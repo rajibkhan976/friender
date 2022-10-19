@@ -1,0 +1,60 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use  "../../abstract/mixins" as *;
+@use  "../../abstract/variables" as *;
+
+.element-wraper {
+  @include positioned(relative);
+  @include display(inline-block);
+  width: $full-width;
+  @include margins (10px , 0, 10px, 0);
+    label {
+      font-size: $smallFontSize;
+      color: $textColor;
+      span {
+        color: #767485;
+        margin-left: 5px;
+        ;
+      }
+    }
+    .forget-wraper {
+      a {
+        font-size: $footerFontSize;
+        color: $linkColor;
+        text-decoration: none;
+        &:hover {
+          color: $linkColorHover;
+        }
+      }
+    }  
+  .form-field {
+    @include margins (10px , 0, 0px, 0);
+    @include positioned(relative);
+    .form-control {
+      @include inputBox();
+    }
+    .show-hide {
+      .hide-pass {
+        @include positioned(absolute);
+        z-index: 9;
+        right: 12px;
+        top: 17px;
+        cursor: pointer;
+      }
+      .show-pass {
+        @include positioned(absolute);
+        z-index: 9;
+        right: 12px;
+        top: 11px;
+        cursor: pointer;
+      }
+  }
+    .error {
+      @include bordered($errorColor, 1px, solid);
+      &:hover {
+        @include bordered($errorColor, 1px, solid);
+      }
+    }
+  }
+}
+

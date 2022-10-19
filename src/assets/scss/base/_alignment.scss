@@ -1,0 +1,11 @@
+@use "../abstract/mixins";
+@use  "../abstract/variables";
+.text-center {
+    @include mixins.textAlign(variables.$center-alignment)
+}
+.text-left {
+    @include mixins.textAlign(variables.$left-alignment)
+}
+.text-right {
+    @include mixins.textAlign(variables.$right-alignment)
+}

@@ -1,0 +1,35 @@
+// Font Color
+$textColor: #fff;
+$textHeadingColor: #fff;
+$textParaColor: #BDBDBD;
+$buttonTextColor: #fff;
+$footerTextColor: #9A9AA9;
+$linkColor: #0094FF;
+$linkColorHover: #605BFF;
+$footerLinkTextColor: #0094FF;
+$successColor: #006D15;
+$labelColor: #6B7499;
+$errorColor: #FF6A77;
+
+// Background Color
+$backgroundColor: #000;
+$bodyColor: #1C1C1E;
+$inputBackground: #313037;
+
+// Dark Theme
+$bodyDarkColor: #111;
+
+// Button Color
+$buttonBackground: #605BFF;
+$buttonHoverBackground: #2922FF;
+;
+
+// Border and BoxShadow Gradient Color
+$borderColor: #676e8f; 
+$borderBoxColor: #3B3B48;
+$inputBoxBorder: #0094FF;
+$gradientFirst: #827EFF; 
+$gradientsecond: #52D9BB;
+
+$colorList: $gradientFirst -1.45%, $gradientsecond 101.45%; 
+

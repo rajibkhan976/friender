@@ -1,0 +1,23 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+
+.footer-infos {
+  font-family: $fontFamily;
+  @include positioned (relative);
+  @include margins (auto, 0, 0, 0);
+  @include paddings (0, 0, 20px, 0);
+  p{
+    font-size: $smallFontSize;
+    color: $footerTextColor;
+    font-weight: $smallFontWeight;
+    a {
+      color: $linkColor;
+      font-weight: $fontWeight;
+      &:hover {
+        color: $linkColorHover;
+      }
+    }
+  }
+}
+

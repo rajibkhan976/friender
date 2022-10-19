@@ -1,0 +1,75 @@
+@use '../abstract/mixins';
+@use '../abstract/variables';
+@use '../abstract/color';
+
+.text-center {
+  @include mixins.textAlignment(center);
+}
+.text-left {
+  @include mixins.textAlignment(left);
+}
+.text-right {
+  @include mixins.textAlignment(right);
+}
+
+// Avater
+
+.avatar {
+  @include mixins.circleAvater(100px, $radius: 50%);
+}
+
+// Flex
+
+.d-flex {
+  @include mixins.display(flex);
+}
+
+.d-flex-center {
+  @include mixins.flexCenter();
+}
+
+.d-flex-column {
+  @include mixins.flexDirection(column);
+}
+
+.d-flex-row {
+  @include mixins.flexDirection(row);
+}
+
+// Clearfix
+.clearfix {
+  @include mixins.clearfix();
+}
+
+
+// Display Classes
+
+.d-block {
+  @include mixins.display(block);
+}
+.d-inline {
+  @include mixins.display(inline);
+}
+.d-inline-block {
+  @include mixins.display(inline-block);
+}
+.d-hide {
+  @include mixins.display(none);
+}
+
+
+// Float 
+
+.float-left {
+  float: variables.$left;
+}
+
+.float-right {
+  float: variables.$right;
+}
+
+// Error Message
+
+.error-mesage {
+  @include mixins.errorMessage();
+}

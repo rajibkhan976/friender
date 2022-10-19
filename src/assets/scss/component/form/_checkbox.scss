@@ -1,0 +1,81 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use  "../../abstract/mixins" as *;
+@use  "../../abstract/variables" as *;
+
+.remember-wraper {
+  width: $full-width;
+  display: flex;
+  align-items: center;
+  @include margins (10px , 0, 10px, 0);
+  cursor: $pointer-cursor;
+  .check-container {
+    @include positioned(relative);
+    @include margins (0px , 0px, 0px, 0px);
+    @include paddings (0px , 0px, 0px, 22px);
+    cursor: $pointer-cursor;
+    font-size: $footerFontSize;
+      color: $textParaColor; 
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    a {
+      color: $linkColor;
+      font-weight: $fontWeight;
+      &:hover {
+        color: $linkColorHover;
+      }
+    }
+    input {
+      @include positioned(absolute);
+      opacity: 0;
+      cursor: $pointer-cursor;
+      height: 0;
+      width: 0;
+      &:checked ~ .checkmark {
+        background-color: $buttonBackground;
+        &::after {
+          display: $block;
+        }
+      }
+    }
+    .checkmark {
+      @include positioned(absolute);
+      top: 0;
+      left: 0;
+      height: 14px;
+      width: 14px;
+      @include bordered($labelColor, 1px, solid);
+      @include border-radius(3px);
+      &:after {
+        content: "";
+        @include positioned(absolute);
+        display: none;
+        left: 3px;
+        top: 0px;
+        width: 6px;
+        height: 10px;
+        @include bordered($bodyColor, 1px, solid);
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }  
+  }
+}
+
+
+/* The container */
+
+
+
+
+
+
+
+
+
+
+

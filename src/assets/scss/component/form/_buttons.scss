@@ -1,0 +1,19 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use  "../../abstract/mixins" as *;
+
+   .btn-primary {
+    @include authButton();
+   }
+   .disabled {
+    background: #2C2C2E;
+    color: #9A9AA9;
+    cursor: not-allowed;
+    &:hover {
+      background: #2C2C2E;
+      color: #9A9AA9;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+}
+   
