@@ -34,14 +34,14 @@ const LoginPage = (props) => {
             <EmailInput labelText="Email" placeholderText="Enter Email" emailErrors = {emailErrors} />
             <PasswordInput labelText="Password" placeholderText="Enter Password" passwordErrors = {passwordErrors} passwordEntered = {passwordEnter}>
               <span className='forget-wraper float-right'>
-                <Link to="/forgetpassword" className="text-right">Forgot Password</Link>
+                <Link to="/forget-password" className="text-right">Forgot Password</Link>
               </span>
             </PasswordInput>
             <Checkbox labelValue="Remember" boxText="Remember Me" />
             {emailValidation === null && passwordValidation === null ?
               <Button class="btn-primary" btnText="Continue" />
               :
-              <Button class="btn-primary disabled" btnText="Continue" />
+              <Button class="btn-primary" btnText="Continue" disable="true" />
             }
           </form>
         <p className={module['footer-text']}>Don't have an account? <Link to="/signup">Sign up</Link></p>

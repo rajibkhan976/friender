@@ -34,21 +34,17 @@
       @include inputBox();
     }
     .show-hide {
-      .hide-pass {
-        @include positioned(absolute);
-        z-index: 9;
-        right: 12px;
-        top: 17px;
-        cursor: pointer;
-      }
-      .show-pass {
-        @include positioned(absolute);
-        z-index: 9;
-        right: 12px;
-        top: 11px;
-        cursor: pointer;
-      }
-  }
+      @include positioned(absolute);
+      align-items: center;
+      position: absolute;
+      z-index: 9;
+      right: 0;
+      top: 0px;
+      display: flex;
+      cursor: pointer;
+      height: 42px;
+      padding-right: 10px;
+    }
     .error {
       @include bordered($errorColor, 1px, solid);
       &:hover {

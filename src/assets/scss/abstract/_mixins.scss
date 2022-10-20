@@ -448,9 +448,7 @@
 
 @mixin authBox( $background: color.$bodyColor, $width: variables.$authBox-width, $border: color.$borderBoxColor, $weight: font.$smallFontWeight) {
   width: $width;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  @include margins (auto , 0, auto, 0);
   background: $background;
   border: 1px solid $border;
   @include border-radius(10px);

@@ -43,11 +43,11 @@ const CreatePasswordPage = () => {
             {passwordNew === passwordConfirm ?
             <Button class="btn-primary" btnText ="Continue" />
             :
-            <Button class="btn-primary disabled" btnText ="Passwords did not matched" />
+            <Button class="btn-primary" btnText ="Passwords did not matched" disable="true" />
             }
           </div>
           :
-          <Button class="btn-primary disabled" btnText ="Continue" />
+          <Button class="btn-primary" btnText ="Continue" disable="true" />
           }
         </form>
         <p className={module['footer-text']}>If you don’t want to reset password &nbsp; <Link to="/">Log in</Link></p>

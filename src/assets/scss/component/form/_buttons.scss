@@ -4,16 +4,12 @@
 
    .btn-primary {
     @include authButton();
-   }
-   .disabled {
-    background: #2C2C2E;
-    color: #9A9AA9;
-    cursor: not-allowed;
-    &:hover {
+    &:disabled {
       background: #2C2C2E;
       color: #9A9AA9;
       cursor: not-allowed;
       pointer-events: none;
     }
-}
+   }
+
    

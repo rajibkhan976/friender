@@ -6,6 +6,7 @@
 .body-wraper {
   @include positioned(relative);
   display: flex;
+  align-items: center;
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;

@@ -5,11 +5,11 @@ const PasswordInput = (props) => {
   const [checkPassword, setCheckPassword] = useState('');
   const [passwordErrors, setPasswordErrors] = useState(false);
   const handleChangePassword = event => {
-    setCheckPassword(event.target.value);
+    setCheckPassword(event.target.value.trim());
     console.log('Password value is:', event.target.value);
     console.log('Password length:', checkPassword.length);
     console.log('Password State:', passwordErrors);
-    if(checkPassword.length > 4) {
+    if(event.target.value.length !== 0 && checkPassword.length > 4) {
       setPasswordErrors(null);
       props.passwordErrors(null);
       props.passwordEntered(event.target.value); 
@@ -30,11 +30,11 @@ const PasswordInput = (props) => {
       {props.children}
     <div className="form-field">
       <input type={!showHidePassword ? "password" : "text"}  className= {passwordErrors ? "form-control error" : "form-control" } placeholder={props.placeholderText} onChange={handleChangePassword} />
-      <span className="show-hide">
+      <span className="show-hide" onClick={setShowHidePasswordFn} >
         {!showHidePassword ?
-        <img src={hidePassword} className="hide-pass" onClick={setShowHidePasswordFn} />
+        <img src={hidePassword} className="hide-show" alt=""/>
         :
-        <img src={showPassword} className="show-pass" onClick={setShowHidePasswordFn} />
+        <img src={showPassword} className="show-pass" alt=""/>
         }
       </span>
       {passwordErrors && <span className="error-mesage">{passwordErrors}</span> }

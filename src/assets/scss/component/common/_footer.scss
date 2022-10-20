@@ -4,9 +4,10 @@
 
 .footer-infos {
   font-family: $fontFamily;
+  width: 100%;
   @include positioned (relative);
   @include margins (auto, 0, 0, 0);
-  @include paddings (0, 0, 20px, 0);
+  @include paddings (20px, 0, 20px, 0);
   p{
     font-size: $smallFontSize;
     color: $footerTextColor;

@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,  useNavigate  } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 import EmailInput from '../../components/FormComponents/EmailInput';
 import TextInput from '../../components/FormComponents/TextInput';
 import Button from '../../components/FormComponents/Button';
-import Footer from '../../components/Common/Footer';
 import module from "./styling/authpages.module.scss";
 
 const SignupPage = (props) => {
@@ -12,6 +11,7 @@ const SignupPage = (props) => {
   const emailErrors = (error) => {
     setEmailValidation(error);
   }
+  const navigate = useNavigate();   
   return (
       <div className={module['page-wrapers']}>
           <div className={module['logo-wraper']}>
@@ -31,9 +31,9 @@ const SignupPage = (props) => {
               </label>
             </div>
             {emailValidation === null  ?
-              <Button class="btn-primary" btnText="Sign Up" />
+              <Button class="btn-primary" btnText="Sign Up" pageLink="/success" navigate={navigate} />
             :
-              <Button class="btn-primary disabled" btnText="Sign Up" />
+              <Button class="btn-primary" btnText="Sign Up" disable="true" />
             }
           </form>
         <p className={module['footer-text']}>Already have an account <Link to="/">Log in</Link></p>
