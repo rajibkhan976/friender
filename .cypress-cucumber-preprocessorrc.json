@@ -1,0 +1,15 @@
+{
+  "json": {
+    "enabled": true,
+    "output": "/cypress/jsonlogs/log.json",
+    "formatter": "cucumber-json-formatter.exe"
+  },
+  "messages": {
+    "enabled": true,
+    "output": "/cypress/jsonlogs/messages.ndjson"
+  },
+  "html": {
+    "enabled": true
+  },
+  "stepDefinitions": "cypress/e2e/Authentication/*.{js,ts}"
+}
