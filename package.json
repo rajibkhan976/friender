@@ -17,10 +17,11 @@
   },
   "scripts": {
     "cypress:runner": "cypress open",
-    "start": "react-scripts start & npm run cypress:runner",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "e2e": "cypress run"
     
   },
   "eslintConfig": {
