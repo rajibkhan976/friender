@@ -91,8 +91,6 @@ export const utils = {
             formattedCardExpairy = cardExpairySectionsMonth;
         }
 
-        console.log('Formatted Exp d', formattedCardExpairy)
-
         return formattedCardExpairy;
     },
     convertUTCToTimezone(utcDt, timezone = null, dateFormat = "LLL") {

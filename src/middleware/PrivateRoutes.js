@@ -8,17 +8,6 @@ const PrivateRoutes = (props) => {
         logState ? 
             <Outlet /> :
             <Navigate to="/login" />
-        // <Route
-        //     render={(props) =>
-        //         props.isLoggedIn ? (
-        //             <>
-        //                 <Component {...props} params={props.match}/>
-        //             </>
-        //         ) : (
-        //             <Navigate to="/login" />
-        //         )
-        //     }
-        // />
     )
 };  
 

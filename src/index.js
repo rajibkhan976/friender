@@ -1,14 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {Provider} from "react-redux";
+import {createStore, applyMiddleware, compose} from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducers/index";
+import { ThemeContextProvider } from './context/ThemeContext';
 import './assets/scss/index.scss';
-import App from './App';
-
+import Routeing from './route';
 import reportWebVitals from './reportWebVitals';
 
+const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <ThemeContextProvider>
+        <Routeing />
+      </ThemeContextProvider>
+    </Provider>
   </React.StrictMode>
 );
 

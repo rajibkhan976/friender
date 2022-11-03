@@ -73,3 +73,7 @@
 .error-mesage {
   @include mixins.errorMessage();
 }
+
+.error-mesage.error-mesage {
+ margin: 5px 0 5px 0;
+}

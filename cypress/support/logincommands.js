@@ -1,59 +1,37 @@
-
-import login from "../e2e/POM/login.spec"
+import login from "../pages/login.spec"
 
 
 let values;
 beforeEach(() => {
 
     cy.fixture("devcred").then((data) => {
+            values = data;
 
-        values = data;
+        })
+})  
 
-    })
+Cypress.Commands.add('login', () => {
 
-})
+
+    login.get_loginbuttonclick().click();
+    cy.visit("http://localhost:3000");
+
+});
+
 
 Cypress.Commands.add('loginvalid', () => {
 
-    login.get_loginbuttonclick().click();
+
     login.get_emailfield().type(values.email);
-    login.get_password().type(values.defaultPass)
-
-
+    login.get_password().type(values.defaultPass);
+    login.get_viewbutton().click();
 });
 Cypress.Commands.add('continuebuttonclick', () => {
-    login.get_continuebuttonclick().click();
+    cy.contains('Continue').click();
 
 });
 
-Cypress.Commands.add('invalidemailcheck', () => {
+Cypress.Commands.add('invalidemailchecking', () => {
     login.get_emailfield().type(values.wrongemail);
-    login.get_password().type(values.defaultPass)
-    
-
+    login.get_password().type(values.defaultPass);
 });
-
-Cypress.Commands.add('remembermecheck', () => {
-    login.get_remeberbuttonclick().click()
-
-});
-Cypress.Commands.add('invalidpasswordcheck', () => {
-    login.get_emailfield().type(values.defaultPass);
-    
-
-});
-
-Cypress.Commands.add('invalidpasswordcheck', () => {
-    login.get_emailfield().type(values.email);
-    login.get_password().type(values.wrongpass)
-    
-
-});
-
-
-
-
-
-
-
-

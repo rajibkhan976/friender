@@ -3,7 +3,6 @@
 *::after {
     box-sizing: border-box;
 }
-
 html,
 body,
 h1,
@@ -29,6 +28,11 @@ ol[role='list'] {
 
 html:focus-within {
     scroll-behavior: smooth;
+}
+
+html,
+body {
+  background-color: #000;
 }
 
 body {
@@ -113,6 +117,104 @@ button {
   background: #2922FF; 
 }
 
+
+.error-mesage.margin-up-down {
+  margin-top: -15px;
+  margin-top: 10px;
+}
+
+
+
+// loader
+.btn-primary.loaderbtn {
+  background: #2922FF;
+  pointer-events: none;
+}
+
+.stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 3px 0;
+  overflow: hidden;
+}
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 6px;
+  height: 6px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #fff;
+  box-shadow: 9999px 0 0 -5px #fff;
+  animation: dotPulse 1.5s infinite linear;
+  animation-delay: .25s;
+}
+
+.dot-pulse::before, .dot-pulse::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #fff;
+}
+
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px #fff;
+  animation: dotPulseBefore 1.5s infinite linear;
+  animation-delay: 0s;
+}
+
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px #fff;
+  animation: dotPulseAfter 1.5s infinite linear;
+  animation-delay: .5s;
+}
+
+@keyframes dotPulseBefore {
+  0% {
+    box-shadow: 9984px 0 0 -5px #fff;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px #fff;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px #fff;
+  }
+}
+
+@keyframes dotPulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px #fff;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px #fff;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px #fff;
+  }
+}
+
+@keyframes dotPulseAfter {
+  0% {
+    box-shadow: 10014px 0 0 -5px #fff;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px #fff;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px #fff;
+  }
+}
+// loader ends
 
 @media (prefers-reduced-motion: reduce) {
     html:focus-within {

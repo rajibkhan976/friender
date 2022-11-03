@@ -17,6 +17,7 @@
 import './commands'
 import './logincommands.js'
 import './signupcommands.js'
+import './forgetpassword.js'
 
 
 

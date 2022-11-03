@@ -12,7 +12,7 @@ Feature: Sign Up
         Then  I should see the confirmation popup of sending mail from friender team
     Scenario: user should not be able to signup for giving same registered email-id
         Given I enter to the web portal
-        When  I entered the same registered email
+         When  I entered the same registered email
         Then  I should see the validation message for duplicate user
     Scenario: user should not be able to signup for giving invalid email
         Given I enter again to the web portal
@@ -22,7 +22,7 @@ Feature: Sign Up
         Given user enter to the web portal
         When  I entered a valid email and my full name
         Then  I click on Sign Up button
-        Then  I should not see any confirmation message sent by friender team
+        
 
 
 

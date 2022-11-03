@@ -1,6 +1,6 @@
 @use "../../../assets/scss/abstract/color" as *;
 @use "../../../assets/scss/abstract/font" as *;
-@use  "../../../assets/scss/abstract/mixins" as *;
+@use "../../../assets/scss/abstract/mixins" as *;
 @use "../../../assets/scss/abstract/variables" as *;
 
 .body-wraper {
@@ -10,67 +10,77 @@
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
-  background: $backgroundColor;
+
   .page-wrapers {
     @include authBox();
+
     .logo-wraper {
-      @include margins (0px , 0, 40px, 0);
+      @include margins(0px, 0, 40px, 0);
+
       img {
-       @include margins (0px , auto, 17px, auto);
+        @include margins(0px, auto, 17px, auto);
       }
     }
+
     .auth-heading-info {
-      @include margins (0px , 0, 30px, 0);
+      @include margins(0px, 0, 30px, 0);
       @include textAlignment(center);
+
       .success-image {
-        @include margins (0px , auto, 30px, auto);
+        @include margins(0px, auto, 30px, auto);
+
         img {
-          @include margins (0px , auto, 0px, auto);
+          @include margins(0px, auto, 0px, auto);
         }
       }
+
       h3 {
         @include hedadingText();
       }
+
       p {
         @include hedadingPara();
       }
+
       .success-page {
         @include positioned(relative);
-        @include margins (64px , 0, 45px, 0);
+        @include margins(64px, 0, 45px, 0);
+
         img {
-          @include margins (0px , auto, 17px, auto);
+          @include margins(0px, auto, 17px, auto);
         }
+
         p {
           color: $textParaColor;
         }
       }
     }
+
     .footer-text {
       font-size: $footerFontSize;
       color: $textParaColor;
       @include textAlignment(center);
       line-height: $lineHeightSecondary;
+
       a {
         color: $linkColor;
         font-weight: $fontWeight;
+
         &:hover {
           color: $linkColorHover;
         }
       }
     }
+
     &:before {
-      // background: linear-gradient(left, #827EFF -1.45%, #52D9BB 101.45%)!important;
-      // background: linear-gradient(90deg, #827EFF -1.45%, #52D9BB 101.45%);
-      //@include background-gradient($gradientFirst, $gradientsecond, 'horizontal');
       @include gradient(90deg, $colorList);
       width: $full-width;
       height: 10px;
       @include positioned(absolute);
       top: 0;
       left: 0;
-      content: '';
-      @include border-radius(10px,10px,0px,0px);
+      content: "";
+      @include border-radius(10px, 10px, 0px, 0px);
     }
-    
   }
 }

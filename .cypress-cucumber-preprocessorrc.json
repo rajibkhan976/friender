@@ -1,15 +1,24 @@
+
+
 {
   "json": {
-    "enabled": true,
-    "output": "/cypress/jsonlogs/log.json",
+    "enabled": false,
+    "output": "jsonlogs/log.json",
     "formatter": "cucumber-json-formatter.exe"
   },
   "messages": {
-    "enabled": true,
-    "output": "/cypress/jsonlogs/messages.ndjson"
+    "enabled": false,
+    "output": "jsonlogs/messages.ndjson"
   },
   "html": {
-    "enabled": true
+    "enabled": false
   },
-  "stepDefinitions": "cypress/e2e/Authentication/*.{js,ts}"
+  "stepDefinitions": [
+      "[filepath]/**/*.{js,ts}",
+      "[filepath].{js,ts}",
+      "cypress/e2e/step-definitions/*.js",
+      "[filepath]\\***.{js,ts}",
+      "[filepath].{js,ts}",
+      "cypress\\e2e\\*\\step-definitions\\*.{js,ts}"
+  ]
 }

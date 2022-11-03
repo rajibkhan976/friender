@@ -1,14 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+
 import { ModeContext } from "../context/ThemeContext"
-import { Outlet } from "react-router-dom"
 
 const MainComponent = () => {
     const {darkMode} = useContext(ModeContext);
 
     return (
-        <main className={darkMode ? 'main' : 'main theme-light'}>
-            <header>Header</header>
-            <Outlet/>
+        <main className={darkMode ? 'main theme-default' : 'main theme-light'}>
+            <Outlet />
         </main>
     );
 };

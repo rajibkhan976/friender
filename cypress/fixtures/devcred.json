@@ -1,9 +1,8 @@
     {
-    "email": "sangeetaganguly41@gmail.com",
-    "fullname": "sangeeta ganguly",
-    "invalidEmail": "sangee.co",
-    "wrongemail": "sangeeta@gmail.com",
-    "defaultPass": "",
-    "wrongpass":  "1235"
-    
+        "email": "sangeeta1234@gmail.com",
+        "fullname": "sangeeta ganguly",
+        "invalidEmail": "sangee.co",
+        "wrongemail": "sangeeta@gmail.com",
+        "defaultPass": "Tier5",
+        "wrongpass": "1235"
     }

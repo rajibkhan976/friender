@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Route, Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const UnProtectedRoute = ({ component: Component, ...rest }) => {
     const logState = useSelector((state) => state.auth.isLoggedIn);
