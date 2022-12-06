@@ -1,123 +1,146 @@
-import { userLogin, userRegister, forgetPassword, userLogout, resetPassword } from "../services/authentication/AuthServices";
-import * as actionTypes from "./types";
-import { history } from '../helpers/history';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+// import { response } from "express";
+import { forgetPassword, onboarding, resetPassword, resetUserPassword, userLogin, userRegister } from "../services/authentication/AuthServices";
 
-const register  = (email)=>{
-    return dispatch => {
-        return new Promise((resolve, reject)=>{
-            userRegister(email)
-                .then(response =>{
-                    if(response){
-                        dispatch({
-                            type: actionTypes.USER_REGISTER,
-                            user: response
-                        });
-                        resolve(response);
-                    }
-                })
-                .catch(error=>{
-                    if (error) {
-                        dispatch({
-                            type: actionTypes.USER_REGISTER_ERROR,
-                            message: error
-                        });
-                    }
-                    reject(error);
-                })
-            })
+let token = localStorage.getItem('fr_token');
+ if(token){
+  // console.log("the lol token......",token);
+ }
+const initialState = token ? {
+  isLoggedIn: true,
+  user: { 'token': token }
+} : {
+  isLoggedIn: false,
+  user: null,
+  message : null,
+  type:null,
+  regSuccess:false
+};
+
+
+export const register=createAsyncThunk(
+  "auth/register",
+  async({email,name},{rejectWithValue})=>{
+    console.log("i am lol email!!!!!!!!!",email);
+    
+    try{
+      const res= await userRegister(email,name)
+      return res;
+    }catch(err){
+      console.log("i am lol error!!!!!!!!!",err);
+      return rejectWithValue(err)
     }
-}
+  }
 
-const login  = (email,password)=>{
-  return dispatch => {
-      return new Promise((resolve, reject) => {
-          userLogin(email, password)
-              .then(response => {
-                  if (response) {
-                      dispatch({
-                          type: actionTypes.USER_LOGIN,
-                          user: response
-                      });
-                      resolve(response);
-                  }
-              })
-              .catch(error => {
-                  if (error) {
-                      dispatch({
-                          type: actionTypes.LOGIN_FAILURE,
-                          message: error
-                      });
-                  }
-                  reject(error);
-              });
-          
-      });
-  };
-}
+)
 
-const logout = () => {
-    return dispatch => {
-        userLogout();
-        dispatch({
-            type: actionTypes.LOGOUT,
-        })
-        history.push('/login');
-    };
-}
+export const logUserIn= createAsyncThunk(
+  "auth/logUserIn",
+  async ({email,password},{ rejectWithValue }) => {
+    /**  @param arg {{ email:string, password: string }} */
+    //  const {email,password}=props
+      try{
+        const res=await userLogin(email,password)
+        console.log("i am the ressss from login reducer",res);
+        return res;
+      }catch(err){
 
-const forgetpassword  = (email)=>{
-    return dispatch => {
-        return new Promise((resolve, reject)=>{
-            forgetPassword(email)
-            .then(response =>{
-                if(response){
-                    dispatch({
-                        type: actionTypes.FORGET_PASSWORD,
-                        user: response
-                    });
-                    resolve(response);
-                }
-            })
-            .catch(error=>{
-                // console.log("error", error);
-                if (error) {
-                    dispatch({
-                        type: actionTypes.FORGET_PASSWORD_ERROR,
-                        message: error
-                    })
-                }
-                reject(error);
-            });
-        })
+        console.log("eroor hooor*****->>>",err);
+        return rejectWithValue(err)
+      }
+      
+    // .catch((err) => console.log("i am the eerrror from login ",err));
+  }
+);
+
+export const forgetpassword=createAsyncThunk(
+  "auth/forgetpassword",
+  async({email})=>{
+      const res=await forgetPassword(email);
+      return res;
+  }
+)
+
+export const resetPass=createAsyncThunk(
+  "auth/resetPass",
+  async ({token,password})=>{
+    const res=await resetPassword(token,password);
+    return res;
+  }
+)
+
+export const resetUserPass=createAsyncThunk(
+  "auth/resetUserPass",
+  async ({token,password})=>{
+    const res=await resetUserPassword(token,password)
+    return res;
+  }
+)
+
+export const onboardingUser=createAsyncThunk(
+  "auth/onboardingUser",
+  async ({question_one,question_two,question_three,token})=>{
+    console.log("1111111",question_one);
+    console.log("22222",question_two)
+    console.log("3333333",question_three)
+    console.log("token",token)
+      const res=await onboarding(token,question_one,question_two,question_three,);
+      return res;
+
+  }
+)
+
+
+
+
+
+
+export const authSlice=createSlice({
+    name:"auth",
+    initialState,
+    reducers:{
+      userLoging:()=>{
+
+      },
+      regOut:(state)=>{
+  state.regSuccess=false;
+      },
+      userLogout:(state)=>{
+        localStorage.removeItem("fr_token");
+        localStorage.removeItem("fr_pass_changed");
+        localStorage.removeItem("fr_onboarding");
+        localStorage.removeItem("fr_default_fb");
+        localStorage.removeItem("fr_sidebarToogle");
+        localStorage.removeItem("fr_default_email");
+        localStorage.removeItem("submenu_status");
+        localStorage.removeItem('syncedFriend');
+          state.isLoggedIn=false;
+      }
+    },
+    extraReducers:{
+      //state change for registration
+      [register.fulfilled]:(state,action)=>{
+        state.user=action.payload;
+        state.regSuccess=true;
+      },
+      [register.rejected]:(state,action)=>{
+        state.isLoggedIn=false;
+        state.message=action.payload;
+        state.regSuccess=false;
+      },
+      //state change for login
+      [logUserIn.fulfilled]: (state, action) => {
+        state.user=action.payload
+        state.isLoggedIn = true;
+      },
+      [logUserIn.rejected]: (state,action) => {
+
+        console.log("rejected",action.payload);
+        state.isLoggedIn = false;
+        state.message=action.payload;
+      },
     }
-} 
+})
 
-const resetPass = (token, password) => {
-    // console.log("token, password", token, password);
-    return dispatch => {
-        return new Promise((resolve, reject)=>{
-            resetPassword(token, password)
-            .then(response =>{
-                if(response){
-                    dispatch({
-                        type: actionTypes.RESET_PASSWORD,
-                        user: response
-                    });
-                    resolve(response);
-                }
-            })
-            .catch(error=>{
-                // console.log("error", error);
-                if (error) {
-                    dispatch({
-                        type: actionTypes.RESET_PASSWORD_ERROR,
-                        message: error
-                    })
-                }
-                reject(error);
-            });
-        })
-    }
-}
-
-export default{register, login, forgetpassword, logout, resetPass};
+export const {userLogout,regOut}=authSlice.actions;
+export default authSlice.reducer;

@@ -33,6 +33,13 @@ const EmailInput = (props) => {
           type="email"
           tabIndex="1"
           autoComplete="new-password"
+          onPaste={(e)=>{
+            e.preventDefault()
+            return false;
+          }} onCopy={(e)=>{
+            e.preventDefault()
+            return false;
+          }}
           value={emailId}
           className={emailErrors ? "form-control error" : "form-control"}
           placeholder={props.placeholderText}

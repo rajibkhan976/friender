@@ -1,0 +1,88 @@
+@use "../../abstract/mixins" as *;
+@use "../../abstract/color-themes" as *;
+
+.pagination {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+
+    .page-item {
+        .page-link {
+            min-width: 30px;
+            padding-inline: 10px;
+            height: 30px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #8998B8;
+            @include border-radius(5px);
+
+            &:hover {
+                @include theme-aware('background-color', 'btn-hover');
+                @include theme-aware('color', 'text-color');
+            }
+        }
+
+        &:first-child {
+            margin-right: 13px;
+            background-color: transparent !important;
+
+            .page-link {
+                background-image: url('../../../images/left-default.png');
+                background-color: transparent;
+                font-size: 0;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 10px auto;
+
+                &:hover {
+                    background-image: url('../../../images/left-hover.png');
+                    @include theme-aware('background-color', 'pagination-arrow-hover');
+                    background-size: auto 60px;
+                    background-repeat: no-repeat;
+                    background-size: 10px auto;
+                    transform: scaleX(-1);
+                }
+            }
+        }
+
+        &:last-child {
+            margin-left: 13px;
+            background-color: transparent !important;
+            
+            .page-link {
+                background-image: url('../../../images/right-default.png');
+                background-color: transparent;
+                font-size: 0;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 10px auto;
+                transform: scaleX(-1);
+
+                &:hover {
+                    background-image: url('../../../images/right-hover.png');
+                    @include theme-aware('background-color', 'pagination-arrow-hover');
+                    background-size: auto 60px;
+                    background-repeat: no-repeat;
+                    background-size: 10px auto;
+                    transform: none;
+                }
+            }
+        }
+
+        &.active {
+            .page-link {
+                color: #fff;
+                @include theme-aware('background-color', 'button-bg');
+            }
+        }
+
+        &.disabled {
+            .page-link {
+                @include theme-aware('background-color', 'btn-disabled');
+                @include theme-aware('color', 'disabled-text');
+            }
+        }
+    }
+}

@@ -1,12 +1,20 @@
-const Checkbox = (props) => {
+import { memo, useEffect } from "react";
+
+const Checkbox = ({checkValue=false, onChangeCheck, checkText=""}) => {
+  useEffect(() => {
+    console.log('checkValue', checkValue);
+  }, [checkValue])
   return (
-  <div className="remember-wraper">
-    <label className="check-container d-block">{props.boxText}
-      <input type="checkbox" value={props.labelValue} />
+    <label className="fr-custom-check">
+      <input 
+        type="checkbox" 
+        checked={checkValue}
+        onChange={(e) => onChangeCheck(e.target.checked)}
+      />
       <span className="checkmark"></span>
+      {checkText ? <span className="checkmark-text"></span> : ''}
     </label>
-  </div>
   );
 }
 
-export default Checkbox;
+export default memo(Checkbox);

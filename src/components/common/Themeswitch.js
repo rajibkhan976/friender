@@ -1,18 +1,19 @@
 import React, {useContext} from 'react';
-import {DarkModeContext} from '../../context/DarkModeContext';
+import {ModeContext} from '../../context/ThemeContext';
+import Switch from './Switch';
 
-function Themewitch() {
-    const {darkMode, toggleDarkMode} = useContext(DarkModeContext);
+function Themewitch({extraClass}) {
+    const {darkMode, toggleDarkMode} = useContext(ModeContext);
     const handleClick = () => {
         toggleDarkMode();
+        console.log('done');
     }
     return (
-        <div className="Lightswitch">
-          <button  onClick={handleClick}>
-          {darkMode ? 
-            `Light` : `Dark`}
-          </button>
-                  
+        <div className={`lightswitch ${extraClass ? extraClass : ''}`}>
+          <Switch
+            checked={darkMode}
+            handleChange={handleClick}
+          />                  
         </div>
     )
 }

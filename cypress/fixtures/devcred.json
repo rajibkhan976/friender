@@ -1,8 +1,12 @@
     {
-        "email": "sangeeta1234@gmail.com",
+        "email": "sangeeta321@gmail.com",
         "fullname": "sangeeta ganguly",
         "invalidEmail": "sangee.co",
         "wrongemail": "sangeeta@gmail.com",
         "defaultPass": "Tier5",
-        "wrongpass": "1235"
+        "wrongpass": "1235",
+        "username":"Emma rossi",
+        "facebookfriends": "5000",
+        "connectedfriends": "5000",
+        "resetPassword" : "Sangeeta@321"
     }

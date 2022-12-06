@@ -17,7 +17,9 @@
 import './commands'
 import './logincommands.js'
 import './signupcommands.js'
-import './forgetpassword.js'
+import './forgetpassword'
+import './gettingstarted.js'
+import 'cypress-ag-grid';
 
 
 

@@ -1,0 +1,72 @@
+//alert box style start
+@use "../../abstract/color"as *;
+@use "../../abstract/font"as *;
+@use "../../abstract/mixins"as *;
+
+#showmsg {
+  visibility: visible;
+  background-color: transparent;
+  text-align: center;
+  padding: 16px;
+  position: fixed;
+  z-index: 10000;
+  right: 0;
+  top: 20px;
+  font-family: "Nunito";
+  font-style: normal;
+}
+
+.showmsg-child {
+  visibility: visible;
+  font-weight: 900;
+  border-radius: 10px;
+  min-width: 250px;
+  margin-left: -125px;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 224, 116, 0.15) 0%,
+    rgba(0, 224, 116, 0) 90%
+  );
+  color: rgb(0, 0, 0);
+  text-align: center;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 17px;
+
+  .alert-inner {
+    display: flex;
+    .alert-inner-sec {
+      .msg-header {
+        color: $statusActive;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22px;
+      }
+      .msg {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+
+        color: #a4cea8;
+      }
+    }
+  }
+}
+
+.showmsg-child.show {
+  -webkit-animation: fadein 0.5s;
+  animation: fadein 0.5s;
+  z-index: 99999;
+}
+
+.showmsg-child.hide {
+  visibility: hidden;
+  display: none;
+}
+
+//alert box style end
+
+
+
+

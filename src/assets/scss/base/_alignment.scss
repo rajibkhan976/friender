@@ -7,5 +7,5 @@
     @include mixins.textAlign(variables.$left-alignment)
 }
 .text-right {
-    @include mixins.textAlign(variables.$right-alignment)
+    @include mixins.textAlign(variables.$right-alignment) . 
 }

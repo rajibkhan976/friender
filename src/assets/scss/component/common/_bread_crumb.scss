@@ -1,0 +1,37 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+
+
+.breadcrumb {
+    list-style: none;
+    margin: 5px 0 0 0;
+  }
+  .breadcrumb li {
+    display: inline;
+    font: {
+        style: normal;
+        weight: 400;
+        size: 10px;
+    }
+    color: $linkColor;
+  }
+  .breadcrumb li+li:before {
+    padding: 8px;
+    color: $linkColor;
+    content: ">\00a0";
+  }
+.breadcrumb li a {
+    // font: {
+    //     style: normal;
+    //     weight: 400;
+    //     size: 10px;
+    // }
+    color: $linkColor;
+   
+    text-decoration: none;
+  }
+.breadcrumb li a:hover {
+    color: $linkColorHover;
+    // text-declinkColor;oration: underline;
+  }

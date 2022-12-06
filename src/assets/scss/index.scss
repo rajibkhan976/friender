@@ -3,6 +3,14 @@
 @use './component/form/input';
 @use './component/form/checkbox';
 @use './component/common/footer';
+@use './component/common/sidebar.scss';
+@use './component/common/body_content_wraper';
+@use './component/common/rightSec_content_wraper';
 @use './abstract/mixins';
 @use './base/classLibary';
-
+@use './component/common/page_header';
+@use './component/common/bread_crumb';
+@use './component/common/page_common';
+@use './component/common/switch';
+@use './component/common/commn_compnt_style';
+@use './component/common/alert';

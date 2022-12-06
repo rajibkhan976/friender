@@ -1,0 +1,192 @@
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 30px 50px;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid #FFFFFF;
+        box-shadow: 0px 2px 10px rgb(0 0 0 / 10%);
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        line-height: 19px;
+        color: #FFFFFF;
+        padding-inline: 25px;
+        height: 40px;
+        cursor: pointer;
+
+        &:hover {
+            color: #605BFF;
+            background-color: #fff;
+        }
+    }
+
+    .content-success {
+        width: 100%;
+        flex: 1 1 auto;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .sky-content {
+            background: #605BFF;
+            position: relative;
+            z-index: 1;
+            height: 55%;
+            overflow: hidden;
+
+            span {
+                position: absolute;
+                z-index: 3;
+
+                svg {
+                    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+                }
+            }
+
+
+
+            .cloud-1 {
+                top: 345px;
+                right: -200px;
+                animation: gliding-left 18s ease-in infinite alternate;
+            }
+
+            .cloud-2 {
+                top: 201px;
+                right: -200px;
+                animation: gliding-left 35s ease-in-out infinite alternate;
+            }
+
+            .cloud-3 {
+                top: 396.45px;
+                right: -200px;
+                animation: gliding-left 15s ease-in infinite alternate;
+            }
+
+            .cloud-4 {
+                top: 221px;
+                left: -200px;
+                animation: gliding-right 20s ease-in infinite alternate;
+            }
+
+            .cloud-5 {
+                top: 371.07px;
+                left: -200px;
+                animation: gliding-right 30s ease-in infinite alternate;
+            }
+
+            .cloud-6 {
+                top: 287px;
+                left: -200px;
+                animation: gliding-right 20s ease-in-out infinite alternate;
+            }
+
+            .rocket {
+                position: absolute;
+                bottom: -120px;
+                left: 50%;
+                transform: translateX(-50%);
+                animation: rise-up 8s ease-in-out 1 alternate;
+                opacity: 1;
+                
+
+                &.lift-off {
+                    animation: lift-off 15s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1 alternate;
+                    animation-delay: 0;
+                }
+            }
+        }
+
+        .land-content {
+            padding-top: 60px;
+            height: 45%;
+            position: relative;
+            z-index: 2;
+
+            p {
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 22px;
+                text-align: center;
+                color: #BDBDBD;
+            }
+        }
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 44px;
+        text-align: center;
+        color: #FFFFFF;
+        margin-bottom: 20px;
+    }
+    
+    @keyframes gliding-right {
+        0% {
+            left: -200px;
+        }
+
+        100% {
+            left: calc(100vw + 200px);
+        }
+    }
+
+    @keyframes gliding-left {
+        0% {
+            right: -200px;
+        }
+
+        100% {
+            right: calc(100vw + 200px);
+        }
+    }
+
+    @keyframes rise-up {
+        0% {
+            bottom: -140px;
+            opacity: 1;
+        }
+
+        100% {
+            bottom: -120px;
+            opacity: 1;
+        }
+    }
+
+    @keyframes lift-off {
+        0% {
+            bottom: -120px;
+            opacity: 1;
+        }
+
+        70% {
+            bottom: calc(55% + 320px);
+            opacity: 1;
+        }
+
+        75% {
+            bottom: calc(55% + 320px);
+            opacity: 0;
+        }
+
+        90% {
+            bottom: -300px;
+            opacity: 0;
+        }
+
+        100% {
+            bottom: -120px;
+            opacity: 1;
+        }
+    }

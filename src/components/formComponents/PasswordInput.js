@@ -2,21 +2,43 @@ import { useState, useEffect } from "react";
 const PasswordInput = (props) => {
   const [checkPassword, setCheckPassword] = useState("");
   const [passwordErrors, setPasswordErrors] = useState(false);
-  useEffect(() => {}, [checkPassword, passwordErrors]);
+  useEffect(() => {
+    setCheckPassword(checkPassword);
+    setPasswordErrors(passwordErrors)
+  }, [checkPassword, passwordErrors]);
+  //useEffect(() => {}, [checkPassword, passwordErrors]);
   const handleChangePassword = (event) => {
     setCheckPassword(event.target.value.trim());
+    //console.log("Password Entered is",checkPassword);
     if (event.target.value.length > 4) {
       if (/\s/.test(event.target.value) === false) {
-        setPasswordErrors(null);
-        props.passwordErrors(null);
-        props.passwordEntered(event.target.value);
+        if(props.typeValidation) {
+          if(event.target.value.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})")) {
+            setPasswordErrors(null);
+            props.passwordErrors(null);
+            props.passwordEntered(event.target.value);
+          } else {
+            setPasswordErrors('Must have 8 characters including: A-Z,a-z, @#$ & 0-9');
+            props.passwordErrors('Must have 8 characters including: A-Z,a-z, @#$ & 0-9');
+          }
+        } else {
+          setPasswordErrors(null);
+          props.passwordErrors(null);
+          props.passwordEntered(event.target.value);
+        }
+        // console.log("Password Entered satidfies is",checkPassword);
+        // console.log("Error is",passwordErrors);
       } else {
         setPasswordErrors("Password cannot have space");
         props.passwordErrors("Password cannot have space");
+        // console.log("Password Entered satidfies is",checkPassword);
+        // console.log("Error is",passwordErrors);
       }
     } else {
       setPasswordErrors("Invalid Password");
       props.passwordErrors("Invalid Password");
+      // console.log("Password Entered satidfies is",checkPassword);
+      //   console.log("Error is",passwordErrors);
     }
   };
 
@@ -32,6 +54,13 @@ const PasswordInput = (props) => {
         <input
           tabIndex="1"
           autoComplete="new-password"
+          onPaste={(e)=>{
+            e.preventDefault()
+            return false;
+          }} onCopy={(e)=>{
+            e.preventDefault()
+            return false;
+          }}
           type={!showHidePassword ? "password" : "text"}
           className={passwordErrors ? "form-control error" : "form-control"}
           placeholder={props.placeholderText}

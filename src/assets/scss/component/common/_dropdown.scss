@@ -1,0 +1,116 @@
+@use "../../abstract/mixins" as *;
+@use "../../abstract/color" as *;
+
+.fr-dropdown {
+    padding: 10px 8px;
+    position: absolute;
+    @include theme-aware('background-color','listing-popup-bg');
+    border: 1px solid;
+    @include theme-aware('border-color','sidebar-border-color');
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    @include border-radius(5px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    top: 100%;
+    margin-top: -30px;
+
+    ul {
+        pointer-events: all;
+
+        li {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            height: 30px;
+            @include border-radius(5px);
+            padding-inline: 10px;
+
+            figure {
+                width: 14px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 8px;
+            }
+
+            span {
+                @include theme-aware('color', 'tooltip-text');
+                white-space: nowrap;
+                font-weight: 600;
+                font-size: 10px;
+                line-height: 14px;
+            }
+
+            &:hover {
+                @include theme-aware('background-color', 'tooltip-bg');
+                
+                span {
+                    color: $textColor;
+                }
+            }
+
+            &.whiteLabel-fr-action {
+                figure {
+                    path {
+                        @include theme-aware('fill', 'link-text-color');
+                    }
+                }
+
+                &:hover {
+                    figure {
+                        path {
+                            fill: $goldenColor;
+                        }
+                    }
+                }
+            }
+
+            &.del-fr-action {
+                &:hover {
+                    path {
+                        fill: $errorColor;
+                    }
+                }
+            }
+
+            &.history-fr-action {
+                &:hover {
+                    path {
+                        fill: $textColor;
+                    }
+                }                
+            }
+
+            &.reject-fr-action {
+                &:hover {
+                    circle {
+                        fill: $errorColor;
+                        stroke: $errorColor;
+                    }
+                    path {
+                        stroke: $errorColor;
+
+                        &:first-of-type {
+                            fill: $errorColor;
+                            stroke: $errorColor;
+                        }
+                    }
+                }                
+            }
+        }
+    }
+
+    &.active {
+        margin-top: 20px;
+        opacity: 1;
+        visibility: visible;
+
+        ul {
+        }
+    }
+
+    &.fr-dropdownAction {
+        right: 0;
+    }
+}

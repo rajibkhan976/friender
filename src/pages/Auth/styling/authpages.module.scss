@@ -10,77 +10,110 @@
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
+}
 
-  .page-wrapers {
-    @include authBox();
+.page-wrapers {
+  @include authBox();
+  &:before {
+    @include gradient(90deg, $colorList);
+    //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
+    width: $full-width;
+    height: 10px;
+    @include positioned(absolute);
+    top: 0;
+    left: 0;
+    content: "";
+    @include border-radius(10px, 10px, 0px, 0px);
+    animation: gradient 5s ease infinite;
+    background-size: 400% 100%;
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    25%{
+      background-position: 50% 50%
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75%{
+      background-position: 50% 50%
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 
-    .logo-wraper {
-      @include margins(0px, 0, 40px, 0);
+  .logo-wraper {
+    @include margins(0px, 0, 40px, 0);
+    text-align: center;
+
+    img {
+      @include margins(0px, auto, 17px, auto);
+    }
+  }
+
+  .auth-heading-info {
+    @include margins(0px, 0, 30px, 0);
+    @include textAlignment(center);
+
+    .success-image {
+      @include margins(0px, auto, 30px, auto);
+
+      img {
+        @include margins(0px, auto, 0px, auto);
+      }
+    }
+
+    h3 {
+      @include hedadingText();
+    }
+
+    p {
+      @include hedadingPara();
+    }
+
+    .success-page {
+      @include positioned(relative);
+      @include margins(64px, 0, 45px, 0);
 
       img {
         @include margins(0px, auto, 17px, auto);
       }
-    }
-
-    .auth-heading-info {
-      @include margins(0px, 0, 30px, 0);
-      @include textAlignment(center);
-
-      .success-image {
-        @include margins(0px, auto, 30px, auto);
-
-        img {
-          @include margins(0px, auto, 0px, auto);
-        }
-      }
-
-      h3 {
-        @include hedadingText();
-      }
 
       p {
-        @include hedadingPara();
+        color: $textParaColor;
       }
-
-      .success-page {
-        @include positioned(relative);
-        @include margins(64px, 0, 45px, 0);
-
-        img {
-          @include margins(0px, auto, 17px, auto);
-        }
-
-        p {
-          color: $textParaColor;
-        }
-      }
-    }
-
-    .footer-text {
-      font-size: $footerFontSize;
-      color: $textParaColor;
-      @include textAlignment(center);
-      line-height: $lineHeightSecondary;
-
-      a {
-        color: $linkColor;
-        font-weight: $fontWeight;
-
-        &:hover {
-          color: $linkColorHover;
-        }
-      }
-    }
-
-    &:before {
-      @include gradient(90deg, $colorList);
-      width: $full-width;
-      height: 10px;
-      @include positioned(absolute);
-      top: 0;
-      left: 0;
-      content: "";
-      @include border-radius(10px, 10px, 0px, 0px);
     }
   }
+
+  .footer-text {
+    font-size: $footerFontSize;
+    color: $textParaColor;
+    @include textAlignment(center);
+    line-height: $lineHeightSecondary;
+
+    a {
+      color: $linkColor;
+      font-weight: $fontWeight;
+
+      &:hover {
+        color: $linkColorHover;
+      }
+    }
+  }
+
+  // &:before {
+  //   @include gradient(90deg, $colorList);
+  //   width: $full-width;
+  //   height: 10px;
+  //   @include positioned(absolute);
+  //   top: 0;
+  //   left: 0;
+  //   content: "";
+  //   @include border-radius(10px, 10px, 0px, 0px);
+  // }
 }

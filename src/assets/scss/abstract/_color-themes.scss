@@ -1,0 +1,176 @@
+// @use './color' as *;
+
+// $themes: (
+//   default: (
+//     text-color: $textColor,
+//     text-para-color: $textParaColor,
+//     button-bg: $buttonBackground,
+//     btn-hover: $buttonHoverBackground,
+//     btn-hover-text: $buttonHoverText,
+//     btn-disabled: $buttonDisabledBackground,
+//     disabled-text: $disabledText,
+//     link-text-color: $linkColor,
+//     interactive-bg: $interactiveBg,
+//     // listing
+//     listing-cell-bg: $listingBgLight,
+//     menu-bg: $listingBgLight,
+//     footer-bg: $listingBgLight,
+//     checkbox-bg: $checkboxBackground,
+//     checked-checkbox-bg: $checkboxCheckedBackground,
+//     checkbox-border: $checkboxBorderColor,
+//     checkbox-checked-border: $checkboxCheckedBackground,
+//     transparent-color: $transparentColor,
+//     listing-popup-bg: $listingPopupBg,
+//     loader-bg: $loaderBackground,
+//     loader-component-bg: $bodyColor,
+//     pagination-arrow-hover: $bodyColor,
+//     items-per-page-color: $transparentBgSelect,
+//     // Sidebar
+//     sidebar-border-color: $sidebarBorder,
+//     menu-toggle-bg: $menuToggleBg,
+//     menu-toggle-border: $menuToggleBorder,
+//     link-text-hover-color: $buttonHoverText,
+//     // Icons
+//     icons: $icon, 
+//     // Extra
+//     active-area: $activeArea,
+//     // Tooltip
+//     tooltip-bg: $tooltipBg,
+//     tooltip-text: $tooltipText,
+//     // Input
+//     input-bg: $inputBackground,
+//     input-border: $inputBorder,
+//   ),
+//   light: (
+//     text-color: $darkTextColor,
+//     text-para-color: $textParaLightColor,
+//     button-bg: $buttonBackground,
+//     btn-hover: $buttonHoverBackground,
+//     btn-hover-text: $buttonLightHoverText,
+//     btn-disabled: $buttonDisabledBackgroundLight,
+//     disabled-text: $disabledText,
+//     link-text-color: $linkColor,
+//     interactive-bg: $interactiveBgLight,
+//     // listing
+//     listing-cell-bg: $listingBgDark,
+//     menu-bg: $listingBgDark,
+//     footer-bg: $listingBgDark,
+//     checkbox-bg: $checkboxBackground,
+//     checked-checkbox-bg: $checkboxCheckedBackground,
+//     checkbox-checked-border: $checkboxCheckedBackground,
+//     transparent-color: $transparentColor,
+//     listing-popup-bg: $listingPopupLightBg,
+//     checkbox-border: $checkboxBorderColor,
+//     loader-bg: $loaderBackgroundLight,
+//     loader-component-bg: $listingBgDark,
+//     pagination-arrow-hover: $bodyColor,
+//     items-per-page-color: $transparentBgSelect,
+//     // Sidebar
+//     sidebar-border-color: $sidebarBorderLight,
+//     menu-toggle-bg: $menuToggleBgLight,
+//     menu-toggle-border: $menuToggleBorderLight,
+//     link-text-hover-color: $linkColorHover,
+//     // Icons
+//     icons: $iconLight, 
+//     // Extra
+//     active-area: $activeAreaLight,
+//     // Tooltip
+//     tooltip-bg: $tooltipBgLight,
+//     tooltip-text: $tooltipTextLight,
+//     // Input
+//     input-bg: $inputBackgroundLight,
+//     input-border: $inputBorderLight,
+//     // Listing selection
+//     listing-checked-border: $selectionBoxBorder,
+//     listing-checked-bg: rgba($selectionBoxBorder, 0.15)
+//   ),
+// );
+
+
+@use './color' as *;
+
+$themes: (
+  default: (
+    text-color: $themeDefaultPrimary2,
+    text-para-color: $themeDefaultPrimary3,
+    button-bg: $themeLightPrimary1,
+    btn-hover: $themePrimaryBlue6,
+    btn-hover-text: $themeDefaultPrimary2,
+    btn-disabled: $themeBlack6,
+    disabled-text: $themeSecondaryDarkBlue3,
+    link-text-color: $themeDefaultPrimary4,
+    interactive-bg: $themeBlack7,
+    // listing
+    listing-cell-bg: $themeDefaultSecondary1,
+    menu-bg: $themeDefaultSecondary1,
+    footer-bg: $themeDefaultSecondary1,
+    checkbox-bg: $checkboxBackground,
+    checked-checkbox-bg: $checkboxCheckedBackground,
+    checkbox-border: $checkboxBorderColor,
+    checkbox-checked-border: $checkboxCheckedBackground,
+    transparent-color: $transparentColor,
+    listing-popup-bg: $listingPopupBg,
+    loader-bg: $loaderBackground,
+    loader-component-bg: $themeDefaultSecondary1,
+    pagination-arrow-hover: $themeDefaultSecondary1,
+    items-per-page-color: $transparentBgSelect,
+    // Sidebar
+    sidebar-border-color: $sidebarBorder,
+    menu-toggle-bg: $menuToggleBg,
+    menu-toggle-border: $menuToggleBorder,
+    link-text-hover-color: $themeDefaultPrimary2,
+    // Icons
+    icons: $icon, 
+    // Extra
+    active-area: $activeArea,
+    // Tooltip
+    tooltip-bg: $tooltipBg,
+    tooltip-text: $tooltipText,
+    // Input
+    input-bg: $activeArea,
+    input-border: $themeDefaultSecondary2,
+  ),
+  light: (
+    text-color: $darkTextColor,
+    text-para-color: $textParaLightColor,
+    button-bg: $buttonBackground,
+    btn-hover: $buttonHoverBackground,
+    btn-hover-text: $buttonLightHoverText,
+    btn-disabled: $buttonDisabledBackgroundLight,
+    disabled-text: $disabledText,
+    link-text-color: $linkColor,
+    interactive-bg: $interactiveBgLight,
+    // listing
+    listing-cell-bg: $listingBgDark,
+    menu-bg: $listingBgDark,
+    footer-bg: $listingBgDark,
+    checkbox-bg: $checkboxBackground,
+    checked-checkbox-bg: $checkboxCheckedBackground,
+    checkbox-checked-border: $checkboxCheckedBackground,
+    transparent-color: $transparentColor,
+    listing-popup-bg: $listingPopupLightBg,
+    checkbox-border: $checkboxBorderColor,
+    loader-bg: $loaderBackgroundLight,
+    loader-component-bg: $listingBgDark,
+    pagination-arrow-hover: $themeDefaultSecondary1,
+    items-per-page-color: $transparentBgSelect,
+    // Sidebar
+    sidebar-border-color: $sidebarBorderLight,
+    menu-toggle-bg: $menuToggleBgLight,
+    menu-toggle-border: $menuToggleBorderLight,
+    link-text-hover-color: $linkColorHover,
+    // Icons
+    icons: $iconLight, 
+    // Extra
+    active-area: $activeAreaLight,
+    // Tooltip
+    tooltip-bg: $tooltipBgLight,
+    tooltip-text: $tooltipTextLight,
+    // Input
+    input-bg: $inputBackgroundLight,
+    input-border: $inputBorderLight,
+    // Listing selection
+    listing-checked-border: $selectionBoxBorder,
+    listing-checked-bg: rgba($selectionBoxBorder, 0.15)
+  ),
+);

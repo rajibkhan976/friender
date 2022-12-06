@@ -15,3 +15,38 @@ $inline: inline;
 $inline-block: inline-block;
 $none: none;
 
+$alignments: (
+    'left': start,
+    'right': end,
+    'center': center
+);
+
+$displays: (
+    'flex': flex,
+    'block': block,
+    'inline': inline,
+    'inline-block': inline-block,
+    'inline-flex': inline-flex,
+    'none': none
+);
+
+$insets: (
+    'top': top,
+    'bottom': bottom,
+    'left': start,
+    'right': end,
+);
+
+$positions: (
+    'static': static,
+    'relative': relative,
+    'absolute': absolute,
+    'fixed':fixed
+);
+
+$justifications: (
+    'start': flex-start,
+    'center': center,
+    'end': flex-end,
+    'between': space-between
+)

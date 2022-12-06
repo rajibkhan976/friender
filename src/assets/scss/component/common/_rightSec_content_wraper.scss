@@ -1,0 +1,375 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+
+.content-wraper {
+  @include positioned(relative);
+  @include paddings (30px , 50px, 30px, 50px);
+  width: 100%;
+  height: 100vh;
+  @include theme-aware('background', 'menu-bg');
+  // box-shadow: 0px 0px 20px rgb(0 0 0 / 8%);
+  border-radius: 10px 10px 10px 10px;
+  overflow-y: auto;
+  .heading-text-wraper {
+    h3 {
+      font-size: $headingFontSize;
+      color: $textColor;
+      font-weight: $fontWeight;
+      line-height: 27px;
+      @include margins (0 , 0, 5px, 0);
+    }
+    p{
+      font-size: $smallFontSize;
+      color: $textParaColor;
+      font-weight: $smallFontWeight;
+      line-height: 19px;
+      @include margins (0 , 0, 0, 0);
+    }
+  }
+  .setup-wraper {
+    width: 100%;
+    @include theme-aware('background', 'active-area');
+    @include margins (25px , 0, 33px, 0);
+    @include paddings (14px , 28px, 14px, 28px);
+    align-items: center;
+    border-radius: 5px;
+    .bulb-icon {
+      margin-right: 15px;
+    }
+    h5 {
+      font-size: $fontSize;
+      color: $textColor;
+      font-weight: $mediumFontWeight;
+      line-height: 22px;
+      @include margins (0 , 0, 0, 0);
+    }
+  }
+  .steps-wraper {
+    .ind-steps {
+      width: 100%;
+      @include paddings (0px , 28px, 0px, 28px);
+      @include margins (0px , 0, 20px, 0);
+      align-items: center;
+      .step-icon {
+        position: relative;
+      }
+      .step-info {
+        @include theme-aware('color', 'text-para-color');
+        font-size: $smallFontSize;
+        font-weight: $fontWeight;
+        line-height: 19px;
+      }
+      .step-action {
+        color: $linkColorHover;
+        font-size: $smallFontSize;
+        font-weight: $fontWeight;
+        line-height: 1;
+        cursor: pointer;
+        a {
+          color: $linkColorHover;
+          font-size: $smallFontSize;
+          font-weight: $fontWeight;
+          line-height: 1;
+        }
+      }
+    }
+    .ind-steps.activated {
+      position: relative;
+      .step-icon {
+        svg circle {
+          fill: $statusActive; 
+          opacity: 1;
+        }
+        &::after {
+          content: '';
+        position: absolute;
+        top: 29px;
+        left: 15px;
+        width: 1px;
+        opacity: 0.5;
+        height: 25px;
+        background: $statusActive;
+        z-index: 1;
+        }  
+        &.sync-facebook::after {
+          display: none;
+        }      
+      }
+      .step-action { 
+        color: $statusActive;
+      }
+      &.award-step {
+        .step-action {
+          color: $awardColor;
+        }
+        .step-icon:after {
+          display: none;
+        }
+      }
+    }
+    .fb-connection-rules {
+      @include margins (0 , 0, 0px, 80px);
+      .facebook-connect-wraper {
+        align-items: center;
+        @include margins (0 , 0, 30px, 0px);
+        background: #1E1E1E      ;
+        border: 2px solid $inputBackground;
+        border-radius: 5px;
+        display: block;
+        .no-fb-present {
+         @include paddings (25px, 30px, 30px, 30px);
+          .connect-error {
+            color: $errorColor;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 20px;
+          }
+          .connect-info {
+            color: $linkColor;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 16px;
+          }
+          .fb-connect-btn-wraper {
+            display: flex;
+            align-items: center;
+            .fb-connect-btn {
+              background: #006FFF;
+              border-radius: 5px;
+              border:none;
+              box-shadow: none;
+              @include paddings (10px, 20px, 10px, 20px);
+              cursor: pointer;
+              margin-right: 30px;
+              &.disabled {
+                background:$buttonDisabledBackground;
+                color: $footerTextColor;
+                pointer-events: none;
+              }
+            }
+            
+            .fb-reset-btn {
+              background: transparent;
+              box-shadow: none;
+              @include paddings (11px, 20px, 12px, 20px);
+              border: 1px solid transparent;
+              color: $linkColorHover;
+              font-size: 14px;
+              font-weight: 600;
+              border-radius: 5px;
+              cursor: pointer;
+              &:hover {
+                border: 1px solid $linkColorHover;
+              }
+            }
+          }
+        }
+        .fb-account-connect {
+          @include paddings (15px, 27px, 30px, 27px);
+          .facebook-profile-info-wraper {
+            align-items: center;
+            margin-bottom: 20px;
+            .profile-fb-img {
+              width: 67px;
+              height: 67px;
+              border-radius: 50%;
+              overflow: hidden;
+              margin-right: 16px;
+              img {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+              }
+            }
+            .profile-fb-info {
+              position: relative;
+              width: calc(100% - 87px);
+              h3 {
+                color: $textColor;
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 25px;
+                margin-bottom: 5px;
+                display: flex;
+                align-items: center;
+                .profile-verification {
+                  margin-left: 10px;
+                }
+              }
+              p {
+                color: $linkColor;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                margin: 0;
+              }
+            }
+          }
+          .fb-connect-btn-wraper {
+            display: flex;
+            align-items: center;
+            padding-left: 85px;
+            .fb-connect-btn {
+              background: #605BFF;
+              border-radius: 5px;
+              color: $textColor;
+              border:none;
+              font-size: 14px;
+              box-shadow: none;
+              @include paddings (10px, 20px, 10px, 20px);
+              cursor: pointer;
+              margin-right: 30px;
+            }
+            .fb-reset-btn {
+              background: transparent;
+              box-shadow: none;
+              @include paddings (11px, 20px, 12px, 20px);
+              border: 1px solid transparent;
+              color: $linkColorHover;
+              font-size: 14px;
+              font-weight: 600;
+              border-radius: 5px;
+              cursor: pointer;
+              &:hover {
+                border: 1px solid $linkColorHover;
+              }
+            }
+          }
+          .facebook-connection-problem {
+            margin-top: 15px;
+            padding-left: 85px;
+            color: $errorColor;
+            font-weight: 500;
+            line-height: 13px;
+            font-size: 10px;
+          }
+        }
+
+      }
+      .fb-rules-heading {
+        color: $textParaColor;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+      .fb-rules-ul {
+        padding-left: 8px;
+        li {
+          font-size: 10px;
+          font-weight: 500;
+          color: $linkColor;
+          margin-bottom: 8px;
+           a {
+            color: $linkColorHover;
+            text-decoration: underline;
+            letter-spacing: 1px;
+           }
+           &:last-child {
+            margin-bottom: none;
+           }
+        }
+      }
+    }
+    .intermediate-wraper {
+      display: flex;
+      @include margins (0 , 0, 40px, 80px);
+      .rewards-wraper {
+        width: 100%;
+        align-items: center;
+        background: #131314;
+        border: 5px solid rgba(0, 148, 255, 0.3);
+        border-radius: 20px;
+        @include paddings (10px, 10px, 10px, 10px);
+        .reward-left-wraper {
+          display: flex;
+          align-items: center;
+          padding: 20px 30px 20px 5px;
+          border-right: 1px solid hwb(205deg 0% 0% / 20%);
+          flex: 0 0 40%;
+          .reward-left-section {
+            margin-right: 25px;
+          }
+          .reward-right-section {
+            h2 {
+              font-size: $headingBigFontSize;
+              color: $footerLinkTextColor;
+              font-weight: $headingFontWeight;
+              line-height: 32px;
+              @include margins (0 , 0, 10px, 0);
+            }
+            p {
+              font-size: $fontSize;
+              color: $textParaColor;
+              font-weight: $smallFontWeight;
+              line-height: 20px;
+              @include margins (0 , 0, 30px, 0);
+            }
+            .time-save-wraper {
+              background: #303033;
+              border-radius: 10px;
+              width: 200px;
+              @include paddings (10px , 10px, 10px, 10px);
+              .fire-wraper {
+                margin-right: 10px;
+              }
+              .saved-hour {
+                color: $textColor;
+                font-size: 13px;
+                font-weight: $headingFontWeight;
+                @include margins (0 , 0, 0px, 0);
+                span {
+                  color: #FEB331;
+                  font-size: $fontSize;
+                  font-weight: 800;
+                  @include margins (0 , 15px, 0, 0);
+                }
+              }
+            }
+          }
+        }
+        .reward-right-wraper {
+          display: flex;
+          flex: 0 0 60%;
+          flex-direction: column;
+          @include paddings (20px , 20px, 20px, 40px);
+          h3 {
+            font-size: $headingFontSize;
+            color: $textParaColor;
+            font-weight: $fontWeight;
+            line-height: 28px;
+            @include margins (0 , 0, 10px, 0);
+          }
+          .result-row {
+            align-items: center;
+            @include margins (5px , 0, 5px, 0);
+            .ind-result {
+              align-items: center;
+              @include margins (10px, 0, 0, 0);
+              flex: 0 0 33.3%;
+              .ind-result-icon {
+                @include margins (0 , 15px, 0, 0);
+              }
+              .ind-result-info {
+                h3 {
+                  font-weight:$headingFontWeight;
+                  font-size:$headingFontSize;
+                  color: $textColor;
+                  line-height:27px;
+                  @include margins (0 , 0, 0px, 0);
+                }
+                p {
+                  font-size: $footerFontSize;
+                  color: $textParaColor;
+                  font-weight: $smallFontWeight;
+                  line-height: 17px;
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+  }  
+}
+

@@ -3,13 +3,12 @@
 @use "../../abstract/mixins" as *;
 
 .footer-infos {
-  font-family: $fontFamily;
   width: 100%;
   @include positioned (relative);
   @include margins (auto, 0, 0, 0);
   @include paddings (20px, 0, 20px, 0);
   p{
-    font-size: $smallFontSize;
+    font-size: $footerFontSize;
     color: $footerTextColor;
     font-weight: $smallFontWeight;
     a {
@@ -19,6 +18,18 @@
         color: $linkColorHover;
       }
     }
+  }
+
+  &.fr-signed-in {
+    @include theme-aware('background', 'footer-bg');
+    @include border-radius(5px);
+    @include margins(10px, auto, 13px, auto);
+    max-width: calc(100% - 60px);
+    flex: 0 0 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

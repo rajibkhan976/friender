@@ -1,12 +1,12 @@
-const Button = (props) => {
+const Button = ({loaderValue=false, extraClass="", disable=false, btnText=""}) => {
   return (
-      <button className={props.loaderValue ? "btn-primary loaderbtn"  : props.extraClass } disabled={props.disable} >
-        {props.loaderValue ?
+      <button className={loaderValue ? "btn-primary loaderbtn"  : extraClass } disabled={disable} >
+        {loaderValue ?
           <div className="stage">
             <div className="dot-pulse"></div>
           </div>
         :
-        props.btnText
+        btnText
         }
         
       </button>

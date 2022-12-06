@@ -1,7 +1,9 @@
 // Font Color
 $textColor: #fff;
+$darkTextColor: #000000;
 $textHeadingColor: #fff;
 $textParaColor: #BDBDBD;
+$textParaLightColor: #030229;
 $buttonTextColor: #fff;
 $footerTextColor: #9A9AA9;
 $linkColor: #767485;
@@ -10,11 +12,17 @@ $footerLinkTextColor: #0094FF;
 $successColor: #006D15;
 $labelColor: #6B7499;
 $errorColor: #FF6A77;
+$goldenColor: #FEC600;
+$paginationLink: #8998B8;
+$awardColor: #FAC000;
 
 // Background Color
 $backgroundColor: #000;
 $bodyColor: #1C1C1E;
 $inputBackground: #313037;
+$inputBackgroundLight: #ffffff;
+$inputBorder: #313037;
+$inputBorderLight: #EDF0F9;
 
 // Dark Theme
 $bodyDarkColor: #111;
@@ -22,7 +30,17 @@ $bodyDarkColor: #111;
 // Button Color
 $buttonBackground: #605BFF;
 $buttonHoverBackground: #2922FF;
-;
+$buttonHoverText: #ffffff;
+$buttonLightHoverText: #1C1C1E;
+
+$disabledText: #9A9AA9;
+
+$buttonDisabledBackground: #2C2C2E;
+$buttonDisabledBackgroundLight: #F4F4F4;
+
+
+
+// New Css color code implemented
 
 // Border and BoxShadow Gradient Color
 $borderColor: #676e8f; 
@@ -33,3 +51,138 @@ $gradientsecond: #52D9BB;
 
 $colorList: $gradientFirst -1.45%, $gradientsecond 101.45%; 
 
+$listingBgLight: #1C1C1E;
+$listingBgDark: #ffffff;
+
+$status: #BBBBBB;
+$statusSupportColor: rgba(77, 77, 77, 20%);
+$statusActive: #49CE56;
+$statusActiveSupportColor: #1B4D20;
+$statusPending: #F29339;
+$statusActiveSupportColor: rgba(242, 147, 57, 0.1);
+
+$loaderBackground: #000;
+$loaderBackgroundLight: #FAFAFB;
+
+// TABLE PLUGIN
+$transparentColor: transparent;
+$checkboxBackground: transparent;
+$checkboxCheckedBackground: #605BFF;
+$checkboxBorderColor: #B3B3BF;
+$listingPopupBg: #131314;
+$listingPopupLightBg: #fff;
+$transparentBgSelect: #BDBDBD;
+
+// SIDEBAR
+$sidebarBorder: #313037;
+$sidebarBorderLight: #dbdbdb;
+$menuToggleBg: #2F2F33;
+$menuToggleBgLight: #FFFFFF;
+$menuToggleBorder: #47474D;
+$menuToggleBorderLight: #FFFFFF;
+
+
+// ICONS
+$icon: rgba(255,255,255,0.7);
+$iconLight: rgba(3, 2, 41, 0.7);
+
+// HEADER OPTIONS
+$numWellBg: rgba(17, 230, 180, 0.2);
+$numWellText: #11E6B4;
+$interactiveBg: #26262A;
+$interactiveBgLight: #EDF0F9;
+
+// Tooltip
+$tooltipBg: #313037;
+$tooltipBgLight: #FFFFFF;
+$tooltipText: #767485;
+$tooltipTextLight: #000000;
+
+
+// EXTRA
+$activeArea: #313037;
+$activeAreaLight: #dbdbdb;
+
+// SELECTION POPUP
+$selectionBoxBorder: #0094FF;
+$selectionBoxBg: rgba(#0094FF, 0.15);
+
+
+// Theme Light
+
+// Primary
+$themeLightPrimary1: #605BFF;
+$themeLightPrimary2: #212121;
+$themeLightPrimary3: #11E6B4;
+
+// Secondary
+$themeLightSecondary1: #030229;
+$themeLightSecondary2: #1F3E79;
+$themeLightSecondary3: #6B7499;
+
+
+
+
+
+// Default Theme (Dark)
+
+// Primary
+$themeDefaultPrimary1: #0094FF;
+$themeDefaultPrimary2: #FFFFFF;
+$themeDefaultPrimary3: #BDBDBD;
+$themeDefaultPrimary4: #767485;
+
+// Secondary
+$themeDefaultSecondary1: #1C1C1E;
+$themeDefaultSecondary2: #313037;
+$themeDefaultSecondary3: #131314;
+
+
+// Gradients
+$themeGradient1_1: #5BC4FF;
+$themeGradient1_2: #FF5BEF;
+$themeGradient2_1: #827EFF;
+$themetGradient2_2: #52D9BB;
+
+
+
+// Shades
+
+$themePrimaryBlue1: #605BFF;
+$themePrimaryBlue2: #F0EFFF;
+$themePrimaryBlue3: #F7F7FF;
+$themePrimaryBlue4: #FCFDFF;
+$themePrimaryBlue5: #FFFFFF;
+$themePrimaryBlue6: #2922FF;
+
+$themeSecondaryDarkBlue1: #030229;
+$themeSecondaryDarkBlue2: #4D4C6A;
+$themeSecondaryDarkBlue3: #9A9AA9;
+$themeSecondaryDarkBlue4: #A2A2B4;
+$themeSecondaryDarkBlue5: #B3B3BF;
+
+$themeSecondaryRoyalBlue1: #1F3E79;
+$themeSecondaryRoyalBlue2: #8998B8;
+
+$themeSecondaryGrey1: #6B7499;
+$themeSecondaryGrey2: #BAC4D8;
+$themeSecondaryGrey3: #F1F2F5;
+$themeSecondaryGrey4: #F4F4F4;
+
+$themeBlack1: #000000;
+$themeBlack2: #1C1C1E;
+$themeBlack3: #313037;
+$themeBlack4: #131314;
+$themeBlack5: #767485;
+$themeBlack6: #2C2C2E;
+$themeBlack7: #26262A;
+
+$themeGreen1: #3A974C;
+$themeGreen2: #49CE56;
+$themeGreen3: #EBF5ED;
+
+$themeYellow1: #F29339;
+$themeYellow1: #FEF4EB;
+
+$themeRed1: #FF6A77;
+$themeRed2: #FFF0F1;

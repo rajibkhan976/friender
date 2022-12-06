@@ -1,79 +1,217 @@
-@use '../abstract/mixins';
-@use '../abstract/variables';
-@use '../abstract/color';
+@use '../abstract/mixins' as *;
+@use '../abstract/variables' as *;
+@use '../abstract/color' as *;
 
-.text-center {
-  @include mixins.textAlignment(center);
-}
-.text-left {
-  @include mixins.textAlignment(left);
-}
-.text-right {
-  @include mixins.textAlignment(right);
+@each $alignment, $value in $alignments {
+  .text-#{$alignment} {
+    text-align: $value;
+  }
+  @if not ($alignment == 'center') {
+    .float-#{$alignment} {
+      float: $value;
+    }
+  }
+};
+
+
+// INSET VALUES
+@each $inset, $value in $insets {
+  .pos-#{$inset} {
+    #{$inset}: 0;
+  }
+  .m-#{$inset}-a {
+    margin-#{$inset}: auto;
+  }
+};
+
+// POSITION
+@each $position, $value in $positions {
+  .position-#{$position} {
+    position: $value;
+  }
 }
 
 // Avater
 
 .avatar {
-  @include mixins.circleAvater(100px, $radius: 50%);
+  @include circleAvater(100px, $radius: 50%);
 }
 
 // Flex
 
 .d-flex {
-  @include mixins.display(flex);
+  @include display(flex);
 }
 
 .d-flex-center {
-  @include mixins.flexCenter();
+  @include flexCenter();
 }
 
 .d-flex-column {
-  @include mixins.flexDirection(column);
+  @include flexDirection(column);
 }
 
 .d-flex-row {
-  @include mixins.flexDirection(row);
+  @include flexDirection(row);
 }
 
+
+.justifyContent-start{
+  justify-content: start;
+}
+.justifyContent-center{
+  justify-content:center
+}
+.justifyContent-end{
+  justify-content: end;
+}
+.justifyContent-spaceBetween{
+  justify-content: space-between;
+}
+.justifyContent-spaceAround{
+  justify-content: space-around;
+}
+.justifyContent-spaceEvenly{
+  justify-content: space-evenly;
+}
 // Clearfix
 .clearfix {
-  @include mixins.clearfix();
+  @include clearfix();
 }
 
 
 // Display Classes
 
 .d-block {
-  @include mixins.display(block);
+  @include display(block);
 }
 .d-inline {
-  @include mixins.display(inline);
+  @include display(inline);
 }
 .d-inline-block {
-  @include mixins.display(inline-block);
+  @include display(inline-block);
 }
 .d-hide {
-  @include mixins.display(none);
+  @include display(none);
 }
 
-
-// Float 
-
-.float-left {
-  float: variables.$left;
-}
-
-.float-right {
-  float: variables.$right;
-}
 
 // Error Message
 
 .error-mesage {
-  @include mixins.errorMessage();
+  @include errorMessage();
 }
 
 .error-mesage.error-mesage {
  margin: 5px 0 5px 0;
+}
+
+// Margin
+
+.m-top-50 {
+  margin-top: 50px;
+}
+
+.m-right-50 {
+  margin-right: 50px;
+}
+
+.m-bottom-50 {
+  margin-bottom: 50px;
+}
+
+.m-left-50 {
+  margin-left: 50px;
+}
+
+.m-top-25 {
+  margin-top: 25px;
+}
+
+.m-right-25 {
+  margin-right: 25px;
+}
+
+.m-bottom-25 {
+  margin-bottom: 25px;
+}
+
+.m-left-25 {
+  margin-left: 25px;
+}
+
+
+
+// Margin
+
+.m-top-50 {
+  margin-top: 50px;
+}
+
+.m-right-50 {
+  margin-right: 50px;
+}
+
+.m-bottom-50 {
+  margin-bottom: 50px;
+}
+
+.m-left-50 {
+  margin-left: 50px;
+}
+
+.m-top-25 {
+  margin-top: 25px;
+}
+
+.m-right-25 {
+  margin-right: 25px;
+}
+
+.m-bottom-25 {
+  margin-bottom: 25px;
+}
+
+.m-left-25 {
+  margin-left: 25px;
+}
+
+
+@each $justification, $value in $justifications {
+  .f-align-#{$justification} {
+    align-items: $value;
+  }
+  .f-justify-#{$justification} {
+    justify-content: $value;
+  }
+};
+
+.no-pointer {
+  pointer-events: none;
+}
+
+.num-well {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 8px;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 16px;
+
+  &.num-header-count {
+    background: $numWellBg;
+    color: $numWellText;
+    @include border-radius(33px);
+    height: 18px;
+  }
+}
+
+.h-100 {
+  height: 100%;
 }

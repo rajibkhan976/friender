@@ -1,0 +1,71 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    margin-right: 14px;
+    input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        &:checked + .slider {
+          background: rgba(58, 151, 76, 0.2);
+          border: 1px solid #3A974C;
+          }
+          
+          &:focus + .slider {
+            box-shadow: 0 0 1px #3A974C;;
+          }
+          
+          &:checked + .slider:before {
+            background: $statusActive;
+            -webkit-transform: translateX(14px);
+            -ms-transform: translateX(14px);
+            transform: translateX(14px);
+          }
+
+
+      }
+  }
+  
+
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(179, 179, 191, 0.2);
+    border: 0.5px solid $textParaColor;
+    -webkit-transition: .4s;
+    transition: .4s;
+    &:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 2px;
+        background: $textParaColor;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+  }
+  
+
+  
+  
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }

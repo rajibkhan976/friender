@@ -1,4 +1,11 @@
+import { useState, useEffect } from "react";
 const TextInput = (props) => {
+  const [nameEnter, setNameEnter] = useState("");
+  useEffect(() => {}, [nameEnter]);
+  const handleChangeName = (event) => {
+    setNameEnter(event.target.value.trim());
+    props.nameEntered(event.target.value.trim());
+  };
   return (
     <div className="element-wraper">
       <label>
@@ -9,7 +16,15 @@ const TextInput = (props) => {
           type="text"
           className="form-control"
           autoComplete="new-password"
+          onChange={handleChangeName}
           placeholder={props.placeholderText}
+          onPaste={(e)=>{
+            e.preventDefault()
+            return false;
+          }} onCopy={(e)=>{
+            e.preventDefault()
+            return false;
+          }}
         />
       </div>
     </div>

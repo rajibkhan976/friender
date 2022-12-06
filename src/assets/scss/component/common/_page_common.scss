@@ -1,0 +1,114 @@
+@use "../../abstract/color"as *;
+@use "../../abstract/font"as *;
+@use "../../abstract/mixins"as *;
+
+
+//my setting page start
+.page-left-menu-nav {
+    width: 290px;
+    padding: 20px 0 20px 0;
+
+    li {
+        height: 40px;
+        width: 100%;
+        padding: 10px 0 11px 20px;
+
+        a {
+            font: {
+                weight: 600;
+                size: 14px;
+
+            }
+
+            line-height: 19px;
+            color: $textColor;
+        }
+    }
+}
+
+.darknav_active {
+    background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+    /* Dark/Primary/blue */
+
+    border-left: 2px solid $linkColorHover;
+
+    a {
+        color: $linkColorHover !important;
+    }
+}
+
+.main-mysetting {
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.setting-content {
+    overflow: hidden;
+    flex: 1 1 auto;
+    margin-left: 30px;
+    
+}
+
+.settings {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    overflow: auto;
+
+    .setting {
+        width: 100%;
+        min-height: 45px;
+        margin-bottom: 5px;
+        color: $textColor;
+        padding: 5px 20px 10px 20px;
+
+        font: {
+            weight: 400;
+            size: 14px;
+        }
+        &.last-settings {
+          margin-bottom: 15px;
+        }
+
+        .setting-child{
+            // display:flex;
+            // align-items: center;
+
+            .setting-input{
+                    @include ComInputBox($inputBackground,92px,$linkColor,40px,$linkColor,$textParaColor);
+                    margin:3px;
+                    color: $textColor;
+                    &:active,
+                    &:focus,
+                    &:focus-within,
+                    &:hover,
+                    &:visited,
+                    &:focus-visible,
+                    &:target {
+                      border:1px solid $linkColorHover;
+                      background: $listingPopupBg;
+                    }
+            }
+
+        }     
+        .first{
+
+            // height: 59px;
+        } 
+        .others{
+            // height: 59px;
+            margin-left: 51.5px;
+            margin-top: 9px;
+        }
+
+    }
+
+    .setting-checked {
+        background: $listingPopupBg;
+        // min-height: 59px;
+    }
+
+}
+
+
+//my setting page end

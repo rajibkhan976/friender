@@ -1,0 +1,156 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/variables" as *;
+
+// dropdown selector start
+.selector_box {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  background-image: url("../../../images/arrow-w.png");
+  background-repeat: no-repeat;
+  background-position-x: 100%;
+  background-position-y: 5px;
+  width: 103px;
+  height: 40px;
+  cursor: pointer;
+  padding: 10px 15px 8px 15px;
+  width: 120px;
+  height: 30px;
+  border: 1px solid #999;
+  font-size: 18px;
+  background-color: #313037;
+  border: 0;
+  border-radius: 5px;
+  color: $textColor;
+  font: {
+  weight: 400;
+  size: 14px;
+  }
+  //arrow style
+  background-position: right 10px top 50%;
+
+  // options {
+  //     border-radius: 5px;
+  // }
+}
+// dropdown selector end
+.onboarding-heading {
+  font-size: 24px!important;
+  font-weight: 700!important;
+  line-height: 32px;
+  margin-bottom: 8px!important;
+}
+.onboarding-para {
+  font-size: 14px!important;
+  font-weight: 400!important;
+  margin-bottom: 60px!important;
+}
+.buttons-submit {
+  .btn-primary {
+    margin-bottom: 0;
+  }
+}
+//common modal
+.modal-background {
+display:none;/* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 99999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgb(19 19 20 / 90%);
+  // filter: blur(2px);
+  // display: flex;
+  // justify-content:center;
+  // align-items: center;
+
+}
+.modal {
+    // min-height: 256px;
+    width: 466px;
+    margin: auto;
+    padding: 30px;
+    background: $listingBgLight;
+    box-shadow: 0px -5px 40px 10px $darkTextColor;
+    border-radius:10px 10px 10px 10px;
+    opacity: 1;
+    // position:relative;
+    // // filter: blur(0);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    &:before {
+        @include gradient(90deg, $colorList);
+        //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
+        width: $full-width;
+        height: 10px;
+        @include positioned(absolute);
+        top: 0;
+        left: 0;
+        content: "";
+        @include border-radius(10px, 10px, 0px, 0px);
+        animation: gradient 5s ease infinite;
+        background-size: 400% 100%;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        25%{
+          background-position: 50% 50%
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        75%{
+          background-position: 50% 50%
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+  .modal-content-wraper {
+    position: relative;
+    .close-modal {
+      position: absolute;
+      right: 0;
+      top: -10px;
+      cursor: pointer;
+      }
+    .modal-header{
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 27px;
+    }
+    .modal-content{
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      margin-top: 15px;
+      /* or 143% */
+      
+      
+      /* Dark/Primary/grey-td100 */
+      
+      color: $textParaColor;
+    }
+    .modal-buttons{
+    margin-top:30px
+    }
+  }
+
+}
+
+
+
+
+//commonmodal end
