@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Logo from "../../assets/images/logo.png";
+//import Logo from "../../assets/images/logo.png";
 import PasswordInput from "../../components/formComponents/PasswordInput";
 import Button from "../../components/formComponents/Button";
 import module from "./styling/authpages.module.scss";
@@ -13,7 +13,7 @@ const CreatePasswordPage = () => {
   let { token } = useParams();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
-  const [passwordEntered, setPasswordEntered] = useState(false);
+  //const [passwordEntered, setPasswordEntered] = useState(false);
   const [passwordValidation, setPasswordValidation] = useState(false);
   const [confirmPasswordValidation, setConfirmPasswordValidation] = useState(false);
   const [passwordNew, setPasswordNew] = useState(false);
@@ -38,7 +38,7 @@ const CreatePasswordPage = () => {
 
     // console.log("passwordNew", passwordNew, "passwordConfirm", passwordConfirm);
     if (passwordNew === passwordConfirm) {
-      dispatch(resetPass({token:resetToken,password:passwordNew} )).unwrap()
+      dispatch(resetPass({password:passwordNew,token:resetToken} )).unwrap() // token:resetToken,
         .then((response) => {
           if (response) {
             window.localStorage.removeItem("fr_reset");

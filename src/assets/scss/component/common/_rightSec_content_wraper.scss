@@ -14,14 +14,14 @@
   .heading-text-wraper {
     h3 {
       font-size: $headingFontSize;
-      color: $textColor;
+      color: $themeDefaultPrimary2;
       font-weight: $fontWeight;
       line-height: 27px;
       @include margins (0 , 0, 5px, 0);
     }
     p{
       font-size: $smallFontSize;
-      color: $textParaColor;
+      color: $themeDefaultPrimary3;
       font-weight: $smallFontWeight;
       line-height: 19px;
       @include margins (0 , 0, 0, 0);
@@ -39,7 +39,8 @@
     }
     h5 {
       font-size: $fontSize;
-      color: $textColor;
+      color: $themeDefaultPrimary2;
+      @include theme-aware('color', 'text-color');
       font-weight: $mediumFontWeight;
       line-height: 22px;
       @include margins (0 , 0, 0, 0);
@@ -61,13 +62,13 @@
         line-height: 19px;
       }
       .step-action {
-        color: $linkColorHover;
+        color: $selectionBoxBorder;
         font-size: $smallFontSize;
         font-weight: $fontWeight;
         line-height: 1;
         cursor: pointer;
         a {
-          color: $linkColorHover;
+          color: $themeBlack5;
           font-size: $smallFontSize;
           font-weight: $fontWeight;
           line-height: 1;
@@ -114,19 +115,19 @@
         align-items: center;
         @include margins (0 , 0, 30px, 0px);
         background: #1E1E1E      ;
-        border: 2px solid $inputBackground;
+        border: 2px solid $themeBlack3;
         border-radius: 5px;
         display: block;
         .no-fb-present {
          @include paddings (25px, 30px, 30px, 30px);
           .connect-error {
-            color: $errorColor;
+            color: $themeRed1;
             font-size: 12px;
             font-weight: 500;
             margin-bottom: 20px;
           }
           .connect-info {
-            color: $linkColor;
+            color: $themeBlack5;
             font-size: 12px;
             font-weight: 500;
             margin-bottom: 16px;
@@ -143,8 +144,8 @@
               cursor: pointer;
               margin-right: 30px;
               &.disabled {
-                background:$buttonDisabledBackground;
-                color: $footerTextColor;
+                background:$themeBlack6;
+                color: $themeSecondaryDarkBlue3;
                 pointer-events: none;
               }
             }
@@ -154,13 +155,13 @@
               box-shadow: none;
               @include paddings (11px, 20px, 12px, 20px);
               border: 1px solid transparent;
-              color: $linkColorHover;
+              color: $themeBlack5;
               font-size: 14px;
               font-weight: 600;
               border-radius: 5px;
               cursor: pointer;
               &:hover {
-                border: 1px solid $linkColorHover;
+                border: 1px solid $themeBlack5;
               }
             }
           }
@@ -186,7 +187,7 @@
               position: relative;
               width: calc(100% - 87px);
               h3 {
-                color: $textColor;
+                color: $themeDefaultPrimary2;
                 font-size: 18px;
                 font-weight: 700;
                 line-height: 25px;
@@ -198,7 +199,7 @@
                 }
               }
               p {
-                color: $linkColor;
+                color: $themeBlack5;
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 20px;
@@ -213,7 +214,7 @@
             .fb-connect-btn {
               background: #605BFF;
               border-radius: 5px;
-              color: $textColor;
+              color: $themeDefaultPrimary2;
               border:none;
               font-size: 14px;
               box-shadow: none;
@@ -226,20 +227,20 @@
               box-shadow: none;
               @include paddings (11px, 20px, 12px, 20px);
               border: 1px solid transparent;
-              color: $linkColorHover;
+              color: $themeBlack5;
               font-size: 14px;
               font-weight: 600;
               border-radius: 5px;
               cursor: pointer;
               &:hover {
-                border: 1px solid $linkColorHover;
+                border: 1px solid $themeBlack5;
               }
             }
           }
           .facebook-connection-problem {
             margin-top: 15px;
             padding-left: 85px;
-            color: $errorColor;
+            color: $themeRed1;
             font-weight: 500;
             line-height: 13px;
             font-size: 10px;
@@ -248,7 +249,7 @@
 
       }
       .fb-rules-heading {
-        color: $textParaColor;
+        color: $themeDefaultPrimary3;
         font-size: 12px;
         font-weight: 600;
         margin-bottom: 15px;
@@ -258,10 +259,10 @@
         li {
           font-size: 10px;
           font-weight: 500;
-          color: $linkColor;
+          color: $themeBlack5;
           margin-bottom: 8px;
            a {
-            color: $linkColorHover;
+            color: $themeBlack5;
             text-decoration: underline;
             letter-spacing: 1px;
            }
@@ -277,7 +278,8 @@
       .rewards-wraper {
         width: 100%;
         align-items: center;
-        background: #131314;
+        // background: #131314;
+        @include theme-aware('background-color', 'award-background');
         border: 5px solid rgba(0, 148, 255, 0.3);
         border-radius: 20px;
         @include paddings (10px, 10px, 10px, 10px);
@@ -293,20 +295,21 @@
           .reward-right-section {
             h2 {
               font-size: $headingBigFontSize;
-              color: $footerLinkTextColor;
+              color: $themeDefaultPrimary1;
               font-weight: $headingFontWeight;
               line-height: 32px;
               @include margins (0 , 0, 10px, 0);
             }
             p {
               font-size: $fontSize;
-              color: $textParaColor;
+              color: $themeDefaultPrimary3;
               font-weight: $smallFontWeight;
               line-height: 20px;
               @include margins (0 , 0, 30px, 0);
             }
             .time-save-wraper {
-              background: #303033;
+              // background: #303033;
+              @include theme-aware('background-color', 'award-inner-individual-background');
               border-radius: 10px;
               width: 200px;
               @include paddings (10px , 10px, 10px, 10px);
@@ -314,7 +317,8 @@
                 margin-right: 10px;
               }
               .saved-hour {
-                color: $textColor;
+                // color: $themeDefaultPrimary2;
+                @include theme-aware('color', 'award-inner-individual-color');
                 font-size: 13px;
                 font-weight: $headingFontWeight;
                 @include margins (0 , 0, 0px, 0);
@@ -335,7 +339,7 @@
           @include paddings (20px , 20px, 20px, 40px);
           h3 {
             font-size: $headingFontSize;
-            color: $textParaColor;
+            color: $themeDefaultPrimary3;
             font-weight: $fontWeight;
             line-height: 28px;
             @include margins (0 , 0, 10px, 0);
@@ -349,18 +353,48 @@
               flex: 0 0 33.3%;
               .ind-result-icon {
                 @include margins (0 , 15px, 0, 0);
+                svg {
+                  rect {
+                    @include theme-aware('fill', 'award-inner-individual-icon-background');
+                  }
+                  path {
+                    @include theme-aware('fill', 'award-inner-individual-icons');
+                    //@include theme-aware('stroke', 'award-inner-individual-icons-stroke');
+                  }
+                  ellipse {
+                    @include theme-aware('fill', 'award-inner-individual-icons');
+                  }
+                  rect {
+                   // @include theme-aware('stroke', 'award-inner-individual-icons');
+                  }
+                }
+                &.highlighted {
+                  svg {
+                    rect {
+                      @include theme-aware('fill', 'award-inner-individual-highlighted-background');
+                    }
+                    path {
+                      @include theme-aware('fill', 'award-inner-individual-highlighted-background');
+                      @include theme-aware('stroke', 'award-inner-individual-highlighted-background');
+                    }
+                    ellipse {
+                      @include theme-aware('fill', 'award-inner-individual-highlighted-background');
+                    }
+                  }
+                }
               }
               .ind-result-info {
                 h3 {
                   font-weight:$headingFontWeight;
                   font-size:$headingFontSize;
-                  color: $textColor;
+                  // color: $themeDefaultPrimary2;
+                  @include theme-aware('color', 'award-inner-individual-icon-info');
                   line-height:27px;
                   @include margins (0 , 0, 0px, 0);
                 }
                 p {
                   font-size: $footerFontSize;
-                  color: $textParaColor;
+                  color: $themeDefaultPrimary3;
                   font-weight: $smallFontWeight;
                   line-height: 17px;
                 }

@@ -1,6 +1,6 @@
 class extension {
     constructor() {
-      this.dashboard = "#root > main > div.main-wrapper > div.body-content-wraper > div > header > a.extension_btn__iOXpu"
+        this.dashboard = "div.body-content-wraper > div > header > a"
     }
     get_redirected() {
         if (cy.contains("Installed").should("be.visible")) {

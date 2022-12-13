@@ -36,14 +36,19 @@
     "cypress:runner": "cypress open --env ENV='dev'",
     "start": "env-cmd -f .env react-scripts start",
     "build": "env-cmd -f .env react-scripts build",
+    "build:dev": "env-cmd -f .env.dev react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy:dev": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://dev.friender.io",
+    "deploy:dev": "npm i && GENERATE_SOURCEMAP=false npm run build:dev && aws s3 sync build s3://dev.friender.io",
     "cy:open:dev": "cypress open --env ENV=dev",
-    "cy:open:local": "cypress open --env ENV=local --config defaultCommandTimeout=15000,requestTimeout=7000",
-    "cy:run:local-auth": "cypress run --env ENV=local --spec  'cypress/e2e/features/signup.feature,cypress/e2e/features/syncwithkyubi.feature,cypress/e2e/features/login-logout.feature' --config defaultCommandTimeout=15000,requestTimeout=7000",
-    "cy:run:local-onboarding": "cypress run --env ENV=local --spec 'cypress/e2e/features/reset-password.feature,cypress/e2e/features/tellmeaboutyourself.feature,cypress/e2e/features/getting-startedv2.feature,cypress/e2e/features/getting-started.feature,cypress/e2e/features/installation-success.feature' --config defaultCommandTimeout=15000,requestTimeout=7000 --browser chrome",
-    "cy:run:local": "cypress run --env ENV=local --spec  'cypress/e2e/features/signup.feature,cypress/e2e/features/syncwithkyubi.feature,cypress/e2e/features/login-logout.feature,cypress/e2e/features/forgot-password.feature,cypress/e2e/features/reset-password.feature,cypress/e2e/features/tellmeabout-yourself.feature,cypress/e2e/features/installation-success.feature,cypress/e2e/features/getting-started.feature,cypress/e2e/features/getting-startedv2.feature,cypress/e2e/features/settings.feature,cypress/e2e/features/profile-space.feature,cypress/e2e/features/friendlist.feature' --config defaultCommandTimeout=15000,requestTimeout=7000 --browser chrome"
+    "cy:open:local": "cypress open --env ENV=local",
+    "cy:run:local-auth": "cypress run --env ENV=local --spec  'cypress/e2e/features/authentication' --config defaultCommandTimeout=15000,requestTimeout=7000",
+    "cy:run:local-onboarding": "cypress run --env ENV=local --spec'cypress/e2e/features/onboarding' --config defaultCommandTimeout=15000,requestTimeout=7000 --browser chrome",
+    "cy:run:local-profile":"cypress run --env ENV=local --spec 'cypress/e2e/features/profiles' --browser chrome --headed",
+    "cy:run:local-settings":"cypress run --env ENV=local --spec 'cypress/e2e/features/settings' --browser chrome --headed",
+    "cy:run:local-friends":"cypress run --env ENV=local --spec 'cypress/e2e/features/friends' --browser chrome --headed",
+    "cy:run:local": "cypress run --env ENV=local --config defaultCommandTimeout=15000,requestTimeout=7000",
+    "cy:run:dev": "cypress run --env ENV=dev --config defaultCommandTimeout=15000,requestTimeout=7000"
   },
   "eslintConfig": {
     "extends": [
@@ -77,6 +82,8 @@
     "cypress-fill-command": "^1.0.2",
     "esbuild": "^0.14.54",
     "multiple-cucumber-html-reporter": "^3.0.1",
+    "npm-run-all": "^4.1.5",
+    "parallelshell": "^3.0.2",
     "sass": "^1.55.0"
   }
 }

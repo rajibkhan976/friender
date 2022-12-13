@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Search = ({extraClass, placeholderText="Search...", onSearch, setTabIndex=1}) => {
+const Search = ({extraClass, placeholderText="Search...", onSearch}) => {
     const [errors, setErrors] = useState('');
 
     const onSearchChange = (e) => {
@@ -13,7 +13,7 @@ const Search = ({extraClass, placeholderText="Search...", onSearch, setTabIndex=
                     type="search" 
                     placeholder={placeholderText}
                     onChange={(e) => onSearchChange(e)}
-                    tabIndex={setTabIndex}
+                    // tabIndex={setTabIndex}
                     autoComplete="new-password"
                     className={errors ? "form-control error" : "form-control"}
                 />

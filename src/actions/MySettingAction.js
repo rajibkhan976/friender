@@ -9,28 +9,15 @@ import { fetchProfileSetting } from "../services/SettingServices";
   export const getMySettings = createAsyncThunk(
     "product/getMySettings",
     async (props,{ rejectWithValue }) => {
-  
-        console.log("i am fetching the the setting api props", props);
-
         try{
-          console.log("gasjdgjgjsdagj hiiiii")
           const res=await fetchProfileSetting({
-            token: props.token,
+            // token: props.token,
             fbUserId: props.fbUserId
           })
           return res.data[0];
         }catch(err){
           rejectWithValue(err.response.data)
         }
-
-      // return fetchProfileSetting({
-      //   token: token,
-      //   fbUserId: fbUserId
-      // }).then((res) => {
-      //   console.log("i am the ressss",res);
-      //   return res.data[0];
-      // })
-      // .catch((err) => console.log("i am the eerrror",err));
     }
   );
   
@@ -40,7 +27,6 @@ import { fetchProfileSetting } from "../services/SettingServices";
     initialState,
     reducers:{
         updateMysetting:(state,action)=>{
-            console.log("hi my setting fetch******->>",action.payload);
               state.mySettings=action.payload;
         }
     },

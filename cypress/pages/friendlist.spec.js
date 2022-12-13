@@ -3,7 +3,7 @@ class friendlist {
     this.pagesize = '#page-size'
     this.friendlist = '.ag-center-cols-container'
     this.agroot = 'div.ag-root-wrapper.ag-ltr.ag-layout-normal'
-    this.selectall = 'input#ag-4-input.ag-input-field-input.ag-checkbox-input'
+    this.selectall = 'input#ag-3-input.ag-input-field-input.ag-checkbox-input'
     this.firstrow = 'div.ag-header-row.ag-header-row-column'
     this.filter = 'div.ag-filter > form.ag-filter-wrapper.ag-focus-managed '
     this.getaggrid = 'div.ag-body-viewport.ag-row-animation.ag-layout-normal'
@@ -16,7 +16,7 @@ class friendlist {
   }
 
   getfriendlisttab() {
-    cy.get('.nav-bar > ul > li:nth-child(4)').click()
+    cy.get('.nav-bar > ul > li.nav-menu.has-child.link-seperator').click()
     cy.contains('friend list').should('be.visible')
   }
 

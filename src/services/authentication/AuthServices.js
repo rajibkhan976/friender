@@ -116,6 +116,7 @@ export const resetUserPassword = (token, password)=>{
 
 export const onboarding = (token,question_one, question_two, question_three)=>{
   return new Promise((resolve, reject)=>{
+    console.log({"question_one": question_one, "question_two": question_two, "question_three": question_three,"token": token  })
     axios
       .post(
           config.onboardingUrl,

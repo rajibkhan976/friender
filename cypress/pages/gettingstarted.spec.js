@@ -2,7 +2,7 @@ class getstarted {
     constructor() {
         this.installnow = ".step-action";
         this.installed = "#root > main > div > div.body-content-wraper > div > div > div.steps-wraper > div.ind-steps.d-flex.activated > span.step-action",
-        this.connectnow = ":nth-child(2) > .step-action";
+            this.connectnow = ":nth-child(2) > .step-action";
         this.gotoyourfacebook = "#root > main > div > div.body-content-wraper > div > div > div.steps-wraper > div.fb-connection-rules > div > div > div > button.fb-connect-btn > img";
         this.connectbutton = ".fb-connect-btn";
         this.connected = ":nth-child(2) > .step-action"
@@ -10,7 +10,7 @@ class getstarted {
         this.sync = ".step-action";
         this.refreshagain = "#root > main > div > div.body-content-wraper > div > div > div.steps-wraper > div.fb-connection-rules > div > div.fb-account-connect > div.fb-connect-btn-wraper > button.fb-reset-btn"
         this.profbutton = ".profiles-informations"
-        this.totalfriend = "#root > main > div.main-wrapper > div.body-content-wraper > div > div > div.steps-wraper > div.intermediate-wraper > div > div.reward-right-wraper > div:nth-child(2) > div:nth-child(1) > div.ind-result-info > h3"
+        this.totalfriend = ".nav-bar > ul > li:nth-child(4)"
         this.profile = '.profile-photo'
         this.pfswitch = "#root > main > div.main-wrapper > div.body-content-wraper > aside > div > div.profile-popup > div.profile-listings-sec-wraper > div.profile-option-listings > ul > li > span > span > img"
     }
@@ -65,12 +65,12 @@ class getstarted {
         cy.fixture("facebook-creds").then((data) => {
             let value = data;
             if (cy.get(this.profbutton).contains(value.profilename2)) {
-                cy.get(this.totalfriend).contains(value.QASwagata).should("be.visible")
+                cy.get(this.totalfriend).click().contains(value.QASwagata).should("be.visible")
                 cy.log("total friends got synced properly");
             }
             cy.get(this.pfswitch).click();
             if (cy.get(this.profbutton).contains(value.profilename1)) {
-                cy.get(this.totalfriend).contains(value.QAbikram).should("be.visible")
+                cy.get(this.totalfriend).click().contains(value.QAbikram).should("be.visible")
                 cy.log("total friends of this profile got synced properly");
             }
         })

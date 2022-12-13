@@ -5,7 +5,7 @@ const URL = Cypress.env("baseUrl");
 Given("user on the getting started page", () => {
     cy.log("Base URL", URL);
     cy.visit(URL);
-    cy.loginvalid();
+    cy.loginwithfacebookdata();
     cy.continuebuttonclick();
     cy.wait(waittime);
     cy.gettingstartedpagelanding();

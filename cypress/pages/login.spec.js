@@ -20,10 +20,6 @@ class login {
     }
     get_logout() {
         return cy.get(this.getbottomsidebar).get(" .bottom-nav-bar > li:nth-child(3) > button.btn-transparent")
-
     }
-
 }
-
-
 module.exports = new login();

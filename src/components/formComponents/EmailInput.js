@@ -31,7 +31,7 @@ const EmailInput = (props) => {
       <div className="form-field">
         <input
           type="email"
-          tabIndex="1"
+          // tabIndex="1"
           autoComplete="new-password"
           onPaste={(e)=>{
             e.preventDefault()

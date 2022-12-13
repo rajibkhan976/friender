@@ -6,6 +6,7 @@ class profile {
         this.swagswitch = "div.profile-option-listings > ul > li"
         this.friendlistbutton = "#root > main > div.main-wrapper > div.body-content-wraper > aside > div > nav:nth-child(2) > ul > li.nav-menu.has-child > a"
         this.friendlistheader = ".header-breadcrumb > .d-flex";
+        this.headcount =".num-header-count";
     }
     get_pf() {
         return cy.get(this.pf).click();
@@ -49,7 +50,7 @@ class profile {
             if (cy.get(this.pfbutton).contains(val.profilename2)) {
                 cy.get(".num-header-count").contains(val.QASwagata).should("be.visible")
                 cy.wait(5000)
-                cy.log("333 friends of that profile should be visible");
+                cy.log("327 friends of that profile should be visible");
                 Cypress.on('uncaught:exception', (err, runnable) => {
                     return false
                 })
@@ -59,9 +60,11 @@ class profile {
             }
             cy.wait(4000)
             cy.get(this.anotherfb).click();
+            cy.get(this.pf).click();
             if (cy.get(this.pfbutton).contains(val.profilename1)) {
                 cy.log("profile QA bikram");
-                cy.get(".num-header-count").contains(val.QAbikram).should("be.visible")
+                cy.get(this.friendlistbutton).click();
+                cy.get(this.headcount).contains(val.QAbikram).should("be.visible")
                 cy.log("40 friends of QA bikram profile should be shown")
                 Cypress.on('uncaught:exception', (err, runnable) => {
                     return false

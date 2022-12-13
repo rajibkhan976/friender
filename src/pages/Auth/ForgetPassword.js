@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import Logo from "../../assets/images/logo.png";
+//import Logo from "../../assets/images/logo.png";
 import EmailInput from "../../components/formComponents/EmailInput";
 import Button from "../../components/formComponents/Button";
 import Email from "../../assets/images/email.png";

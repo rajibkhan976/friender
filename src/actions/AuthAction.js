@@ -3,9 +3,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { forgetPassword, onboarding, resetPassword, resetUserPassword, userLogin, userRegister } from "../services/authentication/AuthServices";
 
 let token = localStorage.getItem('fr_token');
- if(token){
-  // console.log("the lol token......",token);
- }
 const initialState = token ? {
   isLoggedIn: true,
   user: { 'token': token }
@@ -21,13 +18,10 @@ const initialState = token ? {
 export const register=createAsyncThunk(
   "auth/register",
   async({email,name},{rejectWithValue})=>{
-    console.log("i am lol email!!!!!!!!!",email);
-    
     try{
       const res= await userRegister(email,name)
       return res;
     }catch(err){
-      console.log("i am lol error!!!!!!!!!",err);
       return rejectWithValue(err)
     }
   }
@@ -40,16 +34,11 @@ export const logUserIn= createAsyncThunk(
     /**  @param arg {{ email:string, password: string }} */
     //  const {email,password}=props
       try{
-        const res=await userLogin(email,password)
-        console.log("i am the ressss from login reducer",res);
+        const res=await userLogin(email,password);
         return res;
       }catch(err){
-
-        console.log("eroor hooor*****->>>",err);
         return rejectWithValue(err)
       }
-      
-    // .catch((err) => console.log("i am the eerrror from login ",err));
   }
 );
 
@@ -80,10 +69,7 @@ export const resetUserPass=createAsyncThunk(
 export const onboardingUser=createAsyncThunk(
   "auth/onboardingUser",
   async ({question_one,question_two,question_three,token})=>{
-    console.log("1111111",question_one);
-    console.log("22222",question_two)
-    console.log("3333333",question_three)
-    console.log("token",token)
+    console.log("token,question_one,question_two,question_three, :: ", token,question_one,question_two,question_three,);
       const res=await onboarding(token,question_one,question_two,question_three,);
       return res;
 
@@ -110,8 +96,12 @@ export const authSlice=createSlice({
         localStorage.removeItem("fr_pass_changed");
         localStorage.removeItem("fr_onboarding");
         localStorage.removeItem("fr_default_fb");
+        localStorage.removeItem("fr_current_fbId");
         localStorage.removeItem("fr_sidebarToogle");
         localStorage.removeItem("fr_default_email");
+        localStorage.removeItem("fr_isSyncing");
+        localStorage.removeItem("fr_update");
+        localStorage.removeItem("fr_tooltip");
         localStorage.removeItem("submenu_status");
         localStorage.removeItem('syncedFriend');
           state.isLoggedIn=false;
@@ -134,7 +124,6 @@ export const authSlice=createSlice({
         state.isLoggedIn = true;
       },
       [logUserIn.rejected]: (state,action) => {
-
         console.log("rejected",action.payload);
         state.isLoggedIn = false;
         state.message=action.payload;

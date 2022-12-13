@@ -38,7 +38,7 @@ const ResetPasswordPage = () => {
     console.log("the loader state is", loader);
 
     if (passwordNew === passwordConfirm) {
-      dispatch(resetUserPass({token:resetToken,password:passwordNew})).unwrap()
+      dispatch(resetUserPass({token : localStorage.getItem("fr_token") , password : passwordNew})).unwrap() // token:resetToken,
         .then((response) => {
           console.log('here', response);
           if (response) {

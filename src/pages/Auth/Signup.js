@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../assets/images/logo.png";
+//import Logo from "../../assets/images/logo.png";
 import EmailInput from "../../components/formComponents/EmailInput";
-import TextInput from "../../components/formComponents/TextInput";
+//import TextInput from "../../components/formComponents/TextInput";
 import Button from "../../components/formComponents/Button";
 import Email from "../../assets/images/email.png";
 import module from "./styling/authpages.module.scss";

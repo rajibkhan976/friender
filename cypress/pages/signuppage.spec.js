@@ -7,7 +7,7 @@ class register {
     this.errormsg = ".error-mesage";
   }
   get_signuppage() {
-    return cy.visit("/signup");
+    return cy.get('a').contains("Sign up").click();
   }
   get_emailfield() {
     return cy.get(this.emailfield);
@@ -24,8 +24,8 @@ class register {
   get_errormsg() {
     return cy.get(this.errormsg);
   }
-  get_backtologin(){
-    return cy.get(this.signupbuttonclick+".d-block")
+  get_backtologin() {
+    return cy.get(this.signupbuttonclick + ".d-block")
   }
 }
 module.exports = new register();

@@ -6,7 +6,6 @@ import { ErrorIcon, SuccessIcon, WarningIcon } from "../../assets/icons/Icons";
 // import 'react-toastify/dist/ReactToastify.min.css';
 
 const Alertbox = (msg = "success", type = "success", delay,position="top-right") => {
-  // console.log("hii", msg, type);
   switch (type) {
     case "success":
       return toast.success(

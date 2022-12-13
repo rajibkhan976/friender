@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { LoaderContext } from "../context/PageLoaderContext";
 import { ModeContext } from "../context/ThemeContext";
-
 import PageLoader from "../components/common/loaders/PageLoader";
 import Sidebar from "./common/Sidebar";
 import Footer from "./common/Footer";
@@ -14,7 +13,7 @@ const MainComponent = () => {
   const location = useLocation();
   const { darkMode } = useContext(ModeContext);
   const { pageLoaderMode, switchLoaderOn, switchLoaderOff } = useContext(LoaderContext);
-  const [isHeader, setIsHeader] = useState(false);
+  //const [isHeader, setIsHeader] = useState(false);
 
   const showHeader = () => {
     if(
@@ -33,7 +32,6 @@ const MainComponent = () => {
   useEffect(() => {
     let password_reset_status = localStorage.getItem("fr_pass_changed");
     let user_onbording_status = localStorage.getItem("fr_onboarding");
-    // console.log(password_reset_status, user_onbording_status);
 
     if (password_reset_status != 1) {
       navigate("/reset-password");

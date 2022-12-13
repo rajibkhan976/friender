@@ -56,7 +56,7 @@ When("I switch to any of the existing profiles", () => {
 	
 });
 Then("I go to my friend list page", () => {
-	cy.get("#root > main > div.main-wrapper > div.body-content-wraper > aside > div > nav:nth-child(2) > ul > li.nav-menu.has-child > a").click();
+	profile.get_friendlist().click();
 })
 Then("I can see my total number of friends is matched according to my profile friends", () => {
 	profile.get_friendlist();

@@ -9,13 +9,13 @@
   @include paddings (20px, 0, 20px, 0);
   p{
     font-size: $footerFontSize;
-    color: $footerTextColor;
+    color: $themeSecondaryDarkBlue3;
     font-weight: $smallFontWeight;
     a {
-      color: $linkColor;
+      color: $themeBlack5;
       font-weight: $fontWeight;
       &:hover {
-        color: $linkColorHover;
+        color: $themeDefaultPrimary1;
       }
     }
   }

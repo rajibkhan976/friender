@@ -14,11 +14,11 @@
         weight: 400;
         size: 10px;
     }
-    color: $linkColor;
+    color: $themeBlack5;
   }
   .breadcrumb li+li:before {
     padding: 8px;
-    color: $linkColor;
+    color: $themeBlack5;
     content: ">\00a0";
   }
 .breadcrumb li a {
@@ -27,11 +27,11 @@
     //     weight: 400;
     //     size: 10px;
     // }
-    color: $linkColor;
+    color: $themeBlack5;
    
     text-decoration: none;
   }
 .breadcrumb li a:hover {
-    color: $linkColorHover;
+    color: $themeBlack5;
     // text-declinkColor;oration: underline;
   }

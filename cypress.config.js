@@ -8,6 +8,10 @@ const { readFileSync } = require('fs');
 module.exports = defineConfig({
   e2e: {
     async setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser, launchOptions) => {
+        launchOptions.extensions.push('C:/Users/Swagata/Documents/friender/dist')
+        return launchOptions
+        })
       // for environment
       // implement node event listeners here
       const env = config.env.ENV
@@ -27,9 +31,11 @@ module.exports = defineConfig({
       console.log("Config", config)
       return config;
     },
+    videoUploadOnPasses:false,
+    failOnStatusCode: false,
     chromeWebSecurity: false,
     projectId: "ofjfkz",
-    specPattern: "cypress/e2e/**/*.feature",
+    specPattern: "cypress/e2e/***/**/*.feature",
     reporter: "json",
     viewportHeight:900,
     viewportWidth: 1440,

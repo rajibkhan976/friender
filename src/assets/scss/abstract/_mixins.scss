@@ -353,7 +353,7 @@
 
 @mixin hedadingText(
   $size: font.$fontSize,
-  $color: color.$textHeadingColor,
+  $color: color.$themeDefaultPrimary2,
   $weight: font.$fontWeight
 ) {
   // Standard Auth Page Heading Styles
@@ -365,7 +365,7 @@
 }
 @mixin hedadingPara(
   $size: font.$smallFontSize,
-  $color: color.$textParaColor,
+  $color: color.$themeDefaultPrimary3,
   $height: variables.$lineHeight
 ) {
   font-size: $size;
@@ -384,10 +384,10 @@
 ) {
   // Standard Auth Button Styles
   width: $width;
-  background: color.$buttonBackground;
+  background: color.$themeLightPrimary1;
   font-size: font.$fontSize;
   font-weight: $weight;
-  color: color.$buttonTextColor;
+  color: color.$themeDefaultPrimary2;
   height: 42px;
   @include border-radius(5px);
   @include margins(10px, 0, 30px, 0);
@@ -396,7 +396,7 @@
   @include textAlignment(center);
   cursor: pointer;
   &:hover {
-    background: color.$buttonHoverBackground;
+    background: color.$themePrimaryBlue6;
   }
 }
 
@@ -404,12 +404,12 @@
   $width: variables.$full-width,
   $weight: font.$smallFontWeight,
   $height: 42px,
-  $clr:color.$buttonTextColor,
-  $clrHvr:color.$buttonTextColor,
-  $backClr: color.$buttonBackground,
-  $backClrHvr: color.$buttonHoverBackground,
-  $bordrClr:color.$buttonBackground,
-  $bdrClrHvr:color.$buttonHoverBackground
+  $clr:color.$themeDefaultPrimary2,
+  $clrHvr:color.$themeDefaultPrimary2,
+  $backClr: color.$themeLightPrimary1,
+  $backClrHvr: color.$themePrimaryBlue6,
+  $bordrClr:color.$themeLightPrimary1,
+  $bdrClrHvr:color.$themePrimaryBlue6
 ) {
   width: $width;
   background: $backClr;
@@ -436,9 +436,9 @@
 // Input Fields
 
 @mixin inputBox(
-  $background: color.$inputBackground,
+  $background: color.$themeBlack3,
   $width: variables.$full-width,
-  $color: color.$textColor
+  $color: color.$themeDefaultPrimary2
 ) {
   // Standard Auth InputBox Styles
   width: $width;
@@ -450,7 +450,7 @@
   background: $background;
   transition: all 0.5s ease-in-out;
   @include border-radius(5px);
-  @include bordered(color.$inputBackground, 1px, solid);
+  @include bordered(color.$themeBlack3, 1px, solid);
   &:active,
   &:focus,
   &:focus-within,
@@ -464,11 +464,11 @@
 }
 
 @mixin ComInputBox(
-  $background: color.$inputBackground,
+  $background: color.$themeBlack3,
   $width: variables.$full-width,
-  $color: color.$textColor,
+  $color: color.$themeDefaultPrimary2,
   $height: variables.$full-width,
-  $border: color.$inputBackground,
+  $border: color.$themeBlack3,
   $borderHover: color.$inputBoxBorder
 ) {
   // Standard common InputBox Styles with variable hieght and width and border colors
@@ -499,7 +499,7 @@
 
 // Input Fields Error Message
 
-@mixin errorMessage($color: color.$errorColor, $weight: font.$smallFontWeight) {
+@mixin errorMessage($color: color.$themeRed1, $weight: font.$smallFontWeight) {
   color: $color;
   font-weight: $weight;
   font-size: 12px;
@@ -514,7 +514,7 @@
 // Auth Page Input Box
 
 @mixin authBox(
-  $background: color.$bodyColor,
+  $background: color.$themeBlack2,
   $width: variables.$authBox-width,
   $border: color.$borderBoxColor,
   $weight: font.$smallFontWeight

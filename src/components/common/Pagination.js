@@ -13,7 +13,7 @@ const Pagination = ({ pageNum, itemsPerPage, onNumClick }) => {
     
     setCurrentItems([...Array(Number(pageNum)).keys()].slice(itemOffset, endOffset));
     setPageCount(Math.ceil([...Array(Number(pageNum)).keys()].length / itemsPerPage));
-  }, [itemOffset, itemsPerPage]);
+  }, [itemOffset, itemsPerPage, pageNum]);
 
   const handlePageClick = (event) => {
     const newOffset = event.selected * itemsPerPage % [...Array(Number(pageNum)).keys()].length;

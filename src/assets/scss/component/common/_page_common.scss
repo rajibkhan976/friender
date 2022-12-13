@@ -7,13 +7,18 @@
 .page-left-menu-nav {
     width: 290px;
     padding: 20px 0 20px 0;
+    @include theme-aware('background-color', 'listing-cell-bg');
 
     li {
-        height: 40px;
+        
         width: 100%;
-        padding: 10px 0 11px 20px;
+       
 
         a {
+            padding: 10px 0 11px 20px;
+            height: 40px;
+        width: 100%;
+        display: block;
             font: {
                 weight: 600;
                 size: 14px;
@@ -21,7 +26,7 @@
             }
 
             line-height: 19px;
-            color: $textColor;
+            color: $themeDefaultPrimary2;
         }
     }
 }
@@ -30,10 +35,11 @@
     background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
     /* Dark/Primary/blue */
 
-    border-left: 2px solid $linkColorHover;
+    border-left: 2px solid ;
+    @include theme-aware('border-color', 'dark-light-border');
 
     a {
-        color: $linkColorHover !important;
+        color: $themeBlack5 !important;
     }
 }
 
@@ -59,7 +65,8 @@
         width: 100%;
         min-height: 45px;
         margin-bottom: 5px;
-        color: $textColor;
+        // color: $themeDefaultPrimary2;
+        @include theme-aware('color', 'text-color');
         padding: 5px 20px 10px 20px;
 
         font: {
@@ -75,9 +82,11 @@
             // align-items: center;
 
             .setting-input{
-                    @include ComInputBox($inputBackground,92px,$linkColor,40px,$linkColor,$textParaColor);
+                    @include ComInputBox($themeBlack3,92px,$themeBlack5,40px,$themeBlack5,$themeDefaultPrimary3);
                     margin:3px;
-                    color: $textColor;
+                    @include theme-aware('background-color', 'listing-cell-bg');
+                    // color: $themeDefaultPrimary2;
+                    @include theme-aware('color', 'text-color');
                     &:active,
                     &:focus,
                     &:focus-within,
@@ -85,8 +94,8 @@
                     &:visited,
                     &:focus-visible,
                     &:target {
-                      border:1px solid $linkColorHover;
-                      background: $listingPopupBg;
+                      border:1px solid $themeBlack5;
+                      @include theme-aware('background-color', 'listing-cell-bg');
                     }
             }
 
@@ -104,7 +113,8 @@
     }
 
     .setting-checked {
-        background: $listingPopupBg;
+        //background: $listingPopupBg;
+        @include theme-aware('background-color', 'listing-cell-bg');
         // min-height: 59px;
     }
 

@@ -5,12 +5,10 @@ Feature: Tell me about yourself
 
     User should be able to see Onboarding page after reset-password
 
-    Scenario: user should be able to skip Tell me about Yourself page
-
-
-
-        Given I can login with this newly changed password
-        Then I will landed up into Tell me about Yourself page and I want to skip That page
+    # Scenario: user should be able to skip Tell me about Yourself page
+        
+        #     Given I can login with this newly changed password
+        #     Then I will landed up into Tell me about Yourself page and I want to skip That page
 
     Scenario: user should be able to give answer to all the questions in the page
 

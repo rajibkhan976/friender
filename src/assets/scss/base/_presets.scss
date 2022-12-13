@@ -42,7 +42,7 @@ html:focus-within {
 
 html,
 body {
-  background-color: $darkTextColor;
+  background-color: $themeBlack1;
 }
 
 body {
@@ -80,19 +80,19 @@ button {
 
 
 ::-webkit-input-placeholder { /* Edge */
-  color: $linkColor;
+  color: $themeBlack5;
   font-size: 12px;
   opacity: 0.7;
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: $linkColor;
+  color: $themeBlack5;
   font-size: 12px;
   opacity: 0.7;
 }
 
 ::placeholder {
-  color: $linkColor;
+  color: $themeBlack5;
   font-size: 12px;
   opacity: 0.7;
 }
@@ -103,7 +103,7 @@ button {
 
 .routes-sec {
   height: 100vh;
-  background: $darkTextColor;
+  background: $themeBlack1;
   overflow-y: auto;
 }
 
@@ -126,13 +126,15 @@ button {
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #333335; 
+  // background: #333335; 
+  @include theme-aware('background-color', 'scrollbar');
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #333335;; 
+  // background: #333335; 
+  @include theme-aware('background-color', 'scrollbar');
 }
 
 
@@ -145,7 +147,7 @@ button {
 
 // loader
 .btn-primary.loaderbtn {
-  background: $buttonHoverBackground;
+  background: $themePrimaryBlue6;
   pointer-events: none;
 }
 
@@ -163,9 +165,9 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 5px;
-  background-color: $textColor;
-  color: $textColor;
-  box-shadow: 9999px 0 0 -5px $textColor;
+  background-color: $themeDefaultPrimary2;
+  color: $themeDefaultPrimary2;
+  box-shadow: 9999px 0 0 -5px $themeDefaultPrimary2;
   animation: dotPulse 1.5s infinite linear;
   animation-delay: .25s;
 }
@@ -178,58 +180,58 @@ button {
   width: 6px;
   height: 6px;
   border-radius: 5px;
-  background-color: $textColor;
-  color: $textColor;
+  background-color: $themeDefaultPrimary2;
+  color: $themeDefaultPrimary2;
 }
 
 .dot-pulse::before {
-  box-shadow: 9984px 0 0 -5px $textColor;
+  box-shadow: 9984px 0 0 -5px $themeDefaultPrimary2;
   animation: dotPulseBefore 1.5s infinite linear;
   animation-delay: 0s;
 }
 
 .dot-pulse::after {
-  box-shadow: 10014px 0 0 -5px $textColor;
+  box-shadow: 10014px 0 0 -5px $themeDefaultPrimary2;
   animation: dotPulseAfter 1.5s infinite linear;
   animation-delay: .5s;
 }
 
 @keyframes dotPulseBefore {
   0% {
-    box-shadow: 9984px 0 0 -5px $textColor;
+    box-shadow: 9984px 0 0 -5px $themeDefaultPrimary2;
   }
   30% {
-    box-shadow: 9984px 0 0 2px $textColor;
+    box-shadow: 9984px 0 0 2px $themeDefaultPrimary2;
   }
   60%,
   100% {
-    box-shadow: 9984px 0 0 -5px $textColor;
+    box-shadow: 9984px 0 0 -5px $themeDefaultPrimary2;
   }
 }
 
 @keyframes dotPulse {
   0% {
-    box-shadow: 9999px 0 0 -5px $textColor;
+    box-shadow: 9999px 0 0 -5px $themeDefaultPrimary2;
   }
   30% {
-    box-shadow: 9999px 0 0 2px $textColor;
+    box-shadow: 9999px 0 0 2px $themeDefaultPrimary2;
   }
   60%,
   100% {
-    box-shadow: 9999px 0 0 -5px $textColor;
+    box-shadow: 9999px 0 0 -5px $themeDefaultPrimary2;
   }
 }
 
 @keyframes dotPulseAfter {
   0% {
-    box-shadow: 10014px 0 0 -5px $textColor;
+    box-shadow: 10014px 0 0 -5px $themeDefaultPrimary2;
   }
   30% {
-    box-shadow: 10014px 0 0 2px $textColor;
+    box-shadow: 10014px 0 0 2px $themeDefaultPrimary2;
   }
   60%,
   100% {
-    box-shadow: 10014px 0 0 -5px $textColor;
+    box-shadow: 10014px 0 0 -5px $themeDefaultPrimary2;
   }
 }
 // loader ends
@@ -252,7 +254,7 @@ button {
 main {
   height: 100vh;
   overflow: hidden;
-  background-color: $darkTextColor;
+  background-color: $themeBlack1;
 }
 
 .main-wrapper {
@@ -284,8 +286,8 @@ main {
 // disabled 
 
 .disabled {
-  background: $buttonDisabledBackground;
-  color: $footerTextColor;
+  background: $themeBlack6;
+  color: $themeSecondaryDarkBlue3;
   pointer-events: none;
 }
 
@@ -300,7 +302,8 @@ main {
   margin-right: 0;
   margin-bottom: auto;
   margin-left: 0;
-  background: $bodyColor;
+  // background: $themeBlack2;
+  @include theme-aware('background', 'menu-bg');
   border: 1px solid #3B3B48;
   border-radius: 10px;
   position: relative;
@@ -323,7 +326,7 @@ main {
       background-size: 400% 100%;
   }
   .reset-password {
-    color: $textParaColor;
+    color: $themeDefaultPrimary3;
     font-size: 14px;
     font-weight: 400;
   }
@@ -404,7 +407,7 @@ main {
     margin: 10px 0;
     width: 100%;
     .check-container {
-      color: $textParaColor;
+      color: $themeDefaultPrimary3;
     cursor: pointer;
     font-size: 12px;
     margin: 0;
@@ -420,7 +423,7 @@ main {
       width: 0;
     }
     .checkmark {
-      border: 1px solid $labelColor;
+      border: 1px solid $themeLightSecondary3;
       ;
       border-radius: 3px;
       height: 14px;
@@ -429,7 +432,7 @@ main {
       top: 0;
       width: 14px;
       &:after {
-        border: 1px solid $bodyColor;
+        border: 1px solid $themeBlack2;
         border-width: 0 3px 3px 0;
         content: "";
         display: none;
@@ -444,8 +447,11 @@ main {
     }
     }
     a {
-      color: $linkColor;
+      color: $themeBlack5;
       font-weight: 600;
+      &:hover {
+        color: $themeDefaultPrimary1;
+      }
     }
 }
 
@@ -453,7 +459,7 @@ main {
   display: block;
 }
 .remember-wraper.signup-checkbox .check-container input:checked~.checkmark {
-  background-color: $buttonBackground;
+  background-color: $themeLightPrimary1;
 }
 
 .authpage-form {
@@ -506,7 +512,7 @@ main {
     }
 
     h1 {
-      color: $textColor;
+      color: $themeDefaultPrimary2;
       font-size: 40px;
       font-weight: 600;
       text-align: center;
@@ -520,16 +526,16 @@ main {
   .page-content-wraper {
     width: 100%;
     padding: 44px 12%;
-    background: $textColor;
+    background: $themeDefaultPrimary2;
     margin-top: 130px;
     p {
       font-size: 14px;
-      color: $inputBackground;
+      color: $themeBlack3;
       margin-bottom: 10px;
       line-height: 20px;
     }
     h2 {
-      color:$buttonBackground;
+      color:$themeLightPrimary1;
       font-size: 20px;
       font-weight: 700;
       margin: 50px 0 14px 0;
@@ -560,6 +566,22 @@ main {
 // .ag-header-cell-filtered > .ag-icon.ag-icon-menu {
 //   background-position: -24px -6px;
 // }
+.theme-default{
+  .light-theme {
+    display: none;
+  }
+  .dark-theme {
+    display: block;
+  }
+}
+.theme-light{
+  .light-theme {
+    display: block;
+  }
+  .dark-theme {
+    display: none;
+  }
+}
 
 .ag-header-icon.ag-header-label-icon.ag-filter-icon {
   display: none;
@@ -576,3 +598,24 @@ main {
 *[data-disabled=true] {
   pointer-events: none !important;
 }
+
+// .selectArrow {
+//   display: inline-block;
+//   -webkit-appearance: none;
+//   position: relative;
+//   -moz-appearance: none;
+//   background: transparent;
+//   //background-image: url("../../../images/arrow-sprite.png");
+//   background-repeat: no-repeat;
+//   //background-position-x: 97%;
+//   background-position: 111% 0px;
+//   //background-position-y: 15px;
+//   width: 103px;
+//   height: 40px;
+//   cursor: pointer;
+//   padding: 10px 15px 8px 15px;
+//   width: 120px;
+//   height: 30px;
+//   border: 1px solid #999;
+//   font-size: 18px;
+// }

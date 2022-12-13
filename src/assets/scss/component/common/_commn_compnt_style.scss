@@ -4,36 +4,121 @@
 @use "../../abstract/variables" as *;
 
 // dropdown selector start
-.selector_box {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background: transparent;
-  background-image: url("../../../images/arrow-w.png");
-  background-repeat: no-repeat;
-  background-position-x: 100%;
-  background-position-y: 5px;
-  width: 103px;
-  height: 40px;
-  cursor: pointer;
-  padding: 10px 15px 8px 15px;
-  width: 120px;
-  height: 30px;
-  border: 1px solid #999;
-  font-size: 18px;
-  background-color: #313037;
-  border: 0;
-  border-radius: 5px;
-  color: $textColor;
-  font: {
-  weight: 400;
-  size: 14px;
-  }
-  //arrow style
-  background-position: right 10px top 50%;
+// .select-drop-wraper {
+//   display: inline-block;
+  .selector_box {
+    -webkit-appearance: none;
+    position: relative;
+    -moz-appearance: none;
+    background: transparent;
+    // background-image: url("../../../images/arrow-whites.png");
+    // background-repeat: no-repeat;
+    //  background-position-x: 97%;
+    //background-position: 111% 0px;
+    //  background-position-y: 15px;
+    width: 103px;
+    height: 40px;
+    cursor: pointer;
+    padding: 10px 15px 8px 15px;
+    width: 120px;
+    height: 30px;
+    border: 1px solid #999;
+    font-size: 18px;
+    @include theme-aware('background-color', 'listing-cell-bg');
+    border: 1px solid #767485;
+    border-radius: 5px;
+    @include theme-aware('color', 'tooltip-text');
+    font: {
+      weight: 400;
+      size: 14px;
+    }
+    //arrow style
+    // background-position: right 10px top 50%;
 
-  // options {
-  //     border-radius: 5px;
-  // }
+    // options {
+    //     border-radius: 5px;
+    // }
+    // &:after {
+    //   content: "";
+    //   background-image: url("../../../images/arrow-sprite.png");
+    //   position: absolute;
+    //   background-repeat: no-repeat;
+    //   height: 6.09px;
+    //   width: 8.02px;
+    //   left: 0;
+    //   top: 0;
+    //   background-position: 71px 0px;
+    // }
+  }  
+// }
+.theme-default {
+.select-wrapers {
+  position:  relative;
+  .select-arrow {
+    display: block;
+    position: absolute;
+    // background: transparent;
+    background-image: url("../../../images/arrow-sprite.png");
+    background-repeat: no-repeat;
+    background-position: 73% 48%;
+    width: 9px;
+    height: 7px;
+    cursor: pointer;
+    overflow: hidden;
+    top: 7px;
+    right: 5px;
+  }
+}
+}
+
+.theme-light{
+  .select-wrapers {
+    position:  relative;
+    .select-arrow {
+      display: block;
+      position: absolute;
+      // background: transparent;
+      background-image: url("../../../images/arrow-sprite.png");
+      background-repeat: no-repeat;
+      background-position: 28% 48%;
+      width: 9px;
+      height: 7px;
+      cursor: pointer;
+      overflow: hidden;
+      top: 7px;
+      right: 5px;
+  }
+}
+}
+
+.selectbox-wraper {
+  .selector_box {
+    -webkit-appearance: none;
+    position: relative;
+    -moz-appearance: none;
+    background: transparent;
+    // background-image: url("../../../images/arrow-whites.png");
+    // background-repeat: no-repeat;
+    //  background-position-x: 97%;
+    //background-position: 111% 0px;
+    //background-position-y: 15px;
+    width: 103px;
+    height: 40px;
+    cursor: pointer;
+    padding: 10px 15px 8px 15px;
+    width: 120px;
+    height: 30px;
+    border: 1px solid #999;
+    font-size: 18px;
+    @include theme-aware('background-color', 'listing-cell-bg');
+    border: 1px solid #767485;
+    border-radius: 5px;
+    @include theme-aware('color', 'tooltip-text');
+    font: {
+      weight: 400;
+      size: 14px;
+    }
+  }  
 }
 // dropdown selector end
 .onboarding-heading {
@@ -75,7 +160,7 @@ display:none;/* Hidden by default */
     margin: auto;
     padding: 30px;
     background: $listingBgLight;
-    box-shadow: 0px -5px 40px 10px $darkTextColor;
+    box-shadow: 0px -5px 40px 10px $themeBlack1;
     border-radius:10px 10px 10px 10px;
     opacity: 1;
     // position:relative;
@@ -122,14 +207,22 @@ display:none;/* Hidden by default */
     .close-modal {
       position: absolute;
       right: 0;
-      top: -10px;
+      top: 5px;
       cursor: pointer;
       }
     .modal-header{
-      margin-top: 20px;
+      padding-top: 25px;
       font-weight: 600;
       font-size: 20px;
       line-height: 27px;
+      &.delete-type {
+        display: flex;
+        align-items: center;
+        color: $themeRed1;
+        .modal-icon {
+          margin-right: 4px;
+        }
+      }
     }
     .modal-content{
       font-weight: 400;
@@ -141,7 +234,7 @@ display:none;/* Hidden by default */
       
       /* Dark/Primary/grey-td100 */
       
-      color: $textParaColor;
+      color: $themeDefaultPrimary3;
     }
     .modal-buttons{
     margin-top:30px

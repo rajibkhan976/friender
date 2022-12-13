@@ -170,7 +170,7 @@
             padding-inline: 15px;
 
             &:focus {
-                border-color: $linkColorHover;
+                border-color: $themeDefaultPrimary1;
             }
         }
     }
@@ -339,7 +339,7 @@
 
     .ag-standard-button {
         cursor: pointer;
-        color: $textColor;
+        color: $themeDefaultPrimary2;
         @include border-radius(3px);
         @include theme-aware('background-color', 'button-bg');
 
@@ -436,6 +436,11 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        svg {
+            path {
+                //@include theme-aware('fill', 'link-text-color');
+            }
+        }
     }
 
     span {

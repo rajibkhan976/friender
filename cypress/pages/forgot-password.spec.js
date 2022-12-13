@@ -4,7 +4,7 @@ class forgetpwd {
     this.continuebtn = ".btn-primary";
   }
   get_forgetpwdpage() {
-    return cy.visit("/forget-password");
+    return cy.get('span.forget-wraper.float-right').click();
   }
   get_emailfield() {
     return cy.get(this.email);

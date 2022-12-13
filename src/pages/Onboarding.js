@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 //import AuthAction from "../actions/AuthAction";
-import DropSelector from "../components/common/DropSelector";
 import Footer from "../components/common/Footer";
 import Sidebar from "../components/common/Sidebar";
 import Button from "../components/formComponents/Button";
 import module from "./Auth/styling/authpages.module.scss";
 import { onboardingUser } from "../actions/AuthAction";
+import DropSelector from "../components/formComponents/DropSelector";
 const OnboardingPage = () => {
   let token = localStorage.getItem("fr_token");
   let token_onboarding = localStorage.getItem("fr_onboarding");
@@ -96,10 +96,11 @@ const OnboardingPage = () => {
 
     dispatch(
       onboardingUser({
+        token : localStorage.getItem("fr_token"),
         question_one: selectedValueOne,
         question_two: selectedValueTwo,
         question_three: selectedValueThree,
-        token: token,
+        // token: token,
       })
     )
       .unwrap()
@@ -126,10 +127,11 @@ const OnboardingPage = () => {
     dispatch(onboardingUser(
       
       {
+        token : localStorage.getItem("fr_token"),
         question_one: "null",
         question_two:"null",
         question_three:"null" ,
-        token: token,
+        // token: token,
       }
       )).unwrap()
       .then((response) => {

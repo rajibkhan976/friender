@@ -40,7 +40,7 @@
         top: 0px;
         width: 6px;
         height: 10px;
-        @include bordered($bodyColor, 1px, solid);
+        @include bordered($themeBlack2, 1px, solid);
         border-width: 0 3px 3px 0;
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);

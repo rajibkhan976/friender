@@ -195,7 +195,8 @@
         }
     }
     &.settings-loader {
-      background: #BDBDBD;
+      //background: #BDBDBD;
+      @include theme-aware('background-color', 'listing-cell-bg');
       height: 100%;
       padding: 30px 50px;
       margin-top: 0;

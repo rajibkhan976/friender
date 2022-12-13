@@ -52,7 +52,7 @@ const PasswordInput = (props) => {
       {props.children}
       <div className="form-field">
         <input
-          tabIndex="1"
+          // tabIndex="1"
           autoComplete="new-password"
           onPaste={(e)=>{
             e.preventDefault()

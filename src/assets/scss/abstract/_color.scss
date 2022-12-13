@@ -1,46 +1,6 @@
-// Font Color
-$textColor: #fff;
-$darkTextColor: #000000;
-$textHeadingColor: #fff;
-$textParaColor: #BDBDBD;
-$textParaLightColor: #030229;
-$buttonTextColor: #fff;
-$footerTextColor: #9A9AA9;
-$linkColor: #767485;
-$linkColorHover: #0094FF;
-$footerLinkTextColor: #0094FF;
-$successColor: #006D15;
-$labelColor: #6B7499;
-$errorColor: #FF6A77;
-$goldenColor: #FEC600;
-$paginationLink: #8998B8;
-$awardColor: #FAC000;
-
-// Background Color
-$backgroundColor: #000;
-$bodyColor: #1C1C1E;
-$inputBackground: #313037;
-$inputBackgroundLight: #ffffff;
-$inputBorder: #313037;
-$inputBorderLight: #EDF0F9;
-
-// Dark Theme
-$bodyDarkColor: #111;
-
-// Button Color
-$buttonBackground: #605BFF;
-$buttonHoverBackground: #2922FF;
-$buttonHoverText: #ffffff;
-$buttonLightHoverText: #1C1C1E;
-
-$disabledText: #9A9AA9;
-
-$buttonDisabledBackground: #2C2C2E;
-$buttonDisabledBackgroundLight: #F4F4F4;
-
-
-
 // New Css color code implemented
+
+$bodyDarkColor: #111;
 
 // Border and BoxShadow Gradient Color
 $borderColor: #676e8f; 
@@ -48,6 +8,10 @@ $borderBoxColor: #3B3B48;
 $inputBoxBorder: #0094FF;
 $gradientFirst: #827EFF; 
 $gradientsecond: #52D9BB;
+
+$successColor: #006D15;
+$goldenColor: #FEC600;
+$awardColor: #FAC000;
 
 $colorList: $gradientFirst -1.45%, $gradientsecond 101.45%; 
 
@@ -91,6 +55,7 @@ $numWellBg: rgba(17, 230, 180, 0.2);
 $numWellText: #11E6B4;
 $interactiveBg: #26262A;
 $interactiveBgLight: #EDF0F9;
+$inputBorderLight: #EDF0F9;
 
 // Tooltip
 $tooltipBg: #313037;
@@ -102,6 +67,8 @@ $tooltipTextLight: #000000;
 // EXTRA
 $activeArea: #313037;
 $activeAreaLight: #dbdbdb;
+$scrollbar-dark: #333335;
+$scrollbar-light: #BDBDBD;
 
 // SELECTION POPUP
 $selectionBoxBorder: #0094FF;
@@ -119,10 +86,12 @@ $themeLightPrimary3: #11E6B4;
 $themeLightSecondary1: #030229;
 $themeLightSecondary2: #1F3E79;
 $themeLightSecondary3: #6B7499;
+$themeLightSecondary4: #929292;
 
+//Gradients
 
-
-
+$darkThemeGradient: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+$lightThemeGradient: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
 
 // Default Theme (Dark)
 
@@ -154,6 +123,7 @@ $themePrimaryBlue3: #F7F7FF;
 $themePrimaryBlue4: #FCFDFF;
 $themePrimaryBlue5: #FFFFFF;
 $themePrimaryBlue6: #2922FF;
+$themePrimaryBlue7: #e5f5ff;
 
 $themeSecondaryDarkBlue1: #030229;
 $themeSecondaryDarkBlue2: #4D4C6A;
@@ -168,6 +138,9 @@ $themeSecondaryGrey1: #6B7499;
 $themeSecondaryGrey2: #BAC4D8;
 $themeSecondaryGrey3: #F1F2F5;
 $themeSecondaryGrey4: #F4F4F4;
+$themeSecondaryGrey5: #303033;
+$themeSecondaryGrey6: rgba(96, 91, 255, 0.05);
+$themeSecondaryGrey7: #d3d3d3;
 
 $themeBlack1: #000000;
 $themeBlack2: #1C1C1E;
@@ -182,7 +155,12 @@ $themeGreen2: #49CE56;
 $themeGreen3: #EBF5ED;
 
 $themeYellow1: #F29339;
-$themeYellow1: #FEF4EB;
+$themeYellow2: #FEF4EB;
+$themeYellow3: #FFC227;
+$themeYellow4: rgb(255 214 107 / 54%);
+$themeYellow5: #e99d00;
 
 $themeRed1: #FF6A77;
 $themeRed2: #FFF0F1;
+
+$themeGreen: #00CA14;

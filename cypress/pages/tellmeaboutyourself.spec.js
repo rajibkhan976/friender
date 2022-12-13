@@ -9,13 +9,13 @@ class tellmeaboutyourself {
     cy.get(this.skipbutton).click()
   }
   giveanswertoquestionfirst() {
-    cy.get(this.question + ':nth-child(1) > .selector_box').select('Marketing automation')
+    cy.get(this.question+':nth-child(1) > .select-wrapers > .selector_box').select('Marketing automation')
   }
   giveanswertoquestionsecond() {
-    cy.get(this.question + ':nth-child(2) > .selector_box').select('Marketer')
+    cy.get(this.question + ':nth-child(2) > .select-wrapers > .selector_box').select('Marketer')
   }
   giveanswertoquestionthree() {
-    cy.get(this.question + ':nth-child(3) > .selector_box').select('FB automation')
+    cy.get(this.question + ':nth-child(3) > .select-wrapers > .selector_box').select('FB automation')
   }
   getnextpage() {
     cy.get(this.nextbutton).contains("Next").click()

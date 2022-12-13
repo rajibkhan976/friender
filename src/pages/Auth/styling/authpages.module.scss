@@ -85,23 +85,23 @@
       }
 
       p {
-        color: $textParaColor;
+        color: $themeDefaultPrimary3;
       }
     }
   }
 
   .footer-text {
     font-size: $footerFontSize;
-    color: $textParaColor;
+    color: $themeDefaultPrimary3;
     @include textAlignment(center);
     line-height: $lineHeightSecondary;
 
     a {
-      color: $linkColor;
+      color: $themeBlack5;
       font-weight: $fontWeight;
 
       &:hover {
-        color: $linkColorHover;
+        color: $themeDefaultPrimary1;
       }
     }
   }

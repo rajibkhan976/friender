@@ -11,9 +11,7 @@ export function showMessage(msg,type, duration = 30000) {
 
 
   alertMsg.setAttribute('class','showmsg-child show')
-  // const closeAlert=()=>{
-  //   console.log("hi test")
-  // }
+
    
   alertMsg.innerHTML = `<div class='alert-inner'>
   <div>icon</div>  

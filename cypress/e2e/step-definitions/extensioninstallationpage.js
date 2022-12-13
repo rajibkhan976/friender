@@ -4,7 +4,7 @@ const URL = Cypress.env("baseUrl");
 import extension from "../../pages/extensioninstallation.spec"
 Given("user successfully logs in to the portal", () => {
     cy.visit(URL);
-    cy.loginvalid();
+    cy.loginwithfacebookdata();
     cy.continuebuttonclick();
 });
 When("user comes to the getting started page", () => {

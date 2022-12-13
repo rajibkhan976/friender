@@ -4,7 +4,7 @@
 
 .btn {
   @include theme-aware("background","button-bg");
-  color: $textColor;
+  color: $themeDefaultPrimary2;
   cursor: pointer;
   @include border-radius(5px);
   display: inline-flex;
@@ -17,7 +17,7 @@
   -o-transition: all ease-in-out 0.3s;
 
   &.accessibility-btn {
-    color: $textColor;
+    color: $themeDefaultPrimary2;
     font-weight: 600;
     font-size: 14px;
     line-height: 19px;
@@ -61,14 +61,16 @@
   @include authButton();
 
   &.mismatched {
-    color: $errorColor!important;
+    color: $themeRed1!important;
   }
 
   &:disabled {
-    background: $buttonDisabledBackground;
-    color: $footerTextColor;
+    //@include theme-aware('background', 'btn-disabled');
+    background: $themeBlack6;
+    color: $themeSecondaryDarkBlue3;
     cursor: not-allowed;
     pointer-events: none;
+    opacity: .7;
   }
     &.upgrade-btn {
       margin: 0;
@@ -93,12 +95,12 @@
     75px,
     $smallFontWeight,
     42px,
-    $buttonBackground,
-    $buttonHoverBackground,
+    $themeLightPrimary1,
+    $themePrimaryBlue6,
     $listingBgLight,
     $listingBgLight,
-    $buttonBackground,
-    $buttonHoverBackground
+    $themeLightPrimary1,
+    $themePrimaryBlue6
   );
   margin-right:5px;
   border: 1px solid;

@@ -28,13 +28,13 @@ const LoginPage = () => {
   const passwordErrors = (error) => {
     setPasswordValidation(error);
   };
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handelerSubmit = (e) => {
     e.preventDefault();
     setLoader(true);
 
-    console.log("login component  pass****",passwordEntered)
+   // console.log("login component  pass****",passwordEntered)
 
     dispatch(logUserIn({email:emailEntered,password:passwordEntered}))
       .then((response) => {
@@ -62,7 +62,7 @@ const LoginPage = () => {
         localStorage.setItem('submenu_status', 0);  
       })
       .catch((error) => {
-        console.log("ole rejected___+++",error);
+       // console.log("ole rejected___+++",error);
         setEmailAlreadyExists(error);
       })
       .finally(() => {
@@ -70,7 +70,7 @@ const LoginPage = () => {
       });
   };
   useEffect(()=>{
-    console.log("ddddddddddddd",emailAlreadyExists);
+    //console.log("ddddddddddddd",emailAlreadyExists);
 
   },[emailAlreadyExists])
 

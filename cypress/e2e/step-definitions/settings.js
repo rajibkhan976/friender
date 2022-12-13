@@ -5,7 +5,7 @@ const waittime = 7000;
 Given("I logged in to the friender web portal", () => {
     cy.visit(URL);
     cy.loginwithfacebookdata();
-    cy.login();
+    cy.continuebuttonclick();
     setting.uncaught();
     cy.wait(waittime);
 })
@@ -84,7 +84,7 @@ Given("user should make some changes in the page", () => {
 })
 When("user reloads the page once or login to the same account once again", () => {
     cy.loginwithfacebookdata()
-    cy.login();
+    cy.continuebuttonclick();
     setting.uncaught();
     cy.wait(waittime)
     setting.mysettings();

@@ -6,7 +6,6 @@ class resetpwd {
     this.password = "div[class=element-wraper]";
     this.button = ".btn-primary"
   }
-
   get_newpassword() {
     return cy.get(this.password)
       .get("input[placeholder='Set new Password']")

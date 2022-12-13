@@ -16,6 +16,7 @@ export const fetchFriendList = (payload)=>{
           resolve(result.data);
       })
       .catch((error)=>{
+        resolve({})
         console.log("ERROR FRIENDLIST::::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })

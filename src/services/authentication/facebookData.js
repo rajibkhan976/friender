@@ -22,19 +22,18 @@ export const saveUserProfile = (profilebody)=>{
   })
 }
 
-export const fetchUserProfile = (profilebody)=>{
-    return new Promise((resolve, reject)=>{
-      axios
-        .post(
-          config.fetchprofileDataUrl,
-          profilebody,
-          {headers: headers}
-        ).then((result)=>{
-            resolve(result.data.data);
-        })
-        .catch((error)=>{
-          // console.log("error:::", error.message);
-          reject(error?.response?.data ? error.response.data : error.message);
-        })
-    })
-  }
+export const fetchUserProfile = ()=>{
+  return new Promise((resolve, reject)=>{
+    axios
+      .get(
+        config.fetchprofileDataUrl,
+        {headers: headers}
+      ).then((result)=>{
+          resolve(result.data.data);
+      })
+      .catch((error)=>{
+        // console.log("error:::", error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}

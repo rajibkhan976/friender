@@ -1,6 +1,6 @@
-@use "../../abstract/color" as *;
-@use "../../abstract/mixins" as *;
-@use "../common/dropdown" as *;
+@use "../../abstract/color"as *;
+@use "../../abstract/mixins"as *;
+@use "../common/dropdown"as *;
 
 .common-header {
     @include theme-aware('background-color', 'listing-cell-bg');
@@ -9,7 +9,7 @@
     width: 100%;
     @include positioned(relative);
     @include margins(0, 0, 0, 0);
-    background: $bodyColor;
+    background: $themeBlack2;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
     @include border-radius(10px, 10px, 10px, 10px);
     padding: 15px 30px;
@@ -19,14 +19,17 @@
 
     .left-div {
         height: 100%;
+
         .header-breadcrumb {
             h2 {
                 text-transform: capitalize;
+
                 font: {
                     style: normal;
                     size: 20px;
                     weight: 600;
-                }            
+                }
+
                 @include theme-aware('color', 'text-color');
 
                 .num-header-count {
@@ -37,7 +40,7 @@
 
         .menu-breadcrumb {
             line-height: 14px;
-            color: $linkColor;
+            color: $themeBlack5;
             padding-left: 1px;
             text-transform: capitalize;
             margin-top: auto;
@@ -47,10 +50,11 @@
             }
         }
     }
-    .right-div{
-     height: 100%;
 
-        > * {
+    .right-div {
+        height: 100%;
+
+        >* {
             margin-left: 10px;
             height: 40px;
         }
@@ -78,7 +82,7 @@
                 }
             }
         }
-    }   
+    }
 }
 
 .fr-fb-sync {
@@ -87,13 +91,19 @@
     font-weight: 600;
     padding-inline: 15px;
     white-space: nowrap;
+    position: relative;
+
+    * {
+        position: relative;
+        z-index: 2;
+    }
 
     figure {
         font-size: 0;
         vertical-align: middle;
     }
 
-    .fr-tooltip  {
+    .fr-tooltip {
         margin-left: 8px;
 
         .fr-tooltip-icon {
@@ -106,8 +116,53 @@
     .sync-text {
         margin-left: 8px
     }
+
     .stage {
         width: 46px;
+    }
+
+    &.active {
+        min-width: 140px;
+        overflow: hidden;
+
+        &:after {
+            pointer-events: none;
+            background-image: url('../../../SVG/wave-active.svg');
+            content: '';
+            position: absolute;
+            width: calc(140px * 10);
+            height: 100%;
+            left: 0;
+            background-repeat: repeat-x;
+            animation: wave 10s -3s linear infinite alternate;
+            transform: translate3d(0, 0, 0);
+            background-position: left bottom;
+            background-color: #594500;
+            background-size: 145px auto;
+        }
+
+        .sync-text {
+            margin: 0;
+            color: #fff;
+        }
+
+        figure {
+            display: none
+        }
+    }
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(-25%);
+    }
+
+    100% {
+        transform: translateX(-50%);
     }
 }
 
@@ -125,7 +180,7 @@
         }
 
         .fr-radio-design {
-            @include theme-aware('color','text-para-color');
+            @include theme-aware('color', 'text-para-color');
             cursor: pointer;
             padding-inline: 20px;
             font-weight: 500;
@@ -142,14 +197,15 @@
             -o-transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
         }
 
-        input:checked + .fr-radio-design {
+        input:checked+.fr-radio-design {
             @include theme-aware('background-color', 'button-bg');
             @include border-radius(10px);
-            color: $textColor;
+            color: $themeDefaultPrimary2;
         }
     }
+
     &:hover {
-        input:checked + .fr-radio-design {
+        input:checked+.fr-radio-design {
             @include theme-aware('background-color', 'btn-hover');
         }
     }

@@ -41,7 +41,7 @@
     right: 0;
     bottom: 0;
     background: rgba(179, 179, 191, 0.2);
-    border: 0.5px solid $textParaColor;
+    border: 0.5px solid $themeDefaultPrimary3;
     -webkit-transition: .4s;
     transition: .4s;
     &:before {
@@ -51,7 +51,7 @@
         width: 14px;
         left: 3px;
         bottom: 2px;
-        background: $textParaColor;
+        background: $themeDefaultPrimary3;
         -webkit-transition: .4s;
         transition: .4s;
       }

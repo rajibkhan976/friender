@@ -1,7 +1,8 @@
 import Fire from "../../assets/images/fire.png";
 import Lottie from "react-lottie-player";
 import awardAnimation from "../../assets/animations/award-animation.json";
-import { produceWithPatches } from "immer";
+import awardAnimationLight from "../../assets/animations/award-animation-light.json";
+//import { produceWithPatches } from "immer";
 const Award = (props) => {
   
   return (
@@ -9,11 +10,22 @@ const Award = (props) => {
     <div className="rewards-wraper d-flex">
     <div className="reward-left-wraper">
       <div className="reward-left-section">
-        <div className="cup-animation">
+        <div className="cup-animation dark-theme">
           {/* Lotti animation placed */}
             <Lottie
                 loop = {4}
                 animationData={awardAnimation}
+                play
+                background="transparent"
+                style={{ width: "200px", height: "200px" }}
+              />
+          {/* Lotti animation placed */}
+        </div>
+        <div className="cup-animation light-theme">
+          {/* Lotti animation placed */}
+            <Lottie
+                loop = {4}
+                animationData={awardAnimationLight}
                 play
                 background="transparent"
                 style={{ width: "200px", height: "200px" }}
@@ -38,7 +50,7 @@ const Award = (props) => {
         <div className="result-row d-flex">
 
           <div className="ind-result d-flex">
-            <div className="ind-result-icon">
+            <div className="ind-result-icon highlighted">
               <svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect opacity="0.2" width="50" height="50" rx="25" fill="#00CA14"/>
                 <path d="M22.2474 30.367C22.5075 30.3127 22.6624 30.0405 22.5332 29.8083C22.2482 29.2965 21.7992 28.8467 21.2249 28.504C20.4853 28.0625 19.579 27.8232 18.6466 27.8232C17.7143 27.8232 16.808 28.0625 16.0684 28.504C15.494 28.8467 15.0451 29.2965 14.7601 29.8083C14.6308 30.0405 14.7858 30.3127 15.0459 30.3669C17.4209 30.8619 19.8724 30.8619 22.2474 30.367Z" fill="#00CA14"/>
@@ -132,10 +144,7 @@ const Award = (props) => {
               <p>Comments</p>
             </div>
           </div>
-
         </div>
-
-
       </div>
     </div>
   </div>

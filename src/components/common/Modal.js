@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Modal({headerText,bodyText,open,setOpen,btnText,ModalFun}) {
+function Modal({headerText,modalIcon,bodyText,modalType,open,setOpen,btnText,ModalFun}) {
     
   return (
     <div className='modal-background' style={{display:open?"block":"none"}}>
@@ -12,8 +12,10 @@ function Modal({headerText,bodyText,open,setOpen,btnText,ModalFun}) {
                 </svg>
 
               </span>
-                <div className='modal-header'>
-                    {headerText}
+                <div className={`modal-header ${modalType}`} >
+                  <figure>
+                   <img src={modalIcon} className="modal-icon" alt="" />
+                  </figure> {headerText}
                 </div>
                 <div className='modal-content'>{bodyText}</div>
                 <div className='modal-buttons d-flex justifyContent-end'>

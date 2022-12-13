@@ -10,10 +10,10 @@
   @include margins (10px , 0, 10px, 0);
     label {
       font-size: $smallFontSize;
-      color: $textColor;
+      color: $themeDefaultPrimary2;
       @include margins (0 , 0, 10px, 0);
       span {
-        color: $linkColor;
+        color: $themeBlack5;
         margin-left: 5px;
         ;
       }
@@ -22,10 +22,10 @@
       float: right;
       a {
         font-size: $footerFontSize;
-        color: $linkColor;
+        color: $themeBlack5;
         text-decoration: none;
         &:hover {
-          color: $linkColorHover;
+          color: $themeDefaultPrimary1;
         }
       }
     }  
@@ -47,9 +47,9 @@
       padding-right: 14px;
     }
     .error {
-      @include bordered($errorColor, 1px, solid);
+      @include bordered($themeRed1, 1px, solid);
       &:hover {
-        @include bordered($errorColor, 1px, solid);
+        @include bordered($themeRed1, 1px, solid);
       }
     }
   }
