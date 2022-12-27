@@ -318,11 +318,11 @@ const Sidebar = (props) => {
                         <span className="nav-menu-name">- Unfriends</span>
                       </NavLink>
                     </li>
-                    <li className="nav-menu" onClick={listClick}>
+                    {/* <li className="nav-menu" onClick={listClick}>
                       <NavLink to="/friends/lost-friends">
                         <span className="nav-menu-name">- Lost Friends</span>
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li className="nav-menu" onClick={listClick}>
                       <NavLink to="/friends/whitelist">
                         <span className="nav-menu-name">

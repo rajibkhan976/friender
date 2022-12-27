@@ -90,20 +90,22 @@ export const MessageRenderer = memo((params) => {
 });
 export const NameCellRenderer = memo((params) => {
   return (
-    <span className="name-image-renderer">
-      <span
-        className="fb-display-pic"
-        style={{
-          backgroundImage: `url(${params.data.friendProfilePicture})`,
-        }}
-      ></span>
-      <span className="fb-name">{params.value}</span>
-      {params.data.whitelist_status ? (
-        <span className="profile-whitelabeled">{<WhitelabelIcon />}</span>
-      ) : (
-        ""
-      )}
-    </span>
+    <a href={params.data.friendProfileUrl} target="_blank" rel="noreferrer">
+      <span className="name-image-renderer">
+        <span
+          className="fb-display-pic"
+          style={{
+            backgroundImage: `url(${params.data.friendProfilePicture})`,
+          }}
+        ></span>
+        <span className="fb-name">{params.value}</span>
+        {params.data.whitelist_status ? (
+          <span className="profile-whitelabeled">{<WhitelabelIcon />}</span>
+        ) : (
+          ""
+        )}
+      </span>
+    </a>
   );
 });
 export const ReactionRenderer = memo((params) => {

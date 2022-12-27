@@ -104,6 +104,8 @@ export const authSlice=createSlice({
         localStorage.removeItem("fr_tooltip");
         localStorage.removeItem("submenu_status");
         localStorage.removeItem('syncedFriend');
+        localStorage.removeItem("friendLength");
+        localStorage.removeItem("fr-selected-friends");
           state.isLoggedIn=false;
       }
     },

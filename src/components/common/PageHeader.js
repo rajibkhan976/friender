@@ -208,6 +208,15 @@ function PageHeader({ headerText = "" }) {
     }
   }, []);
 
+  const sleep = (ms) => {
+    console.log("SLEEP for ", ms / 1000 + " Second(s)")
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  const getRandomInteger = (min, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
   const closeFilterDropdown = (item) => {
     console.log(item.type == "quickAction" && item.active, accessOptions);
     const accessPlaceholder = [...accessOptions];
@@ -261,102 +270,77 @@ function PageHeader({ headerText = "" }) {
     }
   };
 
-  const unFriendUsers = (item) => {
-    closeFilterDropdown(item);
+  const checkBeforeUnfriend = async (item) => {
+    if (item) {
+      closeFilterDropdown(item);
+    }
     if (selectedFriends && selectedFriends.length > 0) {
       let abortdelete = false;
-      let payload = selectedFriends.map((item) => {
+      selectedFriends.map( async (item) => {
         if (item.whitelist_status === 1) {
           abortdelete = true;
-          // setWhiteFrndcount(whiteFrndcount+1);
+          return; 
         }
-        return {
-          // token: token,
-          fbUserId: currentFbId,
-          friendFbId: item.friendFbId,
-          friendListId: item._id,
-          status: 1,
-        };
       });
+
       if (abortdelete) {
         setModalOpen(true);
         return;
+      } else {
+        unfriend();
       }
-
-      dispatch(deleteFriend({ payload: payload }))
-        .unwrap()
-        .then((res) => {
-          dispatch(
-            getFriendList({
-              // token: localStorage.getItem("fr_token"),
-              fbUserId: savedFbUId,
-            })
-          )
-            .unwrap()
-            .then((res) => {
-              selectedFriends &&
-                Alertbox(
-                  `${
-                    selectedFriends.length > 1 ? "Contacts" : "Contact"
-                  } removed successfully!`,
-                  "success",
-                  1000,
-                  "bottom-right"
-                );
-              dispatch(removeSelectedFriends());
-            });
-        })
-        .catch((err) => {
-          dispatch(removeSelectedFriends());
-          Alertbox(`${err.message} `, "error", 2000, "bottom-right");
-        });
+     
     }
   };
 
-  const unfriendWhiteLabeled = () => {
-    if (selectedFriends && selectedFriends.length > 0) {
-      let payload = selectedFriends.map((item) => {
-        return {
-          // token: token,
-          fbUserId: currentFbId,
-          friendFbId: item.friendFbId,
-          friendListId: item._id,
-          status: 1,
-        };
+  const unfriend = () => {
+    selectedFriends.map( async (item, i) => {
+      console.log("deleteing")
+    
+      let payload = [{
+        fbUserId: currentFbId,
+        friendFbId: item.friendFbId,
+        friendListId: item._id,
+        status: 1,
+      }];
+
+      const unfriendFromFb = await extensionAccesories.sendMessageToExt({
+        action: "unfriend",
+        frLoginToken: localStorage.getItem("fr_token"),
+        payload: payload
       });
-      dispatch(deleteFriend({ payload: payload }))
-        .unwrap()
-        .then((res) => {
-          dispatch(
-            getFriendList({
-              // token: localStorage.getItem("fr_token"),
-              fbUserId: savedFbUId,
-            })
-          )
-            .unwrap()
-            .then((res) => {
-              console.log("response sfter deletion", res);
-              setModalOpen(false);
-              dispatch(removeSelectedFriends());
-              selectedFriends &&
-                Alertbox(
-                  `${
-                    selectedFriends.length > 1 ? "Contacts" : "Contact"
-                  } removed successfully!`,
-                  "success",
-                  1000,
-                  "bottom-right"
-                );
-            });
-        })
-        .catch((err) => {
-          Alertbox(`${err.message} `, "error", 2000, "bottom-right");
-          dispatch(removeSelectedFriends());
-          setModalOpen(false);
-        });
-    }
-  };
 
+      dispatch(deleteFriend({ payload: payload }))
+      .unwrap()
+      .then((res) => {
+        dispatch(
+          getFriendList({
+            fbUserId: savedFbUId,
+          })
+        )
+          .unwrap()
+          .then((res) => {
+            selectedFriends &&
+              Alertbox(
+                `${
+                  item.friendName 
+                } unfriended successfully!`,
+                "success",
+                1000,
+                "bottom-right"
+              );
+            dispatch(removeSelectedFriends());
+          });
+      })
+      .catch((err) => {
+        dispatch(removeSelectedFriends());
+        Alertbox(`${err.message} `, "error", 2000, "bottom-right");
+      });
+      let delay = getRandomInteger(1000*5, 1000*60*2); // 30 secs to 2 mins
+      await sleep(delay);
+    });
+    
+  }
   const syncFriend = async () => {
     setInlineLoader(true);
     try {
@@ -530,7 +514,7 @@ function PageHeader({ headerText = "" }) {
           )} Whitelist friend are selected as well. Are you sure you want to unfriend your friends?`}
           open={modalOpen}
           setOpen={setModalOpen}
-          ModalFun={unfriendWhiteLabeled}
+          ModalFun={unfriend}
           btnText={"Yes, Unfriend"}
         />
       )}
@@ -632,7 +616,7 @@ function PageHeader({ headerText = "" }) {
                       <ul>
                         <li
                           className="del-fr-action"
-                          onClick={() => unFriendUsers(accessItem)}
+                          onClick={() => checkBeforeUnfriend(accessItem)}
                           data-disabled={
                             !selectedState || selectedState.length == 0
                               ? true
