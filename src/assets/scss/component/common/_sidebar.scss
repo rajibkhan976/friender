@@ -1,21 +1,26 @@
-@use "../../abstract/color"as *;
-@use "../../abstract/font"as *;
-@use "../../abstract/mixins"as *;
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
 
 .sidebar {
-  @include theme-aware('background', 'menu-bg');
+  contain: layout;
+  @include theme-aware("background", "menu-bg");
   @include positioned(relative);
   z-index: 100;
   @include margins(0, 0, 0, 0);
   // box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
-  @include border-radius(10px, 10px, 10px, 10px);
+  // @include border-radius(10px, 10px, 10px, 10px);
+  border-right: 1px solid;
+  @include theme-aware("border-color", "general-border");
   height: 100%;
   flex: 0 0 300px;
 
   .menu-toogle {
-    @include theme-aware('background', 'menu-toggle-bg');
+    visibility: hidden;
+    contain: layout;
+    @include theme-aware("background", "menu-toggle-bg");
     border: 1px solid;
-    @include theme-aware('border-color', 'menu-toggle-border');
+    @include theme-aware("border-color", "menu-toggle-border");
     height: 30px;
     width: 30px;
     line-height: 37px;
@@ -36,7 +41,7 @@
 
     svg {
       path {
-        @include theme-aware('fill', 'icons');
+        @include theme-aware("fill", "icons");
       }
     }
   }
@@ -45,9 +50,9 @@
     width: 370px;
     max-height: 458px;
     height: 58vh;
-    @include theme-aware('background', 'menu-bg');
+    @include theme-aware("background", "menu-bg");
     border: 1px solid;
-    @include theme-aware('border-color', 'sidebar-border-color');
+    @include theme-aware("border-color", "sidebar-border-color");
     box-shadow: 1px 17px 44px rgba(3, 2, 41, 0.07);
     border-radius: 10px;
     position: absolute;
@@ -62,14 +67,14 @@
       padding: 14px 5px;
       justify-content: flex-start;
       border-right: 1px solid;
-      @include theme-aware('border-color', 'sidebar-border-color');
+      @include theme-aware("border-color", "sidebar-border-color");
       // overflow-y: auto;
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
 
       .main-profile-selected {
-        background: linear-gradient(90deg, #827EFF -1.45%, #52D9BB 101.45%);
+        background: linear-gradient(90deg, #827eff -1.45%, #52d9bb 101.45%);
         border-width: 2px;
         width: 48px;
         height: 48px;
@@ -82,7 +87,7 @@
           height: 42px;
           border-radius: 50%;
           border: 2px solid;
-          @include theme-aware('border-color', 'menu-toggle-bg');
+          @include theme-aware("border-color", "menu-toggle-bg");
           position: absolute;
           left: 50%;
           top: 50%;
@@ -101,7 +106,7 @@
 
           li {
             margin-bottom: 10px;
-            border: 1px solid $themeBlack5;
+            border: 1px solid $themeDefaultPrimary4;
             border-radius: 50%;
 
             span {
@@ -144,11 +149,9 @@
             }
 
             &:before {
-              content: '';
+              content: "";
               position: absolute;
-              @include triangle(10px,
-                rgba(0, 0, 0, 1),
-                left);
+              @include triangle(10px, rgba(0, 0, 0, 1), left);
               transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
               -webkit-transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
               -moz-transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
@@ -181,8 +184,8 @@
         //cursor: pointer;
         pointer-events: none;
         font-size: 0;
+        visibility: hidden;
       }
-
     }
 
     .current-profile-info-wraper {
@@ -233,16 +236,16 @@
               height: 9px;
               display: inline-block;
               border-radius: 50%;
-              background-color: $status;
+              background-color: $themeSecondaryGrey12;
               border: 2px solid;
-              @include theme-aware('border-color', 'menu-toggle-bg');
+              @include theme-aware("border-color", "menu-toggle-bg");
 
               &.active {
-                background-color: $statusActive;
+                background-color: $themeGreen7;
               }
 
               &.inPending {
-                background-color: $statusPending;
+                background-color: $themeYellow9;
               }
             }
           }
@@ -254,7 +257,7 @@
               font-weight: 600;
               font-size: 14px;
               line-height: 19px;
-              @include theme-aware('color', 'text-color');
+              @include theme-aware("color", "text-color");
             }
 
             span {
@@ -262,7 +265,7 @@
               font-weight: 400;
               font-size: 12px;
               line-height: 16px;
-              @include theme-aware('color', 'link-text-color');
+              @include theme-aware("color", "link-text-color");
             }
           }
         }
@@ -272,25 +275,23 @@
           align-items: center;
           padding: 20px 15px;
           border: 1px solid;
-          @include theme-aware('border-color', 'sidebar-border-color');
+          @include theme-aware("border-color", "sidebar-border-color");
           border-radius: 15px;
           position: relative;
           margin-bottom: 28px;
 
           .sec-name {
             position: absolute;
-            background: $themeBlack2;
+            background: $themeDefaultSecondary1;
             font-weight: 400;
             font-size: 11px;
             line-height: 15px;
-            @include theme-aware('color', 'link-text-color');
+            @include theme-aware("color", "link-text-color");
             padding: 0 2px;
             position: absolute;
             top: -8px;
             left: 12px;
           }
-
-
         }
 
         .popup-menu {
@@ -299,16 +300,20 @@
 
           ul {
             li {
-              a {
+              a,
+              &.popup-logout {
                 display: flex;
                 font-weight: 500;
                 font-size: 12px;
                 line-height: 28px;
-                @include theme-aware('color', 'link-text-color');
+                @include theme-aware("color", "link-text-color");
 
                 &:hover {
-                  @include theme-aware('color', 'link-text-hover-color');
+                  @include theme-aware("color", "link-text-hover-color");
                 }
+              }
+              &.popup-logout {
+                cursor: pointer;
               }
             }
 
@@ -317,7 +322,7 @@
               font-weight: 500;
               font-size: 12px;
               line-height: 16px;
-              @include theme-aware('color', 'link-text-color');
+              @include theme-aware("color", "link-text-color");
               display: flex;
               align-items: center;
 
@@ -333,6 +338,7 @@
 
           &.lower-menu {
             margin-top: auto;
+            padding-bottom: 5px;
           }
         }
       }
@@ -360,15 +366,30 @@
       padding: 20px 25px 20px 25px;
       width: 100%;
       align-items: center;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
 
       .settings-menu {
         margin-left: auto;
         cursor: pointer;
-        padding-right: 15px;
+        margin-right: 15px;
 
         a {
           svg {
             vertical-align: middle;
+          }
+
+          &:hover,
+          &.active {
+            svg {
+              *[fill] {
+                @include theme-aware('fill', 'svg-icon-hover-color');
+              }
+              *[stroke] {
+                @include theme-aware('stroke', 'svg-icon-hover-color');
+              }
+            }
           }
         }
       }
@@ -392,16 +413,16 @@
 
       .seperator,
       .link-seperator:before {
-        content: '';
+        content: "";
         height: 1px;
         display: flex;
         background: rgb(255 255 255 / 10%);
-        @include margins (15px, 25px, 15px, 25px);
-        pointer-events: none
+        @include margins(15px, 25px, 15px, 25px);
+        pointer-events: none;
       }
 
       .nav-menu {
-        @include theme-aware('border-color', 'menu-bg');
+        @include theme-aware("border-color", "menu-bg");
         background: transparent;
         text-align: left;
         pointer-events: all;
@@ -417,22 +438,26 @@
 
           &.activated {
             a {
-              svg {
+              > svg {
                 path {
-                  @include theme-aware('fill', 'active-menu-color');
+                  @include theme-aware("fill", "active-menu-color");
                 }
 
                 ellipse {
                   //fill: $themeDefaultPrimary2;
-                  @include theme-aware('fill', 'active-menu-color');
+                  @include theme-aware("fill", "active-menu-color");
                 }
               }
 
               .nav-menu-name {
                 // color: $themeDefaultPrimary2;
-                @include theme-aware('color', 'active-menu-color');
+                @include theme-aware("color", "active-menu-color");
+                // svg {
+                //   path {
+                //     stroke: $themeDefaultPrimary1;
+                //   }
+                // }
               }
-
             }
           }
         }
@@ -456,11 +481,18 @@
             font-weight: 600;
             line-height: 19px;
             margin-left: 15px;
+
+            &.nav-menu-name {
+              flex: 1 1 auto;
+            }
           }
 
           &:hover {
-            background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
-            border-color: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+            background: linear-gradient(
+              90deg,
+              rgba(0, 148, 255, 0.1) 0.73%,
+              rgba(0, 148, 255, 0) 100%
+            );
           }
         }
 
@@ -483,11 +515,11 @@
         &:hover {
           cursor: pointer;
 
-          svg path {
+          a > svg path {
             fill: $themeDefaultPrimary1;
           }
 
-          svg ellipse {
+          a > svg ellipse {
             fill: $themeDefaultPrimary1;
           }
         }
@@ -495,16 +527,19 @@
 
       .nav-menu {
         .active {
-
-          background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+          background: linear-gradient(
+            90deg,
+            rgba(0, 148, 255, 0.1) 0.73%,
+            rgba(0, 148, 255, 0) 100%
+          );
           border-left: 2px solid $themeDefaultPrimary1;
           cursor: pointer;
 
-          svg path {
+          > svg path {
             fill: $themeDefaultPrimary1;
           }
 
-          svg ellipse {
+          > svg ellipse {
             fill: $themeDefaultPrimary1;
           }
 
@@ -519,18 +554,17 @@
             border-left: 2px solid transparent;
             cursor: pointer;
 
-            svg path {
+            > svg path {
               fill: $themeDefaultPrimary2;
             }
 
-            svg ellipse {
+            > svg ellipse {
               fill: $themeDefaultPrimary2;
             }
 
             .nav-menu-name {
               color: $themeDefaultPrimary2;
               font-weight: 600;
-
             }
           }
 
@@ -543,7 +577,11 @@
               }
 
               .active {
-                background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+                background: linear-gradient(
+                  90deg,
+                  rgba(0, 148, 255, 0.1) 0.73%,
+                  rgba(0, 148, 255, 0) 100%
+                );
                 border-radius: 5px;
                 border-left: none;
 
@@ -555,7 +593,11 @@
 
               &:hover {
                 a {
-                  background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+                  background: linear-gradient(
+                    90deg,
+                    rgba(0, 148, 255, 0.1) 0.73%,
+                    rgba(0, 148, 255, 0) 100%
+                  );
                   border-radius: 5px;
 
                   .nav-menu-name {
@@ -601,7 +643,7 @@
           max-width: 40px;
 
           &.profile-opened {
-            background: linear-gradient(to right, #827EFF, #52D9BB);
+            background: linear-gradient(to right, #827eff, #52d9bb);
             //border: 2px solid #000;
             border-radius: 5px;
           }
@@ -616,6 +658,7 @@
             border-radius: 5px;
             //background-color: #000000;
             cursor: pointer;
+            background-color: rgb(204, 204, 204, 10%);
           }
         }
 
@@ -640,11 +683,7 @@
         }
 
         &:last-child {
-          @include margins (0px, 0px, 0px, 0px);
-        }
-
-        &.closed-only {
-          display: none;
+          @include margins(0px, 0px, 0px, 0px);
         }
 
         &.opened-only {
@@ -666,23 +705,24 @@
 
     .logo-closed.opened-sidebar {
       display: block;
-
     }
-
-  }
-
-  .bottom-nav-only {
-    display: none;
   }
 
   .sub-menu-toogle {
     float: right;
     margin-left: 10px;
+    width: 25px;
+    height: 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
     // padding-top: 6px;
     svg {
       path {
-        fill: $themeDefaultPrimary4;
+        // fill: $themeDefaultPrimary4;
+        // stroke: $themeDefaultPrimary4;
+        @include theme-aware("stroke", "active-menu-color");
       }
     }
 
@@ -691,7 +731,16 @@
         -ms-transform: rotate(180deg);
         /* IE 9 */
         transform: rotate(180deg);
+      }
+    }
 
+    &:hover {
+      svg {
+        path {
+          // fill: $themeDefaultPrimary4;
+          stroke: $themeDefaultPrimary1;
+          // @include theme-aware('stroke', 'active-menu-color');
+        }
       }
     }
   }
@@ -706,11 +755,15 @@
           &.has-child {
             &.activated {
               a {
-                background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+                background: linear-gradient(
+                  90deg,
+                  rgba(0, 148, 255, 0.1) 0.73%,
+                  rgba(0, 148, 255, 0) 100%
+                );
                 border-left: 2px solid $themeDefaultPrimary1;
                 cursor: pointer;
 
-                svg {
+                > svg {
                   path {
                     fill: $themeDefaultPrimary1;
                   }
@@ -719,11 +772,23 @@
                     fill: $themeDefaultPrimary1;
                   }
                 }
+
+                .nav-menu-name {
+                  svg {
+                    path {
+                      stroke: $themeDefaultPrimary1;
+                    }
+                  }
+                }
               }
 
               &:hover {
                 a {
-                  background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+                  background: linear-gradient(
+                    90deg,
+                    rgba(0, 148, 255, 0.1) 0.73%,
+                    rgba(0, 148, 255, 0) 100%
+                  );
                   border-left: 2px solid $themeDefaultPrimary1;
                   cursor: pointer;
                 }
@@ -748,8 +813,8 @@
             margin-top: 15px;
           }
 
-          &.closed-only {
-            display: block;
+          &.opened-only {
+            display: none;
           }
         }
       }
@@ -761,14 +826,6 @@
 
     .sub-menus {
       display: none;
-    }
-
-    .bottom-nav-only {
-      display: block;
-
-      .bottom-settings.closed-only {
-        a {}
-      }
     }
 
     .seperator {
@@ -800,7 +857,7 @@
       .logo-closed {
         text-align: center;
         padding: 20px 29px;
-        @include margins (0, 0, 10px, 0);
+        @include margins(0, 0, 10px, 0);
       }
 
       .nav-bar {
@@ -811,20 +868,19 @@
           height: 1px;
           display: flex;
           background: rgb(255 255 255 / 10%);
-          @include margins (15px, 10px, 15px, 10px);
-
+          @include margins(15px, 10px, 15px, 10px);
         }
 
         .nav-menu {
           border-left: 2px solid;
-          @include theme-aware('border-color', 'menu-bg');
+          @include theme-aware("border-color", "menu-bg");
           background: transparent;
           padding: 8px 30px;
           text-align: center;
           position: relative;
 
           &:before {
-            content: '';
+            content: "";
             position: absolute;
             top: -16px;
             left: 8px;
@@ -836,14 +892,14 @@
 
           .nav-menu {
             border-left: 2px solid;
-            @include theme-aware('border-color', 'menu-bg');
+            @include theme-aware("border-color", "menu-bg");
             background: transparent;
             padding: 8px 30px;
             text-align: center;
             position: relative;
 
             &:before {
-              content: '';
+              content: "";
               position: absolute;
               top: -16px;
               left: 8px;
@@ -854,7 +910,7 @@
             }
 
             &:after {
-              content: '';
+              content: "";
               position: absolute;
               bottom: -16px;
               left: 8px;
@@ -865,7 +921,11 @@
             }
 
             &:hover {
-              background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+              background: linear-gradient(
+                90deg,
+                rgba(0, 148, 255, 0.1) 0.73%,
+                rgba(0, 148, 255, 0) 100%
+              );
               border-left: 2px solid $themeDefaultPrimary1;
               cursor: pointer;
 
@@ -883,7 +943,7 @@
             }
 
             &:after {
-              content: '';
+              content: "";
               position: absolute;
               bottom: -16px;
               left: 8px;
@@ -894,7 +954,11 @@
             }
 
             &:hover {
-              background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+              background: linear-gradient(
+                90deg,
+                rgba(0, 148, 255, 0.1) 0.73%,
+                rgba(0, 148, 255, 0) 100%
+              );
               border-left: 2px solid $themeDefaultPrimary1;
               cursor: pointer;
 
@@ -913,7 +977,11 @@
           }
 
           .nav-menu.active {
-            background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+            background: linear-gradient(
+              90deg,
+              rgba(0, 148, 255, 0.1) 0.73%,
+              rgba(0, 148, 255, 0) 100%
+            );
             border-left: 2px solid $themeDefaultPrimary1;
             cursor: pointer;
 
@@ -944,7 +1012,7 @@
           padding: 8px 4px;
           text-align: center;
           // cursor: pointer;
-          @include margins (0px, 0px, 10px, 0px);
+          @include margins(0px, 0px, 10px, 0px);
 
           &.user-profile-image {
             height: 40px;
@@ -957,7 +1025,7 @@
             @include border-radius(5px);
 
             &.profile-opened {
-              background: linear-gradient(to right, #827EFF, #52D9BB);
+              background: linear-gradient(to right, #827eff, #52d9bb);
               // border: 2px solid #000;
               border-radius: 5px;
             }
@@ -966,7 +1034,7 @@
               display: block;
               width: 100%;
               height: 100%;
-              background-image: url('../../../images/profilePhoto.png');
+              background-image: url("../../../images/profilePhoto.png");
               background-size: cover;
               background-position: center center;
               background-repeat: no-repeat;
@@ -984,12 +1052,10 @@
           }
 
           &:last-child {
-            @include margins (0px, 0px, 0px, 0px);
+            @include margins(0px, 0px, 0px, 0px);
           }
 
           &.closed-only {
-            display: block;
-
             &.bottom-settings {
               a {
                 svg {
@@ -1004,8 +1070,6 @@
           }
         }
       }
-
-
     }
   }
 
@@ -1021,6 +1085,12 @@
 
     .switch {
       margin: 0;
+    }
+  }
+
+  &:hover {
+    .menu-toogle {
+      visibility: visible;
     }
   }
 }

@@ -7,9 +7,9 @@ const FacebookConnect = (props) => {
   const setNoConnectFn = (e) => {
     setNoConnect(false);
   };
-  useEffect(()=>{
-    console.log("props data ::: ", props.fbProfile)
-  }, [])
+  // useEffect(()=>{
+  //   console.log("props data ::: ", props.fbProfile)
+  // }, [])
   const [connectionErrors, setConnectionErrors] = useState(false);
   const setConnectionErrorsFn = (e) => {
     setConnectionErrors((current) => !current);
@@ -28,7 +28,7 @@ const FacebookConnect = (props) => {
             <button className="fb-connect-btn" onClick={(e) => {
                           window.open("https://www.facebook.com/", "_blank")
                         }}>
-              <img src={FB} alt="" />
+              <img src={FB} alt="" loading='lazy' />
             </button>
             <button className="fb-reset-btn" onClick={(e)=>props.refreshProfile(e)}>Refresh</button>
           </div>
@@ -37,13 +37,13 @@ const FacebookConnect = (props) => {
           <div className="fb-account-connect">
             <div className="facebook-profile-info-wraper d-flex">
               <span className="profile-fb-img">
-                <img src={props.fbProfile.photo} alt="" />
+                <img src={props.fbProfile.photo} alt="" loading='lazy' />
               </span>
               <span className="profile-fb-info">
                 <h3>
                   {props.fbProfile.text}
                   <span className="profile-verification">
-                    <img src={Tick} alt="" />
+                    <img src={Tick} alt="" loading='lazy' />
                   </span>
                 </h3>
                 <p>{"https://www.facebook.com" + props.fbProfile.path}</p>

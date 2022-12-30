@@ -10,7 +10,6 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -26,13 +25,6 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Friender</title>
-    <script type="text/javascript">
-      (function(c,l,a,r,i,t,y){
-      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "e5g8cina8a");
-      </script>
      
   </head>
   <body>
@@ -54,8 +46,13 @@
           var x = d.createElement("link");
           var y = d.getElementsByTagName("script")[0];
           x.rel = "stylesheet";
-          x.href = "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900";
+          x.href = "https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900";
           y.parentNode.insertBefore(x, y);
+          
+          var a = d.createElement("link");
+          a.rel = "stylesheet";
+          a.href = "https://cdn.jsdelivr.net/npm/ag-grid-community@28.2.1/styles/ag-grid.css";
+          y.parentNode.insertBefore(a, y);
       })(document);
     </script>
      

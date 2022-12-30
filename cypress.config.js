@@ -8,19 +8,17 @@ const { readFileSync } = require('fs');
 module.exports = defineConfig({
   e2e: {
     async setupNodeEvents(on, config) {
-      on('before:browser:launch', (browser, launchOptions) => {
-        launchOptions.extensions.push('C:/Users/Swagata/Documents/friender/dist')
-        return launchOptions
-        })
-      // for environment
-      // implement node event listeners here
+      //  on('before:browser:launch', (browser, launchOptions) => {
+      //   launchOptions.extensions.push('C:/Users/Swagata/Documents/friender/dist')
+      //   return launchOptions
+      //   })
       const env = config.env.ENV
       const text = readFileSync(`./cypress/config/${env}.json`)
       const values = JSON.parse(text)
       config.baseUrl = values.baseUrl;
       
       config.env = {
-        ...values
+        api: values.api
       }
       // end env setup
       const bundler = createBundler({
@@ -39,9 +37,11 @@ module.exports = defineConfig({
     reporter: "json",
     viewportHeight:900,
     viewportWidth: 1440,
-    reporterOptions:
-    {
-      outputDir: "./cucumber-json",
-    },
+    reporter: "../node_modules/mochawesome/src/mochawesome.js",
+    reporterOptions: {
+        "overwrite": false,
+        "html": false,
+        "json": true
+    }
   }
 });

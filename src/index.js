@@ -1,9 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {Provider} from "react-redux";
-// import {createStore, applyMiddleware, compose} from "redux";
-// import thunk from "redux-thunk";
-// import rootReducer from "./reducers/index";
+import { Provider } from "react-redux";
 import { store } from './app/store';
 import { ThemeContextProvider } from './context/ThemeContext';
 import { LoaderContextProvider } from './context/PageLoaderContext'
@@ -11,24 +8,27 @@ import './assets/scss/index.scss';
 import Routeing from './route';
 import reportWebVitals from './reportWebVitals';
 import axios from "axios";
-import {frInstance} from "./configuration/fr-instance";
+import { frInstance } from "./configuration/fr-instance";
+import { frInstance1 } from './configuration/fr-instance';
+// import {frInstanceResponse} from "./configuration/fr-instance";
 import './index.css';
 axios.interceptors.request.use(frInstance.authorizerInterceptor);
+axios.interceptors.response.use(frInstance1.authorizerInterceptor);
 frInstance.disableProdConsole();
 
 // const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-    <Provider store={store}>
-      <ThemeContextProvider>
+  <Provider store={store}>
+    <ThemeContextProvider>
       {/* <ToastContainer /> */}
-        <LoaderContextProvider>
-      <Routeing />    
-     
-        </LoaderContextProvider>
-      </ThemeContextProvider>
-    </Provider>
+      <LoaderContextProvider>
+        <Routeing />
+
+      </LoaderContextProvider>
+    </ThemeContextProvider>
+  </Provider>
   // </React.StrictMode>
 );
 

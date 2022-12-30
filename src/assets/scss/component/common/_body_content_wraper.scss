@@ -4,7 +4,7 @@
 
 .body-content-wraper {
   @include positioned(relative);
-  @include paddings (30px , 30px, 0, 30px);
+  // @include paddings (30px , 30px, 0, 30px);
   display: flex;
   width: 100%;
   flex: 1 1 auto;
@@ -14,10 +14,13 @@
     @include positioned(relative);
     flex-grow: 1;
     flex-shrink: 1;
+    overflow:hidden;
     // flex-basis: calc(100% - 85px);
     // max-width: calc(100% - 85px);
     align-items: center;
     flex-direction: column;
+    @include theme-aware('background-color', 'main-content-background');
+
     .auth-heading-info {
       margin-bottom: 150px;
     }
@@ -25,12 +28,26 @@
       @include positioned(absolute);
       top: 20px;
       right: 50px;
-      a {
+      cursor: pointer;
+      // a {
         text-decoration: underline;
         font-size: 14px;
-        color: $themeBlack5;
+        color: $themeDefaultPrimary4;
         font-weight: 400;
         line-height: 19px;
+        -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in Internet Explorer 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+      // }
+      &:hover {
+        color: $themeSecondaryGrey15;
       }
     }
     .selectbox-wraper {
@@ -47,17 +64,25 @@
     }
 
     &.main-content {
-      margin-left: 50px;
+      // margin-left: 50px;
     }
   }
 }
 
 .paper{
   @include positioned(relative);
-  // background: $themeBlack2;
+  // background: $themeDefaultSecondary1;
   @include theme-aware('background-color', 'settings-background');
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   @include border-radius(10px, 10px, 10px, 10px);
-  padding: 19px 20px 20px 20px!important;
+  // padding: 19px 20px 20px 20px!important;
+  padding: 19px 20px 20px 20px;
+}
+.paper-non-padded{
+  @include positioned(relative);
+  // background: $themeDefaultSecondary1;
+  @include theme-aware('background-color', 'settings-background');
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
+  @include border-radius(10px, 10px, 10px, 10px);
 }
 

@@ -3,77 +3,55 @@
 @use "../../abstract/mixins" as *;
 @use "../../abstract/variables" as *;
 
-// dropdown selector start
-// .select-drop-wraper {
-//   display: inline-block;
-  .selector_box {
-    -webkit-appearance: none;
-    position: relative;
-    -moz-appearance: none;
-    background: transparent;
-    // background-image: url("../../../images/arrow-whites.png");
-    // background-repeat: no-repeat;
-    //  background-position-x: 97%;
-    //background-position: 111% 0px;
-    //  background-position-y: 15px;
-    width: 103px;
-    height: 40px;
-    cursor: pointer;
-    padding: 10px 15px 8px 15px;
-    width: 120px;
-    height: 30px;
-    border: 1px solid #999;
-    font-size: 18px;
-    @include theme-aware('background-color', 'listing-cell-bg');
-    border: 1px solid #767485;
-    border-radius: 5px;
-    @include theme-aware('color', 'tooltip-text');
-    font: {
-      weight: 400;
-      size: 14px;
-    }
-    //arrow style
-    // background-position: right 10px top 50%;
+//////////////////////////////////////////////////////////////////////////////////
+/*:::::THis is the file where all the Style are done for Common components:::::*/
+////////////////////////////////////////////////////////////////////////////////
 
-    // options {
-    //     border-radius: 5px;
-    // }
-    // &:after {
-    //   content: "";
-    //   background-image: url("../../../images/arrow-sprite.png");
-    //   position: absolute;
-    //   background-repeat: no-repeat;
-    //   height: 6.09px;
-    //   width: 8.02px;
-    //   left: 0;
-    //   top: 0;
-    //   background-position: 71px 0px;
-    // }
-  }  
-// }
-.theme-default {
-.select-wrapers {
-  position:  relative;
-  .select-arrow {
-    display: block;
-    position: absolute;
-    // background: transparent;
-    background-image: url("../../../images/arrow-sprite.png");
-    background-repeat: no-repeat;
-    background-position: 73% 48%;
-    width: 9px;
-    height: 7px;
-    cursor: pointer;
-    overflow: hidden;
-    top: 7px;
-    right: 5px;
+.selector_box {
+  -webkit-appearance: none;
+  position: relative;
+  -moz-appearance: none;
+  background: transparent;
+  width: 103px;
+  height: 40px;
+  cursor: pointer;
+  padding: 10px 15px 8px 15px;
+  width: 120px;
+  height: 30px;
+  border: 1px solid #999;
+  font-size: 18px;
+  @include theme-aware("background-color", "listing-cell-bg");
+  border: 1px solid #767485;
+  border-radius: 5px;
+  @include theme-aware("color", "link-text-color");
+  font: {
+    weight: 400;
+    size: 14px;
   }
 }
+
+.theme-default {
+  .select-wrapers {
+    position: relative;
+    .select-arrow {
+      display: block;
+      position: absolute;
+      background-image: url("../../../images/arrow-sprite.png");
+      background-repeat: no-repeat;
+      background-position: 73% 48%;
+      width: 9px;
+      height: 7px;
+      cursor: pointer;
+      overflow: hidden;
+      top: 7px;
+      right: 5px;
+    }
+  }
 }
 
-.theme-light{
+.theme-light {
   .select-wrapers {
-    position:  relative;
+    position: relative;
     .select-arrow {
       display: block;
       position: absolute;
@@ -87,8 +65,8 @@
       overflow: hidden;
       top: 7px;
       right: 5px;
+    }
   }
-}
 }
 
 .selectbox-wraper {
@@ -108,29 +86,29 @@
     padding: 10px 15px 8px 15px;
     width: 120px;
     height: 30px;
-    border: 1px solid #999;
+    border: 1px solid $themeBlack9;
     font-size: 18px;
-    @include theme-aware('background-color', 'listing-cell-bg');
-    border: 1px solid #767485;
+    @include theme-aware("background-color", "listing-cell-bg");
+    border: 1px solid $themeDefaultPrimary4;
     border-radius: 5px;
-    @include theme-aware('color', 'tooltip-text');
+    @include theme-aware("color", "text-color");
     font: {
       weight: 400;
       size: 14px;
     }
-  }  
+  }
 }
 // dropdown selector end
 .onboarding-heading {
-  font-size: 24px!important;
-  font-weight: 700!important;
+  font-size: 24px !important;
+  font-weight: 700 !important;
   line-height: 32px;
-  margin-bottom: 8px!important;
+  margin-bottom: 8px !important;
 }
 .onboarding-para {
-  font-size: 14px!important;
-  font-weight: 400!important;
-  margin-bottom: 60px!important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  margin-bottom: 60px !important;
 }
 .buttons-submit {
   .btn-primary {
@@ -139,7 +117,8 @@
 }
 //common modal
 .modal-background {
-display:none;/* Hidden by default */
+  //backdrop-filter: blur(3px);
+  display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 99999; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -152,56 +131,57 @@ display:none;/* Hidden by default */
   // display: flex;
   // justify-content:center;
   // align-items: center;
-
+    contain: layout;
+    content-visibility: auto;
 }
 .modal {
-    // min-height: 256px;
-    width: 466px;
-    margin: auto;
-    padding: 30px;
-    background: $listingBgLight;
-    box-shadow: 0px -5px 40px 10px $themeBlack1;
-    border-radius:10px 10px 10px 10px;
-    opacity: 1;
-    // position:relative;
-    // // filter: blur(0);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    &:before {
-        @include gradient(90deg, $colorList);
-        //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-        background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
-        width: $full-width;
-        height: 10px;
-        @include positioned(absolute);
-        top: 0;
-        left: 0;
-        content: "";
-        @include border-radius(10px, 10px, 0px, 0px);
-        animation: gradient 5s ease infinite;
-        background-size: 400% 100%;
-      }
+  // min-height: 256px;
+  width: 466px;
+  margin: auto;
+  padding: 30px;
+  background: $themeDefaultSecondary1;
+  box-shadow: 0px -5px 40px 10px $themeBlack1;
+  border-radius: 10px 10px 10px 10px;
+  opacity: 1;
+  // position:relative;
+  // // filter: blur(0);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  &:before {
+    @include gradient(90deg, $themeColorList);
+    //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
+    width: $full-width;
+    height: 10px;
+    @include positioned(absolute);
+    top: 0;
+    left: 0;
+    content: "";
+    @include border-radius(10px, 10px, 0px, 0px);
+    animation: gradient 5s ease infinite;
+    background-size: 400% 100%;
+  }
 
-      @keyframes gradient {
-        0% {
-          background-position: 0% 50%;
-        }
-        25%{
-          background-position: 50% 50%
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        75%{
-          background-position: 50% 50%
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
   .modal-content-wraper {
     position: relative;
     .close-modal {
@@ -209,12 +189,25 @@ display:none;/* Hidden by default */
       right: 0;
       top: 5px;
       cursor: pointer;
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      // background: rgba(255, 106, 118, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background: rgba(255, 106, 118, 0.3);
       }
-    .modal-header{
+    }
+    .modal-header {
       padding-top: 25px;
       font-weight: 600;
       font-size: 20px;
       line-height: 27px;
+      display: inline-flex;
+      gap: 10px;
+
       &.delete-type {
         display: flex;
         align-items: center;
@@ -223,27 +216,211 @@ display:none;/* Hidden by default */
           margin-right: 4px;
         }
       }
+      &.normal-type {
+        display: flex;
+        align-items: center;
+        @include theme-aware("color", "text-color");
+        .modal-icon {
+          margin-right: 4px;
+        }
+      }
+
+      span.icon-modal-comm {
+        margin-top: -0.4rem;
+      }
     }
-    .modal-content{
+    .modal-content {
       font-weight: 400;
       font-size: 14px;
       line-height: 20px;
       margin-top: 15px;
       /* or 143% */
-      
-      
+
       /* Dark/Primary/grey-td100 */
-      
+
       color: $themeDefaultPrimary3;
+      b {
+        color: $themeDefaultPrimary2;
+      }
     }
-    .modal-buttons{
-    margin-top:30px
+    .modal-buttons {
+      margin-top: 30px;
     }
   }
-
 }
 
-
-
-
 //commonmodal end
+
+//Message page left empty-nav-icon start
+
+.empty-nav-icon {
+  position: relative;
+  svg:nth-child(1) {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+  }
+  .loto-loti {
+    position: absolute;
+    top: 315px;
+    left: 50%;
+    transform: translate(-100%, -50%);
+  }
+  .empty-nav-text {
+    position: absolute;
+    padding: 0px 67px;
+    color: $themeDefaultPrimary4;
+    height: 32px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    top: 360px;
+    opacity: 0.8;
+  }
+}
+//Message page left empty-nav-icon end
+.draggable-list {
+  height: calc(100% - 79px);
+  overflow-y: auto;
+  padding: 0 4px;
+  .draggable-list__item {
+    width: 100%;
+    cursor: pointer;
+    padding: 0;
+    //border: none;
+    .subdmf_card_default {
+    }
+    .subdmf_card {
+      width: 100%;
+      border-radius: 5px;
+      padding: 21px 14px;
+      .subdmf_card_icons {
+        width: auto;
+        .dragable-item-dots {
+          margin-right: 17px;
+        }
+        .dragable-file {
+          margin-right: 11px;
+          background: $themePink2;
+
+          // svg {
+
+          //   path {
+
+          //     fill: $themePink;
+          //     stroke: $themePink;
+          //   }
+          // }
+        }
+      }
+      .dragable-item-infos {
+        h4 {
+          @include theme-aware("color", "settingsBlockPara");
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 22px;
+          margin-bottom: 1px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          max-width: 165px;
+          overflow: hidden;
+        }
+        p {
+          @include theme-aware("color", "settingsBlockPara");
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 16px;
+        }
+      }
+      &.active {
+        @include theme-aware("background", "navBg");
+      }
+      &.default {
+        .subdmf_card_icons {
+          .dragable-item-dots {
+            visibility: hidden;
+          }
+          .dragable-file {
+            margin-right: 11px;
+            opacity: 0.4;
+            @include theme-aware("background", "iconbg");
+
+            // svg {
+            //   path {
+            //     fill: $themeDefaultPrimary2;
+            //      stroke:$themeDefaultPrimary2 ;
+            //   //   @include theme-aware("fill", "navBg");
+            //   //   @include theme-aware("stroke", "navBg");
+
+            //   }
+            // }
+          }
+        }
+      }
+    }
+    .subdmf_card_active {
+      padding: 25px 15px;
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      .subdmf_card_icons {
+        width: auto;
+        .dragable-item-dots {
+          margin-right: 17px;
+        }
+        .dragable-file {
+          margin-right: 11px;
+          background: $themePink2;
+          svg {
+            path {
+              fill: $themePink;
+              stroke: $themePink;
+            }
+          }
+        }
+      }
+      .dragable-item-infos {
+        h4 {
+          @include theme-aware("color", "text-color");
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 22px;
+          margin-bottom: 1px;
+        }
+        p {
+          @include theme-aware("color", "text-color");
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 16px;
+        }
+      }
+    }
+    &:hover {
+      .subdmf_card {
+        @include theme-aware("background", "navBg");
+        .subdmf_card_icons {
+          .dragable-file {
+            margin-right: 11px;
+            background: $themePink2;
+          }
+        }
+        .dragable-item-infos {
+          h4 {
+            @include theme-aware("color", "text-color");
+          }
+          p {
+            @include theme-aware("color", "text-color");
+          }
+        }
+      }
+    }
+    &.dragstart {
+      opacity: 0.5 !important;
+    }
+    &.dragover {
+    }
+  }
+}
+//Draggable List Style End

@@ -1,5 +1,4 @@
 {
     "baseUrl": "http://localhost:3000",
-    "defaultCommandTimeout":15000,
-    "requestTimeout":7000
+    "api":"/dev"
 }

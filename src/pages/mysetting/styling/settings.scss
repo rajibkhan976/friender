@@ -1,0 +1,318 @@
+@use "../../../assets/scss/abstract/color" as *;
+@use "../../../assets/scss/abstract/color-themes" as *;
+@use "../../../assets/scss/abstract/mixins" as *;
+
+.main-mysetting {
+  flex: 1 1 auto;
+  overflow: hidden;
+  padding: 0;
+  margin-top: -10px;
+  margin-bottom: 0;
+}
+
+.setting-content {
+  overflow: hidden;
+  flex: 1 1 auto;
+  // margin-left: 20px;
+  position: relative;
+
+  &.setting-global {
+    display: flex;
+    flex-direction: column;
+
+    .settings {
+      position: relative;
+      margin-top: 5px;
+      margin-right: 10px;
+      padding-right: 10px;
+      width: auto;
+
+      .fr-heading {
+        margin-block: 18px 26px;
+        margin-left: 30px;
+
+        &:not(:first-child) {
+          margin-top: 40px;
+        }
+      }
+
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-track {
+        border-radius: 10px;
+      }
+    }
+
+    .setting {
+      height: 50px;
+      padding: 0 20px 0 50px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+      cursor: pointer;
+      @include theme-aware("color", "text-color");
+
+      &.setting-actived {
+        border-top: 1px solid;
+        @include theme-aware("border-color", "general-border");
+        @include theme-aware("background-color", "settings-header-background");
+
+        ~ .setting-child {
+          padding: 30px 94px 30px 106px;
+          @include theme-aware("background-color", "settings-active-content-background");
+        }
+      }
+
+      .switch {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+
+.setting-menu {
+  background: $themeDefaultSecondary3;
+  border-right: 1px solid;
+  @include theme-aware("border-color", "general-border");
+
+  .page-left-menu-nav {
+    padding: 0;
+    margin-top: 20px;
+  }
+}
+.setting-paper {
+  position: relative;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
+}
+
+.muted-text {
+  color: $themeSecondaryGrey1;
+}
+
+.settings {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+
+  .setting {
+    width: 100%;
+    min-height: 45px;
+    @include theme-aware("color", "text-color");
+    padding: 15px 20px 10px 20px;
+    cursor: pointer;
+    padding-left: 2.5rem;
+
+    font: {
+      weight: 400;
+      size: 14px;
+    }
+    &.last-settings {
+      margin-bottom: 15px;
+    }
+
+    .setting-child {
+      display: inline-flex;
+      align-items: center;
+
+      .setting-input {
+        @include ComInputBox(
+          $themeDefaultSecondary2,
+          92px,
+          $themeDefaultPrimary4,
+          40px,
+          $themeDefaultPrimary4,
+          $themeDefaultPrimary3
+        );
+        margin: 3px;
+        @include theme-aware("background-color", "listing-cell-bg");
+        @include theme-aware("color", "text-color");
+        &:active,
+        &:focus,
+        &:focus-within,
+        &:hover,
+        &:visited,
+        &:focus-visible,
+        &:target {
+          border: 1px solid $themeDefaultPrimary4;
+          @include theme-aware("background-color", "listing-cell-bg");
+        }
+      }
+    }
+    .first {
+      // height: 59px;
+    }
+    .others {
+      // height: 59px;
+      margin-left: 51.5px;
+      margin-top: 9px;
+    }
+  }
+
+  .setting-checked {
+    //background: $themeDefaultSecondary3;
+    @include theme-aware("background-color", "listing-cell-bg");
+    // min-height: 59px;
+  }
+
+  .setting-actived {
+    background: $themeDefaultSecondary1;
+  }
+}
+
+.time-section {
+  margin-right: 10px;
+}
+
+// Setting Page temporary css
+.currenctly-active {
+  > .setting-child {
+    &:first-child {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    &.others {
+      font-size: 14px;
+      background: $themeDefaultSecondary3;
+      padding: 1.5rem 5.5rem;
+      color: #bcbcbc;
+    }
+  }
+}
+.currenctly-deactive {
+  height: calc(100vh - 303px) !important;
+}
+
+.fr-heading {
+  margin-bottom: 21.5px;
+  position: relative;
+  margin-top: 1.5rem;
+  margin-left: 1.5rem;
+
+  > span {
+    line-height: 24px;
+    font-size: 15px;
+    display: inline-flex;
+    padding-inline: 0 5px;
+    @include theme-aware("color", "text-color");
+    background-color: #000000;
+    position: relative;
+    z-index: 1;
+
+    .warn-badget {
+      height: 16px;
+      padding-block: 0;
+    }
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    top: 12px;
+    @include theme-aware("background", "general-border");
+    width: 100%;
+    height: 1px;
+    left: 0;
+    z-index: 0;
+    background: rgb(70, 70, 70) !important;
+  }
+}
+
+/*=============================================
+=            Delete Pending Friend Request(s) automatically            =
+=============================================*/
+
+.error-text {
+  color: #b54b54;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.setting-control {
+  @include theme-aware("color", "text-secondary-color");
+  display: inline-flex;
+  align-items: center;
+  margin-left: auto;
+
+  .delete-pending-frnd {
+    margin-left: 20px;
+  }
+
+  .icon-arrow-down {
+    margin-left: 50px;
+  }
+}
+
+.input-num {
+  display: inline-flex;
+  background: #000;
+  width: 4.5rem;
+  border: 1px solid #313037;
+  border-radius: 5px;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding-block: 1px;
+  padding-inline: 0;
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+
+  &:hover {
+    @include theme-aware("border-color", "input-hover-button-background");
+  }
+
+  .setting-input {
+    box-sizing: border-box;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    background: none;
+    width: 100%;
+    padding-inline: 10px 24px;
+  }
+
+  .input-arrows {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #1c1c1e;
+    line-height: 0px;
+    border-radius: 0 5px 5px 0;
+
+    .btn {
+      height: 14px;
+      width: 100%;
+
+      svg {
+        fill: #fff;
+        cursor: pointer;
+        width: 100%;
+
+        &:hover {
+          @include theme-aware("background-color", "input-hover-button-background");
+        }
+      }
+    }
+  }
+}
+
+/*=====  End of Delete Pending Friend Request(s) automatically  ======*/
+
+// /*=============================================
+// =   Interval auto sync friend list to make right sides arrow icons and future updates keeps right   =
+// =============================================*/
+
+// .setting-interval-sync-frnd {
+//   @extend .setting-delete-pending-frnd;
+// }
+
+// /*=====  End of Interval auto sync friend list  ======*/

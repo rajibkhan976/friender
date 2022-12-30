@@ -1,36 +1,58 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, memo } from "react";
 import { useLocation } from "react-router-dom";
+
 import BreadCrumb from "./BreadCrumb";
-import Radio from "./Radio";
 import { io } from "socket.io-client";
+// import socket  from "../../configuration/socket-connection";
+import helper from "../../helpers/helper";
 import {
   FacebookSyncIcon,
-  SortIcon,
-  FilterIcon,
+  // SortIcon,
+  // FilterIcon,
   ActionIcon,
-  ExportIcon,
+  // ExportIcon,
   DeleteIcon,
   WhitelabelIcon,
-  ClockIcon,
-  RejectIcon,
+  BlockIcon,
 } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
 import { useDispatch, useSelector } from "react-redux";
+import { removeSelectedFriends } from "../../actions/FriendListAction";
+import {
+  saveUserProfile,
+  fetchUserProfile,
+} from "../../services/authentication/facebookData";
+import {
+  setProfileSpaces,
+  setDefaultProfileId,
+} from "../../actions/ProfilespaceActions";
+import {getSendFriendReqst} from "../../actions/FriendsAction" ;
 import {
   deleteFriend,
-  removeSelectedFriends,
+  getFriendList,
   whiteListFriend,
-} from "../../actions/FriendListAction";
-import { getFriendList } from "../../actions/FriendsAction";
+  BlockListFriend,
+} from "../../actions/FriendsAction";
 import Modal from "./Modal";
-import DeleteImgIcon from "../../assets/images/deleteModal.png"
+import DeleteImgIcon from "../../assets/images/deleteModal.png";
 import extensionAccesories from "../../configuration/extensionAccesories";
-import { updateFilter } from "../../actions/FilterActions";
+import { updateFilter } from "../../actions/FriendListAction";
+import { updateMessageType } from "../../actions/MessageAction";
+import useComponentVisible from "../../helpers/useComponentVisible";
+import ToolTipPro from "./ToolTipPro";
+import { alertBrodcater, fr_channel } from "./AlertBrodcater";
+import "../../assets/scss/component/common/_page_header.scss"
+
+const syncBtnDefaultState = "Sync Now";
+const syncStatucCheckingIntvtime = 1000 * 10;
+const refethingDelayAfterSync = 1000 * 60 * 1;
+var isStopingSync = false;
 
 // Page-wise options
 const pageOptoions = {
+  messageOption: false,
   viewSelect: false,
   syncManual: false,
   searchHeader: false,
@@ -48,6 +70,11 @@ const pageOptoions = {
   labelsTagsView: false,
   billingOptionsView: false,
   listingLengthWell: false,
+  queryTopHeader: {
+    active: false,
+    content:
+      "Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+  },
 };
 
 // View options
@@ -59,6 +86,24 @@ const radioOptions = [
   // {
   //   label: "Label",
   //   checked: true,
+  // },
+];
+
+const radioMessageOptions = [
+  {
+    label: "Dynamic Merge field",
+    checked: true,
+    data: "dmf",
+  },
+  // {
+  //   label: "Segment",
+  //   checked: false,
+  //   data: "segment",
+  // },
+  // {
+  //   label: "Group",
+  //   checked: false,
+  //   data: "group",
   // },
 ];
 
@@ -93,60 +138,189 @@ const accessibilityOptions = [
   //   active: false,
   // },
 ];
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
-const ENDPOINTEST = process.env.REACT_APP_SOCKET_URL_LOCAL;
-
-const socket = io(ENDPOINTEST, {
-  transports: ["websocket"], // use WebSocket first, if available
+// If the socket connection failed then reconnect
+const socket = io(SOCKET_URL, {
+  transports: ["websocket", "polling"], // use WebSocket first, if available
+  auth: { token: localStorage.getItem("fr_token") },
 });
-socket.on("connect_error", () => {
-  // console.log("There Is a connection Error");
-  socket.io.opts.transports = ["polling", "websocket"];
+
+socket.on("connect", function () {
+  socket.emit("join", { token: localStorage.getItem("fr_token") });
+});
+socket.on("disconnect", (reason) => {
+  console.log("disconnect due to " + reason);
+});
+socket.on("connect_error", (e) => {
+  console.log("There Is a connection Error in header", e);
+  socket.io.opts.transports = ["websocket", "polling"];
 });
 
 function PageHeader({ headerText = "" }) {
   const dispatch = useDispatch();
+  const searchRef = useRef(null);
+  const { clickedRef, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
+  const messageType = useSelector((state) => state.message.messageType);
   const actionRef = useRef(null);
   const location = useLocation();
   const token = localStorage.getItem("fr_token");
   const selectedFriends = useSelector(
-    (state) => state.friend_list_data.selected_friends
+    (state) => state.friendlist.selected_friends
   );
-  const currentFbId = useSelector((state) => state.facebook_data.current_fb_id);
-  const listCount = useSelector((state) =>
-    state.friend_list_data.curr_list_count
-    
-  );
+  const defaultFbId = localStorage.getItem("fr_default_fb");
+  const listCount = useSelector((state) => state.friendlist.curr_list_count);
   const [links, setLinks] = useState([]);
   const [accessOptions, setAccessOptions] = useState(accessibilityOptions);
   const [headerOptions, setHeaderOptions] = useState(pageOptoions);
   const [modalOpen, setModalOpen] = useState(false);
   let savedFbUId = localStorage.getItem("fr_default_fb");
   const [inlineLoader, setInlineLoader] = useState(false);
-  const [selectedState, setSelectedState] = useState(true);
+  // const [selectedState, setSelectedState] = useState(true);
+  const [whiteListable, setWhiteListable] = useState(false);
+  const [blacklistable, setBlacklistable] = useState(false);
   const [isSyncing, setIsSyncing] = useState(true);
   const [toolTip, setTooltip] = useState("");
-  const onChangeHandler = useCallback((e) => {
-    console.log(e);
-  }, []);
+  const [whiteCountInUnfriend, setWhiteCountInUnfriend] = useState(null);
+  const [messageTypeOpt, setMessageTypeOpt] = useState("dmf");
+  const [runningUnfriend, setRunningUnfriend] = useState(false);
+  // const onChangeHandler = useCallback((e) => {
+  //   //console.log(e);
+  // }, []);
+  useEffect(() => {
+    if (!modalOpen) {
+      setWhiteCountInUnfriend(null);
+    }
+  }, [modalOpen]);
+  const closeAccessItem = (e) => {
+    setIsComponentVisible(false);
+  };
+  useEffect(() => {
+    if (!isComponentVisible) {
+      const updatedAccess = accessOptions.map((accessObj) => {
+        return {
+          ...accessObj,
+          active: false,
+        };
+      });
 
+      setAccessOptions(updatedAccess);
+    }
+  }, [isComponentVisible]);
+  // const [isStopingSync, setIsStopingSync] = useState(false);
+  alertBrodcater();
   const onSearchModified = useCallback((e) => {
     dispatch(updateFilter(e));
   }, []);
-  const [update, setUpdate] = useState("Sync Now");
+  const [update, setUpdate] = useState(syncBtnDefaultState);
 
-  socket.on("sendUpdate", (facebookFriendListUpdate)=>{
-    console.log("sendUpdate ::: ", facebookFriendListUpdate);
-    localStorage.setItem("fr_isSyncing", facebookFriendListUpdate?.isSyncing);
-    setIsSyncing(facebookFriendListUpdate?.isSyncing);
-    setUpdate(facebookFriendListUpdate?.update)
-    localStorage.setItem("fr_update", facebookFriendListUpdate?.update)
+  socket.on("facebookLoggedOut", (logoutUpdate) => {
+    //console.log("updates :::  ", logoutUpdate);
+    setUpdate(syncBtnDefaultState);
     setInlineLoader(false);
+    setIsSyncing("");
+    dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
+      .unwrap()
+      .then((response) => {
+        // console.log("response :::b ", response)
+        if (response?.data?.length > 0) {
+          setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
+          localStorage.setItem(
+            "fr_tooltip",
+            response?.data[0]?.friend_details[0]?.updated_at
+          );
+        }
+      });
   });
+  /**
+   * function to search array for not white-listed friend
+   * @param {Array} list
+   * @returns
+   */
+  const searchForNotWhiteLst = (list) => {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].whitelist_status === 0 || !list[i].whitelist_status) {
+        return true;
+      }
+    }
+  };
+  /**
+   * Function to search array fro not black-listed friend
+   * @param {Array} list
+   * @returns
+   */
+  const searchForNotBlackLst = (list) => {
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].blacklist_status === 0 || !list[i].blacklist_status) {
+        return true;
+      }
+    }
+  };
+
+  useEffect(() => {
+    setWhiteListable(searchForNotWhiteLst(selectedFriends));
+    setBlacklistable(searchForNotBlackLst(selectedFriends));
+  }, [selectedFriends]);
+  useEffect(() => {
+    const addAccess = accessOptions.map((accessObj) => {
+      switch (accessObj.type) {
+        case "sortHeader":
+          return {
+            ...accessObj,
+            status: headerOptions.sortHeader,
+          };
+
+        case "filterHeader":
+          return {
+            ...accessObj,
+            status: headerOptions.filterHeader,
+          };
+
+        case "quickAction":
+          return {
+            ...accessObj,
+            status: headerOptions.quickAction,
+          };
+
+        case "exportHeader":
+          return {
+            ...accessObj,
+            status: headerOptions.exportHeader,
+          };
+
+        default:
+          break;
+      }
+
+      return accessObj;
+    });
+
+    setAccessOptions(addAccess);
+  }, [headerOptions]);
+
+  useEffect(() => {
+    const locationArray = [];
+    const locationPathName = location.pathname
+      .split("/")
+      .filter((el) => el.trim() !== "");
+
+    locationPathName.map((el, i) => {
+      locationArray.push({
+        location: el.replace("-", " "),
+        key: i,
+      });
+    });
+
+    setLinks(locationArray);
+
+    validateHeaderOptions(locationPathName[locationPathName.length - 1]);
+  }, [location]);
 
   const onAccessClick = (e) => {
     const updatedAccess = accessOptions.map((accessObj) => {
       if (accessObj.type === e.type) {
+        closeAccessItem();
         return {
           ...accessObj,
           active: !accessObj.active,
@@ -156,6 +330,7 @@ function PageHeader({ headerText = "" }) {
     });
 
     setAccessOptions(updatedAccess);
+    setIsComponentVisible((current) => !current);
   };
 
   const validateHeaderOptions = useCallback((pathValue) => {
@@ -163,7 +338,7 @@ function PageHeader({ headerText = "" }) {
       case "friend-list":
         setHeaderOptions({
           ...headerOptions,
-          viewSelect: true,
+          viewSelect: false,
           syncManual: true,
           searchHeader: true,
           sortHeader: true,
@@ -171,54 +346,96 @@ function PageHeader({ headerText = "" }) {
           quickAction: true,
           exportHeader: true,
           listingLengthWell: true,
+          queryTopHeader: {
+            active: true,
+            content:
+              "Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+          },
         });
         break;
       case "lost-friends":
         setHeaderOptions({
           ...headerOptions,
-          viewSelect: true,
-          syncManual: true,
+          viewSelect: false,
           searchHeader: true,
-          sortHeader: true,
-          filterHeader: true,
+          listingLengthWell: true,
+          quickAction: false,
+        });
+        break;
+      case "unfriended-friends":
+        setHeaderOptions({
+          ...headerOptions,
+          viewSelect: false,
+          searchHeader: true,
+          listingLengthWell: true,
+          quickAction: false,
+        });
+        break;
+      case "whitelisted-friends":
+        setHeaderOptions({
+          ...headerOptions,
+          viewSelect: false,
+          searchHeader: true,
           quickAction: true,
-          exportHeader: true,
           listingLengthWell: true,
         });
         break;
-      case "unfriend":
+      case "blacklisted-friends":
         setHeaderOptions({
           ...headerOptions,
-          viewSelect: true,
+          viewSelect: false,
+          quickAction: true,
           searchHeader: true,
-          listingLengthWell: true
+          listingLengthWell: true,
         });
         break;
-        case "whitelist":
+      case "message":
         setHeaderOptions({
           ...headerOptions,
-          viewSelect: true,
-          searchHeader: true,
-          listingLengthWell: true
+          messageOption: true,
         });
         break;
+      case "pending-request":
+        setHeaderOptions({
+          ...headerOptions,
+          viewSelect: false,
+          syncManual: false,
+          searchHeader: true,
+          sortHeader: true,
+          filterHeader: true,
+          quickAction: false,
+          exportHeader: true,
+          listingLengthWell: true,
+          infoToolTip: true,
+        });
+        break;
+      case "deactivated-friends":
+        setHeaderOptions({
+          ...headerOptions,
+          viewSelect: false,
+          syncManual: false,
+          searchHeader: true,
+          sortHeader: true,
+          filterHeader: true,
+          quickAction: false,
+          exportHeader: true,
+          listingLengthWell: true,
+          infoToolTip: true,
+        });
+        break;
+
       default:
         setHeaderOptions({ ...pageOptoions });
         break;
     }
   }, []);
 
-  const sleep = (ms) => {
-    console.log("SLEEP for ", ms / 1000 + " Second(s)")
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   const getRandomInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
-  }
+  };
 
   const closeFilterDropdown = (item) => {
-    console.log(item.type == "quickAction" && item.active, accessOptions);
+    //onsole.log(item.type == "quickAction" && item.active, accessOptions);
     const accessPlaceholder = [...accessOptions];
     accessPlaceholder.filter(
       (arrayOpt) => item.type == "quickAction" && item.active,
@@ -228,12 +445,13 @@ function PageHeader({ headerText = "" }) {
   };
 
   const whiteLabeledUsers = (item) => {
+    dispatch(removeSelectedFriends());
     closeFilterDropdown(item);
     if (selectedFriends && selectedFriends.length > 0) {
       let payload = selectedFriends.map((item) => {
         return {
           // token: token,
-          fbUserId: currentFbId,
+          fbUserId: defaultFbId,
           friendFbId: item.friendFbId,
           friendListId: item._id,
           status: 1,
@@ -242,105 +460,169 @@ function PageHeader({ headerText = "" }) {
       dispatch(whiteListFriend({ payload: payload }))
         .unwrap()
         .then((res) => {
-          dispatch(
-            getFriendList({
-              // token: localStorage.getItem("fr_token"),
-              fbUserId: savedFbUId,
-            })
-          )
-            .unwrap()
-            .then((res) => {
-              selectedFriends &&
-                Alertbox(
-                  `${
-                    selectedFriends.length > 1 ? "Contacts" : "Contact"
-                  } white-listed successfully!`,
-                  "success",
-                  1000,
-                  "bottom-right"
-                );
-
-              dispatch(removeSelectedFriends());
-            });
+          selectedFriends &&
+            Alertbox(
+              `${selectedFriends.length > 1 ? "Contacts" : "Contact"
+              } whitelisted successfully!`,
+              "success",
+              1000,
+              "bottom-right"
+            );
+          //dispatch(removeSelectedFriends());
         })
         .catch((err) => {
-          Alertbox(`${err.message} `, "error", 2000, "bottom-right");
-          dispatch(removeSelectedFriends());
+          Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+         // dispatch(removeSelectedFriends());
         });
     }
   };
 
+  const BlocklistUser = (item) => {
+    dispatch(removeSelectedFriends());
+    closeFilterDropdown(item);
+    if (selectedFriends && selectedFriends.length > 0) {
+      let payload = selectedFriends.map((item) => {
+        return {
+          // token: token,
+          fbUserId: defaultFbId,
+          friendFbId: item.friendFbId,
+          status: 1,
+        };
+      });
+
+      dispatch(BlockListFriend({ payload: payload }))
+        .unwrap()
+        .then((res) => {
+          selectedFriends &&
+            Alertbox(
+              `${selectedFriends.length > 1 ? "Contacts" : "Contact"
+              } blacklisted successfully!`,
+              "success",
+              3000,
+              "bottom-right"
+            );
+          //dispatch(removeSelectedFriends());
+        })
+        .catch((err) => {
+          Alertbox(`${err.message} `, "error", 2000, "bottom-right");
+          //dispatch(removeSelectedFriends());
+        });
+    }
+  };
   const checkBeforeUnfriend = async (item) => {
     if (item) {
       closeFilterDropdown(item);
     }
     if (selectedFriends && selectedFriends.length > 0) {
-      let abortdelete = false;
-      selectedFriends.map( async (item) => {
+      let whiteCount = 0;
+      for (let item of selectedFriends) {
         if (item.whitelist_status === 1) {
-          abortdelete = true;
-          return; 
+          whiteCount++;
         }
-      });
-
-      if (abortdelete) {
-        setModalOpen(true);
-        return;
-      } else {
-        unfriend();
       }
-     
+      setWhiteCountInUnfriend(whiteCount);
+      setModalOpen(true);
     }
   };
+  const skipWhitList = () => {
+    const listWithOutWhites = selectedFriends.filter((item) => {
+      return item.whitelist_status !== 1;
+    });
+    unfriend(listWithOutWhites);
+  };
+  const handleBeforeUnload = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
 
-  const unfriend = () => {
-    selectedFriends.map( async (item, i) => {
-      console.log("deleteing")
-    
-      let payload = [{
-        fbUserId: currentFbId,
-        friendFbId: item.friendFbId,
-        friendListId: item._id,
-        status: 1,
-      }];
+  const unfriend = async (unfriendableList = selectedFriends) => {
+    // console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
+    if (!unfriendableList?.length > 0) {
+      Alertbox(
+        `Some error happend in selecting prfiles`,
+        "error",
+        1000,
+        "bottom-right"
+      );
+      return;
+    }
+    setModalOpen(false);
 
+    let defaultFb = localStorage.getItem("fr_default_fb");
+    let loggedInFb = localStorage.getItem("fr_current_fbId");
+
+    if (defaultFb !== loggedInFb) {
+      alert(
+        "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
+        localStorage.getItem("fr_default_fb")
+      );
+      return false;
+    }
+
+    Alertbox(
+      `Started to delete ${unfriendableList.length} friends, please don't logout from facebook or turn off the system`,
+      "warning",
+      3000,
+      "bottom-right"
+    );
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    setRunningUnfriend(true);
+    dispatch(removeSelectedFriends());
+    for (let i = 0; i < unfriendableList.length; i++) {
+      let item = unfriendableList[i];
+
+      let payload = [
+        {
+          fbUserId: defaultFbId,
+          friendFbId: item.friendFbId,
+          friendListId: item._id,
+          status: 1,
+        },
+      ];
       const unfriendFromFb = await extensionAccesories.sendMessageToExt({
         action: "unfriend",
         frLoginToken: localStorage.getItem("fr_token"),
-        payload: payload
+        payload: payload,
       });
+      //console.timeEnd("send remove req");
+
+      // console.log("unfriendFromFb", unfriendFromFb);
 
       dispatch(deleteFriend({ payload: payload }))
-      .unwrap()
-      .then((res) => {
-        dispatch(
-          getFriendList({
-            fbUserId: savedFbUId,
-          })
-        )
-          .unwrap()
-          .then((res) => {
-            selectedFriends &&
-              Alertbox(
-                `${
-                  item.friendName 
-                } unfriended successfully!`,
-                "success",
-                1000,
-                "bottom-right"
-              );
-            dispatch(removeSelectedFriends());
+        .unwrap()
+        .then((res) => {
+          fr_channel.postMessage({
+            cmd: "alert",
+            type: "success",
+            time: 3000,
+            message: `${item.friendName
+              } unfriended successfully!   (Unfriending ${i + 1}/${unfriendableList.length
+              })`,
+            position: "bottom-right",
           });
-      })
-      .catch((err) => {
-        dispatch(removeSelectedFriends());
-        Alertbox(`${err.message} `, "error", 2000, "bottom-right");
-      });
-      let delay = getRandomInteger(1000*5, 1000*60*2); // 30 secs to 2 mins
-      await sleep(delay);
-    });
-    
-  }
+          Alertbox(
+            `${item.friendName} unfriended successfully!   (Unfriending ${i + 1
+            }/${unfriendableList.length})`,
+            "success",
+            3000,
+            "bottom-right"
+          );
+        })
+        .catch((err) => {
+          //dispatch(removeSelectedFriends());
+          Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+        });
+     // dispatch(removeSelectedFriends());
+      if (i !== unfriendableList.length - 1) {
+        let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
+        //console.time("wake up");
+        await helper.sleep(delay);
+        //console.timeEnd("wake up");
+      }
+    }
+    setRunningUnfriend(false);
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
   const syncFriend = async () => {
     setInlineLoader(true);
     try {
@@ -348,22 +630,36 @@ function PageHeader({ headerText = "" }) {
         action: "syncprofile",
         frLoginToken: localStorage.getItem("fr_token"),
       });
-      // console.log("facebookProfile :::::::::::::: ", facebookProfile?.uid?.toString())
       if (
         facebookProfile?.uid?.toString() !==
         localStorage.getItem("fr_default_fb")
       ) {
         alert(
           "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-            localStorage.getItem("fr_default_fb")
+          localStorage.getItem("fr_default_fb")
         );
         setInlineLoader(false);
         return;
       }
-      localStorage.setItem("fr_isSyncing", "active");
-      localStorage.setItem("fr_update", "Syncing Friends...")
       setUpdate("Syncing Friends...");
       setIsSyncing("active");
+
+      let profileUpdate = {
+        userId: facebookProfile.uid.toString(),
+        name: facebookProfile.text,
+        profilePicture: facebookProfile.photo,
+        profileUrl: "https://www.facebook.com" + facebookProfile.path,
+      };
+      await saveUserProfile(profileUpdate);
+      fetchUserProfile().then((res) => {
+        if (res && res.length) {
+          dispatch(setProfileSpaces(res));
+        }
+      });
+
+      helper.setCookie("fr_isSyncing", "active");
+      localStorage.setItem("fr_update", "Syncing Friends...");
+
       const friendCountPayload = {
         action: "syncFriendLength",
         frLoginToken: localStorage.getItem("fr_token"),
@@ -372,34 +668,108 @@ function PageHeader({ headerText = "" }) {
         friendCountPayload
       );
       if (facebookFriendLength) {
-      localStorage.setItem("friendLength", facebookFriendLength.friendLength)
+        localStorage.setItem("friendLength", facebookFriendLength.friendLength);
         const friendListPayload = {
           action: "manualSyncFriendList",
           frLoginToken: localStorage.getItem("fr_token"),
         };
 
+        let intv = setInterval(() => {
+          checkSyncingStatus(intv);
+        }, syncStatucCheckingIntvtime);
+
         const syncedFriends = await extensionAccesories.sendMessageToExt(
           friendListPayload
         );
-
-        if (syncedFriends) {
-          console.log("syncedFriends  ", syncedFriends);
-        }
-        localStorage.setItem("fr_isSyncing", "");
-        Alertbox(
-          "Friends syncing is successfully completed",
-          "success",
-          1000,
-          "bottom-right"
-        );
-        setInlineLoader(false);
-        console.log("here");
       }
-      console.log("here::::");
+      //console.log("here::::");
     } catch (error) {
     } finally {
-      setInlineLoader(false);
+      // setInlineLoader(false);
     }
+  };
+
+  const fetchFriends = async () => {
+    dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
+      .unwrap()
+      .then((response) => {
+        //console.log("response :::b ", response);
+        if (response?.data?.length > 0) {
+          setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
+          localStorage.setItem(
+            "fr_tooltip",
+            response?.data[0]?.friend_details[0]?.updated_at
+          );
+        }
+      });
+  };
+  const fetchPendingFrRquest=async()=>{
+    dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })).unwrap().then((res)=>{
+      console.log("Pending Request List",res)
+    })
+  }
+
+  const completeSync = async () => {
+    // console.log("Stop syncing");
+    setIsSyncing("");
+    setUpdate(syncBtnDefaultState);
+    setInlineLoader(false);
+    // setIsStopingSync(false);
+    isStopingSync = false;
+    localStorage.removeItem("fr_update");
+    console.log("syncing completed_________________________>")
+    Alertbox(
+      "Friends syncing is successfully completed",
+      "success",
+      1000,
+      "bottom-right"
+    );
+    fetchPendingFrRquest();
+    fetchFriends();
+  };
+
+  const checkSyncingStatus = async (intv) => {
+    let isSyncActive = helper.getCookie("fr_isSyncing");
+    let syncingUpdate = localStorage.getItem("fr_update");
+
+    if (syncingUpdate !== "Done") {
+      setUpdate(syncingUpdate);
+    }
+    if (isSyncActive) {
+      //console.log("set inline loader");
+      setInlineLoader(true);
+    }
+
+    //console.log("is Syncing stoping", isStopingSync);
+
+    if (!isSyncActive && syncingUpdate && !isStopingSync) {
+      //console.log("stoping sync");
+      clearInterval(intv);
+      isStopingSync = true;
+      // setIsStopingSync(true);
+      await helper.sleep(refethingDelayAfterSync);
+      await completeSync();
+    }
+  };
+
+  // Force stop syncing loader
+  useEffect(() => {
+    if (update === "Sync Now") {
+      setIsSyncing("");
+    }
+  }, [update]);
+
+  const checkIsSyncing = async () => {
+    setInterval(() => {
+      let isSyncActive = helper.getCookie("fr_isSyncing");
+      let syncingUpdate = localStorage.getItem("fr_update");
+      if (isSyncActive && syncingUpdate !== "Done") {
+        setIsSyncing(true);
+        setUpdate(syncingUpdate || "Syncing Friends...");
+      } else if (syncingUpdate && !isStopingSync) {
+        checkSyncingStatus();
+      }
+    }, 1000 * 10);
   };
 
   useEffect(() => {
@@ -461,61 +831,86 @@ function PageHeader({ headerText = "" }) {
   }, [location]);
 
   useEffect(() => {
-    setSelectedState(selectedFriends);
-  }, [selectedFriends]);
+    let isSyncingActive = helper.getCookie("fr_isSyncing");
+    //console.log("Cookie isSyncingActive = ", isSyncingActive);
+    setIsSyncing(isSyncingActive);
 
-  useEffect(() => {
-    setIsSyncing(localStorage.getItem("fr_isSyncing"));
-    console.log("localStorage.getItem(fr_update) :::: ", localStorage.getItem("fr_update") !== null && localStorage.getItem("fr_update") !== "Done" )
-    if(localStorage.getItem("fr_tooltip") !== null) setTooltip(localStorage.getItem("fr_tooltip"))
-    if(localStorage.getItem("fr_update") !== null && localStorage.getItem("fr_update") !== "Done" ){ setUpdate(localStorage.getItem("fr_update")) } else setUpdate("Sync Now")
+    checkIsSyncing();
+
+    if (localStorage.getItem("fr_tooltip") !== null)
+      setTooltip(localStorage.getItem("fr_tooltip"));
+
+    if (isSyncingActive) {
+      setUpdate(localStorage.getItem("fr_update"));
+
+      // Check sync status
+      let intv = setInterval(() => {
+        checkSyncingStatus(intv);
+      }, syncStatucCheckingIntvtime);
+    } else {
+      localStorage.removeItem("fr_update");
+      setUpdate(syncBtnDefaultState);
+    }
   }, []);
 
+  const MassagebuttonClick = (messageType) => {
+    // console.log("clicked msgobj::::>>", messageType);
+    dispatch(updateMessageType(messageType.data));
+  };
+
   useEffect(() => {
-    console.log("inlineLoader", inlineLoader);
-  }, [inlineLoader]);
-
-
-  useEffect(()=>{
-    if(update === "Done"){
-    Alertbox(
-        "Friends syncing is successfully completed",
-        "success",
-        1000,
-        "bottom-right"
-      );
-      setUpdate("Sync Now");
-      dispatch(getFriendList({"fbUserId" : localStorage.getItem("fr_default_fb")})).unwrap()
-          .then((response) => {
-            console.log("response :::b ", response)
-            if(response?.data?.length>0){
-              setTooltip(response?.data[0]?.friend_details[0]?.updated_at)
-              localStorage.setItem("fr_tooltip", response?.data[0]?.friend_details[0]?.updated_at)
-            }
-            // else {
-            // }
-          })
+    if (messageType) {
+      radioMessageOptions
+        .filter((msg) => msg.data != messageType)
+        .map((mapMsg) => (mapMsg.checked = false));
+      radioMessageOptions.filter(
+        (msg) => msg.data == messageType
+      )[0].checked = true;
     }
-  }, [update]);
+  }, []);
 
+  // useEffect(() => {
+  //   console.log("isComponentVisible", isComponentVisible);
+  // }, [isComponentVisible]);
 
   return (
     <>
+      {/* <Prompt
+        when={runningUnfriend}
+        message={() => 'Are you sure you want to leave this page? Your changes will not be saved.'}
+      /> */}
       {selectedFriends?.length > 0 && (
         <Modal
           modalType="delete-type"
           modalIcon={DeleteImgIcon}
           headerText={"Unfriend"}
-          bodyText={`${
-            selectedFriends.length
-          } Friends selected. but ${selectedFriends.reduce(
-            (acc, curr) => acc + curr.whitelist_status,
-            0
-          )} Whitelist friend are selected as well. Are you sure you want to unfriend your friends?`}
+          bodyText={
+            <>
+              You have selected <b>{selectedFriends.length}</b> friend(s), and{" "}
+              <b>
+                {" "}
+                {selectedFriends.reduce(
+                  (acc, curr) => acc + curr.whitelist_status,
+                  0
+                )}{" "}
+              </b>{" "}
+              of them are currently on your whitelist. Are you sure you want to
+              remove all of these friend(s) from your list?
+            </>
+          }
+          closeBtnTxt={"Yes, unfriend"}
+          closeBtnFun={unfriend}
           open={modalOpen}
           setOpen={setModalOpen}
-          ModalFun={unfriend}
-          btnText={"Yes, Unfriend"}
+          ModalFun={skipWhitList}
+          btnText={"Skip whitelisted"}
+          ExtraProps={{
+            primaryBtnDisable:
+              whiteCountInUnfriend === 0 ||
+                whiteCountInUnfriend === selectedFriends.length
+                ? true
+                : false,
+          }}
         />
       )}
       <div className="common-header d-flex f-align-center f-justify-between">
@@ -525,12 +920,26 @@ function PageHeader({ headerText = "" }) {
               {headerText != ""
                 ? headerText
                 : links.length > 0
-                ? links[links.length - 1].location
-                : ""}
+                  ? links[links.length - 1].location
+                  : ""}
               {headerOptions.listingLengthWell && (
-                <span className="num-header-count num-well">
-                  {listCount}
-                </span>
+                <span className="num-header-count num-well">{listCount}</span>
+              )}
+              {headerOptions.infoToolTip && (
+                <ToolTipPro
+                  textContent={
+                    "This count is only based on the friend requests sent by Friender"
+                  }
+                />
+              )}
+
+              {headerOptions.queryTopHeader.active ? (
+                <Tooltip
+                  textContent={headerOptions.queryTopHeader.content}
+                  type={"query"}
+                />
+              ) : (
+                ""
               )}
             </h2>
           </div>
@@ -540,13 +949,21 @@ function PageHeader({ headerText = "" }) {
         </div>
         <div className="right-div d-flex f-align-center">
           {headerOptions.viewSelect && (
-            <div className="fr-listing-view">
-              <Radio
+            <div className="fr-listing-view no-click">
+              {/* <Radio
                 name="list-type"
                 options={radioOptions}
                 onChangeMethod={onChangeHandler}
-              />
+              /> */}
             </div>
+          )}
+          {headerOptions.searchHeader && (
+            <Search
+              extraClass="fr-search-header"
+              itemRef={searchRef}
+              onSearch={onSearchModified}
+              placeholderText="Search"
+            />
           )}
           {headerOptions.syncManual && (
             <div className="fr-sync-header">
@@ -559,20 +976,22 @@ function PageHeader({ headerText = "" }) {
                   <FacebookSyncIcon />
                 </figure>
                 <span className="sync-text">
-                  {update}
+                  {update || syncBtnDefaultState}
                 </span>
-                {console.log(toolTip)}
-                {!isSyncing && <Tooltip textContent={toolTip !== "" ? "Last syced at " + toolTip : "Not Synced yet."} />}
+                {/* {console.log(toolTip)} */}
+                {!isSyncing && (
+                  <Tooltip
+                    textContent={
+                      toolTip !== ""
+                        ? "Last synced at " + toolTip
+                        : "Not Synced yet."
+                    }
+                  />
+                )}
               </button>
             </div>
           )}
-          {headerOptions.searchHeader && (
-            <Search
-              extraClass="fr-search-header"
-              onSearch={onSearchModified}
-              placeholderText="Search"
-            />
-          )}
+
           <div className="fr-accessibility-buttons d-flex f-align-center">
             {/* 
           {headerOptions.dynamicMergeFields && }
@@ -587,13 +1006,16 @@ function PageHeader({ headerText = "" }) {
             {accessOptions
               .filter((e) => e.status)
               .map((accessItem, i) => (
-                <div className="fr-access-item h-100" key={"access-" + i}>
+                <div
+                  className="fr-access-item h-100"
+                  key={"access-" + i}
+                  ref={clickedRef}
+                >
                   <button
-                    className={`accessibility-btn btn h-100 ${
-                      accessItem.active || accessItem.type == "exportHeader"
+                    className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
                         ? "active"
                         : ""
-                    }`}
+                      }`}
                     key={accessItem.type + i}
                     onClick={() => onAccessClick(accessItem)}
                     ref={accessItem.type == "quickAction" ? actionRef : null}
@@ -605,20 +1027,19 @@ function PageHeader({ headerText = "" }) {
                       {accessItem.text}
                     </span>
                   </button>
-                  {accessItem.type == "quickAction" && (
+                  {accessItem.type == "quickAction" && isComponentVisible && (
                     <div
-                      className={`fr-dropdown fr-dropdownAction ${
-                        accessItem.type == "quickAction" && accessItem.active
+                      className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
                           ? "active"
                           : ""
-                      }`}
+                        }`}
                     >
                       <ul>
                         <li
                           className="del-fr-action"
                           onClick={() => checkBeforeUnfriend(accessItem)}
                           data-disabled={
-                            !selectedState || selectedState.length == 0
+                            !selectedFriends || selectedFriends.length === 0
                               ? true
                               : false
                           }
@@ -631,18 +1052,14 @@ function PageHeader({ headerText = "" }) {
                         <li
                           className="whiteLabel-fr-action"
                           onClick={() => whiteLabeledUsers(accessItem)}
-                          data-disabled={
-                            !selectedState || selectedState.length == 0
-                              ? true
-                              : false
-                          }
+                          data-disabled={!whiteListable}
                         >
                           <figure>
                             <WhitelabelIcon />
                           </figure>
                           <span>Whitelist Friends</span>
                         </li>
-                        <li
+                        {/* <li
                           className="history-fr-action"
                           data-disabled={
                             !selectedState || selectedState.length == 0
@@ -654,8 +1071,8 @@ function PageHeader({ headerText = "" }) {
                             <ClockIcon />
                           </figure>
                           <span>Run History</span>
-                        </li>
-                        <li
+                        </li> */}
+                        {/* <li
                           className="reject-fr-action"
                           data-disabled={
                             !selectedState || selectedState.length == 0
@@ -667,6 +1084,17 @@ function PageHeader({ headerText = "" }) {
                             <RejectIcon />
                           </figure>
                           <span>Reject Requests</span>
+                        </li> */}
+                        {/* </li> */}
+                        <li
+                          className="block-fr-action"
+                          onClick={() => BlocklistUser(accessItem)}
+                          data-disabled={!blacklistable}
+                        >
+                          <figure>
+                            <BlockIcon color={"#767485"} />
+                          </figure>
+                          <span>Blacklist</span>
                         </li>
                       </ul>
                     </div>
@@ -680,4 +1108,4 @@ function PageHeader({ headerText = "" }) {
   );
 }
 
-export default PageHeader;
+export default memo(PageHeader);

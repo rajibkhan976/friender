@@ -1,166 +1,139 @@
 // New Css color code implemented
 
-$bodyDarkColor: #111;
-
-// Border and BoxShadow Gradient Color
-$borderColor: #676e8f; 
-$borderBoxColor: #3B3B48;
-$inputBoxBorder: #0094FF;
-$gradientFirst: #827EFF; 
-$gradientsecond: #52D9BB;
-
-$successColor: #006D15;
-$goldenColor: #FEC600;
-$awardColor: #FAC000;
-
-$colorList: $gradientFirst -1.45%, $gradientsecond 101.45%; 
-
-$listingBgLight: #1C1C1E;
-$listingBgDark: #ffffff;
-
-$status: #BBBBBB;
-$statusSupportColor: rgba(77, 77, 77, 20%);
-$statusActive: #49CE56;
-$statusActiveSupportColor: #1B4D20;
-$statusPending: #F29339;
-$statusActiveSupportColor: rgba(242, 147, 57, 0.1);
-
-$loaderBackground: #000;
-$loaderBackgroundLight: #FAFAFB;
-
-// TABLE PLUGIN
-$transparentColor: transparent;
-$checkboxBackground: transparent;
-$checkboxCheckedBackground: #605BFF;
-$checkboxBorderColor: #B3B3BF;
-$listingPopupBg: #131314;
-$listingPopupLightBg: #fff;
-$transparentBgSelect: #BDBDBD;
-
-// SIDEBAR
-$sidebarBorder: #313037;
-$sidebarBorderLight: #dbdbdb;
-$menuToggleBg: #2F2F33;
-$menuToggleBgLight: #FFFFFF;
-$menuToggleBorder: #47474D;
-$menuToggleBorderLight: #FFFFFF;
-
-
-// ICONS
-$icon: rgba(255,255,255,0.7);
-$iconLight: rgba(3, 2, 41, 0.7);
-
-// HEADER OPTIONS
-$numWellBg: rgba(17, 230, 180, 0.2);
-$numWellText: #11E6B4;
-$interactiveBg: #26262A;
-$interactiveBgLight: #EDF0F9;
-$inputBorderLight: #EDF0F9;
-
-// Tooltip
-$tooltipBg: #313037;
-$tooltipBgLight: #FFFFFF;
-$tooltipText: #767485;
-$tooltipTextLight: #000000;
-
-
-// EXTRA
-$activeArea: #313037;
-$activeAreaLight: #dbdbdb;
-$scrollbar-dark: #333335;
-$scrollbar-light: #BDBDBD;
-
-// SELECTION POPUP
-$selectionBoxBorder: #0094FF;
-$selectionBoxBg: rgba(#0094FF, 0.15);
-
-
-// Theme Light
+// Theme Transparent
+$themeTransparent: transparent;
 
 // Primary
-$themeLightPrimary1: #605BFF;
+
+// Theme Default Primary
+$themeDefaultPrimary1: #0094FF;
+$themeDefaultPrimary2: #FFFFFF;
+$themeDefaultPrimary3: #BDBDBD;
+$themeDefaultPrimary4: #767485;
+$themeDefaultPrimary5: #111;
+$themeDefaultPrimary6: rgba(255,255,255,0.7);$themeLightPrimary1: #605BFF;
+
+// Theme Light Primary
 $themeLightPrimary2: #212121;
-$themeLightPrimary3: #11E6B4;
+$themeLightPrimary3: #11E6B4;$themePrimaryBlue2: #F0EFFF;
+
+// Theme Primary Blue
+$themePrimaryBlue3: #F7F7FF;
+$themePrimaryBlue4: #FCFDFF;
+$themePrimaryBlue6: #2922FF;
+$themePrimaryBlue7: #e5f5ff;
+$themePrimaryBlue8: rgb(137 163 255 / 10%);
+$themePrimaryBlue9: rgb(137 163 255 / 35%);
+$themePrimaryBlue10: rgba(0, 148, 255, 0.1);
+$themePrimaryBlue11: #827EFF;
+$themePrimaryBlue12: rgba(3, 2, 41, 0.7);
+$themePrimaryBlue13: #004373;
 
 // Secondary
+
+// Theme Light Secondary
 $themeLightSecondary1: #030229;
 $themeLightSecondary2: #1F3E79;
 $themeLightSecondary3: #6B7499;
 $themeLightSecondary4: #929292;
 
-//Gradients
-
-$darkThemeGradient: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
-$lightThemeGradient: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
-
-// Default Theme (Dark)
-
-// Primary
-$themeDefaultPrimary1: #0094FF;
-$themeDefaultPrimary2: #FFFFFF;
-$themeDefaultPrimary3: #BDBDBD;
-$themeDefaultPrimary4: #767485;
-
-// Secondary
+// Theme Default Secondary
 $themeDefaultSecondary1: #1C1C1E;
 $themeDefaultSecondary2: #313037;
 $themeDefaultSecondary3: #131314;
+$themeDefaultSecondary4: #ededed;
+$themeDefaultSecondary5: #333335;
+$themeDefaultSecondary6: #FAFAFB;
+$themeDefaultSecondary7: #EDF0F9;
+$themeDefaultSecondary8: #242424;
+$themeDefaultSecondary10: #A8A8A8;
 
-
-// Gradients
-$themeGradient1_1: #5BC4FF;
-$themeGradient1_2: #FF5BEF;
-$themeGradient2_1: #827EFF;
-$themetGradient2_2: #52D9BB;
-
-
-
-// Shades
-
-$themePrimaryBlue1: #605BFF;
-$themePrimaryBlue2: #F0EFFF;
-$themePrimaryBlue3: #F7F7FF;
-$themePrimaryBlue4: #FCFDFF;
-$themePrimaryBlue5: #FFFFFF;
-$themePrimaryBlue6: #2922FF;
-$themePrimaryBlue7: #e5f5ff;
-
-$themeSecondaryDarkBlue1: #030229;
+// Theme Secondary Blue
 $themeSecondaryDarkBlue2: #4D4C6A;
 $themeSecondaryDarkBlue3: #9A9AA9;
 $themeSecondaryDarkBlue4: #A2A2B4;
 $themeSecondaryDarkBlue5: #B3B3BF;
-
-$themeSecondaryRoyalBlue1: #1F3E79;
+$themeSecondaryDarkBlue6:rgba(0, 148, 255, 0.2);
 $themeSecondaryRoyalBlue2: #8998B8;
 
-$themeSecondaryGrey1: #6B7499;
+// Theme Secondary Grey
+$themeSecondaryGrey1: #808080;
 $themeSecondaryGrey2: #BAC4D8;
 $themeSecondaryGrey3: #F1F2F5;
 $themeSecondaryGrey4: #F4F4F4;
 $themeSecondaryGrey5: #303033;
 $themeSecondaryGrey6: rgba(96, 91, 255, 0.05);
 $themeSecondaryGrey7: #d3d3d3;
+$themeSecondaryGrey8: #949393;
+$themeSecondaryGrey9: #676e8f; 
+$themeSecondaryGrey10: #3B3B48;
+$themeSecondaryGrey11: rgba(77, 77, 77, 20%);
+$themeSecondaryGrey12: #BBBBBB;
+$themeSecondaryGrey13: #2F2F33;
+$themeSecondaryGrey14: #47474D;
+$themeSecondaryGrey15:#56555b;
+$themeSecondaryGrey16: #dbdbdb;
+$themeSecondaryGrey17: #151516;
 
+// Shades
+
+// Theme Black
 $themeBlack1: #000000;
-$themeBlack2: #1C1C1E;
-$themeBlack3: #313037;
-$themeBlack4: #131314;
-$themeBlack5: #767485;
 $themeBlack6: #2C2C2E;
 $themeBlack7: #26262A;
+$themeBlack8: rgb(49 48 55 / 50%);
+$themeBlack9: #999;
 
-$themeGreen1: #3A974C;
-$themeGreen2: #49CE56;
+// Theme Green
+$themeGreen: #00CA14;
+$themeGreen1: #3A974C; 
+$themeGreen2: #52D9BB;
 $themeGreen3: #EBF5ED;
+$themeGreen4: #005911;
+$themeGreen5: #006D15;
+$themeGreen6: #1B4D20;
+$themeGreen7: #49CE56;
+$themeGreen8: #a4cea8;
+$themeGreen9: rgba(17, 230, 180, 0.2);
 
-$themeYellow1: #F29339;
+// Theme Yellow
+$themeYellow1: #FEC600;
 $themeYellow2: #FEF4EB;
 $themeYellow3: #FFC227;
 $themeYellow4: rgb(255 214 107 / 54%);
 $themeYellow5: #e99d00;
+$themeYellow6: rgb(255 214 107 / 10%);
+$themeYellow7: rgb(255 214 107 / 35%);
+$themeYellow8: #FAC000;
+$themeYellow9: #F29339;
+$themeYellow10: #6D5413;
+$themeYellow11: #C3BF92;
+$themeYellow12: #FFE600;
 
+// Theme Red
 $themeRed1: #FF6A77;
 $themeRed2: #FFF0F1;
+$themeRed3: #92000D;
+$themeRed4:rgb(223 111 121 / 10%);
+$themeRed5:rgb(223 111 121 / 35%);
+$themeRed6: #B54B54;
+$themeRed7: #FFDBDE;
+$themeRed8: #D1A8A8;
 
-$themeGreen: #00CA14;
+// Theme Orange
+$themeOrange1: rgba(242, 147, 57, 0.1);
+
+// Theme Pink
+$themePink: #EF37FF;
+$themePink2: rgb(239 55 255 / 10%);
+
+// Theme Gradients
+$themeGradient1_1: #5BC4FF;
+$themeGradient1_2: #FF5BEF;
+$themeDarkGradient: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
+
+// Theme Navfill
+$themeNavDark:#272729;
+$themeNavLight:#27272938;
+$themeColorList: $themePrimaryBlue11 -1.45%, $themeGreen2 101.45%; 
+$themeBackground: rgba($themeDefaultPrimary1, 0.15);

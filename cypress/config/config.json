@@ -1,0 +1,12 @@
+{
+    "forgetpassword":"x6tb08uu3m.execute-api.us-east-1.amazonaws.com",
+    "login" : "https://x6tb08uu3m.execute-api.us-east-1.amazonaws.com",
+    "signup" : "https://x6tb08uu3m.execute-api.us-east-1.amazonaws.com",
+    "gettingstarted" : "https://3pqc39mfr1.execute-api.us-east-1.amazonaws.com",
+    "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTY2MywiZW1haWwiOiJzc3NAZ21haWwuY29tIiwic3RhdHVzIjoiMSIsImlhdCI6MTY3MjQwNDI2NCwiZXhwIjoxNjczMDA5MDY0fQ.gpz6q7roYdzUyEp-blGRwk22utTG6n3sTK2iW9Qs43M",
+    "fetchUserProfile" : "https://3pqc39mfr1.execute-api.us-east-1.amazonaws.com",
+    "fetchUserFriendlist" : "https://3pqc39mfr1.execute-api.us-east-1.amazonaws.com",
+    "fetchUsersettings":"3pqc39mfr1.execute-api.us-east-1.amazonaws.com",
+    "resetpassword":"x6tb08uu3m.execute-api.us-east-1.amazonaws.com"
+
+}

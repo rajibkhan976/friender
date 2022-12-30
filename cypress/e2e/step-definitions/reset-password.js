@@ -19,36 +19,43 @@ When("I Logged in with the default password", () => {
     cy.login()
     Cypress.on('uncaught:exception', (err, runnable) => {
         return false
-        })
+    })
     resetpwd.get_resetpasswordpage()
 });
 
 Then("I should landed in the reset-password page and can change the password", () => {
+    cy.readFile('cypress/config/config.json').then((text)=>{
+        cy.server()
+        cy.route({
+            method: 'POST',
+            url: 'https://'+text.resetpassword+Cypress.env('api')+'/user-reset-password'
+          }).as('resetpassword');
+      })
     resetpwd.getpassword()
      cy.fixture("logindata").then((data) => {
         values = data;
-    resetpwd.get_newpassword().type(values.newpassword)
-    resetpwd.confirm_newpassword().type(values.newpassword)
+    resetpwd.get_newpassword().type(values.newpassword,{log:false})
+    resetpwd.confirm_newpassword().type(values.newpassword,{log:false})
     resetpwd.get_buttonnext().click();
     })
-   
-
 })
-
 
 Then("I should see the reset password confirmation message", () => {
+    cy.wait('@resetpassword').then(xhr => {
+        cy.log(xhr.requestBody);
+        cy.log("RESPONSE "+xhr.responseBody);
+        expect(xhr.method).to.eq('POST');
+    })
     tellmeaboutyourself.gettellusaboutyourselfpage()
     cy.logout()
-
 })
-
 
 Then("I can login with this newly changed password", () => {
     cy.loginvalid()
     cy.login()
     Cypress.on('uncaught:exception', (err, runnable) => {
         return false
-        })
+    })
     tellmeaboutyourself.gettellusaboutyourselfpage()
 })
 
@@ -56,7 +63,6 @@ Then("I should landed in the reset-password page and give very weak password", (
     resetpwd.get_newpassword().type('ghsghgiii00')
     resetpwd.confirm_newpassword().type('ghsghgiii00')
 });
-
 
 Then("I should see error message", () => {
     cy.contains("Must have 8 characters including: A-Z,a-z, @#$ & 0-9").should('be.visible')
@@ -72,7 +78,6 @@ Then("I should landed in the reset-password page and give password and make empt
 Then("I should see error message for invalid input", () => {
     cy.contains("Invalid Password").should('be.visible')
     resetpwd.get_buttonnext().should('be.disabled')
-
 });
 
 Then("I should landed in the reset-password page and I should not able to proceed without changing the password", () => {

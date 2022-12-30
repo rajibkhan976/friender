@@ -1,7 +1,7 @@
-@use "./color";
+@use "./color" as *;
 @use "./color-themes" as *;
-@use "./font";
-@use "./variables";
+@use "./font" as *;
+@use "./variables" as *;
 
 @mixin theme-aware($key, $color) {
   @each $theme-name, $theme-color in $themes {
@@ -75,7 +75,7 @@
 // Text alignment
 
 // Position alignment
-@mixin textAlign($alignment: variables.$left-alignment) {
+@mixin textAlign($alignment: $left-alignment) {
   text-align: $alignment;
 }
 
@@ -352,9 +352,9 @@
 // Header Text Styling
 
 @mixin hedadingText(
-  $size: font.$fontSize,
-  $color: color.$themeDefaultPrimary2,
-  $weight: font.$fontWeight
+  $size: $fontSize,
+  $color: $themeDefaultPrimary2,
+  $weight: $fontWeight
 ) {
   // Standard Auth Page Heading Styles
   font-size: $size;
@@ -364,9 +364,9 @@
   @include margins(0px, 0, 10px, 0);
 }
 @mixin hedadingPara(
-  $size: font.$smallFontSize,
-  $color: color.$themeDefaultPrimary3,
-  $height: variables.$lineHeight
+  $size: $smallFontSize,
+  $color: $themeDefaultPrimary3,
+  $height: $lineHeight
 ) {
   font-size: $size;
   color: $color;
@@ -379,15 +379,15 @@
 
 @mixin authButton(
   $button-type: "",
-  $width: variables.$full-width,
-  $weight: font.$smallFontWeight
+  $width: $full-width,
+  $weight: $smallFontWeight
 ) {
   // Standard Auth Button Styles
   width: $width;
-  background: color.$themeLightPrimary1;
-  font-size: font.$fontSize;
+  background: $themeLightPrimary1;
+  font-size: $fontSize;
   font-weight: $weight;
-  color: color.$themeDefaultPrimary2;
+  color: $themeDefaultPrimary2;
   height: 42px;
   @include border-radius(5px);
   @include margins(10px, 0, 30px, 0);
@@ -396,24 +396,24 @@
   @include textAlignment(center);
   cursor: pointer;
   &:hover {
-    background: color.$themePrimaryBlue6;
+    background: $themePrimaryBlue6;
   }
 }
 
 @mixin commonBtn(
-  $width: variables.$full-width,
-  $weight: font.$smallFontWeight,
+  $width: $full-width,
+  $weight: $smallFontWeight,
   $height: 42px,
-  $clr:color.$themeDefaultPrimary2,
-  $clrHvr:color.$themeDefaultPrimary2,
-  $backClr: color.$themeLightPrimary1,
-  $backClrHvr: color.$themePrimaryBlue6,
-  $bordrClr:color.$themeLightPrimary1,
-  $bdrClrHvr:color.$themePrimaryBlue6
+  $clr:$themeDefaultPrimary2,
+  $clrHvr:$themeDefaultPrimary2,
+  $backClr: $themeLightPrimary1,
+  $backClrHvr: $themePrimaryBlue6,
+  $bordrClr:$themeLightPrimary1,
+  $bdrClrHvr:$themePrimaryBlue6
 ) {
   width: $width;
   background: $backClr;
-  font-size: font.$fontSize;
+  font-size: $fontSize;
   font-weight: $weight;
   color: $clr;
   height: $height;
@@ -436,9 +436,9 @@
 // Input Fields
 
 @mixin inputBox(
-  $background: color.$themeBlack3,
-  $width: variables.$full-width,
-  $color: color.$themeDefaultPrimary2
+  $background: $themeDefaultSecondary2,
+  $width: $full-width,
+  $color: $themeDefaultPrimary2
 ) {
   // Standard Auth InputBox Styles
   width: $width;
@@ -450,7 +450,7 @@
   background: $background;
   transition: all 0.5s ease-in-out;
   @include border-radius(5px);
-  @include bordered(color.$themeBlack3, 1px, solid);
+  @include bordered($themeDefaultSecondary2, 1px, solid);
   &:active,
   &:focus,
   &:focus-within,
@@ -458,18 +458,18 @@
   &:visited,
   &:focus-visible,
   &:target {
-    @include bordered(color.$inputBoxBorder, 1px, solid);
-    background: color.$listingPopupBg;
+    @include bordered($themeDefaultPrimary1, 1px, solid);
+    background: $themeDefaultSecondary3;
   }
 }
 
 @mixin ComInputBox(
-  $background: color.$themeBlack3,
-  $width: variables.$full-width,
-  $color: color.$themeDefaultPrimary2,
-  $height: variables.$full-width,
-  $border: color.$themeBlack3,
-  $borderHover: color.$inputBoxBorder
+  $background: $themeDefaultSecondary2,
+  $width: $full-width,
+  $color: $themeDefaultPrimary2,
+  $height: $full-width,
+  $border: $themeDefaultSecondary2,
+  $borderHover: $themeDefaultPrimary1
 ) {
   // Standard common InputBox Styles with variable hieght and width and border colors
   width: $width;
@@ -491,7 +491,7 @@
   &:focus-visible,
   &:target {
     border: 1px solid $borderHover;
-    background: color.$listingPopupBg;
+    background: $themeDefaultSecondary3;
   }
 }
 
@@ -499,7 +499,7 @@
 
 // Input Fields Error Message
 
-@mixin errorMessage($color: color.$themeRed1, $weight: font.$smallFontWeight) {
+@mixin errorMessage($color: $themeRed1, $weight: $smallFontWeight) {
   color: $color;
   font-weight: $weight;
   font-size: 12px;
@@ -514,10 +514,10 @@
 // Auth Page Input Box
 
 @mixin authBox(
-  $background: color.$themeBlack2,
-  $width: variables.$authBox-width,
-  $border: color.$borderBoxColor,
-  $weight: font.$smallFontWeight
+  $background: $themeDefaultSecondary1,
+  $width: $authBox-width,
+  $border: $themeSecondaryGrey10,
+  $weight: $smallFontWeight
 ) {
   width: $width;
   overflow-y: auto;

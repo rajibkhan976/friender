@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const SettingLoader = () => {
     return (
         <div className="page-loader-mainSpace settings-loader d-flex d-flex-column">
@@ -5,12 +7,13 @@ const SettingLoader = () => {
                 <span className="skeleton-loader closed-settings"></span>
                 <span className="skeleton-loader closed-settings"></span>
                 <span className="skeleton-loader closed-settings"></span>
-                <span className="skeleton-loader opened-settings"></span>
-                <span className="skeleton-loader opened-settings"></span>
-                <span className="skeleton-loader opened-settings"></span>
+                <span className="skeleton-loader closed-settings"></span>
+                <span className="skeleton-loader closed-settings"></span>
+                <span className="skeleton-loader closed-settings"></span>
+                <span className="skeleton-loader closed-settings"></span>
             </div>
         </div>
     );
 };
 
-export default SettingLoader;
+export default memo(SettingLoader);

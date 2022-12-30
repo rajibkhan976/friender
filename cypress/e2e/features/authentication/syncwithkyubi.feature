@@ -5,6 +5,6 @@ Feature: Sync With Kyubi
     Scenario: user should be able to login with Kyubi user credentials
 
         Given User created via Kyubi
-        When  I will be in friender platform 
+        When  I can login with the user created via Kyubi and default password of Kyubi
         Then  I should see landed up into password reset page
    

@@ -4,7 +4,7 @@
 .page-loader {
     position: fixed;
     inset: 0;
-    padding: 30px;
+    // padding: 30px;
     @include theme-aware('background-color', 'loader-bg');
     z-index: 99999;
 
@@ -16,7 +16,7 @@
             @include theme-aware('background', 'loader-component-bg');
             padding: 20px 25px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
-            @include border-radius(10px);
+            // @include border-radius(10px);
 
             &.open {
                 flex: 0 0 300px;
@@ -63,12 +63,12 @@
 
         .page-loader-body {
             flex: 1 1 auto;
-            margin-left: 50px;
+            // margin-left: 50px;
 
             .page-loader-header {
                 flex: 0 0 80px;
                 padding: 15px 30px;
-                @include border-radius(10px);
+                // @include border-radius(10px);
                 @include theme-aware('background', 'loader-component-bg');
                 box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
 
@@ -107,8 +107,8 @@
 
     .page-loader-bottom {
         flex: 0 0 40px;
-        margin-top: 10px; 
-        @include border-radius(5px);
+        // margin-top: 10px; 
+        // @include border-radius(5px);
     }
 }
 
@@ -116,6 +116,7 @@
     flex: 1 1 auto;
     margin-top: 26px;
     width: 100%;
+    padding-inline: 30px;
 
     * {
         width: 100%;
@@ -200,14 +201,13 @@
       height: 100%;
       padding: 30px 50px;
       margin-top: 0;
-      border-radius: 10px;
       .page-loader-tableHeader {
         flex-direction: column;
         .skeleton-loader {
           width: 100%;
-          margin-bottom: 20px;
+          margin-bottom: 5px;
           &.closed-settings {
-            height: 35px;
+            height: 50px;
           }
           &.opened-settings {
             height: 114px;

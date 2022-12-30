@@ -6,10 +6,9 @@ const PasswordInput = (props) => {
     setCheckPassword(checkPassword);
     setPasswordErrors(passwordErrors)
   }, [checkPassword, passwordErrors]);
-  //useEffect(() => {}, [checkPassword, passwordErrors]);
+  
   const handleChangePassword = (event) => {
     setCheckPassword(event.target.value.trim());
-    //console.log("Password Entered is",checkPassword);
     if (event.target.value.length > 4) {
       if (/\s/.test(event.target.value) === false) {
         if(props.typeValidation) {
@@ -26,19 +25,15 @@ const PasswordInput = (props) => {
           props.passwordErrors(null);
           props.passwordEntered(event.target.value);
         }
-        // console.log("Password Entered satidfies is",checkPassword);
-        // console.log("Error is",passwordErrors);
       } else {
         setPasswordErrors("Password cannot have space");
         props.passwordErrors("Password cannot have space");
-        // console.log("Password Entered satidfies is",checkPassword);
-        // console.log("Error is",passwordErrors);
+        
       }
     } else {
       setPasswordErrors("Invalid Password");
       props.passwordErrors("Invalid Password");
-      // console.log("Password Entered satidfies is",checkPassword);
-      //   console.log("Error is",passwordErrors);
+      
     }
   };
 
@@ -54,13 +49,13 @@ const PasswordInput = (props) => {
         <input
           // tabIndex="1"
           autoComplete="new-password"
-          onPaste={(e)=>{
-            e.preventDefault()
-            return false;
-          }} onCopy={(e)=>{
-            e.preventDefault()
-            return false;
-          }}
+          // onPaste={(e)=>{
+          //   e.preventDefault()
+          //   return false;
+          // }} onCopy={(e)=>{
+          //   e.preventDefault()
+          //   return false;
+          // }}
           type={!showHidePassword ? "password" : "text"}
           className={passwordErrors ? "form-control error" : "form-control"}
           placeholder={props.placeholderText}

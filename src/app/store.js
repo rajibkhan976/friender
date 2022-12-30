@@ -3,7 +3,8 @@ import mysettingReducer from "../actions/MySettingAction";
 import authReducer from "../actions/AuthAction"
 import fbReducer from "../actions/FriendsAction";
 import friendListReducer from "../actions/FriendListAction";
-import listingFilterReducer from "../actions/FilterActions"
+import profilespace from "../actions/ProfilespaceActions"
+import messageReducer from "../actions/MessageAction"
 // import productReducer from "../features/product/productSlice";
 // import searchReducer from "../features/Search/searchSlice";
 
@@ -12,7 +13,8 @@ export const store = configureStore({
     mySettings:mysettingReducer,
     auth:authReducer,
     facebook_data:fbReducer,
-    friend_list_data:friendListReducer,
-    listingFilter: listingFilterReducer
+    friendlist:friendListReducer,
+    profilespace: profilespace,
+    message:messageReducer,
   },
 });

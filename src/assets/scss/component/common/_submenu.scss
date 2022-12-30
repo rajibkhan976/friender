@@ -1,0 +1,76 @@
+@use '../../abstract/color' as *;
+@use '../../abstract/color-themes' as *;
+@use '../../abstract/font' as *;
+@use '../../abstract/mixins' as *;
+
+.sub-menu {
+    @include theme-aware('background', 'award-background');
+    border: 1px solid;
+    @include theme-aware('border-color', 'table-headings');
+    position: absolute;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 99;
+
+    &.submenu-message {
+        width: 110px;
+        right: 0%;
+        top: 100%;
+        li {
+            display: flex;
+            align-items: center;
+            height: 27px;
+            padding-inline: 10px;
+            @include border-radius(5px);
+
+            &.sub-menu-item {
+                background-color: rgba($themeDefaultPrimary1, 0.1);
+
+                figure {
+                    width: 8px;
+                    margin-right: 5px;
+
+                    svg {
+                        max-width: 100%;
+                        path {
+                            fill: $themeDefaultPrimary1;
+                        }
+                    }
+                }
+                span {
+                    font-size: 10px;
+                    color: $themeDefaultPrimary1;
+                    font-weight: $fontWeight;
+                }
+
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+
+            &.error-menu-item {
+                background-color: rgba($themeRed1, 0.1);
+
+                figure {
+                    svg {
+                        max-width: 100%;
+
+                        path {
+                            fill: $themeRed1;
+                        }
+                    }
+                }
+
+                span {
+                    font-size: 10px;
+                    color: $themeRed1;
+                    font-weight: $fontWeight;
+                }
+            }
+        }
+
+        li + li {
+            margin-top: 5px;
+        }
+    }
+}

@@ -54,6 +54,24 @@ export const whiteListFriends = async (payload)=>{
       })
   })
 }
+
+
+export const BlockListFriends = async (payload)=>{
+  return new Promise((resolve, reject)=>{
+    axios
+      .post(
+          config.blockListUserUrl,
+          payload,
+          {headers: headers}
+      ).then((result)=>{
+          resolve(result.data);
+      })
+      .catch((error)=>{
+        console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
 export const deleteFriends = (payload)=>{
   return new Promise((resolve, reject)=>{
     axios
@@ -82,7 +100,26 @@ export const fetchFriendLost = (payload)=>{
           resolve(result.data);
       })
       .catch((error)=>{
-        console.log("ERROR REGISTER:::", error?.response?.data ? error.response.data : error.message);
+        console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
+
+
+
+export const fetchSenFriendReqList= (payload)=>{
+  return new Promise((resolve, reject)=>{
+    axios
+      .post(
+          config.fetchSendFriendReqUrl,
+          payload,
+          {headers: headers}
+      ).then((result)=>{
+          resolve(result.data);
+      })
+      .catch((error)=>{
+        console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })

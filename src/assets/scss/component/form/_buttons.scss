@@ -41,19 +41,85 @@
 
     &.active {
       width: auto;
-
+      @include theme-aware("background", "btn-hover");
       .accessibility-text {
         opacity: 1;
       }
     }
   }
 
+  &.link-btn {
+    margin: 0;
+    padding-inline: 20px;
+  }
+
   &:disabled {
     @include theme-aware("background", "btn-disabled");
     @include theme-aware("color", "disabled-text");
   }
-  &:hover {
-    @include theme-aware("background", "btn-hover");
+  // &:hover {
+   
+  // }
+
+  &.delete-pending-frnd {
+    @include theme-aware('background-color', 'red-delete');
+    padding-inline: 8px;
+    padding-block: 0;
+    font-size: 10px;
+    height: 22px;
+    @include border-radius(3px);
+    border: 1px solid transparent;
+
+
+    span {
+      margin-right: 5px;
+      line-height: 1;
+    }
+
+    &:hover {
+      filter: saturate(0.8)
+    }
+
+    &.btn-deleting {
+      @include theme-aware('color', 'red-delete');
+      @include theme-aware('border-color', 'red-delete');
+      @include theme-aware('background-color', 'red-delete-active');
+
+      span {
+        &:has(svg) {
+          animation: rotate 3s infinite forwards;
+          rotate: 0deg;
+          transform-origin: 50% 50%;
+          font-size: 0;
+        }
+      }
+
+      svg {
+        *[fill] {
+          @include theme-aware('fill', 'red-delete');
+        }
+        *[stroke] {
+          @include theme-aware('stroke', 'red-delete');
+        }
+      }
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      rotate: 0deg;
+    }
+    75% {
+      rotate: 180deg;      
+    }
+    100% {
+      rotate: 0deg
+    }
+  }
+
+  &.inline-btn {
+    padding: 0;
+    margin: 0;
   }
 }
 
@@ -77,18 +143,26 @@
       height: 40px;
     }
     &.unfriend {
-      width: 135px;
+      width: auto;
       padding: 0 20px;
       height: 40px;
       margin-left: 10px;
       margin-bottom: 0;
+      font-size: 14px;
     }
     &.outline {
       color: rgba(96, 91, 255, 1);
       background: transparent;
       border: 1px solid rgba(96, 91, 255, 0.4);
-      width: 76px;
+      width: auto;
+      padding: 10px 20px;
+      font-size: 14px;
       margin-bottom: 0;
+      height: 40px;
+      &:hover {
+        color: #0094FF!important;
+        border: 1px solid #0094FF;
+      }
     }
 .btn-primary-outline {
   @include commonBtn(
@@ -97,8 +171,8 @@
     42px,
     $themeLightPrimary1,
     $themePrimaryBlue6,
-    $listingBgLight,
-    $listingBgLight,
+    $themeDefaultSecondary1,
+    $themeDefaultSecondary1,
     $themeLightPrimary1,
     $themePrimaryBlue6
   );
@@ -107,7 +181,7 @@
 }  }
 
   .btn-transparent {
-    background: transparent;
+    background: transparent !important;
     border: none;
     cursor: pointer;
     &.menu-detail{
@@ -117,4 +191,61 @@
       margin-right: 10px;
     }
   }
+
+
+
+/*=============================================
+=            Buttton Danger (Delete Button)            =
+=============================================*/
+
+.btn-danger {
+  @include authButton();
+  background: #B54B54;
+
+  &:hover {
+    background: #b96c72!important;
+  }
+
+  &.mismatched {
+    color: $themeRed1!important;
+  }
+
+  &:disabled {
+    //@include theme-aware('background', 'btn-disabled');
+    background: #B54B54;
+    color: $themeSecondaryDarkBlue3;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: .7;
+  }
+    &.upgrade-btn {
+      margin: 0;
+      height: 40px;
+    }
+    &.unfriend {
+      width: auto;
+      padding: 0 20px;
+      height: 40px;
+      margin-left: 10px;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+    &.outline {
+      color: #B54B54;
+      background: transparent;
+      border: 1px solid rgba(96, 91, 255, 0.4);
+      width: auto;
+      padding: 10px 20px;
+      font-size: 14px;
+      margin-bottom: 0;
+      height: 40px;
+      &:hover {
+        color: #b96c72!important;
+        border: 1px solid #c18e92;
+      }
+    }
+}
+
+
+/*=====  End of Buttton Danger (Delete Button)  ======*/
 

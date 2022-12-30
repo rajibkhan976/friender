@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const ListingLoader = () => {
     return (
         <div className="page-loader-mainSpace d-flex d-flex-column">
@@ -30,4 +32,4 @@ const ListingLoader = () => {
     );
 };
 
-export default ListingLoader;
+export default memo(ListingLoader);

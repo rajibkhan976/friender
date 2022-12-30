@@ -1,5 +1,5 @@
 module.exports = {
-    socketUrlLocal: process.env.REACT_APP_SOCKET_URL_LOCAL,
+    socketUrlLocal: process.env.REACT_APP_SOCKET_URL,
     // socketUrlProd: process.env.REACT_APP_SOCKET_URL,
     STAGE: process.env.REACT_APP_ENV,
     // REACT_APP_BUCKET_NAME: process.env.REACT_APP_BUCKET_NAME,

@@ -7,10 +7,18 @@
     width: 36px;
     height: 20px;
     margin-right: 14px;
+    // top: -3px;
+
     input { 
         opacity: 0;
         width: 0;
         height: 0;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        
         &:checked + .slider {
           background: rgba(58, 151, 76, 0.2);
           border: 1px solid #3A974C;
@@ -21,7 +29,7 @@
           }
           
           &:checked + .slider:before {
-            background: $statusActive;
+            background: $themeGreen7;
             -webkit-transform: translateX(14px);
             -ms-transform: translateX(14px);
             transform: translateX(14px);
@@ -68,4 +76,12 @@
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  .muted-slider {
+    border-color: $themeSecondaryGrey15;
+
+    &:before {
+      background: $themeSecondaryGrey15;
+    }
   }

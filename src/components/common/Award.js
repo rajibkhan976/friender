@@ -1,10 +1,14 @@
 import Fire from "../../assets/images/fire.png";
-import Lottie from "react-lottie-player";
-import awardAnimation from "../../assets/animations/award-animation.json";
-import awardAnimationLight from "../../assets/animations/award-animation-light.json";
+import Button from "../formComponents/Button";
+import { Link } from "react-router-dom";
+import { lazy } from "react";
+import AwardDefault from '../../assets/animations/components/AwardDefault'
+import AwardLight from '../../assets/animations/components/AwardLight';
 //import { produceWithPatches } from "immer";
 const Award = (props) => {
-  
+  // const AwardDefault = lazy(() => import('../../assets/animations/components/AwardDefault'));
+  // const AwardLight = lazy(() => import('../../assets/animations/components/AwardLight'));
+
   return (
     <div className="intermediate-wraper">
     <div className="rewards-wraper d-flex">
@@ -12,9 +16,8 @@ const Award = (props) => {
       <div className="reward-left-section">
         <div className="cup-animation dark-theme">
           {/* Lotti animation placed */}
-            <Lottie
+            <AwardDefault
                 loop = {4}
-                animationData={awardAnimation}
                 play
                 background="transparent"
                 style={{ width: "200px", height: "200px" }}
@@ -23,9 +26,8 @@ const Award = (props) => {
         </div>
         <div className="cup-animation light-theme">
           {/* Lotti animation placed */}
-            <Lottie
+            <AwardLight
                 loop = {4}
-                animationData={awardAnimationLight}
                 play
                 background="transparent"
                 style={{ width: "200px", height: "200px" }}
@@ -35,16 +37,18 @@ const Award = (props) => {
       </div>
       <div className="reward-right-section">
         <h2>Congratulations!</h2>
-        <p>You have sucessfully completed<br /> your first 3 steps</p>
-        <div className="time-save-wraper d-flex">
+        <p>You have sucessfully completed your first 3 steps</p>
+
+        <Link to="/friends/friend-list" className="btn-primary btn link-btn">Your friend list is ready. Click here</Link>
+        {/* <div className="time-save-wraper d-flex">
           <span className="fire-wraper">
             <img src={Fire} alt="" />
           </span>
           <p className="saved-hour"><span>5 Hours</span> You saved</p>
-        </div>
+        </div> */}
       </div>
       </div>
-      <div className="reward-right-wraper">
+      {/* <div className="reward-right-wraper">
         <h3>Results</h3>
         
         <div className="result-row d-flex">
@@ -62,7 +66,7 @@ const Award = (props) => {
               </svg>
             </div>
             <div className="ind-result-info">
-              <h3>{props.friendsCount}</h3>
+              <h3>50</h3>
               <p>Total Friends</p>
             </div>
           </div>
@@ -145,7 +149,7 @@ const Award = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   </div>
   );

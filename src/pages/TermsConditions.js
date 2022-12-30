@@ -1,4 +1,4 @@
-import { React } from "react";
+import { memo, React } from "react";
 import Logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 //import AuthAction from "../../actions/AuthAction";
@@ -12,7 +12,7 @@ const TermsConditions = () => {
         </div>
         <div className="logo-section">
           <Link to="/">
-            <img src={Logo} alt="" />
+            <img src={Logo} alt="" loading="lazy" />
           </Link>
         </div>
       </div>
@@ -635,4 +635,4 @@ const TermsConditions = () => {
   );
 };
 
-export default TermsConditions;
+export default memo(TermsConditions);

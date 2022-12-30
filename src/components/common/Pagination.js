@@ -10,7 +10,7 @@ const Pagination = ({ pageNum, itemsPerPage, onNumClick }) => {
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-    
+    console.log("This the pagination com[p]",pageNum)
     setCurrentItems([...Array(Number(pageNum)).keys()].slice(itemOffset, endOffset));
     setPageCount(Math.ceil([...Array(Number(pageNum)).keys()].length / itemsPerPage));
   }, [itemOffset, itemsPerPage, pageNum]);

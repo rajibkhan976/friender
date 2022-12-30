@@ -5,15 +5,19 @@ export default function useComponentVisible() {
   const clickedRef = useRef(null);
 
   const handleClickOutside = (event) => {
+    
+    const newTarget = event.target.closest('div[dir="dmf-list"]');
     if (clickedRef.current && !clickedRef.current.contains(event.target)) {
-      isComponentVisible && setIsComponentVisible(false);
+      
+      if(newTarget && newTarget.getAttribute("dir") === "dmf-list")
+        isComponentVisible && setIsComponentVisible(true);
+      else
+        isComponentVisible && setIsComponentVisible(false);
     }
-    // if (clickedRef.current && !clickedRef.current.contains(event.target)) {
-    //   setIsComponentVisible(!isComponentVisible);
-    // }
   };
 
   useEffect(() => {
+    
     document.addEventListener("click", handleClickOutside, !isComponentVisible);
 
     return () => {

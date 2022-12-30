@@ -27,3 +27,23 @@ import 'cypress-ag-grid';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+let identity
+Cypress.Commands.add('postToken', () => {
+cy.request({
+    method: 'POST',
+    url: func.login + Cypress.env('api') + '/login',
+    headers: {
+     // 'Authorization': 'Bearer' + payload.token,
+      'Content-Type': 'application/json'
+    },
+    body: {
+      "email": "sss@gmail.com",
+      "password": "Sangeeta@321"
+    }
+  })   .its('body')
+  .then((response) => {
+      identity = response
+      window.localStorage.setItem('identity', JSON.stringify(identity))
+      cy.log(identity.token)
+  })
+})

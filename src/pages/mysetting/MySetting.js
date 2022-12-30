@@ -10,8 +10,11 @@ import {
 } from "../../services/SettingServices";
 import Alertbox from "../../components/common/Toast";
 import { useDispatch } from "react-redux";
-import { getMySettings, updateMysetting } from "../../actions/MySettingAction";
-
+import { getMySettings, updateMysetting, makeDeletePendingFrndReq } from "../../actions/MySettingAction";
+import { ChevronUpArrowIcon, ChevronDownArrowIcon, OutlinedDeleteIcon, DangerIcon, RefreshIconLight, DeleteIcon } from '../../assets/icons/Icons';
+import NotifyAlert from "../../components/common/NotifyAlert";
+import extensionAccesories from "../../configuration/extensionAccesories"
+import helper from "../../helpers/helper"
 const MySetting = () => {
   //:::: This is a child Setting my-setting::::
   const current_fb_id = localStorage.getItem("fr_default_fb");
@@ -34,6 +37,14 @@ const MySetting = () => {
   const [sndMsgExptFrndRqu, setSndMsgExptFrndRqu] = useState(false);
   const [dayBackAnlyFrndEng, setDayBackAnlyFrndEng] = useState(false);
   const [dayBackAnlyFrndEngNEW, setDayBackAnlyFrndEngNEW] = useState(false);
+  const [dayBackAnlyFrndEngOpen, setDayBackAnlyFrndEngOpen] = useState(false);
+  const [deletePendingFrnd, setDeletePendingFrnd] = useState(false);
+  const [deletePendingFrndOpen, setDeletePendingFrndOpen] = useState(false);
+  const [deletePendingFrndValue, setDeletePendingFrndValue] = useState(1);
+  const [deletePendingFrndModalOpen, setDeletePendingFrndModalOpen] = useState(false);
+  const [deletePendingFrndStartFinding, setDeletePendingFrndStartFinding] = useState(false);
+  const [deletePendingFrndError, setDeletePendingFrndError] = useState(false);
+
 
   //period selctor obj
   const periodObj = [
@@ -177,6 +188,10 @@ const MySetting = () => {
       value: "23:00",
       label: "11:00 PM",
     },
+    {
+      value: "24:00",
+      label: "00:00 AM",
+    },
   ];
   //massage template selector object
   const msgTmpltObj = [{ value: 0, label: "Select message" }];
@@ -198,15 +213,14 @@ const MySetting = () => {
     periodObj[0].value
   );
   const [dayBackAnlyFrndEngSelect1, setDayBackAnlyFrndEngSelect1] = useState(
-    periodObj[0].value
+    timeObj[0].value
   );
   const [dayBackAnlyFrndEngSelect2, setDayBackAnlyFrndEngSelect2] = useState(
-    periodObj[0].value
+    timeObj[1].value
   );
 
-  const [dayBackAnlyFrndEngSelect1NEW, setDayBackAnlyFrndEngSelect1NEW] = useState(
-    dayObj[0].value
-  );
+  const [dayBackAnlyFrndEngSelect1NEW, setDayBackAnlyFrndEngSelect1NEW] =
+    useState(dayObj[0].value);
 
   //inputs box states
   const [reFrndngInput1, setReFrndngInput1] = useState(1);
@@ -233,6 +247,101 @@ const MySetting = () => {
     msgTmpltObj[0]
   );
 
+  useEffect(() => {
+    setLoading(true)
+    console.log("before", render.current)
+    if (render.current <= 5) {
+      render.current = render.current + 1;
+    }
+    // console.log("after", render.current)
+    if (render.current > 1) {
+      if (settingFetched) {
+        //console.log("the setting saving is optimized-._>");
+        const handler = setTimeout(() => saveMySetting(), 1000);
+        setLoading(false)
+        return () => clearTimeout(handler);
+        /* ::::Never delete the Comment::::
+        optiMizedSave();
+        setTimeout(() => {
+          saveMySetting();
+        }, 1000);*/
+      } else {
+        return;
+      }
+    }
+  }, [
+    dontSendFrindReqFrnd,
+    dontSendFrindReqIRejct,
+    dontSendFrindReqThyRejct,
+    reFrndng,
+    autoCnclFrndRque,
+    sndMsgRcvFrndRqu,
+    sndMsgAcptFrndRqu,
+    sndMsgDlcFrndRqu,
+    sndMsgExptFrndRqu,
+    dayBackAnlyFrndEng,
+    reFrndSelect1,
+    sndMsgRcvFrndRquSelect,
+    sndMsgAcptFrndRquSelect,
+    sndMsgDlcFrndRquSelect,
+    sndMsgExptFrndRquSelect,
+    dayBackAnlyFrndEngSelect1,
+    dayBackAnlyFrndEngSelect2,
+    sndMsgRcvFrndRquMsgSelect,
+    sndMsgAcptFrndRquMsgSelect,
+    sndMsgDlcFrndRquMsgSelect,
+    sndMsgExptFrndRquMsgSelect,
+    reFrndngInput1,
+    reFrndngInput2,
+    cnclFrndRqueInput,
+    sndMsgRcvFrndRquInput,
+    sndMsgAcptFrndRquInput,
+    sndMsgDlcFrndRquInput,
+    sndMsgExptFrndRquInput,
+  ]);
+  useEffect(() => {
+    const isDeleting = helper.getCookie("deleteAllPendingFR");
+    if(localStorage.getItem("fr_delete_id") === localStorage.getItem("fr_default_fb")){
+      if (isDeleting && isDeleting === "Done") {
+        setDeletePendingFrndStartFinding(false);
+        localStorage.removeItem("fr_delete_id");
+        helper.deleteCookie("deleteAllPendingFR");
+      } else if (isDeleting && isDeleting === "Active") {
+        setDeletePendingFrndStartFinding(true);
+        checkDeletePFRProgress();
+      }
+      else {
+        setDeletePendingFrndStartFinding(false);
+        localStorage.removeItem("fr_delete_id");
+      }
+    }
+    dispatch(getMySettings({ fbUserId: `${current_fb_id}` }));
+    //update api call with redux
+    fetchProfileSetting({
+      fbUserId: `${current_fb_id}`,
+    })
+      .then((response) => {
+        syncSettings(response.data[0]);
+
+        setSettingFetched(true);
+        setLoading(false);
+
+        //console.log("my res **", response.data);
+      })
+      .catch((err) => {
+        //console.log(err);
+      });
+  }, []);
+
+  /**
+   * ----- Delete Pending Friend Request(s) API integration -----
+   */
+  // useEffect(() => {
+  //   console.log("Current FB user id -- ", current_fb_id);
+
+
+  // }, []);
+
   //massege template select end
   const saveMySetting = () => {
     const payload = {
@@ -250,6 +359,9 @@ const MySetting = () => {
       send_message_when_decline_friend_request: sndMsgDlcFrndRqu,
       send_message_when_someone_accept_new_friend_request: sndMsgExptFrndRqu,
       day_bak_to_analyse_friend_engagement: dayBackAnlyFrndEng,
+      automatic_cancel_friend_requests_settings: {
+        remove_after: cnclFrndRqueInput
+      },
     };
     if (current_fb_id) {
       payload.facebookUserId = `${current_fb_id}`;
@@ -287,6 +399,7 @@ const MySetting = () => {
         payload.automatic_cancel_friend_requests_settings = {
           remove_after: cnclFrndRqueInput ? cnclFrndRqueInput : 1,
         };
+        setDeletePendingFrndValue(cnclFrndRqueInput ? cnclFrndRqueInput : 1)
       } else {
         Alertbox(
           "Input should not be empty or 0",
@@ -300,6 +413,14 @@ const MySetting = () => {
       //   remove_after: cnclFrndRqueInput ? cnclFrndRqueInput : 1,
       //   remove_after_type: cnclFrndRqueSelect1,
       // };
+    }
+    if (!autoCnclFrndRque) {
+      if (cnclFrndRqueInput && Number(cnclFrndRqueInput) !== 0) {
+        payload.automatic_cancel_friend_requests_settings = {
+          remove_after: cnclFrndRqueInput ? cnclFrndRqueInput : 1,
+        };
+        setDeletePendingFrndValue(cnclFrndRqueInput ? cnclFrndRqueInput : 1)
+      }
     }
     // cancel_sent_friend_requests_settings end
 
@@ -400,15 +521,18 @@ const MySetting = () => {
 
     //vvi ucomment it
 
-    console.log("i am payload****-----|||||>>>", payload);
+    //console.log("i am payload****-----|||||>>>", payload);
     dispatch(updateMysetting(payload));
     saveSettings(payload).then(() => {
-      Alertbox("setting saved successfully", "success", 1000, "bottom-right");
+      if (render.current > 2) {
+        Alertbox("setting saved successfully", "success", 1000, "bottom-right");
+      }
+
     });
   };
 
   const syncSettings = (data) => {
-    console.log("i am the data which creating change in setting**", data);
+    // console.log("i am the data which creating change in setting**", data);
     if (!data) return;
     if (data.length < 0) return;
     setDontSendFrindReqFrnd(
@@ -423,7 +547,7 @@ const MySetting = () => {
     setReFrndng(data.re_friending);
 
     if (data.re_friending && data.re_friending_settings) {
-      console.log("refriender setting****", data.re_friending_settings[0]);
+      // console.log("refriender setting****", data.re_friending_settings[0]);
 
       setReFrndSelect1(data.re_friending_settings[0].time_type);
 
@@ -438,9 +562,9 @@ const MySetting = () => {
 
     setAutoCnclFrndRque(data.automatic_cancel_friend_requests);
     if (
-      data.automatic_cancel_friend_requests &&
-      data.automatic_cancel_friend_requests_settings[0]
+      data?.automatic_cancel_friend_requests_settings.length > 0
     ) {
+      console.log('data', data.automatic_cancel_friend_requests_settings[0].remove_after);
       setCnclFrndRqueInput(
         data.automatic_cancel_friend_requests_settings[0].remove_after
       );
@@ -534,378 +658,797 @@ const MySetting = () => {
     }
   };
 
-  useEffect(() => {
-   console.log("current fb id creating requesting->>>",current_fb_id);
-      dispatch(getMySettings({fbUserId:`${current_fb_id}`}
-    ))
-    //update api call with redux
-      fetchProfileSetting({
-        fbUserId: `${current_fb_id}`,
-      })
-        .then((response) => {
-          syncSettings(response.data[0]);
-
-        setSettingFetched(true);
-        setLoading(false);
-
-        console.log("my res **", response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
-
   //if you want to use the common debounce function jus use it here i have used wth useCallback
 
-  useEffect(() => {
-    // as we are using react strict mode that why the rendering in happening  two times
-    if (render.current <= 3) {
-      render.current = render.current + 1;
+  /**
+   * set start time
+   * if start time is higher than to time,
+   * set to time as 1hr more than selected from time
+   *
+   * @returns
+   */
+  const setStartTime = (e) => {
+    if (
+      timeObj.indexOf(timeObj.filter((el) => el.value == e.target.value)[0]) >=
+      timeObj.indexOf(
+        timeObj.filter((el) => el.value == dayBackAnlyFrndEngSelect2)[0]
+      )
+    ) {
+      console.log("here");
+      setDayBackAnlyFrndEngSelect2(
+        timeObj[
+          timeObj.indexOf(
+            timeObj.filter((el) => el.value == e.target.value)[0]
+          ) + 1
+        ].value
+      );
     }
-    if (render.current > 2) {
-      if (settingFetched) {
-        console.log("the setting saving is optimized-._>");
+    setDayBackAnlyFrndEngSelect1(e.target.value);
+  };
 
-        const handler = setTimeout(() => saveMySetting(), 1000);
-        return () => clearTimeout(handler);
+  /**
+   * ======== Handle The Select Drop Down for Interval for auto sync friend list ========
+   * @param {object} event 
+   * @param {string} variant 
+   */
+  const dayBackAnlyFrndEngDropSelectHandle = (event, variant) => {
+    const { value } = event.target;
 
-        /* ::::Never delete the Comment::::
-        optiMizedSave();
-        setTimeout(() => {
-          saveMySetting();
-        }, 1000);*/
-      } else {
-        return;
+    if (!dayBackAnlyFrndEng) {
+      Alertbox(
+        "Please turn on the setting to make changes",
+        "warning",
+        1000,
+        "bottom-right"
+      );
+    }
+
+    if (dayBackAnlyFrndEng) {
+      if (variant === "select1") {
+        setDayBackAnlyFrndEngSelect1(value);
+      }
+      if (variant === "select2") {
+        setDayBackAnlyFrndEngSelect2(value);
       }
     }
-  }, [
-    dontSendFrindReqFrnd,
-    dontSendFrindReqIRejct,
-    dontSendFrindReqThyRejct,
-    reFrndng,
-    autoCnclFrndRque,
-    sndMsgRcvFrndRqu,
-    sndMsgAcptFrndRqu,
-    sndMsgDlcFrndRqu,
-    sndMsgExptFrndRqu,
-    dayBackAnlyFrndEng,
-    reFrndSelect1,
-    sndMsgRcvFrndRquSelect,
-    sndMsgAcptFrndRquSelect,
-    sndMsgDlcFrndRquSelect,
-    sndMsgExptFrndRquSelect,
-    dayBackAnlyFrndEngSelect1,
-    dayBackAnlyFrndEngSelect2,
-    sndMsgRcvFrndRquMsgSelect,
-    sndMsgAcptFrndRquMsgSelect,
-    sndMsgDlcFrndRquMsgSelect,
-    sndMsgExptFrndRquMsgSelect,
-    reFrndngInput1,
-    reFrndngInput2,
-    cnclFrndRqueInput,
-    sndMsgRcvFrndRquInput,
-    sndMsgAcptFrndRquInput,
-    sndMsgDlcFrndRquInput,
-    sndMsgExptFrndRquInput,
-  ]);
+  };
+
+  /**
+   * Set Delete Pending Requests Increment & Decrement..
+   */
+  const setValOfDeletePendingFrndIncDic = (type) => {
+    console.log("autoCnclFrndRque", autoCnclFrndRque);
+    if (!autoCnclFrndRque) {
+      Alertbox(
+        "Please turn on the setting to make changes",
+        "warning",
+        1000,
+        "bottom-right"
+      );
+    }
+
+    if (autoCnclFrndRque) {
+      if (type === "INCREMENT") {
+        if (cnclFrndRqueInput > 30) {
+          setDeletePendingFrndError(true);
+        } else {
+          setDeletePendingFrndError(false);
+          setCnclFrndRqueInput(parseInt(cnclFrndRqueInput) + 1);
+          setDeletePendingFrndValue(parseInt(cnclFrndRqueInput) + 1);
+        }
+      }
+
+      if (type === "DECREMENT") {
+        if (cnclFrndRqueInput > 1) {
+          setDeletePendingFrndError(false);
+          setCnclFrndRqueInput(parseInt(cnclFrndRqueInput) - 1);
+          setDeletePendingFrndValue(parseInt(cnclFrndRqueInput) - 1);
+        }
+      }
+    }
+  };
+
+  /**
+   * Handle Input-Bar of Cancel send friend reuquest(s) 
+   */
+  const deletePendingFrndInputHandle = (event) => {
+    const { value } = event.target;
+
+    if (!autoCnclFrndRque) {
+      Alertbox(
+        "Please turn on the setting to make changes",
+        "warning",
+        1000,
+        "bottom-right"
+      );
+    }
+
+    if (autoCnclFrndRque) {
+      if (parseInt(value) === 0 || value <= -1) {
+        setDeletePendingFrndError(true);
+        // setDeletePendingFrndValue(1);
+        setCnclFrndRqueInput(1)
+
+      } else if (parseInt(value) > 31) {
+        setDeletePendingFrndError(true);
+        // setDeletePendingFrndValue(31);
+        setCnclFrndRqueInput(31)
+
+      } else if (value.includes('.')) {
+        setDeletePendingFrndError(true);
+        // setDeletePendingFrndValue(Math.floor(parseFloat(value)));
+        setCnclFrndRqueInput(Math.floor(parseFloat(value)))
+      } else {
+        setDeletePendingFrndError(false);
+        setDeletePendingFrndValue(value);
+        setCnclFrndRqueInput(value)
+      }
+    }
+    // if (autoCnclFrndRque) {
+    //   setDeletePendingFrndError(false);
+
+    //   if (!deletePendingFrndValue) {
+    //     setDeletePendingFrndValue(1)
+    //     setCnclFrndRqueInput(1)
+    //   } else {
+    //     setCnclFrndRqueInput(deletePendingFrndValue)
+    //   }
+    // }
+  }
+
+  const checkDeletePFRProgress = async () => {
+    let checkingIntv = setInterval(() => {
+      console.log("checking deleting PFR status");
+      const isDeleting = helper.getCookie("deleteAllPendingFR");
+      if(isDeleting){
+        switch(isDeleting) {
+          case "Done" :
+            setDeletePendingFrndStartFinding(false);
+            localStorage.removeItem("fr_delete_id");
+            helper.deleteCookie("deleteAllPendingFR")
+            clearInterval(checkingIntv);
+            Alertbox(
+              "Deleted all pending friend request(s)",
+              "success",
+              1000,
+              "bottom-right"
+            );
+            break;
+
+          case "Active":
+            setDeletePendingFrndStartFinding(true)
+            break;
+
+          case "Empty":
+            clearInterval(checkingIntv);
+            localStorage.removeItem("fr_delete_id");
+            setDeletePendingFrndStartFinding(false);
+            helper.deleteCookie("deleteAllPendingFR");
+            Alertbox(
+              "No pending request(s) found",
+              "warning-toast",
+              1000,
+              "bottom-right"
+            );
+            break;
+        }
+      }
+      else {
+        setDeletePendingFrndStartFinding(false)
+        clearInterval(checkingIntv)
+      }
+    }, 1000 * 10);
+  };
+
+  /**
+   * Delete Pending Request Handler Function..
+   */
+  const deletePendingRequestHandle = async () => {
+    setDeletePendingFrndModalOpen(false);
+    setDeletePendingFrndStartFinding(true);
+    localStorage.setItem("fr_delete_id", localStorage.getItem("fr_default_fb"))
+    Alertbox(
+      "Started to delete all pending friend request(s) please don't reload or logout from facebook or turn off the system",
+      "warning",
+      1000,
+      "bottom-right"
+    );
+    const currentProfile = localStorage.getItem("fr_default_fb")
+    const friendCountPayload = {
+      action: "syncprofile",
+      frLoginToken: localStorage.getItem("fr_token"),
+    };
+    const facebookProfile = await extensionAccesories.sendMessageToExt(
+      friendCountPayload
+    );
+    if (!facebookProfile.uid || facebookProfile.uid != currentProfile) {
+      setDeletePendingFrndStartFinding(false);
+      localStorage.removeItem("fr_delete_id");
+      Alertbox(
+        `To initiate the deletion process, please Login to following facebook account`,
+        "error-toast",
+        2000,
+        "bottom-right",
+        `https://www.facebook.com/${localStorage.getItem("fr_default_fb")}`
+      );
+      return;
+    }
+    helper.setCookie("deleteAllPendingFR", "Active");
+    checkDeletePFRProgress();
+    await extensionAccesories.sendMessageToExt({ action: "deletePendingFR", fbUserId: localStorage.getItem("fr_default_fb") });
+  };
+
+  /**
+   * Delete Pending Request with Days Handler Function..
+   */
+  const deletePendingRequestWithDaysHandle = (event) => {
+    if (autoCnclFrndRque) {
+      setDeletePendingFrndError(false);
+      console.log('deletePendingFrndValue', deletePendingFrndValue);
+
+      if (!deletePendingFrndValue) {
+        setDeletePendingFrndValue(1)
+        setCnclFrndRqueInput(1)
+      } else {
+        setCnclFrndRqueInput(deletePendingFrndValue)
+      }
+    }
+  };
+
+
+  /**
+   * Disable every functional / special key except numbers
+   */
+
+  const checkData = (e) => {
+    let keySuccess = e.target.value == "." ||
+      e.target.value == "e" ||
+      e.target.value == "E" ||
+      e.code == "Period" ||
+      e.code == "NumpadDecimal" ||
+      e.code == "NumpadAdd" ||
+      e.code == "Equal" ||
+      e.code == "Minus" ||
+      e.code == "NumpadSubtract" ||
+      e.code == "Minus" ||
+      e.code == "NumpadMultiply" ||
+      e.code == "KeyE"
+
+    if (keySuccess) {
+      e.preventDefault()
+    }
+  }
 
   return (
-    <div className="setting-content">
+    <div className="setting-content setting-global">
       {settingFetched && (
-        <div className="settings paper">
-          {/* all setting list with switchs*/}
+        <>
+          <NotifyAlert
+            type="NOTIFY"
+            title="The settings will apply to each profile individually, allowing for customization and flexibility within a single account"
+          />
 
-          <div className="setting">
-            <Modal
-              headerText={"Unfriend"}
-              bodyText={
-                "8 Friends selected. but 3 Whitelist friend are selected aswell. Are you sure you want to unfriend your friends."
-              }
-              open={modalOpen}
-              setOpen={setModalOpen}
-              ModalFun={() => {
-                console.log("Modal opened");
-              }}
-              btnText={"Yes, Unfriend"}
-            />
-            <div className="setting-child">
-              <Switch
-                checked={dontSendFrindReqFrnd}
-                handleChange={() => {
-                  setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
-                }}
-              />
-              Don’t send friend requests to people I’ve been friends with
-              before.
-            </div>
-          </div>
-          <div className="setting">
-            <div className="setting-child">
-              <Switch
-                checked={dontSendFrindReqIRejct}
-                handleChange={() => {
-                  setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
-                }}
-              />{" "}
-              Don’t send friend requests to people who sent me friend requests
-              and I rejected.
-            </div>
-          </div>
-          <div className="setting last-settings">
-            <div className="setting-child">
-              <Switch
-                checked={dontSendFrindReqThyRejct}
-                handleChange={() => {
-                  setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
-                }}
-              />
-              Don’t send friend requests to people I sent friend requests and
-              they rejected.
-            </div>
-          </div>
+          <Modal
+            modalType="DELETE"
+            headerText={"Delete"}
+            bodyText={
+              "Are you sure you want to delete all of your pending friend request(s)."
+            }
+            open={deletePendingFrndModalOpen}
+            setOpen={setDeletePendingFrndModalOpen}
+            ModalFun={deletePendingRequestHandle}
+            btnText={"Yes, Delete"}
+            ModalIconElement={() => <DangerIcon />}
+          />
+          <div className="settings setting-paper currenctly-active">
 
-          {/* Re-Friending   setting start*/}
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
-                checked={reFrndng}
-                handleChange={() => {
-                  setReFrndng(!reFrndng);
+            {/* ========== Friends Settings ============ */}
+            <p className="fr-heading">
+              <span>Friends settings</span>
+            </p>
+
+            <div className="setting no-click">
+              <Modal
+                headerText={"Unfriend"}
+                bodyText={
+                  "8 Friends selected. but 3 Whitelist friend are selected aswell. Are you sure you want to unfriend your friends."
+                }
+                open={modalOpen}
+                setOpen={setModalOpen}
+                ModalFun={() => {
+                  //console.log("Modal opened");
                 }}
+                btnText={"Yes, Unfriend"}
               />
-              Re-Friending
-            </div>
-            {reFrndng && (
-              <div className="setting-child others">
-                Remove pending friend request after &nbsp;
-                <input
-                  className="setting-input"
-                  value={reFrndngInput1}
-                  onChange={(e) => {
-                    setReFrndngInput1(e.target.value);
+              <div className="setting-child muted-text">
+                <Switch
+                  upComing
+                  checked={dontSendFrindReqFrnd}
+                  handleChange={() => {
+                    setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
                   }}
                 />
-                <DropSelector
-                  selects={periodObj}
-                  value={reFrndSelect1}
-                  style={{}}
-                  handleChange={(e) => {
-                    setReFrndSelect1(e.target.value);
+                Don’t send friend request(s) to people I’ve been friends with before.
+              </div>
+
+              <span className="warn-badget">Coming Soon</span>
+            </div>
+
+            <div className="setting no-click">
+              <div className="setting-child muted-text">
+                <Switch
+                  upComing
+                  checked={dontSendFrindReqIRejct}
+                  handleChange={() => {
+                    setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
                   }}
                 />{" "}
-                &nbsp;and then, Instantly resend the friend request. I can set
-                this to &nbsp;
-                <input
-                  className="setting-input"
-                  value={reFrndngInput2}
-                  onChange={(e) => {
-                    setReFrndngInput2(e.target.value);
+                Don’t send friend request(s) to people who sent me friend request(s) and I rejected.
+              </div>
+
+              <span className="warn-badget">Coming Soon</span>
+            </div>
+
+            <div className="setting no-click">
+              <div className="setting-child muted-text">
+                <Switch
+                  upComing
+                  checked={dontSendFrindReqThyRejct}
+                  handleChange={() => {
+                    setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
                   }}
                 />
-                &nbsp;amount of times to Refriend.
+                Don’t send friend request(s) to people I sent friend request(s) and they rejected.
               </div>
-            )}
-          </div>
-          {/* Re-Friending   setting end*/}
 
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
+              <span className="warn-badget">Coming Soon</span>
+            </div>
+
+
+            {/* Re-Friending  setting start*/}
+            <div className="setting no-click">
+              <div className="setting-child muted-text">
+                <Switch
+                  upComing
+                  checked={reFrndng}
+                  handleChange={() => {
+                    setReFrndng(!reFrndng);
+                  }}
+                />
+                Automated re-friending
+              </div>
+              {reFrndng && (
+                <div className="setting-child others">
+                  Remove pending friend request after &nbsp;
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={reFrndngInput1}
+                    onChange={(e) => {
+                      setReFrndngInput1(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={reFrndSelect1}
+
+                    handleChange={(e) => {
+                      setReFrndSelect1(e.target.value);
+                    }}
+                  />{" "}
+                  &nbsp;and then, Instantly resend the friend request. I can set
+                  this to &nbsp;
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={reFrndngInput2}
+                    onChange={(e) => {
+                      setReFrndngInput2(e.target.value);
+                    }}
+                  />
+                  &nbsp;amount of times to Refriend.
+                </div>
+              )}
+
+              <span className="warn-badget">Coming Soon</span>
+            </div>
+
+
+            <div className="setting setting-actived" onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
               <Switch
                 checked={autoCnclFrndRque}
-                handleChange={() => {
-                  setAutoCnclFrndRque(!autoCnclFrndRque);
-                }}
+                // handleOnBlur={e => setAutoCnclFrndRque(!autoCnclFrndRque)}
+                handleChange={() => setAutoCnclFrndRque(!autoCnclFrndRque)}
               />
-              Automaticaly Cancel sent friend requests.
-            </div>
-            {autoCnclFrndRque && (
-              <div className="setting-child others">
-                Remove sent friend request after &nbsp;{" "}
-                <input
-                  className="setting-input"
-                  value={cnclFrndRqueInput}
-                  onChange={(e) => {
-                    setCnclFrndRqueInput(e.target.value);
-                  }}
-                />
-                &nbsp;Times.
+              Delete pending friend request(s) automatically
+
+              <div className="setting-control">
+                Delete all pending request(s) now
+                {" "}
+                <button
+                  className={
+                    deletePendingFrndStartFinding ?
+                      "btn delete-pending-frnd btn-deleting" : "btn delete-pending-frnd"}
+                  onClick={() => setDeletePendingFrndModalOpen(true)}
+                  // style={{ background: !deletePendingFrndStartFinding ? '#B54B54' : '#ba7c82' }}
+                  disabled={deletePendingFrndStartFinding}
+                >
+                  {!deletePendingFrndStartFinding ? (
+                    <>
+                      <span><OutlinedDeleteIcon color="white" /></span>
+                      Delete all
+                    </>
+                  ) : (
+                    <>
+                      <span>
+                        <RefreshIconLight />
+                      </span>
+                      Deleting..
+                    </>
+                  )}
+                </button>
+
+                <figure className="icon-arrow-down">
+                  {!deletePendingFrndOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
               </div>
-            )}
-          </div>
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
-                checked={sndMsgRcvFrndRqu}
-                handleChange={() => {
-                  setSndMsgRcvFrndRqu(!sndMsgRcvFrndRqu);
-                }}
-              />
-              Send message when you receive a new friend request from someone.
             </div>
 
-            {sndMsgRcvFrndRqu && (
+            {deletePendingFrndOpen && (
               <div className="setting-child others">
-                Select the message template you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgRcvFrndRquMsgSelect}
-                  style={{}}
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgRcvFrndRquMsgSelect(e.target.value);
-                  }}
-                />
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  className="setting-input"
-                  value={sndMsgRcvFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgRcvFrndRquInput(e.target.value);
-                  }}
-                />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgRcvFrndRquSelect}
-                  style={{}}
-                  handleChange={(e) => {
-                    setSndMsgRcvFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
+                Cancel send friend request(s) after
+                {" "}
+                <div className="input-num">
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={deletePendingFrndValue}
+                    onKeyDown={e => checkData(e)}
+                    onChange={deletePendingFrndInputHandle}
+                    // onBlur={deletePendingRequestWithDaysHandle}
+                  />
+
+                  <div className="input-arrows">
+                    <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
+                      <ChevronUpArrowIcon size={15} />
+                    </button>
+
+                    <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
+                      <ChevronDownArrowIcon size={15} />
+                    </button>
+                  </div>
+                </div>
+                {" "}
+                day(s)
+
+                {deletePendingFrndError && <span className="error-text">Provided value must be within the range of 1 to 31</span>}
               </div>
             )}
-          </div>
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              {" "}
-              <Switch
-                checked={sndMsgAcptFrndRqu}
-                handleChange={() => {
-                  setSndMsgAcptFrndRqu(!sndMsgAcptFrndRqu);
-                }}
-              />
-              Send message when you accept a friend request you received from
-              someone.
-            </div>
-            {sndMsgAcptFrndRqu && (
-              <div className="setting-child others">
-                Select the message tempalte you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgAcptFrndRquMsgSelect}
-                  style={{}}
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgAcptFrndRquMsgSelect(e.target.value);
-                  }}
-                />{" "}
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  className="setting-input"
-                  value={sndMsgAcptFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgAcptFrndRquInput(e.target.value);
-                  }}
+
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                // checked={autoCnclFrndRque}
+                // handleChange={() => {
+                //   setAutoCnclFrndRque(!autoCnclFrndRque);
+                // }}
                 />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgAcptFrndRquSelect}
-                  style={{}}
-                  handleChange={(e) => {
-                    setSndMsgAcptFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
+                Friend inactivity period
               </div>
-            )}
-          </div>
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
-                checked={sndMsgDlcFrndRqu}
-                handleChange={() => {
-                  setSndMsgDlcFrndRqu(!sndMsgDlcFrndRqu);
-                }}
-              />
-              Send message when you decline a friend request you received from
-              someone.
+              {/* {autoCnclFrndRque && (
+                <div className="setting-child others">
+                  Remove sent friend request after &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={cnclFrndRqueInput}
+                    onChange={(e) => {
+                      setCnclFrndRqueInput(e.target.value);
+                    }}
+                  />
+                  &nbsp;Time(s).
+                </div>
+              )} */}
+
+              <span className="warn-badget">Coming Soon</span>
             </div>
 
-            {sndMsgDlcFrndRqu && (
+            <div className="setting setting-actived" onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
+              <Switch
+                checked={dayBackAnlyFrndEng}
+                // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
+                handleChange={() => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
+              />
+              {/* Day back to analyse friends engagement */}
+              {/* Friend list and engagement sync time */}
+              Interval for auto sync friend list
+
+              <div className="setting-control">
+                <figure className="icon-arrow-down">
+                  {!dayBackAnlyFrndEngOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
+              </div>
+            </div>
+            {dayBackAnlyFrndEngOpen && (
               <div className="setting-child others">
-                Select the message tempalte you want to send &nbsp;
+                Select the time: From &nbsp;
                 <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgDlcFrndRquMsgSelect}
+                  selects={timeObj.slice(0, timeObj.length - 1)}
+                  value={dayBackAnlyFrndEngSelect1}
                   style={{}}
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgDlcFrndRquMsgSelect(e.target.value);
-                  }}
+                  // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
+                  handleChange={e => setStartTime(e)}
+                  setDisable={!dayBackAnlyFrndEng}
                 />{" "}
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  className="setting-input"
-                  value={sndMsgDlcFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgDlcFrndRquinput(e.target.value);
-                  }}
-                />
+                &nbsp; To &nbsp;
                 <DropSelector
-                  selects={periodObj}
-                  value={sndMsgDlcFrndRquSelect}
+                  selects={
+                    dayBackAnlyFrndEngSelect1
+                      ? timeObj.slice(
+                        timeObj.indexOf(
+                          timeObj.filter(
+                            (el) => el.value == dayBackAnlyFrndEngSelect1
+                          )[0]
+                        ) + 1
+                      )
+                      : timeObj
+                  }
+                  value={dayBackAnlyFrndEngSelect2}
                   style={{}}
-                  handleChange={(e) => {
-                    setSndMsgDlcFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
+                  handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
+                  setDisable={!dayBackAnlyFrndEng}
+                />{" "}
+                daily.
               </div>
             )}
-          </div>
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
-                checked={sndMsgExptFrndRqu}
-                handleChange={() => {
-                  setSndMsgExptFrndRqu(!sndMsgExptFrndRqu);
-                }}
-              />
-              Send message when someone except my friend request.
+
+
+            {/* ========== Message Settings ============ */}
+            <p className="fr-heading">
+              <span>Message settings<span className="warn-badget">Coming Soon</span></span>
+            </p>
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                  checked={sndMsgRcvFrndRqu}
+                  handleChange={() => {
+                    setSndMsgRcvFrndRqu(!sndMsgRcvFrndRqu);
+                  }}
+                />
+                Send message when I accept an incoming friend request
+              </div>
+
+              {sndMsgRcvFrndRqu && (
+                <div className="setting-child others no-click">
+                  Select the message template you want to send &nbsp;
+                  <DropSelector
+                    selects={msgTmpltObj}
+                    value={sndMsgRcvFrndRquMsgSelect}
+
+                    width={"297px"}
+                    handleChange={(e) => {
+                      setSndMsgRcvFrndRquMsgSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; and then, &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={sndMsgRcvFrndRquInput}
+                    onChange={(e) => {
+                      setSndMsgRcvFrndRquInput(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={sndMsgRcvFrndRquSelect}
+
+                    handleChange={(e) => {
+                      setSndMsgRcvFrndRquSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; the mesage will be sent
+                </div>
+              )}
+
+
             </div>
 
-            {sndMsgExptFrndRqu && (
-              <div className="setting-child others">
-                Select the message tempalte you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgExptFrndRquMsgSelect}
-                  style={{}}
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgExptFrndRquMsgSelect(e.target.value);
-                  }}
-                />{" "}
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  className="setting-input"
-                  value={sndMsgExptFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgExptFrndRquInput(e.target.value);
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                {" "}
+                <Switch
+                  upComing
+                  checked={sndMsgAcptFrndRqu}
+                  handleChange={() => {
+                    setSndMsgAcptFrndRqu(!sndMsgAcptFrndRqu);
                   }}
                 />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgExptFrndRquSelect}
-                  handleChange={(e) => {
-                    setSndMsgExptFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
+                Send message when I reject an incoming friend request
               </div>
-            )}
-          </div>
-          {/* <div className="setting  paper setting-checked">
+              {sndMsgAcptFrndRqu && (
+                <div className="setting-child others">
+                  Select the message template you want to send &nbsp;
+                  <DropSelector
+                    selects={msgTmpltObj}
+                    value={sndMsgAcptFrndRquMsgSelect}
+
+                    width={"297px"}
+                    handleChange={(e) => {
+                      setSndMsgAcptFrndRquMsgSelect(e.target.value);
+                    }}
+                  />{" "}
+                  &nbsp; and then, &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={sndMsgAcptFrndRquInput}
+                    onChange={(e) => {
+                      setSndMsgAcptFrndRquInput(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={sndMsgAcptFrndRquSelect}
+
+                    handleChange={(e) => {
+                      setSndMsgAcptFrndRquSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; the mesage will be sent
+                </div>
+              )}
+
+
+            </div>
+
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                  checked={sndMsgDlcFrndRqu}
+                  handleChange={() => {
+                    setSndMsgDlcFrndRqu(!sndMsgDlcFrndRqu);
+                  }}
+                />
+                Send message when someone sends me a friend request
+              </div>
+
+              {sndMsgDlcFrndRqu && (
+                <div className="setting-child others">
+                  Select the message template you want to send &nbsp;
+                  <DropSelector
+                    selects={msgTmpltObj}
+                    value={sndMsgDlcFrndRquMsgSelect}
+
+                    width={"297px"}
+                    handleChange={(e) => {
+                      setSndMsgDlcFrndRquMsgSelect(e.target.value);
+                    }}
+                  />{" "}
+                  &nbsp; and then, &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={sndMsgDlcFrndRquInput}
+                    onChange={(e) => {
+                      setSndMsgDlcFrndRquinput(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={sndMsgDlcFrndRquSelect}
+
+                    handleChange={(e) => {
+                      setSndMsgDlcFrndRquSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; the mesage will be sent
+                </div>
+              )}
+
+
+            </div>
+
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                  checked={sndMsgExptFrndRqu}
+                  handleChange={() => {
+                    setSndMsgExptFrndRqu(!sndMsgExptFrndRqu);
+                  }}
+                />
+                Send message when someone accepted my friend request
+              </div>
+
+              {sndMsgExptFrndRqu && (
+                <div className="setting-child others">
+                  Select the message template you want to send &nbsp;
+                  <DropSelector
+                    selects={msgTmpltObj}
+                    value={sndMsgExptFrndRquMsgSelect}
+
+                    width={"297px"}
+                    handleChange={(e) => {
+                      setSndMsgExptFrndRquMsgSelect(e.target.value);
+                    }}
+                  />{" "}
+                  &nbsp; and then, &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={sndMsgExptFrndRquInput}
+                    onChange={(e) => {
+                      setSndMsgExptFrndRquInput(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={sndMsgExptFrndRquSelect}
+                    handleChange={(e) => {
+                      setSndMsgExptFrndRquSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; the mesage will be sent
+                </div>
+              )}
+            </div>
+
+            <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                  checked={sndMsgExptFrndRqu}
+                  handleChange={() => {
+                    setSndMsgExptFrndRqu(!sndMsgExptFrndRqu);
+                  }}
+                />
+                Send message when someone reject my friend request
+              </div>
+
+              {sndMsgExptFrndRqu && (
+                <div className="setting-child others">
+                  Select the message template you want to send &nbsp;
+                  <DropSelector
+                    selects={msgTmpltObj}
+                    value={sndMsgExptFrndRquMsgSelect}
+
+                    width={"297px"}
+                    handleChange={(e) => {
+                      setSndMsgExptFrndRquMsgSelect(e.target.value);
+                    }}
+                  />{" "}
+                  &nbsp; and then, &nbsp;{" "}
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={sndMsgExptFrndRquInput}
+                    onChange={(e) => {
+                      setSndMsgExptFrndRquInput(e.target.value);
+                    }}
+                  />
+                  <DropSelector
+                    selects={periodObj}
+                    value={sndMsgExptFrndRquSelect}
+                    handleChange={(e) => {
+                      setSndMsgExptFrndRquSelect(e.target.value);
+                    }}
+                  />
+                  &nbsp; the mesage will be sent
+                </div>
+              )}
+            </div>
+
+
+            {/* <div className="setting  setting-paper setting-checked">
                     <div className="setting-child first">
                       <Switch
                         checked={dayBackAnlyFrndEng}
@@ -921,7 +1464,7 @@ const MySetting = () => {
                         <DropSelector
                           selects={timeObj}
                           value={dayBackAnlyFrndEngSelect1}
-                          style={{}}
+                          
                           handleChange={(e) => {
                             setDayBackAnlyFrndEngSelect1(e.target.value);
                           }}
@@ -930,7 +1473,7 @@ const MySetting = () => {
                         <DropSelector
                           selects={timeObj}
                           value={dayBackAnlyFrndEngSelect2}
-                          style={{}}
+                          
                           handleChange={(e) => {
                             setDayBackAnlyFrndEngSelect2(e.target.value);
                           }}
@@ -939,24 +1482,24 @@ const MySetting = () => {
                     )}
                   </div> */}
 
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
+            {/* <div className="setting  setting-paper setting-checked"> */}
+            {/* <div className="setting-child first"> */}
+            {/* <Switch
                 checked={dayBackAnlyFrndEng}
                 handleChange={() => {
                   setDayBackAnlyFrndEng(!dayBackAnlyFrndEng);
                 }}
-              />
-              {/* Day back to analyse friends engagement */}
-              Friend list and engagement sync time
-            </div>
-            {dayBackAnlyFrndEng && (
+              /> */}
+            {/* Day back to analyse friends engagement */}
+            {/* Friend list and engagement sync time */}
+            {/* </div> */}
+            {/* {dayBackAnlyFrndEng && (
               <div className="setting-child others">
                 Select the time: From &nbsp;
                 <DropSelector
                   selects={timeObj}
                   value={dayBackAnlyFrndEngSelect1}
-                  style={{}}
+                  
                   handleChange={(e) => {
                     setDayBackAnlyFrndEngSelect1(e.target.value);
                   }}
@@ -965,39 +1508,42 @@ const MySetting = () => {
                 <DropSelector
                   selects={timeObj}
                   value={dayBackAnlyFrndEngSelect2}
-                  style={{}}
+                  
                   handleChange={(e) => {
                     setDayBackAnlyFrndEngSelect2(e.target.value);
                   }}
                 />{" "}
-                daily once.
+                daily.
               </div>
-            )}
-          </div>
+            )} */}
+            {/* </div> */}
 
-          <div className="setting  paper setting-checked">
-            <div className="setting-child first">
-              <Switch
-                checked={dayBackAnlyFrndEngNEW}
-                handleChange={() => {
-                  setDayBackAnlyFrndEngNEW(!dayBackAnlyFrndEngNEW);
-                }}
-              />
-              Day back to analyse friends engagement &nbsp;
-              <DropSelector
-                selects={dayObj}
-                value={dayBackAnlyFrndEngSelect1NEW}
-                style={{}}
-                handleChange={(e) => {
-                  setDayBackAnlyFrndEngSelect1NEW(e.target.value);
-                }}
-              />
-              &nbsp;days.
-            </div>
-          </div>
+            {/* <div className="setting  setting-paper no-click">
+              <div className="setting-child first muted-text">
+                <Switch
+                  upComing
+                  checked={dayBackAnlyFrndEngNEW}
+                  handleChange={() => {
+                    setDayBackAnlyFrndEngNEW(!dayBackAnlyFrndEngNEW);
+                  }}
+                />
+                Interval to analyse friends engagement &nbsp;
+                <DropSelector
+                  selects={dayObj}
+                  value={dayBackAnlyFrndEngSelect1NEW}
+                  
+                  handleChange={(e) => {
+                    setDayBackAnlyFrndEngSelect1NEW(e.target.value);
+                  }}
+                />
+                &nbsp;
 
-          {/* all setting list with switchs ends*/}
-        </div>
+              </div>
+            </div> */}
+
+            {/* all setting list with switchs ends*/}
+          </div>
+        </>
       )}
       {loading && <SettingLoader />}
     </div>

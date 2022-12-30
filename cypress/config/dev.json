@@ -1,3 +1,4 @@
 {
-    "baseUrl": "https://dev.friender.io"
+    "baseUrl": "https://dev.friender.io",
+    "api":"/prod"
 }

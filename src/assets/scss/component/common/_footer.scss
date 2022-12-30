@@ -12,7 +12,7 @@
     color: $themeSecondaryDarkBlue3;
     font-weight: $smallFontWeight;
     a {
-      color: $themeBlack5;
+      color: $themeDefaultPrimary4;
       font-weight: $fontWeight;
       &:hover {
         color: $themeDefaultPrimary1;
@@ -22,9 +22,11 @@
 
   &.fr-signed-in {
     @include theme-aware('background', 'footer-bg');
-    @include border-radius(5px);
-    @include margins(10px, auto, 13px, auto);
-    max-width: calc(100% - 60px);
+    // @include border-radius(5px);
+    // @include margins(10px, auto, 13px, auto);
+    border-top: 1px solid;
+    @include theme-aware('border-color', 'general-border');
+    // max-width: calc(100% - 60px);
     flex: 0 0 40px;
     padding: 0;
     display: flex;

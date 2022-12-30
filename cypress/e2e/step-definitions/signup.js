@@ -1,7 +1,7 @@
 import { Given, Then, When } from "@badeball/cypress-cucumber-preprocessor";
 const URL = Cypress.env("baseUrl");
 Given("I entered to the web portal", () => {
-	cy.visit(URL);
+	cy.visit("/");
 });
 When("I entered my valid Email-id and my full name", () => {
 	cy.signupvalid();
@@ -16,7 +16,7 @@ Then("I should see the confirmation popup of sending mail from friender team", (
 	cy.contains("An email sent to your registered email id please open it up to activate your account.").should("be.visible");
 });
 Given("I enter to the web portal", () => {
-	cy.visit(URL);
+	cy.visit("/");
 });
 When("I entered the same registered email", () => {
 	cy.signupvalid();

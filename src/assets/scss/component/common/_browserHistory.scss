@@ -1,0 +1,293 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/variables" as *;
+
+
+// Browser Manager Page
+
+.browser-manager {
+    .settings {
+      display: flex;
+      flex-direction: column;
+      .setting {
+        .no-data-found {
+          margin-top: 15px;
+        }
+        //flex-grow: 0;
+        .info-wraper {
+          max-width: 370px;
+        }
+        .signin-details-info {
+          padding: 20px 30px;
+          font-weight: 700;
+          font-size: 16px;
+          line-height: 22px;
+          @include theme-aware("color", "settingsBlockPara");
+          span {
+            background: $themeGreen9;
+            color: $themeLightPrimary3;
+            @include border-radius(33px);
+            margin-left: 10px;
+            display: inline-flex;
+            font-size: 12px;
+            align-items: center;
+            justify-content: center;
+            padding-inline: 8px;
+          }
+        }
+      }
+      .browsers-history {
+        height: calc(100% - 220px);
+        padding: 0px 30px;
+        overflow-y: auto;
+        .browser-table-wraper {
+          width: 100%;
+          display: table;
+          .browser-table-row {
+            width: 100%;
+            display: table-row;
+
+            .browser-table-column {
+              display: table-cell;
+              padding: 20px 30px;
+              //min-width: 130px;
+              vertical-align: middle;
+              border-bottom: 1px solid $themeDefaultSecondary2;
+              @media screen and (max-width: 1750px) {
+                padding: 20px 15px;
+              }
+              p {
+                @include theme-aware("color", "settingsBlockPara");
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 19px;
+                &.prefix-automation-No {
+                  color: $themeRed1;
+                  text-align: center;
+                  text-transform: uppercase;
+                }
+                &.prefix-automation-Running {
+                  color: $themeGreen7;
+                  text-align: center;
+                  text-transform: uppercase;
+                }
+              }
+              .table-heading {
+                @include theme-aware("color", "table-headings");
+                font-weight: 500;
+                font-size: 12px;
+                line-height: 16px;
+                letter-spacing: 0.01em;
+              }
+              .table-details {
+                display: flex;
+                align-items: center;
+                &.this-device {
+                  pointer-events: none;
+                  .different-device {
+                    display: none;
+                  }
+                }
+                &.other-device {
+                  cursor: pointer;
+                  .current-device {
+                    display: none;
+                  }
+                  &:hover {
+                    .different-device {
+                      background: $themePrimaryBlue6;
+                    }
+                  }
+                }
+                .current-device {
+                  background: $themeDefaultSecondary2;
+                  border-radius: 33px;
+                  padding: 4px 15px;
+                  pointer-events: none;
+                  @include theme-aware("color", "settingsBlockPara");
+                  font-weight: 400;
+                  font-size: 12px;
+                  line-height: 19px;
+                }
+                .different-device {
+                  background: $themeLightPrimary1;
+                  border-radius: 5px;
+                  padding: 10px 20px;
+                  pointer-events: none;
+                  color: $themeDefaultPrimary2 !important;
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 19px;
+                  cursor: pointer;
+                  &:hover {
+                    background: $themePrimaryBlue6;
+                  }
+                }
+                p {
+                  @include theme-aware("color", "settingsBlockPara");
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 19px;
+                  .time-section {
+                    margin-right: 10px;
+                  }
+                }
+                .device-icon {
+                  margin-right: 10px;
+                  width: 60px;
+                  height: 60px;
+                  background-image: url("../../../images/browserHistory.png");
+                  background-repeat: no-repeat;
+                  @include theme-aware("background-color", "listing-cell-bg");
+                  border: 1px solid $themeDefaultSecondary2;
+                  border-radius: 10px;
+                  &.Windows {
+                    background-position: 24% 14%;
+                  }
+                  &.Mac {
+                    background-position: 24% 36.6%;
+                  }
+                  &.Linux {
+                    background-position: 24% 59.5%;
+                  }
+                  &.Android {
+                    background-position: 24% 82.5%;
+                  }
+                }
+                .left-icon {
+                  margin-right: 10px;
+                }
+                .browser-name {
+                  margin-left: 10px;
+                  .display-name-info {
+                    display: flex;
+                    align-items: center;
+                    p {
+                      @include theme-aware("color", "settingsBlockHeadeing");
+                      font-weight: 600;
+                      font-size: 14px;
+                      line-height: 19px;
+                      white-space: nowrap;
+                      text-overflow: ellipsis;
+                      overflow: hidden;
+                      max-width: 190px;
+                    }
+                    .edit-browser-name {
+                      margin-left: 18px;
+                      cursor: pointer;
+                      &:hover {
+                        svg {
+                          path {
+                            fill:$themeDefaultPrimary1;
+                          }
+                        }
+                      }
+                    }
+                    &.hide {
+                      display: none;
+                    }
+                  }
+                  .display-name-edit {
+                    @include theme-aware("background", "input-edit-background");
+                    border-bottom: 1px solid $themeDefaultPrimary1;
+                    .display-name-edit-wrapers {
+                      position: relative;
+                      display: flex;
+                      align-items: center;
+                      .form-control {
+                        background: $themeTransparent;
+                        padding: 15px 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 12px;
+                        line-height: 16px;
+                        letter-spacing: 0.02em;
+                        @include theme-aware("color", "settingsBlockHeadeing");
+                        border: none;
+                      }
+                      .close-edit {
+                        cursor: pointer;
+                        margin-left: auto;
+                        padding-right: 10px;
+                        &:hover {
+                          svg {
+                            path {
+                              stroke: $themeRed1;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              // &:first-child {
+              //   // .table-details {
+              //   //   // width: 300px;
+              //   //   // max-width: 300px;
+              //   // }
+              // }
+              &:last-child {
+                .table-details {
+                  // width: 100px;
+                  // max-width: 100px;
+                  float: right;
+                }
+              }
+              // &:first-child {
+              //   // width: 300px;
+              //   // max-width: 300px;
+              // }
+              // &:nth-child(5) {
+              //   // width: 199px;
+              //   // max-width: 199px;
+              // }
+              &.activated {
+                p {
+                  color: $themeGreen7;
+                }
+              }
+              &.inactivated {
+                p {
+                  color: $themeRed1;
+                }
+              }
+              .browser-logo {
+                width: 35px;
+                height: 35px;
+                background-image: url("../../../images/browserHistory.png");
+                background-repeat: no-repeat;
+                background-position: 71% 80.3%;
+                &.Chrome {
+                  background-position: 71% 15.5%;
+                }
+                &.Opera {
+                  background-position: 71% 37%;
+                }
+                &.Firefox {
+                  background-position: 71% 58.7%;
+                }
+                // &.Edge  {
+                //   background-position: 71% 15.5%
+                // }
+              }
+              &.automation-cell {
+                width: 130px;
+              }
+            }
+            &:last-child {
+              .browser-table-column {
+                border-bottom: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .no-edit {
+    pointer-events: none;
+    cursor: none;
+  }

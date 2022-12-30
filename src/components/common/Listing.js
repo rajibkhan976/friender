@@ -5,30 +5,30 @@ import React, {
   useCallback,
   memo,
   useEffect,
+  lazy,
+  Suspense,
 } from "react";
+import { useBeforeUnload } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
-
-import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
-import Pagination from "./Pagination";
 import Checkbox from "../formComponents/Checkbox";
 import ListingLoader from "./loaders/ListingLoader";
 import NoDataFound from "./NoDataFound";
-import Modal from "../common/Modal";
+//import Modal from "../common/Modal";
 import { updateSelectedFriends } from "../../actions/FriendListAction";
+import "../../assets/scss/component/common/_listing.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { RowNode } from "ag-grid-community";
+//import { RowNode } from "ag-grid-community";
 // import 'ag-grid-community/styles/ag-theme-alpine.css';
+const Pagination = lazy(() => import("./Pagination"));
 
 const Listing = (props) => {
   const dispatch = useDispatch();
   const selectRef = useRef(null);
   const gridRef = useRef();
   const selectedFrnd = useSelector(
-    (state) => state.friend_list_data.selected_friends
+    (state) => state.friendlist.selected_friends
   );
-  const textFilter = useSelector(
-    (state) => state.listingFilter.searched_filter
-  );
+  const textFilter = useSelector((state) => state.friendlist.searched_filter);
   const [rowData, setRowData] = useState();
   const [maxSelect, setMaxSelect] = useState(0);
   const [tableStyle, setTableStyle] = useState({
@@ -38,12 +38,82 @@ const Listing = (props) => {
   const [columnDefs, setColumnDefs] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [showPaginate, setShowPaginate] = useState(false);
-  const [selectedFriends, setSelectedFriends] = useState(null);
+  const [selectedFriends, setSelectedFriends] = useState([]);
   const isFirstColumn = (params) => {
     var displayedColumns = params.columnApi.getAllDisplayedColumns();
     var thisIsFirstColumn = displayedColumns[0] === params.column;
     return thisIsFirstColumn;
   };
+
+  useEffect(() => {
+    let ageCol = document.querySelectorAll(".ag-header-cell-text");
+    let colInterval = setInterval(() => {
+      if (ageCol?.length <= 0) {
+        ageCol = document.querySelectorAll(".ag-header-cell-text");
+      } else {
+        clearInterval(colInterval);
+        if (ageCol?.length > 0) {
+          for (let col of ageCol) {
+            if (col.innerHTML.includes("Age")) {
+              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>"+
+              "<circle cx='9' cy='9' r='6.75' fill='#767485'/>"+
+              "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>"+
+              "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>"+
+              "</svg></p>";
+            }
+          }
+        }
+      }
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    setMaxSelect(props.friendsData.length);
+    //console.log("FRIENDS IN LISTING::::>>", props.friendsData.length);
+  }, []);
+ 
+
+  useEffect(() => {
+   // console.log("i am selectd frinends*****>>>>>:::::",selectedFriends);
+    if (selectedFriends?.length >= 0) {
+     // console.log("if select frind 11111111111111")
+      dispatch(updateSelectedFriends(selectedFriends));
+    } else {
+      //console.log("else select frind 000000")
+      dispatch(updateSelectedFriends([]));
+    }
+  }, [selectedFriends]);
+
+  // useEffect(() => {
+  //   if (selectedFrnd?.length <= 0) {
+  //   console.log("selectd fr nddddds*****>>>>>:::::",selectedFrnd);
+  //     if (gridRef.current && selectedFriends.length > 0) {
+  //       gridRef.current.api.deselectAll();
+  //     }
+  //   }
+  // }, [selectedFrnd]);
+
+  useEffect(() => {
+    gridRef &&
+      gridRef.current &&
+      gridRef.current.api &&
+      gridRef.current.api.setQuickFilter(textFilter);
+
+    // gridRef &&
+    //   gridRef.current &&
+    //   gridRef.current.api &&
+    //   console.log(
+    //     "lllllllccccount",
+    //     gridRef.current.api.getDisplayedRowCount()
+    //   );
+  }, [textFilter]);
+
+  useEffect(() => {
+    onGridReady();
+    setColumnDefs(props.friendsListingRef);
+    //setMaxSelect(props.friendsData.length);
+    //console.log("FRIENDS IN LISTING", props.friendsData.length);
+  }, [props.friendsData]);
 
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(() => ({
@@ -53,6 +123,7 @@ const Listing = (props) => {
     // autoHeaderHeight: true,
     suppressDragLeaveHidesColumns: true,
     resizable: true,
+    suppressMultiSort: false,
   }));
 
   // Example load data from sever
@@ -60,7 +131,12 @@ const Listing = (props) => {
     try {
       setRowData(props.friendsData);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
+    } finally {
+      var defaultSortModel = [{ colId: "engagement", sort: "desc" }];
+      if (params) {
+        params.columnApi.applyColumnState({ state: defaultSortModel });
+      }
     }
   };
 
@@ -117,72 +193,74 @@ const Listing = (props) => {
 
       if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
         setMaxSelect(filteredCount);
-        console.log("filtered:::", filteredCount);
+        //console.log("filtered:::", filteredCount);
       } else if (textFilter) {
-        console.log("::Gobal List filter active:::>", filteredCount);
+        //console.log("::Gobal List filter active:::>", filteredCount);
         setMaxSelect(filteredCount);
       } else {
         setMaxSelect(props.friendsData.length);
-        console.log("not filtered", filteredCount);
+        //console.log("not filtered", filteredCount);
       }
+      // gridRef.current.api.deselectAll();
     },
     [textFilter]
   );
 
   const onChangeCheck = useCallback((isChecked) => {
     if (isChecked) {
-      gridRef.current.api.selectAll();
+      gridRef.current.api.selectAllFiltered();
     } else {
       gridRef.current.api.deselectAll();
     }
   }, []);
 
-  useEffect(() => {
-    // console.log("i am selectd frinends*****>>>>>:::::",selectedFriends);
-    dispatch(updateSelectedFriends(selectedFriends));
-  }, [selectedFriends]);
-
   const selectionChanged = useCallback((e) => {
-    let selectedRows = gridRef.current.api.getSelectedRows();
+    // let selectedRows = gridRef.current.api.getSelectedRows();
+    // console.log("selectedRows", selectedRows);
+    const selectedNodes = gridRef.current.api.getSelectedNodes();
+   // console.log("selectedNodes", selectedNodes);
     let selectedUsers = [];
 
-    selectedRows.forEach((item) => {
-      selectedUsers = [...selectedUsers, item.fb_user_id];
+    selectedNodes.forEach((node) => {
+      selectedUsers = [...selectedUsers, {...node.data,"rowId":node.id}];
     });
 
     // friendFbId
     setSelectedFriends(
-      selectedUsers || selectedUsers.length != 0 ? selectedRows : null
+      selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
     );
-    if (selectedRows?.length) {
+    if (selectedUsers?.length) {
       localStorage.setItem(
         "fr-selected-friends",
         JSON.stringify(selectedUsers)
       );
     }
   }, []);
+  useEffect(()=>{
+   // console.log("data updated",props.friendsData)
+    setTimeout(()=>{
+      if(selectedFrnd?.length>0){
+        console.log("inside the row select");
+          const selectedRowIds = selectedFrnd.map((item) => item.rowId);
+        gridRef &&
+        gridRef.current &&
+        gridRef.current.api &&  
+        gridRef.current.api.forEachNodeAfterFilterAndSort((node) => {
+          // console.log("all node", node);
+            const rowId = node.id;
+            if (selectedRowIds.includes(rowId)) {
+              console.log("all nodeeeeeeeeeeeeeeeeeee", node);
+              // console.log("inside the row select includessssss");
+              // if(node.selected){
+              //  node.setSelected(false);
+              // }
+              node.setSelected(true);
+            }
+          });
+       }
+    },0)
 
-  useEffect(() => {
-    gridRef &&
-      gridRef.current &&
-      gridRef.current.api &&
-      gridRef.current.api.setQuickFilter(textFilter);
-
-    gridRef &&
-      gridRef.current &&
-      gridRef.current.api &&
-      console.log(
-        "lllllllccccount",
-        gridRef.current.api.getDisplayedRowCount()
-      );
-  }, [textFilter]);
-
-  useEffect(() => {
-    onGridReady();
-    setColumnDefs(props.friendsListingRef);
-    setMaxSelect(props.friendsData.length);
-    console.log("FRIENDS IN LISTING", props.friendsData.length);
-  }, [props.friendsData]);
+  },[props.friendsData])
 
   return (
     <>
@@ -192,15 +270,17 @@ const Listing = (props) => {
       selectedFrnd.length > 0 ? (
         <div className="selection-popup d-flex f-justify-center f-align-center">
           <p>
-            {selectedFriends.length == gridRef.current.props.rowData.length &&
+            {selectedFriends.length === gridRef.current.props.rowData.length &&
               "All"}{" "}
             {selectedFriends.length ? (
               <strong>{selectedFriends.length}</strong>
             ) : (
               ""
             )}{" "}
-            Friend{selectedFriends.length > 1 && "s"} on this page are selected,
-            {gridRef.current.props.rowData.length != selectedFriends.length ? (
+            Friend{selectedFriends.length > 1 && "s"}{" "}
+            {selectedFriends.length > 1 ? "are" : "is"} selected.
+            {gridRef.current.props.rowData.length !== selectedFriends.length &&
+            maxSelect - Number(selectedFriends.length) > 0 ? (
               <span>
                 Do you want to select other all{" "}
                 {maxSelect - Number(selectedFriends.length)} Friends{" "}
@@ -208,12 +288,20 @@ const Listing = (props) => {
             ) : (
               <span>Uncheck All </span>
             )}{" "}
-            <Checkbox
-              onChangeCheck={onChangeCheck}
-              checkValue={
-                gridRef.current.props.rowData.length == selectedFriends.length
-              }
-            />
+            {maxSelect - Number(selectedFriends.length) === 0 ? (
+              <Checkbox
+                onChangeCheck={onChangeCheck}
+                checkValue={maxSelect === Number(selectedFriends.length)}
+              />
+            ) : (
+              <Checkbox
+                onChangeCheck={onChangeCheck}
+                checkValue={
+                  gridRef.current.props.rowData.length ===
+                  selectedFriends.length
+                }
+              />
+            )}
           </p>
         </div>
       ) : (
@@ -237,6 +325,7 @@ const Listing = (props) => {
       >
         <AgGridReact
           onGridReady={onGridReady}
+          // onRowDataChanged={()=>{}}
           ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
@@ -261,15 +350,20 @@ const Listing = (props) => {
           noRowsOverlayComponent={NoDataFound}
           cacheQuickFilter={true}
           // cacheBlockSize={listLimit}
+          //enableBrowserTooltips={true}
+          tooltipShowDelay={0}
+          tooltipHideDelay={1000000}
         />
       </div>
-      {maxSelect != 0 && !showPaginate ? (
+      {maxSelect !== 0 && !showPaginate ? (
         <footer className="table-footer d-flex f-align-center">
-          <Pagination
-            pageNum={maxSelect}
-            itemsPerPage={itemsPerPage}
-            onNumClick={navigateToNumPage}
-          />
+          <Suspense fallback={""}>
+            <Pagination
+              pageNum={maxSelect}
+              itemsPerPage={itemsPerPage}
+              onNumClick={navigateToNumPage}
+            />
+          </Suspense>
           <div className="select-page">
             <select
               onChange={onPageSizeChanged}

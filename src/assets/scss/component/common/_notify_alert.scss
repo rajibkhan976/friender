@@ -1,0 +1,38 @@
+// notify alert style start
+@use "../../abstract/color"as *;
+@use "../../abstract/font"as *;
+@use "../../abstract/mixins"as *;
+
+.common-notify-alert {
+    position: sticky;
+    width: 100%;
+    padding: 8px;
+    margin: 0;
+    margin-bottom: 5px;
+    font-size: 13px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.notify-alert {
+    @extend .common-notify-alert;
+    background: $themeYellow10;
+}
+
+.danger-alert {
+    @extend .common-notify-alert;
+    background: $themeRed5;
+}
+
+.info-alert {
+    @extend .common-notify-alert;
+    background: $themePrimaryBlue11;
+}
+
+.success-alert {
+    @extend .common-notify-alert;
+    background-color: $themeGreen9;
+}

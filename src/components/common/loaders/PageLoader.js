@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
+import { memo } from "react";
 import "../../../assets/scss/component/common/_page_loader.scss";
-
-const pageLoader = {
-
-}
 
 const PageLoader = () => {
     return (
@@ -66,4 +62,4 @@ const PageLoader = () => {
     );
 };
 
-export default PageLoader;
+export default memo(PageLoader);

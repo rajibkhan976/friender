@@ -4,8 +4,8 @@ Feature: Reset Password
 
     Scenario: user should not be able to make weak password
 
-        Given I signin newly to Friender
-        When  I Logged in with the default password
+        Given User created via Kyubi
+        When  I can login with the user created via Kyubi and default password of Kyubi
         Then  I should landed in the reset-password page and give very weak password
         Then  I should see error message
 

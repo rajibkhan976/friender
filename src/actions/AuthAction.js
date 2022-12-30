@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import { response } from "express";
 import { forgetPassword, onboarding, resetPassword, resetUserPassword, userLogin, userRegister } from "../services/authentication/AuthServices";
-
+import extensionAccesories from "../configuration/extensionAccesories"
+import helper from "../helpers/helper";
 let token = localStorage.getItem('fr_token');
 const initialState = token ? {
   isLoggedIn: true,
@@ -69,7 +70,7 @@ export const resetUserPass=createAsyncThunk(
 export const onboardingUser=createAsyncThunk(
   "auth/onboardingUser",
   async ({question_one,question_two,question_three,token})=>{
-    console.log("token,question_one,question_two,question_three, :: ", token,question_one,question_two,question_three,);
+    //console.log("token,question_one,question_two,question_three, :: ", token,question_one,question_two,question_three,);
       const res=await onboarding(token,question_one,question_two,question_three,);
       return res;
 
@@ -77,7 +78,15 @@ export const onboardingUser=createAsyncThunk(
 )
 
 
-
+//::function to remove any item from localStrage with given prfix::
+export function removeVariablesWithPrefix(prefix) {
+  /**@params prefix=String */
+  for (let key in window.localStorage) {
+    if (key.startsWith(prefix)) {
+      window.localStorage.removeItem(key);
+    }
+  }
+}
 
 
 
@@ -92,20 +101,28 @@ export const authSlice=createSlice({
   state.regSuccess=false;
       },
       userLogout:(state)=>{
-        localStorage.removeItem("fr_token");
-        localStorage.removeItem("fr_pass_changed");
-        localStorage.removeItem("fr_onboarding");
-        localStorage.removeItem("fr_default_fb");
-        localStorage.removeItem("fr_current_fbId");
-        localStorage.removeItem("fr_sidebarToogle");
-        localStorage.removeItem("fr_default_email");
-        localStorage.removeItem("fr_isSyncing");
-        localStorage.removeItem("fr_update");
-        localStorage.removeItem("fr_tooltip");
-        localStorage.removeItem("submenu_status");
-        localStorage.removeItem('syncedFriend');
-        localStorage.removeItem("friendLength");
-        localStorage.removeItem("fr-selected-friends");
+        // localStorage.removeItem("fr_token");
+        // localStorage.removeItem("fr_pass_changed");
+        // localStorage.removeItem("fr_onboarding");
+        // localStorage.removeItem("fr_default_fb");
+        // localStorage.removeItem("fr_current_fbId");
+        // localStorage.removeItem("fr_sidebarToogle");
+        // localStorage.removeItem("fr_default_email");
+        // localStorage.removeItem("fr_isSyncing");
+        // localStorage.removeItem("fr_update");
+        // localStorage.removeItem("fr_tooltip");
+        // localStorage.removeItem("submenu_status");
+        // localStorage.removeItem('syncedFriend');
+        // localStorage.removeItem("friendLength");
+        // localStorage.removeItem("fr-selected-friends");
+        // localStorage.removeItem("fr_theme");
+        helper.deleteCookie("fr_isSyncing");
+        helper.deleteCookie("deleteAllPendingFR");
+        localStorage.clear();
+        extensionAccesories.isExtensionInstalled({
+          action : "logout", 
+        });
+        removeVariablesWithPrefix("fr_")
           state.isLoggedIn=false;
       }
     },
@@ -126,7 +143,7 @@ export const authSlice=createSlice({
         state.isLoggedIn = true;
       },
       [logUserIn.rejected]: (state,action) => {
-        console.log("rejected",action.payload);
+        //console.log("rejected",action.payload);
         state.isLoggedIn = false;
         state.message=action.payload;
       },

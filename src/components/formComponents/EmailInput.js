@@ -1,51 +1,58 @@
-import { useState, useEffect } from "react";
-const EmailInput = (props) => {
-  const [emailId, setEmailId] = useState("");
-  const [emailErrors, setEmailErrors] = useState(false);
+import { useEffect } from "react";
+const EmailInput = ({
+  labelText,
+  placeholderText,
+  emailEntered,
+  emailValidation,
+  setEmailValidation,
+  setEmailEntered,
+}) => {
   useEffect(() => {
-    setEmailErrors(emailErrors);
-  }, [emailId, emailErrors]);
-  const handleChangeEmail = (event) => {
-    setEmailId(event.target.value.trim());
-    if (
-      event.target.value.length !== 0 &&
-      emailId.trim().match(/\S+@\S+\.\S+/)
+    //console.log("I am the Email Input::::",emailEntered);
+    if (emailEntered.length === 0) {
+      setEmailValidation(false);
+    } else if (
+      emailEntered.length !== 0 &&
+      emailEntered.match(/\S+@\S+\.\S+/)
     ) {
-      if (/\s/.test(event.target.value) === false) {
-        setEmailErrors(null);
-        props.emailErrors(null);
-        setEmailId(event.target.value);
-        props.emailEntered(event.target.value);
+      if (/\s/.test(emailEntered) === false) {
+        //console.log('here');
+        setEmailValidation(null);
       } else {
-        setEmailErrors("Email cannot have space");
-        props.emailErrors("Email cannot have space");
+        console.log("here");
+        setEmailValidation("Email cannot have space");
       }
     } else {
-      setEmailErrors("Enter proper email id");
-      props.emailErrors("Enter proper email id");
+      //console.log('here');
+      setEmailValidation("Enter proper email id");
     }
-  };
+  }, [emailEntered]);
+
   return (
     <div className="element-wraper">
-      <label>{props.labelText}</label>
+      <label>{labelText}</label>
       <div className="form-field">
         <input
           type="email"
           // tabIndex="1"
           autoComplete="new-password"
-          onPaste={(e)=>{
-            e.preventDefault()
-            return false;
-          }} onCopy={(e)=>{
-            e.preventDefault()
-            return false;
+          // onPaste={(e)=>{
+          //   e.preventDefault()
+          //   return false;
+          // }} onCopy={(e)=>{
+          //   e.preventDefault()
+          //   return false;
+          // }}
+          value={emailEntered}
+          className={emailValidation ? "form-control error" : "form-control"}
+          placeholder={placeholderText}
+          onChange={(e) => {
+            setEmailEntered(e.target.value.trim());
           }}
-          value={emailId}
-          className={emailErrors ? "form-control error" : "form-control"}
-          placeholder={props.placeholderText}
-          onChange={handleChangeEmail}
         />
-        {emailErrors && <span className="error-mesage">{emailErrors}</span>}
+        {emailValidation && (
+          <span className="error-mesage">{emailValidation}</span>
+        )}
       </div>
     </div>
   );

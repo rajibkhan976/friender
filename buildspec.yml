@@ -23,9 +23,9 @@ phases:
   build:
     commands:
       - echo Building the app
-      - npm run build
-      - serve -s $BUILD_DIR & npx wait-on http://localhost:3000
-      - npm run e2e
+      - npm run build:dev
+      # - serve -s $BUILD_DIR & npx wait-on http://localhost:3000
+      # - npm run e2e
       - pip3 install awscli --upgrade --user
       - aws s3 sync $BUILD_DIR s3://$S3_BUCKET
 

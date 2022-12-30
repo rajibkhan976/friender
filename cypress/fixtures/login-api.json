@@ -1,0 +1,11 @@
+{
+    "user_id": 1663,
+    "email": "sss@gmail.com",
+    "status": 200,
+    "password_reset_status": "1",
+    "user_onbording_status": "1",
+    "message": "User logged in successfully.",
+    "friend_list_id":"63aedfa3fdfac80008f869b6",
+    "friendName": "QA Swagata",
+    "message1" : "User Friendlist fetched succesfully."
+}

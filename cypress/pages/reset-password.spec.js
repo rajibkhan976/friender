@@ -26,11 +26,11 @@ class resetpwd {
   }
 
   loginforfirst() {
-    cy.fixture("signeddata.json").then((data) => {
+    cy.fixture("kyubicreds.json").then((data) => {
       values = data;
       cy.visit("/")
       login.get_emailfield().type(values.email);
-      login.get_password().type(values.defaultPass,{log:false});
+      login.get_password().type(values.password,{log:false});
 
     })
 
@@ -43,7 +43,7 @@ class resetpwd {
 
   getpassword() {
     let newpassword = this.generatepwd()
-    cy.fixture("signeddata.json").then((data) => {
+    cy.fixture("kyubicreds.json").then((data) => {
       values = data
       let email = values.email
       cy.writeFile("cypress/fixtures/logindata.json", { email, newpassword })
@@ -54,5 +54,4 @@ class resetpwd {
     cy.contains("Welcome to Friender").should('be.visible')
   }
 }
-
 module.exports = new resetpwd();

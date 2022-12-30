@@ -57,7 +57,7 @@
 
 
 .justifyContent-start{
-  justify-content: start;
+  justify-content: flex-start;
 }
 .justifyContent-center{
   justify-content:center
@@ -205,8 +205,8 @@
   line-height: 16px;
 
   &.num-header-count {
-    background: $numWellBg;
-    color: $numWellText;
+    background: $themeGreen9;
+    color: $themeLightPrimary3;
     @include border-radius(33px);
     height: 18px;
   }

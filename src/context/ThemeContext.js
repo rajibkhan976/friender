@@ -1,21 +1,30 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
-const ModeContext = createContext()
+const ModeContext = createContext();
+
+const themedUser = JSON.parse(localStorage.getItem("fr_theme"));
 
 const ThemeContextProvider = (props) => {
-    const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode] = useState(true);
 
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode)
-    }
+  const toggleDarkMode = () => {
+    //console.log("themedUser", themedUser, "changing to:::", !darkMode);
+    localStorage.setItem("fr_theme", !darkMode);
+    setDarkMode(!darkMode);
+  };
 
-    return (
-     <>
-        <ModeContext.Provider value={{darkMode, toggleDarkMode}}>
-            {props.children}
-        </ModeContext.Provider>
-     </>   
-    );
-}
- 
-export {ModeContext, ThemeContextProvider};
+  useEffect(() => {
+    //console.log(":::", themedUser);
+    themedUser != null && setDarkMode(themedUser)
+  }, [])
+
+  return (
+    <>
+      <ModeContext.Provider value={{ darkMode, toggleDarkMode }}>
+        {props.children}
+      </ModeContext.Provider>
+    </>
+  );
+};
+
+export { ModeContext, ThemeContextProvider };

@@ -1,4 +1,5 @@
 import { memo, useEffect } from "react";
+import "../../assets/scss/component/form/_checkbox.scss"
 
 const Checkbox = ({checkValue=false, onChangeCheck, checkText=""}) => {
   useEffect(() => {
@@ -8,7 +9,7 @@ const Checkbox = ({checkValue=false, onChangeCheck, checkText=""}) => {
     <label className="fr-custom-check">
       <input 
         type="checkbox" 
-        checked={checkValue}
+        checked={checkValue} 
         onChange={(e) => onChangeCheck(e.target.checked)}
       />
       <span className="checkmark"></span>

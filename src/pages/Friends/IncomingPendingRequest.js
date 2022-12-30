@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-
-import Footer from "../../components/common/Footer";
-import Sidebar from "../../components/common/Sidebar";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
 import FriendsAction from "../../actions/FriendsAction";
 
-import "../../assets/scss/component/common/_listing.scss";
+ 
 import Listing from "../../components/common/Listing";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
-import PageHeader from "../../components/common/PageHeader";
 import {
   SourceRenderer,
   HasConversationRenderer,
@@ -91,7 +87,7 @@ const IncomingPendingRequest = () => {
       headerName: "Gender ",
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
-      lockPosition: "right",
+      // lockPosition: "right",
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,
@@ -123,7 +119,7 @@ const IncomingPendingRequest = () => {
     },
     {
       field: "finalSource",
-      headerName: "Friends source",
+      headerName: "Friends Source",
       cellRenderer: SourceRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -211,12 +207,10 @@ const IncomingPendingRequest = () => {
       let savedFbUId = localStorage.getItem("fr_default_fb");
 
       if (savedFbUId) {
-        console.log("got saved from local");
         setDefaultFbId(savedFbUId);
       } else {
         const getCurrentFbProfile = await fetchUserProfile();
         if (getCurrentFbProfile) {
-          console.log("got saved from cloud");
           savedFbUId = localStorage.setItem(
             "fr_default_fb",
             getCurrentFbProfile[0].fb_user_id
@@ -237,20 +231,24 @@ const IncomingPendingRequest = () => {
           response
         );
         if (response.data[0].friend_details.length > 0) {
+          console.log(
+            "helo e   pending lst datta:::::",
+            response.data[0].friend_details
+          );
           setFriendsList(response.data[0].friend_details);
           setLoading(false);
           setNoDataFound(false);
-          console.log("here:::", response.data[0].friend_details);
+          //console.log("here:::", response.data[0].friend_details);
         } else {
           setFriendsList([]);
           setLoading(false);
           setNoDataFound(true);
-          console.log("here");
+          //console.log("here");
         }
         // console.log("response.data[0].friend_details", response.data[0].friend_details);
       });
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       setLoading(false);
       setNoDataFound(true);
     }

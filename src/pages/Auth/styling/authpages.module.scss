@@ -15,7 +15,7 @@
 .page-wrapers {
   @include authBox();
   &:before {
-    @include gradient(90deg, $colorList);
+    @include gradient(90deg, $themeColorList);
     //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
     width: $full-width;
@@ -97,7 +97,7 @@
     line-height: $lineHeightSecondary;
 
     a {
-      color: $themeBlack5;
+      color: $themeDefaultPrimary4;
       font-weight: $fontWeight;
 
       &:hover {
@@ -107,7 +107,7 @@
   }
 
   // &:before {
-  //   @include gradient(90deg, $colorList);
+  //   @include gradient(90deg, $themeColorList);
   //   width: $full-width;
   //   height: 10px;
   //   @include positioned(absolute);

@@ -4,9 +4,8 @@ Feature: login and logout
 
     Scenario: user should be logged in successfully for the very first time 
         
-        Given I signin newly to Friender
-        When  I entered my valid Email-id and my default password sent by friender team
-        Then  I click on continue
+        Given User created via Kyubi
+        When  I can login with the user created via Kyubi and default password of Kyubi
         Then  I should see landed up into password reset page
 
 

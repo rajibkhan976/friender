@@ -3,15 +3,16 @@
 @use "../common/dropdown"as *;
 
 .common-header {
+    contain: layout;
     @include theme-aware('background-color', 'listing-cell-bg');
     flex: 0 0 80px;
     height: 80px;
     width: 100%;
     @include positioned(relative);
     @include margins(0, 0, 0, 0);
-    background: $themeBlack2;
+    background:$themeDefaultSecondary1;
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
-    @include border-radius(10px, 10px, 10px, 10px);
+    // @include border-radius(10px, 10px, 10px, 10px);
     padding: 15px 30px;
     display: flex;
     margin-bottom: 10px;
@@ -23,6 +24,8 @@
         .header-breadcrumb {
             h2 {
                 text-transform: capitalize;
+                line-height: 27px;
+                align-items: center;
 
                 font: {
                     style: normal;
@@ -35,12 +38,33 @@
                 .num-header-count {
                     margin-left: 10px;
                 }
+
+                .fr-tooltip {
+                    font-size: inherit;
+
+                    figure {
+                        line-height: 1;
+                        font-size: 0;
+                    }
+                }
+            }
+
+            .fr-tooltip-query {
+                margin-left: 8px;
+                vertical-align: middle;
+                display: inline-flex;
+                align-items: center;
+            }    
+            
+            .fr-tooltip-content {
+                text-align: left;
+                width: 250px;
             }
         }
 
         .menu-breadcrumb {
             line-height: 14px;
-            color: $themeBlack5;
+            color: $themeDefaultPrimary4;
             padding-left: 1px;
             text-transform: capitalize;
             margin-top: auto;
@@ -52,6 +76,7 @@
     }
 
     .right-div {
+        contain: layout;
         height: 100%;
 
         >* {
@@ -105,12 +130,6 @@
 
     .fr-tooltip {
         margin-left: 8px;
-
-        .fr-tooltip-icon {
-            display: inline-flex;
-            align-items: center;
-            vertical-align: middle;
-        }
     }
 
     .sync-text {
@@ -124,6 +143,7 @@
     &.active {
         min-width: 140px;
         overflow: hidden;
+        pointer-events: none;
 
         &:after {
             pointer-events: none;

@@ -8,6 +8,13 @@ Feature: Friendlist
         When  I am in Friendlist Tab
         Then  I select pagesize as 30 I can see 30 friends in a single page
 
+     Scenario: user should be able to filter Status column should be filter with Deactivate 
+
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can filter the list only with Deactivate
+
+
     Scenario: user should be able to select all the user in friendlist
 
         Given I landed into Friender portal with particular email and password
@@ -56,11 +63,11 @@ Feature: Friendlist
         When  I am in Friendlist Tab
         Then  I can sort status column with descending order
 
-    # Scenario: user should be able to filter sync Sync & Added Date &  Time  column should be sort descending order
+    Scenario: user should be able to filter sync Sync & Added Date &  Time  column should be sort descending order
 
-    #     Given I landed into Friender portal with particular email and password
-    #     When  I am in Friendlist Tab
-    #     Then  I can sort Sync & Added Date &  Time  column with descending order
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can sort Sync & Added Date &  Time  column with descending order
 
     Scenario: user should be able to filter Total Reaction should be sort ascending order
 
@@ -74,17 +81,17 @@ Feature: Friendlist
         When  I am in Friendlist Tab
         Then  I can sort Total Reaction column with descending order
     
-    # Scenario: user should be able to filter Message Count should be sort ascending order
+    Scenario: user should be able to filter Message Count should be sort ascending order
 
-    #     Given I landed into Friender portal with particular email and password
-    #     When  I am in Friendlist Tab
-    #     Then  I can sort Message Count column with ascending order
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can sort Message Count column with ascending order
 
-    # Scenario: user should be able to filter Message Count should be sort descending order
+    Scenario: user should be able to filter Message Count should be sort descending order
 
-    #     Given I landed into Friender portal with particular email and password
-    #     When  I am in Friendlist Tab
-    #     Then  I can sort Message Count column with descending order
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can sort Message Count column with descending order
 
     Scenario: user should be able to filter Total Comment should be sort ascending order
 
@@ -103,16 +110,22 @@ Feature: Friendlist
     #     Given I landed into Friender portal with particular email and password
     #     When  I am in Friendlist Tab
     #     Then  I can filter the list only with female
-
-    #  Scenario: user should be able to filter Status column should be filter with Deactivate 
-
-    #     Given I landed into Friender portal with particular email and password
-    #     When  I am in Friendlist Tab
-    #     Then  I can filter the list only with Deactivate
     
-    # Scenario: user should be able to reset Status column should after filtering 
+    # Scenario: user should be able to filter Gender column should be filter if he/she wants to sort filter with Male
 
     #     Given I landed into Friender portal with particular email and password
     #     When  I am in Friendlist Tab
-    #     Then  I can filter the list only with Deactivate
-    #     Then  I can reset it back and get the previous list
+    #     Then  I can filter the list only with male
+
+     Scenario: user should be able to filter Status column should be filter with Deactivate 
+
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can filter the list only with Deactivate
+    
+    Scenario: user should be able to reset Status column should after filtering 
+
+        Given I landed into Friender portal with particular email and password
+        When  I am in Friendlist Tab
+        Then  I can filter the list only with Deactivate
+        Then  I can reset it back and get the previous list

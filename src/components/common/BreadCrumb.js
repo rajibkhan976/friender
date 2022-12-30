@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 function BreadCrumb({ links }) {
@@ -9,7 +9,7 @@ function BreadCrumb({ links }) {
           <li key={index}>{item.location}</li>
         ) : (
           <li key={index}>
-            <NavLink path={item.link}>{item.location}</NavLink>
+            <NavLink to={item.location}>{item.location}</NavLink>
           </li>
         );
       })}

@@ -1,7 +1,7 @@
 import { Given, When, Then, } from "@badeball/cypress-cucumber-preprocessor"
 import { faker } from '@faker-js/faker';
 import login from "../../pages/login.spec"
-const email = faker.internet.email()
+const email = "test"+faker.internet.email()
 const pwd = 123456
 Given("User created via Kyubi", () => {
     cy.request({
@@ -24,7 +24,7 @@ Given("User created via Kyubi", () => {
     })
 });
 
-Then("I will be in friender platform", () => {
+Then("I can login with the user created via Kyubi and default password of Kyubi", () => {
     cy.visit('/')
     cy.fixture("kyubicreds.json").then((data) => {
         values = data;

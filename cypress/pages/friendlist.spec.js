@@ -108,20 +108,55 @@ class friendlist {
   }
 
   filterwithmale() {
-    cy.get("div.ag-root-wrapper.ag-ltr.ag-layout-normal").agGridColumnFilterTextMenu({
-      searchCriteria: [{
-        columnName: "Gender ",
-        filterValue: "Male",
-        operator: "Equals"
-      }
-      ],
-      hasApplyButton: false
-    })
+    cy.wait(5000)
+    cy.get('.ag-header-cell').eq(8).get('.ag-header-cell-resize').then(($rebtn) => {
+      cy.get($rebtn).eq(8)
+        //  .trigger('mousedown', { which: 1, pageX: 437, pageY: 428 })
+          .trigger('mousemove', { which: 1, pageX: 440, pageY: 428 })
+         // .trigger('mouseup',  { pageX: 440, pageY: 428 });
+  })
+    cy.wait(5000)
+    cy.get('.ag-icon-menu')
+		.eq(8)
+		.click()
+    .type("Male")
+
+
+	cy.get('.ag-picker-field-icon').eq(0).click()
+  cy.get('.ag-list-item.ag-select-list-item').find('span').contains('Starts with').click()
+  
+  this.apply()
+
+	cy.get('.ag-center-cols-container .ag-row')
+		.find(`[col-id="friendGender"]`)
+		.then(cells => {
+			cells.each((_, cell) => {
+				expect(cell).to.have.text('male');
+			});
+		})
   }
 
   filterwithfemale() {
-    cy.get(this.getgendercolumn + this.getfilterofeachcolumn).click()
-    cy.get(this.getfilter1).type("Female")
+    cy.wait(5000)
+    cy.get('.ag-header-cell').eq(8).find(' .ag-header-cell-resize')
+    cy.get('.ag-icon-menu')
+		.eq(8)
+		.click()
+    .type("Female")
+
+
+	cy.get('.ag-picker-field-icon').eq(0).click()
+  cy.get('.ag-list-item.ag-select-list-item').find('span').contains('Starts with').click()
+  
+  this.apply()
+
+	cy.get('.ag-center-cols-container .ag-row')
+		.find(`[col-id="friendGender"]`)
+		.then(cells => {
+			cells.each((_, cell) => {
+				expect(cell).to.have.text('female');
+			});
+		})
   }
 
   status_deactivate() {

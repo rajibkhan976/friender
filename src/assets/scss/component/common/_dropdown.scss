@@ -25,6 +25,10 @@
             height: 30px;
             @include border-radius(5px);
             padding-inline: 10px;
+            &:hover{
+                padding-left: 8px;
+                padding-right: 12px;
+            }
 
             figure {
                 width: 14px;
@@ -35,7 +39,7 @@
             }
 
             span {
-                @include theme-aware('color', 'tooltip-text');
+                @include theme-aware('color', 'link-text-color');
                 white-space: nowrap;
                 font-weight: 600;
                 font-size: 10px;
@@ -46,38 +50,38 @@
                 @include theme-aware('background-color', 'tooltip-bg');
                 
                 span {
-                    color: $themeDefaultPrimary2;
+                    color: $themeSecondaryGrey8;
                 }
             }
 
             &.whiteLabel-fr-action {
-                figure {
-                    path {
-                        @include theme-aware('fill', 'link-text-color');
-                    }
-                }
+                // figure {
+                //     path {
+                //         @include theme-aware('fill', 'link-text-color');
+                //     }
+                // }
 
-                &:hover {
+                
                     figure {
                         path {
-                            fill: $goldenColor;
+                            fill: $themeYellow1;
                         }
                     }
-                }
+                
             }
 
             &.del-fr-action {
-                &:hover {
+                
                     path {
                         fill: $themeRed1;
                     }
-                }
+                
             }
 
             &.history-fr-action {
                 &:hover {
                     path {
-                        fill: $themeDefaultPrimary2;
+                        fill: $themeSecondaryGrey7;
                     }
                 }                
             }
@@ -97,6 +101,14 @@
                         }
                     }
                 }                
+            }
+            &.block-fr-action{
+                
+                    path {
+                        fill: $themeRed1;
+                    }
+                
+
             }
         }
     }

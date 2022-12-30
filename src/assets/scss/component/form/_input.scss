@@ -1,39 +1,39 @@
 @use "../../abstract/color" as *;
 @use "../../abstract/font" as *;
-@use  "../../abstract/mixins" as *;
-@use  "../../abstract/variables" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/variables" as *;
 
 .element-wraper {
   @include positioned(relative);
   @include display(inline-block);
   width: $full-width;
-  @include margins (10px , 0, 10px, 0);
-    label {
-      font-size: $smallFontSize;
-      color: $themeDefaultPrimary2;
-      @include margins (0 , 0, 10px, 0);
-      span {
-        color: $themeBlack5;
-        margin-left: 5px;
-        ;
+  @include margins(10px, 0, 10px, 0);
+  label {
+    font-size: $smallFontSize;
+    color: $themeDefaultPrimary2;
+    @include margins(0, 0, 10px, 0);
+    span {
+      color: $themeDefaultPrimary4;
+      margin-left: 5px;
+    }
+  }
+  .forget-wraper {
+    float: right;
+    a {
+      font-size: $footerFontSize;
+      color: $themeDefaultPrimary4;
+      text-decoration: none;
+      &:hover {
+        color: $themeDefaultPrimary1;
       }
     }
-    .forget-wraper {
-      float: right;
-      a {
-        font-size: $footerFontSize;
-        color: $themeBlack5;
-        text-decoration: none;
-        &:hover {
-          color: $themeDefaultPrimary1;
-        }
-      }
-    }  
+  }
   .form-field {
     // @include margins (10px , 0, 0px, 0);
     @include positioned(relative);
     .form-control {
       @include inputBox();
+      @include theme-aware("color", "text-color");
     }
     .show-hide {
       @include positioned(absolute);
@@ -54,4 +54,3 @@
     }
   }
 }
-
