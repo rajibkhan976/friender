@@ -22,7 +22,7 @@ import Modal from "../../components/common/Modal";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 
-const SendRequest = () => {
+const SendRequest = ({deleteAllInterval}) => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
@@ -48,6 +48,10 @@ const SendRequest = () => {
       .then((res) => {
         console.log("the friend request send list", res);
       });
+    let currentCookies = document.cookie;
+    if (currentCookies.includes("deleteAllPendingFR")) {
+      deleteAllInterval(() => { dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })) });
+    }
   }, []);
 
   /**

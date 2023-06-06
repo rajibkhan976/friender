@@ -34,6 +34,9 @@ import Friends from "./pages/Friends";
 // import BlackList from "./pages/Friends/BlackList";
 // import Friends from "./components/friends";
 import { alertBrodcater } from "./components/common/AlertBrodcater";
+import helper from "./helpers/helper"
+import { useDispatch } from "react-redux";
+import { getSendFriendReqst } from "./actions/FriendsAction"
 
 const LoginComponent = AuthLayout(LoginPage);
 // const SignupComponent = AuthLayout(SignupPage);
@@ -52,8 +55,40 @@ const SendRequest = lazy(() => import("./pages/Friends/SendRequest"));
 const BlackList = lazy(() => import("./pages/Friends/BlackList"));
 const InstallSuccess = lazy(() => import("./pages/extension/InstallSuccess"));
 
+
 const Routeing = () => {
-  alertBrodcater()
+  const dispatch = useDispatch();
+  const deleteAllInterval = async (callback) => {
+    const timeInterVal = setInterval(() => {
+      let cookie = helper.getCookie("deleteAllPendingFR");
+      if (cookie !== "Active") {
+        callback(); //callback function calling the pending list action
+        console.log("send req api got hitted>>>>");
+        clearInterval(timeInterVal);
+      }
+    }, 500);
+  };
+
+  /**
+   * Function to check for changes in cookies
+   */
+  function checkCookieChange() {
+    let currentCookies = document.cookie;
+    if (currentCookies.includes("deleteAllPendingFR") && !checkCookieChange.previousCookies.includes("deleteAllPendingFR")) {
+      deleteAllInterval(() => { dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb"), })); });
+      console.log('New "DPFR" cookie added!');
+    }
+    // Update the previous cookies for the next check
+    checkCookieChange.previousCookies = currentCookies;
+    // Schedule the next check
+    requestAnimationFrame(checkCookieChange);
+  }
+  // Initial setup
+  checkCookieChange.previousCookies = document.cookie;
+  checkCookieChange(); // Start checking for cookie changes
+  ///////////////
+
+  alertBrodcater();
   return (
     <BrowserRouter history={history}>
       <Routes>
@@ -70,8 +105,18 @@ const Routeing = () => {
               path="reset-password"
               element={<ResetPasswordPage />}
             ></Route>
-            <Route path="settings" element={<Suspense fallback={"Loading Settings..."}><Settings /></Suspense>}>
-              <Route path="settings" element={<MySetting />}></Route>
+            <Route
+              path="settings"
+              element={
+                <Suspense fallback={"Loading Settings..."}>
+                  <Settings />
+                </Suspense>
+              }
+            >
+              <Route
+                path="settings"
+                element={<MySetting />}
+              ></Route>
               <Route
                 path="request-history"
                 element={<FriendRequestSentVersion />}
@@ -81,31 +126,85 @@ const Routeing = () => {
                 element={<BrowserManager />}
               ></Route>
             </Route>
-              {/* <Route path="dmf" element={<DynamicMergeFields />}></Route> */}
+            {/* <Route path="dmf" element={<DynamicMergeFields />}></Route> */}
             {/* <Route path="message" element={<Message />}>
             </Route> */}
 
             {/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}
             <Route path="friends" element={<Friends />}>
-              <Route path="friend-list" element={<Suspense fallback={""}><FriendsList /></Suspense>}></Route>
-              <Route path="whitelisted-friends" element={<Suspense fallback={""}><WhiteList /></Suspense>}></Route>
-              <Route path="blacklisted-friends" element={<Suspense fallback={""}><BlackList /></Suspense>}></Route>
+              <Route
+                path="friend-list"
+                element={
+                  <Suspense fallback={""}>
+                    <FriendsList />
+                  </Suspense>
+                }
+              ></Route>
+              <Route
+                path="whitelisted-friends"
+                element={
+                  <Suspense fallback={""}>
+                    <WhiteList />
+                  </Suspense>
+                }
+              ></Route>
+              <Route
+                path="blacklisted-friends"
+                element={
+                  <Suspense fallback={""}>
+                    <BlackList />
+                  </Suspense>
+                }
+              ></Route>
               <Route
                 path="incoming-pending-request"
-                element={<Suspense fallback={""}><IncomingPendingRequest /></Suspense>}
+                element={
+                  <Suspense fallback={""}>
+                    <IncomingPendingRequest />
+                  </Suspense>
+                }
               ></Route>
 
-              <Route path="pending-request" element={<Suspense fallback={""}><SendRequest /></Suspense>}></Route>
+              <Route
+                path="pending-request"
+                element={
+                  <Suspense fallback={""}>
+                    <SendRequest deleteAllInterval={deleteAllInterval}/>
+                  </Suspense>
+                }
+              ></Route>
               <Route
                 path="incoming-rejected-request"
-                element={<Suspense fallback={""}><IncomingRejectedRequest /></Suspense>}
+                element={
+                  <Suspense fallback={""}>
+                    <IncomingRejectedRequest />
+                  </Suspense>
+                }
               ></Route>
-              <Route path="unfriended-friends" element={<Suspense fallback={""}><Unfriend /></Suspense>}></Route>
+              <Route
+                path="unfriended-friends"
+                element={
+                  <Suspense fallback={""}>
+                    <Unfriend />
+                  </Suspense>
+                }
+              ></Route>
               <Route
                 path="deactivated-friends"
-                element={<Suspense fallback={""}><DeactivatedFriends /></Suspense>}
+                element={
+                  <Suspense fallback={""}>
+                    <DeactivatedFriends />
+                  </Suspense>
+                }
               ></Route>
-              <Route path="lost-friends" element={<Suspense fallback={""}><LostFriends /></Suspense>}></Route>
+              <Route
+                path="lost-friends"
+                element={
+                  <Suspense fallback={""}>
+                    <LostFriends />
+                  </Suspense>
+                }
+              ></Route>
             </Route>
             <Route path="onboarding" element={<OnboardingPage />}></Route>
           </Route>
@@ -124,7 +223,14 @@ const Routeing = () => {
           <Route path="/terms-conditions" element={<TermsConditions />}></Route>
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
-        <Route path="/extension-success" element={<Suspense fallback={'Loading your extension...'}><InstallSuccess /></Suspense>}></Route>
+        <Route
+          path="/extension-success"
+          element={
+            <Suspense fallback={"Loading your extension..."}>
+              <InstallSuccess />
+            </Suspense>
+          }
+        ></Route>
       </Routes>
     </BrowserRouter>
   );
