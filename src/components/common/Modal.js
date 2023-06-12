@@ -14,10 +14,12 @@ const Modal = ({
   ModalFun,
   ModalIconElement,
   ExtraProps = {},
+  modalButtons = true,
+  additionalClass
 }) => {
   return (
     <div
-      className="modal-background"
+      className={`modal-background ${additionalClass}`}
       style={{ display: open ? "block" : "none" }}
       // onClick={() => {
       //   setOpen(false);
@@ -52,7 +54,7 @@ const Modal = ({
             <span style={{color: modalType === "DELETE" ? '#FF6A77' : '#fff'}}>{headerText}</span>
           </div>
           <div className="modal-content">{bodyText} </div>
-          <div className="modal-buttons d-flex justifyContent-end">
+          {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
             <button
               className="btn-primary outline"
               onClick={
@@ -76,7 +78,7 @@ const Modal = ({
                 {btnText}
               </button>
             )}
-          </div>
+          </div>}
         </div>
       </div>
     </div>

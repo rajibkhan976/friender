@@ -121,6 +121,10 @@
     padding: 0;
     margin: 0;
   }
+
+  &:hover {
+    @include theme-aware('background-color', 'btn-hover');
+  }
 }
 
 .btn-primary {

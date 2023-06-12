@@ -1,0 +1,45 @@
+@use "../../abstract/mixins" as *;
+
+.inputBlock{
+  display: flex;
+  padding: 7px 0 5px 0;
+  width:100%;
+  overflow: auto;
+
+  .keyword-input{
+    background: none;
+    border: none;
+    color: #BDBDBD;
+    font-size: 12px;
+    min-width: 150px;
+    resize: none;
+  }
+  .keywords{
+    height: 22px;
+    width: auto;
+    display: inline-block;
+    line-height: 22px;
+    font-size: 12px;
+    padding: 0 10px;
+    background: #005911;
+    border-radius: 22.5px;
+    margin: 0 5px 0 0;
+    position: relative;
+    .cross{
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      position: absolute;
+      right: 4px;
+      cursor: pointer;
+    }
+    &:hover{
+      background: #B54B54;
+      padding: 0 27px 0 10px;
+      .cross{
+        display: inline-block;           
+      }
+    }
+  }
+}

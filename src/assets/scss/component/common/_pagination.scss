@@ -4,22 +4,24 @@
 .pagination {
     display: flex;
     align-items: center;
-    margin: 0 auto;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
 
     .page-item {
         .page-link {
-            min-width: 30px;
-            padding-inline: 10px;
-            height: 30px;
+            width: 30px;
+            aspect-ratio: 1 / 1;
+            padding-inline: 2px;
+            border-radius: 100%;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             color: #8998B8;
-            @include border-radius(5px);
 
             &:hover {
-                @include theme-aware('background-color', 'btn-hover');
+                @include theme-aware('background-color', 'dark-light-border');
                 @include theme-aware('color', 'text-color');
             }
         }
@@ -27,6 +29,7 @@
         &:first-child {
             margin-right: 13px;
             background-color: transparent !important;
+            padding-inline: 0;
 
             .page-link {
                 background-image: url('../../../images/left-default.png');
@@ -39,7 +42,6 @@
                 &:hover {
                     background-image: url('../../../images/left-hover.png');
                     @include theme-aware('background-color', 'pagination-arrow-hover');
-                    background-size: auto 60px;
                     background-repeat: no-repeat;
                     background-size: 10px auto;
                     transform: scaleX(-1);
@@ -50,6 +52,7 @@
         &:last-child {
             margin-left: 13px;
             background-color: transparent !important;
+            padding-inline: 0;
             
             .page-link {
                 background-image: url('../../../images/right-default.png');
@@ -63,7 +66,6 @@
                 &:hover {
                     background-image: url('../../../images/right-hover.png');
                     @include theme-aware('background-color', 'pagination-arrow-hover');
-                    background-size: auto 60px;
                     background-repeat: no-repeat;
                     background-size: 10px auto;
                     transform: none;
@@ -73,8 +75,8 @@
 
         &.active {
             .page-link {
-                color: #fff;
-                @include theme-aware('background-color', 'button-bg');
+                @include theme-aware('color', 'pagination-active-text');
+                @include theme-aware('background-color', 'dark-light-border');
             }
         }
 

@@ -46,6 +46,7 @@
       top: 7px;
       right: 5px;
     }
+    
   }
 }
 
@@ -133,6 +134,15 @@
   // align-items: center;
     contain: layout;
     content-visibility: auto;
+    
+  &.modal-keywords {
+    .modal-header {
+      padding-top: 12px !important;
+    }
+    .modal-content {
+      margin-top: 45px !important;
+    }
+  }
 }
 .modal {
   // min-height: 256px;
@@ -424,3 +434,120 @@
   }
 }
 //Draggable List Style End
+
+
+// styling for tiny_selector_box start
+.theme-default {
+  .tinyWrap{
+    .selector_box{
+      border-radius: 5px;
+      border: 1px solid $themeDefaultSecondary2;
+      background: #000000;
+      color: #fff;
+      padding: 1px 9px;
+      &:hover{
+        border-color: $themeDefaultPrimary1;   
+      } 
+      
+    }
+    .select-arrow{
+      background-position: none;
+      background: url(../../../images/arrow1.svg) 0 2px no-repeat;
+      width: 10px;
+      height: 9px;
+      pointer-events: none;
+    }  
+  }
+}
+// styling for tiny_selector_box end
+
+// styling for keywordBlock starts
+.smallTxt{
+  font-size: $footerFontSize;
+  line-height: 19px;
+}
+.keywordBlock{
+  background: #000000;
+  border: 1px solid $themeDefaultSecondary2;
+  border-radius: 10px;
+  padding: 12px 23px 5px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  
+    .saveBlock{
+      display: flex;
+      width:100%;
+      flex-wrap: wrap;
+      padding: 5px 0;
+      margin-bottom: 8px;
+      position: relative;
+
+      .saveBtn{
+        font-weight: 400;
+        font-size: 14px;
+        line-height:auto;
+        color: #313037;
+        margin: 0 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+      button.activated{
+        color: #0094FF;
+      }
+      .doomedText{
+        font-size: 12px;
+        line-height: 16px;
+        color: #4D4D4D;
+        position: absolute;
+        right: 20px;
+      }
+    }
+   
+}
+
+// styling for keywordBlock end
+
+// styling for page number select
+
+.theme-default {
+  .pageNo{
+    .selector_box{
+      border-radius: 5px;
+      border: 1px solid #1C1C1E;
+      background: #1C1C1E;
+      color: #fff;
+      padding: 1px 9px;
+     
+    }
+    .select-arrow{
+      background-position: none;
+      background: url(../../../images/arrow1.svg) 0 2px no-repeat;
+      width: 10px;
+      height: 9px;
+      pointer-events: none;
+    }  
+  }
+}
+
+// styling for page number select end
+
+.friendSource{
+  display: flex;
+  align-items: center;
+
+  span{
+    margin: 0 7px 0 7px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ico-open-link{
+    path {
+      stroke: #767485;
+      
+    }
+  }
+}
+

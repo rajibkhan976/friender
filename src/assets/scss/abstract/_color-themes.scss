@@ -24,6 +24,7 @@ $themes: (
     loader-bg: $themeBlack1,
     loader-component-bg: $themeDefaultSecondary1,
     pagination-arrow-hover: $themeDefaultSecondary1,
+    pagination-active-text: $themeBlack1,
     items-per-page-color: $themeDefaultPrimary3,
     // Sidebar
     sidebar-border-color: $themeDefaultSecondary2,
@@ -102,6 +103,7 @@ $themes: (
     loader-bg: $themeDefaultSecondary6,
     loader-component-bg: $themeDefaultPrimary2,
     pagination-arrow-hover: $themeDefaultSecondary1,
+    pagination-active-text: $themeBlack1,
     items-per-page-color: $themeDefaultPrimary3,
     // Sidebar
     sidebar-border-color: $themeSecondaryGrey16,

@@ -7,7 +7,7 @@
   overflow: hidden;
   padding: 0;
   margin-top: -10px;
-  margin-bottom: 0;
+  // margin-bottom: 0;
 }
 
 .setting-content {
@@ -51,15 +51,22 @@
       align-items: center;
       margin-bottom: 0;
       cursor: pointer;
+      border-top: 1px solid transparent;
+      transition: 0.5s;
       @include theme-aware("color", "text-color");
-
+      &:hover{
+        border-top: 1px solid;
+        transition: 0.5s;
+       @include theme-aware("border-color", "general-border");
+        @include theme-aware("background-color", "settings-header-background");
+      }
       &.setting-actived {
         border-top: 1px solid;
         @include theme-aware("border-color", "general-border");
         @include theme-aware("background-color", "settings-header-background");
 
         ~ .setting-child {
-          padding: 30px 94px 30px 106px;
+          padding: 30px 20px 30px 106px;
           @include theme-aware("background-color", "settings-active-content-background");
         }
       }
@@ -156,9 +163,7 @@
     // min-height: 59px;
   }
 
-  .setting-actived {
-    background: $themeDefaultSecondary1;
-  }
+ 
 }
 
 .time-section {

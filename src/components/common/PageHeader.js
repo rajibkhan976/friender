@@ -353,6 +353,16 @@ function PageHeader({ headerText = "" }) {
           },
         });
         break;
+      case "pending-request":
+        setHeaderOptions({
+          ...headerOptions,
+          viewSelect: false,
+          searchHeader: true,
+          listingLengthWell: true,
+          quickAction: false,
+          syncManual: true,
+        });
+        break;
       case "lost-friends":
         setHeaderOptions({
           ...headerOptions,
@@ -927,6 +937,7 @@ function PageHeader({ headerText = "" }) {
               )}
               {headerOptions.infoToolTip && (
                 <ToolTipPro
+                  type={"query"}
                   textContent={
                     "This count is only based on the friend requests sent by Friender"
                   }
@@ -978,32 +989,36 @@ function PageHeader({ headerText = "" }) {
                 <span className="sync-text">
                   {update || syncBtnDefaultState}
                 </span>
-                {/* {console.log(toolTip)} */}
-                {!isSyncing && (
-                  <Tooltip
-                    textContent={
-                      toolTip !== ""
-                        ? "Last synced at " + toolTip
-                        : "Not Synced yet."
-                    }
-                  />
-                )}
               </button>
+              <span className="last-sync-status text-center">
+                {
+                  toolTip !== "" ? 
+                  `Last sync : ${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) > 1 ? 
+                  `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} days ago` : 
+                  Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) === 1 ? 
+                  `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} day ago` : 'Today'}` : 
+                  "Not Synced yet."
+                }
+                </span>
             </div>
           )}
 
-          <div className="fr-accessibility-buttons d-flex f-align-center">
+          {
+            accessOptions
+            .filter((e) => e.status)
+            .length > 0 ?
+            <div className="fr-accessibility-buttons d-flex f-align-center">
             {/* 
-          {headerOptions.dynamicMergeFields && }
-          {headerOptions.sendInviteHeader && }
-          {headerOptions.listLabelView && }
-          {headerOptions.notificationView && }
-          {headerOptions.markNotificationRead && }
-          {headerOptions.createHeader && }
-          {headerOptions.templatesOptions && }
-          {headerOptions.labelsTagsView && } */}
+              {headerOptions.dynamicMergeFields && }
+              {headerOptions.sendInviteHeader && }
+              {headerOptions.listLabelView && }
+              {headerOptions.notificationView && }
+              {headerOptions.markNotificationRead && }
+              {headerOptions.createHeader && }
+              {headerOptions.templatesOptions && }
+              {headerOptions.labelsTagsView && } */}
 
-            {accessOptions
+              {accessOptions
               .filter((e) => e.status)
               .map((accessItem, i) => (
                 <div
@@ -1101,7 +1116,7 @@ function PageHeader({ headerText = "" }) {
                   )}
                 </div>
               ))}
-          </div>
+          </div> : '' }
         </div>
       </div>
     </>

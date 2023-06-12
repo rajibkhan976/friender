@@ -19,6 +19,8 @@ import "../../assets/scss/component/common/_listing.scss";
 import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
 // import 'ag-grid-community/styles/ag-theme-alpine.css';
+import DropSelector from "../formComponents/DropSelector"
+
 const Pagination = lazy(() => import("./Pagination"));
 
 const Listing = (props) => {
@@ -44,7 +46,32 @@ const Listing = (props) => {
     var thisIsFirstColumn = displayedColumns[0] === params.column;
     return thisIsFirstColumn;
   };
-
+  const pageNumbers = [
+    {
+      value: "15",
+      label: "15 view",
+    },
+    {
+      value: "30",
+      label: "30 view",
+    },
+    {
+      value: "45",
+      label: "45 view",
+    },
+    {
+      value: "90",
+      label: "90 view",
+    },
+    {
+      value: "180",
+      label: "180 view",
+    },
+    {
+      value: maxSelect,
+      label: "All",
+    }
+  ];
   useEffect(() => {
     let ageCol = document.querySelectorAll(".ag-header-cell-text");
     let colInterval = setInterval(() => {
@@ -54,8 +81,15 @@ const Listing = (props) => {
         clearInterval(colInterval);
         if (ageCol?.length > 0) {
           for (let col of ageCol) {
-            if (col.innerHTML.includes("Age")) {
+            if (col.innerHTML.includes("Age") ) {
               col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>"+
+              "<circle cx='9' cy='9' r='6.75' fill='#767485'/>"+
+              "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>"+
+              "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>"+
+              "</svg></p>";
+            }
+            if (col.innerHTML.includes("Friends source")) {
+              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>"+
               "<circle cx='9' cy='9' r='6.75' fill='#767485'/>"+
               "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>"+
               "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>"+
@@ -124,16 +158,21 @@ const Listing = (props) => {
     suppressDragLeaveHidesColumns: true,
     resizable: true,
     suppressMultiSort: false,
+    suppressMovable: true
   }));
 
   // Example load data from sever
   const onGridReady = (params) => {
+    var defaultSortModel = [{ colId: "created_at", sort: "desc" }];
     try {
       setRowData(props.friendsData);
+      
+      if(props.friendsData) {
+        params.columnApi.applyColumnState({ state: defaultSortModel });
+      }
     } catch (error) {
       //console.log(error);
     } finally {
-      var defaultSortModel = [{ colId: "engagement", sort: "desc" }];
       if (params) {
         params.columnApi.applyColumnState({ state: defaultSortModel });
       }
@@ -353,6 +392,7 @@ const Listing = (props) => {
           //enableBrowserTooltips={true}
           tooltipShowDelay={0}
           tooltipHideDelay={1000000}
+          alwaysShowHorizontalScroll={true}
         />
       </div>
       {maxSelect !== 0 && !showPaginate ? (
@@ -365,7 +405,7 @@ const Listing = (props) => {
             />
           </Suspense>
           <div className="select-page">
-            <select
+            {/* <select
               onChange={onPageSizeChanged}
               id="page-size"
               defaultValue={"15"}
@@ -377,7 +417,17 @@ const Listing = (props) => {
               <option value="90">90 view</option>
               <option value="180">180 view</option>
               <option value={maxSelect}>All</option>
-            </select>
+            </select>  */}
+             <DropSelector
+                    handleChange={onPageSizeChanged}
+                    id="page-size"
+                    defaultValue={"15"}
+                    // ref={selectRef}
+                    selects={pageNumbers}
+                    extraClass="pageNo"
+                    height="30px"
+                    width="90px"
+                  /> 
           </div>
         </footer>
       ) : (

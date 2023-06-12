@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import DropSelector from "../../components/formComponents/DropSelector";
+// import DropSelectorTiny from "../../components/formComponents/DropSelectorTiny";
 import Switch from "../../components/formComponents/Switch";
 import SettingLoader from "../../components/common/loaders/SettingLoader";
 import Modal from "../../components/common/Modal";
@@ -11,10 +12,20 @@ import {
 import Alertbox from "../../components/common/Toast";
 import { useDispatch } from "react-redux";
 import { getMySettings, updateMysetting, makeDeletePendingFrndReq } from "../../actions/MySettingAction";
-import { ChevronUpArrowIcon, ChevronDownArrowIcon, OutlinedDeleteIcon, DangerIcon, RefreshIconLight, DeleteIcon } from '../../assets/icons/Icons';
+import { ChevronUpArrowIcon, 
+  ChevronDownArrowIcon, 
+  OutlinedDeleteIcon,
+   DangerIcon, 
+   RefreshIconLight, 
+   DeleteIcon ,
+   Cross2
+  } from '../../assets/icons/Icons';
 import NotifyAlert from "../../components/common/NotifyAlert";
 import extensionAccesories from "../../configuration/extensionAccesories"
 import helper from "../../helpers/helper"
+import ToolTipPro from "../../components/common/ToolTipPro"
+import Keyword from "../../components/common/Keyword"
+
 const MySetting = () => {
   //:::: This is a child Setting my-setting::::
   const current_fb_id = localStorage.getItem("fr_default_fb");
@@ -45,7 +56,7 @@ const MySetting = () => {
   const [deletePendingFrndStartFinding, setDeletePendingFrndStartFinding] = useState(false);
   const [deletePendingFrndError, setDeletePendingFrndError] = useState(false);
 
-
+  
   //period selctor obj
   const periodObj = [
     {
@@ -224,7 +235,7 @@ const MySetting = () => {
 
   //inputs box states
   const [reFrndngInput1, setReFrndngInput1] = useState(1);
-  const [reFrndngInput2, setReFrndngInput2] = useState(1);
+  const [reFrndngInput2, setReFrndngInput2] = useState();
   const [cnclFrndRqueInput, setCnclFrndRqueInput] = useState(1);
   const [sndMsgRcvFrndRquInput, setSndMsgRcvFrndRquInput] = useState(1);
   const [sndMsgAcptFrndRquInput, setSndMsgAcptFrndRquInput] = useState(1);
@@ -246,6 +257,25 @@ const MySetting = () => {
   const [sndMsgExptFrndRquMsgSelect, setSndMsgExptFrndRquMsgSelect] = useState(
     msgTmpltObj[0]
   );
+  const [refrienderingOpen, setRefrienderingOpen] = useState(false);
+
+  //Refrendering obj
+  const noOfRefrendering = [
+    {
+      value: 1,
+      label: "1",
+    },
+    {
+      value: 2,
+      label: "2",
+    },
+    {
+      value: 3,
+      label: "3",
+    },
+  ];
+  const [reFriendSaveActive, setReFriendSaveActive] = useState(false);
+  const [reFriendOpenKeywords, setReFriendOpenKeywords] = useState(false);
 
   useEffect(() => {
     setLoading(true)
@@ -1006,10 +1036,9 @@ const MySetting = () => {
 
 
             {/* Re-Friending  setting start*/}
-            <div className="setting no-click">
-              <div className="setting-child muted-text">
+            <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}` } onClick={() => setRefrienderingOpen(!refrienderingOpen)}>
+              <div className="setting-child ">
                 <Switch
-                  upComing
                   checked={reFrndng}
                   handleChange={() => {
                     setReFrndng(!reFrndng);
@@ -1017,44 +1046,97 @@ const MySetting = () => {
                 />
                 Automated re-friending
               </div>
-              {reFrndng && (
-                <div className="setting-child others">
-                  Remove pending friend request after &nbsp;
-                  <input
-                    type="number"
-                    className="setting-input"
-                    value={reFrndngInput1}
-                    onChange={(e) => {
-                      setReFrndngInput1(e.target.value);
-                    }}
-                  />
-                  <DropSelector
-                    selects={periodObj}
-                    value={reFrndSelect1}
+              <div className="setting-control">
+                <figure className="icon-arrow-down">
+                  {!refrienderingOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
+              </div>
+             
+            </div>
+            {refrienderingOpen && (
+                <div className="setting-child">
 
+                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>                    
+                  {" "}
+                  <div className="input-num">
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={reFrndngInput1}
+                      //onKeyDown={e => checkData(e)}
+                      onChange={(e) => {
+                        setReFrndngInput1(e.target.value);
+                      }}
+                      // onBlur={deletePendingRequestWithDaysHandle}
+                    />
+
+                    <div className="input-arrows">
+                      <button className="btn inline-btn btn-transparent" 
+                      //onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}
+                      >
+                        <ChevronUpArrowIcon size={15} />
+                      </button>
+
+                      <button className="btn inline-btn btn-transparent" 
+                       //onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}
+                      >
+                        <ChevronDownArrowIcon size={15} />
+                      </button>
+                    </div>
+                  </div>{" "}
+                  <span className="smallTxt">  day(s), and immediately send a new friend request. Choose how often to retry friending up to</span> 
+                  {" "}
+                  <DropSelector
+                    selects={noOfRefrendering}
+                    value={reFrndSelect1}
                     handleChange={(e) => {
                       setReFrndSelect1(e.target.value);
                     }}
+                    extraClass="tinyWrap"
+                    height="30px"
+                    width="90px"
                   />{" "}
-                  &nbsp;and then, Instantly resend the friend request. I can set
-                  this to &nbsp;
-                  <input
-                    type="number"
-                    className="setting-input"
-                    value={reFrndngInput2}
-                    onChange={(e) => {
-                      setReFrndngInput2(e.target.value);
-                    }}
-                  />
-                  &nbsp;amount of times to Refriend.
+                  <span className="smallTxt"> attempt(s)</span> 
+
+                  <div className="keywordBlock">
+                     <div className="saveBlock">
+                        <Switch
+                            upComing
+                            checked={reFriendOpenKeywords}
+                            handleChange={() => {
+                              setReFriendOpenKeywords(!reFriendOpenKeywords);
+                            }}
+                          /> {" "}  
+                          <span className="smallTxt"> Keyword(s) 
+                            <ToolTipPro
+                              textContent={"content"}
+                              type={"info"}
+                            />
+                          </span>
+                          {" "}
+                          
+                          {reFriendSaveActive &&
+                          <>
+                            <button className="saveBtn">Save</button>  {/* add class "activated" for blue color */}
+                          <span className="doomedText">* Enter a comma after each keyword</span> 
+                          </> 
+                          }
+                     </div>
+                     {reFriendOpenKeywords &&
+                      <Keyword
+                      onMouseDownHandler={(e) => {setReFriendSaveActive(true)}}
+                      onBlurHandler={(e) => {setReFriendSaveActive(false)}}
+                      />
+                     
+                     }
+                     
+                  </div>  
+                  
+                 
                 </div>
               )}
 
-              <span className="warn-badget">Coming Soon</span>
-            </div>
-
-
-            <div className="setting setting-actived" onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
+            <div className={`setting ${deletePendingFrndOpen ? "setting-actived" : ""}` } onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
               <Switch
                 checked={autoCnclFrndRque}
                 // handleOnBlur={e => setAutoCnclFrndRque(!autoCnclFrndRque)}
@@ -1155,7 +1237,7 @@ const MySetting = () => {
               <span className="warn-badget">Coming Soon</span>
             </div>
 
-            <div className="setting setting-actived" onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
+            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}` } onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
               <Switch
                 checked={dayBackAnlyFrndEng}
                 // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}

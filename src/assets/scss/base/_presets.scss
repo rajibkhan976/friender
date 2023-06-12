@@ -3,6 +3,8 @@
 @use "../../../assets/scss/abstract/mixins" as *;
 @use "../../../assets/scss/abstract/variables" as *;
 
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900");
+
 *,
 *::before,
 *::after {
@@ -433,8 +435,8 @@ main {
   width: 100%;
   overflow: hidden;
   position: relative;
-  padding-inline: 30px;
-  margin-bottom: 10px;
+  padding-inline: 30px 10px;
+  // margin-bottom: 10px;
 }
 
 .main {
@@ -508,10 +510,7 @@ main {
   }
 }
 
-.remember-wraper.signup-checkbox
-  .check-container
-  input:checked
-  ~ .checkmark:after {
+.remember-wraper.signup-checkbox .check-container input:checked ~ .checkmark:after {
   display: block;
 }
 .remember-wraper.signup-checkbox .check-container input:checked ~ .checkmark {
@@ -665,7 +664,6 @@ main {
   box-shadow: 0 0 0 5px rgb(96 91 255 / 26%);
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 /*:::::THis is the file where styles for individual pages are done:::::*/
 /////////////////////////////////////////////////////////////////////////
@@ -700,11 +698,7 @@ main {
 }
 
 .darknav_active {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 148, 255, 0.1) 0.73%,
-    rgba(0, 148, 255, 0) 100%
-  );
+  background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
   /* Dark/Primary/blue */
 
   border-left: 2px solid;
@@ -719,17 +713,16 @@ main {
 /*:::::THis is the file where styles for individual pages are done:::::*/
 /////////////////////////////////////////////////////////////////////////
 
-
 @media screen and (max-width: 1750px) {
   .fr-tooltip-icon {
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
-  
-      svg {
-        width: 14px!important;
-        height: 14px!important;
-      }
+
+    svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
   }
 }
 
@@ -753,9 +746,9 @@ main {
     }
     &::after {
       position: absolute;
-      content: '';
+      content: "";
       inset: 0;
-      background: #1C1C1E;
+      background: #1c1c1e;
       z-index: -2;
     }
   }
@@ -778,9 +771,9 @@ main {
   .Toastify__toast--warning {
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       inset: 0;
-      background: linear-gradient( 90deg, rgba(255, 230, 0, 0.15), rgba(27, 27, 29, 0) );
+      background: linear-gradient(90deg, rgba(255, 230, 0, 0.15), rgba(27, 27, 29, 0));
       z-index: -1;
     }
     .msg {
@@ -794,7 +787,7 @@ main {
   .Toastify__toast--success {
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       inset: 0;
       background: linear-gradient(90deg, rgba(0, 224, 116, 0.15) 0%, rgba(0, 224, 116, 0) 90%);
       z-index: -1;
@@ -812,7 +805,7 @@ main {
   .Toastify__toast--error {
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       inset: 0;
       background: linear-gradient(90deg, rgba(255, 106, 119, 0.15) 0%, rgba(255, 106, 119, 0) 90%);
       z-index: -1;
@@ -829,5 +822,20 @@ main {
 
   .Toastify__toast-icon {
     margin-right: 22px !important;
+  }
+}
+
+// Tags
+.tags {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 15px;
+  height: 26px;
+  margin: 0 6px 6px 0;
+  border-radius: 30px;
+  color: $themeDefaultPrimary2;
+
+  &.positive-tags {
+    background-color: $themeGreen4;
   }
 }

@@ -1,0 +1,98 @@
+@use "../../abstract/mixins" as *;
+@use "../../abstract/color" as *;
+
+.ag-theme-fr-table{
+  .ag-popup{
+    .ag-grid-header-tooltip{
+      position: relative;
+      cursor: pointer;
+    
+      .header-tooltip-content{
+        content-visibility: auto;
+        contain:layout;
+        @include border-radius(2px);
+        padding: 14px 18px;
+        pointer-events: none;
+        position: absolute;
+        font-size: 12px;
+        text-align: center;
+        z-index: 99;
+        min-width: 180px;
+        @include theme-aware("background-color", "tooltip-bg");
+        @include theme-aware("color", "tooltip-text");
+        left: 50%;
+        transform: translate(-50%);
+        -webkit-transform: translate(-50%);
+        -moz-transform: translate(-50%);
+        -ms-transform: translate(-50%);
+        -o-transform: translate(-50%);
+
+          *{
+            @include theme-aware("background-color", "tooltip-bg");           
+          }
+         
+          ul{
+            text-align: left;
+             li{
+                font-size: 14px;
+                line-height: 19px;
+                color: #FFFFFF;
+                padding-bottom: 10px;
+                display: flex;
+                align-content: center;
+                flex-wrap: wrap;
+                span{
+                  padding-right: 10px;
+                }
+             }
+             &.muted{
+              li{
+                color: #BDBDBD
+              }
+             }  
+          }
+          .commingSoon{
+            position: relative;
+            margin-bottom: 14px;
+            &::before,
+            &::after{
+              content:"";
+              position: absolute;
+              margin-bottom: 14px;
+              width: 32%;
+              left: 0;
+              top: 8px;
+              border-top: 1px solid #42404B;
+              height: 2px;
+            }
+            &::after{
+              left: auto;
+              right: 0
+            }
+            .warn-badget {
+              background-color: #FEC600;
+              font-size: 10px;
+              padding: 2px 5px;
+              border-radius: 5px;
+              color: black;
+              margin-left: 16px;
+              margin-right: 16px;
+              
+              text-transform: lowercase;
+              font-family: "Nunito", sans-serif;
+              font-weight: 500;
+              line-height: 15px;
+              vertical-align: middle;
+              align-self: center;
+              
+            }
+          }
+          
+       }
+      }
+  }
+}
+
+
+
+//tooltip pro style start

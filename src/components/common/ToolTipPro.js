@@ -1,12 +1,12 @@
 import { memo, useEffect } from "react";
-import { InfoIcon, QueryIcon } from "../../assets/icons/Icons";
+import { InfoIcon,InfoIcon2, QueryIcon } from "../../assets/icons/Icons";
 import '../../assets/scss/component/common/_tooltip.scss'
 import useComponentVisible from "../../helpers/useComponentVisible";
 
 function ToolTipPro({
   direction = "bottom",
   textContent = "Hello World",
-  type = "query",
+  type = "",
 }) {
     const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
   useEffect(() => {
@@ -18,8 +18,8 @@ function ToolTipPro({
     >
       <figure className="fr-tooltipPro-icon"
        onMouseEnter={()=>{
-        setIsComponentVisible(true)}} ref={clickedRef}>
-        {type ==="query" ? <QueryIcon /> : <InfoIcon />}
+        setIsComponentVisible(true)}} ref={clickedRef}> 
+        {type ==="query" ? <QueryIcon /> : type==="info" ? <InfoIcon2/> : <InfoIcon />}
       </figure>
       {isComponentVisible&&  <span className="fr-tooltipPro-content">
         <h3>

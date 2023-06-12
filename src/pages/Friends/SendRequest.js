@@ -2,11 +2,16 @@ import { useDispatch, useSelector } from "react-redux";
  
 import Listing from "../../components/common/Listing";
 import {
+  AgeRenderer,
   CreationRenderer,
+  GenderRenderer,
   KeywordRenderer,
-  RequestRenderer,
-  GeneralNameCellRenderer,
   SourceRenderer,
+  UnlinkedNameCellRenderer,
+  CountryRenderer,
+  CountryTierRenderer,
+  SourceRendererPending,
+  RefriendCountRenderer
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -14,6 +19,8 @@ import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import { getSendFriendReqst } from "../../actions/FriendsAction";
 import Modal from "../../components/common/Modal";
+import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
+
 
 const SendRequest = () => {
   //::::Friend List geting data from Redux::::
@@ -28,8 +35,6 @@ const SendRequest = () => {
   // const [friendsList,setFriendsList]=useState(fr_req_send_list)
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
-
-    console.log("pending list:::::::::::::::::::::", friendsList);
   }, [dispatch, friendsList]);
 
   useEffect(() => {
@@ -45,16 +50,28 @@ const SendRequest = () => {
       });
   }, []);
 
+  /**
+   * Custom comparator for columns with dates
+   *
+   * @returns updated array which is descending / ascending / default
+   */
+  const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
+    let valA = new Date(nodeA.data.created_at);
+    let valB = new Date(nodeB.data.created_at);
+    
+    return valB - valA
+  }
+
   const friendsListinRef = [
     {
       field: "friendName",
       headerName: "Name",
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
+      headerCheckboxSelection: false,
+      checkboxSelection: false,
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
-      headerCheckboxSelectionFilteredOnly: true,
+      headerCheckboxSelectionFilteredOnly: false,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -62,7 +79,7 @@ const SendRequest = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: GeneralNameCellRenderer,
+      cellRenderer: UnlinkedNameCellRenderer,
       minWidth: 220,
       maxWidth: 320,
     },
@@ -93,11 +110,92 @@ const SendRequest = () => {
     //   },
     // },
     {
-      field: "groupName" ? "groupName" : "finalSource",
-      headerName: "Source",
-      //filter: "agTextColumnFilter",
-      cellRenderer: SourceRenderer,
+      field: "friendGender",
+      headerName: "Gender ",
+      filter: "agTextColumnFilter",
+      cellRenderer: GenderRenderer,
       // lockPosition: "right",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      },
+    },
+    {
+      field: "created_at",
+      headerName:"Age"  ,
+      valueGetter: AgeRenderer,
+      headerTooltip:"Age",
+      tooltipComponent: CustomHeaderTooltip,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      },
+      comparator: dateComparator,
+    },
+    {
+      field: "country",
+      headerName: "Country Name",
+      filter: "agTextColumnFilter",
+      cellRenderer: CountryRenderer,
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      }
+    },
+    {
+      field: "tier",
+      headerName: "Country Tier",
+      filter: "agTextColumnFilter",
+      cellRenderer: CountryTierRenderer,
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      }
+    },
+    {
+      field: "refriending_attempt",
+      headerName: "# Re-friending",
+      filter: "agNumberColumnFilter",
+      cellRenderer: RefriendCountRenderer,
+    },
+    {
+      field: "keywords",
+      headerName: "Keyword",
+      // filter: "agTextColumnFilter",
+      cellRendererParams: {
+        setKeyWords,
+        setModalOpen,
+      },
+      cellRenderer: KeywordRenderer,
+      // lockPosition: "right",
+      // filterParams: {
+      //   buttons: ["apply", "reset"],
+      //   suppressMiniFilter: true,
+      //   closeOnApply: true,
+      //   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      // },
+    },
+    {
+      field: "groupName" ? "groupName" : "finalSource",
+      headerName: "Friends source",
+      filter: "agTextColumnFilter",
+      headerTooltip: 'Friends source',
+      tooltipComponent: CustomHeaderTooltip,
+      cellRenderer: SourceRendererPending,
+      // lockPosition: "right",
+      minWidth: 185,
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,
@@ -119,25 +217,8 @@ const SendRequest = () => {
     //   // },
     // },
     {
-      field: "keywords",
-      headerName: "Keyword",
-      // filter: "agTextColumnFilter",
-      cellRendererParams: {
-        setKeyWords,
-        setModalOpen,
-      },
-      cellRenderer: KeywordRenderer,
-      // lockPosition: "right",
-      // filterParams: {
-      //   buttons: ["apply", "reset"],
-      //   suppressMiniFilter: true,
-      //   closeOnApply: true,
-      //   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      // },
-    },
-    {
       field: "created_at",
-      headerName: "Request Sent Date &  Time",
+      headerName: "Request date &  time",
       cellRenderer: CreationRenderer,
       minWidth: 240,
       maxWidth: 250,
@@ -161,17 +242,17 @@ const SendRequest = () => {
   //   console.log("//////////////", keyWords);
   // }, [keyWords]);
   return (
-    <div className="main-content-inner d-flex d-flex-column">
+    <div className="main-content-inner fff d-flex d-flex-column">
       {modalOpen && (
         <Modal
           modalType="normal-type"
           modalIcon={null}
-          headerText={"Keywords"}
+          headerText={"Keyword(s)"}
           bodyText={
             <>
               {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ? 
                 keyWords?.matchedKeyword.map((el, i) =>
-                (<span className={`sync-box-wrap`} key={`key-${i}`}>
+                (<span className={`tags positive-tags`} key={`key-${i}`}>
                   {el}
                 </span>)
               ) : (
@@ -183,6 +264,8 @@ const SendRequest = () => {
           setOpen={setModalOpen}
           ModalFun={null}
           btnText={" "}
+          modalButtons={false}
+          additionalClass="modal-keywords"
         />
       )}
       {friendsList?.length > 0 && (

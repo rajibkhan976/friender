@@ -9,7 +9,9 @@ import {
   ReactionIcon,
   FacebookSyncIcon,
   EnvelopeIcon,
-  BlockIcon, 
+  BlockIcon,
+  OpenInNewTab, 
+  SourceGroupIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -160,6 +162,23 @@ export const GeneralNameCellRenderer = memo((params) => {
   );
 });
 
+export const UnlinkedNameCellRenderer = memo((params) => {
+  return (
+    <span className="name-image-renderer">
+      <span
+        className="fb-display-pic"
+        style={{
+          backgroundImage: `url(${params.data.friendProfilePicture})`,
+        }}
+      ></span>
+      <span className="fb-name">{params.value}</span>
+      <a href={params.data.friendProfileUrl} target="_blank" rel="noreferrer" className="ico-open-link">
+        <OpenInNewTab />
+      </a>
+    </span>
+  );
+});
+
 export const CommentRenderer = memo((params) => {
   const commentCount = params.value;
 
@@ -288,7 +307,6 @@ export const ReactionRenderer = memo((params) => {
 
 export const SourceRenderer = memo((params) => {
   const sourceFriend = params?.data?.groupName;
-  console.log('params::::>>>', sourceFriend);
 
   return (
     <>
@@ -321,7 +339,7 @@ export const SourceRenderer = memo((params) => {
               </figure>
               <span>
                 {/* {params?.data?.finalSource} : {sourceFriend} */}
-                {params?.data?.finalSource}
+               {params?.data?.finalSource}
               </span>
             </>
           ) : (
@@ -359,7 +377,7 @@ export const EmailRenderer = memo((params) => {
   return (
     <span className={`sync-email d-flex f-align-center`}>
       <figure className={`sync-ico text-center`}>
-        <EnvelopeIcon />
+        <EnvelopeIcon /> 
       </figure>
       <span className={`sync-txt`}>{emailSync}</span>
     </span>
@@ -393,21 +411,117 @@ export const KeywordRenderer = memo((params) => {
       params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : [])
   
   return (
-    <span
-      className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
-      onClick={() => {
-        params.setKeyWords({
-          keywords: keywords,
-          matchedKeyword: matchedKeyword,
-        });
-        params.setModalOpen(true);
-      }}
-    >
-      <span className={`sync-txt`}>
-        {Array.isArray(matchedKeyword)
-          ? matchedKeyword.length
-          : 0}
-      </span>
+    <>
+      {keywords && keywords?.length > 0 ? 
+      <span
+        className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
+      >
+          <span className={`sync-txt tags positive-tags`}>
+            {Array.isArray(matchedKeyword)
+              ? matchedKeyword[0]
+              : 0}
+          </span>
+          {Array.isArray(matchedKeyword) && matchedKeyword.length > 1 ? 
+          <span 
+            className="syn-tag-count" 
+            onClick={() => {
+              params.setKeyWords({
+                keywords: keywords,
+                matchedKeyword: matchedKeyword,
+              });
+              params.setModalOpen(true);
+            }}
+          >+{matchedKeyword.length - 1}</span> 
+          : ''}
+      </span> : <span className="no-keywords muted-text">N/A</span>
+    }
+  </>
+  );
+});
+export const CountryRenderer = memo((params) => {
+  let countryName = "N/A";
+  if (params.value) {
+    countryName = params.value.toLowerCase();
+  }
+
+  return (
+    <span className={` d-flex f-align-center`}>
+      <span className={`sync-txt`}>{countryName}</span>
     </span>
+  );
+});
+export const CountryTierRenderer = memo((params) => {
+  let countryTierName = "N/A";
+  if (params.value) {
+    countryTierName = params.value.toLowerCase();
+  }
+
+  return (
+    <span className={` d-flex f-align-center`}>
+      <span className={`sync-txt`}>{countryTierName}</span>
+    </span>
+  );
+});
+
+export const RefriendCountRenderer = memo((params) => {
+  console.log('params?.value', params?.value);
+  return params?.value ? params?.value : 'N/A'
+})
+
+export const SourceRendererPending = memo((params) => {
+  const sourceFriend = params?.data?.groupName;
+
+  return (
+    <>
+      {params?.data?.groupUrl && sourceFriend ? (
+        <div
+          className="friend-sync-source d-flex f-align-center"
+        >
+          {sourceFriend ? (
+            <>
+              <figure className="friend-source text-center">
+                {sourceFriend === "sync" ? <FacebookSyncIcon /> : ""}
+              </figure>
+              <span className="friendSource">
+                {/* {params?.data?.finalSource} : {sourceFriend} */}
+               <SourceGroupIcon/> <span>{sourceFriend}</span>
+               <Link
+                  to={params?.data?.groupUrl}
+                  className="ico-open-link"
+                  target="_blank"
+                >
+                  <OpenInNewTab />
+                  </Link>
+              </span>
+            </>
+          ) : (
+            "N/A"
+          )}
+        </div>
+      ) : (
+        <div className="friend-sync-source d-flex f-align-center">
+          {params?.data?.finalSource ? (
+            <>
+              <figure className="friend-source text-center">
+                {params?.data?.finalSource === "sync" ? <FacebookSyncIcon /> : ""}
+              </figure>
+              <span className="friendSource">
+                {/* {params?.data?.finalSource} : {sourceFriend} */}
+                <SourceGroupIcon/> <span>{params?.data?.finalSource}</span> 
+                <Link
+                  to={params?.data?.groupUrl}
+                  className="ico-open-link"
+                  target="_blank"
+                >
+                  <OpenInNewTab />
+                  </Link>
+              </span>
+            </>
+          ) : (
+            "N/A"
+          )}
+        </div>
+      )}
+    </>
   );
 });
