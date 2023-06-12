@@ -42,4 +42,23 @@
       }
     }
   }
+
+  .keywords-static{
+    @extend .keywords;
+
+    &:hover {
+      background: #005911;
+      padding: 0 10px;
+      
+      .cross{
+        display: none;
+        background: none;
+        border: none;
+        color: #fff;
+        position: absolute;
+        right: 4px;
+        cursor: pointer;
+      }
+    }
+  }
 }

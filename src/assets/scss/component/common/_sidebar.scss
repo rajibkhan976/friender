@@ -443,7 +443,7 @@
             }
           }
 
-          &.activated {
+          &.activated:has(.active) {
             a {
               > svg {
                 path {
@@ -760,7 +760,7 @@
       .nav-bar {
         .nav-menu {
           &.has-child {
-            &.activated {
+            &.activated:has(.active) {
               a {
                 background: linear-gradient(
                   90deg,

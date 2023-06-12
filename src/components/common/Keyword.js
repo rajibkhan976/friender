@@ -6,7 +6,7 @@ import "../../assets/scss/component/common/_kewords.scss"
 
 const Keywords = (props) => {
   const [reFrndngInput2, setReFrndngInput2] = useState('');
-  const { reFrndngKeywords, setFrndngKeywords } = props;
+  const { reFrndngKeywords, setFrndngKeywords, isModified } = props;
 
   const handleKeywordsInputKeyDown = (event) => {
     if (event.key === 'Enter' && reFrndngInput2.trim() !== '') {
@@ -16,7 +16,7 @@ const Keywords = (props) => {
     } else if (event.key === 'Enter' && reFrndngInput2.trim() === '') {
       event.preventDefault();
 
-    } else if (event.key === 'Comma') {
+    } else if (event.key === ',' || event.key === 'Comma') {
       event.preventDefault();
       addKeywords(reFrndngInput2.trim());
     }
@@ -57,8 +57,8 @@ const Keywords = (props) => {
       {
         reFrndngKeywords?.length > 0 && reFrndngKeywords.split(',').map(keyword => {
           return (
-            <div className="keywords" key={keyword}>
-              {keyword} <button className="cross" onClick={() => removeKeyword(keyword)}><Cross2 /></button>
+            <div className={!isModified ? 'keywords-static' : 'keywords'} key={keyword}>
+              {keyword} {isModified && <button className="cross" onClick={() => removeKeyword(keyword)}><Cross2 /></button>}
             </div>
           );    
         })
@@ -71,6 +71,7 @@ const Keywords = (props) => {
         onChange={(e) => {
           setReFrndngInput2(e.target.value);
         }}
+        disabled={!isModified}
         onMouseDown={props.onMouseDownHandler}
         onBlur={props.onBlurHandler}
         onKeyDown={handleKeywordsInputKeyDown}

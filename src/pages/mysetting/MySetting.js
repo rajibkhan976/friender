@@ -1256,12 +1256,12 @@ const MySetting = () => {
                   {reFriendOpenKeywords &&
                     <Keyword
                       reFrndngKeywords={reFrndngKeywords}
+                      isModified={reFriendSaveActive}
                       setFrndngKeywords={setFrndngKeywords}
                       onMouseDownHandler={(e) => { setReFriendSaveActive(true) }}
                       onBlurHandler={saveReFrndngKeywords}
                     />
                   }
-
                 </div>
               </div>
             )}
