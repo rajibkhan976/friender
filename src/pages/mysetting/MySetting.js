@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import DropSelector from "../../components/formComponents/DropSelector";
-// import DropSelectorTiny from "../../components/formComponents/DropSelectorTiny";
 import Switch from "../../components/formComponents/Switch";
 import SettingLoader from "../../components/common/loaders/SettingLoader";
 import Modal from "../../components/common/Modal";
@@ -11,15 +10,14 @@ import {
 } from "../../services/SettingServices";
 import Alertbox from "../../components/common/Toast";
 import { useDispatch } from "react-redux";
-import { getMySettings, updateMysetting, makeDeletePendingFrndReq } from "../../actions/MySettingAction";
-import { ChevronUpArrowIcon, 
-  ChevronDownArrowIcon, 
+import { getMySettings, updateMysetting } from "../../actions/MySettingAction";
+import {
+  ChevronUpArrowIcon,
+  ChevronDownArrowIcon,
   OutlinedDeleteIcon,
-   DangerIcon, 
-   RefreshIconLight, 
-   DeleteIcon ,
-   Cross2
-  } from '../../assets/icons/Icons';
+  DangerIcon,
+  RefreshIconLight,
+} from '../../assets/icons/Icons';
 import NotifyAlert from "../../components/common/NotifyAlert";
 import extensionAccesories from "../../configuration/extensionAccesories"
 import helper from "../../helpers/helper"
@@ -41,7 +39,7 @@ const MySetting = () => {
   const [dontSendFrindReqThyRejct, setDontSendFrindReqThyRejct] =
     useState(false);
   const [reFrndng, setReFrndng] = useState(false);
-  const [autoCnclFrndRque, setAutoCnclFrndRque] = useState(false);
+  const [autoCnclFrndRque, setAutoCnclFrndRque] = useState(null);
   const [sndMsgRcvFrndRqu, setSndMsgRcvFrndRqu] = useState(false);
   const [sndMsgAcptFrndRqu, setSndMsgAcptFrndRqu] = useState(false);
   const [sndMsgDlcFrndRqu, setSndMsgDlcFrndRqu] = useState(false);
@@ -56,7 +54,7 @@ const MySetting = () => {
   const [deletePendingFrndStartFinding, setDeletePendingFrndStartFinding] = useState(false);
   const [deletePendingFrndError, setDeletePendingFrndError] = useState(false);
 
-  
+
   //period selctor obj
   const periodObj = [
     {
@@ -209,7 +207,7 @@ const MySetting = () => {
   //massage template selector object end
 
   //selector states
-  const [reFrndSelect1, setReFrndSelect1] = useState(periodObj[0].value);
+  const [reFrndSelect1, setReFrndSelect1] = useState(1);
 
   const [sndMsgRcvFrndRquSelect, setSndMsgRcvFrndRquSelect] = useState(
     periodObj[0].value
@@ -236,11 +234,14 @@ const MySetting = () => {
   //inputs box states
   const [reFrndngInput1, setReFrndngInput1] = useState(1);
   const [reFrndngInput2, setReFrndngInput2] = useState();
+  const [reFrndngKeywords, setFrndngKeywords] = useState('');
   const [cnclFrndRqueInput, setCnclFrndRqueInput] = useState(1);
   const [sndMsgRcvFrndRquInput, setSndMsgRcvFrndRquInput] = useState(1);
   const [sndMsgAcptFrndRquInput, setSndMsgAcptFrndRquInput] = useState(1);
   const [sndMsgDlcFrndRquInput, setSndMsgDlcFrndRquinput] = useState(1);
   const [sndMsgExptFrndRquInput, setSndMsgExptFrndRquInput] = useState(1);
+
+  // console.log('reFrndngKeywords -- ', reFrndngKeywords);
 
   //input box states end
 
@@ -304,13 +305,15 @@ const MySetting = () => {
     dontSendFrindReqIRejct,
     dontSendFrindReqThyRejct,
     reFrndng,
+    reFrndngInput1,
+    reFrndSelect1,
+    reFriendOpenKeywords,
     autoCnclFrndRque,
     sndMsgRcvFrndRqu,
     sndMsgAcptFrndRqu,
     sndMsgDlcFrndRqu,
     sndMsgExptFrndRqu,
     dayBackAnlyFrndEng,
-    reFrndSelect1,
     sndMsgRcvFrndRquSelect,
     sndMsgAcptFrndRquSelect,
     sndMsgDlcFrndRquSelect,
@@ -321,7 +324,6 @@ const MySetting = () => {
     sndMsgAcptFrndRquMsgSelect,
     sndMsgDlcFrndRquMsgSelect,
     sndMsgExptFrndRquMsgSelect,
-    reFrndngInput1,
     reFrndngInput2,
     cnclFrndRqueInput,
     sndMsgRcvFrndRquInput,
@@ -331,7 +333,7 @@ const MySetting = () => {
   ]);
   useEffect(() => {
     const isDeleting = helper.getCookie("deleteAllPendingFR");
-    if(localStorage.getItem("fr_delete_id") === localStorage.getItem("fr_default_fb")){
+    if (localStorage.getItem("fr_delete_id") === localStorage.getItem("fr_default_fb")) {
       if (isDeleting && isDeleting === "Done") {
         setDeletePendingFrndStartFinding(false);
         localStorage.removeItem("fr_delete_id");
@@ -356,7 +358,7 @@ const MySetting = () => {
         setSettingFetched(true);
         setLoading(false);
 
-        //console.log("my res **", response.data);
+        // console.log("my res **", response.data[0]);
       })
       .catch((err) => {
         //console.log(err);
@@ -371,6 +373,8 @@ const MySetting = () => {
 
 
   // }, []);
+
+  console.log('refrnding -- ', reFrndng);
 
   //massege template select end
   const saveMySetting = () => {
@@ -399,19 +403,14 @@ const MySetting = () => {
 
     //refriending
     if (reFrndng) {
-      if (
-        reFrndngInput1 &&
-        Number(reFrndngInput1) !== 0 &&
-        reFrndngInput2 &&
-        Number(reFrndngInput2) !== 0
-      ) {
+      if (reFrndngInput1 && Number(reFrndngInput1) !== 0 && reFrndSelect1 && Number(reFrndSelect1) !== 0) {
         payload.re_friending_settings = {
-          remove_pending_friend_request_after: reFrndngInput1
-            ? reFrndngInput1
-            : 1,
-          time_type: reFrndSelect1,
-          instantly_resend_friend_request: reFrndngInput2 ? reFrndngInput2 : 1,
+          remove_pending_friend_request_after: reFrndngInput1 ? reFrndngInput1 : 1,
+          instantly_resend_friend_request: reFrndSelect1 ? reFrndSelect1 : 1,
+          use_keyword: reFriendOpenKeywords,
+          keywords: reFrndngKeywords,
         };
+
       } else {
         Alertbox(
           "Input should not be empty or 0",
@@ -422,7 +421,17 @@ const MySetting = () => {
         return;
       }
     }
+
+    if (!reFrndng) {
+      payload.re_friending_settings = {
+        remove_pending_friend_request_after: reFrndngInput1 ? reFrndngInput1 : 1,
+        instantly_resend_friend_request: reFrndSelect1 ? reFrndSelect1 : 1,
+        use_keyword: reFriendOpenKeywords,
+        keywords: reFrndngKeywords,
+      };
+    }
     //refriending end
+
     //cancel_sent_friend_requests_settings
     if (autoCnclFrndRque) {
       if (cnclFrndRqueInput && Number(cnclFrndRqueInput) !== 0) {
@@ -578,16 +587,14 @@ const MySetting = () => {
 
     if (data.re_friending && data.re_friending_settings) {
       // console.log("refriender setting****", data.re_friending_settings[0]);
-
-      setReFrndSelect1(data.re_friending_settings[0].time_type);
-
       setReFrndngInput1(
         data.re_friending_settings[0].remove_pending_friend_request_after
       );
+      setReFrndSelect1(data.re_friending_settings[0].instantly_resend_friend_request);
 
-      setReFrndngInput2(
-        data.re_friending_settings[0].instantly_resend_friend_request
-      );
+      // Adding the keywords..
+      setFrndngKeywords(data.re_friending_settings[0].keywords);
+      setReFriendOpenKeywords(data.re_friending_settings[0].use_keyword);
     }
 
     setAutoCnclFrndRque(data.automatic_cancel_friend_requests);
@@ -744,6 +751,40 @@ const MySetting = () => {
   };
 
   /**
+   * ====== Set Re-Friending Input1 Increment & Decrement..
+   * @param {string} type 
+   */
+  const setValOfReFrndngIncDic = (type) => {
+    if (!reFrndng) {
+      Alertbox(
+        "Please turn on the setting to make changes",
+        "warning",
+        1000,
+        "bottom-right"
+      );
+    }
+
+    if (reFrndng) {
+      if (type === "INCREMENT") {
+        if (reFrndngInput1 >= 99) {
+          //.. error true
+          return;
+        } else {
+          //.. error false
+          setReFrndngInput1(parseInt(reFrndngInput1) + 1);
+        }
+      }
+
+      if (type === "DECREMENT") {
+        if (reFrndngInput1 > 1) {
+          //.. error false..
+          setReFrndngInput1(parseInt(reFrndngInput1) - 1);
+        }
+      }
+    }
+  };
+
+  /**
    * Set Delete Pending Requests Increment & Decrement..
    */
   const setValOfDeletePendingFrndIncDic = (type) => {
@@ -774,6 +815,38 @@ const MySetting = () => {
           setCnclFrndRqueInput(parseInt(cnclFrndRqueInput) - 1);
           setDeletePendingFrndValue(parseInt(cnclFrndRqueInput) - 1);
         }
+      }
+    }
+  };
+
+
+  /**
+   * Handle Input-Bar of Re-Frinding Input1
+   */
+  const reFriendingInput1Handle = (event) => {
+    const { value } = event.target;
+
+    if (!reFrndng) {
+      Alertbox(
+        "Please turn on the setting to make changes",
+        "warning",
+        1000,
+        "bottom-right"
+      );
+      return;
+    }
+
+    if (reFrndng) {
+      if (parseInt(value) === 0 || value <= -1) {
+        setReFrndngInput1(1);
+
+      } else if (parseInt(value) > 99) {
+        setReFrndngInput1(99);
+
+      } else if (value.includes('.')) {
+        setReFrndngInput1(Math.floor(parseInt(value)));
+      } else {
+        setReFrndngInput1(value);
       }
     }
   };
@@ -830,9 +903,9 @@ const MySetting = () => {
     let checkingIntv = setInterval(() => {
       console.log("checking deleting PFR status");
       const isDeleting = helper.getCookie("deleteAllPendingFR");
-      if(isDeleting){
-        switch(isDeleting) {
-          case "Done" :
+      if (isDeleting) {
+        switch (isDeleting) {
+          case "Done":
             setDeletePendingFrndStartFinding(false);
             localStorage.removeItem("fr_delete_id");
             helper.deleteCookie("deleteAllPendingFR")
@@ -904,6 +977,7 @@ const MySetting = () => {
       return;
     }
     helper.setCookie("deleteAllPendingFR", "Active");
+  //  deleteAllInterval(()=>{dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") }))});
     checkDeletePFRProgress();
     await extensionAccesories.sendMessageToExt({ action: "deletePendingFR", fbUserId: localStorage.getItem("fr_default_fb") });
   };
@@ -923,6 +997,18 @@ const MySetting = () => {
         setCnclFrndRqueInput(deletePendingFrndValue)
       }
     }
+  };
+
+  /**
+   * ===== Save Re-Friending Keywords ====
+   * @param {*} event 
+   */
+  const saveReFrndngKeywords = () => {
+    // setReFriendSaveActive(false);
+    // console.log("Save Re-Friending Keywords -- ", reFrndngKeywords);
+    // console.log("re-friending after -- ", reFrndngInput1);
+    // console.log("re-frending attemps -- ", reFrndSelect1);
+    saveMySetting();
   };
 
 
@@ -1036,7 +1122,7 @@ const MySetting = () => {
 
 
             {/* Re-Friending  setting start*/}
-            <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}` } onClick={() => setRefrienderingOpen(!refrienderingOpen)}>
+            <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}`} onClick={() => setRefrienderingOpen(!refrienderingOpen)}>
               <div className="setting-child ">
                 <Switch
                   checked={reFrndng}
@@ -1051,42 +1137,52 @@ const MySetting = () => {
                   {!refrienderingOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
-             
+
             </div>
             {refrienderingOpen && (
-                <div className="setting-child">
+              <div className="setting-child">
 
-                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>                    
-                  {" "}
-                  <div className="input-num">
-                    <input
-                      type="number"
-                      className="setting-input"
-                      value={reFrndngInput1}
-                      //onKeyDown={e => checkData(e)}
-                      onChange={(e) => {
-                        setReFrndngInput1(e.target.value);
-                      }}
-                      // onBlur={deletePendingRequestWithDaysHandle}
-                    />
+                <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
+                {" "}
+                <div className="input-num">
+                  <input
+                    type="number"
+                    className="setting-input"
+                    value={reFrndngInput1}
+                    //onKeyDown={e => checkData(e)}
+                    onChange={reFriendingInput1Handle}
+                  // onBlur={deletePendingRequestWithDaysHandle}
+                  />
 
-                    <div className="input-arrows">
-                      <button className="btn inline-btn btn-transparent" 
-                      //onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}
-                      >
-                        <ChevronUpArrowIcon size={15} />
-                      </button>
+                  <div className="input-arrows">
+                    <button className="btn inline-btn btn-transparent"
+                      onClick={() => setValOfReFrndngIncDic("INCREMENT")}
+                    >
+                      <ChevronUpArrowIcon size={15} />
+                    </button>
 
-                      <button className="btn inline-btn btn-transparent" 
-                       //onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}
-                      >
-                        <ChevronDownArrowIcon size={15} />
-                      </button>
-                    </div>
-                  </div>{" "}
-                  <span className="smallTxt">  day(s), and immediately send a new friend request. Choose how often to retry friending up to</span> 
-                  {" "}
+                    <button className="btn inline-btn btn-transparent"
+                      onClick={() => setValOfReFrndngIncDic("DECREMENT")}
+                    >
+                      <ChevronDownArrowIcon size={15} />
+                    </button>
+                  </div>
+                </div>{" "}
+                <span className="smallTxt">  day(s), and immediately send a new friend request. Choose how often to retry friending up to</span>
+                {" "}
+                <span onClick={() => {
+                  if (!reFrndng) {
+                    Alertbox(
+                      "Please turn on the setting to make changes",
+                      "warning",
+                      1000,
+                      "bottom-right"
+                    );
+                    return;
+                  }
+                }}>
                   <DropSelector
+                    setDisable={!reFrndng}
                     selects={noOfRefrendering}
                     value={reFrndSelect1}
                     handleChange={(e) => {
@@ -1095,48 +1191,82 @@ const MySetting = () => {
                     extraClass="tinyWrap"
                     height="30px"
                     width="90px"
-                  />{" "}
-                  <span className="smallTxt"> attempt(s)</span> 
+                  />
+                </span>{" "}
+                <span className="smallTxt"> attempt(s)</span>
 
-                  <div className="keywordBlock">
-                     <div className="saveBlock">
-                        <Switch
-                            upComing
-                            checked={reFriendOpenKeywords}
-                            handleChange={() => {
-                              setReFriendOpenKeywords(!reFriendOpenKeywords);
-                            }}
-                          /> {" "}  
-                          <span className="smallTxt"> Keyword(s) 
-                            <ToolTipPro
-                              textContent={"content"}
-                              type={"info"}
-                            />
-                          </span>
-                          {" "}
-                          
-                          {reFriendSaveActive &&
-                          <>
-                            <button className="saveBtn">Save</button>  {/* add class "activated" for blue color */}
-                          <span className="doomedText">* Enter a comma after each keyword</span> 
-                          </> 
+                <div className="keywordBlock">
+                  <div className="saveBlock">
+                    <span onClick={() => {
+                      if (!reFrndng) {
+                        Alertbox(
+                          "Please turn on the setting to make changes",
+                          "warning",
+                          1000,
+                          "bottom-right"
+                        );
+                        return;
+                      }
+                    }}>
+                      <Switch
+                        upComing={!reFrndng}
+                        isDisabled={!reFrndng}
+                        checked={reFriendOpenKeywords}
+                        handleChange={() => {
+                          if (reFrndng) {
+                            setReFriendOpenKeywords(!reFriendOpenKeywords);
                           }
-                     </div>
-                     {reFriendOpenKeywords &&
-                      <Keyword
-                      onMouseDownHandler={(e) => {setReFriendSaveActive(true)}}
-                      onBlurHandler={(e) => {setReFriendSaveActive(false)}}
+                        }}
                       />
-                     
-                     }
-                     
-                  </div>  
-                  
-                 
-                </div>
-              )}
+                    </span>
+                    {" "}
+                    <span className="smallTxt"> Keyword(s)
+                      <ToolTipPro
+                        isInteract={false}
+                        textContent={"Enabling this feature will resend friend request(s) to those targeted friends who have matched the designated keyword(s)"}
+                        type={"info"}
+                      />
+                    </span>
+                    {" "}
 
-            <div className={`setting ${deletePendingFrndOpen ? "setting-actived" : ""}` } onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
+                    {reFriendSaveActive && (
+                      <>
+                        <button
+                          className={`saveBtn ${reFrndngKeywords?.length && 'activated'}`}
+                          onClick={() => setReFriendSaveActive(false)}
+                        >
+                          Save
+                        </button>  {/* add class "activated" for blue color */}
+                        <span className="doomedText">* Enter a comma after each keyword</span>
+                      </>
+                    )}
+
+                    {!reFriendSaveActive && reFrndngKeywords?.length > 0 && (
+                      <>
+                        <button
+                          className={`saveBtn activated`}
+                          onClick={() => setReFriendSaveActive(true)}
+                        >
+                          Modify
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  {reFriendOpenKeywords &&
+                    <Keyword
+                      reFrndngKeywords={reFrndngKeywords}
+                      setFrndngKeywords={setFrndngKeywords}
+                      onMouseDownHandler={(e) => { setReFriendSaveActive(true) }}
+                      onBlurHandler={saveReFrndngKeywords}
+                    />
+                  }
+
+                </div>
+              </div>
+            )}
+
+            <div className={`setting ${deletePendingFrndOpen ? "setting-actived" : ""}`} onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
               <Switch
                 checked={autoCnclFrndRque}
                 // handleOnBlur={e => setAutoCnclFrndRque(!autoCnclFrndRque)}
@@ -1187,7 +1317,7 @@ const MySetting = () => {
                     value={deletePendingFrndValue}
                     onKeyDown={e => checkData(e)}
                     onChange={deletePendingFrndInputHandle}
-                    // onBlur={deletePendingRequestWithDaysHandle}
+                  // onBlur={deletePendingRequestWithDaysHandle}
                   />
 
                   <div className="input-arrows">
@@ -1237,7 +1367,7 @@ const MySetting = () => {
               <span className="warn-badget">Coming Soon</span>
             </div>
 
-            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}` } onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
+            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
               <Switch
                 checked={dayBackAnlyFrndEng}
                 // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
