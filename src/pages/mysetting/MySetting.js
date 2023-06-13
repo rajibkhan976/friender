@@ -1260,6 +1260,7 @@ const MySetting = () => {
                       setFrndngKeywords={setFrndngKeywords}
                       onMouseDownHandler={(e) => { setReFriendSaveActive(true) }}
                       onBlurHandler={saveReFrndngKeywords}
+                      onMouseOut={saveReFrndngKeywords}
                     />
                   }
                 </div>
