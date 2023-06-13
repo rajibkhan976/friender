@@ -14,6 +14,7 @@ import {
   AgeRenderer,
   GeneralNameCellRenderer,
   EngagementGetter,
+  UnlinkedNameCellRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -66,7 +67,7 @@ const FriendsList = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: GeneralNameCellRenderer,
+      cellRenderer: UnlinkedNameCellRenderer,
       minWidth: 250,
       maxWidth: 300,
     },

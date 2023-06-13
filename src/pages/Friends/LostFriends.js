@@ -17,7 +17,8 @@ import {
   GenderRenderer,
   CreationRenderer,
   AgeRenderer,
-  GeneralNameCellRenderer
+  GeneralNameCellRenderer,
+  UnlinkedNameCellRenderer
 } from "../../components/listing/FriendListColumns";
 
 const LostFriends = () => {
@@ -56,7 +57,7 @@ const LostFriends = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: GeneralNameCellRenderer,
+      cellRenderer: UnlinkedNameCellRenderer,
     },
     // {
     //   field: "friendStatus",

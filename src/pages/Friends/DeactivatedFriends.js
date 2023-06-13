@@ -12,6 +12,7 @@ import {
   GenderRenderer,
   CreationRenderer,
   GeneralNameCellRenderer,
+  UnlinkedNameCellRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -48,7 +49,7 @@ const DeactivatedFriends = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: GeneralNameCellRenderer,
+      cellRenderer: UnlinkedNameCellRenderer,
       minWidth: 250,
       maxWidth: 300,
     },

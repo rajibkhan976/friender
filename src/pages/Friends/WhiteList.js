@@ -17,6 +17,7 @@ import {
   StatusRenderer,
   AgeRenderer,
   EngagementGetter,
+  UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
 
 const WhiteList = () => {
@@ -65,7 +66,7 @@ const WhiteList = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: NameCellRenderer,
+      cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 250,
       maxWidth: 300,
     },

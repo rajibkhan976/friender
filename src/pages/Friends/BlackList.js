@@ -16,6 +16,7 @@ import {
   ReactionRenderer,
   SourceRenderer,
   StatusRenderer,
+  UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
 
 const BlackList = () => {
@@ -60,7 +61,7 @@ const BlackList = () => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-      cellRenderer: NameCellRenderer,
+      cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 250,
       maxWidth: 300,
     },
