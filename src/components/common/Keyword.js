@@ -71,7 +71,6 @@ const Keywords = (props) => {
         onChange={(e) => {
           setReFrndngInput2(e.target.value);
         }}
-        disabled={!isModified}
         onMouseDown={props.onMouseDownHandler}
         onBlur={props.onBlurHandler}
         onMouseOut={props.onMouseOut}

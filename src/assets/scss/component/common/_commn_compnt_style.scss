@@ -445,14 +445,21 @@
       background: #000000;
       color: #fff;
       padding: 1px 9px;
+      font-size: 12px;
       &:hover{
         border-color: $themeDefaultPrimary1;   
       } 
-      
+      &:disabled{
+        color: #767485;
+        background: #1C1C1E;
+        &:hover{
+          border-color: $themeDefaultSecondary2;   
+        } 
+      }
     }
     .select-arrow{
       background-position: none;
-      background: url(../../../images/arrow1.svg) 0 2px no-repeat;
+      background: url(../../../images/arrow1.svg) 0 1px no-repeat;
       width: 10px;
       height: 9px;
       pointer-events: none;
@@ -519,7 +526,7 @@
       background: #1C1C1E;
       color: #fff;
       padding: 1px 9px;
-     
+      font-size: 12px;     
     }
     .select-arrow{
       background-position: none;

@@ -1087,7 +1087,7 @@ const MySetting = () => {
                 Don’t send friend request(s) to people I’ve been friends with before.
               </div>
 
-              <span className="warn-badget">Coming Soon</span>
+              <span className="warn-badget">Coming soon</span>
             </div>
 
             <div className="setting no-click">
@@ -1102,7 +1102,7 @@ const MySetting = () => {
                 Don’t send friend request(s) to people who sent me friend request(s) and I rejected.
               </div>
 
-              <span className="warn-badget">Coming Soon</span>
+              <span className="warn-badget">Coming soon</span>
             </div>
 
             <div className="setting no-click">
@@ -1117,7 +1117,7 @@ const MySetting = () => {
                 Don’t send friend request(s) to people I sent friend request(s) and they rejected.
               </div>
 
-              <span className="warn-badget">Coming Soon</span>
+              <span className="warn-badget">Coming soon</span>
             </div>
 
 
@@ -1365,7 +1365,7 @@ const MySetting = () => {
                 </div>
               )} */}
 
-              <span className="warn-badget">Coming Soon</span>
+              <span className="warn-badget">Coming soon</span>
             </div>
 
             <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
@@ -1394,6 +1394,9 @@ const MySetting = () => {
                   // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
                   handleChange={e => setStartTime(e)}
                   setDisable={!dayBackAnlyFrndEng}
+                  extraClass="tinyWrap"
+                  height="30px"
+                  width="90px"
                 />{" "}
                 &nbsp; To &nbsp;
                 <DropSelector
@@ -1412,6 +1415,9 @@ const MySetting = () => {
                   style={{}}
                   handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
                   setDisable={!dayBackAnlyFrndEng}
+                  extraClass="tinyWrap"
+                  height="30px"
+                  width="90px"
                 />{" "}
                 daily.
               </div>
@@ -1420,7 +1426,7 @@ const MySetting = () => {
 
             {/* ========== Message Settings ============ */}
             <p className="fr-heading">
-              <span>Message settings<span className="warn-badget">Coming Soon</span></span>
+              <span>Message settings<span className="warn-badget">Coming soon</span></span>
             </p>
 
             <div className="setting  setting-paper no-click">

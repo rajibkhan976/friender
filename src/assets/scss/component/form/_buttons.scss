@@ -77,7 +77,9 @@
     }
 
     &:hover {
-      filter: saturate(0.8)
+        filter: saturate(0.9);
+        background-color: #dd6b74;
+    
     }
 
     &.btn-deleting {
@@ -196,7 +198,15 @@
     }
   }
 
-
+  .theme-default  {
+    .btn.delete-pending-frnd{
+      &:hover{
+        filter: saturate(0.9);
+        background-color: #dd6b74;
+      }
+    }
+  }   
+  
 
 /*=============================================
 =            Buttton Danger (Delete Button)            =
