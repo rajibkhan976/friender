@@ -377,7 +377,7 @@ const MySetting = () => {
   console.log('refrnding -- ', reFrndng);
 
   //massege template select end
-  const saveMySetting = () => {
+  const saveMySetting = (forceSave = false) => {
     const payload = {
       // token: userToken,
       dont_send_friend_requests_prople_ive_been_friends_with_before:
@@ -412,12 +412,7 @@ const MySetting = () => {
         };
 
       } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
+        setReFrndngInput1(1);
         return;
       }
     }
@@ -440,12 +435,13 @@ const MySetting = () => {
         };
         setDeletePendingFrndValue(cnclFrndRqueInput ? cnclFrndRqueInput : 1)
       } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
+        // Alertbox(
+        //   "Input should not be empty or 0",
+        //   "warning",
+        //   1000,
+        //   "bottom-right"
+        // );
+        setCnclFrndRqueInput(1);
         return;
       }
       // payload.cancel_sent_friend_requests_settings = {
@@ -563,10 +559,13 @@ const MySetting = () => {
     //console.log("i am payload****-----|||||>>>", payload);
     dispatch(updateMysetting(payload));
     saveSettings(payload).then(() => {
-      if (render.current > 2) {
+      if (render.current > 2 && !forceSave) {
         Alertbox("setting saved successfully", "success", 1000, "bottom-right");
       }
 
+      if (forceSave && render.current > 1) {
+        Alertbox("settings updated successfully", "success", 1000, "bottom-right");
+      }
     });
   };
 
@@ -1008,7 +1007,7 @@ const MySetting = () => {
     // console.log("Save Re-Friending Keywords -- ", reFrndngKeywords);
     // console.log("re-friending after -- ", reFrndngInput1);
     // console.log("re-frending attemps -- ", reFrndSelect1);
-    saveMySetting();
+    saveMySetting(true);
   };
 
 
@@ -1186,7 +1185,7 @@ const MySetting = () => {
                     selects={noOfRefrendering}
                     value={reFrndSelect1}
                     handleChange={(e) => {
-                      setReFrndSelect1(e.target.value);
+                      setReFrndSelect1(parseInt(e.target.value));
                     }}
                     extraClass="tinyWrap"
                     height="30px"
@@ -1233,7 +1232,9 @@ const MySetting = () => {
                       <>
                         <button
                           className={`saveBtn ${reFrndngKeywords?.length && 'activated'}`}
-                          onClick={() => setReFriendSaveActive(false)}
+                          onClick={() => {
+                            setReFriendSaveActive(false);
+                          }}
                         >
                           Save
                         </button>  {/* add class "activated" for blue color */}
@@ -1260,7 +1261,6 @@ const MySetting = () => {
                       setFrndngKeywords={setFrndngKeywords}
                       onMouseDownHandler={(e) => { setReFriendSaveActive(true) }}
                       onBlurHandler={saveReFrndngKeywords}
-                      onMouseOut={saveReFrndngKeywords}
                     />
                   }
                 </div>

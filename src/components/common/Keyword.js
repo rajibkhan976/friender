@@ -73,7 +73,6 @@ const Keywords = (props) => {
         }}
         onMouseDown={props.onMouseDownHandler}
         onBlur={props.onBlurHandler}
-        onMouseOut={props.onMouseOut}
         onKeyDown={handleKeywordsInputKeyDown}
       />
     </div>
