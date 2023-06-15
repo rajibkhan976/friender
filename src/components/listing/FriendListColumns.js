@@ -477,11 +477,11 @@ export const KeywordRenderer = memo((params) => {
       <span
         className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
       >
-          <span className={`sync-txt tags positive-tags`}>
-            {Array.isArray(matchedKeyword)
-              ? matchedKeyword[0]
+          {Array.isArray(matchedKeyword)
+              ? <span className={`sync-txt tags positive-tags`}>
+                  {matchedKeyword[0]}
+                </span>
               : 0}
-          </span>
           {Array.isArray(matchedKeyword) && matchedKeyword.length > 1 ? 
           <span 
             className="syn-tag-count" 
@@ -507,7 +507,7 @@ export const CountryRenderer = memo((params) => {
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className={`sync-txt`}>{countryName}</span>
+      <span className={`capText sync-txt`}>{countryName}</span>
     </span>
   );
 });
@@ -543,9 +543,9 @@ export const SourceRendererPending = memo((params) => {
               <figure className="friend-source text-center">
                 {sourceFriend === "sync" ? <FacebookSyncIcon /> : ""}
               </figure>
-              <span className="friendSource">
+              <span className="friendSource tooltipFullName" data-text={sourceFriend}>
                 {/* {params?.data?.finalSource} : {sourceFriend} */}
-               <SourceGroupIcon/> <span>{sourceFriend}</span>
+               <SourceGroupIcon/> <span >{sourceFriend}</span>
                <Link
                   to={params?.data?.groupUrl}
                   className="ico-open-link"
@@ -566,9 +566,10 @@ export const SourceRendererPending = memo((params) => {
               <figure className="friend-source text-center">
                 {params?.data?.finalSource === "sync" ? <FacebookSyncIcon /> : ""}
               </figure>
-              <span className="friendSource">
+              <span className="friendSource tooltipFullName" data-text={params?.data?.finalSource}>
                 {/* {params?.data?.finalSource} : {sourceFriend} */}
-                <SourceGroupIcon/> <span>{params?.data?.finalSource}</span> 
+                <SourceGroupIcon/> <span >
+                   {params?.data?.finalSource}</span> 
                 <Link
                   to={params?.data?.groupUrl}
                   className="ico-open-link"

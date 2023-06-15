@@ -90,9 +90,11 @@
 
   .ag-row:not(.ag-header-row) {
     contain: layout;
-    content-visibility: auto;
+    //content-visibility: auto;
     will-change: auto;
-
+    &:hover{
+      z-index: 60;
+    }
     .ag-cell {
       .key-box-wrap {
         margin: 0;
@@ -836,3 +838,9 @@ span.ag-sort-indicator-icon.ag-sort-descending-icon {
 //  .ag-popup {
 //   background-color: #FF0000 !important; /* Replace with your desired background color */
 // }
+
+
+.ag-theme-fr-table {
+  .ag-row{
+  }
+}

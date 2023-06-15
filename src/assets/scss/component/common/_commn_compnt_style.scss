@@ -558,3 +558,83 @@
   }
 }
 
+.capText::first-letter{
+  text-transform:capitalize;
+}
+
+.tooltipFullName{
+    position:relative; 
+
+    &:before {
+      content: attr(data-text);
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: 15px;
+      white-space: pre-wrap;
+      width: 148px;
+      font-size: 12px;
+      padding: 10px;
+      pointer-events: none;
+      background: #313037;
+      color: #fff;
+      justify-content: center;
+      display:flex;
+      opacity: 0;
+      transition: 0.5s;
+      visibility: hidden;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 1px 4px 0px rgb(0 0 0 / 40%);
+      z-index: 100; 
+    }
+    &:hover:before {
+      opacity: 1;
+      visibility: visible;
+      transition: 0.5s;
+    }
+    &:after {
+      content: "";
+      left: 77px;
+      background: #313037;
+      rotate: 45deg;
+      opacity: 0;
+      transition: 0.5s;
+      visibility: hidden;
+      width: 13px;
+      height: 13px;
+      bottom: 27px;
+      position: absolute;
+      z-index: 101; 
+    }
+    &:hover:after {
+      opacity: 1;
+      visibility: visible;
+      transition: 0.5s;
+    }
+}
+
+
+.ag-cell-value{
+  overflow: visible;
+}
+
+.ag-theme-fr-table {
+  .ag-row:first-child, 
+  .ag-row:nth-child(2){
+    .tooltipFullName{
+      &:before {
+        bottom: auto;
+        top: 25px;
+        box-shadow: 0 -1px 4px 0px rgb(0 0 0 / 40%);
+      }
+      &:after {
+        bottom: -10px;
+        left: 63px;
+      }
+    }
+
+  }
+}
+

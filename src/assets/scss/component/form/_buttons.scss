@@ -86,7 +86,7 @@
       @include theme-aware('color', 'red-delete');
       @include theme-aware('border-color', 'red-delete');
       @include theme-aware('background-color', 'red-delete-active');
-
+      cursor: not-allowed;
       span {
         &:has(svg) {
           animation: rotate 3s infinite forwards;
