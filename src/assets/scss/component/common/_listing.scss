@@ -682,7 +682,7 @@
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  overflow: hidden;
+  //overflow: hidden;
   text-overflow: ellipsis;
   @include theme-aware("color", "text-color");
   a {
@@ -709,10 +709,11 @@
     margin-right: 14px;
   }
   .fb-name {
-    max-width: calc(100% - 50px);
+    max-width: 105px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
   }
 
   .profile-whitelabeled {
@@ -743,8 +744,8 @@
 }
 .ag-cell-wrapper {
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  //overflow: hidden;
+  //text-overflow: ellipsis;
   width: 100%;
 }
 .selection-popup {

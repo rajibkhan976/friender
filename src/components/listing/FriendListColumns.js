@@ -159,7 +159,7 @@ export const GeneralNameCellRenderer = memo((params) => {
         <span className="fb-name">{params.value}</span>
       </a>
     </span>
-  );
+  ); 
 });
 
 export const UnlinkedNameCellRenderer = memo((params) => {
@@ -189,7 +189,10 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
           backgroundImage: `url(${params.data.friendProfilePicture})`,
         }}
       ></span>
-      <span className="fb-name">{params.value}</span>
+      <span className="tooltipFullName" data-text={params.value} >
+        <span className="fb-name">{params.value}</span>
+      </span>
+      
       <a href={params.data.friendProfileUrl} target="_blank" rel="noreferrer" className="ico-open-link">
         <OpenInNewTab />
       </a>
