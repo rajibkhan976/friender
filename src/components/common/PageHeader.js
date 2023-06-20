@@ -997,7 +997,7 @@ function PageHeader({ headerText = "" }) {
                   `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} days ago` : 
                   Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) === 1 ? 
                   `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} day ago` : 'Today'}` : 
-                  "Not Synced yet."
+                  ""
                 }
                 </span>
             </div>

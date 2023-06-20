@@ -163,7 +163,9 @@ const Listing = (props) => {
 
   // Example load data from sever
   const onGridReady = (params) => {
-    var defaultSortModel = [{ colId: "created_at", sort: "desc" }];
+    var defaultSortModel = [{ colId: "created_at"
+    // sort: "asc"
+     }];
     try {
       setRowData(props.friendsData);
       

@@ -110,7 +110,7 @@ const SendRequest = () => {
     //   },
     // },
     {
-      field: "friendGender",
+      field: "gender",
       headerName: "Gender ",
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
