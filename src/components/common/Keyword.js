@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Cross2
 } from '../../assets/icons/Icons';
@@ -6,7 +6,23 @@ import "../../assets/scss/component/common/_kewords.scss"
 
 const Keywords = (props) => {
   const [reFrndngInput2, setReFrndngInput2] = useState('');
+  const [modify, setModify] = useState(true);
   const { reFrndngKeywords, setFrndngKeywords, isModified } = props;
+
+  /**
+   * Hook for maintaining Modify Keywords Input..
+   */
+  useEffect(() => {
+    console.log(reFrndngKeywords.length);
+    if (!isModified) {
+      if (reFrndngKeywords.length) {
+        setModify(false);
+      }
+    }
+    if (isModified) {
+        setModify(true);
+    }
+  }, [isModified]);
 
   const handleKeywordsInputKeyDown = (event) => {
     if (event.key === 'Enter' && reFrndngInput2.trim() !== '') {
@@ -52,6 +68,9 @@ const Keywords = (props) => {
     // setReFrndngKeywords(reFrndngKeywords.filter((KW) => KW !== keyword));
   };
 
+
+  console.log("Modified -- ", modify);
+
   return (
     <div className="inputBlock">
       {
@@ -66,13 +85,13 @@ const Keywords = (props) => {
       
       <textarea
         className="keyword-input"
-        placeholder="Add keyword"
+        placeholder={!modify ? '' : 'Add keyword'}
+        disabled={!modify}
         value={reFrndngInput2}
         onChange={(e) => {
           setReFrndngInput2(e.target.value);
         }}
         onMouseDown={props.onMouseDownHandler}
-        onBlur={props.onBlurHandler}
         onKeyDown={handleKeywordsInputKeyDown}
       />
     </div>

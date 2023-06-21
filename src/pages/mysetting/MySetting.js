@@ -275,7 +275,7 @@ const MySetting = () => {
       label: "3",
     },
   ];
-  const [reFriendSaveActive, setReFriendSaveActive] = useState(false);
+  const [reFriendSaveActive, setReFriendSaveActive] = useState(null);
   const [reFriendOpenKeywords, setReFriendOpenKeywords] = useState(false);
 
   useEffect(() => {
@@ -784,6 +784,23 @@ const MySetting = () => {
   };
 
   /**
+   * ===== Handle Change Re-Friending =====
+   */
+  const handleChangeReFrndingToggle = () => {
+    setReFrndng(!reFrndng);
+  };
+
+  useEffect(() => {
+    if (reFrndng === false) {
+      setReFriendOpenKeywords(false);
+      setReFriendSaveActive(false);
+      setReFrndng(false);
+
+      console.log("Set Re Friending Open Keyword and Active is setting -- ", reFriendOpenKeywords);
+    }
+  }, [reFrndng]);
+
+  /**
    * Set Delete Pending Requests Increment & Decrement..
    */
   const setValOfDeletePendingFrndIncDic = (type) => {
@@ -976,7 +993,7 @@ const MySetting = () => {
       return;
     }
     helper.setCookie("deleteAllPendingFR", "Active");
-  //  deleteAllInterval(()=>{dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") }))});
+    //  deleteAllInterval(()=>{dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") }))});
     checkDeletePFRProgress();
     await extensionAccesories.sendMessageToExt({ action: "deletePendingFR", fbUserId: localStorage.getItem("fr_default_fb") });
   };
@@ -1125,9 +1142,7 @@ const MySetting = () => {
               <div className="setting-child ">
                 <Switch
                   checked={reFrndng}
-                  handleChange={() => {
-                    setReFrndng(!reFrndng);
-                  }}
+                  handleChange={handleChangeReFrndingToggle}
                 />
                 Automated re-friending
               </div>
@@ -1228,12 +1243,13 @@ const MySetting = () => {
                     </span>
                     {" "}
 
-                    {reFriendSaveActive && (
+                    {reFriendSaveActive && reFriendOpenKeywords && (
                       <>
                         <button
-                          className={`saveBtn ${reFrndngKeywords?.length && 'activated'}`}
+                          className={`saveBtn activated`}
                           onClick={() => {
                             setReFriendSaveActive(false);
+                            saveReFrndngKeywords();
                           }}
                         >
                           Save
@@ -1242,7 +1258,7 @@ const MySetting = () => {
                       </>
                     )}
 
-                    {!reFriendSaveActive && reFrndngKeywords?.length > 0 && (
+                    {!reFriendSaveActive && reFrndngKeywords?.length > 0 && reFriendOpenKeywords && (
                       <>
                         <button
                           className={`saveBtn activated`}
@@ -1260,7 +1276,6 @@ const MySetting = () => {
                       isModified={reFriendSaveActive}
                       setFrndngKeywords={setFrndngKeywords}
                       onMouseDownHandler={(e) => { setReFriendSaveActive(true) }}
-                      onBlurHandler={saveReFrndngKeywords}
                     />
                   }
                 </div>
