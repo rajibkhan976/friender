@@ -28,7 +28,7 @@ import {
   setProfileSpaces,
   setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
-import {getSendFriendReqst} from "../../actions/FriendsAction" ;
+import { getSendFriendReqst } from "../../actions/FriendsAction";
 import {
   deleteFriend,
   getFriendList,
@@ -171,6 +171,7 @@ function PageHeader({ headerText = "" }) {
   );
   const defaultFbId = localStorage.getItem("fr_default_fb");
   const listCount = useSelector((state) => state.friendlist.curr_list_count);
+  const facebookData = useSelector((state) => state?.facebook_data);
   const [links, setLinks] = useState([]);
   const [accessOptions, setAccessOptions] = useState(accessibilityOptions);
   const [headerOptions, setHeaderOptions] = useState(pageOptoions);
@@ -223,7 +224,6 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        // console.log("response :::b ", response)
         if (response?.data?.length > 0) {
           setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
           localStorage.setItem(
@@ -482,7 +482,7 @@ function PageHeader({ headerText = "" }) {
         })
         .catch((err) => {
           Alertbox(`${err.message} `, "error", 3000, "bottom-right");
-         // dispatch(removeSelectedFriends());
+          // dispatch(removeSelectedFriends());
         });
     }
   };
@@ -622,7 +622,7 @@ function PageHeader({ headerText = "" }) {
           //dispatch(removeSelectedFriends());
           Alertbox(`${err.message} `, "error", 3000, "bottom-right");
         });
-     // dispatch(removeSelectedFriends());
+      // dispatch(removeSelectedFriends());
       if (i !== unfriendableList.length - 1) {
         let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
         //console.time("wake up");
@@ -703,19 +703,23 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        //console.log("response :::b ", response);
-        if (response?.data?.length > 0) {
-          setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
+        console.log('response', response);
+        if (response?.data?.length > 0 && response?.data[0]?.last_sync_at) {
+          setTooltip(response?.data[0]?.friend_details[0]?.last_sync_at);
           localStorage.setItem(
             "fr_tooltip",
-            response?.data[0]?.friend_details[0]?.updated_at
+            response?.data[0]?.friend_details[0]?.last_sync_at
           );
+        } else {
+          setTooltip('');
+          localStorage.removeItem('fr_tooltip')
         }
       });
   };
-  const fetchPendingFrRquest=async()=>{
-    dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })).unwrap().then((res)=>{
-      console.log("Pending Request List",res)
+  
+  const fetchPendingFrRquest = async () => {
+    dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })).unwrap().then((res) => {
+      console.log("Pending Request List", res)
     })
   }
 
@@ -847,8 +851,32 @@ function PageHeader({ headerText = "" }) {
 
     checkIsSyncing();
 
-    if (localStorage.getItem("fr_tooltip") !== null)
-      setTooltip(localStorage.getItem("fr_tooltip"));
+    if(facebookData?.fb_data == null) {
+      dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
+        .unwrap()
+        .then((response) => {
+          if (response) {
+            if (
+              !localStorage.getItem("fr_tooltip") ||
+              localStorage.getItem("fr_tooltip") == null ||
+              localStorage.getItem("fr_tooltip") == 'undefined'
+            ) {
+              if(!response?.data[0]?.last_sync_at){
+                setTooltip(response?.data[0]?.updated_at);
+                localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
+              } else {
+                setTooltip(response?.data[0]?.last_sync_at);
+                localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
+              }
+            } else {
+              setTooltip(localStorage.getItem("fr_tooltip"));
+            }
+          }
+        })
+    } else {
+      console.log('yyyy');
+      setTooltip(facebookData?.fb_data?.last_sync_at)
+    }
 
     if (isSyncingActive) {
       setUpdate(localStorage.getItem("fr_update"));
@@ -992,23 +1020,23 @@ function PageHeader({ headerText = "" }) {
               </button>
               <span className="last-sync-status text-center">
                 {
-                  toolTip !== "" ? 
-                  `Last sync : ${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) > 1 ? 
-                  `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} days ago` : 
-                  Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) === 1 ? 
-                  `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} day ago` : 'Today'}` : 
-                  ""
+                  toolTip && toolTip !== "" ?
+                    `Last sync : ${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) > 1 ?
+                      `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} days ago` :
+                      Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) === 1 ?
+                        `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} day ago` : 'Today'}` :
+                    ""
                 }
-                </span>
+              </span>
             </div>
           )}
 
           {
             accessOptions
-            .filter((e) => e.status)
-            .length > 0 ?
-            <div className="fr-accessibility-buttons d-flex f-align-center">
-            {/* 
+              .filter((e) => e.status)
+              .length > 0 ?
+              <div className="fr-accessibility-buttons d-flex f-align-center">
+                {/* 
               {headerOptions.dynamicMergeFields && }
               {headerOptions.sendInviteHeader && }
               {headerOptions.listLabelView && }
@@ -1018,63 +1046,63 @@ function PageHeader({ headerText = "" }) {
               {headerOptions.templatesOptions && }
               {headerOptions.labelsTagsView && } */}
 
-              {accessOptions
-              .filter((e) => e.status)
-              .map((accessItem, i) => (
-                <div
-                  className="fr-access-item h-100"
-                  key={"access-" + i}
-                  ref={clickedRef}
-                >
-                  <button
-                    className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
-                        ? "active"
-                        : ""
-                      }`}
-                    key={accessItem.type + i}
-                    onClick={() => onAccessClick(accessItem)}
-                    ref={accessItem.type == "quickAction" ? actionRef : null}
-                  >
-                    <figure className="accessibility-icon">
-                      {accessItem.icon}
-                    </figure>
-                    <span className="accessibility-text">
-                      {accessItem.text}
-                    </span>
-                  </button>
-                  {accessItem.type == "quickAction" && isComponentVisible && (
+                {accessOptions
+                  .filter((e) => e.status)
+                  .map((accessItem, i) => (
                     <div
-                      className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
+                      className="fr-access-item h-100"
+                      key={"access-" + i}
+                      ref={clickedRef}
+                    >
+                      <button
+                        className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
                           ? "active"
                           : ""
-                        }`}
-                    >
-                      <ul>
-                        <li
-                          className="del-fr-action"
-                          onClick={() => checkBeforeUnfriend(accessItem)}
-                          data-disabled={
-                            !selectedFriends || selectedFriends.length === 0
-                              ? true
-                              : false
-                          }
+                          }`}
+                        key={accessItem.type + i}
+                        onClick={() => onAccessClick(accessItem)}
+                        ref={accessItem.type == "quickAction" ? actionRef : null}
+                      >
+                        <figure className="accessibility-icon">
+                          {accessItem.icon}
+                        </figure>
+                        <span className="accessibility-text">
+                          {accessItem.text}
+                        </span>
+                      </button>
+                      {accessItem.type == "quickAction" && isComponentVisible && (
+                        <div
+                          className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
+                            ? "active"
+                            : ""
+                            }`}
                         >
-                          <figure>
-                            <DeleteIcon />
-                          </figure>
-                          <span>Unfriend</span>
-                        </li>
-                        <li
-                          className="whiteLabel-fr-action"
-                          onClick={() => whiteLabeledUsers(accessItem)}
-                          data-disabled={!whiteListable}
-                        >
-                          <figure>
-                            <WhitelabelIcon />
-                          </figure>
-                          <span>Whitelist Friends</span>
-                        </li>
-                        {/* <li
+                          <ul>
+                            <li
+                              className="del-fr-action"
+                              onClick={() => checkBeforeUnfriend(accessItem)}
+                              data-disabled={
+                                !selectedFriends || selectedFriends.length === 0
+                                  ? true
+                                  : false
+                              }
+                            >
+                              <figure>
+                                <DeleteIcon />
+                              </figure>
+                              <span>Unfriend</span>
+                            </li>
+                            <li
+                              className="whiteLabel-fr-action"
+                              onClick={() => whiteLabeledUsers(accessItem)}
+                              data-disabled={!whiteListable}
+                            >
+                              <figure>
+                                <WhitelabelIcon />
+                              </figure>
+                              <span>Whitelist Friends</span>
+                            </li>
+                            {/* <li
                           className="history-fr-action"
                           data-disabled={
                             !selectedState || selectedState.length == 0
@@ -1087,7 +1115,7 @@ function PageHeader({ headerText = "" }) {
                           </figure>
                           <span>Run History</span>
                         </li> */}
-                        {/* <li
+                            {/* <li
                           className="reject-fr-action"
                           data-disabled={
                             !selectedState || selectedState.length == 0
@@ -1100,23 +1128,23 @@ function PageHeader({ headerText = "" }) {
                           </figure>
                           <span>Reject Requests</span>
                         </li> */}
-                        {/* </li> */}
-                        <li
-                          className="block-fr-action"
-                          onClick={() => BlocklistUser(accessItem)}
-                          data-disabled={!blacklistable}
-                        >
-                          <figure>
-                            <BlockIcon color={"#767485"} />
-                          </figure>
-                          <span>Blacklist</span>
-                        </li>
-                      </ul>
+                            {/* </li> */}
+                            <li
+                              className="block-fr-action"
+                              onClick={() => BlocklistUser(accessItem)}
+                              data-disabled={!blacklistable}
+                            >
+                              <figure>
+                                <BlockIcon color={"#767485"} />
+                              </figure>
+                              <span>Blacklist</span>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              ))}
-          </div> : '' }
+                  ))}
+              </div> : ''}
         </div>
       </div>
     </>
