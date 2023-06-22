@@ -309,6 +309,22 @@
       }
     }
   }
+  &.disabled{
+    background: #1C1C1E;
+    pointer-events: none;
+    .setting-input {
+      color: #767485;
+    }
+    .input-arrows{
+      .btn {
+        svg{
+          path{
+            fill:#767485;
+          }
+        }
+      }
+    }
+  }
 }
 
 /*=====  End of Delete Pending Friend Request(s) automatically  ======*/

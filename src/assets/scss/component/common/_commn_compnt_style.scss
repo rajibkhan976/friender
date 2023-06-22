@@ -446,6 +446,7 @@
       color: #fff;
       padding: 1px 9px;
       font-size: 12px;
+      pointer-events: none;
       &:hover{
         border-color: $themeDefaultPrimary1;   
       } 
@@ -465,6 +466,9 @@
       pointer-events: none;
     }  
   }
+}
+.theme-default .tinyWrap .selector_box:disabled ~ .select-arrow {
+  opacity: 0.4;
 }
 // styling for tiny_selector_box end
 

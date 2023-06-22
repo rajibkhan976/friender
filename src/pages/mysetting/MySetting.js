@@ -1158,7 +1158,7 @@ const MySetting = () => {
 
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
                 {" "}
-                <div className="input-num">
+                <div className="input-num ">  {/* //add "disabled" class here for disable style */}
                   <input
                     type="number"
                     className="setting-input"
