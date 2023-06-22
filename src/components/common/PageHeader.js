@@ -703,12 +703,12 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        console.log('response', response);
+        // console.log('response', response);
         if (response?.data?.length > 0 && response?.data[0]?.last_sync_at) {
-          setTooltip(response?.data[0]?.friend_details[0]?.last_sync_at);
+          setTooltip(response?.data[0]?.last_sync_at);
           localStorage.setItem(
             "fr_tooltip",
-            response?.data[0]?.friend_details[0]?.last_sync_at
+            response?.data[0]?.last_sync_at
           );
         } else {
           setTooltip('');
