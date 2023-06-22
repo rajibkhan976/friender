@@ -4,6 +4,7 @@ function Switch({checked,handleChange,isDisabled=false, upComing=false, handleOn
   return (
     <label className="switch">
         <input type="checkbox" defaultChecked={checked}
+          checked={checked}
           onChange={handleChange}
           disabled={isDisabled}
           onBlur={handleOnBlur}
