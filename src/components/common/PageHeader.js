@@ -1020,12 +1020,12 @@ function PageHeader({ headerText = "" }) {
               </button>
               <span className="last-sync-status text-center">
                 {
-                  toolTip && toolTip !== "" ?
-                    `Last sync : ${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) > 1 ?
-                      `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} days ago` :
-                      Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24)) === 1 ?
-                        `${Math.floor((new Date().getTime() - new Date(toolTip).getTime()) / (1000 * 3600 * 24))} day ago` : 'Today'}` :
-                    ""
+                  (toolTip && toolTip !== "") ? 
+                  `Last sync : ${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24)) > 1 ? 
+                  `${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24))} days ago` : 
+                  Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24)) === 1 ? 
+                  `${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24))} day ago` : 'Today'}` : 
+                  ""
                 }
               </span>
             </div>
