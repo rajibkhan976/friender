@@ -231,6 +231,7 @@ const Sidebar = (props) => {
   const switchProfile = (profileId) => {
     // console.log("switch profile", profileId);
     localStorage.setItem("fr_default_fb", profileId);
+    localStorage.removeItem("fr_tooltip")
     // dispatch( setDefaultProfileId(profileId) )
     setIsComponentVisible(false);
 

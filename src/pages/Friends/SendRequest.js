@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
- 
+
 import Listing from "../../components/common/Listing";
 import {
   AgeRenderer,
@@ -58,7 +58,7 @@ const SendRequest = () => {
   const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
     let valA = new Date(nodeA.data.created_at);
     let valB = new Date(nodeB.data.created_at);
-    
+
     return valB - valA
   }
 
@@ -124,9 +124,9 @@ const SendRequest = () => {
     },
     {
       field: "created_at",
-      headerName:"Age"  ,
+      headerName: "Age",
       valueGetter: AgeRenderer,
-      headerTooltip:"Age",
+      headerTooltip: "Age",
       tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -178,6 +178,11 @@ const SendRequest = () => {
         setKeyWords,
         setModalOpen,
       },
+      sortable: true,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+        if (valueA == valueB) return 0;
+        return (valueA > valueB) ? 1 : -1;
+    } ,
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -188,7 +193,7 @@ const SendRequest = () => {
         },
         textCustomComparator: function (filter, value, filterText) {
           const matchedKeywords = value.split(", "); // Split matched keywords by comma
-    
+
           if (filter === "equals") {
             // Exact match
             return matchedKeywords.includes(filterText);
@@ -269,15 +274,15 @@ const SendRequest = () => {
           headerText={"Keyword(s)"}
           bodyText={
             <>
-              {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ? 
+              {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
                 keyWords?.matchedKeyword.map((el, i) =>
                 (<span className={`tags positive-tags`} key={`key-${i}`}>
                   {el}
                 </span>)
-              ) : (
-                "No specific keyword used"
-              )}
-              </>
+                ) : (
+                  "No specific keyword used"
+                )}
+            </>
           }
           open={modalOpen}
           setOpen={setModalOpen}

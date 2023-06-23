@@ -182,7 +182,7 @@ function PageHeader({ headerText = "" }) {
   const [whiteListable, setWhiteListable] = useState(false);
   const [blacklistable, setBlacklistable] = useState(false);
   const [isSyncing, setIsSyncing] = useState(true);
-  const [toolTip, setTooltip] = useState("");
+  const [toolTip, setTooltip] = useState(localStorage.getItem("fr_tooltip") ? localStorage.getItem("fr_tooltip") : '');
   const [whiteCountInUnfriend, setWhiteCountInUnfriend] = useState(null);
   const [messageTypeOpt, setMessageTypeOpt] = useState("dmf");
   const [runningUnfriend, setRunningUnfriend] = useState(false);
@@ -224,13 +224,13 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        if (response?.data?.length > 0) {
-          setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
-          localStorage.setItem(
-            "fr_tooltip",
-            response?.data[0]?.friend_details[0]?.updated_at
-          );
-        }
+        // if (response?.data?.length > 0) {
+        //   setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
+        //   localStorage.setItem(
+        //     "fr_tooltip",
+        //     response?.data[0]?.friend_details[0]?.updated_at
+        //   );
+        // }
       });
   });
   /**
@@ -703,7 +703,7 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        // console.log('response', response);
+        console.log('response', response);
         if (response?.data?.length > 0 && response?.data[0]?.last_sync_at) {
           setTooltip(response?.data[0]?.last_sync_at);
           localStorage.setItem(
@@ -716,7 +716,7 @@ function PageHeader({ headerText = "" }) {
         }
       });
   };
-  
+
   const fetchPendingFrRquest = async () => {
     dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })).unwrap().then((res) => {
       console.log("Pending Request List", res)
@@ -851,25 +851,17 @@ function PageHeader({ headerText = "" }) {
 
     checkIsSyncing();
 
-    if(facebookData?.fb_data == null) {
+    if (facebookData?.fb_data == null) {
       dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
         .unwrap()
         .then((response) => {
           if (response) {
-            if (
-              !localStorage.getItem("fr_tooltip") ||
-              localStorage.getItem("fr_tooltip") == null ||
-              localStorage.getItem("fr_tooltip") == 'undefined'
-            ) {
-              if(!response?.data[0]?.last_sync_at){
-                setTooltip(response?.data[0]?.updated_at);
-                localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
-              } else {
-                setTooltip(response?.data[0]?.last_sync_at);
-                localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
-              }
+            if (!response?.data[0]?.last_sync_at) {
+              setTooltip('');
+              localStorage.removeItem("fr_tooltip");
             } else {
-              setTooltip(localStorage.getItem("fr_tooltip"));
+              localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
+              setTooltip(response?.data[0]?.last_sync_at);
             }
           }
         })
@@ -1019,13 +1011,14 @@ function PageHeader({ headerText = "" }) {
                 </span>
               </button>
               <span className="last-sync-status text-center">
+                {console.log('::::::>>>>>', toolTip, Math.ceil(new Date().getDate(), '<<<<<<<', new Date(toolTip).getDate()))}
                 {
-                  (toolTip && toolTip !== "") ? 
-                  `Last sync : ${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24)) > 1 ? 
-                  `${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24))} days ago` : 
-                  Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24)) === 1 ? 
-                  `${Math.ceil((new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24))} day ago` : 'Today'}` : 
-                  ""
+                  (toolTip && toolTip !== "") ?
+                    `Last sync : ${Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) > 1 ?
+                      `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} days ago` :
+                      Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) === 1 ?
+                        `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} day ago` : 'Today'}` :
+                    ""
                 }
               </span>
             </div>

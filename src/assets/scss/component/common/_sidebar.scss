@@ -76,8 +76,8 @@
       .main-profile-selected {
         background: linear-gradient(90deg, #827eff -1.45%, #52d9bb 101.45%);
         border-width: 2px;
-        width: 48px;
-        height: 48px;
+        flex: 0 0 48px;
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
         position: relative;
         margin: 0 auto;
@@ -385,10 +385,10 @@
           &.active {
             svg {
               *[fill] {
-                @include theme-aware('fill', 'svg-icon-hover-color');
+                @include theme-aware("fill", "svg-icon-hover-color");
               }
               *[stroke] {
-                @include theme-aware('stroke', 'svg-icon-hover-color');
+                @include theme-aware("stroke", "svg-icon-hover-color");
               }
             }
           }
@@ -424,7 +424,7 @@
         }
 
         &:first-child::before {
-          margin-top: 0
+          margin-top: 0;
         }
       }
 
@@ -495,11 +495,7 @@
           }
 
           &:hover {
-            background: linear-gradient(
-              90deg,
-              rgba(0, 148, 255, 0.2) 0.73%,
-              rgba(0, 148, 255, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 148, 255, 0.2) 0.73%, rgba(0, 148, 255, 0) 100%);
           }
         }
 
@@ -534,11 +530,7 @@
 
       .nav-menu {
         .active {
-          background: linear-gradient(
-            90deg,
-            rgba(0, 148, 255, 0.1) 0.73%,
-            rgba(0, 148, 255, 0) 100%
-          );
+          background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
           border-left: 2px solid $themeDefaultPrimary1;
           cursor: pointer;
 
@@ -584,11 +576,7 @@
               }
 
               .active {
-                background: linear-gradient(
-                  90deg,
-                  rgba(0, 148, 255, 0.1) 0.73%,
-                  rgba(0, 148, 255, 0) 100%
-                );
+                background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
                 border-radius: 5px;
                 border-left: none;
 
@@ -600,11 +588,7 @@
 
               &:hover {
                 a {
-                  background: linear-gradient(
-                    90deg,
-                    rgba(0, 148, 255, 0.1) 0.73%,
-                    rgba(0, 148, 255, 0) 100%
-                  );
+                  background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
                   border-radius: 5px;
 
                   .nav-menu-name {
@@ -762,11 +746,7 @@
           &.has-child {
             &.activated:has(.active) {
               a {
-                background: linear-gradient(
-                  90deg,
-                  rgba(0, 148, 255, 0.1) 0.73%,
-                  rgba(0, 148, 255, 0) 100%
-                );
+                background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
                 border-left: 2px solid $themeDefaultPrimary1;
                 cursor: pointer;
 
@@ -791,11 +771,7 @@
 
               &:hover {
                 a {
-                  background: linear-gradient(
-                    90deg,
-                    rgba(0, 148, 255, 0.1) 0.73%,
-                    rgba(0, 148, 255, 0) 100%
-                  );
+                  background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
                   border-left: 2px solid $themeDefaultPrimary1;
                   cursor: pointer;
                 }
@@ -928,11 +904,7 @@
             }
 
             &:hover {
-              background: linear-gradient(
-                90deg,
-                rgba(0, 148, 255, 0.1) 0.73%,
-                rgba(0, 148, 255, 0) 100%
-              );
+              background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
               border-left: 2px solid $themeDefaultPrimary1;
               cursor: pointer;
 
@@ -961,11 +933,7 @@
             }
 
             &:hover {
-              background: linear-gradient(
-                90deg,
-                rgba(0, 148, 255, 0.1) 0.73%,
-                rgba(0, 148, 255, 0) 100%
-              );
+              background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
               border-left: 2px solid $themeDefaultPrimary1;
               cursor: pointer;
 
@@ -984,11 +952,7 @@
           }
 
           .nav-menu.active {
-            background: linear-gradient(
-              90deg,
-              rgba(0, 148, 255, 0.1) 0.73%,
-              rgba(0, 148, 255, 0) 100%
-            );
+            background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
             border-left: 2px solid $themeDefaultPrimary1;
             cursor: pointer;
 
