@@ -20,7 +20,7 @@ const Keywords = (props) => {
       }
     }
     if (isModified) {
-        setModify(true);
+      setModify(true);
     }
   }, [isModified]);
 
@@ -39,26 +39,25 @@ const Keywords = (props) => {
   };
 
   const addKeywords = (keyword) => {
-    // For String Case..
     const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
     const filteredKeywords = newKeywords.filter((KW) => KW !== '');
-    const uniqueKeywords = filteredKeywords.filter((KW) => !reFrndngKeywords.includes(KW));
+    const uniqueKeywords = filteredKeywords.filter((KW) => {
+      const lowercaseKW = KW.toLowerCase();
+      return !reFrndngKeywords.toLowerCase().split(',').some((existingKW) => {
+        return existingKW.trim().toLowerCase() === lowercaseKW || existingKW.trim().toLowerCase().includes(` ${lowercaseKW}`);
+      });
+    });
 
     if (uniqueKeywords.length > 0) {
-      const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}`: uniqueKeywords.join(',');
+      const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}` : uniqueKeywords.join(',');
       setFrndngKeywords(updatedKeywords);
     }
 
-    // For Array Case..
-    // const newKeywords = keyword.split(',').map((keyword) => keyword.trim());
-    // const filteredKeywords = newKeywords.filter(keyword => keyword !== '');
-
-    // if (filteredKeywords.length > 0) {
-    //   setReFrndngKeywords([...reFrndngKeywords, ...filteredKeywords]);
-    // }
-
     setReFrndngInput2('');
   };
+
+
+
 
   const removeKeyword = (keyword) => {
     // For String Case..
@@ -80,10 +79,10 @@ const Keywords = (props) => {
             <div className={!isModified ? 'keywords-static' : 'keywords'} key={keyword}>
               {keyword} {isModified && <button className="cross" onClick={() => removeKeyword(keyword)}><Cross2 /></button>}
             </div>
-          );    
+          );
         })
       }
-      
+
       <textarea
         className="keyword-input"
         placeholder={!modify ? '' : 'Add keyword'}

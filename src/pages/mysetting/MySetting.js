@@ -207,7 +207,14 @@ const MySetting = () => {
   //massage template selector object end
 
   //selector states
-  const [reFrndSelect1, setReFrndSelect1] = useState(1);
+  const [reFrndSelect1, setReFrndSelect1] = useState(() => {
+    const storedData = localStorage.getItem('fr_refriending_data');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return parsedData.reFrndngSelect || 1;
+    }
+    return 1;
+  });
 
   const [sndMsgRcvFrndRquSelect, setSndMsgRcvFrndRquSelect] = useState(
     periodObj[0].value
@@ -232,9 +239,23 @@ const MySetting = () => {
     useState(dayObj[0].value);
 
   //inputs box states
-  const [reFrndngInput1, setReFrndngInput1] = useState(1);
+  const [reFrndngInput1, setReFrndngInput1] = useState(() => {
+    const storedData = localStorage.getItem('fr_refriending_data');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return parsedData.reFrndngInput || 1;
+    }
+    return 1;
+  });
   const [reFrndngInput2, setReFrndngInput2] = useState();
-  const [reFrndngKeywords, setFrndngKeywords] = useState(localStorage.getItem('fr_refriending_keywords') || '');
+  const [reFrndngKeywords, setFrndngKeywords] = useState(() => {
+    const storedData = localStorage.getItem('fr_refriending_data');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return parsedData.keywords || '';
+    }
+    return '';
+  });
   const [cnclFrndRqueInput, setCnclFrndRqueInput] = useState(1);
   const [sndMsgRcvFrndRquInput, setSndMsgRcvFrndRquInput] = useState(1);
   const [sndMsgAcptFrndRquInput, setSndMsgAcptFrndRquInput] = useState(1);
@@ -780,6 +801,14 @@ const MySetting = () => {
         } else {
           //.. error false
           setReFrndngInput1(parseInt(reFrndngInput1) + 1);
+
+          const storageData = {
+            reFrndngInput: parseInt(reFrndngInput1) + 1,
+            reFrndngSelect: reFrndSelect1,
+            keywords: reFrndngKeywords,
+          };
+          const jsonStorageData = JSON.stringify(storageData);
+          localStorage.setItem('fr_refriending_data', jsonStorageData);
         }
       }
 
@@ -787,6 +816,14 @@ const MySetting = () => {
         if (reFrndngInput1 > 1) {
           //.. error false..
           setReFrndngInput1(parseInt(reFrndngInput1) - 1);
+
+          const storageData = {
+            reFrndngInput: parseInt(reFrndngInput1) - 1,
+            reFrndngSelect: reFrndSelect1,
+            keywords: reFrndngKeywords,
+          };
+          const jsonStorageData = JSON.stringify(storageData);
+          localStorage.setItem('fr_refriending_data', jsonStorageData);
         }
       }
     }
@@ -851,20 +888,50 @@ const MySetting = () => {
       return;
     }
 
+    const parsedValue = parseInt(value);
+
+    let inputValue = value;
+    let storageData = {
+      reFrndngInput: inputValue,
+      reFrndngSelect: reFrndSelect1,
+      keywords: reFrndngKeywords,
+    };
+
     if (reFrndng) {
-      if (parseInt(value) === 0 || value <= -1) {
-        setReFrndngInput1(1);
-
-      } else if (parseInt(value) > 99) {
-        setReFrndngInput1(99);
-
+      if (parsedValue === 0 || parsedValue <= -1) {
+        inputValue = 1;
+        storageData.reFrndngInput = 1;
+      } else if (parsedValue > 99) {
+        inputValue = 99;
+        storageData.reFrndngInput = 99;
       } else if (value.includes('.')) {
-        setReFrndngInput1(Math.floor(parseInt(value)));
-      } else {
-        setReFrndngInput1(value);
+        inputValue = Math.floor(parsedValue);
+        storageData.reFrndngInput = inputValue;
       }
+
+      setReFrndngInput1(inputValue);
+      const jsonStorageData = JSON.stringify(storageData);
+      localStorage.setItem('fr_refriending_data', jsonStorageData);
     }
   };
+
+  /**
+   * ===== Re-Friending Select Attempts Handle Function =======
+   * @param {*} event 
+   */
+  const handleChangeReFrndngSelect1 = (event) => {
+    const { value } = event.target;
+    const parsedValue = parseInt(value);
+    setReFrndSelect1(parsedValue);
+
+    const jsonStorageData = JSON.stringify({
+      reFrndngInput: reFrndngInput1,
+      reFrndngSelect: parsedValue,
+      keywords: reFrndngKeywords,
+    });
+    localStorage.setItem('fr_refriending_data', jsonStorageData);
+  };
+
 
   /**
    * Handle Input-Bar of Cancel send friend reuquest(s) 
@@ -1024,7 +1091,13 @@ const MySetting = () => {
     // console.log("re-friending after -- ", reFrndngInput1);
     // console.log("re-frending attemps -- ", reFrndSelect1);
     saveMySetting(true);
-    localStorage.setItem("fr_refriending_keywords", keywords);
+    const storageData = {
+      reFrndngInput: reFrndngInput1,
+      reFrndngSelect: reFrndSelect1,
+      keywords,
+    };
+    const jsonStorageData = JSON.stringify(storageData);
+    localStorage.setItem('fr_refriending_data', jsonStorageData);
     setFrndngKeywords(keywords);
 
     if (keywords === '') {
@@ -1220,9 +1293,7 @@ const MySetting = () => {
                     setDisable={!reFrndng}
                     selects={noOfRefrendering}
                     value={reFrndSelect1}
-                    handleChange={(e) => {
-                      setReFrndSelect1(parseInt(e.target.value));
-                    }}
+                    handleChange={handleChangeReFrndngSelect1}
                     extraClass="tinyWrap"
                     height="30px"
                     width="90px"
