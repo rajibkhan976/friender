@@ -234,7 +234,7 @@ const MySetting = () => {
   //inputs box states
   const [reFrndngInput1, setReFrndngInput1] = useState(1);
   const [reFrndngInput2, setReFrndngInput2] = useState();
-  const [reFrndngKeywords, setFrndngKeywords] = useState('');
+  const [reFrndngKeywords, setFrndngKeywords] = useState(localStorage.getItem('fr_refriending_keywords') || '');
   const [cnclFrndRqueInput, setCnclFrndRqueInput] = useState(1);
   const [sndMsgRcvFrndRquInput, setSndMsgRcvFrndRquInput] = useState(1);
   const [sndMsgAcptFrndRquInput, setSndMsgAcptFrndRquInput] = useState(1);
@@ -373,6 +373,15 @@ const MySetting = () => {
 
 
   // }, []);
+
+  /**
+   * Make Child Toggle Turn Off when parent settings Toggle is Turned Off.
+   */
+  useEffect(() => {
+    if (reFrndng === false) {
+      setReFriendOpenKeywords(false);
+    }
+  }, [reFrndng]);
 
   console.log('refrnding -- ', reFrndng);
 
@@ -790,16 +799,6 @@ const MySetting = () => {
     setReFrndng(!reFrndng);
   };
 
-  useEffect(() => {
-    if (reFrndng === false) {
-      setReFriendOpenKeywords(false);
-      setReFriendSaveActive(false);
-      setReFrndng(false);
-
-      console.log("Set Re Friending Open Keyword and Active is setting -- ", reFriendOpenKeywords);
-    }
-  }, [reFrndng]);
-
   /**
    * Set Delete Pending Requests Increment & Decrement..
    */
@@ -1019,14 +1018,19 @@ const MySetting = () => {
    * ===== Save Re-Friending Keywords ====
    * @param {*} event 
    */
-  const saveReFrndngKeywords = () => {
+  const saveReFrndngKeywords = (keywords) => {
     // setReFriendSaveActive(false);
     // console.log("Save Re-Friending Keywords -- ", reFrndngKeywords);
     // console.log("re-friending after -- ", reFrndngInput1);
     // console.log("re-frending attemps -- ", reFrndSelect1);
     saveMySetting(true);
-  };
+    localStorage.setItem("fr_refriending_keywords", keywords);
+    setFrndngKeywords(keywords);
 
+    if (keywords === '') {
+      localStorage.removeItem("fr_refriending_keywords");
+    }
+  };
 
   /**
    * Disable every functional / special key except numbers
@@ -1158,7 +1162,7 @@ const MySetting = () => {
 
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
                 {" "}
-                <div className="input-num ">  {/* //add "disabled" class here for disable style */}
+                <div className={!reFrndng ? "input-num disabled" : "input-num"}> 
                   <input
                     type="number"
                     className="setting-input"
@@ -1249,7 +1253,7 @@ const MySetting = () => {
                           className={`saveBtn activated`}
                           onClick={() => {
                             setReFriendSaveActive(false);
-                            saveReFrndngKeywords();
+                            saveReFrndngKeywords(reFrndngKeywords);
                           }}
                         >
                           Save
@@ -1326,7 +1330,7 @@ const MySetting = () => {
               <div className="setting-child others">
                 Cancel send friend request(s) after
                 {" "}
-                <div className="input-num">
+                <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
                   <input
                     type="number"
                     className="setting-input"

@@ -42,9 +42,10 @@ const Keywords = (props) => {
     // For String Case..
     const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
     const filteredKeywords = newKeywords.filter((KW) => KW !== '');
+    const uniqueKeywords = filteredKeywords.filter((KW) => !reFrndngKeywords.includes(KW));
 
-    if (filteredKeywords.length > 0) {
-      const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${filteredKeywords.join(',')}`: filteredKeywords.join(',');
+    if (uniqueKeywords.length > 0) {
+      const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}`: uniqueKeywords.join(',');
       setFrndngKeywords(updatedKeywords);
     }
 
