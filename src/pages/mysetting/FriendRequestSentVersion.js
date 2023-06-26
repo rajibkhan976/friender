@@ -214,7 +214,7 @@ const FriendRequestSentVersion = () => {
           </div>
 
           <div className="table-data">
-            <p className="info-texts">{item.profile_viewed}</p>
+            <p className="info-texts">{typeof item?.profile_viewed == 'number' && item.profile_viewed}</p>
           </div>
 
           <div className="table-data">

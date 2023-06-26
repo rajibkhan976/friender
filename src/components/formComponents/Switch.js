@@ -3,7 +3,7 @@ import { memo } from 'react'
 function Switch({checked,handleChange,isDisabled=false, upComing=false, handleOnBlur}) {
   return (
     <label className="switch">
-        <input type="checkbox" defaultChecked={checked}
+        <input type="checkbox"
           checked={checked}
           onChange={handleChange}
           disabled={isDisabled}

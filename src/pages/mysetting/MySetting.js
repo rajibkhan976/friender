@@ -1055,6 +1055,30 @@ const MySetting = () => {
     }
   }
 
+  /**
+   * ====== Turn On Settings Warning ======
+   * @param {*} param
+   * @returns 
+   */
+  const TurnOnSettingsWarn = ({ children, enabledFeature }) => {
+    return (
+      <span onClick={() => {
+        if (!enabledFeature) {
+          Alertbox(
+            "Please turn on the setting to make changes",
+            "warning",
+            1000,
+            "bottom-right"
+          );
+          return;
+        }
+      }}>
+        {children}
+      </span>
+    );
+  };
+
+
   return (
     <div className="setting-content setting-global">
       {settingFetched && (
@@ -1162,43 +1186,36 @@ const MySetting = () => {
 
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
                 {" "}
-                <div className={!reFrndng ? "input-num disabled" : "input-num"}> 
-                  <input
-                    type="number"
-                    className="setting-input"
-                    value={reFrndngInput1}
-                    //onKeyDown={e => checkData(e)}
-                    onChange={reFriendingInput1Handle}
-                  // onBlur={deletePendingRequestWithDaysHandle}
-                  />
+                <TurnOnSettingsWarn enabledFeature={reFrndng}>
+                  <div className={!reFrndng ? "input-num disabled" : "input-num"}>
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={reFrndngInput1}
+                      //onKeyDown={e => checkData(e)}
+                      onChange={reFriendingInput1Handle}
+                    // onBlur={deletePendingRequestWithDaysHandle}
+                    />
 
-                  <div className="input-arrows">
-                    <button className="btn inline-btn btn-transparent"
-                      onClick={() => setValOfReFrndngIncDic("INCREMENT")}
-                    >
-                      <ChevronUpArrowIcon size={15} />
-                    </button>
+                    <div className="input-arrows">
+                      <button className="btn inline-btn btn-transparent"
+                        onClick={() => setValOfReFrndngIncDic("INCREMENT")}
+                      >
+                        <ChevronUpArrowIcon size={15} />
+                      </button>
 
-                    <button className="btn inline-btn btn-transparent"
-                      onClick={() => setValOfReFrndngIncDic("DECREMENT")}
-                    >
-                      <ChevronDownArrowIcon size={15} />
-                    </button>
+                      <button className="btn inline-btn btn-transparent"
+                        onClick={() => setValOfReFrndngIncDic("DECREMENT")}
+                      >
+                        <ChevronDownArrowIcon size={15} />
+                      </button>
+                    </div>
                   </div>
-                </div>{" "}
+                </TurnOnSettingsWarn>
+                {" "}
                 <span className="smallTxt">  day(s), and immediately send a new friend request. Choose how often to retry friending up to</span>
                 {" "}
-                <span onClick={() => {
-                  if (!reFrndng) {
-                    Alertbox(
-                      "Please turn on the setting to make changes",
-                      "warning",
-                      1000,
-                      "bottom-right"
-                    );
-                    return;
-                  }
-                }}>
+                <TurnOnSettingsWarn enabledFeature={reFrndng}>
                   <DropSelector
                     setDisable={!reFrndng}
                     selects={noOfRefrendering}
@@ -1210,22 +1227,13 @@ const MySetting = () => {
                     height="30px"
                     width="90px"
                   />
-                </span>{" "}
+                </TurnOnSettingsWarn>
+                {" "}
                 <span className="smallTxt"> attempt(s)</span>
 
                 <div className="keywordBlock">
                   <div className="saveBlock">
-                    <span onClick={() => {
-                      if (!reFrndng) {
-                        Alertbox(
-                          "Please turn on the setting to make changes",
-                          "warning",
-                          1000,
-                          "bottom-right"
-                        );
-                        return;
-                      }
-                    }}>
+                    <TurnOnSettingsWarn enabledFeature={reFrndng}>
                       <Switch
                         upComing={!reFrndng}
                         isDisabled={!reFrndng}
@@ -1236,7 +1244,7 @@ const MySetting = () => {
                           }
                         }}
                       />
-                    </span>
+                    </TurnOnSettingsWarn>
                     {" "}
                     <span className="smallTxt"> Keyword(s)
                       <ToolTipPro
@@ -1330,26 +1338,28 @@ const MySetting = () => {
               <div className="setting-child others">
                 Cancel send friend request(s) after
                 {" "}
-                <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
-                  <input
-                    type="number"
-                    className="setting-input"
-                    value={deletePendingFrndValue}
-                    onKeyDown={e => checkData(e)}
-                    onChange={deletePendingFrndInputHandle}
-                  // onBlur={deletePendingRequestWithDaysHandle}
-                  />
+                <TurnOnSettingsWarn enabledFeature={autoCnclFrndRque}>
+                  <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={deletePendingFrndValue}
+                      onKeyDown={e => checkData(e)}
+                      onChange={deletePendingFrndInputHandle}
+                    // onBlur={deletePendingRequestWithDaysHandle}
+                    />
 
-                  <div className="input-arrows">
-                    <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
-                      <ChevronUpArrowIcon size={15} />
-                    </button>
+                    <div className="input-arrows">
+                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
+                        <ChevronUpArrowIcon size={15} />
+                      </button>
 
-                    <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
-                      <ChevronDownArrowIcon size={15} />
-                    </button>
+                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
+                        <ChevronDownArrowIcon size={15} />
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </TurnOnSettingsWarn>
                 {" "}
                 day(s)
 
@@ -1406,38 +1416,44 @@ const MySetting = () => {
             {dayBackAnlyFrndEngOpen && (
               <div className="setting-child others">
                 Select the time: From &nbsp;
-                <DropSelector
-                  selects={timeObj.slice(0, timeObj.length - 1)}
-                  value={dayBackAnlyFrndEngSelect1}
-                  style={{}}
-                  // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
-                  handleChange={e => setStartTime(e)}
-                  setDisable={!dayBackAnlyFrndEng}
-                  extraClass="tinyWrap"
-                  height="30px"
-                  width="90px"
-                />{" "}
+                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
+                  <DropSelector
+                    selects={timeObj.slice(0, timeObj.length - 1)}
+                    value={dayBackAnlyFrndEngSelect1}
+                    style={{}}
+                    // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
+                    handleChange={e => setStartTime(e)}
+                    setDisable={!dayBackAnlyFrndEng}
+                    extraClass="tinyWrap"
+                    height="30px"
+                    width="90px"
+                  />
+                </TurnOnSettingsWarn>
+                {" "}
                 &nbsp; To &nbsp;
-                <DropSelector
-                  selects={
-                    dayBackAnlyFrndEngSelect1
-                      ? timeObj.slice(
-                        timeObj.indexOf(
-                          timeObj.filter(
-                            (el) => el.value == dayBackAnlyFrndEngSelect1
-                          )[0]
-                        ) + 1
-                      )
-                      : timeObj
-                  }
-                  value={dayBackAnlyFrndEngSelect2}
-                  style={{}}
-                  handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
-                  setDisable={!dayBackAnlyFrndEng}
-                  extraClass="tinyWrap"
-                  height="30px"
-                  width="90px"
-                />{" "}
+                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
+                  <DropSelector
+                    selects={
+                      dayBackAnlyFrndEngSelect1
+                        ? timeObj.slice(
+                          timeObj.indexOf(
+                            timeObj.filter(
+                              (el) => el.value == dayBackAnlyFrndEngSelect1
+                            )[0]
+                          ) + 1
+                        )
+                        : timeObj
+                    }
+                    value={dayBackAnlyFrndEngSelect2}
+                    style={{}}
+                    handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
+                    setDisable={!dayBackAnlyFrndEng}
+                    extraClass="tinyWrap"
+                    height="30px"
+                    width="90px"
+                  />
+                </TurnOnSettingsWarn>
+                {" "}
                 daily.
               </div>
             )}

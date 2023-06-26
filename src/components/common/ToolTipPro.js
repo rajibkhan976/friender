@@ -17,10 +17,12 @@ function ToolTipPro({
     <span
       className={"fr-tooltipPro fr-tooltipPro-" + direction + ` fr-tooltipPro-${type}`}
     >
-      <figure className="fr-tooltipPro-icon"
-        onMouseEnter={() => {
-          setIsComponentVisible(true)
-        }} ref={clickedRef}>
+      <figure
+        className="fr-tooltipPro-icon"
+        onMouseEnter={() => setIsComponentVisible(true)}
+        ref={clickedRef}
+        onMouseLeave={() => !isInteract && setIsComponentVisible(false)}
+      >
         {type === "query" ? <QueryIcon /> : type === "info" ? <InfoIcon2 /> : <InfoIcon />}
       </figure>
       {isComponentVisible && <span className="fr-tooltipPro-content">
