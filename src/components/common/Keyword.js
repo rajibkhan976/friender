@@ -38,25 +38,41 @@ const Keywords = (props) => {
     }
   };
 
+  // const addKeywords = (keyword) => {
+  //   const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
+  //   const filteredKeywords = newKeywords.filter((KW) => KW !== '');
+  //   const uniqueKeywords = filteredKeywords.filter((KW) => {
+  //     const lowercaseKW = KW.toLowerCase();
+  //     return !reFrndngKeywords.toLowerCase().split(',').some((existingKW) => {
+  //       return existingKW.trim().toLowerCase() === lowercaseKW || existingKW.trim().toLowerCase().includes(` ${lowercaseKW}`);
+  //     });
+  //   });
+
+  //   if (uniqueKeywords.length > 0) {
+  //     const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}` : uniqueKeywords.join(',');
+  //     setFrndngKeywords(updatedKeywords);
+  //   }
+
+  //   setReFrndngInput2('');
+  // };
+  
+  
   const addKeywords = (keyword) => {
     const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
     const filteredKeywords = newKeywords.filter((KW) => KW !== '');
     const uniqueKeywords = filteredKeywords.filter((KW) => {
-      const lowercaseKW = KW.toLowerCase();
-      return !reFrndngKeywords.toLowerCase().split(',').some((existingKW) => {
-        return existingKW.trim().toLowerCase() === lowercaseKW || existingKW.trim().toLowerCase().includes(` ${lowercaseKW}`);
+      return !reFrndngKeywords.split(',').some((existingKW) => {
+        return existingKW.trim() === KW || existingKW.trim() === KW || existingKW.trim().includes(` ${KW}`);
       });
     });
-
+    
     if (uniqueKeywords.length > 0) {
       const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}` : uniqueKeywords.join(',');
       setFrndngKeywords(updatedKeywords);
     }
-
+    
     setReFrndngInput2('');
   };
-
-
 
 
   const removeKeyword = (keyword) => {
@@ -67,9 +83,6 @@ const Keywords = (props) => {
     // For Array Case..
     // setReFrndngKeywords(reFrndngKeywords.filter((KW) => KW !== keyword));
   };
-
-
-  console.log("Modified -- ", modify);
 
   return (
     <div className="inputBlock">
