@@ -681,6 +681,51 @@
           display: inline-flex;
         }
 
+        &.feedback-nav {
+          margin-left: auto;
+          display: inline-flex;
+          align-items: center;
+          
+          .btn {
+            padding-inline: 8px;
+            height: 22px;
+            font-size: $smallestFontSize;
+            font-weight: $fontWeight;
+            @include theme-aware('background-color', 'themed-highlighted-background');
+            @include theme-aware('color', 'themed-highlighted-content-color');
+
+            svg {
+              margin-left: 5px;
+
+              path[stroke] {
+                transition: none;
+                @include theme-aware('stroke', 'themed-highlighted-content-color');
+              }
+              path[fill] {
+                transition: none;
+                @include theme-aware('fill', 'themed-highlighted-content-color');
+              }
+            }
+
+            &:hover {
+              @include theme-aware('background-color', 'button-bg');
+              @include theme-aware('color', 'text-color');
+
+              svg {
+                margin-left: 5px;
+  
+                path[stroke] {
+                  @include theme-aware('stroke', 'text-color');
+                }
+                path[fill] {
+                  @include theme-aware('fill', 'text-color');
+                  stroke: none;
+                }
+              }
+            }
+          }
+        }
+
         .upgrade-btn {
           font-size: 14px;
           font-weight: 600;

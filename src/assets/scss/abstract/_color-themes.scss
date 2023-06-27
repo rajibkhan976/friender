@@ -79,6 +79,8 @@ $themes: (
     red-delete: $themeRed6,
     red-delete-active: $themeRed7,
     input-hover-button-background: $themePrimaryBlue13,
+    themed-highlighted-background: $themeLightPrimary3,
+    themed-highlighted-content-color: $themeDefaultSecondary8
   ),
   light: (
     text-color: $themeBlack1,
@@ -161,5 +163,7 @@ $themes: (
     red-delete: $themeRed6,
     red-delete-active: $themeRed7,
     input-hover-button-background: $themePrimaryBlue13,
+    themed-highlighted-background: $themeLightPrimary3,
+    themed-highlighted-content-color: $themeDefaultSecondary8
   ),
 );

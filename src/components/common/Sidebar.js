@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Themewitch from "../common/Themeswitch";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
@@ -13,7 +13,7 @@ import { userLogout } from "../../actions/AuthAction";
 import { asyncLocalStorage } from "../../helpers/AsyncLocalStorage";
 import useComponentVisible from "../../helpers/useComponentVisible";
 import { crealFilter, removeSelectedFriends } from "../../actions/FriendListAction";
-import {SidebarIcon, SettingIcon, HomeIcon,FriendIcon, LogoutIcon} from "../../assets/icons/Icons";
+import {SidebarIcon, SettingIcon, HomeIcon,FriendIcon, LogoutIcon, OpenInNewTab} from "../../assets/icons/Icons";
 import {
   setProfileSpaces,
   setDefaultProfileId,
@@ -579,6 +579,15 @@ const Sidebar = (props) => {
                   />
                 )}
               </li>
+              {!sidebarToogle && 
+                <li
+                  className="nav-menu feedback-nav"
+                >
+                  <Link to="https://lnkw.co/friender-feedback" target="_blank" className="btn">
+                    Feedback <OpenInNewTab />
+                  </Link>
+                </li>
+              }
               {sidebarToogle ? <li className="nav-menu closed-only">
                 <button
                   className="btn-transparent logout-btn"
