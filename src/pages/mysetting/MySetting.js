@@ -9,8 +9,8 @@ import {
   saveSettings,
 } from "../../services/SettingServices";
 import Alertbox from "../../components/common/Toast";
-import { useDispatch } from "react-redux";
-import { getMySettings, updateMysetting } from "../../actions/MySettingAction";
+import { useDispatch, useSelector } from "react-redux";
+import { getMySettings, saveAllSettings } from "../../actions/MySettingAction";
 import {
   ChevronUpArrowIcon,
   ChevronDownArrowIcon,
@@ -27,9 +27,9 @@ import Keyword from "../../components/common/Keyword"
 const MySetting = () => {
   //:::: This is a child Setting my-setting::::
   const current_fb_id = localStorage.getItem("fr_default_fb");
-  const userToken = localStorage.getItem("fr_token");
+  //const userToken = localStorage.getItem("fr_token");
   const render = useRef(0);
-  const [loading, setLoading] = useState(true);
+  const loading = useSelector((state)=>state.settings.isLoading)
   const dispatch = useDispatch();
   const [settingFetched, setSettingFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -45,9 +45,9 @@ const MySetting = () => {
   const [sndMsgDlcFrndRqu, setSndMsgDlcFrndRqu] = useState(false);
   const [sndMsgExptFrndRqu, setSndMsgExptFrndRqu] = useState(false);
   const [dayBackAnlyFrndEng, setDayBackAnlyFrndEng] = useState(false);
-  const [dayBackAnlyFrndEngNEW, setDayBackAnlyFrndEngNEW] = useState(false);
+  //const [dayBackAnlyFrndEngNEW, setDayBackAnlyFrndEngNEW] = useState(false);
   const [dayBackAnlyFrndEngOpen, setDayBackAnlyFrndEngOpen] = useState(false);
-  const [deletePendingFrnd, setDeletePendingFrnd] = useState(false);
+ // const [deletePendingFrnd, setDeletePendingFrnd] = useState(false);
   const [deletePendingFrndOpen, setDeletePendingFrndOpen] = useState(false);
   const [deletePendingFrndValue, setDeletePendingFrndValue] = useState(1);
   const [deletePendingFrndModalOpen, setDeletePendingFrndModalOpen] = useState(false);
@@ -300,17 +300,15 @@ const MySetting = () => {
   const [reFriendOpenKeywords, setReFriendOpenKeywords] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
+    //setLoading(true)
     console.log("before", render.current)
-    if (render.current <= 5) {
-      render.current = render.current + 1;
-    }
+   
     // console.log("after", render.current)
     if (render.current > 1) {
       if (settingFetched) {
         //console.log("the setting saving is optimized-._>");
         const handler = setTimeout(() => saveMySetting(), 1000);
-        setLoading(false)
+        //setLoading(false)
         return () => clearTimeout(handler);
         /* ::::Never delete the Comment::::
         optiMizedSave();
@@ -320,6 +318,9 @@ const MySetting = () => {
       } else {
         return;
       }
+    }
+    if (render.current <= 5) {
+      render.current = render.current + 1;
     }
   }, [
     dontSendFrindReqFrnd,
@@ -368,22 +369,30 @@ const MySetting = () => {
         localStorage.removeItem("fr_delete_id");
       }
     }
-    dispatch(getMySettings({ fbUserId: `${current_fb_id}` }));
+    dispatch(getMySettings({ fbUserId: `${current_fb_id}` })).unwrap().then((res) => {
+      syncSettings(res.data[0]);
+      //console.log("setting res", res);
+      setSettingFetched(true);
+     // setLoading(false);
+    }).catch((err) => {
+
+      Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+    });
     //update api call with redux
-    fetchProfileSetting({
-      fbUserId: `${current_fb_id}`,
-    })
-      .then((response) => {
-        syncSettings(response.data[0]);
+    // fetchProfileSetting({
+    //   fbUserId: `${current_fb_id}`,
+    // })
+    //   .then((response) => {
+    //     syncSettings(response.data[0]);
 
-        setSettingFetched(true);
-        setLoading(false);
+    //     setSettingFetched(true);
+    //     setLoading(false);
 
-        // console.log("my res **", response.data[0]);
-      })
-      .catch((err) => {
-        //console.log(err);
-      });
+    //     // console.log("my res **", response.data[0]);
+    //   })
+    //   .catch((err) => {
+    //     //console.log(err);
+    //   });
   }, []);
 
   /**
@@ -404,7 +413,7 @@ const MySetting = () => {
     }
   }, [reFrndng]);
 
-  console.log('refrnding -- ', reFrndng);
+ // console.log('refrnding -- ', reFrndng);
 
   //massege template select end
   const saveMySetting = (forceSave = false) => {
@@ -583,19 +592,20 @@ const MySetting = () => {
         to_time: dayBackAnlyFrndEngSelect2,
       };
     }
+    /**
+     * dispatching the save mysetting action/////
+     */
+    dispatch(saveAllSettings(payload)).unwrap().then(() => {
+      Alertbox("setting updated successfully", "success", 3000, "bottom-right");
+      // if (render.current > 2 && !forceSave) {
+      //   Alertbox("setting saved successfully", "success", 3000, "bottom-right");
+      // }
 
-    //vvi ucomment it
-
-    //console.log("i am payload****-----|||||>>>", payload);
-    dispatch(updateMysetting(payload));
-    saveSettings(payload).then(() => {
-      if (render.current > 2 && !forceSave) {
-        Alertbox("setting updated successfully", "success", 1000, "bottom-right");
-      }
-
-      if (forceSave && render.current > 1) {
-        Alertbox("settings updated successfully", "success", 1000, "bottom-right");
-      }
+      // if (forceSave && render.current > 1) {
+      //   Alertbox("settings updated successfully", "success", 1000, "bottom-right");
+      // }
+    }).catch((err)=>{
+      Alertbox(`${err.message} `, "error", 3000, "bottom-right");
     });
   };
 
@@ -630,7 +640,7 @@ const MySetting = () => {
     if (
       data?.automatic_cancel_friend_requests_settings.length > 0
     ) {
-      console.log('data', data.automatic_cancel_friend_requests_settings[0].remove_after);
+      //console.log('data', data.automatic_cancel_friend_requests_settings[0].remove_after);
       setCnclFrndRqueInput(
         data.automatic_cancel_friend_requests_settings[0].remove_after
       );
@@ -740,7 +750,7 @@ const MySetting = () => {
         timeObj.filter((el) => el.value == dayBackAnlyFrndEngSelect2)[0]
       )
     ) {
-      console.log("here");
+      //console.log("here");
       setDayBackAnlyFrndEngSelect2(
         timeObj[
           timeObj.indexOf(
@@ -840,7 +850,7 @@ const MySetting = () => {
    * Set Delete Pending Requests Increment & Decrement..
    */
   const setValOfDeletePendingFrndIncDic = (type) => {
-    console.log("autoCnclFrndRque", autoCnclFrndRque);
+    //console.log("autoCnclFrndRque", autoCnclFrndRque);
     if (!autoCnclFrndRque) {
       Alertbox(
         "Please turn on the setting to make changes",

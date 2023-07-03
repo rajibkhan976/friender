@@ -10,7 +10,7 @@ import messageReducer from "../actions/MessageAction"
 
 export const store = configureStore({
   reducer: {
-    mySettings:mysettingReducer,
+    settings:mysettingReducer,
     auth:authReducer,
     facebook_data:fbReducer,
     friendlist:friendListReducer,

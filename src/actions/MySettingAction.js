@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, deletePendingFrndRequest } from "../services/SettingServices";
+import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, deletePendingFrndRequest, saveSettings } from "../services/SettingServices";
 
  const initialState = {
-     mySettings: [],
+     mySettings: null,
     isLoading: true,
   };
   
@@ -52,34 +52,36 @@ import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, de
   );
 
   export const getMySettings = createAsyncThunk(
-    "product/getMySettings",
-    async (props,{ rejectWithValue }) => {
-        try{
-          const res=await fetchProfileSetting({
-            // token: props.token,
-            fbUserId: props.fbUserId
-          })
-          return res.data[0];
-        }catch(err){
-          rejectWithValue(err.response.data)
-        }
+    "settings/getMySettings",
+    async (payload) => {   
+          const res=await fetchProfileSetting(payload)
+         // console.log("getsetting payload",res);
+          return res;
+       
     }
   );
 
 
 
   export const diviceHistoryList=createAsyncThunk(
-    "product/getDiviceHistoryList",
+    "settings/getDiviceHistoryList",
     async ()=>{
-      console.log("the consolelog below async" )
+      //console.log("the consolelog below async" )
       const res=await fetchDiviceHistory()
       return res;
     }
   )
+  export const saveAllSettings=createAsyncThunk(
+    "settings/saveAllSettings",
+    async (payload)=>{
+    const res =saveSettings(payload);
+    return res;
+    }
+  );
   
 
-  export const mysettingSlice=createSlice({
-    name:"mySetting",
+  export const settingSlice=createSlice({
+    name:"settings",
     initialState,
     reducers:{
         updateMysetting:(state,action)=>{
@@ -97,8 +99,12 @@ import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, de
         [getMySettings.rejected]: (state) => {
           state.isLoading = false;
         },
+        [saveAllSettings.fulfilled]:(state,action)=>{
+          state.mySettings=action.payload;
+          state.isLoading = false;
+        }
       },
 
   })
-  export const {updateMysetting}=mysettingSlice.actions;
-  export default mysettingSlice.reducer;
+  export const {updateMysetting}=settingSlice.actions;
+  export default settingSlice.reducer;

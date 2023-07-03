@@ -71,14 +71,14 @@ export const fetchProfileSetting = (data) => {
 };
 
 export const fetchDiviceHistory = () => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     axios
       .get(config.fetchDiviceHistoryUrl, { headers: headers })
       .then((result) => {
-        res(result.data);
+        resolve(result.data[0]);
       })
       .catch((error) => {
-        rej(error?.response?.data ? error.response.data : error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
       });
   });
 };
