@@ -13,7 +13,6 @@ const Keywords = (props) => {
    * Hook for maintaining Modify Keywords Input..
    */
   useEffect(() => {
-    console.log(reFrndngKeywords.length);
     if (!isModified) {
       if (reFrndngKeywords.length) {
         setModify(false);

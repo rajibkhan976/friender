@@ -590,7 +590,7 @@ const MySetting = () => {
     dispatch(updateMysetting(payload));
     saveSettings(payload).then(() => {
       if (render.current > 2 && !forceSave) {
-        Alertbox("setting saved successfully", "success", 1000, "bottom-right");
+        Alertbox("setting updated successfully", "success", 1000, "bottom-right");
       }
 
       if (forceSave && render.current > 1) {
@@ -934,7 +934,7 @@ const MySetting = () => {
 
 
   /**
-   * Handle Input-Bar of Cancel send friend reuquest(s) 
+   * Handle Input-Bar of Cancel sent friend reuquest(s) 
    */
   const deletePendingFrndInputHandle = (event) => {
     const { value } = event.target;
@@ -1407,7 +1407,7 @@ const MySetting = () => {
 
             {deletePendingFrndOpen && (
               <div className="setting-child others">
-                Cancel send friend request(s) after
+                Cancel sent friend request(s) after
                 {" "}
                 <TurnOnSettingsWarn enabledFeature={autoCnclFrndRque}>
                   <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
