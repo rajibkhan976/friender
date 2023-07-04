@@ -182,7 +182,7 @@ function PageHeader({ headerText = "" }) {
   const [whiteListable, setWhiteListable] = useState(false);
   const [blacklistable, setBlacklistable] = useState(false);
   const [isSyncing, setIsSyncing] = useState(true);
-  const [toolTip, setTooltip] = useState(localStorage.getItem("fr_tooltip") ? localStorage.getItem("fr_tooltip") : '');
+  const [toolTip, setTooltip] = useState('');
   const [whiteCountInUnfriend, setWhiteCountInUnfriend] = useState(null);
   const [messageTypeOpt, setMessageTypeOpt] = useState("dmf");
   const [runningUnfriend, setRunningUnfriend] = useState(false);
@@ -262,6 +262,7 @@ function PageHeader({ headerText = "" }) {
     setWhiteListable(searchForNotWhiteLst(selectedFriends));
     setBlacklistable(searchForNotBlackLst(selectedFriends));
   }, [selectedFriends]);
+
   useEffect(() => {
     const addAccess = accessOptions.map((accessObj) => {
       switch (accessObj.type) {
@@ -845,13 +846,18 @@ function PageHeader({ headerText = "" }) {
   }, [location]);
 
   useEffect(() => {
+
     let isSyncingActive = helper.getCookie("fr_isSyncing");
     //console.log("Cookie isSyncingActive = ", isSyncingActive);
     setIsSyncing(isSyncingActive);
 
     checkIsSyncing();
 
-    if (facebookData?.fb_data == null) {
+    if (
+      facebookData?.fb_data == null || 
+      facebookData?.fb_data == "" || 
+      localStorage.getItem("fr_default_fb") !== facebookData?.fb_data?.fb_user_id
+    ) {
       dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
         .unwrap()
         .then((response) => {
@@ -866,7 +872,6 @@ function PageHeader({ headerText = "" }) {
           }
         })
     } else {
-      console.log('yyyy');
       setTooltip(facebookData?.fb_data?.last_sync_at)
     }
 
@@ -902,6 +907,36 @@ function PageHeader({ headerText = "" }) {
   // useEffect(() => {
   //   console.log("isComponentVisible", isComponentVisible);
   // }, [isComponentVisible]);
+
+  const TooltipDate = () => {
+    console.log('toolTip:::', toolTip);
+    if (toolTip) {
+      if (toolTip?.trim() !== '' || !isNaN(toolTip)) {
+        // let differenceInDays = (new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24);
+        let differenceInDays = new Date().getDate() - new Date(toolTip).getDate()
+        console.log('differenceInDays:::', new Date().getDate() - new Date(toolTip).getDate());
+
+        if (differenceInDays === 1) {
+          return '1 Day ago'
+        }
+        else if (differenceInDays > 1) {
+          return `${differenceInDays} days ago`
+        }
+        else {
+          return 'Today'
+        }
+      } else {
+        return ''
+      }
+    } else {
+      return ''
+    }
+    // `Last sync : ${Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) > 1 ?
+    //   `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} days ago` :
+    //   Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) === 1 ?
+    //     `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} day ago` : 'Today'}` :
+    // ""
+  }
 
   return (
     <>
@@ -1011,15 +1046,7 @@ function PageHeader({ headerText = "" }) {
                 </span>
               </button>
               <span className="last-sync-status text-center">
-                {/* {console.log('::::::>>>>>', toolTip, Math.ceil(new Date().getDate(), '<<<<<<<', new Date(toolTip).getDate()))} */}
-                {
-                  (toolTip && toolTip !== "") ?
-                    `Last sync : ${Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) > 1 ?
-                      `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} days ago` :
-                      Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) === 1 ?
-                        `${Math.ceil(new Date().getDate() - new Date(toolTip).getDate())} day ago` : 'Today'}` :
-                    ""
-                }
+                <TooltipDate />
               </span>
             </div>
           )}
