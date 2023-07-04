@@ -15,9 +15,11 @@ import {
   NameCellRenderer,
   ReactionRenderer,
   SourceRenderer,
+  SourceRendererPending,
   StatusRenderer,
   UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
+import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 const BlackList = () => {
   //::::Friend List geting data from Redux::::
@@ -150,11 +152,27 @@ const BlackList = () => {
         ],
       },
     },
+    // {
+    //   field: "finalSource",
+    //   headerName: "Friends Source",
+    //   cellRenderer: SourceRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   },
+    // },
     {
-      field: "finalSource",
-      headerName: "Friends Source",
-      cellRenderer: SourceRenderer,
+      field: "groupName" ? "groupName" : "finalSource",
+      headerName: "Friends source",
       filter: "agTextColumnFilter",
+      headerTooltip: 'Friends source',
+      tooltipComponent: CustomHeaderTooltip,
+      cellRenderer: SourceRendererPending,
+      // lockPosition: "right",
+      minWidth: 185,
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,

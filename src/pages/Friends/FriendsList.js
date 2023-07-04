@@ -14,12 +14,14 @@ import {
   AgeRenderer,
   // EmptyRenderer,
   EngagementGetter,
-  UnlinkedNameCellWithOptionsRenderer
+  UnlinkedNameCellWithOptionsRenderer,
+  SourceRendererPending
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
 import { useEffect } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
+import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 
 
@@ -34,7 +36,7 @@ const FriendsList = () => {
     )
   );
   useEffect(() => {
-    friendsList && dispatch(countCurrentListsize(friendsList.length));
+    friendsList && dispatch(countCurrentListsize(friendsList.length)); 
   }, [dispatch, friendsList]);
 
   /**
@@ -155,11 +157,27 @@ const FriendsList = () => {
         ],
       },
     },
+    // {
+    //   field: "finalSource",
+    //   headerName: "Friends Source",
+    //   cellRenderer: SourceRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   },
+    // },
     {
-      field: "finalSource",
-      headerName: "Friends Source",
-      cellRenderer: SourceRenderer,
+      field: "groupName" ? "groupName" : "finalSource",
+      headerName: "Friends source",
       filter: "agTextColumnFilter",
+      headerTooltip: 'Friends source',
+      tooltipComponent: CustomHeaderTooltip,
+      cellRenderer: SourceRendererPending,
+      // lockPosition: "right",
+      minWidth: 185,
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,

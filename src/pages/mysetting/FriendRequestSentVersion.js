@@ -76,10 +76,13 @@ const FriendRequestSentVersion = () => {
           
           setFriendRequestHistory(newTimeSavedFun(fetchedSets));
         }
-        const totalTime = secToHeaderTotaltime(
-          fetchedSets?.reduce((acc,curr)=>acc+curr.time_saved,0)
-        );
-      
+        // const totalTime = secToHeaderTotaltime(
+        //   fetchedSets?.reduce((acc,curr)=>acc+curr.time_saved,0)
+        // );
+
+        const totalTime = Math.floor(fetchedSets?.reduce((acc, curr) => acc + curr.time_saved, 0) / (60 * 60));
+
+        {console.log('profileViewedP::::', fetchedSets)}
 
         let headerOptions = {
           totalRun: fetchedSets?.length,
@@ -812,23 +815,28 @@ const FriendRequestSentVersion = () => {
               </figure>
               <div className="individuals-informations">
               <h4
-                  title={
-                    headPoints && headPoints?.savedTime && headPoints.savedTime.fullTime&& headPoints.savedTime.fullTime
-                  }
+                  // title={
+                  //   headPoints && headPoints?.savedTime && headPoints.savedTime.fullTime&& headPoints.savedTime.fullTime
+                  // }
                   className={
                     !headPoints || headPoints.savedTime == null
                       ? "skeleton-loader"
                       : "time-saved-heading"
                   }
                 >
-                  {headPoints && headPoints?.savedTime && headPoints.savedTime.smallTime&& headPoints.savedTime.smallTime}
+                  {/* {headPoints && headPoints?.savedTime && headPoints.savedTime.smallTime&& headPoints.savedTime.smallTime} */}
+                  {headPoints && headPoints?.savedTime ? 
+                    headPoints?.savedTime+' hours' : 
+                    headPoints?.savedTime == null ? '' : 
+                    'Less than 1 hour'
+                  }
 
                   {/* {totalTmeSavedDisplay} */}
                 </h4>
                 <p>Total time saved</p>
-                <Tooltip
+                {/* <Tooltip
                   textContent={headPoints && headPoints?.savedTime && headPoints.savedTime.fullTime&& headPoints.savedTime.fullTime}  
-                /> 
+                />  */}
               </div>
             </div>
           </div>

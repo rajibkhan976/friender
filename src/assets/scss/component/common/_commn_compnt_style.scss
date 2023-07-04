@@ -620,8 +620,8 @@
 }
 
 .ag-theme-fr-table {
-  .ag-row:first-child,
-  .ag-row:nth-child(2) {
+  .ag-row[aria-rowindex="2"],
+  .ag-row[aria-rowindex="3"] {
     .tooltipFullName {
       &:before {
         bottom: auto;

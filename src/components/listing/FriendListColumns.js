@@ -535,6 +535,10 @@ export const RefriendCountRenderer = memo((params) => {
 export const SourceRendererPending = memo((params) => {
   const sourceFriend = params?.data?.groupName;
 
+  useEffect(()=>{
+     console.log("ddddddddddddd",params?.data?.groupUrl, sourceFriend);
+  },[])
+
   return (
     <>
       {params?.data?.groupUrl && sourceFriend ? (
@@ -547,15 +551,15 @@ export const SourceRendererPending = memo((params) => {
                 {sourceFriend === "sync" ? <FacebookSyncIcon /> : ""}
               </figure>
               <span className="friendSource tooltipFullName" data-text={sourceFriend}>
-                {/* {params?.data?.finalSource} : {sourceFriend} */}
+                
                <SourceGroupIcon/> <span >{sourceFriend}</span>
-               <Link
-                  to={params?.data?.groupUrl}
-                  className="ico-open-link"
-                  target="_blank"
-                >
-                  <OpenInNewTab />
-                  </Link>
+                <Link
+                    to={params?.data?.groupUrl}
+                    className="ico-open-link"
+                    target="_blank"
+                  >
+                    <OpenInNewTab />
+                </Link>
               </span>
             </>
           ) : (
@@ -566,20 +570,13 @@ export const SourceRendererPending = memo((params) => {
         <div className="friend-sync-source d-flex f-align-center">
           {params?.data?.finalSource ? (
             <>
-              <figure className="friend-source text-center">
-                {params?.data?.finalSource === "sync" ? <FacebookSyncIcon /> : ""}
-              </figure>
+              
               <span className="friendSource tooltipFullName" data-text={params?.data?.finalSource}>
-                {/* {params?.data?.finalSource} : {sourceFriend} */}
-                <SourceGroupIcon/> <span >
-                   {params?.data?.finalSource}</span> 
-                <Link
-                  to={params?.data?.groupUrl}
-                  className="ico-open-link"
-                  target="_blank"
-                >
-                  <OpenInNewTab />
-                  </Link>
+              
+                <span >
+                  {params?.data?.finalSource}
+                </span> 
+               
               </span>
             </>
           ) : (

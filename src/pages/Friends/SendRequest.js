@@ -69,7 +69,7 @@ const SendRequest = ({deleteAllInterval}) => {
   const friendsListinRef = [
     {
       field: "friendName",
-      headerName: "Name",
+      headerName: "Name", 
       headerCheckboxSelection: false,
       checkboxSelection: false,
       showDisabledCheckboxes: true,

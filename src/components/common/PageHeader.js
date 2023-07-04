@@ -1011,7 +1011,7 @@ function PageHeader({ headerText = "" }) {
                 </span>
               </button>
               <span className="last-sync-status text-center">
-                {console.log('::::::>>>>>', toolTip, Math.ceil(new Date().getDate(), '<<<<<<<', new Date(toolTip).getDate()))}
+                {/* {console.log('::::::>>>>>', toolTip, Math.ceil(new Date().getDate(), '<<<<<<<', new Date(toolTip).getDate()))} */}
                 {
                   (toolTip && toolTip !== "") ?
                     `Last sync : ${Math.ceil(new Date().getDate() - new Date(toolTip).getDate()) > 1 ?
