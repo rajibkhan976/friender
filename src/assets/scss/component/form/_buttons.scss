@@ -61,6 +61,7 @@
    
   // }
 
+
   &.delete-pending-frnd {
     @include theme-aware('background-color', 'red-delete');
     padding-inline: 8px;
@@ -86,7 +87,10 @@
       @include theme-aware('color', 'red-delete');
       @include theme-aware('border-color', 'red-delete');
       @include theme-aware('background-color', 'red-delete-active');
-      cursor: not-allowed;
+      cursor: auto;
+      &:hover{
+        @include theme-aware('background-color', 'red-delete-active');
+      }
       span {
         &:has(svg) {
           animation: rotate 3s infinite forwards;
@@ -202,10 +206,11 @@
     .btn.delete-pending-frnd{
       &:hover{
         filter: saturate(0.9);
-        //background-color: #dd6b74;
+        background-color: #dd6b74;
       }
+     
     }
-  }   
+  } 
   
 
 /*=============================================
