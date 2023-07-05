@@ -854,8 +854,8 @@ function PageHeader({ headerText = "" }) {
     checkIsSyncing();
 
     if (
-      facebookData?.fb_data == null || 
-      facebookData?.fb_data == "" || 
+      facebookData?.fb_data == null ||
+      facebookData?.fb_data == "" ||
       localStorage.getItem("fr_default_fb") !== facebookData?.fb_data?.fb_user_id
     ) {
       dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
@@ -954,13 +954,11 @@ function PageHeader({ headerText = "" }) {
               You have selected <b>{selectedFriends.length}</b> friend(s), and{" "}
               <b>
                 {" "}
-                {selectedFriends.reduce(
-                  (acc, curr) => acc + curr.whitelist_status,
-                  0
-                )}{" "}
+                {selectedFriends.length > 0
+                  ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, Number(0))
+                  : Number(0)}{" "}
               </b>{" "}
-              of them are currently on your whitelist. Are you sure you want to
-              remove all of these friend(s) from your list?
+              of them are currently on your whitelist. Are you sure you want to remove all of these friend(s) from your list? SOLVED
             </>
           }
           closeBtnTxt={"Yes, unfriend"}
