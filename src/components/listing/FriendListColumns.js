@@ -535,10 +535,6 @@ export const RefriendCountRenderer = memo((params) => {
 export const SourceRendererPending = memo((params) => {
   const sourceFriend = params?.data?.groupName;
 
-  useEffect(()=>{
-     console.log("ddddddddddddd",params?.data?.groupUrl, sourceFriend);
-  },[])
-
   return (
     <>
       {params?.data?.groupUrl && sourceFriend ? (

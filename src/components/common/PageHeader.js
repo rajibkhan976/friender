@@ -852,12 +852,14 @@ function PageHeader({ headerText = "" }) {
     setIsSyncing(isSyncingActive);
 
     checkIsSyncing();
-
+ 
     if (
       facebookData?.fb_data == null ||
       facebookData?.fb_data == "" ||
-      localStorage.getItem("fr_default_fb") !== facebookData?.fb_data?.fb_user_id
+      localStorage.getItem("fr_default_fb") !== facebookData?.fb_data?.fb_user_id ||
+      localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
     ) {
+      localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id)
       dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
         .unwrap()
         .then((response) => {
@@ -909,21 +911,29 @@ function PageHeader({ headerText = "" }) {
   // }, [isComponentVisible]);
 
   const TooltipDate = () => {
-    console.log('toolTip:::', toolTip);
+    function dateDiffInDays(a, b) {
+      const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+      // Discard the time and time-zone information.
+      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    
+      return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
     if (toolTip) {
       if (toolTip?.trim() !== '' || !isNaN(toolTip)) {
         // let differenceInDays = (new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24);
-        let differenceInDays = new Date().getDate() - new Date(toolTip).getDate()
-        console.log('differenceInDays:::', new Date().getDate() - new Date(toolTip).getDate());
+        let differenceInDays = Math.abs(dateDiffInDays(new Date(), new Date(toolTip)))
+        console.log('differenceInDays:::', differenceInDays);
 
         if (differenceInDays === 1) {
-          return '1 Day ago'
+          return 'Last sync: Successful 1 Day ago'
         }
         else if (differenceInDays > 1) {
-          return `${differenceInDays} days ago`
+          return `Last sync: Successful ${differenceInDays} days ago`
         }
         else {
-          return 'Today'
+          return 'Last sync: Successful Today'
         }
       } else {
         return ''
