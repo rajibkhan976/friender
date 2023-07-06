@@ -968,7 +968,7 @@ function PageHeader({ headerText = "" }) {
                   ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, Number(0))
                   : Number(0)}{" "}
               </b>{" "}
-              of them are currently on your whitelist. Are you sure you want to remove all of these friend(s) from your list? SOLVED
+              of them are currently on your whitelist. Are you sure you want to remove all of these friend(s) from your list?
             </>
           }
           closeBtnTxt={"Yes, unfriend"}
