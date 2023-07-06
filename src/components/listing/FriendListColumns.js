@@ -180,6 +180,8 @@ export const UnlinkedNameCellRenderer = memo((params) => {
 });
 
 export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
+  const [white, setWhite]=useState(params.data.whitelist_status);
+  const [black, setBlack]=useState(params.data.blacklist_status);
   const dispatch = useDispatch();
   return (
     <span className="name-image-renderer">
@@ -197,12 +199,13 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
         <OpenInNewTab />
       </a>
 
-      {params.data.whitelist_status ? (
+      {white? (
         //dis-whiting
         <span
           className="profile-whitelabeled"
           onClick={() => {
-            handlewhiteListUser(dispatch, params.data.friendFbId, 0);
+             handlewhiteListUser(dispatch, params.data.friendFbId, 0);
+            setWhite(false);
           }}
         >
           {<WhitelabelIcon color={"#FEC600"} />}
@@ -213,17 +216,19 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
           className="profile-whitelabeled"
           onClick={() => {
             handlewhiteListUser(dispatch, params.data.friendFbId, 1);
+            setWhite(true);
           }}
         >
           {<WhitelabelIcon color={"#767485"} />}
         </span>
       )}
-      {params.data.blacklist_status ? (
+      {black ? (
         //removing from  black list
         <span
           className="profile-whitelabeled"
           onClick={() => {
             handleBlockingUser(dispatch, params.data.friendFbId, 0);
+            setBlack(false);
           }}
         >
           {<BlockIcon color={"#FF6A77"} />}
@@ -234,6 +239,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
           className="profile-whitelabeled"
           onClick={() => {
             handleBlockingUser(dispatch, params.data.friendFbId, 1);
+            setBlack(true);
           }}
         >
           {<BlockIcon color={"#767485"} />}

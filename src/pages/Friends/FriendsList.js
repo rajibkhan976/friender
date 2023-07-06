@@ -6,22 +6,23 @@ import {
   HasConversationRenderer,
   MessageRenderer,
   ReactionRenderer,
-  NameCellRenderer,
+  //NameCellRenderer,
   // StatusRenderer,
   CommentRenderer,
   GenderRenderer,
   CreationRenderer,
   AgeRenderer,
   // EmptyRenderer,
-  EngagementGetter,
+  //EngagementGetter,
   UnlinkedNameCellWithOptionsRenderer,
   SourceRendererPending
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
+import { syncMainFriendList } from "../../actions/FriendsAction";
 
 
 
@@ -29,15 +30,29 @@ const FriendsList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const  [filterFrndList,setFilterFrndList] =useState([]);
+
+  // const friendsList = useSelector((state) =>
+  //   state.facebook_data.current_friend_list.filter(
+  //     (item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
+  //   )
+  // );
 
   const friendsList = useSelector((state) =>
-    state.facebook_data.current_friend_list.filter(
+    state.facebook_data.current_friend_list
+  );
+  
+
+  useEffect(() => {
+    const filteredData=friendsList.filter(
       (item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
     )
-  );
-  useEffect(() => {
-    friendsList && dispatch(countCurrentListsize(friendsList.length)); 
+    setFilterFrndList(filteredData)
+    friendsList && dispatch(countCurrentListsize(filteredData.length));
+    dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
+
+
 
   /**
    * Custom comparator for columns with dates
@@ -271,20 +286,20 @@ const FriendsList = () => {
 
   return (
     <div className="main-content-inner d-flex d-flex-column">
-      {friendsList?.length > 0 && (
+      {filterFrndList?.length > 0 && (
         <>
           {!loading && (
             <Listing
-              friendsData={friendsList}
+              friendsData={filterFrndList}
               friendsListingRef={friendsListinRef}
             />
           )}
         </>
       )}
-      {!friendsList.length && loading ? (
+      {!filterFrndList.length && loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        filterFrndList?.length <= 0 && <NoDataFound />
       )}
     </div>
   );
