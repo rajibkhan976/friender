@@ -46,6 +46,24 @@ const Listing = (props) => {
     var thisIsFirstColumn = displayedColumns[0] === params.column;
     return thisIsFirstColumn;
   };
+  const currentWhiteList=useSelector((state)=>state.facebook_data.current_whitelist);
+  const currentBlackList = useSelector((state) => state.facebook_data.current_blacklist);
+  // const [tempBlackList, setTempBlackList] = useState([]);
+  // const [tempWhiteList,setTempWhiteList]=useState([]);
+  
+  // useEffect(() => {
+  //   console.log("currentblockkk",currentBlackList)
+  //   setTempBlackList(currentBlackList);
+  // }, [currentBlackList]);
+  // useEffect(() => {
+  //   console.log("whitelist",currentWhiteList)
+  //   setTempWhiteList(currentWhiteList)
+  // },[currentWhiteList]);
+
+  // useEffect(() => {
+  //   console.log("tempblacklist::::::::::::::::",tempWhiteList);
+  // },[tempWhiteList])
+ 
   const pageNumbers = [
     {
       value: "15",
@@ -257,7 +275,24 @@ const Listing = (props) => {
     let selectedUsers = [];
 
     selectedNodes.forEach((node) => {
-      selectedUsers = [...selectedUsers, {...node.data,"rowId":node.id}];
+      // console.log("selected node",node);
+      // console.log("co=urr white list",currentWhiteList);
+      const newObj={...node.data}
+      if(Object.keys(currentWhiteList).length>0){
+        if(newObj.friendFbId in currentWhiteList){
+          newObj.whitelist_status=currentWhiteList[newObj.friendFbId];
+        }
+      
+      }
+      if(Object.keys(currentBlackList).length>0){
+        if(newObj.friendFbId in currentBlackList){
+          newObj.blacklist_status=currentBlackList[newObj.friendFbId];
+        
+        }
+      }
+        
+     // console.log("new obj",newObj);
+      selectedUsers = [...selectedUsers, {...newObj,"rowId":node.id}];
     });
 
     // friendFbId
@@ -270,32 +305,32 @@ const Listing = (props) => {
         JSON.stringify(selectedUsers)
       );
     }
-  }, []);
-  useEffect(()=>{
-   // console.log("data updated",props.friendsData)
-    setTimeout(()=>{
-      if(selectedFrnd?.length>0){
-        console.log("inside the row select");
-          const selectedRowIds = selectedFrnd.map((item) => item.rowId);
-        gridRef &&
-        gridRef.current &&
-        gridRef.current.api &&  
-        gridRef.current.api.forEachNodeAfterFilterAndSort((node) => {
-          // console.log("all node", node);
-            const rowId = node.id;
-            if (selectedRowIds.includes(rowId)) {
-              console.log("all nodeeeeeeeeeeeeeeeeeee", node);
-              // console.log("inside the row select includessssss");
-              // if(node.selected){
-              //  node.setSelected(false);
-              // }
-              node.setSelected(true);
-            }
-          });
-       }
-    },0)
+  }, [currentWhiteList,currentBlackList]);
 
-  },[props.friendsData])
+  //Below comment is needed for backup funcnality
+  // useEffect(()=>{
+  //  // console.log("data updated",props.friendsData)
+  //   setTimeout(()=>{
+  //     if(selectedFrnd?.length>0){
+  //       const selectedRowIdsSet = new Set(selectedFrnd.map(item => item.rowId));
+  //       gridRef &&
+  //       gridRef.current &&
+  //       gridRef.current.api &&  
+  //       gridRef.current.api.forEachNodeAfterFilterAndSort((node) => {
+  //         // console.log("all node", node);
+  //           const rowId = node.id;
+  //           if (selectedRowIdsSet.has(rowId)) {
+  //             console.log("all nodeeeeeeeeeeeeeeeeeee", node);
+  //             // console.log("inside the row select includessssss");
+  //             // if(node.selected){
+  //             //  node.setSelected(false);
+  //             // }
+  //             node.setSelected(true);
+  //           }
+  //         });
+  //      }
+  //   },0)
+
 
   return (
     <>

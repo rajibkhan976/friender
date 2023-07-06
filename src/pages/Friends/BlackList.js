@@ -19,6 +19,7 @@ import {
   StatusRenderer,
   UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
+import { syncMainFriendList } from "../../actions/FriendsAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 const BlackList = () => {
@@ -32,6 +33,7 @@ const BlackList = () => {
   );
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
+    dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
 
   /**

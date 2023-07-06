@@ -21,6 +21,7 @@ import {
   SourceRendererPending,
 } from "../../components/listing/FriendListColumns";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
+import { syncMainFriendList } from "../../actions/FriendsAction";
 
 const WhiteList = () => {
   //::::Friend List geting data from Redux::::
@@ -36,6 +37,8 @@ const WhiteList = () => {
     friendsList
       ? dispatch(countCurrentListsize(friendsList.length))
       : getFbUserIdCall();
+
+      dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
 
   /**
