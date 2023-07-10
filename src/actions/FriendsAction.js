@@ -205,15 +205,19 @@ const fbSlice = createSlice({
    
     },
     [whiteListFriend.pending]: (state, action) => {
-      // state.current_friend_list = updateWhiteList(
-      //   state.current_friend_list,
-      //   action.meta.arg.payload
-      // );
-      const whitelistObj={...state.current_whitelist}
-      action.meta.arg.payload.forEach((item)=>{
-        whitelistObj[item.friendFbId]=item.status;
-      });
-      state.current_whitelist=whitelistObj;
+      if(action.meta.arg?.bulkAction){
+         state.current_friend_list = updateWhiteList(
+        state.current_friend_list,
+        action.meta.arg.payload
+      );
+      }else{
+        const whitelistObj={...state.current_whitelist}
+        action.meta.arg.payload.forEach((item)=>{
+          whitelistObj[item.friendFbId]=item.status;
+        });
+        state.current_whitelist=whitelistObj;
+      }
+   
     },
     [whiteListFriend.fulfilled]: (state, action) => {
     
@@ -230,15 +234,18 @@ const fbSlice = createSlice({
       );
     },
     [BlockListFriend.pending]: (state, action) => {
-      // state.current_friend_list = updateBlockList(
-      //   state.current_friend_list,
-      //   action.meta.arg.payload
-      // );
-       const blacklistObj={...state.current_blacklist}
-       action.meta.arg.payload.forEach((item)=>{
-        blacklistObj[item.friendFbId]=item.status;
-       });
-       state.current_blacklist=blacklistObj;
+      if(action.meta.arg?.bulkAction){
+      state.current_friend_list = updateBlockList(
+        state.current_friend_list,
+        action.meta.arg.payload
+      );}else{
+        const blacklistObj={...state.current_blacklist}
+        action.meta.arg.payload.forEach((item)=>{
+         blacklistObj[item.friendFbId]=item.status;
+        });
+        state.current_blacklist=blacklistObj;
+      }
+      
     },
     [BlockListFriend.fulfilled]: (state, action) => {
     },
