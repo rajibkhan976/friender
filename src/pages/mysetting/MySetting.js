@@ -29,15 +29,14 @@ const MySetting = () => {
   const current_fb_id = localStorage.getItem("fr_default_fb");
   //const userToken = localStorage.getItem("fr_token");
   const render = useRef(0);
-  const loading = useSelector((state)=>state.settings.isLoading)
+  const loading = useSelector((state) => state.settings.isLoading)
   const dispatch = useDispatch();
   const [settingFetched, setSettingFetched] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   //states for setting switches
   const [dontSendFrindReqFrnd, setDontSendFrindReqFrnd] = useState(false);
   const [dontSendFrindReqIRejct, setDontSendFrindReqIRejct] = useState(false);
-  const [dontSendFrindReqThyRejct, setDontSendFrindReqThyRejct] =
-    useState(false);
+  const [dontSendFrindReqThyRejct, setDontSendFrindReqThyRejct] = useState(false);
   const [reFrndng, setReFrndng] = useState(false);
   const [autoCnclFrndRque, setAutoCnclFrndRque] = useState(null);
   const [sndMsgRcvFrndRqu, setSndMsgRcvFrndRqu] = useState(false);
@@ -47,12 +46,13 @@ const MySetting = () => {
   const [dayBackAnlyFrndEng, setDayBackAnlyFrndEng] = useState(false);
   //const [dayBackAnlyFrndEngNEW, setDayBackAnlyFrndEngNEW] = useState(false);
   const [dayBackAnlyFrndEngOpen, setDayBackAnlyFrndEngOpen] = useState(false);
- // const [deletePendingFrnd, setDeletePendingFrnd] = useState(false);
+  // const [deletePendingFrnd, setDeletePendingFrnd] = useState(false);
   const [deletePendingFrndOpen, setDeletePendingFrndOpen] = useState(false);
   const [deletePendingFrndValue, setDeletePendingFrndValue] = useState(1);
   const [deletePendingFrndModalOpen, setDeletePendingFrndModalOpen] = useState(false);
   const [deletePendingFrndStartFinding, setDeletePendingFrndStartFinding] = useState(false);
   const [deletePendingFrndError, setDeletePendingFrndError] = useState(false);
+  const [frndWillInactiveAfterDays, setFrndInactiveAfterDays] = useState(30);
 
 
   //period selctor obj
@@ -302,7 +302,7 @@ const MySetting = () => {
   useEffect(() => {
     //setLoading(true)
     console.log("before", render.current)
-   
+
     // console.log("after", render.current)
     if (render.current > 1) {
       if (settingFetched) {
@@ -352,6 +352,7 @@ const MySetting = () => {
     sndMsgAcptFrndRquInput,
     sndMsgDlcFrndRquInput,
     sndMsgExptFrndRquInput,
+    frndWillInactiveAfterDays,
   ]);
   useEffect(() => {
     const isDeleting = helper.getCookie("deleteAllPendingFR");
@@ -373,7 +374,7 @@ const MySetting = () => {
       syncSettings(res.data[0]);
       //console.log("setting res", res);
       setSettingFetched(true);
-     // setLoading(false);
+      // setLoading(false);
     }).catch((err) => {
 
       Alertbox(`${err.message} `, "error", 3000, "bottom-right");
@@ -413,10 +414,10 @@ const MySetting = () => {
     }
   }, [reFrndng]);
 
- // console.log('refrnding -- ', reFrndng);
+  // console.log('refrnding -- ', reFrndng);
 
   //massege template select end
-  const saveMySetting = (forceSave = false) => {
+  const saveMySetting = () => {
     const payload = {
       // token: userToken,
       dont_send_friend_requests_prople_ive_been_friends_with_before:
@@ -435,7 +436,9 @@ const MySetting = () => {
       automatic_cancel_friend_requests_settings: {
         remove_after: cnclFrndRqueInput
       },
+      friends_willbe_inactive_after: Number(frndWillInactiveAfterDays)
     };
+
     if (current_fb_id) {
       payload.facebookUserId = `${current_fb_id}`;
     }
@@ -465,6 +468,12 @@ const MySetting = () => {
       };
     }
     //refriending end
+
+    // friend will inactive after days..
+    if (Number(frndWillInactiveAfterDays) < 30) {
+      setFrndInactiveAfterDays(30);
+      payload.friends_willbe_inactive_after = 30;
+    }
 
     //cancel_sent_friend_requests_settings
     if (autoCnclFrndRque) {
@@ -604,7 +613,7 @@ const MySetting = () => {
       // if (forceSave && render.current > 1) {
       //   Alertbox("settings updated successfully", "success", 1000, "bottom-right");
       // }
-    }).catch((err)=>{
+    }).catch((err) => {
       Alertbox(`${err.message} `, "error", 3000, "bottom-right");
     });
   };
@@ -732,6 +741,9 @@ const MySetting = () => {
         data.day_bak_to_analyse_friend_engagement_settings[0].to_time
       );
     }
+
+    // Friends Will Inactive After Days Sync Data..
+    setFrndInactiveAfterDays(data.friends_willbe_inactive_after);
   };
 
   //if you want to use the common debounce function jus use it here i have used wth useCallback
@@ -763,28 +775,43 @@ const MySetting = () => {
   };
 
   /**
-   * ======== Handle The Select Drop Down for Interval for auto sync friend list ========
-   * @param {object} event 
-   * @param {string} variant 
+   * ===== Handle Value Will Inactive After Days =====
+   * @param {*} event 
    */
-  const dayBackAnlyFrndEngDropSelectHandle = (event, variant) => {
-    const { value } = event.target;
+  const handleValWillInactiveAfterDays = (event) => {
+    let { value } = event.target;
+    const parsedValue = parseInt(value);
+    let inputValue = value;
 
-    if (!dayBackAnlyFrndEng) {
-      Alertbox(
-        "Please turn on the setting to make changes",
-        "warning",
-        1000,
-        "bottom-right"
-      );
+    if (parsedValue === 0 || parsedValue <= -1) {
+      inputValue = 30;
+    } else if (parsedValue > 365) {
+      inputValue = 365;
+    } else if (value.includes('.')) {
+      inputValue = Math.floor(parsedValue);
     }
 
-    if (dayBackAnlyFrndEng) {
-      if (variant === "select1") {
-        setDayBackAnlyFrndEngSelect1(value);
+    setFrndInactiveAfterDays(inputValue);
+  };
+
+
+  /**
+   * ====== Set the Value of Friend Will Inactive After Days ======
+   */
+  const setValOfFrndWillInactiveAfterDays = (type) => {
+    if (type === "INCREMENT") {
+      if (Number(frndWillInactiveAfterDays) >= 365) {
+        setFrndInactiveAfterDays(365);
+      } else {
+        setFrndInactiveAfterDays(Number(frndWillInactiveAfterDays) + 1);
       }
-      if (variant === "select2") {
-        setDayBackAnlyFrndEngSelect2(value);
+    }
+
+    if (type === "DECREMENT") {
+      if (Number(frndWillInactiveAfterDays) <= 30) {
+        setFrndInactiveAfterDays(30);
+      } else {
+        setFrndInactiveAfterDays(Number(frndWillInactiveAfterDays) - 1);
       }
     }
   };
@@ -1075,23 +1102,6 @@ const MySetting = () => {
   };
 
   /**
-   * Delete Pending Request with Days Handler Function..
-   */
-  const deletePendingRequestWithDaysHandle = (event) => {
-    if (autoCnclFrndRque) {
-      setDeletePendingFrndError(false);
-      console.log('deletePendingFrndValue', deletePendingFrndValue);
-
-      if (!deletePendingFrndValue) {
-        setDeletePendingFrndValue(1)
-        setCnclFrndRqueInput(1)
-      } else {
-        setCnclFrndRqueInput(deletePendingFrndValue)
-      }
-    }
-  };
-
-  /**
    * ===== Save Re-Friending Keywords ====
    * @param {*} event 
    */
@@ -1190,8 +1200,8 @@ const MySetting = () => {
               <span>Friends settings</span>
             </p>
 
-            <div className="setting no-click">
-              <Modal
+            <div className="setting">
+              {/* <Modal
                 headerText={"Unfriend"}
                 bodyText={
                   "8 Friends selected. but 3 Whitelist friend are selected aswell. Are you sure you want to unfriend your friends."
@@ -1202,10 +1212,9 @@ const MySetting = () => {
                   //console.log("Modal opened");
                 }}
                 btnText={"Yes, Unfriend"}
-              />
-              <div className="setting-child muted-text">
+              /> */}
+              <div className="setting-child">
                 <Switch
-                  upComing
                   checked={dontSendFrindReqFrnd}
                   handleChange={() => {
                     setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
@@ -1213,8 +1222,6 @@ const MySetting = () => {
                 />
                 Don’t send friend request(s) to people I’ve been friends with before.
               </div>
-
-              <span className="warn-badget">Coming soon</span>
             </div>
 
             <div className="setting no-click">
@@ -1226,16 +1233,15 @@ const MySetting = () => {
                     setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
                   }}
                 />{" "}
-                Don’t send friend request(s) to people who sent me friend request(s) and I rejected.
+                Don’t send friend request(s) to people who sent me friend request and I rejected.
               </div>
 
               <span className="warn-badget">Coming soon</span>
             </div>
 
-            <div className="setting no-click">
-              <div className="setting-child muted-text">
+            <div className="setting">
+              <div className="setting-child">
                 <Switch
-                  upComing
                   checked={dontSendFrindReqThyRejct}
                   handleChange={() => {
                     setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
@@ -1243,8 +1249,6 @@ const MySetting = () => {
                 />
                 Don’t send friend request(s) to people I sent friend request(s) and they rejected.
               </div>
-
-              <span className="warn-badget">Coming soon</span>
             </div>
 
 
@@ -1449,33 +1453,31 @@ const MySetting = () => {
             )}
 
 
-            <div className="setting  setting-paper no-click">
-              <div className="setting-child first muted-text">
-                <Switch
-                  upComing
-                // checked={autoCnclFrndRque}
-                // handleChange={() => {
-                //   setAutoCnclFrndRque(!autoCnclFrndRque);
-                // }}
+            <div className="setting setting-paper">
+              Friends will be considered as inactive after {" "}
+              <div className={"input-num"}>
+                <input
+                  type="number"
+                  className="setting-input"
+                  value={frndWillInactiveAfterDays}
+                  onChange={handleValWillInactiveAfterDays}
                 />
-                Friend inactivity period
-              </div>
-              {/* {autoCnclFrndRque && (
-                <div className="setting-child others">
-                  Remove sent friend request after &nbsp;{" "}
-                  <input
-                    type="number"
-                    className="setting-input"
-                    value={cnclFrndRqueInput}
-                    onChange={(e) => {
-                      setCnclFrndRqueInput(e.target.value);
-                    }}
-                  />
-                  &nbsp;Time(s).
-                </div>
-              )} */}
 
-              <span className="warn-badget">Coming soon</span>
+                <div className="input-arrows">
+                  <button className="btn inline-btn btn-transparent"
+                    onClick={() => setValOfFrndWillInactiveAfterDays("INCREMENT")}
+                  >
+                    <ChevronUpArrowIcon size={15} />
+                  </button>
+
+                  <button className="btn inline-btn btn-transparent"
+                    onClick={() => setValOfFrndWillInactiveAfterDays("DECREMENT")}
+                  >
+                    <ChevronDownArrowIcon size={15} />
+                  </button>
+                </div>
+              </div>
+              {" "} day(s)
             </div>
 
             <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
