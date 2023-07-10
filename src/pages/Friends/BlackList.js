@@ -7,6 +7,8 @@ import NoDataFound from "../../components/common/NoDataFound";
 import {
   AgeRenderer,
   CommentRenderer,
+  CountryRenderer,
+  CountryTierRenderer,
   CreationRenderer,
   EngagementGetter,
   GenderRenderer,
@@ -14,6 +16,7 @@ import {
   MessageRenderer,
   NameCellRenderer,
   ReactionRenderer,
+  RecentEngagementRenderer,
   SourceRenderer,
   SourceRendererPending,
   StatusRenderer,
@@ -95,6 +98,19 @@ const BlackList = () => {
       },
     },
     {
+      field: "last_engagement_date" ? "last_engagement_date" : "created_at",
+      headerName: "Recent engagement", 
+      cellRenderer: RecentEngagementRenderer,                                           
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      }
+    }, 
+    {
       field: "created_at",
       headerName: "Age",
       headerTooltip:"Number of days back friends synced or unfriended using friender",
@@ -112,6 +128,7 @@ const BlackList = () => {
     {
       field: "country",
       headerName: "Country Name",
+      cellRenderer: CountryRenderer, 
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -124,6 +141,7 @@ const BlackList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
+      cellRenderer : CountryTierRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

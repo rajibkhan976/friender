@@ -371,6 +371,7 @@ function PageHeader({ headerText = "" }) {
           searchHeader: true,
           listingLengthWell: true,
           quickAction: false,
+          syncManual: true
         });
         break;
       case "unfriended-friends":
@@ -380,6 +381,7 @@ function PageHeader({ headerText = "" }) {
           searchHeader: true,
           listingLengthWell: true,
           quickAction: false,
+          syncManual: true
         });
         break;
       case "whitelisted-friends":
@@ -389,6 +391,7 @@ function PageHeader({ headerText = "" }) {
           searchHeader: true,
           quickAction: true,
           listingLengthWell: true,
+          syncManual: true
         });
         break;
       case "blacklisted-friends":
@@ -398,6 +401,7 @@ function PageHeader({ headerText = "" }) {
           quickAction: true,
           searchHeader: true,
           listingLengthWell: true,
+          syncManual: true
         });
         break;
       case "message":
@@ -410,7 +414,7 @@ function PageHeader({ headerText = "" }) {
         setHeaderOptions({
           ...headerOptions,
           viewSelect: false,
-          syncManual: false,
+          syncManual: true,
           searchHeader: true,
           sortHeader: true,
           filterHeader: true,
@@ -424,7 +428,7 @@ function PageHeader({ headerText = "" }) {
         setHeaderOptions({
           ...headerOptions,
           viewSelect: false,
-          syncManual: false,
+          syncManual: true,
           searchHeader: true,
           sortHeader: true,
           filterHeader: true,

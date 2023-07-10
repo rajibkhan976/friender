@@ -10,15 +10,19 @@
 
     .page-item {
         .page-link {
-            width: 30px;
-            aspect-ratio: 1 / 1;
-            padding-inline: 2px;
-            border-radius: 100%;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #8998B8;
+            
+                min-width: 30px;
+                height: 30px;
+                padding-inline: 2px;
+                border-radius: 50px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                color: #8998B8;
+                margin: 0 5px;
+                padding: 0 10px;
+            
 
             &:hover {
                 @include theme-aware('background-color', 'dark-light-border');

@@ -19,6 +19,9 @@ import {
   EngagementGetter,
   UnlinkedNameCellWithOptionsRenderer,
   SourceRendererPending,
+  CountryRenderer,
+  CountryTierRenderer,
+  RecentEngagementRenderer,
 } from "../../components/listing/FriendListColumns";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
@@ -118,6 +121,7 @@ const WhiteList = () => {
     {
       field: "country",
       headerName: "Country Name",
+      cellRenderer: CountryRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -130,6 +134,20 @@ const WhiteList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
+      cellRenderer : CountryTierRenderer,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      }
+    },
+    {
+      field: "last_engagement_date" ? "last_engagement_date" : "created_at",
+      headerName: "Recent engagement", 
+      cellRenderer: RecentEngagementRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

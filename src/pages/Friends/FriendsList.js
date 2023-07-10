@@ -15,7 +15,10 @@ import {
   // EmptyRenderer,
   //EngagementGetter,
   UnlinkedNameCellWithOptionsRenderer,
-  SourceRendererPending
+  SourceRendererPending,
+  CountryRenderer,
+  RecentEngagementRenderer,
+  CountryTierRenderer
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -130,6 +133,7 @@ const FriendsList = () => {
     {
       field: "country",
       headerName: "Country Name",
+      cellRenderer: CountryRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -142,6 +146,20 @@ const FriendsList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
+      filter: "agTextColumnFilter", 
+      cellRenderer : CountryTierRenderer,
+      filterParams: {
+        buttons: ["apply", "reset"],
+        debounceMs: 200,
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      }
+    },
+    {
+      field: "last_engagement_date" ? "last_engagement_date" : "created_at",
+      headerName: "Recent engagement", 
+      cellRenderer: RecentEngagementRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -263,6 +281,7 @@ const FriendsList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
     },
+ 
     // {
     //   field: "engagement",
     //   headerName: "Eng",

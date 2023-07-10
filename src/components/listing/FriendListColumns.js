@@ -32,7 +32,7 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
       friendFbId: friendId,
       status: status,
     },
-  ];
+  ]; 
   dispatch(whiteListFriend({ payload: payload }))
     .unwrap()
     .then((res) => {
@@ -303,9 +303,39 @@ export const AgeRenderer = (params) => {
   return age;
 };
 
+export const RecentEngagementRenderer = memo((params) => {
+
+  const statusSync = params.data.last_engagement_date ?
+                     params.data.last_engagement_date.toLowerCase() : params.data.created_at.toLowerCase();
+  let currentUTC = helper.curretUTCTime();
+  let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
+  let days =  Math.floor(diffTime / (24 * 60 * 60 * 1000));
+  let cutoff = 10; //here Friends will be considered as inactive after
+  let date =  new Date(statusSync);
+  let currentYear = date.getFullYear() ;
+  let currentMonth = date.getMonth() + 1 ; // 0 - 11
+  let currentDay = date.getDate() ; 
+  if (currentMonth < 10){ 
+    currentMonth = "0" + currentMonth
+  }
+  let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
+  console.log("datedatedate", currentMonth);
+
+  return (
+    <span className={` d-flex f-align-center`}>
+      <span className="tooltipFullName small" data-text={"Last engaged on " + dateFormat}>
+        <span className={days > cutoff ? "activeEngaged" : "activeEngaged notAct"}>
+          <span className="dot"></span> {days} day(s)
+        </span>
+      </span> 
+    </span>
+  );
+});
+
+
 export const GenderRenderer = memo((params) => {
   let genderFriend = "N/A";
-  if (params.value?.length > 0) {
+  if (params.value?.length > 0 && params.value != "N/A") {
     genderFriend = params.value.toLowerCase();
   }
 
@@ -330,7 +360,7 @@ export const GenderRenderer = memo((params) => {
       ) : (
         ""
       )}
-      <span>{genderFriend}</span>
+      <span className={genderFriend === "N/A" ? "muted-text": ""}>{genderFriend}</span>
     </div>
   );
 });
@@ -393,11 +423,11 @@ export const SourceRenderer = memo((params) => {
               </figure>
               <span>
                 {/* {params?.data?.finalSource} : {sourceFriend} */}
-                {sourceFriend}
+                {sourceFriend} 
               </span>
             </>
           ) : (
-            "N/A"
+            <span className="no-keywords muted-text">N/A</span>
           )}
         </Link>
       ) : (
@@ -413,7 +443,7 @@ export const SourceRenderer = memo((params) => {
               </span>
             </>
           ) : (
-            "N/A"
+            <span className="no-keywords muted-text">N/A</span>
           )}
         </div>
       )}
@@ -440,7 +470,7 @@ export const StatusRenderer = memo((params) => {
 
 export const EmailRenderer = memo((params) => {
   let emailSync = "N/A";
-  if (params.value) {
+  if (params.value && params.value != "N/A") {
     emailSync = params.value.toLowerCase();
   }
 
@@ -449,7 +479,7 @@ export const EmailRenderer = memo((params) => {
       <figure className={`sync-ico text-center`}>
         <EnvelopeIcon /> 
       </figure>
-      <span className={`sync-txt`}>{emailSync}</span>
+      <span className={emailSync === "N/A" ?`muted-text`: `sync-txt`}>{emailSync}</span>
     </span>
   );
 });
@@ -466,7 +496,7 @@ export const RequestRenderer = memo((params) => {
         reqSync === 1 ? "green" : "yellow"
       }`}
     >
-      <span className={`sync-txt`}>{reqSync}</span>
+      <span className={reqSync === "N/A" ?`muted-text`: `sync-txt`}>{reqSync}</span>
     </span>
   );
 });
@@ -482,7 +512,7 @@ export const KeywordRenderer = memo((params) => {
   
   return (
     <>
-      {keywords && keywords?.length > 0 ? 
+      {keywords && matchedKeyword?.length > 0 ? 
       <span
         className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
       >
@@ -508,27 +538,31 @@ export const KeywordRenderer = memo((params) => {
   </>
   );
 });
+
 export const CountryRenderer = memo((params) => {
   let countryName = "N/A";
-  if (params.value) {
+  if (params.value && params.value != "N/A") {
     countryName = params.value.toLowerCase();
   }
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className={`capText sync-txt`}>{countryName}</span>
+      <span className={countryName === "N/A" ? `muted-text`: `capText sync-txt`}>{countryName} </span>
     </span>
   );
-});
+}); 
+
+
+
 export const CountryTierRenderer = memo((params) => {
   let countryTierName = "N/A";
-  if (params.value) {
+  if (params.value && params.value != "N/A" ) {
     countryTierName = params.value.toLowerCase();
   }
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className={`sync-txt`}>{countryTierName}</span>
+      <span className={countryTierName === "N/A" ? "muted-text" : "capText sync-txt"}>{countryTierName}</span>
     </span>
   );
 });
@@ -556,9 +590,9 @@ export const SourceRendererPending = memo((params) => {
               <figure className="friend-source text-center">
                 {sourceFriend === "sync" ? <FacebookSyncIcon /> : ""}
               </figure>
-              <span className="friendSource tooltipFullName" data-text={sourceFriend}>
+              <span className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}>
                 
-               <SourceGroupIcon/> <span >{sourceFriend}</span>
+               <SourceGroupIcon/> <span >{sourceFriend.length > 12 ? sourceFriend.substring(0, 12) + "..." : sourceFriend }</span>
                 <Link
                     to={params?.data?.groupUrl}
                     className="ico-open-link"
@@ -569,7 +603,7 @@ export const SourceRendererPending = memo((params) => {
               </span>
             </>
           ) : (
-            "N/A"
+            <span className="no-keywords muted-text">N/A</span>
           )}
         </div>
       ) : (
@@ -577,16 +611,16 @@ export const SourceRendererPending = memo((params) => {
           {params?.data?.finalSource ? (
             <>
               
-              <span className="friendSource tooltipFullName" data-text={params?.data?.finalSource}>
+              <span className={params?.data?.finalSource.length > 12 ? "friendSource tooltipFullName" :"friendSource"} data-text={params?.data?.finalSource}>
               
                 <span >
-                  {params?.data?.finalSource}
+                  {params?.data?.finalSource.length > 12 ? params?.data?.finalSource.substring(0, 12) + "..." : params?.data?.finalSource}
                 </span> 
                
               </span>
             </>
           ) : (
-            "N/A"
+            <span className="no-keywords muted-text">N/A</span>
           )}
         </div>
       )}
