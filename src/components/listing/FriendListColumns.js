@@ -466,13 +466,12 @@ export const RequestRenderer = memo((params) => {
 });
 export const KeywordRenderer = memo((params) => {
   const keywords =
-    params.value?.length > 0 && params.value[0].selected_keywords?.length > 0
-      ? params.value[0].selected_keywords
-      : null;
+  params?.data.matchedKeyword ? 
+      params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : null
     
-  const [ matchedKeyword, setMatchedKeyword ] = 
-    useState(params?.data.matchedKeyword ? 
-      params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : [])
+  // const [ matchedKeyword, setMatchedKeyword ] = 
+  //   useState(params?.data.matchedKeyword ? 
+  //     params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : null)
   
   return (
     <>
@@ -480,22 +479,22 @@ export const KeywordRenderer = memo((params) => {
       <span
         className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
       >
-          {Array.isArray(matchedKeyword)
+          {Array.isArray(keywords)
               ? <span className={`sync-txt tags positive-tags`}>
-                  {matchedKeyword[0]}
+                  {keywords[0]}
                 </span>
               : 0}
-          {Array.isArray(matchedKeyword) && matchedKeyword.length > 1 ? 
+          {Array.isArray(keywords) && keywords.length > 1 ? 
           <span 
             className="syn-tag-count" 
             onClick={() => {
               params.setKeyWords({
                 keywords: keywords,
-                matchedKeyword: matchedKeyword,
+                matchedKeyword: keywords,
               });
               params.setModalOpen(true);
             }}
-          >+{matchedKeyword.length - 1}</span> 
+          >+{keywords.length - 1}</span> 
           : ''}
       </span> : <span className="no-keywords muted-text">N/A</span>
     }

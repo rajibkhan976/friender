@@ -82,11 +82,16 @@ const FriendRequestSentVersion = () => {
 
         const totalTime = Math.floor(fetchedSets?.reduce((acc, curr) => acc + curr.time_saved, 0) / (60 * 60));
 
-        {console.log('profileViewedP::::', fetchedSets)}
+       // {console.log('profileViewedP::::', fetchedSets)}
 
         let headerOptions = {
           totalRun: fetchedSets?.length,
-          profileViewed:fetchedSets?.reduce((acc,curr) => acc+curr.profile_viewed,0),
+          profileViewed:  fetchedSets?.reduce((acc, curr) => {
+            if (typeof curr.profile_viewed === 'number') {
+              return acc + curr.profile_viewed;
+            }
+            return acc;
+          }, 0),
           requestSent: fetchedSets?.reduce((acc,curr) => acc+curr.friend_request_send,0),
             
           savedTime: totalTime,
