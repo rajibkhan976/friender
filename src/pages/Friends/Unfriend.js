@@ -16,6 +16,8 @@ import {
   EngagementGetter,
   UnlinkedNameCellRenderer,
   SourceRendererPending,
+  CountryTierRenderer,
+  CountryRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -117,6 +119,7 @@ const FriendsList = () => {
       field: "country",
       headerName: "Country Name",
       filter: "agTextColumnFilter",
+      cellRenderer : CountryRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -129,6 +132,7 @@ const FriendsList = () => {
       field: "tier",
       headerName: "Country Tier",
       filter: "agTextColumnFilter",
+      cellRenderer : CountryTierRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,

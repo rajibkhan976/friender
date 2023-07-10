@@ -19,7 +19,9 @@ import {
   AgeRenderer,
   GeneralNameCellRenderer,
   UnlinkedNameCellRenderer,
-  SourceRendererPending
+  SourceRendererPending,
+  CountryRenderer,
+  CountryTierRenderer
 } from "../../components/listing/FriendListColumns";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
@@ -89,6 +91,7 @@ const LostFriends = () => {
     {
       field: "country",
       headerName: "Country Name",
+      cellRenderer: CountryRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -101,6 +104,7 @@ const LostFriends = () => {
     {
       field: "tier",
       headerName: "Country Tier",
+      cellRenderer : CountryTierRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

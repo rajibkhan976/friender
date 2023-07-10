@@ -75,7 +75,7 @@ export const fetchDiviceHistory = () => {
     axios
       .get(config.fetchDiviceHistoryUrl, { headers: headers })
       .then((result) => {
-        resolve(result.data[0]);
+        resolve(result?.data);
       })
       .catch((error) => {
         reject(error?.response?.data ? error.response.data : error.message);
