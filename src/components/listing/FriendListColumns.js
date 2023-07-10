@@ -23,12 +23,12 @@ import { BlockListFriend, whiteListFriend } from "../../actions/FriendsAction";
 import helper from "../../helpers/helper";
 //import { removeSelectedFriends } from "../../actions/FriendListAction";
 import { Link } from "react-router-dom";
-let savedFbUId = localStorage.getItem("fr_default_fb");
+//let savedFbUId = localStorage.getItem("fr_default_fb");
 
 export const handlewhiteListUser = (dispatch, friendId, status) => {
   const payload = [
     {
-      fbUserId: savedFbUId,
+      fbUserId: localStorage.getItem("fr_default_fb"),
       friendFbId: friendId,
       status: status,
     },
@@ -54,7 +54,7 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
 export const handleBlockingUser = (dispatch, friendId, status) => {
   const payload = [
     {
-      fbUserId: savedFbUId,
+      fbUserId: localStorage.getItem("fr_default_fb"),
       friendFbId: friendId,
       status: status,
     },

@@ -478,7 +478,7 @@ function PageHeader({ headerText = "" }) {
           status: 1,
         };
       });
-      dispatch(whiteListFriend({ payload: payload }))
+      dispatch(whiteListFriend({ payload: payload,bulkAction:true }))
         .unwrap()
         .then((res) => {
           selectedFriends &&
@@ -511,7 +511,7 @@ function PageHeader({ headerText = "" }) {
         };
       });
 
-      dispatch(BlockListFriend({ payload: payload }))
+      dispatch(BlockListFriend({ payload: payload ,bulkAction:true}))
         .unwrap()
         .then((res) => {
           selectedFriends &&
