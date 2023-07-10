@@ -1175,7 +1175,7 @@ const MySetting = () => {
             modalType="DELETE"
             headerText={"Delete"}
             bodyText={
-              "Are you sure you want to delete all of your pending friend request(s)."
+              "Are you sure you want to delete all of your pending friend request(s)?"
             }
             open={deletePendingFrndModalOpen}
             setOpen={setDeletePendingFrndModalOpen}
