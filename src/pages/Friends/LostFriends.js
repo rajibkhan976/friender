@@ -21,7 +21,8 @@ import {
   UnlinkedNameCellRenderer,
   SourceRendererPending,
   CountryRenderer,
-  CountryTierRenderer
+  CountryTierRenderer,
+  KeywordRenderer
 } from "../../components/listing/FriendListColumns";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
@@ -29,6 +30,8 @@ const LostFriends = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const [keyWords, setKeyWords] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list.filter(
       (item) => item.friendStatus === "Lost"
@@ -160,6 +163,40 @@ const LostFriends = () => {
     //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
     //   },
     // },
+    {
+      field: "keywords",
+      headerName: "Keyword",
+      // filter: "agTextColumnFilter",
+      cellRendererParams: {
+        setKeyWords,
+        setModalOpen,
+      },
+      sortable: true,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+        if (valueA == valueB) return 0;
+        return (valueA > valueB) ? 1 : -1;
+    } ,
+      cellRenderer: KeywordRenderer,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        filterOptions: ["contains"], // Set filter options to match any part of the text
+        valueGetter: params => {
+          return params?.data?.matchedKeyword
+        },
+        textCustomComparator: function (filter, value, filterText) {
+          const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+          if (filter === "equals") {
+            // Exact match
+            return matchedKeywords.includes(filterText);
+          } else {
+            // Partial match
+            return matchedKeywords.some(keyword => keyword.includes(filterText));
+          }
+        },
+      },
+    },
     {
       field: "groupName" ? "groupName" : "finalSource",
       headerName: "Friends source",

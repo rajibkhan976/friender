@@ -14,10 +14,11 @@ import {
   GeneralNameCellRenderer,
   UnlinkedNameCellRenderer,
   SourceRendererPending,
+  KeywordRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
@@ -30,6 +31,8 @@ const DeactivatedFriends = () => {
       (item) => item.friendStatus === "Deactivate"
     )
   );
+  const [keyWords, setKeyWords] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
   }, [dispatch, friendsList]);
@@ -78,6 +81,40 @@ const DeactivatedFriends = () => {
         suppressMiniFilter: true,
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      },
+    },
+    {
+      field: "keywords",
+      headerName: "Keyword",
+      // filter: "agTextColumnFilter",
+      cellRendererParams: {
+        setKeyWords,
+        setModalOpen,
+      },
+      sortable: true,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+        if (valueA == valueB) return 0;
+        return (valueA > valueB) ? 1 : -1;
+    } ,
+      cellRenderer: KeywordRenderer,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        filterOptions: ["contains"], // Set filter options to match any part of the text
+        valueGetter: params => {
+          return params?.data?.matchedKeyword
+        },
+        textCustomComparator: function (filter, value, filterText) {
+          const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+          if (filter === "equals") {
+            // Exact match
+            return matchedKeywords.includes(filterText);
+          } else {
+            // Partial match
+            return matchedKeywords.some(keyword => keyword.includes(filterText));
+          }
+        },
       },
     },
     {

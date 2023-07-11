@@ -24,6 +24,7 @@ import helper from "../../helpers/helper";
 //import { removeSelectedFriends } from "../../actions/FriendListAction";
 import { Link } from "react-router-dom";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
+import { getMySettings } from "../../actions/MySettingAction";
 
 export const handlewhiteListUser = (dispatch, friendId, status) => {
   const payload = [
@@ -304,7 +305,8 @@ export const AgeRenderer = (params) => {
 };
 
 export const RecentEngagementRenderer = memo((params) => {
-
+  const dispatch = useDispatch();
+  const [cutOffDays, setCutOffDays] = useState(null)
   const statusSync = params.data.last_engagement_date ?
                      params.data.last_engagement_date.toLowerCase() : params.data.created_at.toLowerCase();
   let currentUTC = helper.curretUTCTime();
@@ -319,14 +321,22 @@ export const RecentEngagementRenderer = memo((params) => {
     currentMonth = "0" + currentMonth
   }
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
-  console.log("datedatedate", currentMonth);
+
+  useEffect(() => {
+    dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
+      if(res) {
+        setCutOffDays(res?.friend_inactivity_period ? res?.friend_inactivity_period : 0)
+      }
+    })
+  }, [])
 
   return (
     <span className={` d-flex f-align-center`}>
       <span className="tooltipFullName small" data-text={"Last engaged on " + dateFormat}>
+        {cutOffDays !== null ?
         <span className={days > cutoff ? "activeEngaged" : "activeEngaged notAct"}>
           <span className="dot"></span> {days} day(s)
-        </span>
+        </span> : ''}
       </span> 
     </span>
   );
@@ -505,19 +515,20 @@ export const KeywordRenderer = memo((params) => {
   params?.data.matchedKeyword ? 
       params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : null
     
-  // const [ matchedKeyword, setMatchedKeyword ] = 
-  //   useState(params?.data.matchedKeyword ? 
-  //     params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : null)
-  
+  const [ matchedKeyword, setMatchedKeyword ] = 
+    useState(params?.data.matchedKeyword ? 
+      params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : [])
+
+      //className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}
   return (
     <>
       {keywords && matchedKeyword?.length > 0 ? 
       <span
         className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
       >
-          {Array.isArray(keywords)
-              ? <span className={`sync-txt tags positive-tags`}>
-                  {keywords[0]}
+          {Array.isArray(matchedKeyword)
+              ? <span className={matchedKeyword[0].length > 12? "tooltipFullName sync-txt tags positive-tags" : "sync-txt tags positive-tags"}  data-text={matchedKeyword[0].length > 12 && matchedKeyword[0]}>
+                  {matchedKeyword[0].length > 12 ? matchedKeyword[0].substring(0, 12) +'...' : matchedKeyword[0]}
                 </span>
               : 0}
           {Array.isArray(keywords) && keywords.length > 1 ? 

@@ -18,7 +18,9 @@ import {
   SourceRendererPending,
   CountryRenderer,
   RecentEngagementRenderer,
-  CountryTierRenderer
+  CountryTierRenderer,
+  KeywordRenderer,
+  StatusRenderer
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -40,7 +42,8 @@ const FriendsList = () => {
   //     (item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
   //   )
   // );
-
+  const [keyWords, setKeyWords] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
@@ -169,6 +172,41 @@ const FriendsList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
+
+    {
+      field: "keywords",
+      headerName: "Keyword",
+      // filter: "agTextColumnFilter",
+      cellRendererParams: {
+        setKeyWords,
+        setModalOpen,
+      },
+      sortable: true,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+        if (valueA == valueB) return 0;
+        return (valueA > valueB) ? 1 : -1;
+    } ,
+      cellRenderer: KeywordRenderer,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        filterOptions: ["contains"], // Set filter options to match any part of the text
+        valueGetter: params => {
+          return params?.data?.matchedKeyword
+        },
+        textCustomComparator: function (filter, value, filterText) {
+          const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+          if (filter === "equals") {
+            // Exact match
+            return matchedKeywords.includes(filterText);
+          } else {
+            // Partial match
+            return matchedKeywords.some(keyword => keyword.includes(filterText));
+          }
+        },
+      },
+    },
     {
       field: "created_at",
       headerName: "Sync & Added Date &  Time",
@@ -211,6 +249,18 @@ const FriendsList = () => {
       cellRenderer: SourceRendererPending,
       // lockPosition: "right",
       minWidth: 185,
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      },
+    },
+    {
+      field: "friendStatus",
+      headerName: "Status",
+      cellRenderer: StatusRenderer,
+      filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,
