@@ -291,6 +291,7 @@ const Sidebar = (props) => {
                 alt="" 
                 loading="lazy"
               />
+              <span className="logoText">Your organic marketing best friend</span>
           </figure>
           <figure
             className={
