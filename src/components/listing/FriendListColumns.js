@@ -322,13 +322,13 @@ export const RecentEngagementRenderer = memo((params) => {
   }
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
 
-  useEffect(() => {
-    dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
-      if(res) {
-        setCutOffDays(res?.friend_inactivity_period ? res?.friend_inactivity_period : 0)
-      }
-    })
-  }, [])
+  // useEffect(() => {
+  //   dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
+  //     if(res) {
+  //       setCutOffDays(res?.friend_inactivity_period ? res?.friend_inactivity_period : 0)
+  //     }
+  //   })
+  // }, [])
 
   return (
     <span className={` d-flex f-align-center`}>
