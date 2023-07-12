@@ -375,6 +375,11 @@ const MySetting = () => {
       //console.log("setting res", res);
       setSettingFetched(true);
       // setLoading(false);
+      
+      // Storing las engage date for later use
+      if(!localStorage.getItem('fr_inactive_after') || localStorage.getItem('fr_inactive_after') == "undefined") {
+        localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after);
+      }
     }).catch((err) => {
 
       Alertbox(`${err.message} `, "error", 3000, "bottom-right");

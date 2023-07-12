@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
+import { getMySettings } from "../../actions/MySettingAction";
 
 
 
@@ -44,6 +45,7 @@ const FriendsList = () => {
   // );
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [cutOffDate, setCutOffDate] = useState(null)
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
@@ -71,6 +73,19 @@ const FriendsList = () => {
     
     return valB - valA
   }
+  // get Settings data
+  useEffect(() => {
+    if(localStorage.getItem('fr_inactive_after')) {
+      setCutOffDate(parseInt((localStorage.getItem('fr_inactive_after'))))
+    } else {
+      dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
+        if (res) {
+          setCutOffDate(res?.data[0]?.friends_willbe_inactive_after);
+          parseInt(localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after))
+        }
+      })
+    }
+  }, [])
 
   const friendsListinRef = [
     {
@@ -163,6 +178,9 @@ const FriendsList = () => {
       field: "last_engagement_date" ? "last_engagement_date" : "created_at",
       headerName: "Recent engagement", 
       cellRenderer: RecentEngagementRenderer,
+      cellRendererParams: {
+        cutOffDate
+      },           
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

@@ -25,6 +25,7 @@ import {
 } from "../../components/listing/FriendListColumns";
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
+import { getMySettings } from "../../actions/MySettingAction";
 
 const BlackList = () => {
   //::::Friend List geting data from Redux::::
@@ -35,12 +36,27 @@ const BlackList = () => {
       (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.blacklist_status === 1
     )
   );
+  const [cutOffDate, setCutOffDate] = useState(null)
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
     dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
+
+  // get Settings data
+  useEffect(() => {
+    if(localStorage.getItem('fr_inactive_after')) {
+      setCutOffDate(parseInt((localStorage.getItem('fr_inactive_after'))))
+    } else {
+      dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
+        if (res) {
+          setCutOffDate(res?.data[0]?.friends_willbe_inactive_after);
+          parseInt(localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after))
+        }
+      })
+    }
+  }, [])
 
   /**
    * Custom comparator for columns with dates
@@ -103,7 +119,10 @@ const BlackList = () => {
     {
       field: "last_engagement_date" ? "last_engagement_date" : "created_at",
       headerName: "Recent engagement", 
-      cellRenderer: RecentEngagementRenderer,                                           
+      cellRenderer: RecentEngagementRenderer,        
+      cellRendererParams: {
+        cutOffDate
+      },                                  
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

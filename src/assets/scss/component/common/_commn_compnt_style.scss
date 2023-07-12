@@ -643,16 +643,15 @@
 //styling for active engagement
 
 .activeEngaged{
-  color: $themeGreen1;
   display: flex;
   align-items: center;
   font-size: 14px;
   .dot{
-      background: $themeGreen7;
+      background-color: $themeDefaultPrimary3;
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      border: 3px solid $themeGreen6;
+      border: 3px solid transparent;
       display: inline-block;
       box-sizing: content-box;
       margin-right: 5px;
@@ -663,6 +662,13 @@
         background: $themeRed1;
         border: 3px solid $themeRed9;
      }
+  }
+  &.actUser {
+    color: $themeGreen1;
+    .dot{
+        background: $themeGreen7;
+        border-color: $themeGreen6;
+    }
   }
 }
 @keyframes borderBlink1 {
@@ -685,8 +691,10 @@
   .ag-row{
     &:hover{
       .activeEngaged{
-        .dot{
-          animation: borderBlink1 1s;
+        &.actUser {
+          .dot{
+            animation: borderBlink1 1s;
+          }
         }
         &.notAct{
           .dot{
