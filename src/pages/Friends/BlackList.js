@@ -243,25 +243,25 @@ const BlackList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
     },
-    // {
-    //   field: "engagement",
-    //   headerName: "Eng",
-    //   filter: "agNumberColumnFilter",
-    //   filterParams: {
-    //     buttons: ["apply", "reset"],
-    //     suppressMiniFilter: true,
-    //     closeOnApply: true,
-    //     filterOptions: [
-    //       "lessThan",
-    //       "greaterThan",
-    //       "lessThanOrEqual",
-    //       "greaterThanOrEqual",
-    //     ],
-    //   },
-    //   valueGetter: EngagementGetter,
-    //   minWidth: 0,
-    //   maxWidth: 0,
-    // },
+    {
+      field: "engagement",
+      headerName: "Eng",
+      filter: "agNumberColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: [
+          "lessThan",
+          "greaterThan",
+          "lessThanOrEqual",
+          "greaterThanOrEqual",
+        ],
+      },
+      valueGetter: EngagementGetter,
+      minWidth: 0,
+      maxWidth: 0,
+    },
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">

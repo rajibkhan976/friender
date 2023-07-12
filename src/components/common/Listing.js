@@ -163,18 +163,12 @@ const Listing = (props) => {
 
   // Example load data from sever
   const onGridReady = (params) => {
-    var defaultSortModel = [{ colId: "created_at"
-    // sort: "asc"
-     }];
     try {
       setRowData(props.friendsData);
-      
-      if(props.friendsData) {
-        params.columnApi.applyColumnState({ state: defaultSortModel });
-      }
     } catch (error) {
       //console.log(error);
     } finally {
+      var defaultSortModel = [{ colId: "engagement", sort: "desc" }];
       if (params) {
         params.columnApi.applyColumnState({ state: defaultSortModel });
       }
