@@ -40,7 +40,7 @@ const WhiteList = () => {
   const getFbUserIdCall = useOutletContext();
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [cutOffDate, setCutOffDate] = useState(null)
+  const [inactiveAfter, setInactiveAfter] = useState(null)
   useEffect(() => {
     friendsList
       ? dispatch(countCurrentListsize(friendsList.length))
@@ -49,18 +49,18 @@ const WhiteList = () => {
       dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
 
+  
   // get Settings data
-  useEffect(() => {
-    if(localStorage.getItem('fr_inactive_after')) {
-      setCutOffDate(parseInt((localStorage.getItem('fr_inactive_after'))))
-    } else {
-      dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
-        if (res) {
-          setCutOffDate(res?.data[0]?.friends_willbe_inactive_after);
-          parseInt(localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after))
-        }
-      })
+  const getSettingsData = async () => {
+    const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
+
+    if(dataSettings) {
+      setInactiveAfter(dataSettings?.data[0].friends_willbe_inactive_after)
     }
+  }
+
+  useEffect(() => {
+    getSettingsData()
   }, [])
 
   /**
@@ -168,7 +168,7 @@ const WhiteList = () => {
       headerName: "Recent engagement", 
       cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
-        cutOffDate
+        inactiveAfter
       },           
       filter: "agTextColumnFilter",
       filterParams: {
