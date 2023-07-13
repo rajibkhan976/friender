@@ -215,6 +215,12 @@ function PageHeader({ headerText = "" }) {
     dispatch(updateFilter(e));
   }, []);
   const [update, setUpdate] = useState(syncBtnDefaultState);
+  useEffect(()=>{
+
+    if(update === syncBtnDefaultState){
+      setIsSyncing(false)
+    }
+  }, [update])
 
   socket.on("facebookLoggedOut", (logoutUpdate) => {
     //console.log("updates :::  ", logoutUpdate);
