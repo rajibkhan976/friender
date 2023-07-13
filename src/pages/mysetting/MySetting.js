@@ -375,9 +375,9 @@ const MySetting = () => {
       //console.log("setting res", res);
       setSettingFetched(true);
       // setLoading(false);
-      
+
       // Storing las engage date for later use
-      if(!localStorage.getItem('fr_inactive_after') || localStorage.getItem('fr_inactive_after') == "undefined") {
+      if (!localStorage.getItem('fr_inactive_after') || localStorage.getItem('fr_inactive_after') == "undefined") {
         localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after);
       }
     }).catch((err) => {
@@ -475,9 +475,9 @@ const MySetting = () => {
     //refriending end
 
     // friend will inactive after days..
-    if (Number(frndWillInactiveAfterDays) < 30) {
-      setFrndInactiveAfterDays(30);
-      payload.friends_willbe_inactive_after = 30;
+    if (Number(frndWillInactiveAfterDays) < 1) {
+      setFrndInactiveAfterDays(1);
+      payload.friends_willbe_inactive_after = 1;
     }
 
     //cancel_sent_friend_requests_settings
@@ -789,7 +789,7 @@ const MySetting = () => {
     let inputValue = value;
 
     if (parsedValue === 0 || parsedValue <= -1) {
-      inputValue = 30;
+      inputValue = 1;
     } else if (parsedValue > 365) {
       inputValue = 365;
     } else if (value.includes('.')) {
@@ -813,8 +813,8 @@ const MySetting = () => {
     }
 
     if (type === "DECREMENT") {
-      if (Number(frndWillInactiveAfterDays) <= 30) {
-        setFrndInactiveAfterDays(30);
+      if (Number(frndWillInactiveAfterDays) <= 1) {
+        setFrndInactiveAfterDays(1);
       } else {
         setFrndInactiveAfterDays(Number(frndWillInactiveAfterDays) - 1);
       }
@@ -1202,7 +1202,7 @@ const MySetting = () => {
 
             {/* ========== Friends Settings ============ */}
             <p className="fr-heading">
-              <span>Friends settings</span>
+              <span>Friend request settings</span>
             </p>
 
             <div className="setting">
@@ -1458,95 +1458,6 @@ const MySetting = () => {
             )}
 
 
-            <div className="setting setting-paper">
-              Friends will be considered as inactive after {" "}
-              <div className={"input-num"}>
-                <input
-                  type="number"
-                  className="setting-input"
-                  value={frndWillInactiveAfterDays}
-                  onChange={handleValWillInactiveAfterDays}
-                />
-
-                <div className="input-arrows">
-                  <button className="btn inline-btn btn-transparent"
-                    onClick={() => setValOfFrndWillInactiveAfterDays("INCREMENT")}
-                  >
-                    <ChevronUpArrowIcon size={15} />
-                  </button>
-
-                  <button className="btn inline-btn btn-transparent"
-                    onClick={() => setValOfFrndWillInactiveAfterDays("DECREMENT")}
-                  >
-                    <ChevronDownArrowIcon size={15} />
-                  </button>
-                </div>
-              </div>
-              {" "} day(s)
-            </div>
-
-            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
-              <Switch
-                checked={dayBackAnlyFrndEng}
-                // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
-                handleChange={() => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
-              />
-              {/* Day back to analyse friends engagement */}
-              {/* Friend list and engagement sync time */}
-              Interval for auto sync friend list
-
-              <div className="setting-control">
-                <figure className="icon-arrow-down">
-                  {!dayBackAnlyFrndEngOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
-                </figure>
-              </div>
-            </div>
-            {dayBackAnlyFrndEngOpen && (
-              <div className="setting-child others">
-                Select the time: From &nbsp;
-                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
-                  <DropSelector
-                    selects={timeObj.slice(0, timeObj.length - 1)}
-                    value={dayBackAnlyFrndEngSelect1}
-                    style={{}}
-                    // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
-                    handleChange={e => setStartTime(e)}
-                    setDisable={!dayBackAnlyFrndEng}
-                    extraClass="tinyWrap"
-                    height="30px"
-                    width="90px"
-                  />
-                </TurnOnSettingsWarn>
-                {" "}
-                &nbsp; To &nbsp;
-                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
-                  <DropSelector
-                    selects={
-                      dayBackAnlyFrndEngSelect1
-                        ? timeObj.slice(
-                          timeObj.indexOf(
-                            timeObj.filter(
-                              (el) => el.value == dayBackAnlyFrndEngSelect1
-                            )[0]
-                          ) + 1
-                        )
-                        : timeObj
-                    }
-                    value={dayBackAnlyFrndEngSelect2}
-                    style={{}}
-                    handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
-                    setDisable={!dayBackAnlyFrndEng}
-                    extraClass="tinyWrap"
-                    height="30px"
-                    width="90px"
-                  />
-                </TurnOnSettingsWarn>
-                {" "}
-                daily.
-              </div>
-            )}
-
-
             {/* ========== Message Settings ============ */}
             <p className="fr-heading">
               <span>Message settings<span className="warn-badget">Coming soon</span></span>
@@ -1787,6 +1698,100 @@ const MySetting = () => {
                   &nbsp; the mesage will be sent
                 </div>
               )}
+            </div>
+
+
+            {/* ========== General Settings ============ */}
+            <p className="fr-heading">
+              <span>General settings</span>
+            </p>
+
+            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
+              <Switch
+                checked={dayBackAnlyFrndEng}
+                // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
+                handleChange={() => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
+              />
+              {/* Day back to analyse friends engagement */}
+              {/* Friend list and engagement sync time */}
+              Interval for auto sync friend list
+
+              <div className="setting-control">
+                <figure className="icon-arrow-down">
+                  {!dayBackAnlyFrndEngOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
+              </div>
+            </div>
+            {dayBackAnlyFrndEngOpen && (
+              <div className="setting-child others">
+                Select the time: From &nbsp;
+                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
+                  <DropSelector
+                    selects={timeObj.slice(0, timeObj.length - 1)}
+                    value={dayBackAnlyFrndEngSelect1}
+                    style={{}}
+                    // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
+                    handleChange={e => setStartTime(e)}
+                    setDisable={!dayBackAnlyFrndEng}
+                    extraClass="tinyWrap"
+                    height="30px"
+                    width="90px"
+                  />
+                </TurnOnSettingsWarn>
+                {" "}
+                &nbsp; To &nbsp;
+                <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>
+                  <DropSelector
+                    selects={
+                      dayBackAnlyFrndEngSelect1
+                        ? timeObj.slice(
+                          timeObj.indexOf(
+                            timeObj.filter(
+                              (el) => el.value == dayBackAnlyFrndEngSelect1
+                            )[0]
+                          ) + 1
+                        )
+                        : timeObj
+                    }
+                    value={dayBackAnlyFrndEngSelect2}
+                    style={{}}
+                    handleChange={(e) => setDayBackAnlyFrndEngSelect2(e.target.value)}
+                    setDisable={!dayBackAnlyFrndEng}
+                    extraClass="tinyWrap"
+                    height="30px"
+                    width="90px"
+                  />
+                </TurnOnSettingsWarn>
+                {" "}
+                daily.
+              </div>
+            )}
+
+            <div className="setting setting-paper">
+              Friends will be considered as inactive after {" "}
+              <div className={"input-num"}>
+                <input
+                  type="number"
+                  className="setting-input"
+                  value={frndWillInactiveAfterDays}
+                  onChange={handleValWillInactiveAfterDays}
+                />
+
+                <div className="input-arrows">
+                  <button className="btn inline-btn btn-transparent"
+                    onClick={() => setValOfFrndWillInactiveAfterDays("INCREMENT")}
+                  >
+                    <ChevronUpArrowIcon size={15} />
+                  </button>
+
+                  <button className="btn inline-btn btn-transparent"
+                    onClick={() => setValOfFrndWillInactiveAfterDays("DECREMENT")}
+                  >
+                    <ChevronDownArrowIcon size={15} />
+                  </button>
+                </div>
+              </div>
+              {" "} day(s)
             </div>
 
 
