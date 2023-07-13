@@ -45,7 +45,7 @@ const FriendsList = () => {
   // );
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [cutOffDate, setCutOffDate] = useState(null)
+  const [inactiveAfter, setInactiveAfter] = useState(null)
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
@@ -74,17 +74,16 @@ const FriendsList = () => {
     return valB - valA
   }
   // get Settings data
-  useEffect(() => {
-    if(localStorage.getItem('fr_inactive_after')) {
-      setCutOffDate(parseInt((localStorage.getItem('fr_inactive_after'))))
-    } else {
-      dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap().then((res) => {
-        if (res) {
-          setCutOffDate(res?.data[0]?.friends_willbe_inactive_after);
-          parseInt(localStorage.setItem('fr_inactive_after', res?.data[0]?.friends_willbe_inactive_after))
-        }
-      })
+  const getSettingsData = async () => {
+    const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
+
+    if(dataSettings) {
+      setInactiveAfter(dataSettings?.data[0].friends_willbe_inactive_after)
     }
+  }
+
+  useEffect(() => {
+    getSettingsData()
   }, [])
 
   const friendsListinRef = [
@@ -179,7 +178,7 @@ const FriendsList = () => {
       headerName: "Recent engagement", 
       cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
-        cutOffDate
+        inactiveAfter
       },           
       filter: "agTextColumnFilter",
       filterParams: {

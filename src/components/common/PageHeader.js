@@ -660,7 +660,7 @@ function PageHeader({ headerText = "" }) {
         //   localStorage.getItem("fr_default_fb")
         // );
         Alertbox(
-          `Please login to following facebook account https://www.facebook.com/profile.php?id=`,
+          `Please login to following facebook account `,
           "error-toast",
           2000,
           "bottom-right",
