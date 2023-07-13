@@ -649,9 +649,16 @@ function PageHeader({ headerText = "" }) {
         facebookProfile?.uid?.toString() !==
         localStorage.getItem("fr_default_fb")
       ) {
-        alert(
-          "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-          localStorage.getItem("fr_default_fb")
+        // alert(
+        //   "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
+        //   localStorage.getItem("fr_default_fb")
+        // );
+        Alertbox(
+          `Please login to following facebook account https://www.facebook.com/profile.php?id=`,
+          "error-toast",
+          2000,
+          "bottom-right",
+          `https://www.facebook.com/${localStorage.getItem("fr_default_fb")}`
         );
         setInlineLoader(false);
         return;
