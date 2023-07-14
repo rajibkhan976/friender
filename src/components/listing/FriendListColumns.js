@@ -303,8 +303,7 @@ export const AgeRenderer = (params) => {
 
 export const RecentEngagementRenderer = memo((params) => {
   const [inactiveAfter, setInactiveAfter] = useState(params.inactiveAfter);
-  const statusSync = params.data.last_engagement_date ?
-    params.data.last_engagement_date.toLowerCase() : params.data.created_at.toLowerCase();
+  const statusSync = params.data.last_engagement_date;
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
   let days = Math.floor(diffTime / (24 * 60 * 60 * 1000));
@@ -319,16 +318,17 @@ export const RecentEngagementRenderer = memo((params) => {
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
 
   useEffect(() => {
+    console.log('params.inactiveAfter', params.inactiveAfter)
     setInactiveAfter(params.inactiveAfter)
   }, [params.inactiveAfter])
 
   return (
     <span className={` d-flex f-align-center`}>
       <span className="tooltipFullName small" data-text={"Last engaged on " + dateFormat}>
-        {params.inactiveAfter && 
-          <span className={inactiveAfter === null ? "activeEngaged muted-text" : days <= inactiveAfter ? "activeEngaged actUser" : "activeEngaged notAct"}>
-            <span className="dot"></span> {days} day(s)
-          </span>}
+        {(params.inactiveAfter && statusSync) ?
+            <span className={inactiveAfter === null ? "activeEngaged muted-text" : days <= inactiveAfter ? "activeEngaged actUser" : "activeEngaged notAct"}>
+              <span className="dot"></span> {days} day(s)
+            </span> : <span className="muted-text">N/A</span>}
       </span>
     </span>
   );
