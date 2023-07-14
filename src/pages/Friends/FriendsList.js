@@ -174,13 +174,13 @@ const FriendsList = () => {
       }
     },
     {
-      field: "last_engagement_date" ? "last_engagement_date" : "created_at",
+      field: "last_engagement_date",
       headerName: "Recent engagement", 
       cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
         inactiveAfter
-      },           
-      filter: "agTextColumnFilter",
+      },
+      filter: "agDateColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
