@@ -502,19 +502,21 @@ export const RequestRenderer = memo((params) => {
   );
 });
 export const KeywordRenderer = memo((params) => {
-  const keywords =
-    params.value?.length > 0 && params.value[0].selected_keywords?.length > 0
-      ? params.value[0].selected_keywords
-      : null;
+  // const keywords =
+  //   params.value?.length > 0 && params.value[0].selected_keywords?.length > 0
+  //     ? params.value[0].selected_keywords
+  //     : null;
 
   const [matchedKeyword, setMatchedKeyword] =
     useState(params?.data.matchedKeyword ?
       params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : [])
 
+  console.log(matchedKeyword);
+
   //className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}
   return (
     <>
-      {keywords && matchedKeyword?.length > 0 ?
+      {matchedKeyword?.length > 0 ?
         <span
           className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
         >
@@ -528,7 +530,6 @@ export const KeywordRenderer = memo((params) => {
               className="syn-tag-count"
               onClick={() => {
                 params.setKeyWords({
-                  keywords: keywords,
                   matchedKeyword: matchedKeyword,
                 });
                 params.setModalOpen(true);

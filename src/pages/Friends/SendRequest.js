@@ -278,6 +278,7 @@ const SendRequest = ({deleteAllInterval}) => {
           headerText={"Keyword(s)"}
           bodyText={
             <>
+            {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
               {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
                 keyWords?.matchedKeyword.map((el, i) =>
                 (<span className={`tags positive-tags`} key={`key-${i}`}>
