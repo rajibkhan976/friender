@@ -29,6 +29,7 @@ import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
+import Modal from "../../components/common/Modal";
 
 
 
@@ -189,7 +190,6 @@ const FriendsList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-
     {
       field: "keywords",
       headerName: "Keyword",
@@ -223,6 +223,13 @@ const FriendsList = () => {
           }
         },
       },
+      // lockPosition: "right",
+      // filterParams: {
+      //   buttons: ["apply", "reset"],
+      //   suppressMiniFilter: true,
+      //   closeOnApply: true,
+      //   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      // },
     },
     {
       field: "created_at",
@@ -371,6 +378,32 @@ const FriendsList = () => {
 
   return (
     <div className="main-content-inner d-flex d-flex-column">
+    {modalOpen && (
+      <Modal
+        modalType="normal-type"
+        modalIcon={null}
+        headerText={"Keyword(s)"}
+        bodyText={
+          <>
+          {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+              keyWords?.matchedKeyword.map((el, i) =>
+              (<span className={`tags positive-tags`} key={`key-${i}`}>
+                {el}
+              </span>)
+              ) : (
+                "No specific keyword used"
+              )}
+          </>
+        }
+        open={modalOpen}
+        setOpen={setModalOpen}
+        ModalFun={null}
+        btnText={" "}
+        modalButtons={false}
+        additionalClass="modal-keywords"
+      />
+    )}
       {filterFrndList?.length > 0 && (
         <>
           {!loading && (

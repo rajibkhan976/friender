@@ -26,6 +26,7 @@ import {
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { getMySettings } from "../../actions/MySettingAction";
+import Modal from "../../components/common/Modal";
 
 const BlackList = () => {
   //::::Friend List geting data from Redux::::
@@ -342,6 +343,32 @@ const BlackList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
+    {modalOpen && (
+      <Modal
+        modalType="normal-type"
+        modalIcon={null}
+        headerText={"Keyword(s)"}
+        bodyText={
+          <>
+          {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+              keyWords?.matchedKeyword.map((el, i) =>
+              (<span className={`tags positive-tags`} key={`key-${i}`}>
+                {el}
+              </span>)
+              ) : (
+                "No specific keyword used"
+              )}
+          </>
+        }
+        open={modalOpen}
+        setOpen={setModalOpen}
+        ModalFun={null}
+        btnText={" "}
+        modalButtons={false}
+        additionalClass="modal-keywords"
+      />
+    )}
       {friendsList?.length > 0 && (
         <>
           {!loading && (
