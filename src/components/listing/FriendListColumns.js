@@ -311,7 +311,7 @@ let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.ge
 
  return (
     <span className={` d-flex f-align-center`}>
-      <span className="tooltipFullName ageTooltip" data-text={"         Synced on         "  + tooltipDateFormat}>
+      <span className="tooltipFullName ageTooltip" data-text={tooltipDateFormat}>
          {age}
       </span>
     </span>
@@ -336,7 +336,7 @@ export const RecentEngagementRenderer = memo((params) => {
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
   
   useEffect(() => {
-    console.log('params.inactiveAfter', params.inactiveAfter)
+    // console.log('params.inactiveAfter', params.inactiveAfter)
     setInactiveAfter(params.inactiveAfter)
   }, [params.inactiveAfter])
 
@@ -528,7 +528,7 @@ export const KeywordRenderer = memo((params) => {
     useState(params?.data.matchedKeyword ?
       params?.data.matchedKeyword.split(",").filter(keyW => keyW.trim() !== "") : [])
 
-  console.log(matchedKeyword);
+  // console.log(matchedKeyword);
 
   //className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}
   return (
@@ -588,8 +588,8 @@ export const CountryTierRenderer = memo((params) => {
 });
 
 export const RefriendCountRenderer = memo((params) => {
-  console.log('params?.value', params?.value);
-  return params?.value ? params?.value : 'N/A'
+  // console.log('params?.value', params?.value);
+  return params?.value ? params?.value : <span className="muted-text">N/A</span>
 })
 
 export const SourceRendererPending = memo((params) => {

@@ -588,6 +588,7 @@
     flex-wrap: wrap;
     box-shadow: 0 1px 6px 4px rgb(0 0 0 / 30%);
     z-index: 100;
+    border-radius: 2px;
   }
   &:hover:before {
     opacity: 1;
@@ -621,6 +622,9 @@
   &.ageTooltip{
     &:before {
        width: 130px;
+       content: 'Synced on \A' attr(data-text);
+       text-align: center;
+       letter-spacing: -0.3px;
     }
   }
 }
