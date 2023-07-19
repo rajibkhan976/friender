@@ -128,27 +128,27 @@ const InactiveFriends = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-    {
-      field: "created_at",
-      headerName: "Sync & Added Date &  Time ",
-      cellRenderer: CreationRenderer,
-      minWidth: 240,
-      maxWidth: 250,
-      filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-          "inRange",
-        ],
-      },
-    },
+    // {
+    //   field: "created_at",
+    //   headerName: "Sync & Added Date &  Time ",
+    //   cellRenderer: CreationRenderer,
+    //   minWidth: 240,
+    //   maxWidth: 250,
+    //   filter: "agDateColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //       "inRange",
+    //     ],
+    //   },
+    // },
     {
       field: "finalSource",
       headerName: "Friends Source",

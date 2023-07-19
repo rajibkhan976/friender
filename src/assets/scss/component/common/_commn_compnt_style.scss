@@ -618,6 +618,11 @@
        width: 115px;
     }
   }
+  &.ageTooltip{
+    &:before {
+       width: 130px;
+    }
+  }
 }
 
 .ag-cell-value {

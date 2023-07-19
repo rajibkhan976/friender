@@ -285,7 +285,7 @@ const Sidebar = (props) => {
 
       <div className="sidebar-opened-wraper d-flex d-flex-column f-justify-start">
         <div className="sidebar-top-wraper d-flex">
-          <figure className="sidebar-logo logo-closed opened-sidebar text-center">
+          <figure className="sidebar-logo logo-closed opened-sidebar">
               <img 
                 src={darkMode ? logoDefault : logoLight} 
                 alt="" 
