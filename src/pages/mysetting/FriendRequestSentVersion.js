@@ -80,9 +80,9 @@ const FriendRequestSentVersion = () => {
         //   fetchedSets?.reduce((acc,curr)=>acc+curr.time_saved,0)
         // );
 
-        const totalTime = Math.floor(fetchedSets?.reduce((acc, curr) => acc + curr.time_saved, 0) / (60 * 60));
+        const totalTime = fetchedSets?.reduce((acc, curr) => acc + curr.time_saved, 0) / (60 * 60);
 
-        {console.log('profileViewedP::::', fetchedSets)}
+        // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
 
         let headerOptions = {
           totalRun: fetchedSets?.length,
@@ -825,8 +825,12 @@ const FriendRequestSentVersion = () => {
                   }
                 >
                   {/* {headPoints && headPoints?.savedTime && headPoints.savedTime.smallTime&& headPoints.savedTime.smallTime} */}
-                  {headPoints && headPoints?.savedTime ? 
-                    headPoints?.savedTime+' hours' : 
+                  {console.log(headPoints?.savedTime)}
+                  {headPoints && headPoints?.savedTime && headPoints?.savedTime > 1 ? 
+                    (headPoints?.savedTime%1 === 0 ? 
+                      headPoints?.savedTime : 
+                      Math.floor(headPoints?.savedTime)
+                    )+'+ hour(s)' : 
                     headPoints?.savedTime == null ? '' : 
                     'Less than 1 hour'
                   }
