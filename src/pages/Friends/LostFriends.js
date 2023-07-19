@@ -121,7 +121,7 @@ const LostFriends = () => {
       field: "created_at",
       headerName: "Age",
       headerTooltip:"Number of days back friends synced or unfriended using friender",
-      valueGetter: AgeRenderer,
+      cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -132,25 +132,25 @@ const LostFriends = () => {
       },
       comparator: dateComparator
     },
-    {
-      field: "created_at",
-      headerName: "Sync & Added Date &  Time ",
-      cellRenderer: CreationRenderer,
-      filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-          "inRange",
-        ],
-      },
-    },
+    // {
+    //   field: "created_at",
+    //   headerName: "Sync & Added Date &  Time ",
+    //   cellRenderer: CreationRenderer,
+    //   filter: "agDateColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //       "inRange",
+    //     ],
+    //   },
+    // },
     // {
     //   field: "finalSource",
     //   headerName: "Friends Source",

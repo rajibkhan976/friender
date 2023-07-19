@@ -129,7 +129,7 @@ const SendRequest = ({deleteAllInterval}) => {
     {
       field: "created_at",
       headerName: "Age",
-      valueGetter: AgeRenderer,
+      cellRenderer: AgeRenderer,
       headerTooltip: "Age",
       tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
@@ -244,27 +244,27 @@ const SendRequest = ({deleteAllInterval}) => {
     //   //   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
     //   // },
     // },
-    {
-      field: "created_at",
-      headerName: "Request date &  time",
-      cellRenderer: CreationRenderer,
-      minWidth: 240,
-      maxWidth: 250,
-      filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-          "inRange",
-        ],
-      },
-    },
+    // {
+    //   field: "created_at",
+    //   headerName: "Request date &  time",
+    //   cellRenderer: CreationRenderer,
+    //   minWidth: 240,
+    //   maxWidth: 250,
+    //   filter: "agDateColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //       "inRange",
+    //     ],
+    //   },
+    // },
   ];
   // useEffect(() => {
   //   console.log("//////////////", keyWords);

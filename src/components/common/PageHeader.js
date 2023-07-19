@@ -14,6 +14,7 @@ import {
   DeleteIcon,
   WhitelabelIcon,
   BlockIcon,
+  UnfriendIcon
 } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
@@ -1119,7 +1120,8 @@ function PageHeader({ headerText = "" }) {
                               }
                             >
                               <figure>
-                                <DeleteIcon />
+                               
+                                <UnfriendIcon />
                               </figure>
                               <span>Unfriend</span>
                             </li>
@@ -1131,7 +1133,7 @@ function PageHeader({ headerText = "" }) {
                               <figure>
                                 <WhitelabelIcon />
                               </figure>
-                              <span>Whitelist Friends</span>
+                              <span>Whitelist</span>
                             </li>
                             {/* <li
                           className="history-fr-action"

@@ -276,7 +276,7 @@ export const CreationRenderer = memo((params) => {
   );
 });
 
-export const AgeRenderer = (params) => {
+export const AgeRenderer = memo((params) => {
   const statusSync = params.data.created_at.toLowerCase();
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
@@ -298,8 +298,26 @@ export const AgeRenderer = (params) => {
   else if (minutes) age = minutes + " Minute(s)";
   else age = secs + " Sec(s)";
 
-  return age;
-};
+ let showingDate = new Date(statusSync); 
+ function getMonthName(monthNumber) {
+ // const date = new Date();
+  showingDate.setMonth(monthNumber - 1);
+
+  return showingDate.toLocaleString('en-US', { month: 'short' });
+}
+
+let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
+
+
+ return (
+    <span className={` d-flex f-align-center`}>
+      <span className="tooltipFullName ageTooltip" data-text={"         Synced on         "  + tooltipDateFormat}>
+         {age}
+      </span>
+    </span>
+   );
+
+});
 
 export const RecentEngagementRenderer = memo((params) => {
   const [inactiveAfter, setInactiveAfter] = useState(params.inactiveAfter);
@@ -316,7 +334,7 @@ export const RecentEngagementRenderer = memo((params) => {
     currentMonth = "0" + currentMonth
   }
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
-
+  
   useEffect(() => {
     console.log('params.inactiveAfter', params.inactiveAfter)
     setInactiveAfter(params.inactiveAfter)
@@ -324,7 +342,7 @@ export const RecentEngagementRenderer = memo((params) => {
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className="tooltipFullName small" data-text={"Last engaged on " + dateFormat}>
+      <span className={dateFormat !== "NaN / NaN / NaN"  ? "tooltipFullName small" : ""} data-text={"Last engaged on " + dateFormat}>
         {(params.inactiveAfter && statusSync) ?
             <span className={inactiveAfter === null ? "activeEngaged muted-text" : days <= inactiveAfter ? "activeEngaged actUser" : "activeEngaged notAct"}>
               <span className="dot"></span> {days} day(s)
