@@ -1219,3 +1219,13 @@ export const UnfriendIcon = () => {
     </svg>    
   )
 }
+export const SyncSourceIcon = () => {
+  return (
+    <svg width="30" height="18" viewBox="0 0 30 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.5 8.25L22.5 11.25L19.5 14.25" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M19.253 4.615C17.6712 4.82692 16.2974 5.31914 15.3876 5.99995C14.4778 6.68076 14.094 7.50373 14.3077 8.31553C14.5215 9.12732 15.3182 9.87258 16.5494 10.4125C17.7806 10.9523 19.3624 11.25 21 11.25" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M26.8457 9.5625C27.2889 9.17867 27.5766 8.75495 27.6923 8.31553C27.808 7.87611 27.7494 7.42959 27.52 7.00149C27.2906 6.57338 26.8948 6.17205 26.3551 5.82043C25.8155 5.46881 25.1427 5.17377 24.375 4.95216" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M0.999871 9.00131L8.99992 9.00082M8.99992 9.00082L5.99992 6.00026M8.99992 9.00082L5.99992 12" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}

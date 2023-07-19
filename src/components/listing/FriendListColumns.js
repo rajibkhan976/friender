@@ -12,6 +12,7 @@ import {
   BlockIcon,
   OpenInNewTab,
   SourceGroupIcon,
+  SyncSourceIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -593,6 +594,7 @@ export const RefriendCountRenderer = memo((params) => {
 })
 
 export const SourceRendererPending = memo((params) => {
+  console.log('params?.data?.groupName', params?.data);
   const sourceFriend = params?.data?.groupName;
 
   return (
@@ -601,6 +603,7 @@ export const SourceRendererPending = memo((params) => {
         <div
           className="friend-sync-source d-flex f-align-center"
         >
+        {console.log('here')}
           {sourceFriend ? (
             <>
               <figure className="friend-source text-center">
@@ -624,15 +627,14 @@ export const SourceRendererPending = memo((params) => {
         </div>
       ) : (
         <div className="friend-sync-source d-flex f-align-center">
+        {console.log('here')}
           {params?.data?.finalSource ? (
             <>
-
+              <figure className="friend-source text-center">
+                <SyncSourceIcon />
+              </figure>
               <span className={params?.data?.finalSource.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={params?.data?.finalSource}>
-
-                <span >
-                  {params?.data?.finalSource.length > 12 ? params?.data?.finalSource.substring(0, 12) + "..." : params?.data?.finalSource}
-                </span>
-
+                {params?.data?.finalSource.length > 12 ? params?.data?.finalSource.substring(0, 12) + "..." : params?.data?.finalSource}
               </span>
             </>
           ) : (
