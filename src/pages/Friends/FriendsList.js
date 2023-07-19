@@ -79,7 +79,7 @@ const FriendsList = () => {
     const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
 
     if(dataSettings) {
-      setInactiveAfter(dataSettings?.data[0].friends_willbe_inactive_after)
+      setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
     }
   }
 
@@ -196,21 +196,6 @@ const FriendsList = () => {
       }
     },
     {
-      field: "created_at",
-      headerName: "Sync & Added Date &  Time",
-      cellRenderer: CreationRenderer,
-      minWidth: 240,
-      maxWidth: 250,
-      filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
-    {
       field: "keywords",
       headerName: "Keyword",
       // filter: "agTextColumnFilter",
@@ -297,18 +282,18 @@ const FriendsList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
     },
-    {
-      field: "friendStatus",
-      headerName: "Status",
-      cellRenderer: StatusRenderer,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
+    // {
+    //   field: "friendStatus",
+    //   headerName: "Status",
+    //   cellRenderer: StatusRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   },
+    // },
     {
       field: "reactionThread",
       headerName: "Total Reaction",

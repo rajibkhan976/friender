@@ -177,32 +177,6 @@ const FriendsList = () => {
         },
       },
     },
-    {
-      field: "created_at",
-      headerName: "Sync & Added Date &  Time",
-      cellRenderer: CreationRenderer,
-      minWidth: 240,
-      maxWidth: 250,
-      filter: "agDateColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        filterOptions: ["contains"], // Set filter options to match any part of the text
-        valueGetter: params => {
-          return params?.data?.matchedKeyword
-        },
-        textCustomComparator: function (filter, value, filterText) {
-          const matchedKeywords = value.split(", "); // Split matched keywords by comma
-
-          if (filter === "equals") {
-            // Exact match
-            return matchedKeywords.includes(filterText);
-          } else {
-            // Partial match
-            return matchedKeywords.some(keyword => keyword.includes(filterText));
-          }
-        },
-      },
-    },
     // {
     //   field: "created_at",
     //   headerName: "Sync & Added Date &  Time",

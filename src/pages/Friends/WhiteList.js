@@ -55,7 +55,7 @@ const WhiteList = () => {
     const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
 
     if(dataSettings) {
-      setInactiveAfter(dataSettings?.data[0].friends_willbe_inactive_after)
+      setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
     }
   }
 
@@ -262,18 +262,18 @@ const WhiteList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
     },
-    {
-      field: "friendStatus",
-      headerName: "Status",
-      cellRenderer: StatusRenderer,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
+    // {
+    //   field: "friendStatus",
+    //   headerName: "Status",
+    //   cellRenderer: StatusRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   },
+    // },
     {
       field: "reactionThread",
       headerName: "Total Reaction",
