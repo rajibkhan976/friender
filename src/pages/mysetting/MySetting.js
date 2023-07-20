@@ -1278,7 +1278,17 @@ const MySetting = () => {
 
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
                 {" "}
-                <TurnOnSettingsWarn enabledFeature={reFrndng}>
+                <span onClick={() => {
+                    if (!reFrndng) {
+                      Alertbox(
+                        "Please turn on the setting to make changes",
+                        "warning",
+                        1000,
+                        "bottom-right"
+                      );
+                      return;
+                    }
+                  }}>
                   <div className={!reFrndng ? "input-num disabled" : "input-num"}>
                     <input
                       type="number"
@@ -1303,7 +1313,7 @@ const MySetting = () => {
                       </button>
                     </div>
                   </div>
-                </TurnOnSettingsWarn>
+                </span>
                 {" "}
                 <span className="smallTxt">  day(s), and immediately send a new friend request. Choose how often to retry friending up to</span>
                 {" "}
@@ -1428,35 +1438,43 @@ const MySetting = () => {
               <div className="setting-child others">
                 Cancel sent friend request(s) after
                 {" "}
-                <TurnOnSettingsWarn enabledFeature={autoCnclFrndRque}>
-                  <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
-                    <input
-                      type="number"
-                      className="setting-input"
-                      value={cnclFrndRqueInput}
-                      onKeyDown={e => checkData(e)}
-                      onChange={deletePendingFrndInputHandle}
-                    // onBlur={deletePendingRequestWithDaysHandle}
-                    />
+                  <span onClick={() => {
+                    if (!autoCnclFrndRque) {
+                      Alertbox(
+                        "Please turn on the setting to make changes",
+                        "warning",
+                        1000,
+                        "bottom-right"
+                      );
+                      return;
+                    }
+                  }}>
+                    <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
+                      <input
+                        type="number"
+                        className="setting-input"
+                        value={cnclFrndRqueInput}
+                        onKeyDown={e => checkData(e)}
+                        onChange={deletePendingFrndInputHandle}
+                      // onBlur={deletePendingRequestWithDaysHandle}
+                      />
 
-                    <div className="input-arrows">
-                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
-                        <ChevronUpArrowIcon size={15} />
-                      </button>
+                      <div className="input-arrows">
+                        <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
+                          <ChevronUpArrowIcon size={15} />
+                        </button>
 
-                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
-                        <ChevronDownArrowIcon size={15} />
-                      </button>
+                        <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
+                          <ChevronDownArrowIcon size={15} />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </TurnOnSettingsWarn>
+                  </span>
                 {" "}
                 day(s)
-
                 {deletePendingFrndError && <span className="error-text">Provided value must be within the range of 1 to 31</span>}
               </div>
             )}
-
 
             {/* ========== Message Settings ============ */}
             <p className="fr-heading">
