@@ -321,8 +321,8 @@ let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.ge
 });
 
 export const RecentEngagementRenderer = memo((params) => {
-  const [inactiveAfter, setInactiveAfter] = useState(params.inactiveAfter);
-  const statusSync = params.data.last_engagement_date;
+  const [inactiveAfter, setInactiveAfter] = useState(params?.inactiveAfter ? params?.inactiveAfter : 30);
+  const [statusSync, setStatusSync] = useState(params?.data?.last_engagement_date);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
   let days = Math.floor(diffTime / (24 * 60 * 60 * 1000));
@@ -337,14 +337,22 @@ export const RecentEngagementRenderer = memo((params) => {
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
   
   useEffect(() => {
-    // console.log('params.inactiveAfter', params.inactiveAfter)
-    setInactiveAfter(params.inactiveAfter)
-  }, [params.inactiveAfter])
+    if(params?.inactiveAfter) {
+      setInactiveAfter(params?.inactiveAfter)
+    }
+    if(params?.data?.last_engagement_date) {
+      setStatusSync(params?.data?.last_engagement_date)
+    }
+  }, [params])
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className={dateFormat !== "NaN / NaN / NaN"  ? "tooltipFullName small" : ""} data-text={"Last engaged on " + dateFormat}>
-        {(params.inactiveAfter && statusSync) ?
+      <span 
+        className={
+          !(inactiveAfter && statusSync)  ? 
+            "" : "tooltipFullName small"
+        } data-text={(inactiveAfter && statusSync) && "Last engaged on " + dateFormat}>
+        {(inactiveAfter && statusSync) ?
             <span className={inactiveAfter === null ? "activeEngaged muted-text" : days <= inactiveAfter ? "activeEngaged actUser" : "activeEngaged notAct"}>
               <span className="dot"></span> {days} day(s)
             </span> : <span className="muted-text">N/A</span>}
@@ -594,7 +602,7 @@ export const RefriendCountRenderer = memo((params) => {
 })
 
 export const SourceRendererPending = memo((params) => {
-  console.log('params?.data?.groupName', params?.data);
+  // console.log('params?.data?.groupName', params?.data);
   const sourceFriend = params?.data?.groupName;
 
   return (
@@ -603,7 +611,7 @@ export const SourceRendererPending = memo((params) => {
         <div
           className="friend-sync-source d-flex f-align-center"
         >
-        {console.log('here')}
+        {/* {console.log('here')} */}
           {sourceFriend ? (
             <>
               <figure className="friend-source text-center">
@@ -627,7 +635,7 @@ export const SourceRendererPending = memo((params) => {
         </div>
       ) : (
         <div className="friend-sync-source d-flex f-align-center">
-        {console.log('here')}
+        {/* {console.log('here')} */}
           {params?.data?.finalSource ? (
             <>
               <figure className="friend-source text-center">

@@ -37,6 +37,7 @@ const FriendsList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const mySettings = useSelector((state) => state.settings.mySettings);
   const  [filterFrndList,setFilterFrndList] =useState([]);
 
   // const friendsList = useSelector((state) =>
@@ -76,14 +77,18 @@ const FriendsList = () => {
   }
   // get Settings data
   const getSettingsData = async () => {
-    const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-
-    if(dataSettings) {
-      setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
+    if(mySettings?.data[0]?.friends_willbe_inactive_after) {
+      setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
+    } else {
+      const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
+      if(dataSettings) {
+        setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
+      }
     }
   }
 
   useEffect(() => {
+    // console.log('mySettings', mySettings?.data[0]?.friends_willbe_inactive_after);
     getSettingsData()
   }, [])
 
@@ -408,7 +413,7 @@ const FriendsList = () => {
     )}
       {filterFrndList?.length > 0 && (
         <>
-          {!loading && (
+          {!loading && inactiveAfter !== null && (
             <Listing
               friendsData={filterFrndList}
               friendsListingRef={friendsListinRef}

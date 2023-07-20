@@ -32,6 +32,7 @@ const WhiteList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const mySettings = useSelector((state) => state.settings.mySettings);
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list.filter(
       (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.whitelist_status === 1
@@ -52,14 +53,18 @@ const WhiteList = () => {
   
   // get Settings data
   const getSettingsData = async () => {
-    const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-
-    if(dataSettings) {
-      setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
+    if(mySettings?.data[0]?.friends_willbe_inactive_after) {
+      setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
+    } else {
+      const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
+      if(dataSettings) {
+        setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
+      }
     }
   }
 
   useEffect(() => {
+    // console.log('mySettings', mySettings?.data[0]?.friends_willbe_inactive_after);
     getSettingsData()
   }, [])
 
@@ -361,7 +366,7 @@ const WhiteList = () => {
     <div className="main-content-inner d-flex d-flex-column">
       {friendsList?.length > 0 && (
         <>
-          {!loading && (
+          {!loading && inactiveAfter !== null && (
             <Listing
               friendsData={friendsList}
               friendsListingRef={friendsListinRef}
