@@ -1433,7 +1433,7 @@ const MySetting = () => {
                     <input
                       type="number"
                       className="setting-input"
-                      value={deletePendingFrndValue}
+                      value={cnclFrndRqueInput}
                       onKeyDown={e => checkData(e)}
                       onChange={deletePendingFrndInputHandle}
                     // onBlur={deletePendingRequestWithDaysHandle}
