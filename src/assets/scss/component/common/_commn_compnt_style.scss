@@ -635,7 +635,8 @@
 
 .ag-theme-fr-table {
   .ag-row[aria-rowindex="2"],
-  .ag-row[aria-rowindex="3"] {
+  .ag-row[aria-rowindex="3"],
+  .ag-row.ag-row-first {
     .tooltipFullName {
       &:before {
         bottom: auto;
