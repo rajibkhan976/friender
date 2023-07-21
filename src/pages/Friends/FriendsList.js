@@ -30,6 +30,7 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
+import helper from "../../helpers/helper"
 
 
 
@@ -186,18 +187,40 @@ const FriendsList = () => {
     },
     {
       field: "last_engagement_date",
-      headerName: "Recent engagement", 
+      headerName: "Recent engagement",
       cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
         inactiveAfter
       },
-      filter: "agDateColumnFilter",
+      filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
         suppressMiniFilter: true,
         closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+        filterOptions: [
+          {
+            displayKey: 'lessThan',
+            displayName: 'Less than',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) < filterValue
+            }
+          },
+          {
+            displayKey: 'greaterThan',
+            displayName: 'Greater than',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) > filterValue
+            }
+          },
+          {
+            displayKey: 'equals',
+            displayName: 'Equals',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) == filterValue
+            }
+          },
+        ]
       }
     },
     {

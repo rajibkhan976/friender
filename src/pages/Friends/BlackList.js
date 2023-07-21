@@ -27,6 +27,7 @@ import { syncMainFriendList } from "../../actions/FriendsAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
+import helper from "../../helpers/helper"
 
 const BlackList = () => {
   //::::Friend List geting data from Redux::::
@@ -122,21 +123,43 @@ const BlackList = () => {
       },
     },
     {
-      field: "last_engagement_date" ? "last_engagement_date" : "created_at",
-      headerName: "Recent engagement", 
-      cellRenderer: RecentEngagementRenderer,        
+      field: "last_engagement_date",
+      headerName: "Recent engagement",
+      cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
         inactiveAfter
-      },                                  
-      filter: "agTextColumnFilter",
+      },
+      filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
         suppressMiniFilter: true,
         closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+        filterOptions: [
+          {
+            displayKey: 'lessThan',
+            displayName: 'Less than',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) < filterValue
+            }
+          },
+          {
+            displayKey: 'greaterThan',
+            displayName: 'Greater than',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) > filterValue
+            }
+          },
+          {
+            displayKey: 'equals',
+            displayName: 'Equals',
+            predicate: ([filterValue], cellValue) => {
+              return cellValue != null && Math.floor(Math.abs(helper.curretUTCTime() - new Date(cellValue).valueOf()) / (24 * 60 * 60 * 1000)) == filterValue
+            }
+          },
+        ]
       }
-    }, 
+    },
     
     {
       field: "created_at",

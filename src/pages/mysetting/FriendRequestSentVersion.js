@@ -831,13 +831,11 @@ const FriendRequestSentVersion = () => {
                 >
                   {/* {headPoints && headPoints?.savedTime && headPoints.savedTime.smallTime&& headPoints.savedTime.smallTime} */}
                   {console.log(headPoints?.savedTime)}
-                  {headPoints && headPoints?.savedTime && headPoints?.savedTime > 1 ? 
-                    (headPoints?.savedTime%1 === 0 ? 
-                      headPoints?.savedTime : 
-                      Math.floor(headPoints?.savedTime)
-                    )+'+ hour(s)' : 
-                    headPoints?.savedTime == null ? '' : 
-                    'Less than 1 hour'
+                  {headPoints && headPoints?.savedTime ?
+                    headPoints?.savedTime > 1 ? 
+                    (headPoints?.savedTime%1 === 0 ? headPoints?.savedTime+' hour(s)' : Math.floor(headPoints?.savedTime))+'+ hour(s)' : 
+                    (headPoints?.savedTime == null || headPoints?.savedTime === 0) ? '0 hours' : 
+                    'Less than 1 hour' : ''
                   }
 
                   {/* {totalTmeSavedDisplay} */}
