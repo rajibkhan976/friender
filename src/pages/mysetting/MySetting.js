@@ -301,8 +301,6 @@ const MySetting = () => {
 
   useEffect(() => {
     //setLoading(true)
-    console.log("before", render.current)
-
     // console.log("after", render.current)
     if (render.current > 1) {
       if (settingFetched) {
@@ -323,6 +321,7 @@ const MySetting = () => {
       render.current = render.current + 1;
     }
   }, [
+    settingFetched,
     dontSendFrindReqFrnd,
     dontSendFrindReqIRejct,
     dontSendFrindReqThyRejct,
@@ -638,7 +637,7 @@ const MySetting = () => {
     );
     setReFrndng(data.re_friending);
 
-    if (data.re_friending && data.re_friending_settings) {
+    if (data?.re_friending_settings) {
       // console.log("refriender setting****", data.re_friending_settings[0]);
       setReFrndngInput1(
         data.re_friending_settings[0].remove_pending_friend_request_after
