@@ -25,10 +25,10 @@
             height: 30px;
             @include border-radius(5px);
             padding-inline: 10px;
-            &:hover{
-                padding-left: 8px;
-                padding-right: 12px;
-            }
+            // &:hover{
+            //     padding-left: 8px;
+            //     padding-right: 12px;
+            // }
 
             figure {
                 width: 14px;
@@ -73,7 +73,8 @@
             &.del-fr-action {
                 
                     path {
-                        fill: $themeRed1;
+                        // fill: $themeRed1;
+                        fill: $themeRed6;
                     }
                 
             }
@@ -111,6 +112,10 @@
 
             }
         }
+
+        li + li {
+            margin-top: 2px;
+        }
     }
 
     &.active {
@@ -123,6 +128,9 @@
     }
 
     &.fr-dropdownAction {
+        margin-top: 7px;
         right: 0;
+        min-width: 172px
+
     }
 }

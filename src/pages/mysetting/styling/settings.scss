@@ -1,6 +1,7 @@
 @use "../../../assets/scss/abstract/color" as *;
 @use "../../../assets/scss/abstract/color-themes" as *;
 @use "../../../assets/scss/abstract/mixins" as *;
+@use "../../../assets/scss/abstract/font" as *;
 
 .main-mysetting {
   flex: 1 1 auto;
@@ -206,6 +207,7 @@
     background-color: #000000;
     position: relative;
     z-index: 1;
+    font-weight: $headingFontWeight;
 
     .warn-badget {
       height: 16px;
