@@ -895,6 +895,11 @@ const MySetting = () => {
       if (type === "INCREMENT") {
         if (cnclFrndRqueInput > 30) {
           setDeletePendingFrndError(true);
+
+          setTimeout(() => {
+            setDeletePendingFrndError(false);
+          }, 2000);
+
         } else {
           setDeletePendingFrndError(false);
           setCnclFrndRqueInput(parseInt(cnclFrndRqueInput) + 1);
@@ -995,15 +1000,28 @@ const MySetting = () => {
         // setDeletePendingFrndValue(1);
         setCnclFrndRqueInput(1)
 
+        setTimeout(() => {
+          setDeletePendingFrndError(false);
+        }, 2000);
+
       } else if (parseInt(value) > 31) {
         setDeletePendingFrndError(true);
         // setDeletePendingFrndValue(31);
         setCnclFrndRqueInput(31)
 
+        setTimeout(() => {
+          setDeletePendingFrndError(false);
+        }, 2000);
+
       } else if (value.includes('.')) {
         setDeletePendingFrndError(true);
         // setDeletePendingFrndValue(Math.floor(parseFloat(value)));
         setCnclFrndRqueInput(Math.floor(parseFloat(value)))
+
+        setTimeout(() => {
+          setDeletePendingFrndError(false);
+        }, 2000);
+
       } else {
         setDeletePendingFrndError(false);
         setDeletePendingFrndValue(value);
