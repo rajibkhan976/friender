@@ -34,18 +34,21 @@ const WhiteList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
-  const friendsList = useSelector((state) =>
-    state.facebook_data.current_friend_list.filter(
-      (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.whitelist_status === 1
-    )
+  const [whiteList,setWhiteList]=useState([]); 
+  const friendsList= useSelector((state) =>
+    state.facebook_data.current_friend_list
   );
   const getFbUserIdCall = useOutletContext();
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [inactiveAfter, setInactiveAfter] = useState(null)
   useEffect(() => {
+    const filteredData=friendsList.filter(
+      (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.whitelist_status === 1
+    );
+    setWhiteList(filteredData)
     friendsList
-      ? dispatch(countCurrentListsize(friendsList.length))
+      ? dispatch(countCurrentListsize(filteredData.length))
       : getFbUserIdCall();
 
       dispatch(syncMainFriendList())
@@ -91,6 +94,7 @@ const WhiteList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
+      headerCheckboxSelectionCurrentPageOnly:true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -387,11 +391,11 @@ const WhiteList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
-      {friendsList?.length > 0 && (
+      {whiteList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
             <Listing
-              friendsData={friendsList}
+              friendsData={whiteList}
               friendsListingRef={friendsListinRef}
             />
           )}
@@ -400,7 +404,7 @@ const WhiteList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        whiteList?.length <= 0 && <NoDataFound />
       )}
     </div>
   );

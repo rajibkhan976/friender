@@ -30,17 +30,20 @@ const FriendsList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const [unfriendList,setUnfriendList]=useState([]);
   const friendsList = useSelector((state) =>
-    state.facebook_data.current_friend_list.filter(
-      (item) => item.deleted_status === 1 && item.friendStatus === "Activate"
-    )
+    state.facebook_data.current_friend_list
   );
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const getFbUserIdCall = useOutletContext();
   useEffect(() => {
+    const filteredData= friendsList.filter(
+      (item) => item.deleted_status === 1 && item.friendStatus === "Activate"
+    );
+    setUnfriendList(filteredData);  
     friendsList
-      ? dispatch(countCurrentListsize(friendsList.length))
+      ? dispatch(countCurrentListsize(unfriendList.length))
       : getFbUserIdCall();
   }, [dispatch, friendsList]);
 
@@ -65,6 +68,7 @@ const FriendsList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
+      headerCheckboxSelectionCurrentPageOnly:true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -311,11 +315,11 @@ const FriendsList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
-      {friendsList?.length > 0 && (
+      {unfriendList?.length > 0 && (
         <>
           {!loading && (
             <Listing
-              friendsData={friendsList}
+              friendsData={unfriendList}
               friendsListingRef={friendsListinRef}
             />
           )}
@@ -324,7 +328,7 @@ const FriendsList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        unfriendList?.length <= 0 && <NoDataFound />
       )}
     </div>
   );

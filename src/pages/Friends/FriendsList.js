@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
  
 import Listing from "../../components/common/Listing";
 import {
-  SourceRenderer,
+// SourceRenderer,
   HasConversationRenderer,
   MessageRenderer,
   ReactionRenderer,
@@ -40,6 +40,7 @@ const FriendsList = () => {
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
   const  [filterFrndList,setFilterFrndList] =useState([]);
+  const  [pageSet,setPageSet]=useState(new Set());
 
   // const friendsList = useSelector((state) =>
   //   state.facebook_data.current_friend_list.filter(
@@ -107,7 +108,9 @@ const FriendsList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
+      eaderCheckboxSelectionCurrentPageOnly:true,
       headerCheckboxSelectionFilteredOnly: true,
+     // headerComponentFramework: CustomHeaderCheckbox,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -118,6 +121,11 @@ const FriendsList = () => {
       cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 280,
       maxWidth: 300,
+      // headerComponentParams:{
+      //   onChange: handleHeaderCheckboxChange, // Pass the custom function to the header component
+      //   checked: false, // Pass the checked state if needed
+      //   indeterminate: false, // Pass the indeterminate state if needed
+      // }
     },
     // {
     //   field: "friendStatus",
@@ -438,6 +446,8 @@ const FriendsList = () => {
         <>
           {!loading && inactiveAfter !== null && (
             <Listing
+            pageSet={pageSet}
+            setPageSet={setPageSet}
               friendsData={filterFrndList}
               friendsListingRef={friendsListinRef}
             />

@@ -34,16 +34,19 @@ const BlackList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
+  const [blackList,setBlackList]=useState([])
   const friendsList = useSelector((state) =>
-    state.facebook_data.current_friend_list.filter(
-      (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.blacklist_status === 1
-    )
+    state.facebook_data.current_friend_list
   );
   const [inactiveAfter, setInactiveAfter] = useState(null)
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
-    friendsList && dispatch(countCurrentListsize(friendsList.length));
+    const filteredData=friendsList.filter(
+      (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.blacklist_status === 1
+    )
+    setBlackList(filteredData)
+    friendsList && dispatch(countCurrentListsize(blackList.length));
     dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
 
@@ -85,6 +88,7 @@ const BlackList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
+      headerCheckboxSelectionCurrentPageOnly:true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -397,11 +401,11 @@ const BlackList = () => {
         additionalClass="modal-keywords"
       />
     )}
-      {friendsList?.length > 0 && (
+      {blackList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
             <Listing
-              friendsData={friendsList}
+              friendsData={blackList}
               friendsListingRef={friendsListinRef}
             />
           )}
@@ -410,7 +414,7 @@ const BlackList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        blackList?.length <= 0 && <NoDataFound />
       )}
     </div>
   );

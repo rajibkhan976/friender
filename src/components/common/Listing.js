@@ -8,7 +8,8 @@ import React, {
   lazy,
   Suspense,
 } from "react";
-import { useBeforeUnload } from "react-router-dom";
+// import ReactDOM from 'react-dom/client';
+// import { useBeforeUnload } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import Checkbox from "../formComponents/Checkbox";
 import ListingLoader from "./loaders/ListingLoader";
@@ -20,16 +21,18 @@ import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
 // import 'ag-grid-community/styles/ag-theme-alpine.css';
 import DropSelector from "../formComponents/DropSelector"
+// import e from "cors";
 
 const Pagination = lazy(() => import("./Pagination"));
 
 const Listing = (props) => {
   const dispatch = useDispatch();
-  const selectRef = useRef(null);
-  const gridRef = useRef();
+//  const selectRef = useRef(null);
+  const gridRef = useRef(null);
   const selectedFrnd = useSelector(
     (state) => state.friendlist.selected_friends
   );
+  let selectedPageSet=new Set();
   const textFilter = useSelector((state) => state.friendlist.searched_filter);
   const [rowData, setRowData] = useState();
   const [maxSelect, setMaxSelect] = useState(0);
@@ -37,17 +40,19 @@ const Listing = (props) => {
     height: "100%",
     width: "100%",
   });
+  const [selectAllChecked,setSelectAllChecked]=useState(false);
   const [columnDefs, setColumnDefs] = useState(null);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [showPaginate, setShowPaginate] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
-  const isFirstColumn = (params) => {
-    var displayedColumns = params.columnApi.getAllDisplayedColumns();
-    var thisIsFirstColumn = displayedColumns[0] === params.column;
-    return thisIsFirstColumn;
-  };
+  // const isFirstColumn = (params) => {
+  //   var displayedColumns = params.columnApi.getAllDisplayedColumns();
+  //   var thisIsFirstColumn = displayedColumns[0] === params.column;
+  //   return thisIsFirstColumn;
+  // };
   const currentWhiteList=useSelector((state)=>state.facebook_data.current_whitelist);
   const currentBlackList = useSelector((state) => state.facebook_data.current_blacklist);
+  
   // const [tempBlackList, setTempBlackList] = useState([]);
   // const [tempWhiteList,setTempWhiteList]=useState([]);
   
@@ -62,6 +67,17 @@ const Listing = (props) => {
 
   // useEffect(() => {
   //   console.log("tempblacklist::::::::::::::::",tempWhiteList);
+  //const [selectedAllChecked, setSelectedAllChecked] = useState(false);
+
+  // const onHeaderCheckboxSelectionChanged = (event) => {
+  //   // Your custom logic here
+  //   // Access selected rows and other grid information from the event object
+  //   console.log('Header checkbox changed!', event);
+
+  //   // If you want to prevent the default selection behavior, set 'selectAllChecked' to false
+  //   // and handle the selection logic in this function
+  //   setSelectedAllChecked(false);
+  // };
   // },[tempWhiteList])
  
   const pageNumbers = [
@@ -90,15 +106,56 @@ const Listing = (props) => {
       label: "All",
     }
   ];
+
+  const headerCheckboxHandle=(event)=>{
+   // let paginationSize = gridRef.current.api.paginationGetPageSize();
+    let currentPageNum = gridRef.current.api.paginationGetCurrentPage();
+   // let totalRowsCount = gridRef.current.api.getDisplayedRowCount();
+
+    if(selectedPageSet.has(currentPageNum)){
+      selectedPageSet.delete(currentPageNum); 
+    }else{
+      selectedPageSet.add(currentPageNum);
+    }
+
+
+    // console.log("ther super ssettt>>>>>",event.target.checked);
+    // console.log("selectedPageSet>>>>>",selectedPageSet);
+  }
+
+  const addHeaderCheckboxClickListener = () => {
+    let headerCheckBoxAll = document.querySelectorAll('.ag-checkbox-input');
+    let eventInterval=setInterval(()=>{
+      if (headerCheckBoxAll?.length > 0) {
+        clearInterval(eventInterval);
+      // console.log("checkboxxxxxxxxxxxxxxxx",headerCheckBoxAll[0])
+        headerCheckBoxAll[0].addEventListener('click', headerCheckboxHandle);
+      }else{
+        headerCheckBoxAll = document.querySelectorAll('.ag-checkbox-input');
+      }
+    },300)
+   
+  };
   useEffect(() => {
+    setMaxSelect(props.friendsData.length);
     let ageCol = document.querySelectorAll(".ag-header-cell-text");
+    let headerCheckBoxAll=document.querySelectorAll('.ag-checkbox-input')
+    addHeaderCheckboxClickListener();
     let colInterval = setInterval(() => {
-      if (ageCol?.length <= 0) {
+      if (ageCol?.length <= 0 && headerCheckBoxAll?.length<=0) {
+        //console.log("header_gtgt");
         ageCol = document.querySelectorAll(".ag-header-cell-text");
+        // headerCheckBoxAll=document.querySelectorAll('.ag-checkbox-input')
       } else {
         clearInterval(colInterval);
+        // if(headerCheckBoxAll?.length>0){
+        //   console.log("headerCheckBoxAll",headerCheckBoxAll[0]);
+        //   headerCheckBoxAll[0].addEventListener("click",(event)=>{headerCheckboxHandle(event)});
+        // }
         if (ageCol?.length > 0) {
+        
           for (let col of ageCol) {
+         
             if (col.innerHTML.includes("Age") ) {
               col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>"+
               "<circle cx='9' cy='9' r='6.75' fill='#767485'/>"+
@@ -116,15 +173,24 @@ const Listing = (props) => {
           }
         }
       }
-    }, 500);
+      // addHeaderCheckboxClickListener();
+    }, 300);
+    // return () => {
+    //   document.removeEventListener('click', headerCheckBoxAll[0]);
+    // };
+    
   }, []);
 
-  useEffect(() => {
-    setMaxSelect(props.friendsData.length);
-    //console.log("FRIENDS IN LISTING::::>>", props.friendsData.length);
-  }, []);
+  // useEffect(() => {
+  //   setMaxSelect(props.friendsData.length);
+  //   //console.log("FRIENDS IN LISTING::::>>", props.friendsData.length);
+  // }, []);
  
-
+//  const onHeaderCheckboxSelectionChanged=(event)=>{
+//    console.log("eventoosss")
+//    //setSelectAllChecked(event.api.getSelectedNodes().length===event.api.getDisplayedRowCount())
+ 
+//  }
   useEffect(() => {
    // console.log("i am selectd frinends*****>>>>>:::::",selectedFriends);
     if (selectedFriends?.length >= 0) {
@@ -144,6 +210,8 @@ const Listing = (props) => {
   //     }
   //   }
   // }, [selectedFrnd]);
+  //const headerCheckBoxHandler=()=>{}
+  useEffect(()=>{},[])
 
   useEffect(() => {
     gridRef &&
@@ -166,6 +234,20 @@ const Listing = (props) => {
     //setMaxSelect(props.friendsData.length);
     //console.log("FRIENDS IN LISTING", props.friendsData.length);
   }, [props.friendsData]);
+  useEffect(() => {
+    if(gridRef?.current?.api){
+
+      gridRef.current.api.addEventListener('paginationChanged', onPaginationChanged);
+     
+    }
+   
+    return () => {
+      if(gridRef?.current?.api){
+        gridRef.current.api.removeEventListener('paginationChanged', onPaginationChanged);
+      }
+     
+    }
+  }, [selectAllChecked])
 
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(() => ({
@@ -179,9 +261,21 @@ const Listing = (props) => {
     suppressMovable: true
   }));
 
+  const onPaginationChanged = useCallback(() => {
+       //Reset rows selection based on current page
+       if (!selectAllChecked) {
+        //console.log("is ieeee checked", selectAllChecked);
+        resetPaginationSelection(gridRef.current);
+      }
+      setTimeout(addHeaderCheckboxClickListener,400);
+      //addHeaderCheckboxClickListener()
+ 
+  },[selectAllChecked])
+
   // Example load data from sever
   const onGridReady = (params) => {
     try {
+      gridRef.current.api.addEventListener('paginationChanged', onPaginationChanged);
       setRowData(props.friendsData);
     } catch (error) {
       //console.log(error);
@@ -191,15 +285,59 @@ const Listing = (props) => {
         params.columnApi.applyColumnState({ state: defaultSortModel });
       }
     }
+
+
+  };
+  function deselectHeaderCheckbox() {
+    const checkboxColumn = gridRef.current.columnApi.getColumn('friendName'); // Replace 'friendName' with your actual checkbox column ID
+   // console.log("chekcbox loadererrer",checkboxColumn);
+    if (checkboxColumn?.colDef?.headerCheckboxSelection ) {
+      // const isHeaderCheckboxSelected = checkboxColumn.getColDef().headerCheckboxSelection;
+      // console.log('Is header checkbox selected:', isHeaderCheckboxSelected);
+      checkboxColumn.colDef.headerCheckboxSelection = false;
+      gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
+      checkboxColumn.colDef.headerCheckboxSelection = true;
+      gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
+      gridRef.current.api.refreshHeader();
+    }
+  }
+  
+  
+  // gridRef.current.api
+  const resetPaginationSelection = (self) => {
+   // console.log("heloooooooo", self)
+    //Deselect previously selected rows to reset selection
+    //self.api.deselectAll();
+  //   const headerCheckbox = document.getElementById("ag-3-input");
+  // if (headerCheckbox) {
+  //   headerCheckbox.checked = false;
+  // }
+ deselectHeaderCheckbox();
+    //Initialize pagination data
+    let paginationSize = self.api.paginationGetPageSize();
+    let currentPageNum = self.api.paginationGetCurrentPage();
+    let totalRowsCount = self.api.getDisplayedRowCount();
+
+    //Calculate current page row indexes
+    let currentPageRowStartIndex = (currentPageNum * paginationSize);
+    let currentPageRowLastIndex = (currentPageRowStartIndex + paginationSize);
+    if (currentPageRowLastIndex > totalRowsCount) currentPageRowLastIndex = (totalRowsCount);
+
+    for (let i = 0; i < totalRowsCount; i++) {
+      //Set isRowSelectable=true attribute for current page rows, and false for other page rows
+      let isWithinCurrentPage = (i >= currentPageRowStartIndex && i < currentPageRowLastIndex);
+      self.api.getDisplayedRowAtIndex(i).setRowSelectable(isWithinCurrentPage);
+    }
   };
 
   const onFirstDataRendered = useCallback((event) => {
     gridRef.current.api.sizeColumnsToFit();
   }, []);
 
-  const onColumnMoved = (params) => {
-    console.log("moved", params.columnApi.getColumnState());
-  };
+  // const onColumnMoved = (params) => {
+  //   //console.log("moved", params.columnApi.getColumnState());
+  // };
+
 
   const onPageSizeChanged = useCallback(() => {
     var value = document.getElementById("page-size").value;
@@ -259,17 +397,33 @@ const Listing = (props) => {
     [textFilter]
   );
 
+
+
+  // Change the rows to be selectable
+const makeRowsSelectable=()=> {
+  // Set the rowSelectable property of all row nodes to true
+  gridRef.current.api.forEachNode((rowNode)=>{
+    rowNode.setRowSelectable(true);
+  });
+
+  // Refresh the cells to apply the changes
+  gridRef.current.api.refreshCells();
+}
   const onChangeCheck = useCallback((isChecked) => {
+    makeRowsSelectable();
+    // gridRef.current.api.deselectAll();
+    setSelectAllChecked(isChecked)
     if (isChecked) {
       gridRef.current.api.selectAllFiltered();
-    } else {
+    } 
+    else {
       gridRef.current.api.deselectAll();
     }
   }, []);
 
   const selectionChanged = useCallback((e) => {
     // let selectedRows = gridRef.current.api.getSelectedRows();
-    // console.log("selectedRows", selectedRows);
+    //  console.log("selecttionchangeee eventntnntntntntntn", e);
     const selectedNodes = gridRef.current.api.getSelectedNodes();
    // console.log("selectedNodes", selectedNodes);
     let selectedUsers = [];
@@ -404,9 +558,10 @@ const Listing = (props) => {
           rowSelection="multiple"
           suppressRowClickSelection={true}
           onFirstDataRendered={onFirstDataRendered}
+          //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
           rowHeight={55}
           headerHeight={50}
-          onColumnMoved={onColumnMoved}
+          //onColumnMoved={onColumnMoved}
           pagination={true}
           paginationPageSize={15}
           suppressScrollOnNewData={false}
@@ -424,6 +579,7 @@ const Listing = (props) => {
           tooltipShowDelay={0}
           tooltipHideDelay={1000000}
           alwaysShowHorizontalScroll={true}
+          //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
         />
       </div>
       {maxSelect !== 0 && !showPaginate ? (
