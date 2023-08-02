@@ -13,8 +13,8 @@ const initialState = {
   isLoading: true,
   current_fb_id: null,
   fb_data: null,
-  current_whitelist:{},
-  current_blacklist:{},
+  current_whitelist: {},
+  current_blacklist: {},
   current_friend_list: [],
 };
 
@@ -129,37 +129,37 @@ const fbSlice = createSlice({
   name: "facebook",
   initialState,
   reducers: {
-    updateId: () => {},
+    updateId: () => { },
     setFriendListArray: (state, action) => {
       //console.log("update fr list rdx", action);
       state.current_friend_list = action.payload;
     },
     syncWhiteList: (state, action) => {
-      state.current_whitelist=action.payload.data;
+      state.current_whitelist = action.payload.data;
     },
     syncBlackList: (state, action) => {
-      state.current_blacklist=action.payload.data;
+      state.current_blacklist = action.payload.data;
     },
-    syncMainFriendList:(state)=>{
-      const blackObj=state.current_blacklist;
-       const whiteObj=state.current_whitelist;
-      if(Object.keys(blackObj).length>0||Object.keys(whiteObj).length>0){
-        state.current_friend_list=state.current_friend_list.map(
-          (item)=>{
+    syncMainFriendList: (state) => {
+      const blackObj = state.current_blacklist;
+      const whiteObj = state.current_whitelist;
+      if (Object.keys(blackObj).length > 0 || Object.keys(whiteObj).length > 0) {
+        state.current_friend_list = state.current_friend_list.map(
+          (item) => {
             //const newObj={...item};
-            if(item.friendFbId in whiteObj){
-              item.whitelist_status=whiteObj[item.friendFbId]
+            if (item.friendFbId in whiteObj) {
+              item.whitelist_status = whiteObj[item.friendFbId]
             }
-            if(item.friendFbId in blackObj){
-              item.blacklist_status=blackObj[item.friendFbId]
+            if (item.friendFbId in blackObj) {
+              item.blacklist_status = blackObj[item.friendFbId]
             }
             return item;
           }
         );
-        state.current_blacklist={};
-        state.current_whitelist={};
+        state.current_blacklist = {};
+        state.current_whitelist = {};
       }
-    
+
     }
   },
   extraReducers: {
@@ -185,6 +185,9 @@ const fbSlice = createSlice({
         state.isLoading = true;
       }
     },
+    [getFriendListFromIndexDb.fulfilled]: (state) => {
+      state.isLoading = false;
+    },
     [getFriendList.pending]: (state) => {
       // console.log("Fetch friend pending state");
       // state.isLoading = false;
@@ -201,31 +204,31 @@ const fbSlice = createSlice({
           ? action.payload.data[0].friend_details
           : [];
     },
-    [getFriendList.rejected]: (state, action) => {
-   
+    [getFriendList.rejected]: (state) => {
+      state.isLoading = false;
     },
     [whiteListFriend.pending]: (state, action) => {
-      if(action.meta.arg?.bulkAction){
-         state.current_friend_list = updateWhiteList(
-        state.current_friend_list,
-        action.meta.arg.payload
-      );
-      }else{
-        const whitelistObj={...state.current_whitelist}
-        action.meta.arg.payload.forEach((item)=>{
-          whitelistObj[item.friendFbId]=item.status;
+      if (action.meta.arg?.bulkAction) {
+        state.current_friend_list = updateWhiteList(
+          state.current_friend_list,
+          action.meta.arg.payload
+        );
+      } else {
+        const whitelistObj = { ...state.current_whitelist }
+        action.meta.arg.payload.forEach((item) => {
+          whitelistObj[item.friendFbId] = item.status;
         });
-        state.current_whitelist=whitelistObj;
+        state.current_whitelist = whitelistObj;
       }
-   
+
     },
     [whiteListFriend.fulfilled]: (state, action) => {
-    
+
     },
     [whiteListFriend.rejected]: (state, action) => {
-      let pyld=action.meta.arg.payload
-      pyld=pyld.map((item)=>{
-        item.status=item.status===1?0:1;
+      let pyld = action.meta.arg.payload
+      pyld = pyld.map((item) => {
+        item.status = item.status === 1 ? 0 : 1;
         return item
       })
       state.current_friend_list = updateWhiteList(
@@ -234,25 +237,26 @@ const fbSlice = createSlice({
       );
     },
     [BlockListFriend.pending]: (state, action) => {
-      if(action.meta.arg?.bulkAction){
-      state.current_friend_list = updateBlockList(
-        state.current_friend_list,
-        action.meta.arg.payload
-      );}else{
-        const blacklistObj={...state.current_blacklist}
-        action.meta.arg.payload.forEach((item)=>{
-         blacklistObj[item.friendFbId]=item.status;
+      if (action.meta.arg?.bulkAction) {
+        state.current_friend_list = updateBlockList(
+          state.current_friend_list,
+          action.meta.arg.payload
+        );
+      } else {
+        const blacklistObj = { ...state.current_blacklist }
+        action.meta.arg.payload.forEach((item) => {
+          blacklistObj[item.friendFbId] = item.status;
         });
-        state.current_blacklist=blacklistObj;
+        state.current_blacklist = blacklistObj;
       }
-      
+
     },
     [BlockListFriend.fulfilled]: (state, action) => {
     },
     [BlockListFriend.rejected]: (state, action) => {
-      let pyld=action.meta.arg.payload
-      pyld=pyld.map((item)=>{
-        item.status=item.status===1?0:1;
+      let pyld = action.meta.arg.payload
+      pyld = pyld.map((item) => {
+        item.status = item.status === 1 ? 0 : 1;
         return item
       })
       state.current_friend_list = updateBlockList(
@@ -275,5 +279,5 @@ const fbSlice = createSlice({
   },
 });
 
-export const { updateId, setFriendListArray ,syncMainFriendList} = fbSlice.actions;
+export const { updateId, setFriendListArray, syncMainFriendList } = fbSlice.actions;
 export default fbSlice.reducer;

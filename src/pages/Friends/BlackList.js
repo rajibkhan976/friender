@@ -34,7 +34,7 @@ const BlackList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
-  const [blackList,setBlackList]=useState([])
+  const [blackList, setBlackList] = useState([])
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
@@ -42,21 +42,23 @@ const BlackList = () => {
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
-    const filteredData=friendsList.filter(
+    const filteredData = friendsList.filter(
       (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.blacklist_status === 1
     )
     setBlackList(filteredData)
     friendsList && dispatch(countCurrentListsize(blackList.length));
     dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
 
   // get Settings data
   const getSettingsData = async () => {
-    if(mySettings?.data[0]?.friends_willbe_inactive_after) {
+    if (mySettings?.data[0]?.friends_willbe_inactive_after) {
       setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
     } else {
       const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-      if(dataSettings) {
+      if (dataSettings) {
         setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
       }
     }
@@ -75,7 +77,7 @@ const BlackList = () => {
   const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
     let valA = new Date(nodeA.data.created_at);
     let valB = new Date(nodeB.data.created_at);
-    
+
     return valB - valA
   }
 
@@ -88,7 +90,7 @@ const BlackList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
-      headerCheckboxSelectionCurrentPageOnly:true,
+      headerCheckboxSelectionCurrentPageOnly: true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -164,11 +166,11 @@ const BlackList = () => {
         ]
       }
     },
-    
+
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -183,7 +185,7 @@ const BlackList = () => {
     {
       field: "country",
       headerName: "Country Name",
-      cellRenderer: CountryRenderer, 
+      cellRenderer: CountryRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -196,7 +198,7 @@ const BlackList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
-      cellRenderer : CountryTierRenderer,
+      cellRenderer: CountryTierRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -206,41 +208,41 @@ const BlackList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-    
-   { 
-    field: "keywords",
-    headerName: "Keyword",
-    // filter: "agTextColumnFilter",
-    cellRendererParams: {
-      setKeyWords,
-      setModalOpen,
-    },
-    sortable: true,
-    comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
-      if (valueA == valueB) return 0;
-      return (valueA > valueB) ? 1 : -1;
-  } ,
-    cellRenderer: KeywordRenderer,
-    filter: "agTextColumnFilter",
-    filterParams: {
-      buttons: ["apply", "reset"],
-      filterOptions: ["contains"], // Set filter options to match any part of the text
-      valueGetter: params => {
-        return params?.data?.matchedKeyword
-      },
-      textCustomComparator: function (filter, value, filterText) {
-        const matchedKeywords = value.split(", "); // Split matched keywords by comma
 
-        if (filter === "equals") {
-          // Exact match
-          return matchedKeywords.includes(filterText);
-        } else {
-          // Partial match
-          return matchedKeywords.some(keyword => keyword.includes(filterText));
-        }
+    {
+      field: "keywords",
+      headerName: "Keyword",
+      // filter: "agTextColumnFilter",
+      cellRendererParams: {
+        setKeyWords,
+        setModalOpen,
+      },
+      sortable: true,
+      comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+        if (valueA == valueB) return 0;
+        return (valueA > valueB) ? 1 : -1;
+      },
+      cellRenderer: KeywordRenderer,
+      filter: "agTextColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        filterOptions: ["contains"], // Set filter options to match any part of the text
+        valueGetter: params => {
+          return params?.data?.matchedKeyword
+        },
+        textCustomComparator: function (filter, value, filterText) {
+          const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+          if (filter === "equals") {
+            // Exact match
+            return matchedKeywords.includes(filterText);
+          } else {
+            // Partial match
+            return matchedKeywords.some(keyword => keyword.includes(filterText));
+          }
+        },
       },
     },
-  },
     // {
     //   field: "created_at",
     //   headerName: "Sync & Added Date &  Time",
@@ -375,38 +377,41 @@ const BlackList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
-    {modalOpen && (
-      <Modal
-        modalType="normal-type"
-        modalIcon={null}
-        headerText={"Keyword(s)"}
-        bodyText={
-          <>
-          {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
-            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
-              keyWords?.matchedKeyword.map((el, i) =>
-              (<span className={`tags positive-tags`} key={`key-${i}`}>
-                {el}
-              </span>)
-              ) : (
-                "No specific keyword used"
-              )}
-          </>
-        }
-        open={modalOpen}
-        setOpen={setModalOpen}
-        ModalFun={null}
-        btnText={" "}
-        modalButtons={false}
-        additionalClass="modal-keywords"
-      />
-    )}
+      {modalOpen && (
+        <Modal
+          modalType="normal-type"
+          modalIcon={null}
+          headerText={"Keyword(s)"}
+          bodyText={
+            <>
+              {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+              {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+                keyWords?.matchedKeyword.map((el, i) =>
+                (<span className={`tags positive-tags`} key={`key-${i}`}>
+                  {el}
+                </span>)
+                ) : (
+                  "No specific keyword used"
+                )}
+            </>
+          }
+          open={modalOpen}
+          setOpen={setModalOpen}
+          ModalFun={null}
+          btnText={" "}
+          modalButtons={false}
+          additionalClass="modal-keywords"
+        />
+      )}
       {blackList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
             <Listing
               friendsData={blackList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -414,7 +419,13 @@ const BlackList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        blackList?.length <= 0 && <NoDataFound />
+        blackList?.length > 0 && listFilteredCount === 0 &&
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

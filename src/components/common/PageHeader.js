@@ -161,6 +161,7 @@ socket.on("connect_error", (e) => {
 function PageHeader({ headerText = "" }) {
   const dispatch = useDispatch();
   const searchRef = useRef(null);
+  const searchValue = useSelector((state) => state.friendlist.searched_filter)
   const { clickedRef, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
   const messageType = useSelector((state) => state.message.messageType);
@@ -216,9 +217,9 @@ function PageHeader({ headerText = "" }) {
     dispatch(updateFilter(e));
   }, []);
   const [update, setUpdate] = useState(syncBtnDefaultState);
-  useEffect(()=>{
+  useEffect(() => {
 
-    if(update === syncBtnDefaultState){
+    if (update === syncBtnDefaultState) {
       setIsSyncing(false)
     }
   }, [update])
@@ -479,7 +480,7 @@ function PageHeader({ headerText = "" }) {
           status: 1,
         };
       });
-      dispatch(whiteListFriend({ payload: payload,bulkAction:true }))
+      dispatch(whiteListFriend({ payload: payload, bulkAction: true }))
         .unwrap()
         .then((res) => {
           selectedFriends &&
@@ -512,7 +513,7 @@ function PageHeader({ headerText = "" }) {
         };
       });
 
-      dispatch(BlockListFriend({ payload: payload ,bulkAction:true}))
+      dispatch(BlockListFriend({ payload: payload, bulkAction: true }))
         .unwrap()
         .then((res) => {
           selectedFriends &&
@@ -870,7 +871,7 @@ function PageHeader({ headerText = "" }) {
     setIsSyncing(isSyncingActive);
 
     checkIsSyncing();
- 
+
     if (
       facebookData?.fb_data == null ||
       facebookData?.fb_data == "" ||
@@ -934,7 +935,7 @@ function PageHeader({ headerText = "" }) {
       // Discard the time and time-zone information.
       const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
       const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-    
+
       return Math.floor((utc2 - utc1) / _MS_PER_DAY);
     }
 
@@ -1054,6 +1055,7 @@ function PageHeader({ headerText = "" }) {
               extraClass="fr-search-header"
               itemRef={searchRef}
               onSearch={onSearchModified}
+              searchValue={searchValue}
               placeholderText="Search"
             />
           )}
@@ -1134,7 +1136,7 @@ function PageHeader({ headerText = "" }) {
                               }
                             >
                               <figure>
-                               
+
                                 <UnfriendIcon />
                               </figure>
                               <span>Unfriend</span>

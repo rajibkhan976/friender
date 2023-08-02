@@ -22,7 +22,7 @@ import Modal from "../../components/common/Modal";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 
-const SendRequest = ({deleteAllInterval}) => {
+const SendRequest = ({ deleteAllInterval }) => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
@@ -53,6 +53,8 @@ const SendRequest = ({deleteAllInterval}) => {
       deleteAllInterval(() => { dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })) });
     }
   }, []);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
 
   /**
    * Custom comparator for columns with dates
@@ -69,9 +71,9 @@ const SendRequest = ({deleteAllInterval}) => {
   const friendsListinRef = [
     {
       field: "friendName",
-      headerName: "Name", 
-       headerCheckboxSelection: false,
-       checkboxSelection: false,
+      headerName: "Name",
+      headerCheckboxSelection: false,
+      checkboxSelection: false,
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
@@ -83,7 +85,7 @@ const SendRequest = ({deleteAllInterval}) => {
         closeOnApply: true,
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       },
-     cellRenderer: UnlinkedNameCellRenderer,
+      cellRenderer: UnlinkedNameCellRenderer,
       minWidth: 220,
       maxWidth: 320,
     },
@@ -186,7 +188,7 @@ const SendRequest = ({deleteAllInterval}) => {
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
         if (valueA == valueB) return 0;
         return (valueA > valueB) ? 1 : -1;
-    } ,
+      },
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -278,7 +280,7 @@ const SendRequest = ({deleteAllInterval}) => {
           headerText={"Keyword(s)"}
           bodyText={
             <>
-            {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+              {/* {console.log('in modal:::', keyWords, keyWords.matchedKeyword)} */}
               {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
                 keyWords?.matchedKeyword.map((el, i) =>
                 (<span className={`tags positive-tags`} key={`key-${i}`}>
@@ -303,6 +305,9 @@ const SendRequest = ({deleteAllInterval}) => {
             <Listing
               friendsData={friendsList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -310,7 +315,13 @@ const SendRequest = ({deleteAllInterval}) => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        friendsList?.length > 0 && listFilteredCount === 0 &&
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

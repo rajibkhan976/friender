@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
- 
+
 import Listing from "../../components/common/Listing";
 import {
   SourceRenderer,
@@ -7,21 +7,23 @@ import {
   MessageRenderer,
   ReactionRenderer,
   NameCellRenderer,
-  StatusRenderer,
+  //StatusRenderer,
   CommentRenderer,
   GenderRenderer,
-  CreationRenderer,
-  AgeRenderer
+  // CreationRenderer,
+  // AgeRenderer
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 
 const InactiveFriends = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list.filter(
       (item) => item.friendStatus === "Deactivate"
@@ -32,6 +34,7 @@ const InactiveFriends = () => {
     console.log("friendsList", friendsList);
   }, [dispatch, friendsList]);
 
+
   /**
    * Custom comparator for columns with dates
    *
@@ -40,7 +43,7 @@ const InactiveFriends = () => {
   const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
     let valA = new Date(nodeA.data.created_at);
     let valB = new Date(nodeB.data.created_at);
-    
+
     return valB - valA
   }
 
@@ -93,7 +96,7 @@ const InactiveFriends = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -233,6 +236,9 @@ const InactiveFriends = () => {
             <Listing
               friendsData={friendsList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -240,7 +246,13 @@ const InactiveFriends = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        friendsList?.length > 0 && listFilteredCount === 0 &&
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

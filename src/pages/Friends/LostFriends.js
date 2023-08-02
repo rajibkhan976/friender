@@ -32,6 +32,8 @@ const LostFriends = () => {
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list.filter(
       (item) => item.friendStatus === "Lost"
@@ -107,7 +109,7 @@ const LostFriends = () => {
     {
       field: "tier",
       headerName: "Country Tier",
-      cellRenderer : CountryTierRenderer,
+      cellRenderer: CountryTierRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -120,7 +122,7 @@ const LostFriends = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -175,7 +177,7 @@ const LostFriends = () => {
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
         if (valueA == valueB) return 0;
         return (valueA > valueB) ? 1 : -1;
-    } ,
+      },
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -299,13 +301,21 @@ const LostFriends = () => {
             friendsData={friendsList}
             friendsListingRef={friendsLostinRef}
             // pageLoadSize={pageLoadSize}
+            getFilterNum={setListFilteredCount}
+            reset={isReset}
+            setReset={setIsReset}
           />
         </>
       )}
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        friendsList?.length > 0 && <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

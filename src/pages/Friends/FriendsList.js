@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
- 
+
 import Listing from "../../components/common/Listing";
 import {
-// SourceRenderer,
+  // SourceRenderer,
   HasConversationRenderer,
   MessageRenderer,
   ReactionRenderer,
@@ -10,7 +10,7 @@ import {
   // StatusRenderer,
   CommentRenderer,
   GenderRenderer,
-  CreationRenderer,
+  // CreationRenderer,
   AgeRenderer,
   // EmptyRenderer,
   EngagementGetter,
@@ -39,8 +39,10 @@ const FriendsList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
-  const  [filterFrndList,setFilterFrndList] =useState([]);
-  const  [pageSet,setPageSet]=useState(new Set());
+  const [filterFrndList, setFilterFrndList] = useState([]);
+  // const [pageSet, setPageSet] = useState(new Set());
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
 
   // const friendsList = useSelector((state) =>
   //   state.facebook_data.current_friend_list.filter(
@@ -53,10 +55,10 @@ const FriendsList = () => {
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
-  
+
 
   useEffect(() => {
-    const filteredData=friendsList.filter(
+    const filteredData = friendsList.filter(
       (item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
     )
     setFilterFrndList(filteredData)
@@ -74,16 +76,16 @@ const FriendsList = () => {
   const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
     let valA = new Date(nodeA.data.created_at);
     let valB = new Date(nodeB.data.created_at);
-    
+
     return valB - valA
   }
   // get Settings data
   const getSettingsData = async () => {
-    if(mySettings?.data[0]?.friends_willbe_inactive_after) {
+    if (mySettings?.data[0]?.friends_willbe_inactive_after) {
       setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
     } else {
       const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-      if(dataSettings) {
+      if (dataSettings) {
         setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
       }
     }
@@ -97,7 +99,7 @@ const FriendsList = () => {
   const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
     if (nodeA.data.matchedKeyword == nodeB.data.matchedKeyword) return 0;
     return (nodeA.data.matchedKeyword > nodeB.data.matchedKeyword) ? 1 : -1;
-}
+  }
 
   const friendsListinRef = [
     {
@@ -108,9 +110,9 @@ const FriendsList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
-      eaderCheckboxSelectionCurrentPageOnly:true,
+      eaderCheckboxSelectionCurrentPageOnly: true,
       headerCheckboxSelectionFilteredOnly: true,
-     // headerComponentFramework: CustomHeaderCheckbox,
+      // headerComponentFramework: CustomHeaderCheckbox,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -154,9 +156,9 @@ const FriendsList = () => {
     },
     {
       field: "created_at",
-      headerName:"Age"  ,
+      headerName: "Age",
       cellRenderer: AgeRenderer,
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -183,8 +185,8 @@ const FriendsList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
-      filter: "agTextColumnFilter", 
-      cellRenderer : CountryTierRenderer,
+      filter: "agTextColumnFilter",
+      cellRenderer: CountryTierRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -240,7 +242,7 @@ const FriendsList = () => {
         setModalOpen,
       },
       sortable: true,
-      comparator: someComparator ,
+      comparator: someComparator,
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -416,48 +418,53 @@ const FriendsList = () => {
 
   return (
     <div className="main-content-inner d-flex d-flex-column">
-    {modalOpen && (
-      <Modal
-        modalType="normal-type"
-        modalIcon={null}
-        headerText={"Keyword(s)"}
-        bodyText={
-          <>
-          {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
-            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
-              keyWords?.matchedKeyword.map((el, i) =>
-              (<span className={`tags positive-tags`} key={`key-${i}`}>
-                {el}
-              </span>)
-              ) : (
-                "No specific keyword used"
-              )}
-          </>
-        }
-        open={modalOpen}
-        setOpen={setModalOpen}
-        ModalFun={null}
-        btnText={" "}
-        modalButtons={false}
-        additionalClass="modal-keywords"
-      />
-    )}
-      {filterFrndList?.length > 0 && (
-        <>
-          {!loading && inactiveAfter !== null && (
-            <Listing
-            pageSet={pageSet}
-            setPageSet={setPageSet}
-              friendsData={filterFrndList}
-              friendsListingRef={friendsListinRef}
-            />
-          )}
-        </>
+      {modalOpen && (
+        <Modal
+          modalType="normal-type"
+          modalIcon={null}
+          headerText={"Keyword(s)"}
+          bodyText={
+            <>
+              {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+              {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+                keyWords?.matchedKeyword.map((el, i) =>
+                (<span className={`tags positive-tags`} key={`key-${i}`}>
+                  {el}
+                </span>)
+                ) : (
+                  "No specific keyword used"
+                )}
+            </>
+          }
+          open={modalOpen}
+          setOpen={setModalOpen}
+          ModalFun={null}
+          btnText={" "}
+          modalButtons={false}
+          additionalClass="modal-keywords"
+        />
       )}
-      {!filterFrndList.length && loading ? (
-        <ListingLoader />
-      ) : (
-        filterFrndList?.length <= 0 && <NoDataFound />
+      {filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
+        <Listing
+          friendsData={filterFrndList}
+          friendsListingRef={friendsListinRef}
+          getFilterNum={setListFilteredCount}
+          reset={isReset}
+          setReset={setIsReset}
+        />
+      )}
+
+      {/* {filterFrndList?.length === 0 && <NoDataFound />} */}
+
+      {loading && <ListingLoader />}
+
+      {filterFrndList?.length > 0 && listFilteredCount === 0 && (
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

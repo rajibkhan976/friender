@@ -30,18 +30,20 @@ const FriendsList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
-  const [unfriendList,setUnfriendList]=useState([]);
+  const [unfriendList, setUnfriendList] = useState([]);
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const getFbUserIdCall = useOutletContext();
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
   useEffect(() => {
-    const filteredData= friendsList.filter(
+    const filteredData = friendsList.filter(
       (item) => item.deleted_status === 1 && item.friendStatus === "Activate"
     );
-    setUnfriendList(filteredData);  
+    setUnfriendList(filteredData);
     friendsList
       ? dispatch(countCurrentListsize(unfriendList.length))
       : getFbUserIdCall();
@@ -68,7 +70,7 @@ const FriendsList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
-      headerCheckboxSelectionCurrentPageOnly:true,
+      headerCheckboxSelectionCurrentPageOnly: true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -109,7 +111,7 @@ const FriendsList = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -125,7 +127,7 @@ const FriendsList = () => {
       field: "country",
       headerName: "Country Name",
       filter: "agTextColumnFilter",
-      cellRenderer : CountryRenderer,
+      cellRenderer: CountryRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -138,7 +140,7 @@ const FriendsList = () => {
       field: "tier",
       headerName: "Country Tier",
       filter: "agTextColumnFilter",
-      cellRenderer : CountryTierRenderer,
+      cellRenderer: CountryTierRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -159,7 +161,7 @@ const FriendsList = () => {
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
         if (valueA == valueB) return 0;
         return (valueA > valueB) ? 1 : -1;
-    } ,
+      },
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -321,6 +323,9 @@ const FriendsList = () => {
             <Listing
               friendsData={unfriendList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -328,7 +333,12 @@ const FriendsList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        unfriendList?.length <= 0 && <NoDataFound />
+        unfriendList?.length > 0 && listFilteredCount === 0 && <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

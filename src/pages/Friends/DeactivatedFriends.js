@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
- 
+
 import Listing from "../../components/common/Listing";
 import {
   SourceRenderer,
@@ -18,7 +18,7 @@ import {
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
@@ -33,6 +33,8 @@ const DeactivatedFriends = () => {
   );
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
   }, [dispatch, friendsList]);
@@ -95,7 +97,7 @@ const DeactivatedFriends = () => {
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
         if (valueA == valueB) return 0;
         return (valueA > valueB) ? 1 : -1;
-    } ,
+      },
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -243,6 +245,9 @@ const DeactivatedFriends = () => {
             <Listing
               friendsData={friendsList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -250,7 +255,13 @@ const DeactivatedFriends = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        friendsList?.length <= 0 && <NoDataFound />
+        friendsList?.length > 0 && listFilteredCount === 0 &&
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );

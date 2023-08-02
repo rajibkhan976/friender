@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
 import FriendsAction from "../../actions/FriendsAction";
 
- 
+
 import Listing from "../../components/common/Listing";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import {
@@ -39,6 +39,8 @@ const IncomingPendingRequest = () => {
   const dispatch = useDispatch();
   const [friendsList, setFriendsList] = useState([]);
   const [noDataFound, setNoDataFound] = useState(false);
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
 
   const [defaultFbId, setDefaultFbId] = useState(null);
 
@@ -271,12 +273,20 @@ const IncomingPendingRequest = () => {
             friendsListingRef={friendsListinRef}
             setLoadingStatus={setLoadingStatus}
             // pageLoadSize={pageLoadSize}
+            getFilterNum={setListFilteredCount}
+            reset={isReset}
+            setReset={setIsReset}
           />
         </>
       )}
 
       {loading && <ListingLoader />}
-      {noDataFound && <NoDataFound />}
+      {noDataFound && listFilteredCount === 0 && <NoDataFound
+        customText="Whoops!"
+        additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+        interactionText="Clear filter"
+        isInteraction={() => { setIsReset(!isReset) }}
+      />}
     </div>
   );
 };

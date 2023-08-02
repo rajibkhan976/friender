@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { countCurrentListsize } from "../../actions/FriendListAction";
@@ -34,16 +34,18 @@ const WhiteList = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.facebook_data.isLoading);
   const mySettings = useSelector((state) => state.settings.mySettings);
-  const [whiteList,setWhiteList]=useState([]); 
-  const friendsList= useSelector((state) =>
+  const [whiteList, setWhiteList] = useState([]);
+  const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
   const getFbUserIdCall = useOutletContext();
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [inactiveAfter, setInactiveAfter] = useState(null)
+  const [listFilteredCount, setListFilteredCount] = useState(null)
+  const [isReset, setIsReset] = useState(null)
   useEffect(() => {
-    const filteredData=friendsList.filter(
+    const filteredData = friendsList.filter(
       (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.whitelist_status === 1
     );
     setWhiteList(filteredData)
@@ -51,17 +53,17 @@ const WhiteList = () => {
       ? dispatch(countCurrentListsize(filteredData.length))
       : getFbUserIdCall();
 
-      dispatch(syncMainFriendList())
+    dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
 
-  
+
   // get Settings data
   const getSettingsData = async () => {
-    if(mySettings?.data[0]?.friends_willbe_inactive_after) {
+    if (mySettings?.data[0]?.friends_willbe_inactive_after) {
       setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
     } else {
       const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-      if(dataSettings) {
+      if (dataSettings) {
         setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
       }
     }
@@ -94,7 +96,7 @@ const WhiteList = () => {
       showDisabledCheckboxes: true,
       lockPosition: "left",
       filter: "agTextColumnFilter",
-      headerCheckboxSelectionCurrentPageOnly:true,
+      headerCheckboxSelectionCurrentPageOnly: true,
       headerCheckboxSelectionFilteredOnly: true,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -135,7 +137,7 @@ const WhiteList = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip:"Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Number of days back friends synced or unfriended using friender",
       cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -163,7 +165,7 @@ const WhiteList = () => {
     {
       field: "tier",
       headerName: "Country Tier",
-      cellRenderer : CountryTierRenderer,
+      cellRenderer: CountryTierRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -223,7 +225,7 @@ const WhiteList = () => {
       comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
         if (valueA == valueB) return 0;
         return (valueA > valueB) ? 1 : -1;
-    } ,
+      },
       cellRenderer: KeywordRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -397,6 +399,9 @@ const WhiteList = () => {
             <Listing
               friendsData={whiteList}
               friendsListingRef={friendsListinRef}
+              getFilterNum={setListFilteredCount}
+              reset={isReset}
+              setReset={setIsReset}
             />
           )}
         </>
@@ -404,7 +409,12 @@ const WhiteList = () => {
       {loading ? (
         <ListingLoader />
       ) : (
-        whiteList?.length <= 0 && <NoDataFound />
+        whiteList?.length > 0 && listFilteredCount === 0 && <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => { setIsReset(!isReset) }}
+        />
       )}
     </div>
   );
