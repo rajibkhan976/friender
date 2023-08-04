@@ -307,16 +307,15 @@ const LostFriends = () => {
           />
         </>
       )}
-      {loading ? (
-        <ListingLoader />
-      ) : (
-        friendsList?.length > 0 && <NoDataFound
+     {loading && <ListingLoader />}
+     {
+        friendsList?.length > 0 && listFilteredCount===0&&<NoDataFound
           customText="Whoops!"
           additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
           interactionText="Clear filter"
           isInteraction={() => { setIsReset(!isReset) }}
         />
-      )}
+      }
     </div>
   );
 };
