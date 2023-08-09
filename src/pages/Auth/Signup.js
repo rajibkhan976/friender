@@ -128,13 +128,13 @@ const SignupPage = () => {
           </div>
           {emailValidation === null && isSubscribed ? (
             <Button
-              extraClass="btn-primary"
+              extraClass="btn-primary w-100"
               loaderValue={loader}
               btnText="Sign Up"
             />
           ) : (
             <Button
-              extraClass="btn-primary"
+              extraClass="btn-primary w-100"
               loaderValue={loader}
               btnText="Sign Up"
               disable={true}

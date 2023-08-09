@@ -196,14 +196,14 @@ const OnboardingPage = () => {
             selectedValueTwo === "null" &&
             selectedValueThree === "null" ? (
               <Button
-                extraClass="btn-primary"
+                extraClass="btn-primary w-100"
                 btnText="Next"
                 loaderValue={loader}
                 disable={true}
               />
             ) : (
               <Button
-                extraClass="btn-primary"
+                extraClass="btn-primary w-100"
                 btnText="Next"
                 loaderValue={loader}
               />

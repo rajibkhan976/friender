@@ -353,9 +353,9 @@ export const RecentEngagementRenderer = memo((params) => {
             "" : "tooltipFullName small"
         } data-text={(inactiveAfter && statusSync) && "Last engaged on " + dateFormat}>
         {(inactiveAfter && statusSync) ?
-            <span className={inactiveAfter === null ? "activeEngaged muted-text" : days <= inactiveAfter ? "activeEngaged actUser" : "activeEngaged notAct"}>
+            <span className={days > inactiveAfter ? "activeEngaged notAct" : "activeEngaged actUser"}>
               <span className="dot"></span> {days} day(s)
-            </span> : <span className="muted-text">N/A</span>}
+            </span> : <span className="activeEngaged notAct"><span className="dot"></span> Never</span>}
       </span>
     </span>
   );

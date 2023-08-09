@@ -1,6 +1,6 @@
 const Button = ({loaderValue=false, extraClass="", disable=false, btnText=""}) => {
   return (
-      <button className={loaderValue ? "btn-primary loaderbtn"  : extraClass } disabled={disable} >
+      <button className={`btn ${extraClass} ${loaderValue ? 'loaderbtn' : ''}`} disabled={disable} >
         {loaderValue ?
           <div className="stage">
             <div className="dot-pulse"></div>

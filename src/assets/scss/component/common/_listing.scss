@@ -119,6 +119,10 @@
             background-color: rgba($themeGreen4, 0.1);
         }
       }
+
+      &.engagementCell {
+        color: $themeTransparent
+      }
     }
 
     &:hover {
@@ -584,6 +588,7 @@
 
   span {
     text-transform: capitalize;
+    line-height: 1;
   }
 }
 

@@ -413,6 +413,7 @@ const FriendsList = () => {
       valueGetter: EngagementGetter,
       minWidth: 0,
       maxWidth: 0,
+      cellClass: 'engagementCell'
     },
   ];
 

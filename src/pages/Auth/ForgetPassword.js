@@ -90,13 +90,13 @@ const ForgetPasswordPage = () => {
             />
             {emailValidation === null ? (
               <Button
-                extraClass="btn-primary"
+                extraClass="btn-primary w-100"
                 loaderValue={loader}
                 btnText="Continue"
               />
             ) : (
               <Button
-                extraClass="btn-primary"
+                extraClass="btn-primary w-100"
                 loaderValue={loader}
                 btnText="Continue"
                 disable={true}

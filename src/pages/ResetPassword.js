@@ -121,13 +121,13 @@ const ResetPasswordPage = () => {
           <div className="reset-password">
             {passwordNew === passwordConfirm ? (
               <Button
-                extraClass="btn-primary"
+                extraClass="btn-primary w-100"
                 loaderValue={loader}
                 btnText="Next"
               />
             ) : (
               <Button
-                extraClass="btn-primary mismatched"
+                extraClass="btn-primary mismatched w-100"
                 loaderValue={loader}
                 btnText="Passwords did not matched"
                 disable={true}
@@ -136,7 +136,7 @@ const ResetPasswordPage = () => {
           </div>
         ) : (
           <Button
-            extraClass="btn-primary"
+            extraClass="btn-primary w-100"
             loaderValue={loader}
             btnText="Next"
             disable={true}

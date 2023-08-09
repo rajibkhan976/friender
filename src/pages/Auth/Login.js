@@ -88,13 +88,13 @@ const LoginPage = () => {
         {/* <Checkbox labelValue="Remember" boxText="Remember Me" /> */}
         {emailValidation === null && passwordValidation === null ? (
           <Button
-            extraClass="btn-primary"
+            extraClass="btn-primary w-100"
             loaderValue={loader}
             btnText="Continue"
           />
         ) : (
           <Button
-            extraClass="btn-primary"
+            extraClass="btn-primary w-100"
             loaderValue={loader}
             btnText="Continue"
             disable={true}
