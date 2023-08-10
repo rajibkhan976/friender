@@ -126,6 +126,9 @@ const Listing = (props) => {
     }
 
 
+    if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
+ 
+
     // console.log("ther super ssettt>>>>>",event.target.checked);
     // console.log("selectedPageSet>>>>>",selectedPageSet);
   }
@@ -246,6 +249,12 @@ const Listing = (props) => {
 
       gridRef.current.api.addEventListener('paginationChanged', onPaginationChanged);
 
+    }
+
+    if (!selectAllChecked) {
+      //console.log("is ieeee checked", selectAllChecked);
+      if (gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
+    
     }
 
     return () => {
