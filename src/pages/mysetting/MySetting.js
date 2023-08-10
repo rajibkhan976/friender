@@ -206,16 +206,6 @@ const MySetting = () => {
   const msgTmpltObj = [{ value: 0, label: "Select message" }];
   //massage template selector object end
 
-  //selector states
-  const [reFrndSelect1, setReFrndSelect1] = useState(() => {
-    const storedData = localStorage.getItem('fr_refriending_data');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      return parsedData.reFrndngSelect || 1;
-    }
-    return 1;
-  });
-
   const [sndMsgRcvFrndRquSelect, setSndMsgRcvFrndRquSelect] = useState(
     periodObj[0].value
   );
@@ -238,6 +228,16 @@ const MySetting = () => {
   const [dayBackAnlyFrndEngSelect1NEW, setDayBackAnlyFrndEngSelect1NEW] =
     useState(dayObj[0].value);
 
+
+  //selector states
+  const [reFrndSelect1, setReFrndSelect1] = useState(() => {
+    const storedData = localStorage.getItem('fr_refriending_data');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return parsedData.reFrndngSelect || 1;
+    }
+    return 1;
+  });
   //inputs box states
   const [reFrndngInput1, setReFrndngInput1] = useState(() => {
     const storedData = localStorage.getItem('fr_refriending_data');
@@ -252,6 +252,13 @@ const MySetting = () => {
     const storedData = localStorage.getItem('fr_refriending_data');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
+      const FBIdFromAPI = current_fb_id;
+      const FBIdFromBrowser = parsedData?.current_fb_id;
+
+      if (FBIdFromAPI !== FBIdFromBrowser) {
+        return '';
+      }
+
       return parsedData.keywords || '';
     }
     return '';
@@ -299,6 +306,10 @@ const MySetting = () => {
   const [reFriendSaveActive, setReFriendSaveActive] = useState(null);
   const [reFriendOpenKeywords, setReFriendOpenKeywords] = useState(false);
 
+
+  /**
+   * ===== Auto-Saving the Settings with any toggle or button pressed ======
+   */
   useEffect(() => {
     //setLoading(true)
     // console.log("after", render.current)
@@ -320,6 +331,13 @@ const MySetting = () => {
     if (render.current <= 5) {
       render.current = render.current + 1;
     }
+
+    // // Memory cleanup..
+    // return () => {
+    //   // fr_refriending_data Keyword Data is going to be deleted after mounted out from component..
+    //   localStorage.removeItem('fr_refriending_data');
+    // };
+
   }, [
     settingFetched,
     dontSendFrindReqFrnd,
@@ -420,8 +438,40 @@ const MySetting = () => {
 
   // console.log('refrnding -- ', reFrndng);
 
-  //massege template select end
-  const saveMySetting = () => {
+
+  /**
+   * ==== When User Changed The Account Then Keywords with Different Useer will be Update =====
+   */
+  useEffect(() => {
+    // Fetching the API Setting here..
+    dispatch(getMySettings({ fbUserId: `${current_fb_id}` })).unwrap().then((res) => {
+      const responseData = res?.data[0];
+      const responsedAPIReFrndingKeywords = responseData?.re_friending_settings[0]?.keywords;
+      const fbUserIdFromAPI = current_fb_id;
+      const fbUserIdFromBrowser = JSON.parse(localStorage.getItem('fr_refriending_data'))?.current_fb_id;
+  
+      // console.log("------- ReFriending =---------- ", reFrndngKeywords);
+      // console.log("Fetch API data -- ", responsedAPIReFrndingKeywords);
+      // console.log("IDDDD -- ", fbUserIdFromAPI, fbUserIdFromBrowser);
+  
+      if (fbUserIdFromAPI !== fbUserIdFromBrowser) {
+        // console.log(" C H A N G E D");
+        const existingStorageData = JSON.parse(localStorage.getItem('fr_refriending_data') || '{}');
+        existingStorageData.keywords = responsedAPIReFrndingKeywords;
+        localStorage.setItem('fr_refriending_data', JSON.stringify(existingStorageData));
+      }
+
+    }).catch((err) => {
+      Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+    });
+
+  }, []);
+
+  /**
+   * ====== Setting API Payload Saving Function =======
+   * @returns 
+   */
+  const saveMySetting = (withSaveButton = false) => {
     const payload = {
       // token: userToken,
       dont_send_friend_requests_prople_ive_been_friends_with_before:
@@ -454,8 +504,15 @@ const MySetting = () => {
           remove_pending_friend_request_after: reFrndngInput1 ? reFrndngInput1 : 1,
           instantly_resend_friend_request: reFrndSelect1 ? reFrndSelect1 : 1,
           use_keyword: reFriendOpenKeywords,
-          keywords: reFrndngKeywords,
+          keywords: localStorage.getItem('fr_refriending_data') && JSON.parse(localStorage.getItem('fr_refriending_data') || '')?.keywords,
         };
+
+        if (withSaveButton) {
+          payload.re_friending_settings = {
+            ...payload.re_friending_settings,
+            keywords: reFrndngKeywords,
+          };
+        }
 
       } else {
         setReFrndngInput1(1);
@@ -468,8 +525,15 @@ const MySetting = () => {
         remove_pending_friend_request_after: reFrndngInput1 ? reFrndngInput1 : 1,
         instantly_resend_friend_request: reFrndSelect1 ? reFrndSelect1 : 1,
         use_keyword: reFriendOpenKeywords,
-        keywords: reFrndngKeywords,
+        keywords: localStorage.getItem('fr_refriending_data') && JSON.parse(localStorage.getItem('fr_refriending_data') || '')?.keywords,
       };
+
+      if (withSaveButton) {
+        payload.re_friending_settings = {
+          ...payload.re_friending_settings,
+          keywords: reFrndngKeywords,
+        };
+      }
     }
     //refriending end
 
@@ -622,6 +686,12 @@ const MySetting = () => {
     });
   };
 
+
+  /**
+   * ===== Syncing API Setting Data Fetching to set with Saved Data ====
+   * @param {*} data 
+   * @returns 
+   */
   const syncSettings = (data) => {
     // console.log("i am the data which creating change in setting**", data);
     if (!data) return;
@@ -844,6 +914,7 @@ const MySetting = () => {
           setReFrndngInput1(parseInt(reFrndngInput1) + 1);
 
           const storageData = {
+            current_fb_id: current_fb_id,
             reFrndngInput: parseInt(reFrndngInput1) + 1,
             reFrndngSelect: reFrndSelect1,
             keywords: reFrndngKeywords,
@@ -859,6 +930,7 @@ const MySetting = () => {
           setReFrndngInput1(parseInt(reFrndngInput1) - 1);
 
           const storageData = {
+            current_fb_id: current_fb_id,
             reFrndngInput: parseInt(reFrndngInput1) - 1,
             reFrndngSelect: reFrndSelect1,
             keywords: reFrndngKeywords,
@@ -938,6 +1010,7 @@ const MySetting = () => {
 
     let inputValue = value;
     let storageData = {
+      current_fb_id: current_fb_id,
       reFrndngInput: inputValue,
       reFrndngSelect: reFrndSelect1,
       keywords: reFrndngKeywords,
@@ -971,6 +1044,7 @@ const MySetting = () => {
     setReFrndSelect1(parsedValue);
 
     const jsonStorageData = JSON.stringify({
+      current_fb_id: current_fb_id,
       reFrndngInput: reFrndngInput1,
       reFrndngSelect: parsedValue,
       keywords: reFrndngKeywords,
@@ -1132,8 +1206,12 @@ const MySetting = () => {
     // console.log("Save Re-Friending Keywords -- ", reFrndngKeywords);
     // console.log("re-friending after -- ", reFrndngInput1);
     // console.log("re-frending attemps -- ", reFrndSelect1);
+
+    // Passed with Bool (true|false) because of to save only clicking save button, 
+    // not automatically with all settings changes... (Don't remove the boolean type and for the function itself calling)
     saveMySetting(true);
     const storageData = {
+      current_fb_id: current_fb_id,
       reFrndngInput: reFrndngInput1,
       reFrndngSelect: reFrndSelect1,
       keywords,
@@ -1388,16 +1466,16 @@ const MySetting = () => {
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
                 {" "}
                 <span onClick={() => {
-                    if (!reFrndng) {
-                      Alertbox(
-                        "Please turn on the setting to make changes",
-                        "warning",
-                        1000,
-                        "bottom-right"
-                      );
-                      return;
-                    }
-                  }}>
+                  if (!reFrndng) {
+                    Alertbox(
+                      "Please turn on the setting to make changes",
+                      "warning",
+                      1000,
+                      "bottom-right"
+                    );
+                    return;
+                  }
+                }}>
                   <div className={!reFrndng ? "input-num disabled" : "input-num"}>
                     <input
                       type="number"
@@ -1547,38 +1625,38 @@ const MySetting = () => {
               <div className="setting-child others">
                 Cancel sent friend request(s) after
                 {" "}
-                  <span onClick={() => {
-                    if (!autoCnclFrndRque) {
-                      Alertbox(
-                        "Please turn on the setting to make changes",
-                        "warning",
-                        1000,
-                        "bottom-right"
-                      );
-                      return;
-                    }
-                  }}>
-                    <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
-                      <input
-                        type="number"
-                        className="setting-input"
-                        value={cnclFrndRqueInput}
-                        onKeyDown={e => checkData(e)}
-                        onChange={deletePendingFrndInputHandle}
-                      // onBlur={deletePendingRequestWithDaysHandle}
-                      />
+                <span onClick={() => {
+                  if (!autoCnclFrndRque) {
+                    Alertbox(
+                      "Please turn on the setting to make changes",
+                      "warning",
+                      1000,
+                      "bottom-right"
+                    );
+                    return;
+                  }
+                }}>
+                  <div className={!autoCnclFrndRque ? "input-num disabled" : "input-num"}>
+                    <input
+                      type="number"
+                      className="setting-input"
+                      value={cnclFrndRqueInput}
+                      onKeyDown={e => checkData(e)}
+                      onChange={deletePendingFrndInputHandle}
+                    // onBlur={deletePendingRequestWithDaysHandle}
+                    />
 
-                      <div className="input-arrows">
-                        <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
-                          <ChevronUpArrowIcon size={15} />
-                        </button>
+                    <div className="input-arrows">
+                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("INCREMENT")}>
+                        <ChevronUpArrowIcon size={15} />
+                      </button>
 
-                        <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
-                          <ChevronDownArrowIcon size={15} />
-                        </button>
-                      </div>
+                      <button className="btn inline-btn btn-transparent" onClick={() => setValOfDeletePendingFrndIncDic("DECREMENT")}>
+                        <ChevronDownArrowIcon size={15} />
+                      </button>
                     </div>
-                  </span>
+                  </div>
+                </span>
                 {" "}
                 day(s)
                 {deletePendingFrndError && <span className="error-text">Provided value must be within the range of 1 to 31</span>}

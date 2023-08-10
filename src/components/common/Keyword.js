@@ -14,7 +14,7 @@ const Keywords = (props) => {
    */
   useEffect(() => {
     if (!isModified) {
-      if (reFrndngKeywords.length) {
+      if (reFrndngKeywords && reFrndngKeywords.length) {
         setModify(false);
       }
     }
@@ -23,6 +23,11 @@ const Keywords = (props) => {
     }
   }, [isModified]);
 
+
+  /**
+   * ===== Handle Keywords Input Key Down when we pressed in textfield ======
+   * @param {*} event 
+   */
   const handleKeywordsInputKeyDown = (event) => {
     if (event.key === 'Enter' && reFrndngInput2.trim() !== '') {
       event.preventDefault();
@@ -37,43 +42,35 @@ const Keywords = (props) => {
     }
   };
 
-  // const addKeywords = (keyword) => {
-  //   const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
-  //   const filteredKeywords = newKeywords.filter((KW) => KW !== '');
-  //   const uniqueKeywords = filteredKeywords.filter((KW) => {
-  //     const lowercaseKW = KW.toLowerCase();
-  //     return !reFrndngKeywords.toLowerCase().split(',').some((existingKW) => {
-  //       return existingKW.trim().toLowerCase() === lowercaseKW || existingKW.trim().toLowerCase().includes(` ${lowercaseKW}`);
-  //     });
-  //   });
-
-  //   if (uniqueKeywords.length > 0) {
-  //     const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}` : uniqueKeywords.join(',');
-  //     setFrndngKeywords(updatedKeywords);
-  //   }
-
-  //   setReFrndngInput2('');
-  // };
-  
-  
+  /**
+   * ==== Adding Keyword with Separated Comma User only with Strings ======
+   * @param {*} keyword 
+   */
   const addKeywords = (keyword) => {
     const newKeywords = keyword.split(/[,]+/).map((KW) => KW.trim());
     const filteredKeywords = newKeywords.filter((KW) => KW !== '');
     const uniqueKeywords = filteredKeywords.filter((KW) => {
-      return !reFrndngKeywords.split(',').some((existingKW) => {
-        return existingKW.trim() === KW || existingKW.trim() === KW || existingKW.trim().includes(` ${KW}`);
-      });
+      if (reFrndngKeywords !== null) {
+        return !reFrndngKeywords.split(',').some((existingKW) => {
+          return existingKW.trim() === KW || existingKW.trim() === KW || existingKW.trim().includes(` ${KW}`);
+        });
+      }
+      return true; // If reFrndngKeywords is null, treat as if no existing keywords
     });
-    
+
     if (uniqueKeywords.length > 0) {
       const updatedKeywords = reFrndngKeywords ? `${reFrndngKeywords}, ${uniqueKeywords.join(',')}` : uniqueKeywords.join(',');
       setFrndngKeywords(updatedKeywords);
     }
-    
+
     setReFrndngInput2('');
   };
 
 
+  /**
+   * ==== Remove Keyword with Press the (x) cross button from string Badgets =====
+   * @param {*} keyword 
+   */
   const removeKeyword = (keyword) => {
     // For String Case..
     const updatedKeywords = reFrndngKeywords.split(',').filter((KW) => KW.trim() !== keyword.trim()).join(',');
@@ -82,6 +79,7 @@ const Keywords = (props) => {
     // For Array Case..
     // setReFrndngKeywords(reFrndngKeywords.filter((KW) => KW !== keyword));
   };
+
 
   return (
     <div className="inputBlock">
