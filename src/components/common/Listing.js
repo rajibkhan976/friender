@@ -126,7 +126,10 @@ const Listing = (props) => {
     }
 
 
-    if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
+    if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);
+      onChangeCheck();
+    
+    }
  
 
     // console.log("ther super ssettt>>>>>",event.target.checked);
