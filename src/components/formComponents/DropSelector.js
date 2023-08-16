@@ -1,6 +1,6 @@
 import React from 'react'
 
-function DropSelector({ selects, value, defaultValue, id, handleChange, height = "40px", width = "103px", setDisable = false, extraClass }) {
+function DropSelector({ selects, value, defaultValue, id, handleChange, height = "40px", width = "103px", setDisable = false, extraClass="" }) {
   // selects should be array of Object 
   // {
   //     value:"",

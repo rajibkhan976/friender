@@ -20,7 +20,7 @@ const Award = (props) => {
                 loop = {4}
                 play
                 background="transparent"
-                style={{ width: "200px", height: "200px" }}
+                style={{ width: "221px", height: "192px" }}
               />
           {/* Lotti animation placed */}
         </div>
@@ -30,14 +30,14 @@ const Award = (props) => {
                 loop = {4}
                 play
                 background="transparent"
-                style={{ width: "200px", height: "200px" }}
+                style={{ width: "221px", height: "192px" }}
               />
           {/* Lotti animation placed */}
         </div>
       </div>
       <div className="reward-right-section">
         <h2>Congratulations!</h2>
-        <p>You have sucessfully completed your first 3 steps</p>
+        <p>You have sucessfully completed your first 4 steps</p>
 
         <Link to="/friends/friend-list" className="btn-primary btn link-btn">Your friend list is ready. Click here</Link>
         {/* <div className="time-save-wraper d-flex">

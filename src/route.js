@@ -13,6 +13,7 @@ import ResetPasswordPage from "./pages/ResetPassword";
 import OnboardingPage from "./pages/Onboarding";
 import GettingStartedPage from "./pages/GettingStarted";
 import AuthLayout from "./pages/Auth/AuthLayout";
+import FacebookAuthApp from "./pages/FacebookAuthApp";
 // import InstallSuccess from "./pages/extension/InstallSuccess";
 import MySetting from "./pages/mysetting/MySetting";
 import FriendRequestSentVersion from "./pages/mysetting/FriendRequestSentVersion";
@@ -207,6 +208,7 @@ const Routeing = () => {
               ></Route>
             </Route>
             <Route path="onboarding" element={<OnboardingPage />}></Route>
+            <Route path="/facebook-auth" element={<FacebookAuthApp />}></Route>
           </Route>
         </Route>
         <Route element={<UnProtectedRoute />}>

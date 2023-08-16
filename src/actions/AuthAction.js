@@ -69,9 +69,10 @@ export const resetUserPass=createAsyncThunk(
 
 export const onboardingUser=createAsyncThunk(
   "auth/onboardingUser",
-  async ({question_one,question_two,question_three,token})=>{
+  async ({question_one,question_two,question_three,question_four,token})=>{
+    console.log(question_one,question_two,question_three,question_four,token);
     //console.log("token,question_one,question_two,question_three, :: ", token,question_one,question_two,question_three,);
-      const res=await onboarding(token,question_one,question_two,question_three,);
+      const res=await onboarding(token,question_one,question_two,question_three,question_four);
       return res;
 
   }

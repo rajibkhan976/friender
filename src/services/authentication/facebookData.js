@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../configuration/config";
-
+import Alertbox from "../../components/common/Toast";
 let headers = {
   "Content-Type": "application/json"
 };
@@ -13,11 +13,19 @@ export const saveUserProfile = (profilebody)=>{
         profilebody,
         {headers: headers}
       ).then((result)=>{
-          resolve(result.data);
+        console.log("result",result)
+          resolve(result);
       })
-      .catch((error)=>{
-        // console.log("error:::", error.message);
-        reject(error?.response?.data ? error.response.data : error.message);
+      .catch((error)=>{ 
+        if(error == "Request failed with status code 409"){
+           Alertbox(
+            `The facebook account you are trying to connect is already connected to a different account.`,
+            "error",
+            1000,
+            "bottom-right"
+          );
+        }
+        resolve(error?.response?.data ? error.response.data : error.message);
       })
   })
 }

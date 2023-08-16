@@ -18,7 +18,7 @@ const initialState = {
   current_friend_list: [],
 };
 
-const storeFriendListIndexDb = async (fbId, friendList) => {
+export const storeFriendListIndexDb = async (fbId, friendList) => {
   // console.log("starting storing the dat in IDB with fb id", fbId);
   try {
     // Add the new friend!
@@ -37,7 +37,7 @@ export const getFriendList = createAsyncThunk(
   async (payload) => {
     const res = await fetchFriendList(payload);
 
-    let friendList = res?.data[0].friend_details
+    let friendList = res?.data?.[0].friend_details
       ? res.data[0].friend_details.length
       : false;
 

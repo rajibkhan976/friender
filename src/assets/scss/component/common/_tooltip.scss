@@ -175,6 +175,8 @@
     max-width: 250px;
     min-width: 216px;
     padding: 16px 20px;
+    @include theme-aware('background', 'tooltip-background-message');
+
     .footer {
       width: 100%;
       display: flex;
@@ -209,7 +211,8 @@
   // }
 
   &.fr-tooltipPro-query,
-  &.fr-tooltipPro-info {
+  &.fr-tooltipPro-info,
+  &.fr-tooltipPro-query-2 {
     .fr-tooltipPro-content {
       @include theme-aware("background-color", "tooltip-bg");
       @include theme-aware("color", "tooltip-text");
@@ -288,6 +291,22 @@
       -moz-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
       -o-transform: translateY(-50%);
+    }
+  }
+
+  &.fr-tooltipPro-top {
+    .fr-tooltipPro-content {
+      left: 50%;
+      transform: translateX(-50%);
+
+      &::after {
+        transform-origin: 5px 6px;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        margin-top: -7px;
+        border-radius: 3px;
+      }
     }
   }
 }

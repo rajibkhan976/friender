@@ -4,7 +4,7 @@ import ProfilePhoto from "../../assets/images/profilePhoto.png";
 
 
 const SidebarPopUp = (props) => {
-
+  console.log("******** PROPS",props)
   return (
     <div
     className={

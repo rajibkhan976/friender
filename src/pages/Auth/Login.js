@@ -53,7 +53,10 @@ const LoginPage = () => {
   return (
     <div className={module["page-wrapers"]}>
       <div className={module["logo-wraper"]}>
-        <Logo />
+        <span className={module["logo-wraper-text"]}>
+          <Logo />
+          <span>Your organic marketing best friend</span>
+        </span>
       </div>
       <div className={module["auth-heading-info"]}>
         <h3 className="text-center">Welcome Back !</h3>

@@ -12,6 +12,7 @@
     user-select: none;
     display: inline-flex;
     vertical-align: middle;
+    align-items: center;
     
     input {
       width: 100%;
@@ -54,6 +55,16 @@
       background-image: url('../../../SVG/tick-white.svg');
       background-position: center center;
       background-repeat: no-repeat;
+    }
+
+    .checkmark-text {
+      @include theme-aware("color", "link-text-color");
+      letter-spacing: 0.42px;
+      font-weight: 500;
+      font-size: $smallFontSize;
+      margin-left: 4px;
+      display: inline-flex;
+      vertical-align: middle;
     }
   }
 

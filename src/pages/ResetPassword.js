@@ -77,7 +77,6 @@ const ResetPasswordPage = () => {
     } else {
       //console.log('in next');
       setResetToken("");
-
       navigate("/");
     }
   }, []);

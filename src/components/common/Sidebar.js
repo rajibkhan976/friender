@@ -53,6 +53,11 @@ const Sidebar = (props) => {
   const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
   const onboarding_token = parseInt(localStorage.getItem("fr_pass_changed"));
   const menu_status_refresh = parseInt(localStorage.getItem("submenu_status"));
+  const facebookAuthInfoStatus = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+
+
+  // console.log("()()()()()f acebook auth info",facebookAuthInfoStatus?.accessToken)
+
   const [sidebarOpenFriends, setSidebarOpenFriends] = useState(false);
   const profiles = useSelector((state) => state.profilespace.profiles);
   const [token,setToken]=useState(localStorage.getItem('fr_token'))
@@ -75,8 +80,11 @@ const Sidebar = (props) => {
   }, []);
 
   useEffect(() => {
+    // alert("a")
     getProfileData();
   }, []);
+
+
   const dispatch = useDispatch();
 
   // socket.on("sendUpdate", (resp) => {
@@ -107,10 +115,16 @@ const Sidebar = (props) => {
     localStorage.removeItem("friendLength");
   });
   useEffect(()=>{
+    // alert("b")
+    // setAuthenticated(false)
     const resetpassword_status = parseInt(localStorage.getItem("fr_onboarding"));
-  const onboarding_status = parseInt(localStorage.getItem("fr_pass_changed"));
-  const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
-  if (resetpassword_status === 1 && onboarding_status === 1) {
+    const onboarding_status = parseInt(localStorage.getItem("fr_pass_changed"));
+    const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+
+
+
+  if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
     setAuthenticated(true);
   }
@@ -123,7 +137,8 @@ const Sidebar = (props) => {
   },[props.isSynced])
 
   useEffect(() => {
-    if (resetpassword_token === 1 && onboarding_token === 1) {
+    // alert("c")
+    if (resetpassword_token === 1 && onboarding_token === 1 && facebookAuthInfoStatus?.accessToken!=undefined && facebookAuthInfoStatus?.accessToken) {
       // console.log("authenticated:::::::::::::::>>>>>>>>>")
       setAuthenticated(true);
     }
@@ -208,6 +223,7 @@ const Sidebar = (props) => {
   const userEmail = localStorage.getItem("fr_default_email");
 
   const getProfileData = () => {
+    // alert("sidebar")
     fetchUserProfile().then((res) => {
       if (res && res.length) {
         // setProfiles(res);
@@ -254,10 +270,18 @@ const Sidebar = (props) => {
     setSidebarOpenFn();
   };
 
-  // useEffect(() => {
-  //   console.log("setSubMenuFriendsFn", checkIfNotFriends());
-  //   setSubMenuFriends(checkIfNotFriends());
-  // }, [location])
+  useEffect(() => {
+    if(
+      location.pathname === "/facebook-auth" ||
+      location.pathname === "/reset-password" ||
+      location.pathname === "/onboarding"
+    ) {
+      localStorage.setItem("fr_sidebarToogle", true);
+      setSidebarToogle(true);
+    }
+    // console.log("setSubMenuFriendsFn", checkIfNotFriends());
+    // setSubMenuFriends(checkIfNotFriends());
+  }, [location])
 
   return (
     <aside
@@ -267,11 +291,12 @@ const Sidebar = (props) => {
           : "sidebar d-flex d-flex-column f-justify-start"
       }
     >
+      {/* {console.log("authenticated",authenticated)} */}
       {props.resetPass ? (
         <></>
       ) : (
         <>
-          {authenticated && (
+          {authenticated && facebookAuthInfoStatus?.accessToken &&(
             <span
               className={sidebarToogle ? "menu-toogle closed" : "menu-toogle"}
               onClick={setSidebarToogleFn} 
@@ -295,14 +320,14 @@ const Sidebar = (props) => {
           </figure>
           <figure
             className={
-              authenticated
+              authenticated && facebookAuthInfoStatus?.accessToken 
                 ? "sidebar-logo logo-closed"
                 : "sidebar-logo logo-closed no-click"
             }
           >
             <img src={logoClosed} alt="" loading="lazy" />
           </figure>
-          {authenticated && (
+          {authenticated && facebookAuthInfoStatus?.accessToken && (
             <span className="settings-menu" onClick={setSidebarHomeOpenFn}>
               <NavLink 
                 to="/settings/settings" 
@@ -319,7 +344,7 @@ const Sidebar = (props) => {
           )}
         </div>
         <nav className={props.resetPass ? "nav-bar no-click" : "nav-bar"}>
-          {authenticated && (
+          {authenticated && facebookAuthInfoStatus?.accessToken && (
             <ul>
               {/* <span className="seperator"></span> */}
               <li
@@ -476,7 +501,7 @@ const Sidebar = (props) => {
           )}
         </nav>
 
-        {authenticated && (
+        {authenticated && facebookAuthInfoStatus?.accessToken && (
           sidebarToogle ? 
           <nav
             className="nav-bar bottom-nav-only m-top-a closed-only"

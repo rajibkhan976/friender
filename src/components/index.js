@@ -5,6 +5,9 @@ import { LoaderContext } from "../context/PageLoaderContext";
 import { ModeContext } from "../context/ThemeContext";
 import PageLoader from "../components/common/loaders/PageLoader";
 import { ToastContainer } from "react-toastify";
+import {
+  fetchUserProfile,
+} from "../services/authentication/facebookData";
 // import socket  from "../configuration/socket-connection";
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 const Sidebar = lazy(() => import("./common/Sidebar"));
@@ -62,24 +65,78 @@ const MainComponent = () => {
   }
 
   useEffect(() => {
-    let password_reset_status = localStorage.getItem("fr_pass_changed");
-    let user_onbording_status = localStorage.getItem("fr_onboarding");
-
-    if (password_reset_status != 1) {
-      navigate("/reset-password");
-    } else {
-      if (user_onbording_status != 1) {
-        navigate("/onboarding");
-      }
-    }
     switchLoaderOn();
+    const fetchUserData = async () => {
+      try {
+        let password_reset_status = await localStorage.getItem("fr_pass_changed");
+        let user_onbording_status = await localStorage.getItem("fr_onboarding");
+        const userProfile = await fetchUserProfile();
+        let fbAuthValidation =  userProfile[0]?.fb_auth_info
+        
+        if(fbAuthValidation!=undefined && user_onbording_status == 1){
+          localStorage.setItem('fr_facebook_auth',JSON.stringify(fbAuthValidation))
+        }
+
+        console.log("****** user profile",userProfile,user_onbording_status,(fbAuthValidation == undefined || fbAuthValidation!=undefined) &&  password_reset_status== 1 && user_onbording_status == "0")
+        if(fbAuthValidation==undefined){
+          console.log("1")
+          localStorage.removeItem("fr_facebook_auth")
+          navigate("/facebook-auth")
+
+          // facebook auth : true && reset password  : false = go to reset password
+        }else if(fbAuthValidation!=undefined && password_reset_status != 1){
+          console.log("2")
+          navigate("/reset-password")
+          // facebook auth : true && user onboarding : false =  go back to facebook auth
+        }else if(fbAuthValidation!=undefined  && user_onbording_status !=1){
+          console.log("3")
+          navigate("/facebook-auth")
+        }else{
+          // facebook auth : true && reset password : true && onboarding : true = getting started
+            // console.log("4")
+            // navigate("/getting-started")
+        }
+        onPageLoad()
+        
+        // if((fbAuthValidation == undefined || fbAuthValidation!=undefined) &&  password_reset_status== 1 && user_onbording_status == "0"){
+        //   navigate("/")
+        // }
+
+
+
+        
+
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+
+    fetchUserData()
+
+    
+  
+
+    // console.log("*******************user_onboarding_status",user_onbording_status)
+
+    // if (password_reset_status != 1) {
+    //   navigate("/reset-password");
+    // } else {
+    //   if (user_onbording_status != 1) {
+    //     navigate("/onboarding");
+    //   }
+    // }
+ 
+
+   
 
     const onPageLoad = () => {
       switchLoaderOff();
     };
 
     if (document.readyState === "complete") {
-      onPageLoad();
+      // onPageLoad();
     } else {
       window.addEventListener("load", onPageLoad);
       return () => window.removeEventListener("load", onPageLoad);

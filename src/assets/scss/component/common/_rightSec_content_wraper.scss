@@ -8,7 +8,7 @@
   width: 100%;
   height: 100vh;
   margin-bottom: 0;
-  @include theme-aware('background', 'menu-bg');
+  // @include theme-aware('background', 'menu-bg');
   // box-shadow: 0px 0px 20px rgb(0 0 0 / 8%);
   // border-radius: 10px 10px 10px 10px;
   overflow-y: auto;
@@ -113,12 +113,15 @@
     .fb-connection-rules {
       @include margins (0 , 0, 0px, 80px);
       .facebook-connect-wraper {
+        max-width: 1321px;
         align-items: center;
         @include margins (0 , 0, 30px, 0px);
-        background: #1E1E1E      ;
-        border: 2px solid $themeDefaultSecondary2;
+        background: #1E1E1E;
+        border: 2px solid;
+        @include theme-aware('border-color', 'sidebar-border-color');
         border-radius: 5px;
         display: block;
+        @include theme-aware('background', 'award-background');
         .no-fb-present {
          @include paddings (25px, 30px, 30px, 30px);
           .connect-error {
@@ -171,13 +174,15 @@
           @include paddings (15px, 27px, 30px, 27px);
           .facebook-profile-info-wraper {
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             .profile-fb-img {
-              width: 67px;
-              height: 67px;
+              width: 60px;
+              height: 60px;
               border-radius: 50%;
               overflow: hidden;
               margin-right: 16px;
+              display: flex;
+              align-items: center;
               img {
                 width: 60px;
                 height: 60px;
@@ -211,9 +216,11 @@
           .fb-connect-btn-wraper {
             display: flex;
             align-items: center;
-            padding-left: 85px;
+            // padding-left: 85px;
             .fb-connect-btn {
-              background: #605BFF;
+              // background: #605BFF;
+              background-color: #006FFF;
+              height: 40px;
               border-radius: 5px;
               color: $themeDefaultPrimary2;
               border:none;
@@ -222,25 +229,33 @@
               @include paddings (10px, 20px, 10px, 20px);
               cursor: pointer;
               margin-right: 30px;
+
+              svg {
+                margin-right: 10px;
+              }
             }
             .fb-reset-btn {
               background: transparent;
               box-shadow: none;
               @include paddings (11px, 20px, 12px, 20px);
+              height: 40px;
               border: 1px solid transparent;
-              color: $themeDefaultPrimary4;
+              // color: $themeDefaultPrimary4;
+              color: $themeDefaultPrimary1;
               font-size: 14px;
               font-weight: 600;
               border-radius: 5px;
               cursor: pointer;
               &:hover {
-                border: 1px solid $themeDefaultPrimary4;
+                // border: 1px solid $themeDefaultPrimary4;
+                border: 1px solid $themeDefaultPrimary1;
               }
             }
           }
           .facebook-connection-problem {
-            margin-top: 15px;
-            padding-left: 85px;
+            // margin-top: 15px;
+            margin-bottom: 38px;
+            // padding-left: 85px;
             color: $themeRed1;
             font-weight: 500;
             line-height: 13px;
@@ -294,6 +309,9 @@
           flex: 0 0 100%;
           .reward-left-section {
             margin-right: 25px;
+            svg {
+              margin-top: -15px;
+            }
           }
           .reward-right-section {
             max-width: 330px;
@@ -412,7 +430,11 @@
           }
         }
       }
-  }
+    }
+
+    .fr-tooltipPro-content {
+      text-align: center;
+    }
   }  
 }
 

@@ -7,6 +7,7 @@ import Button from "../components/formComponents/Button";
 import module from "./Auth/styling/authpages.module.scss";
 import { onboardingUser } from "../actions/AuthAction";
 import DropSelector from "../components/formComponents/DropSelector";
+import NumberInput from "../components/formComponents/NumberInput";
 const OnboardingPage = () => {
   // let token = localStorage.getItem("fr_token");
   // let token_onboarding = localStorage.getItem("fr_onboarding");
@@ -78,11 +79,10 @@ const OnboardingPage = () => {
     },
   ];
 
-  const [selectedValueOne, setSelectedValueOne] = useState("null");
-  const [selectedValueTwo, setSelectedValueTwo] = useState("null");
-  const [selectedValueThree, setSelectedValueThree] = useState("null");
-
-  useEffect(() => {}, [selectedValueOne, selectedValueTwo, selectedValueThree]);
+  const [selectedValueOne, setSelectedValueOne] = useState("");
+  const [selectedValueTwo, setSelectedValueTwo] = useState("");
+  const [selectedValueThree, setSelectedValueThree] = useState("");
+  const [valuationValue, setValuationValue] = useState(1);
 
   const handelerSubmit = (e) => {
     e.preventDefault();
@@ -94,6 +94,7 @@ const OnboardingPage = () => {
         question_one: selectedValueOne,
         question_two: selectedValueTwo,
         question_three: selectedValueThree,
+        question_four: valuationValue
         // token: token,
       })
     )
@@ -112,39 +113,58 @@ const OnboardingPage = () => {
       });
   };
 
-  const handelerSkipSubmit = (e) => {
-    e.preventDefault();
-    //setLoader(true);
+  // const handelerSkipSubmit = (e) => {
+  //   e.preventDefault();
+  //   //setLoader(true);
 
-    dispatch(
-      onboardingUser({
-        token: localStorage.getItem("fr_token"),
-        question_one: "null",
-        question_two: "null",
-        question_three: "null",
-        // token: token,
-      })
-    )
-      .unwrap()
-      .then((response) => {
-        //navigate('/success');
-        //setSuccess(true);
-        localStorage.setItem("fr_onboarding", 1);
-        navigate("/");
-      })
-      .catch((error) => {
-        setSuccess(error);
-      })
-      .finally(() => {
-        setLoader(false);
-      });
-  };
+  //   dispatch(
+  //     onboardingUser({
+  //       token: localStorage.getItem("fr_token"),
+  //       question_one: null,
+  //       question_two: null,
+  //       question_three: null,
+  //       // token: token,
+  //     })
+  //   )
+  //     .unwrap()
+  //     .then((response) => {
+  //       //navigate('/success');
+  //       //setSuccess(true);
+  //       localStorage.setItem("fr_onboarding", 1);
+  //       navigate("/getting-started");
+  //     })
+  //     .catch((error) => {
+  //       setSuccess(error);
+  //     })
+  //     .finally(() => {
+  //       setLoader(false);
+  //     });
+  // };
+
+  const changeValuation = (e) => {
+    setValuationValue(Number(e).toFixed(2) === 0 ? 1 : e)
+  }
+
+  useEffect(()=>{
+    /**
+     * If user revisit/refresh on this page and detials are not submitted then send back to the facebook auth screen.
+     */
+      let checkIfRevisit = localStorage.getItem('onboaring_page_check')
+      if(checkIfRevisit != undefined && checkIfRevisit == 'true'){
+        localStorage.removeItem("fr_facebook_auth")
+        localStorage.setItem('onboaring_page_check',false)
+        navigate("/")
+      }else{
+        localStorage.setItem('onboaring_page_check',true)
+      }
+  },[])
 
   return (
     <>
+      {/* REMOVED DUE TO LOGIN NEW PROCESS
       <span className="skip-wraper" onClick={handelerSkipSubmit}>
         Skip
-      </span>
+      </span> */}
       <div className="page-wrapers">
         <div className={module["auth-heading-info"]}>
           <h3 className="text-center onboarding-heading">
@@ -186,15 +206,30 @@ const OnboardingPage = () => {
               width={"100%"}
             />
           </div>
+          <div className="selectbox-wraper">
+            <p>How much do you value 1 hour of your time in dollars?</p>
+            <div className={(valuationValue === "" || valuationValue <= 0) ? "input-wrapper error-wrapper" : "input-wrapper"}>
+              <NumberInput
+                numberName="valuation"
+                numberValue={valuationValue}
+                numberChange={(e)=>changeValuation(e)}
+                hasControl={true}
+                setValuation={setValuationValue}
+                hasPrefix="$"
+              />
+            </div>
+              {valuationValue === "" && <span className="error-mesage">Blank not allowed</span>}
+          </div>
           {success && (
             <span className="error-mesage existing-email text-center margin-up-down">
               {success}
             </span>
           )}
           <div className="reset-password buttons-submit">
-            {selectedValueOne === "null" &&
-            selectedValueTwo === "null" &&
-            selectedValueThree === "null" ? (
+            {(selectedValueOne === "" ||
+            selectedValueTwo === "" ||
+            selectedValueThree === "" ||
+            (valuationValue <= 0 || valuationValue === "")) ? (
               <Button
                 extraClass="btn-primary w-100"
                 btnText="Next"

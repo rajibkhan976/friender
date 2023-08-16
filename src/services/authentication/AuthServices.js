@@ -71,6 +71,12 @@ export const userLogout = () => {
   localStorage.removeItem("fr_default_fb");
   localStorage.removeItem("fr_default_email");
   localStorage.removeItem("syncedFriend");
+  localStorage.removeItem("onboaring_page_check")
+  localStorage.removeItem('fr_gs_synced')
+  /**
+   * Removing facebook auth information when user is logging out.
+   */
+  localStorage.removeItem("fr_facebook_auth")
   extensionAccesories.isExtensionInstalled({
     action: "logout",
   });
@@ -139,13 +145,15 @@ export const onboarding = (
   token,
   question_one,
   question_two,
-  question_three
+  question_three,
+  question_four
 ) => {
   return new Promise((resolve, reject) => {
     console.log({
       question_one: question_one,
       question_two: question_two,
       question_three: question_three,
+      question_four: question_four,
       token: token,
     });
     axios
@@ -155,6 +163,7 @@ export const onboarding = (
           question_one: question_one,
           question_two: question_two,
           question_three: question_three,
+          question_four: question_four,
           token: token,
         },
         { headers: headers }

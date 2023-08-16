@@ -232,13 +232,13 @@ function PageHeader({ headerText = "" }) {
     dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
       .unwrap()
       .then((response) => {
-        // if (response?.data?.length > 0) {
-        //   setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
-        //   localStorage.setItem(
-        //     "fr_tooltip",
-        //     response?.data[0]?.friend_details[0]?.updated_at
-        //   );
-        // }
+        if (response?.data?.length > 0) {
+          setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
+          localStorage.setItem(
+            "fr_tooltip",
+            response?.data[0]?.friend_details[0]?.updated_at
+          );
+        }
       });
   });
   /**
@@ -883,7 +883,7 @@ function PageHeader({ headerText = "" }) {
         .unwrap()
         .then((response) => {
           if (response) {
-            if (!response?.data[0]?.last_sync_at) {
+            if (!response?.data?.[0]?.last_sync_at) {
               setTooltip('');
               localStorage.removeItem("fr_tooltip");
             } else {
