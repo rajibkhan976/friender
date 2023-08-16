@@ -45,7 +45,7 @@ const FriendsList = () => {
     );
     setUnfriendList(filteredData);
     friendsList
-      ? dispatch(countCurrentListsize(unfriendList.length))
+      ? dispatch(countCurrentListsize(filteredData.length))
       : getFbUserIdCall();
   }, [dispatch, friendsList]);
 
