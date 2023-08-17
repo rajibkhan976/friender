@@ -25,7 +25,8 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Friender</title>
-     
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ag-grid-community@28.2.1/styles/ag-grid.css"/>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -42,15 +43,16 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script>
-      (function(d){
-          var y = d.getElementsByTagName("script")[0];
+      // Commenting this out because of the singular issue of css not being loaded
+      // (function(d){
+      //     var y = d.getElementsByTagName("script")[0];
           
-          var a = d.createElement("link");
-          a.rel = "stylesheet";
-          a.href = "https://cdn.jsdelivr.net/npm/ag-grid-community@28.2.1/styles/ag-grid.css";
-          y.parentNode.insertBefore(a, y);
-      })(document);
+      //     var a = d.createElement("link");
+      //     a.rel = "stylesheet";
+      //     a.href = "https://cdn.jsdelivr.net/npm/ag-grid-community@28.2.1/styles/ag-grid.css";
+      //     y.parentNode.insertBefore(a, y);
+      // })(document);
     </script>
-     
+
   </body>
 </html>
