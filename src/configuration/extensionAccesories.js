@@ -28,7 +28,8 @@ const extensionMethods = {
                                             };
                                         }); 
                                     } else {
-                                        resolve({error : "chrome runtime not found"});
+                                        console.log("actual error is chrome runtime was not found",chrome)
+                                        resolve({error : {message : "Could not establish connection. Receiving end does not exist."}});
                                     }
                                 })
                             }

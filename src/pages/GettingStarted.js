@@ -392,6 +392,7 @@ const GettingStartedPage = (props) => {
    * @returns if(chekcingOnly flag is true)?true/false : executes the function
    */
   const connectProfile = async (checkingOnly= false) => {
+    await extInstallationStatus()
     setIsSynced(false)
     if(!checkingOnly){
       setAccountMismatch(false)
@@ -528,6 +529,7 @@ const GettingStartedPage = (props) => {
 
   const refreshProfile = async (e) => {
     e.preventDefault();
+    await extInstallationStatus()
     console.log("Refreshing fb connection");
     const friendCountPayload = {
       action: "syncprofile",

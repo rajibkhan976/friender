@@ -64,6 +64,7 @@ const FacebookAuthApp = () => {
       }  
 
       if(facebookProfile?.error){
+        console.log("I should be here if there is any unfortunate error")
         const userProfileRes = await saveUserProfile(profilebody);
         console.log("saving data without user id as ext is not installed",userProfileRes)
     
@@ -172,7 +173,7 @@ const FacebookAuthApp = () => {
 
       if(response?.link == undefined){
         Alertbox(
-          `Facebook authentication failed, you need to allow timeline link access in order to proceed with Friender`,
+          `Facebook authentication failed, you need to allow timeline link access in order to proceed with Friender.Please visit to facebook.com -> settings -> Apps and Website and remove access from Friender app and Try again!`,
           "error",
           1000,
           "bottom-right"
