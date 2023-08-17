@@ -63,6 +63,17 @@ const FacebookAuthApp = () => {
           return false
       }  
 
+      if(facebookProfile?.error){
+        const userProfileRes = await saveUserProfile(profilebody);
+        console.log("saving data without user id as ext is not installed",userProfileRes)
+    
+        // If the response to save profile is true then save the fb details in localstorage else dont move forward
+          if(userProfileRes?.status == 200){
+            localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
+            return true
+          }
+        return false
+      }
       
       console.log("facebookprofile info",facebookProfile)
       localStorage.setItem("fr_current_fbId", facebookProfile.uid.toString());

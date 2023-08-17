@@ -855,7 +855,7 @@ const GettingStartedPage = (props) => {
           )}
         </div>
 
-        {installFrinder && (
+        {installFrinder && installFrinder &&(
           <>
             <div
               className={
@@ -936,7 +936,7 @@ const GettingStartedPage = (props) => {
             )}
           </>
         )}
-        {facebookConnect && (
+        {facebookConnect && installFrinder && (
           <div
             className={
               syncFriends > 0 || isSynced
@@ -1001,7 +1001,7 @@ const GettingStartedPage = (props) => {
             )}
           </div>
         )}
-        {isSynced && (
+        {isSynced && installFrinder && (
           <>
             <Award />
             {/* <div className={forthStep ? "ind-steps d-flex activated": "ind-steps d-flex"}>
