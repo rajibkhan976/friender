@@ -21,6 +21,7 @@ import NoDataFound from "../../components/common/NoDataFound";
 import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
+import Modal from "../../components/common/Modal";
 
 const DeactivatedFriends = () => {
   //::::Friend List geting data from Redux::::
@@ -239,6 +240,32 @@ const DeactivatedFriends = () => {
 
   return (
     <div className="main-content-inner d-flex d-flex-column">
+    {modalOpen && (
+      <Modal
+        modalType="normal-type"
+        modalIcon={null}
+        headerText={"Keyword(s)"}
+        bodyText={
+          <>
+            {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+              keyWords?.matchedKeyword.map((el, i) =>
+              (<span className={`tags positive-tags`} key={`key-${i}`}>
+                {el}
+              </span>)
+              ) : (
+                "No specific keyword used"
+              )}
+          </>
+        }
+        open={modalOpen}
+        setOpen={setModalOpen}
+        ModalFun={null}
+        btnText={" "}
+        modalButtons={false}
+        additionalClass="modal-keywords"
+      />
+    )}
       {friendsList?.length > 0 && (
         <>
           {!loading && (

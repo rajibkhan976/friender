@@ -28,6 +28,7 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
 import helper from "../../helpers/helper"
+import Modal from "../../components/common/Modal";
 
 const WhiteList = () => {
   //::::Friend List geting data from Redux::::
@@ -394,6 +395,32 @@ const WhiteList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
+    {modalOpen && (
+      <Modal
+        modalType="normal-type"
+        modalIcon={null}
+        headerText={"Keyword(s)"}
+        bodyText={
+          <>
+            {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+              keyWords?.matchedKeyword.map((el, i) =>
+              (<span className={`tags positive-tags`} key={`key-${i}`}>
+                {el}
+              </span>)
+              ) : (
+                "No specific keyword used"
+              )}
+          </>
+        }
+        open={modalOpen}
+        setOpen={setModalOpen}
+        ModalFun={null}
+        btnText={" "}
+        modalButtons={false}
+        additionalClass="modal-keywords"
+      />
+    )}
       {whiteList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
