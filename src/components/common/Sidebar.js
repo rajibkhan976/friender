@@ -163,6 +163,7 @@ const Sidebar = (props) => {
   };
 
   const setShowProfileFn = (e) => {
+    console.log('clicked', facebookAuthInfoStatus);
     // setShowProfile((current) => profiles?.length > 0 ? !current : false)
     setIsComponentVisible((current) => !current);
     setSubMenuFriends(false);
@@ -578,6 +579,7 @@ const Sidebar = (props) => {
                   onClick={setShowProfileFn}
                   style={{
                     backgroundImage: `url(${
+                      facebookAuthInfoStatus?.picture?.data?.url ? facebookAuthInfoStatus?.picture?.data?.url : 
                       profiles?.filter(
                         (el) => el.fb_user_id == defaultProfileId
                       )[0]?.fb_profile_picture
@@ -591,6 +593,17 @@ const Sidebar = (props) => {
                   {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
                 </span>
 
+                {
+                  console.log(
+                    'authenticated', authenticated, 
+                    'defaultProfileId', defaultProfileId, 
+                    'isComponentVisible', isComponentVisible,
+                    'facebookAuthInfoStatus', facebookAuthInfoStatus,
+                    'facebookAuthInfoStatus image', facebookAuthInfoStatus?.picture?.data?.url,
+                    'facebookAuthInfoStatus url', facebookAuthInfoStatus?.link
+                  )
+                }
+
                 {isComponentVisible && (
 
                   <SidebarPopUp 
@@ -601,7 +614,8 @@ const Sidebar = (props) => {
                     userEmail={userEmail}
                     closePopupFn = {closePopupFn}
                     logoOut = {logoOut}
-                    defaultProfileId = {defaultProfileId}                  
+                    defaultProfileId = {defaultProfileId}
+                    facebookAuthInfoStatus={facebookAuthInfoStatus}            
                   />
                 )}
               </li>

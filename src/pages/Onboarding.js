@@ -82,7 +82,7 @@ const OnboardingPage = () => {
   const [selectedValueOne, setSelectedValueOne] = useState("");
   const [selectedValueTwo, setSelectedValueTwo] = useState("");
   const [selectedValueThree, setSelectedValueThree] = useState("");
-  const [valuationValue, setValuationValue] = useState(1);
+  const [valuationValue, setValuationValue] = useState('1.00');
 
   const handelerSubmit = (e) => {
     e.preventDefault();
@@ -142,7 +142,7 @@ const OnboardingPage = () => {
   // };
 
   const changeValuation = (e) => {
-    setValuationValue(Number(e).toFixed(2) === 0 ? 1 : e)
+    setValuationValue(Number(e).toFixed(2) === 0 ? 1.00 : e)
   }
 
   useEffect(()=>{
@@ -208,6 +208,7 @@ const OnboardingPage = () => {
           </div>
           <div className="selectbox-wraper">
             <p>How much do you value 1 hour of your time in dollars?</p>
+            {console.log('valuationValue in onboarding', valuationValue)}
             <div className={(valuationValue === "" || valuationValue <= 0) ? "input-wrapper error-wrapper" : "input-wrapper"}>
               <NumberInput
                 numberName="valuation"

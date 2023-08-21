@@ -1,21 +1,44 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Themewitch from "../common/Themeswitch";
 import ProfilePhoto from "../../assets/images/profilePhoto.png";
+import { useEffect } from "react";
 
 
 const SidebarPopUp = (props) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log('props facebookAuthInfoStatus', props?.facebookAuthInfoStatus);
+  }, [])
   console.log("******** PROPS",props)
+  
+  // open profile on fb
+  const openProfileonFb = (e) => {
+    e.preventDefault();
+    
+    if (props?.facebookAuthInfoStatus) {
+      console.log('here');
+      navigate(props?.facebookAuthInfoStatus?.link)
+    } else if (props?.profiles) {
+      console.log('here', props?.profiles[0]?.fb_profile_url);
+      navigate(props?.profiles[0]?.fb_profile_url)
+    } else {
+      console.log('here');
+      navigate('/')
+    }
+  }
   return (
     <div
-    className={
-      props.authenticated ? "profile-popup" : "profile-popup hidden"
-    }
+    className="profile-popup"
+    // className={
+    //   props.authenticated ? "profile-popup" : "profile-popup hidden"
+    // }
   >
     <div className="profile-listings-sec-wraper">
       <div className="main-profile-selected">
         {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
         <img
           src={
+            props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.picture?.data?.url :
             props.profiles?.filter(
               (el) => el.fb_user_id == props.defaultProfileId
             )[0]?.fb_profile_picture
@@ -32,32 +55,34 @@ const SidebarPopUp = (props) => {
         (el) => el.fb_user_id != props.defaultProfileId
       ).length > 0 ? (
         <div className="profile-option-listings">
-          <ul>
-            {props.profiles
-              ?.filter(
-                (el) => el.fb_user_id != props.defaultProfileId
-              )
-              .map((el, key) => {
-                return (
-                  <li key={key} data-tooltip={el.name}>
-                    <span
-                      className="sub-profiles"
-                      onClick={() =>
-                        props.switchProfile(el.fb_user_id)
-                      }
-                    >
-                      <span>
-                        <img
-                          src={el?.fb_profile_picture}
-                          alt=""
-                          loading="lazy"
-                        />
+          {props.authenticated && 
+            <ul>
+              {props.profiles
+                ?.filter(
+                  (el) => el.fb_user_id != props.defaultProfileId
+                )
+                .map((el, key) => {
+                  return (
+                    <li key={key} data-tooltip={el.name}>
+                      <span
+                        className="sub-profiles"
+                        onClick={() =>
+                          props.switchProfile(el.fb_user_id)
+                        }
+                      >
+                        <span>
+                          <img
+                            src={el?.fb_profile_picture}
+                            alt=""
+                            loading="lazy"
+                          />
+                        </span>
                       </span>
-                    </span>
-                  </li>
-                );
-              })}
-          </ul>
+                    </li>
+                  );
+                })}
+            </ul>
+          }
         </div>
       ) : (
         ""
@@ -120,10 +145,16 @@ const SidebarPopUp = (props) => {
         </svg>
       </button>
       <div className="profile-inner-wraper">
-        <div className="profile-popup-info">
+        <NavLink 
+          className="profile-popup-info"
+          // onClick={e => openProfileonFb(e)}
+          to={props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.link : props?.profiles[0] ? props?.profiles[0]?.fb_profile_url : '/'}
+          target="_blank"
+        >
           <div className="img-section">
             <img
               src={
+                props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.picture?.data?.url :
                 props.profiles?.filter(
                   (el) => el.fb_user_id == props.defaultProfileId
                 )[0]?.fb_profile_picture
@@ -142,7 +173,7 @@ const SidebarPopUp = (props) => {
           <div className="profiles-informations">
             {/* {console.log("profiles", profiles)} */}
             <p>
-              {props.profiles?.filter(
+              {props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.name : props.profiles?.filter(
                 (el) => el.fb_user_id == props.defaultProfileId
               )[0]?.name
                 ? props.profiles?.filter(
@@ -152,18 +183,18 @@ const SidebarPopUp = (props) => {
             </p>
             <span>{props.userEmail}</span>
           </div>
-        </div>
+        </NavLink>
 
         <div className="popup-menu" onClick={props.closePopupFn}>
           <ul>
             {/* <li className="no-click">
               <NavLink to="/">My Profile</NavLink>
             </li> */}
-            <li>
+            {props.authenticated && <li>
               <NavLink to="/settings/settings">
                 Settings
               </NavLink>
-            </li>
+            </li>}
             {/* <li className="no-click">
               <NavLink to="/">Rewards</NavLink>
             </li>
