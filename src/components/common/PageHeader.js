@@ -557,6 +557,54 @@ function PageHeader({ headerText = "" }) {
     e.preventDefault();
     e.returnValue = "";
   };
+  const checkFBConnection = async () => {
+
+    const profileData = await fetchUserProfile()
+    // if user id is present already with the facebook auth information then : 
+    if(profileData?.length){
+      if(profileData[0].fb_user_id!= null && profileData[0].fb_user_id){
+        const facebookProfile = await extensionAccesories.sendMessageToExt({
+          action: "syncprofile",
+          frLoginToken: localStorage.getItem("fr_token"),
+        });
+        console.log("facewbook data",facebookProfile)
+        console.log("profile datattat",profileData)
+          //If auth profile and current logged in profile is not matching then :
+          if(facebookProfile?.error == "No response"){
+            Alertbox(
+              `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+              "error",
+              1000,
+              "bottom-right"
+            );
+            return false
+          }
+          if (facebookProfile?.uid !=  profileData[0]?.fb_user_id) {
+            Alertbox(
+              `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+              "error",
+              1000,
+              "bottom-right"
+            );
+              return false
+        }
+
+        if(facebookProfile?.error){
+          Alertbox(
+            `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+            "error",
+            1000,
+            "bottom-right"
+          );
+          return false
+        }
+
+
+
+        return true
+      }
+    }
+  };
 
   const unfriend = async (unfriendableList = selectedFriends) => {
     // console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
@@ -574,12 +622,13 @@ function PageHeader({ headerText = "" }) {
     let defaultFb = localStorage.getItem("fr_default_fb");
     let loggedInFb = localStorage.getItem("fr_current_fbId");
 
-    if (defaultFb !== loggedInFb) {
-      alert(
-        "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-        localStorage.getItem("fr_default_fb")
-      );
-      return false;
+
+    
+
+    let proceedFurther = await checkFBConnection()
+    console.log("proceed further ",proceedFurther)
+    if(!proceedFurther){
+      return
     }
 
     Alertbox(

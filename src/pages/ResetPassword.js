@@ -6,6 +6,11 @@ import passwordAnimation from "../assets/animations/password-animation.json";
 import PasswordInput from "../components/formComponents/PasswordInput";
 import Button from "../components/formComponents/Button";
 import module from "./Auth/styling/authpages.module.scss";
+import { fetchUserProfile } from "../services/authentication/facebookData";
+import {
+  setProfileSpaces,
+  setDefaultProfileId,
+} from "../actions/ProfilespaceActions";
 //import AuthAction from "../actions/AuthAction";
 import { resetUserPass } from "../actions/AuthAction";
 const ResetPasswordPage = () => {
@@ -79,6 +84,17 @@ const ResetPasswordPage = () => {
       setResetToken("");
       navigate("/");
     }
+
+
+
+    fetchUserProfile().then((res) => {
+      if (res && res.length) {
+
+        console.log("RESET PASSWORD STATUS",res)
+        // setProfiles(res);
+        dispatch(setProfileSpaces(res));
+      }
+    });
   }, []);
   return (
     <div className="page-wrapers">

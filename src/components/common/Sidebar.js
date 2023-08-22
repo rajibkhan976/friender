@@ -126,6 +126,7 @@ const Sidebar = (props) => {
 
   if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.")
     setAuthenticated(true);
   }
   if (menu_refresh_status === 1) {
@@ -138,16 +139,11 @@ const Sidebar = (props) => {
 
   useEffect(() => {
     // alert("c")
-    if (resetpassword_token === 1 && onboarding_token === 1 && facebookAuthInfoStatus?.accessToken!=undefined && facebookAuthInfoStatus?.accessToken) {
-      // console.log("authenticated:::::::::::::::>>>>>>>>>")
-      setAuthenticated(true);
-    }
-    if (menu_status_refresh === 1) {
-      setSidebarOpenFriends(true);
-    } else {
-      setSidebarOpenFriends(false);
-    }
-  }, []);
+
+    (async () => {
+     
+    })()
+  }, [localStorage.getItem("fr_facebook_auth")]);
 
   useEffect(() => {
     const toggle = asyncLocalStorage.getItem("fr_sidebarToogle");
@@ -225,8 +221,19 @@ const Sidebar = (props) => {
 
   const getProfileData = () => {
     // alert("sidebar")
+    if (menu_status_refresh === 1) {
+      setSidebarOpenFriends(true);
+    } else {
+      setSidebarOpenFriends(false);
+    }
     fetchUserProfile().then((res) => {
       if (res && res.length) {
+
+        console.log("SIDEBAR STATUS",resetpassword_token,onboarding_token,res)
+  
+        if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken!=undefined && res[0]?.fb_auth_info?.accessToken) {
+          setAuthenticated(true);
+        }
         // setProfiles(res);
         dispatch(setProfileSpaces(res));
         if (!userFbProfile || userFbProfile == null) {

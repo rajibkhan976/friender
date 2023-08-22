@@ -2,14 +2,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Themewitch from "../common/Themeswitch";
 import ProfilePhoto from "../../assets/images/profilePhoto.png";
 import { useEffect } from "react";
-
+import { useDispatch, useSelector } from "react-redux";
 
 const SidebarPopUp = (props) => {
+
+  const profiles = useSelector((state) => state.profilespace.profiles);
   const navigate = useNavigate();
   useEffect(() => {
     console.log('props facebookAuthInfoStatus', props?.facebookAuthInfoStatus);
   }, [])
-  console.log("******** PROPS",props)
+  console.log("******** PROPS",props,profiles)
   
   // open profile on fb
   const openProfileonFb = (e) => {
@@ -38,14 +40,14 @@ const SidebarPopUp = (props) => {
         {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
         <img
           src={
-            props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.picture?.data?.url :
-            props.profiles?.filter(
-              (el) => el.fb_user_id == props.defaultProfileId
-            )[0]?.fb_profile_picture
-              ? props.profiles?.filter(
-                  (el) => el.fb_user_id == props.defaultProfileId
-                )[0]?.fb_profile_picture
-              : ProfilePhoto
+            profiles && profiles.length? profiles[0]?.fb_profile_picture : ProfilePhoto
+            // props.profiles?.filter(
+            //   (el) => el.fb_user_id == props.defaultProfileId
+            // )[0]?.fb_profile_picture
+            //   ? props.profiles?.filter(
+            //       (el) => el.fb_user_id == props.defaultProfileId
+            //     )[0]?.fb_profile_picture
+            //   : ProfilePhoto
           }
           alt=""
           loading="lazy"
@@ -154,15 +156,15 @@ const SidebarPopUp = (props) => {
           <div className="img-section">
             <img
               src={
-                props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.picture?.data?.url :
-                props.profiles?.filter(
-                  (el) => el.fb_user_id == props.defaultProfileId
-                )[0]?.fb_profile_picture
-                  ? props.profiles?.filter(
-                      (el) =>
-                        el.fb_user_id == props.defaultProfileId
-                    )[0]?.fb_profile_picture
-                  : ProfilePhoto
+                profiles && profiles.length? profiles[0]?.fb_profile_picture : ProfilePhoto
+                // props.profiles?.filter(
+                //   (el) => el.fb_user_id == props.defaultProfileId
+                // )[0]?.fb_profile_picture
+                //   ? props.profiles?.filter(
+                //       (el) =>
+                //         el.fb_user_id == props.defaultProfileId
+                //     )[0]?.fb_profile_picture
+                //   : ProfilePhoto
               }
               className="profile-main"
               alt=""
@@ -173,13 +175,16 @@ const SidebarPopUp = (props) => {
           <div className="profiles-informations">
             {/* {console.log("profiles", profiles)} */}
             <p>
-              {props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.name : props.profiles?.filter(
+              {
+                 profiles && profiles.length? profiles[0]?.name : "Anonymous"
+              }
+              {/* {props.profiles?.filter(
                 (el) => el.fb_user_id == props.defaultProfileId
               )[0]?.name
                 ? props.profiles?.filter(
                     (el) => el.fb_user_id == props.defaultProfileId
                   )[0]?.name
-                : "Anonymous"}
+                : "Anonymous"} */}
             </p>
             <span>{props.userEmail}</span>
           </div>
