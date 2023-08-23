@@ -86,10 +86,12 @@ const MainComponent = () => {
           // facebook auth : true && reset password  : false = go to reset password
         }else if(fbAuthValidation!=undefined && password_reset_status != 1){
           console.log("2")
+          localStorage.setItem('fr_facebook_auth',JSON.stringify(fbAuthValidation))
           navigate("/reset-password")
           // facebook auth : true && user onboarding : false =  go back to facebook auth
         }else if(fbAuthValidation!=undefined  && user_onbording_status !=1){
           console.log("3")
+          localStorage.removeItem("fr_facebook_auth")
           navigate("/facebook-auth")
         }else{
           // facebook auth : true && reset password : true && onboarding : true = getting started

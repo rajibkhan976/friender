@@ -117,8 +117,8 @@ const Sidebar = (props) => {
   useEffect(()=>{
     // alert("b")
     // setAuthenticated(false)
-    const resetpassword_status = parseInt(localStorage.getItem("fr_onboarding"));
-    const onboarding_status = parseInt(localStorage.getItem("fr_pass_changed"));
+    const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+    const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
     const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
     const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
 
