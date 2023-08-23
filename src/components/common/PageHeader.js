@@ -20,7 +20,7 @@ import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
 import { useDispatch, useSelector } from "react-redux";
-import { removeSelectedFriends } from "../../actions/FriendListAction";
+import { removeSelectedFriends, updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
 import {
   saveUserProfile,
   fetchUserProfile,
@@ -491,6 +491,7 @@ function PageHeader({ headerText = "" }) {
               1000,
               "bottom-right"
             );
+            dispatch(updateWhiteListStatusOfSelectesList(res.data));
           //dispatch(removeSelectedFriends());
         })
         .catch((err) => {

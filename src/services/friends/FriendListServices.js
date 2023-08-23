@@ -45,8 +45,8 @@ export const whiteListFriends = async (payload)=>{
           config.whiteListFriend,
           payload,
           {headers: headers}
-      ).then((result)=>{
-          resolve(result.data);
+      ).then((res)=>{
+        resolve({data:JSON.parse(res.config.data),message:res.data});
       })
       .catch((error)=>{
         console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
@@ -63,8 +63,8 @@ export const BlockListFriends = async (payload)=>{
           config.blockListUserUrl,
           payload,
           {headers: headers}
-      ).then((result)=>{
-          resolve(result.data);
+      ).then((res)=>{
+        resolve({data:JSON.parse(res.config.data),message:res.data})
       })
       .catch((error)=>{
         console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);

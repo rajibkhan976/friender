@@ -24,6 +24,7 @@ import { BlockListFriend, whiteListFriend } from "../../actions/FriendsAction";
 import helper from "../../helpers/helper";
 //import { removeSelectedFriends } from "../../actions/FriendListAction";
 import { Link } from "react-router-dom";
+import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
 
 export const handlewhiteListUser = (dispatch, friendId, status) => {
@@ -44,7 +45,8 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
         1000,
         "bottom-right"
       );
-      //dispatch(removeSelectedFriends());
+     // console.log("response after white listing >>>>>>",res)
+      dispatch(updateWhiteListStatusOfSelectesList(res.data));
     })
     .catch((err) => {
       Alertbox(`${err.message} `, "error", 2000, "bottom-right");

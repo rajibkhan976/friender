@@ -12,6 +12,31 @@ export const frindListSlice = createSlice({
   name: "friendlist",
   initialState,
   reducers: {
+    updateWhiteListStatusOfSelectesList:(state,action)=>{
+      // console.log("list satussss   action ommmmm",action.payload)
+      let statusObj={};
+      action.payload.forEach((item)=>{
+        statusObj[item.friendFbId]=item.status;
+      });
+      state.selected_friends=state.selected_friends.map((item)=>{
+        if(item.friendFbId in statusObj){
+          item.whitelist_status=statusObj[item.friendFbId];
+        }
+        return item;
+      });
+    },
+    updateBlackListStatusOfSelectesList:(state,action)=>{
+      let statusObj={};
+      action.payload.forEach((item)=>{
+        statusObj[item.friendFbId]=item.status;
+      });
+      state.selected_friends=state.selected_friends.map((item)=>{
+        if(item.friendFbId in statusObj){
+          item.blacklist_status=statusObj[item.friendFbId];
+        }
+        return item;
+      });
+    },
     updateSelectedFriends: (state, action) => {
       state.selected_friends = action.payload;
     },
@@ -42,5 +67,7 @@ export const {
   removeSelectedFriends,
   updateNumberofListing,
   countCurrentListsize,
+  updateWhiteListStatusOfSelectesList,
+  updateBlackListStatusOfSelectesList
 } = frindListSlice.actions;
 export default frindListSlice.reducer;
