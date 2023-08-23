@@ -99,7 +99,6 @@ const MySetting = () => {
   ];
 
   //time object
-
   const timeObj = [
     {
       value: "00:00",
@@ -449,11 +448,11 @@ const MySetting = () => {
       const responsedAPIReFrndingKeywords = responseData?.re_friending_settings[0]?.keywords;
       const fbUserIdFromAPI = current_fb_id;
       const fbUserIdFromBrowser = JSON.parse(localStorage.getItem('fr_refriending_data'))?.current_fb_id;
-  
+
       // console.log("------- ReFriending =---------- ", reFrndngKeywords);
       // console.log("Fetch API data -- ", responsedAPIReFrndingKeywords);
       // console.log("IDDDD -- ", fbUserIdFromAPI, fbUserIdFromBrowser);
-  
+
       if (fbUserIdFromAPI !== fbUserIdFromBrowser) {
         // console.log(" C H A N G E D");
         const existingStorageData = JSON.parse(localStorage.getItem('fr_refriending_data') || '{}');
@@ -469,7 +468,7 @@ const MySetting = () => {
 
   /**
    * ====== Setting API Payload Saving Function =======
-   * @returns 
+   * @returns
    */
   const saveMySetting = (withSaveButton = false) => {
     const payload = {
@@ -481,12 +480,16 @@ const MySetting = () => {
       dont_send_friend_requests_prople_i_sent_friend_requests_they_rejected:
         dontSendFrindReqThyRejct,
       re_friending: reFrndng,
-      automatic_cancel_friend_requests: autoCnclFrndRque,
       send_message_when_receive_new_friend_request: sndMsgRcvFrndRqu,
       send_message_when_accept_new_friend_request: sndMsgAcptFrndRqu,
       send_message_when_decline_friend_request: sndMsgDlcFrndRqu,
       send_message_when_someone_accept_new_friend_request: sndMsgExptFrndRqu,
       day_bak_to_analyse_friend_engagement: dayBackAnlyFrndEng,
+      day_bak_to_analyse_friend_engagement_settings: {
+        from_time: dayBackAnlyFrndEngSelect1,
+        to_time: dayBackAnlyFrndEngSelect2,
+      },
+      automatic_cancel_friend_requests: autoCnclFrndRque,
       automatic_cancel_friend_requests_settings: {
         remove_after: cnclFrndRqueInput
       },
@@ -662,13 +665,7 @@ const MySetting = () => {
         return;
       }
     }
-    //
-    if (dayBackAnlyFrndEng) {
-      payload.day_bak_to_analyse_friend_engagement_settings = {
-        from_time: dayBackAnlyFrndEngSelect1,
-        to_time: dayBackAnlyFrndEngSelect2,
-      };
-    }
+
     /**
      * dispatching the save mysetting action/////
      */
@@ -689,8 +686,8 @@ const MySetting = () => {
 
   /**
    * ===== Syncing API Setting Data Fetching to set with Saved Data ====
-   * @param {*} data 
-   * @returns 
+   * @param {*} data
+   * @returns
    */
   const syncSettings = (data) => {
     // console.log("i am the data which creating change in setting**", data);
@@ -705,8 +702,9 @@ const MySetting = () => {
     setDontSendFrindReqThyRejct(
       data.dont_send_friend_requests_prople_i_sent_friend_requests_they_rejected
     );
-    setReFrndng(data.re_friending);
 
+    // Sync Setting for (Automated re-friending)..
+    setReFrndng(data.re_friending);
     if (data?.re_friending_settings) {
       // console.log("refriender setting****", data.re_friending_settings[0]);
       setReFrndngInput1(
@@ -803,16 +801,14 @@ const MySetting = () => {
       // });
     }
 
+    // Syncing Setting for (Interval for auto sync friend list)..
     setDayBackAnlyFrndEng(data.day_bak_to_analyse_friend_engagement);
-    if (
-      data.day_bak_to_analyse_friend_engagement &&
-      data.day_bak_to_analyse_friend_engagement_settings[0]
-    ) {
+    if (data?.day_bak_to_analyse_friend_engagement_settings.length) {
       setDayBackAnlyFrndEngSelect1(
-        data.day_bak_to_analyse_friend_engagement_settings[0].from_time
+        data.day_bak_to_analyse_friend_engagement_settings[0]?.from_time
       );
       setDayBackAnlyFrndEngSelect2(
-        data.day_bak_to_analyse_friend_engagement_settings[0].to_time
+        data.day_bak_to_analyse_friend_engagement_settings[0]?.to_time
       );
     }
 
@@ -850,7 +846,7 @@ const MySetting = () => {
 
   /**
    * ===== Handle Value Will Inactive After Days =====
-   * @param {*} event 
+   * @param {*} event
    */
   const handleValWillInactiveAfterDays = (event) => {
     let { value } = event.target;
@@ -892,7 +888,7 @@ const MySetting = () => {
 
   /**
    * ====== Set Re-Friending Input1 Increment & Decrement..
-   * @param {string} type 
+   * @param {string} type
    */
   const setValOfReFrndngIncDic = (type) => {
     if (!reFrndng) {
@@ -1036,7 +1032,7 @@ const MySetting = () => {
 
   /**
    * ===== Re-Friending Select Attempts Handle Function =======
-   * @param {*} event 
+   * @param {*} event
    */
   const handleChangeReFrndngSelect1 = (event) => {
     const { value } = event.target;
@@ -1054,7 +1050,7 @@ const MySetting = () => {
 
 
   /**
-   * Handle Input-Bar of Cancel sent friend reuquest(s) 
+   * Handle Input-Bar of Cancel sent friend reuquest(s)
    */
   const deletePendingFrndInputHandle = (event) => {
     const { value } = event.target;
@@ -1199,7 +1195,7 @@ const MySetting = () => {
 
   /**
    * ===== Save Re-Friending Keywords ====
-   * @param {*} event 
+   * @param {*} event
    */
   const saveReFrndngKeywords = (keywords) => {
     // setReFriendSaveActive(false);
@@ -1207,7 +1203,7 @@ const MySetting = () => {
     // console.log("re-friending after -- ", reFrndngInput1);
     // console.log("re-frending attemps -- ", reFrndSelect1);
 
-    // Passed with Bool (true|false) because of to save only clicking save button, 
+    // Passed with Bool (true|false) because of to save only clicking save button,
     // not automatically with all settings changes... (Don't remove the boolean type and for the function itself calling)
     saveMySetting(true);
     const storageData = {
@@ -1251,7 +1247,7 @@ const MySetting = () => {
   /**
    * ====== Turn On Settings Warning ======
    * @param {*} param
-   * @returns 
+   * @returns
    */
   const TurnOnSettingsWarn = ({ children, enabledFeature }) => {
     return (
@@ -1322,7 +1318,6 @@ const MySetting = () => {
                   <DropSelector
                     selects={timeObj.slice(0, timeObj.length - 1)}
                     value={dayBackAnlyFrndEngSelect1}
-                    style={{}}
                     // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
                     handleChange={e => setStartTime(e)}
                     setDisable={!dayBackAnlyFrndEng}
@@ -1922,7 +1917,7 @@ const MySetting = () => {
                         <DropSelector
                           selects={timeObj}
                           value={dayBackAnlyFrndEngSelect1}
-                          
+
                           handleChange={(e) => {
                             setDayBackAnlyFrndEngSelect1(e.target.value);
                           }}
@@ -1931,7 +1926,7 @@ const MySetting = () => {
                         <DropSelector
                           selects={timeObj}
                           value={dayBackAnlyFrndEngSelect2}
-                          
+
                           handleChange={(e) => {
                             setDayBackAnlyFrndEngSelect2(e.target.value);
                           }}
@@ -1957,7 +1952,7 @@ const MySetting = () => {
                 <DropSelector
                   selects={timeObj}
                   value={dayBackAnlyFrndEngSelect1}
-                  
+
                   handleChange={(e) => {
                     setDayBackAnlyFrndEngSelect1(e.target.value);
                   }}
@@ -1966,7 +1961,7 @@ const MySetting = () => {
                 <DropSelector
                   selects={timeObj}
                   value={dayBackAnlyFrndEngSelect2}
-                  
+
                   handleChange={(e) => {
                     setDayBackAnlyFrndEngSelect2(e.target.value);
                   }}
@@ -1989,7 +1984,7 @@ const MySetting = () => {
                 <DropSelector
                   selects={dayObj}
                   value={dayBackAnlyFrndEngSelect1NEW}
-                  
+
                   handleChange={(e) => {
                     setDayBackAnlyFrndEngSelect1NEW(e.target.value);
                   }}

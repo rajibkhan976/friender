@@ -8,8 +8,8 @@ let headers = {
 
 /**
  * ==== Fetch All Pending Friend Request ====
- * @param {object} data 
- * @returns 
+ * @param {object} data
+ * @returns
  */
 export const deletePendingFrndRequest = (data) => {
   return new Promise((res, rej) => {
@@ -27,8 +27,8 @@ export const deletePendingFrndRequest = (data) => {
 
 /**
  * ==== Fetch All Pending Friend Request ====
- * @param {object} data 
- * @returns 
+ * @param {object} data
+ * @returns
  */
 export const fetchAllPendingFrndRequest = (data) => {
   console.log("Sending to -- ", data);
@@ -44,6 +44,9 @@ export const fetchAllPendingFrndRequest = (data) => {
 };
 
 export const saveSettings = (data) => {
+
+  console.log('API Config -- ', config.mysettingSaveUrl);
+
   // console.log("API PAYLOAD", data);
   return new Promise((res, rej) => {
     axios
