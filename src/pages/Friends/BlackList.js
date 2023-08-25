@@ -46,7 +46,7 @@ const BlackList = () => {
       (item) => (item.deleted_status !== 1 && item.friendStatus !== "Lost") && item.blacklist_status === 1
     )
     setBlackList(filteredData)
-    friendsList && dispatch(countCurrentListsize(blackList.length));
+    friendsList && dispatch(countCurrentListsize(filteredData.length));
     dispatch(syncMainFriendList())
   }, [dispatch, friendsList]);
   const [listFilteredCount, setListFilteredCount] = useState(null)
