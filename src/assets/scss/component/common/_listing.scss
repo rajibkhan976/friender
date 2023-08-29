@@ -807,19 +807,20 @@ span.ag-sort-indicator-icon.ag-sort-descending-icon {
 
 
 .ag-tooltip {
-  width: 150px;
+  min-width: 150px;
   height: auto;
+  max-width: 330px;
   color: #ffffff;
-  padding: 8px 6px;
+  padding: 8px 10px;
   background: #313037 !important;
   border-radius: 2px;
-  text-align: center;
+  //text-align: center;
   z-index: 999  !important;
   transform: translate(-50%,0);
   &::after {
     content: "";
     position: absolute;
-   transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
     background: transparent !important;
     z-index:0 !important;
     width: 0;

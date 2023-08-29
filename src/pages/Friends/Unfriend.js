@@ -112,7 +112,7 @@ const FriendsList = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip: "Number of days back friends synced or unfriended using friender",
+      headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
