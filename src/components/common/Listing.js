@@ -127,7 +127,7 @@ const Listing = (props) => {
 
 
     if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);
-      onChangeCheck();
+      onChangeCheck(false);
     
     }
  
