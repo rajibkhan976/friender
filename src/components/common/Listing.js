@@ -30,7 +30,7 @@ const Listing = (props) => {
   //  const selectRef = useRef(null);
   const gridRef = useRef(null);
   const selectedFrnd = useSelector(
-    (state) => state.friendlist.selected_friends
+      (state) => state.friendlist.selected_friends
   );
   let selectedPageSet = new Set();
   const textFilter = useSelector((state) => state.friendlist.searched_filter);
@@ -127,10 +127,10 @@ const Listing = (props) => {
 
 
     if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);
-      onChangeCheck(false);
-    
+      onChangeCheck();
+
     }
- 
+
 
     // console.log("ther super ssettt>>>>>",event.target.checked);
     // console.log("selectedPageSet>>>>>",selectedPageSet);
@@ -171,17 +171,17 @@ const Listing = (props) => {
 
             if (col.innerHTML.includes("Age")) {
               col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                "</svg></p>";
+                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+                  "</svg></p>";
             }
             if (col.innerHTML.includes("Friends source")) {
               col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                "</svg></p>";
+                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+                  "</svg></p>";
             }
           }
         }
@@ -193,6 +193,41 @@ const Listing = (props) => {
     // };
 
   }, []);
+
+
+  const addIconToCol=()=>{
+
+    let ageCol = document.querySelectorAll(".ag-header-cell-text");
+    let colInterval = setInterval(() => {
+      if (ageCol?.length <= 0 ) {
+        ageCol = document.querySelectorAll(".ag-header-cell-text");
+      } else {
+        clearInterval(colInterval);
+
+        if (ageCol?.length > 0) {
+
+          for (let col of ageCol) {
+
+            if (col.innerHTML.includes("Age")) {
+              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+                  "</svg></p>";
+            }
+            if (col.innerHTML.includes("Friends source")) {
+              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+                  "</svg></p>";
+            }
+          }
+        }
+      }
+      // addHeaderCheckboxClickListener();
+    }, 300);
+  }
 
   // useEffect(() => {
   //   setMaxSelect(props.friendsData.length);
@@ -228,9 +263,9 @@ const Listing = (props) => {
 
   useEffect(() => {
     gridRef &&
-      gridRef.current &&
-      gridRef.current.api &&
-      gridRef.current.api.setQuickFilter(textFilter);
+    gridRef.current &&
+    gridRef.current.api &&
+    gridRef.current.api.setQuickFilter(textFilter);
 
     // gridRef &&
     //   gridRef.current &&
@@ -257,7 +292,7 @@ const Listing = (props) => {
     if (!selectAllChecked) {
       //console.log("is ieeee checked", selectAllChecked);
       if (gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
-    
+
     }
 
     return () => {
@@ -281,6 +316,7 @@ const Listing = (props) => {
   }));
 
   const onPaginationChanged = useCallback(() => {
+
     //Reset rows selection based on current page
     if (!selectAllChecked) {
       //console.log("is ieeee checked", selectAllChecked);
@@ -288,6 +324,7 @@ const Listing = (props) => {
     }
     setTimeout(addHeaderCheckboxClickListener, 400);
     //addHeaderCheckboxClickListener()
+    setTimeout(addIconToCol);
 
   }, [selectAllChecked])
 
@@ -397,24 +434,24 @@ const Listing = (props) => {
   }, []);
 
   const filterChanged = useCallback(
-    (e) => {
-      let filteredCount = 0;
-      gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
-      props.getFilterNum(filteredCount)
+      (e) => {
+        let filteredCount = 0;
+        gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
+        props.getFilterNum(filteredCount)
 
-      if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
-        setMaxSelect(filteredCount);
-        //console.log("filtered:::", filteredCount);
-      } else if (textFilter) {
-        //console.log("::Gobal List filter active:::>", filteredCount);
-        setMaxSelect(filteredCount);
-      } else {
-        setMaxSelect(props.friendsData.length);
-        //console.log("not filtered", filteredCount);
-      }
-      // gridRef.current.api.deselectAll();
-    },
-    [textFilter]
+        if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
+          setMaxSelect(filteredCount);
+          //console.log("filtered:::", filteredCount);
+        } else if (textFilter) {
+          //console.log("::Gobal List filter active:::>", filteredCount);
+          setMaxSelect(filteredCount);
+        } else {
+          setMaxSelect(props.friendsData.length);
+          //console.log("not filtered", filteredCount);
+        }
+        // gridRef.current.api.deselectAll();
+      },
+      [textFilter]
   );
 
 
@@ -471,12 +508,12 @@ const Listing = (props) => {
 
     // friendFbId
     setSelectedFriends(
-      selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
+        selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
     );
     if (selectedUsers?.length) {
       localStorage.setItem(
-        "fr-selected-friends",
-        JSON.stringify(selectedUsers)
+          "fr-selected-friends",
+          JSON.stringify(selectedUsers)
       );
     }
   }, [currentWhiteList, currentBlackList]);
@@ -489,7 +526,7 @@ const Listing = (props) => {
   //       const selectedRowIdsSet = new Set(selectedFrnd.map(item => item.rowId));
   //       gridRef &&
   //       gridRef.current &&
-  //       gridRef.current.api &&  
+  //       gridRef.current.api &&
   //       gridRef.current.api.forEachNodeAfterFilterAndSort((node) => {
   //         // console.log("all node", node);
   //           const rowId = node.id;
@@ -507,114 +544,114 @@ const Listing = (props) => {
 
 
   return (
-    <>
-      {selectedFriends &&
+      <>
+        {selectedFriends &&
         selectedFriends.length > 0 &&
         selectedFrnd &&
         selectedFrnd.length > 0 ? (
-        <div className="selection-popup d-flex f-justify-center f-align-center">
-          <p>
-            {selectedFriends.length === gridRef.current.props.rowData.length &&
-              "All"}{" "}
-            {selectedFriends.length ? (
-              <strong>{selectedFriends.length}</strong>
-            ) : (
-              ""
-            )}{" "}
-            Friend{selectedFriends.length > 1 && "s"}{" "}
-            {selectedFriends.length > 1 ? "are" : "is"} selected.
-            {gridRef.current.props.rowData.length !== selectedFriends.length &&
-              maxSelect - Number(selectedFriends.length) > 0 ? (
-              <span>
+            <div className="selection-popup d-flex f-justify-center f-align-center">
+              <p>
+                {selectedFriends.length === gridRef.current.props.rowData.length &&
+                    "All"}{" "}
+                {selectedFriends.length ? (
+                    <strong>{selectedFriends.length}</strong>
+                ) : (
+                    ""
+                )}{" "}
+                Friend{selectedFriends.length > 1 && "s"}{" "}
+                {selectedFriends.length > 1 ? "are" : "is"} selected.
+                {gridRef.current.props.rowData.length !== selectedFriends.length &&
+                maxSelect - Number(selectedFriends.length) > 0 ? (
+                    <span>
                 Do you want to select other all{" "}
-                {maxSelect - Number(selectedFriends.length)} Friends{" "}
+                      {maxSelect - Number(selectedFriends.length)} Friends{" "}
               </span>
-            ) : (
-              <span>Uncheck All </span>
-            )}{" "}
-            {maxSelect - Number(selectedFriends.length) === 0 ? (
-              <Checkbox
-                onChangeCheck={onChangeCheck}
-                checkValue={maxSelect === Number(selectedFriends.length)}
-              />
-            ) : (
-              <Checkbox
-                onChangeCheck={onChangeCheck}
-                checkValue={
-                  gridRef.current.props.rowData.length ===
-                  selectedFriends.length
-                }
-              />
-            )}
-          </p>
-        </div>
-      ) : (
-        ""
-      )}
-      <div
-        id="grid-wrapper"
-        className={`ag-theme-fr-table 
+                ) : (
+                    <span>Uncheck All </span>
+                )}{" "}
+                {maxSelect - Number(selectedFriends.length) === 0 ? (
+                    <Checkbox
+                        onChangeCheck={onChangeCheck}
+                        checkValue={maxSelect === Number(selectedFriends.length)}
+                    />
+                ) : (
+                    <Checkbox
+                        onChangeCheck={onChangeCheck}
+                        checkValue={
+                            gridRef.current.props.rowData.length ===
+                            selectedFriends.length
+                        }
+                    />
+                )}
+              </p>
+            </div>
+        ) : (
+            ""
+        )}
+        <div
+            id="grid-wrapper"
+            className={`ag-theme-fr-table 
             ag-theme-alpine 
             ${showPaginate ? "defaultPaginate" : ""} 
             ${selectedFriends &&
             selectedFriends.length > 0 &&
             selectedFrnd &&
             selectedFrnd.length > 0
-            ? "selected-options"
-            : ""
-          }
+                ? "selected-options"
+                : ""
+            }
             `}
-        style={maxSelect === 0 ? {
-          height: "inherit",
-          width: "100%",
-        } : tableStyle}
-      >
-        <AgGridReact
-          onGridReady={onGridReady}
-          // onRowDataChanged={()=>{}}
-          ref={gridRef}
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-          animateRows={true}
-          rowSelection="multiple"
-          suppressRowClickSelection={true}
-          onFirstDataRendered={onFirstDataRendered}
-          //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
-          rowHeight={55}
-          headerHeight={50}
-          //onColumnMoved={onColumnMoved}
-          pagination={true}
-          paginationPageSize={15}
-          suppressScrollOnNewData={false}
-          onGridSizeChanged={onGridSizeChanged}
-          onFilterChanged={filterChanged}
-          rowModelType={showPaginate ? `infinite` : `clientSide`}
-          cacheBlockSize={15}
-          cacheOverflowSize={2}
-          onSelectionChanged={selectionChanged}
-          loadingOverlayComponent={ListingLoader}
-          noRowsOverlayComponent={NoDataFound}
-          cacheQuickFilter={true}
-          // cacheBlockSize={listLimit}
-          //enableBrowserTooltips={true}
-          tooltipShowDelay={0}
-          tooltipHideDelay={1000000}
-          alwaysShowHorizontalScroll={true}
-        //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
-        />
-      </div>
-      {maxSelect !== 0 && !showPaginate ? (
-        <footer className="table-footer d-flex f-align-center">
-          <Suspense fallback={""}>
-            <Pagination
-              pageNum={maxSelect}
-              itemsPerPage={itemsPerPage}
-              onNumClick={navigateToNumPage}
-            />
-          </Suspense>
-          <div className="select-page">
-            {/* <select
+            style={maxSelect === 0 ? {
+              height: "inherit",
+              width: "100%",
+            } : tableStyle}
+        >
+          <AgGridReact
+              onGridReady={onGridReady}
+              // onRowDataChanged={()=>{}}
+              ref={gridRef}
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              animateRows={true}
+              rowSelection="multiple"
+              suppressRowClickSelection={true}
+              onFirstDataRendered={onFirstDataRendered}
+              //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
+              rowHeight={55}
+              headerHeight={50}
+              //onColumnMoved={onColumnMoved}
+              pagination={true}
+              paginationPageSize={15}
+              suppressScrollOnNewData={false}
+              onGridSizeChanged={onGridSizeChanged}
+              onFilterChanged={filterChanged}
+              rowModelType={showPaginate ? `infinite` : `clientSide`}
+              cacheBlockSize={15}
+              cacheOverflowSize={2}
+              onSelectionChanged={selectionChanged}
+              loadingOverlayComponent={ListingLoader}
+              noRowsOverlayComponent={NoDataFound}
+              cacheQuickFilter={true}
+              // cacheBlockSize={listLimit}
+              //enableBrowserTooltips={true}
+              tooltipShowDelay={0}
+              tooltipHideDelay={1000000}
+              alwaysShowHorizontalScroll={true}
+              //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
+          />
+        </div>
+        {maxSelect !== 0 && !showPaginate ? (
+            <footer className="table-footer d-flex f-align-center">
+              <Suspense fallback={""}>
+                <Pagination
+                    pageNum={maxSelect}
+                    itemsPerPage={itemsPerPage}
+                    onNumClick={navigateToNumPage}
+                />
+              </Suspense>
+              <div className="select-page">
+                {/* <select
               onChange={onPageSizeChanged}
               id="page-size"
               defaultValue={"15"}
@@ -627,24 +664,24 @@ const Listing = (props) => {
               <option value="180">180 view</option>
               <option value={maxSelect}>All</option>
             </select>  */}
-            <DropSelector
-              handleChange={onPageSizeChanged}
-              id="page-size"
-              defaultValue={"15"}
-              // ref={selectRef}
-              selects={pageNumbers}
-              extraClass="pageNo"
-              height="30px"
-              width="90px"
-            />
-          </div>
-        </footer>
-      ) : (
-        ""
-      )}
+                <DropSelector
+                    handleChange={onPageSizeChanged}
+                    id="page-size"
+                    defaultValue={"15"}
+                    // ref={selectRef}
+                    selects={pageNumbers}
+                    extraClass="pageNo"
+                    height="30px"
+                    width="90px"
+                />
+              </div>
+            </footer>
+        ) : (
+            ""
+        )}
 
-      {/* <Modal /> */}
-    </>
+        {/* <Modal /> */}
+      </>
   );
 };
 

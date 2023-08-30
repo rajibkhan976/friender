@@ -493,7 +493,17 @@ const MySetting = () => {
       automatic_cancel_friend_requests_settings: {
         remove_after: cnclFrndRqueInput
       },
-      friends_willbe_inactive_after: Number(frndWillInactiveAfterDays)
+      friends_willbe_inactive_after: Number(frndWillInactiveAfterDays),
+      send_message_when_reject_friend_request: false,
+      send_message_when_reject_friend_request_settings: {
+        message_group_id: "",
+        quick_message: ""
+      },
+      send_message_when_someone_accept_new_friend_request: false,
+      send_message_when_someone_accept_new_friend_request_settings: {
+        message_group_id: "",
+        quick_message: ""
+      }
     };
 
     if (current_fb_id) {
@@ -580,91 +590,91 @@ const MySetting = () => {
 
     //send_message_when_receive_new_friend_request_settings
 
-    if (sndMsgRcvFrndRqu) {
-      if (sndMsgRcvFrndRquInput && Number(sndMsgRcvFrndRquInput) !== 0) {
-        payload.send_message_when_receive_new_friend_request_settings = {
-          message_template_id: 1,
-          send_message_time: sndMsgRcvFrndRquInput ? sndMsgRcvFrndRquInput : 1,
-          send_message_time_type: sndMsgRcvFrndRquSelect,
-        };
-      } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
-        return;
-      }
-    }
+    // if (sndMsgRcvFrndRqu) {
+    //   if (sndMsgRcvFrndRquInput && Number(sndMsgRcvFrndRquInput) !== 0) {
+    //     payload.send_message_when_receive_new_friend_request_settings = {
+    //       message_template_id: 1,
+    //       send_message_time: sndMsgRcvFrndRquInput ? sndMsgRcvFrndRquInput : 1,
+    //       send_message_time_type: sndMsgRcvFrndRquSelect,
+    //     };
+    //   } else {
+    //     Alertbox(
+    //       "Input should not be empty or 0",
+    //       "warning",
+    //       1000,
+    //       "bottom-right"
+    //     );
+    //     return;
+    //   }
+    // }
     //send_message_when_receive_new_friend_request_settings end
     //send_message_when_accept_new_friend_request_settings
 
-    if (sndMsgAcptFrndRqu) {
-      if (sndMsgAcptFrndRquInput && Number(sndMsgAcptFrndRquInput) !== 0) {
-        payload.send_message_when_accept_new_friend_request_settings = {
-          message_template_id: 1,
-          send_message_time: sndMsgAcptFrndRquInput
-            ? sndMsgAcptFrndRquInput
-            : 1,
-          send_message_time_type: sndMsgAcptFrndRquSelect,
-        };
-      } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
-        return;
-      }
-    }
+    // if (sndMsgAcptFrndRqu) {
+    //   if (sndMsgAcptFrndRquInput && Number(sndMsgAcptFrndRquInput) !== 0) {
+    //     payload.send_message_when_accept_new_friend_request_settings = {
+    //       message_template_id: 1,
+    //       send_message_time: sndMsgAcptFrndRquInput
+    //         ? sndMsgAcptFrndRquInput
+    //         : 1,
+    //       send_message_time_type: sndMsgAcptFrndRquSelect,
+    //     };
+    //   } else {
+    //     Alertbox(
+    //       "Input should not be empty or 0",
+    //       "warning",
+    //       1000,
+    //       "bottom-right"
+    //     );
+    //     return;
+    //   }
+    // }
     //send_message_when_accept_new_friend_request_settings end
 
     //send_message_when_decline_friend_request_settings
-    if (sndMsgDlcFrndRqu) {
-      if (sndMsgDlcFrndRquInput && Number(sndMsgDlcFrndRquInput) !== 0) {
-        payload.send_message_when_decline_friend_request_settings = {
-          message_template_id: 1,
-          send_message_time: sndMsgDlcFrndRquInput ? sndMsgDlcFrndRquInput : 1,
-          send_message_time_type: sndMsgDlcFrndRquSelect,
-        };
-      } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
-        return;
-      }
-      // payload.send_message_when_decline_friend_request_settings = {
-      //   message_template_id: 1,
-      //   send_message_time: sndMsgDlcFrndRquInput ? sndMsgDlcFrndRquInput : 1,
-      //   send_message_time_type: sndMsgDlcFrndRquMsgSelect,
-      // };
-    }
+    // if (sndMsgDlcFrndRqu) {
+    //   if (sndMsgDlcFrndRquInput && Number(sndMsgDlcFrndRquInput) !== 0) {
+    //     payload.send_message_when_decline_friend_request_settings = {
+    //       message_template_id: 1,
+    //       send_message_time: sndMsgDlcFrndRquInput ? sndMsgDlcFrndRquInput : 1,
+    //       send_message_time_type: sndMsgDlcFrndRquSelect,
+    //     };
+    //   } else {
+    //     Alertbox(
+    //       "Input should not be empty or 0",
+    //       "warning",
+    //       1000,
+    //       "bottom-right"
+    //     );
+    //     return;
+    //   }
+    //   // payload.send_message_when_decline_friend_request_settings = {
+    //   //   message_template_id: 1,
+    //   //   send_message_time: sndMsgDlcFrndRquInput ? sndMsgDlcFrndRquInput : 1,
+    //   //   send_message_time_type: sndMsgDlcFrndRquMsgSelect,
+    //   // };
+    // }
     //send_message_when_decline_friend_request_settings end
     //
-    if (sndMsgExptFrndRqu) {
-      if (sndMsgExptFrndRquInput && Number(sndMsgExptFrndRquInput) !== 0) {
-        payload.send_message_when_someone_accept_new_friend_request_settings = {
-          message_template_id: 1,
-          send_message_time: sndMsgExptFrndRquInput
-            ? sndMsgExptFrndRquInput
-            : 1,
-          send_message_time_type: sndMsgExptFrndRquSelect,
-        };
-      } else {
-        Alertbox(
-          "Input should not be empty or 0",
-          "warning",
-          1000,
-          "bottom-right"
-        );
-        return;
-      }
-    }
+    // if (sndMsgExptFrndRqu) {
+    //   if (sndMsgExptFrndRquInput && Number(sndMsgExptFrndRquInput) !== 0) {
+    //     payload.send_message_when_someone_accept_new_friend_request_settings = {
+    //       message_template_id: 1,
+    //       send_message_time: sndMsgExptFrndRquInput
+    //         ? sndMsgExptFrndRquInput
+    //         : 1,
+    //       send_message_time_type: sndMsgExptFrndRquSelect,
+    //     };
+    //   } else {
+    //     Alertbox(
+    //       "Input should not be empty or 0",
+    //       "warning",
+    //       1000,
+    //       "bottom-right"
+    //     );
+    //     return;
+    //   }
+    // }
 
     /**
      * dispatching the save mysetting action/////
