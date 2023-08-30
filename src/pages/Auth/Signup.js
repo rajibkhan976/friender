@@ -84,7 +84,7 @@ const SignupPage = () => {
         </div>
       )}
       {regSuccess ? (
-        <button className="btn-primary d-block" onClick={successClick}>
+        <button className="btn-primary d-block w-100" onClick={successClick}>
           Back to Login
         </button>
       ) : (

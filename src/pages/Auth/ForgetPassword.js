@@ -70,7 +70,7 @@ const ForgetPasswordPage = () => {
         </div>
       )}
       {successMailSent ? (
-        <button className="btn-primary d-block" onClick={successMailClick}>
+        <button className="btn-primary d-block w-100" onClick={successMailClick}>
           Back to Login
         </button>
       ) : (

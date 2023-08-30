@@ -208,6 +208,7 @@ const Sidebar = (props) => {
   const logoOut = (e) => {
     e.preventDefault();
     dispatch(setDefaultProfileId(""));
+    dispatch(setProfileSpaces([]));
     dispatch(userLogout());
     if (!darkMode) {
       toggleDarkMode();
