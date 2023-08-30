@@ -126,8 +126,10 @@ const Sidebar = (props) => {
 
   if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.")
+    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
     setAuthenticated(true);
+  }else{
+    setAuthenticated(false)
   }
   if (menu_refresh_status === 1) {
     setSidebarOpenFriends(true);
@@ -141,9 +143,22 @@ const Sidebar = (props) => {
     // alert("c")
 
     (async () => {
-     
+      const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+      const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
+      const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+      const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+
+
+
+  if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
+    // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen. --1")
+    setAuthenticated(true);
+  }else{
+    setAuthenticated(false)
+  }
     })()
-  }, [localStorage.getItem("fr_facebook_auth")]);
+  }, [localStorage.getItem("fr_facebook_auth") || localStorage.getItem("fr_pass_changed") || localStorage.getItem("fr_onboarding")]);
 
   useEffect(() => {
     const toggle = asyncLocalStorage.getItem("fr_sidebarToogle");
@@ -228,12 +243,15 @@ const Sidebar = (props) => {
       setSidebarOpenFriends(false);
     }
     fetchUserProfile().then((res) => {
+      console.log("user info sidebar",res)
       if (res && res.length) {
 
-        console.log("SIDEBAR STATUS",resetpassword_token,onboarding_token,res)
-  
+        
         if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken!=undefined && res[0]?.fb_auth_info?.accessToken) {
+          console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
           setAuthenticated(true);
+        }else{
+          setAuthenticated(false)
         }
         // setProfiles(res);
         dispatch(setProfileSpaces(res));

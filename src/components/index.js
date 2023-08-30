@@ -71,13 +71,14 @@ const MainComponent = () => {
         let password_reset_status = await localStorage.getItem("fr_pass_changed");
         let user_onbording_status = await localStorage.getItem("fr_onboarding");
         const userProfile = await fetchUserProfile();
+        console.log("user info index",userProfile)
         let fbAuthValidation =  userProfile[0]?.fb_auth_info
         
         if(fbAuthValidation!=undefined && user_onbording_status == 1){
           localStorage.setItem('fr_facebook_auth',JSON.stringify(fbAuthValidation))
         }
 
-        console.log("****** user profile",userProfile,user_onbording_status,(fbAuthValidation == undefined || fbAuthValidation!=undefined) &&  password_reset_status== 1 && user_onbording_status == "0")
+        console.log("****** user profile",userProfile,user_onbording_status,fbAuthValidation)
         if(fbAuthValidation==undefined){
           console.log("1")
           localStorage.removeItem("fr_facebook_auth")

@@ -399,8 +399,11 @@ const GettingStartedPage = (props) => {
       setFacebookConnectLoader(true);
     }
     const profileData = await fetchUserProfile()
+    console.log("userinfo getting started",profileData)
+
     // if user id is present already with the facebook auth information then : 
     if(profileData?.length){
+      localStorage.setItem('fr_facebook_auth',JSON.stringify(profileData[0].fb_auth_info))
       dispatch(setProfileSpaces(profileData));
       if(profileData[0].fb_user_id!= null && profileData[0].fb_user_id){
         const facebookProfile = await extensionAccesories.sendMessageToExt({

@@ -139,6 +139,7 @@ const FacebookAuthApp = () => {
     }
   }
   const responseFacebook = async (response) => {
+  
     /**Sample facebook auth response payload structure and info
      * 
      * {
@@ -181,13 +182,17 @@ const FacebookAuthApp = () => {
         return false
       }
       let checkAuth = await connectProfile(response)
+      
+      
       if(checkAuth == true){
+        console.log("after auth")
         proceedFurther()
       }
     }
   }
 
   useEffect(() => {
+    localStorage.removeItem("fr_onboarding");
     /**
      *  @facebookAuthInfo is holding the facebook auth response in Stringify version, please parse it to get the object info.
      * 
