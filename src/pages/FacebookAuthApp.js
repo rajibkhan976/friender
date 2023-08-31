@@ -181,6 +181,8 @@ const FacebookAuthApp = () => {
         );
         return false
       }
+
+      localStorage.removeItem("fr_onboarding");
       let checkAuth = await connectProfile(response)
       
       
@@ -192,7 +194,7 @@ const FacebookAuthApp = () => {
   }
 
   useEffect(() => {
-    localStorage.removeItem("fr_onboarding");
+    // localStorage.removeItem("fr_onboarding");
     /**
      *  @facebookAuthInfo is holding the facebook auth response in Stringify version, please parse it to get the object info.
      * 

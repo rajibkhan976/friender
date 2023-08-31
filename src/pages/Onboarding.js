@@ -146,6 +146,16 @@ const OnboardingPage = () => {
   }
 
   useEffect(()=>{
+    let password_reset_status = localStorage.getItem("fr_pass_changed");
+    let user_onbording_status = localStorage.getItem("fr_onboarding");
+    
+    if (password_reset_status != 1) {
+      navigate("/reset-password");
+    } else if (user_onbording_status == 1) {
+      navigate("/");
+    } 
+    
+    
     /**
      * If user revisit/refresh on this page and detials are not submitted then send back to the facebook auth screen.
      */
@@ -157,6 +167,8 @@ const OnboardingPage = () => {
       }else{
         localStorage.setItem('onboaring_page_check',true)
       }
+
+
   },[])
 
   return (
