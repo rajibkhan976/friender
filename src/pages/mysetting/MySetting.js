@@ -717,15 +717,16 @@ const MySetting = () => {
     if (data?.re_friending_settings) {
       // console.log("refriender setting****", data.re_friending_settings[0]);
       setReFrndngInput1(
-        data.re_friending_settings[0].remove_pending_friend_request_after
+        data?.re_friending_settings[0]?.remove_pending_friend_request_after
       );
-      setReFrndSelect1(data.re_friending_settings[0].instantly_resend_friend_request);
+      setReFrndSelect1(data?.re_friending_settings[0]?.instantly_resend_friend_request);
 
       // Adding the keywords..
-      setFrndngKeywords(data.re_friending_settings[0].keywords);
-      setReFriendOpenKeywords(data.re_friending_settings[0].use_keyword);
+      setFrndngKeywords(data?.re_friending_settings[0]?.keywords);
+      setReFriendOpenKeywords(data?.re_friending_settings[0]?.use_keyword);
     }
 
+    // Sync Setting for (Auto Cancel Friend requests)
     setAutoCnclFrndRque(data.automatic_cancel_friend_requests);
     if (
       data?.automatic_cancel_friend_requests_settings.length > 0
