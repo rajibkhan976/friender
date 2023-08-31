@@ -40,7 +40,7 @@ const FriendRequestSentVersion = () => {
       let startDate=new Date(item.created_at);
       let endDate=new Date(item.updated_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-      console.log("diff:",differenceInSeconds);
+      // console.log("diff:",differenceInSeconds);
       item.time_saved=differenceInSeconds+(item.profile_viewed*30)
       return item;
     })
@@ -73,8 +73,7 @@ const FriendRequestSentVersion = () => {
 
       if (fetchedSets) {
         if (Array.isArray(fetchedSets)) {
-          
-          setFriendRequestHistory(newTimeSavedFun(fetchedSets));
+          setFriendRequestHistory(fetchedSets);
         }
         // const totalTime = secToHeaderTotaltime(
         //   fetchedSets?.reduce((acc,curr)=>acc+curr.time_saved,0)
@@ -261,9 +260,7 @@ const FriendRequestSentVersion = () => {
                 </svg>
               </figure>
               <p className="info-texts highlighted">
-                 {item?.time_saved===0||!item?.time_saved?"0 sec":secToReadableFormat(
-                  parseInt(item.time_saved.toString().slice(0, 7))
-                )}
+                 {item?.time_saved===0||!item?.time_saved?"0 sec":secToReadableFormat(item?.time_saved)}
               </p>
             </div>
           </div>
@@ -581,12 +578,12 @@ const FriendRequestSentVersion = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("sortCriteria changed to::::", sortCriteria);
-  }, [sortCriteria]);
+  // useEffect(() => {
+    // console.log("sortCriteria changed to::::", sortCriteria);
+  // }, [sortCriteria]);
 
   useEffect(() => {
-    console.log("In versions page");
+    // console.log("In versions page");
     fetchUserRequestSettings();
   }, []);
 
@@ -637,6 +634,7 @@ const FriendRequestSentVersion = () => {
    * @returns 
    */
   const secToReadableFormat = (seconds) => {
+    console.log('time saved>>>>>>', seconds)
     let y = Math.floor(seconds / 31536000);
     let mo = Math.floor((seconds % 31536000) / 2628000);
     let d = Math.floor(((seconds % 31536000) % 2628000) / 86400);

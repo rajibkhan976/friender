@@ -126,7 +126,7 @@ const Sidebar = (props) => {
 
   if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
+    // console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
     setAuthenticated(true);
   }else{
     setAuthenticated(false)
@@ -152,7 +152,7 @@ const Sidebar = (props) => {
 
   if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-    console.log("Authentication is off and now the sidebar can access the menu buttons on screeen. --1")
+    // console.log("Authentication is off and now the sidebar can access the menu buttons on screeen. --1")
     setAuthenticated(true);
   }else{
     setAuthenticated(false)
@@ -243,12 +243,12 @@ const Sidebar = (props) => {
       setSidebarOpenFriends(false);
     }
     fetchUserProfile().then((res) => {
-      console.log("user info sidebar",res)
+      // console.log("user info sidebar",res)
       if (res && res.length) {
 
         
         if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken!=undefined && res[0]?.fb_auth_info?.accessToken) {
-          console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
+          // console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
           setAuthenticated(true);
         }else{
           setAuthenticated(false)
@@ -619,7 +619,7 @@ const Sidebar = (props) => {
                   {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
                 </span>
 
-                {
+                {/* {
                   console.log(
                     'authenticated', authenticated, 
                     'defaultProfileId', defaultProfileId, 
@@ -628,7 +628,7 @@ const Sidebar = (props) => {
                     'facebookAuthInfoStatus image', facebookAuthInfoStatus?.picture?.data?.url,
                     'facebookAuthInfoStatus url', facebookAuthInfoStatus?.link
                   )
-                }
+                } */}
 
                 {isComponentVisible && (
 

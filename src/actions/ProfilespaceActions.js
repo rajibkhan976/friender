@@ -9,9 +9,9 @@ const profilespace = createSlice({
   initialState,
   reducers: {
     setProfileSpaces: (state, action) => {
-      console.log("before update profile spaces",action.payload)
+      // console.log("before update profile spaces",action.payload)
       state.profiles = action.payload;
-      console.log("after update profile spaces",initialState)
+      // console.log("after update profile spaces",initialState)
 
     },
     addProfileSpace: (state, action) => {
