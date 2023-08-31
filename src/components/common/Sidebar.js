@@ -74,7 +74,7 @@ const Sidebar = (props) => {
       socket.connect();
     });
     socket.on("connect_error", (e) => {
-      console.log("There Is a connection Error", e);
+      //console.log("There Is a connection Error", e);
       socket.io.opts.transports = ["websocket", "polling"];
     });
   }, []);
@@ -619,7 +619,9 @@ const Sidebar = (props) => {
                   {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
                 </span>
 
+
                 {/* {
+
                   console.log(
                     'authenticated', authenticated, 
                     'defaultProfileId', defaultProfileId, 

@@ -154,7 +154,7 @@ socket.on("disconnect", (reason) => {
   console.log("disconnect due to " + reason);
 });
 socket.on("connect_error", (e) => {
-  console.log("There Is a connection Error in header", e);
+  //console.log("There Is a connection Error in header", e);
   socket.io.opts.transports = ["websocket", "polling"];
 });
 
@@ -801,7 +801,7 @@ function PageHeader({ headerText = "" }) {
     // setIsStopingSync(false);
     isStopingSync = false;
     localStorage.removeItem("fr_update");
-    console.log("syncing completed_________________________>")
+   // console.log("syncing completed_________________________>")
     Alertbox(
       "Friends syncing is successfully completed",
       "success",
@@ -993,7 +993,7 @@ function PageHeader({ headerText = "" }) {
       if (toolTip?.trim() !== '' || !isNaN(toolTip)) {
         // let differenceInDays = (new Date() - new Date(toolTip)) / (1000 * 60 * 60 * 24);
         let differenceInDays = Math.abs(dateDiffInDays(new Date(), new Date(toolTip)))
-        console.log('differenceInDays:::', differenceInDays);
+        //console.log('differenceInDays:::', differenceInDays);
 
         if (differenceInDays === 1) {
           return 'Last sync: Successful 1 Day ago'

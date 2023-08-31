@@ -22,7 +22,7 @@ socket.on('connect', function () {
 });
 
 socket.on("connect_error", (e) => {
-    console.log("There Is a connection Error in helper", e);
+    //console.log("There Is a connection Error in helper", e);
     socket.io.opts.transports = ["websocket", "polling"];
     socket.auth = {token: localStorage.getItem("fr_token")}
 });

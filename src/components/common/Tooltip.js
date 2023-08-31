@@ -4,7 +4,7 @@ import { InfoIcon, QueryIcon } from "../../assets/icons/Icons";
 import '../../assets/scss/component/common/_tooltip.scss'
 
 const Tooltip = ({direction='bottom', textContent='Hello World', type="query",position=null,iconColor=null,iconbackground=null}) => {
-    console.log("tghe mouse position",position)
+   // console.log("tghe mouse position",position)
     
     useEffect(() => {
         //console.log("textContent");

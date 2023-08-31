@@ -124,11 +124,12 @@ const Listing = (props) => {
     } else {
       selectedPageSet.add(currentPageNum);
     }
-
-
-    if (!event.target.checked && gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);
-      onChangeCheck();
-
+ //after two click the code is not working on every page
+    if (!event.target.checked && gridRef?.current?.api) { 
+      onChangeCheck(false);
+      setTimeout(() => {
+        resetPaginationSelection(gridRef.current);
+      },100);
     }
 
 
@@ -290,17 +291,17 @@ const Listing = (props) => {
     }
 
     if (!selectAllChecked) {
-      //console.log("is ieeee checked", selectAllChecked);
+     // console.log("is ieeee checked", selectAllChecked);
       if (gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
 
-    }
+   }
+   //after removing the return it worked the staying selectAll issue
+    // return () => {
+    //   if (gridRef?.current?.api) {
+    //     gridRef.current.api.removeEventListener('paginationChanged', onPaginationChanged);
+    //   }
 
-    return () => {
-      if (gridRef?.current?.api) {
-        gridRef.current.api.removeEventListener('paginationChanged', onPaginationChanged);
-      }
-
-    }
+    // }
   }, [selectAllChecked])
 
   // DefaultColDef sets props common to all Columns
@@ -475,6 +476,9 @@ const Listing = (props) => {
     }
     else {
       gridRef.current.api.deselectAll();
+      if(gridRef?.current){
+        resetPaginationSelection(gridRef.current);
+      }
     }
   }, []);
 
