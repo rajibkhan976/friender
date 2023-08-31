@@ -483,7 +483,6 @@ const MySetting = () => {
       send_message_when_receive_new_friend_request: sndMsgRcvFrndRqu,
       send_message_when_accept_new_friend_request: sndMsgAcptFrndRqu,
       send_message_when_decline_friend_request: sndMsgDlcFrndRqu,
-      send_message_when_someone_accept_new_friend_request: sndMsgExptFrndRqu,
       day_bak_to_analyse_friend_engagement: dayBackAnlyFrndEng,
       day_bak_to_analyse_friend_engagement_settings: {
         from_time: dayBackAnlyFrndEngSelect1,
