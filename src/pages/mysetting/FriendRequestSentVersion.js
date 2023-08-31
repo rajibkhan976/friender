@@ -41,7 +41,7 @@ const FriendRequestSentVersion = () => {
       let endDate=new Date(item.updated_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
       // console.log("diff:",differenceInSeconds);
-      item.time_saved=differenceInSeconds+(item.profile_viewed*30)
+      item.time_saved=differenceInSeconds+(item.profile_viewed!= undefined && item.profileViewed? item.profileViewed:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send:0*30)
       return item;
     })
     return newArr;
@@ -73,15 +73,18 @@ const FriendRequestSentVersion = () => {
 
       if (fetchedSets) {
         if (Array.isArray(fetchedSets)) {
-          setFriendRequestHistory(fetchedSets);
+          setFriendRequestHistory(newTimeSavedFun(fetchedSets));
         }
         // const totalTime = secToHeaderTotaltime(
         //   fetchedSets?.reduce((acc,curr)=>acc+curr.time_saved,0)
         // );
 
-        const totalTime = fetchedSets?.reduce((acc, curr) => acc + curr.time_saved, 0) / (60 * 60);
+        const totalTime = newTimeSavedFun(fetchedSets)?.reduce((acc, curr) => {
+          console.log("reducer",curr,curr.time_saved)
+          return parseInt(acc) + parseInt(curr.time_saved)}, 0) / (60 * 60);
 
-        // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
+          console.log("total time ***",totalTime)
+          // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
 
         let headerOptions = {
           totalRun: fetchedSets?.length,
