@@ -125,6 +125,7 @@ const LostFriends = () => {
       headerName: "Age",
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
+      headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -180,10 +181,25 @@ const LostFriends = () => {
         return (valueA > valueB) ? 1 : -1;
       },
       cellRenderer: KeywordRenderer,
+      headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
-        filterOptions: ["contains"], // Set filter options to match any part of the text
+        filterOptions: [
+          {
+            displayKey: 'contains',
+            displayName: 'Contains',
+            predicate: ([filterValue], cellValue) => {
+              console.log([filterValue][0], cellValue);
+              if([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
+                return cellValue === undefined || cellValue === "undefined" || !cellValue || cellValue === null || cellValue === "NA" || cellValue === "N/A"
+              }
+              else {
+                return cellValue != null && cellValue?.includes(filterValue)
+              }
+            }
+          }
+        ],
         valueGetter: params => {
           return params?.data?.matchedKeyword
         },

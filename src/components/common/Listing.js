@@ -166,26 +166,26 @@ const Listing = (props) => {
         //   console.log("headerCheckBoxAll",headerCheckBoxAll[0]);
         //   headerCheckBoxAll[0].addEventListener("click",(event)=>{headerCheckboxHandle(event)});
         // }
-        if (ageCol?.length > 0) {
+        // if (ageCol?.length > 0) {
 
-          for (let col of ageCol) {
+        //   for (let col of ageCol) {
 
-            if (col.innerHTML.includes("Age")) {
-              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                  "</svg></p>";
-            }
-            if (col.innerHTML.includes("Friends source")) {
-              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                  "</svg></p>";
-            }
-          }
-        }
+        //     if (col.innerHTML.includes("Age")) {
+        //       col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+        //           "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+        //           "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+        //           "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+        //           "</svg></p>";
+        //     }
+        //     if (col.innerHTML.includes("Friends source")) {
+        //       col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+        //           "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+        //           "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+        //           "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+        //           "</svg></p>";
+        //     }
+        //   }
+        // }
       }
       // addHeaderCheckboxClickListener();
     }, 300);
@@ -205,26 +205,26 @@ const Listing = (props) => {
       } else {
         clearInterval(colInterval);
 
-        if (ageCol?.length > 0) {
+        // if (ageCol?.length > 0) {
 
-          for (let col of ageCol) {
+        //   for (let col of ageCol) {
 
-            if (col.innerHTML.includes("Age")) {
-              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                  "</svg></p>";
-            }
-            if (col.innerHTML.includes("Friends source")) {
-              col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
-                  "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
-                  "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
-                  "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
-                  "</svg></p>";
-            }
-          }
-        }
+        //     if (col.innerHTML.includes("Age")) {
+        //       col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Age  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+        //           "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+        //           "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+        //           "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+        //           "</svg></p>";
+        //     }
+        //     if (col.innerHTML.includes("Friends source")) {
+        //       col.innerHTML = "<p style='display:flex;align-items:center;justify-content:center;'> Friends source  <svg  style='margin-left:5px;' width='18'height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>" +
+        //           "<circle cx='9' cy='9' r='6.75' fill='#767485'/>" +
+        //           "<circle cx='9' cy='13.5' r='0.375' fill='black' stroke='black' stroke-width='0.5'/>" +
+        //           "<path d='M9 12V10.9359C9 10.2277 9.45316 9.59895 10.125 9.375V9.375C10.7968 9.15105 11.25 8.52233 11.25 7.81415V7.42927C11.25 6.22569 10.2743 5.25 9.07073 5.25H9C7.75736 5.25 6.75 6.25736 6.75 7.5V7.5' stroke='black'/>" +
+        //           "</svg></p>";
+        //     }
+        //   }
+        // }
       }
       // addHeaderCheckboxClickListener();
     }, 300);
@@ -642,6 +642,7 @@ const Listing = (props) => {
               tooltipShowDelay={0}
               tooltipHideDelay={1000000}
               alwaysShowHorizontalScroll={true}
+              suppressMenuHide={true}
               //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
           />
         </div>
