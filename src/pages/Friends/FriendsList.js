@@ -97,8 +97,16 @@ const FriendsList = () => {
   }, [])
 
   const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
+    // console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);
     if (nodeA.data.matchedKeyword == nodeB.data.matchedKeyword) return 0;
-    return (nodeA.data.matchedKeyword > nodeB.data.matchedKeyword) ? 1 : -1;
+    return (nodeA.data.matchedKeyword === undefined || nodeA.data.matchedKeyword === null)
+       ? 
+       -1 :
+      ((nodeB.data.matchedKeyword === undefined || nodeB.data.matchedKeyword === null)
+      ?
+      1
+      :
+      ((nodeA.data.matchedKeyword > nodeB.data.matchedKeyword) ? 1 : -1));
   }
 
   const friendsListinRef = [
