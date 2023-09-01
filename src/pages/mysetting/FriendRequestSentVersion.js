@@ -40,8 +40,11 @@ const FriendRequestSentVersion = () => {
       let startDate=new Date(item.created_at);
       let endDate=new Date(item.updated_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-      // console.log("diff:",differenceInSeconds);
-      item.time_saved=differenceInSeconds+(item.profile_viewed!= undefined && item.profileViewed? item.profileViewed:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send:0*30)
+      console.log("sn:",item.settings_name);
+      console.log("diff:",item.created_at,item.updated_at,differenceInSeconds);
+      console.log("time:",startDate.getTime(),endDate.getTime());
+      console.log("profile view",item.profile_viewed,item.profile_viewed!= undefined && item.profile_viewed? item.profile_viewed*30:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send*30:0*30)
+      item.time_saved=differenceInSeconds+(item.profile_viewed!= undefined && item.profile_viewed? item.profile_viewed*30:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send*30:0*30)
       return item;
     })
     return newArr;
@@ -73,6 +76,7 @@ const FriendRequestSentVersion = () => {
 
       if (fetchedSets) {
         if (Array.isArray(fetchedSets)) {
+          console.log("timesaved records",newTimeSavedFun(fetchedSets))
           setFriendRequestHistory(newTimeSavedFun(fetchedSets));
         }
         // const totalTime = secToHeaderTotaltime(
