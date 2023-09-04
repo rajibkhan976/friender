@@ -600,19 +600,16 @@ const Sidebar = (props) => {
                     : "nav-menu user-profile-image"
                 }
               >
+                {
+                  console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
+                }
                 <span
                   className="profile-photo"
                   onClick={setShowProfileFn}
                   style={{
                     backgroundImage: `url(${
-                      facebookAuthInfoStatus?.picture?.data?.url ? facebookAuthInfoStatus?.picture?.data?.url : 
-                      profiles?.filter(
-                        (el) => el.fb_user_id == defaultProfileId
-                      )[0]?.fb_profile_picture
-                        ? profiles?.filter(
-                            (el) => el.fb_user_id == defaultProfileId
-                          )[0]?.fb_profile_picture
-                        : ProfilePhoto
+                      // facebookAuthInfoStatus?.picture?.data?.url ? facebookAuthInfoStatus?.picture?.data?.url : 
+                      profiles && profiles.length? profiles[0]?.fb_profile_picture : ProfilePhoto
                     })`,
                   }}
                 >

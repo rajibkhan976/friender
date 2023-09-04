@@ -53,7 +53,7 @@ const SidebarPopUp = (props) => {
           loading="lazy"
         />
       </div>
-      {props.profiles?.filter(
+      {/* {props.profiles?.filter(
         (el) => el.fb_user_id != props.defaultProfileId
       ).length > 0 ? (
         <div className="profile-option-listings">
@@ -88,7 +88,7 @@ const SidebarPopUp = (props) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
       <button
         className="add-new-profile text-center btn-transparent"
         aria-label="button"
