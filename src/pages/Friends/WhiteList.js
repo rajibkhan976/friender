@@ -229,7 +229,6 @@ const WhiteList = () => {
         return (valueA > valueB) ? 1 : -1;
       },
       cellRenderer: KeywordRenderer,
-      headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -303,6 +302,7 @@ const WhiteList = () => {
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
       tooltipComponent: CustomHeaderTooltip,
+      headerClass: 'header-query-tooltip',
       cellRenderer: SourceRendererPending,
       // lockPosition: "right",
       minWidth: 185,
