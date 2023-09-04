@@ -40,10 +40,10 @@ const FriendRequestSentVersion = () => {
   const newTimeSavedFun=(objArr)=>{
     const newArr= objArr.map((item)=>{
       let startDate=new Date(item.created_at);
-      let endDate=new Date(item.updated_at)
+      let endDate=new Date(item.settings_end_date)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
       console.log("sn:",item.settings_name);
-      console.log("diff:",item.created_at,item.updated_at,differenceInSeconds);
+      console.log("diff:",item.created_at,item.settings_end_date,differenceInSeconds);
       console.log("time:",startDate.getTime(),endDate.getTime());
       console.log("profile view",item.profile_viewed,item.profile_viewed!= undefined && item.profile_viewed? item.profile_viewed*30:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send*30:0*30)
       console.log("type of profile viewed",typeof item.profile_viewed  )
@@ -321,7 +321,7 @@ const FriendRequestSentVersion = () => {
               </figure>
               <p className="info-texts">
                 <Moment format=" Do MMMM YYYY,  h:mm a">
-                  {item.updated_at}
+                  {item.settings_end_date}
                 </Moment>
               </p>
             </div>
