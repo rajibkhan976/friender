@@ -267,8 +267,43 @@
         margin-left: 5px;
         line-height: 5px;
         float: left;
+        display: inline-flex;
+        flex-direction: column;
+        width: 18px;
+        height: 18px;
+        align-items: center;
         figure {
           cursor: pointer;
+        }
+      }
+
+      &.start-end-info,
+      &.start-end-info,
+      &:last-child {
+        cursor: default;
+      }
+
+      &.dsc {
+        .down-icon {
+          svg {
+            *[fill] {
+              @include theme-aware('fill', 'dark-light-border');
+            }
+          }
+        }
+        .up-icon {
+        }
+      }
+
+      &.asc {
+        .up-icon {
+          svg {
+            *[fill] {
+              @include theme-aware('fill', 'dark-light-border');
+            }
+          }
+        }
+        .down-icon {
         }
       }
 

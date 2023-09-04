@@ -858,11 +858,17 @@ const FriendRequestSentVersion = () => {
               <div className="history-display-wraper">
                 <div className="setting table-head-content">
                   <div className="cutom-table-wraper">
-                    <div className="table-heads">
+                    <div className={
+                      sortCriteria?.sort === "settings_name" ?
+                        sortCriteria?.type === "asc" ? 
+                          "table-heads asc" : "table-heads dsc" :
+                        "table-heads"
+                      }
+                      onClick={() => setSort("settings_name", "asc")}
+                      >
                       <span className="table-head-name">Summary</span>
                       <span
                         className="filter-icons"
-                        onClick={() => setSort("settings_name", "asc")}
                       >
                         <figure className="up-icon">
                           <svg
@@ -895,11 +901,16 @@ const FriendRequestSentVersion = () => {
                       </span>
                     </div>
 
-                    <div className="table-heads">
+                    <div className={
+                      sortCriteria?.sort === "profile_viewed" ?
+                        sortCriteria?.type === "asc" ? 
+                          "table-heads asc" : "table-heads dsc" :
+                        "table-heads"
+                      }
+                      onClick={() => setSort("profile_viewed", "asc")}>
                       <span className="table-head-name">Profile Viewed</span>
                       <span
                         className="filter-icons"
-                        onClick={() => setSort("profile_viewed", "asc")}
                       >
                         <figure className="up-icon">
                           <svg
@@ -932,11 +943,16 @@ const FriendRequestSentVersion = () => {
                       </span>
                     </div>
 
-                    <div className="table-heads">
+                    <div className={
+                      sortCriteria?.sort === "friend_request_send" ?
+                        sortCriteria?.type === "asc" ? 
+                          "table-heads asc" : "table-heads dsc" :
+                        "table-heads"
+                      }
+                      onClick={() => setSort("friend_request_send", "asc")}>
                       <span className="table-head-name">Request Sent</span>
                       <span
                         className="filter-icons"
-                        onClick={() => setSort("friend_request_send", "asc")}
                       >
                         <figure className="up-icon">
                           <svg
@@ -969,11 +985,16 @@ const FriendRequestSentVersion = () => {
                       </span>
                     </div>
 
-                    <div className="table-heads">
+                    <div className={
+                      sortCriteria?.sort === "time_saved" ?
+                        sortCriteria?.type === "asc" ? 
+                          "table-heads asc" : "table-heads dsc" :
+                        "table-heads"
+                      }
+                      onClick={() => setSort("time_saved", "asc")}>
                       <span className="table-head-name">Time Saved</span>
                       <span
                         className="filter-icons"
-                        onClick={() => setSort("time_saved", "asc")}
                       >
                         <figure className="up-icon">
                           <svg
@@ -1078,7 +1099,7 @@ const FriendRequestSentVersion = () => {
                     </span> */}
                     </div>
 
-                    <div className="table-heads">
+                    <div className={"table-heads"}>
                       <span className="table-head-name">Settings History</span>
                     </div>
                   </div>
