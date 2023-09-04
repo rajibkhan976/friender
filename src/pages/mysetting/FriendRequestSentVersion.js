@@ -43,11 +43,12 @@ const FriendRequestSentVersion = () => {
       let endDate=new Date(item?.settings_end_date!= undefined && item?.settings_end_date?item?.settings_end_date:item?.created_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
       console.log("sn:",item.settings_name);
-      console.log("diff:",item.created_at,item.settings_end_date,differenceInSeconds);
+      console.log("diff:",differenceInSeconds);
       console.log("time:",startDate.getTime(),endDate.getTime());
       console.log("profile view",item.profile_viewed,item.profile_viewed!= undefined && item.profile_viewed? item.profile_viewed*30:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send*30:0*30)
-      console.log("type of profile viewed",typeof item.profile_viewed  )
-      item.time_saved=differenceInSeconds+(item?.profile_viewed!= undefined && item?.profile_viewed && typeof item?.profile == 'number'? item.profile_viewed*30:item?.friend_request_send!=undefined && item?.friend_request_send && typeof item?.friend_request_send == 'number'?item.friend_request_send*30:0*30)
+      console.log("type of profile viewed",(typeof item?.profile_viewed,item?.profile_viewed!= undefined && item?.profile_viewed && typeof item?.profile == 'number'? item.profile_viewed*30:0*30))
+      item.time_saved=differenceInSeconds+(item?.profile_viewed!= undefined && item?.profile_viewed && typeof item?.profile_viewed == 'number'? item.profile_viewed*30:item?.friend_request_send!=undefined && item?.friend_request_send && typeof item?.friend_request_send == 'number'?item.friend_request_send*30:0*30)
+     console.log("item_saved",item.time_saved)
       return item;
     })
     return newArr;
