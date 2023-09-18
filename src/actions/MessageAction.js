@@ -1,5 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addNewDMF, addNewSubDMF, deleteDMF, deleteSubDMF, fetchDMFs, prioritySubDMF } from "../services/messages/MessagesServices";
+import {
+  deleteSegmentMessage,
+  addNewSegmentMessage,
+  deleteOneSegment,
+  fetchAllSegments,
+  addOneSegment,
+  addNewDMF,
+  addNewGroupMessage,
+  addNewSubDMF,
+  addOneGroup,
+  deleteDMF,
+  deleteGroupMessage,
+  deleteOneGroup,
+  deleteSubDMF,
+  fetchAllGroups,
+  fetchDMFs,
+  prioritySubDMF,
+} from "../services/messages/MessagesServices";
 
 const messageType = localStorage.getItem("fr_messageTabType");
 /**@param args messageType="dmf"|"segment"|"group" */
@@ -65,6 +82,88 @@ export const updateSubPriority = createAsyncThunk(
   async (payload) => {
     const res = await prioritySubDMF(payload);
     return res;
+  }
+)
+
+export const fetchGroups = createAsyncThunk(
+  "messages/getAllGroups",
+  async (payload) => {
+    const res = await fetchAllGroups(payload)
+    return res;
+  }
+)
+
+export const fetchSegments = createAsyncThunk(
+    "messages/getAllSegments",
+    async (payload) => {
+      const res = await fetchAllSegments(payload);
+      return res;
+    }
+)
+
+export const addNewSegment = createAsyncThunk(
+    "messages/addNewMessageSegment",
+    async (payload) => {
+      const res = await addOneSegment(payload);
+      console.log('Response of new Segment: ', res);
+      return res;
+    }
+);
+
+export const deleteSegment = createAsyncThunk(
+    "messages/deleteSegment",
+    async (payload) => {
+      const res = await deleteOneSegment(payload);
+      return res
+    }
+)
+
+export const addNewSegmentMessageItem = createAsyncThunk(
+    "messages/newSegmentMessage",
+    async (payload) => {
+      const res = await addNewSegmentMessage(payload);
+      return res
+    }
+)
+
+export const deleteSegmentItemMessage = createAsyncThunk(
+    "messages/deleteMessage",
+    async (payload) => {
+      const res = await deleteSegmentMessage(payload)
+      return res
+    }
+)
+
+export const addNewGroup = createAsyncThunk(
+  "messages/addNewMessageGroup",
+  async (payload) => {
+    const res = await addOneGroup(payload);
+    console.log('done n dusted', res);
+    return res
+  }
+)
+
+export const deleteGroup = createAsyncThunk(
+  "messages/deleteGroup",
+  async (payload) => {
+    const res = await deleteOneGroup(payload);
+    return res
+  }
+)
+
+export const addNewGroupMessageItem = createAsyncThunk(
+  "messages/newGroupMessage",
+  async (payload) => {
+    const res = await addNewGroupMessage(payload);
+    return res
+  }
+)
+
+export const deleteGroupItemMessage = createAsyncThunk(
+  "messages/deleteMessage",
+  async (payload) => {
+    const res = await deleteGroupMessage(payload)
+    return res
   }
 )
 
@@ -137,6 +236,92 @@ export const messageSlice = createSlice({
     },
     [deleteSubDmf.rejected]: (state) => {
       state.isLoading = false;
+    },
+
+
+    [addNewSegment.pending]: (state) => {
+      state.isLoading = true
+    },
+    [addNewSegment.fulfilled]: (state, action) => {
+      if(action?.payload?.data?.length) {
+        state.segmentsArray = [action.payload.data, ...state.segmentsArray]
+      }
+      state.isLoading = false;
+    },
+    [addNewSegment.rejected]: (state) => {
+      state.isLoading =false
+    },
+    [fetchSegments.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchSegments.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.segmentsArray = action?.payload?.data ? action?.payload?.data?.reverse() : [];
+    },
+    [fetchSegments.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [deleteSegment.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteSegment.fulfilled]: (state, action) => {
+      state.isLoading = false;
+    },
+    [deleteSegment.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [addNewSegmentMessageItem.pending]: (state) => {
+      state.isLoading = true
+    },
+    [addNewSegmentMessageItem.fulfilled]: (state, action) => {
+      state.isLoading = false;
+    },
+    [addNewSegmentMessageItem.rejected]: (state) => {
+      state.isLoading =false
+    },
+
+
+    [addNewGroup.pending]: (state) => {
+      state.isLoading = true
+    },
+    [addNewGroup.fulfilled]: (state, action) => {
+      if(action?.payload?.data?.length) {
+        state.groupArray = [action.payload.data, ...state.groupArray]
+      }
+      state.isLoading = false;
+    },
+    [addNewGroup.rejected]: (state) => {
+      state.isLoading =false
+    },
+    [fetchGroups.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchGroups.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.groupArray = action?.payload?.data ? action?.payload?.data?.reverse() : [];
+    },
+    [fetchGroups.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [deleteGroup.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteGroup.fulfilled]: (state, action) => {
+      state.isLoading = false;
+    },
+    [deleteGroup.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [addNewGroupMessageItem.pending]: (state) => {
+      state.isLoading = true
+    },
+    [addNewGroupMessageItem.fulfilled]: (state, action) => {
+      console.log('action', state, action?.payload?.data);
+      // state.groupArray = [action.payload.data, ...state.groupArray]
+      state.isLoading = false;
+    },
+    [addNewGroupMessageItem.rejected]: (state) => {
+      state.isLoading =false
     },
   }
 });

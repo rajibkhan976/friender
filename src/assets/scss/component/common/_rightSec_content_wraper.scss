@@ -4,7 +4,9 @@
 
 .content-wraper {
   @include positioned(relative);
-  @include paddings (30px , 50px, 30px, 50px);
+  // @include paddings (30px , 50px, 30px, 50px);
+  padding: 30px;
+  padding-top: 0;
   width: 100%;
   height: 100vh;
   margin-bottom: 0;
@@ -13,16 +15,27 @@
   // border-radius: 10px 10px 10px 10px;
   overflow-y: auto;
   .heading-text-wraper {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-inline: -30px;
+    @include theme-aware('background', 'menu-bg');
+    padding-inline: 30px;
+    border-bottom: 1px solid;
+    @include theme-aware('border-color', 'sidebar-border-color');
+
     h3 {
       font-size: $headingFontSize;
       @include theme-aware('color', 'text-color');
-      font-weight: $fontWeight;
+      font-weight: $smallFontWeight;
       line-height: 27px;
       @include margins (0 , 0, 5px, 0);
     }
     p{
-      font-size: $smallFontSize;
-      color: $themeDefaultPrimary3;
+      font-size: $smallestFontSize;
+      // color: $themeDefaultPrimary3;
+      @include theme-aware('color', 'table-headings');
       font-weight: $smallFontWeight;
       line-height: 19px;
       @include margins (0 , 0, 0, 0);
@@ -30,9 +43,12 @@
   }
   .setup-wraper {
     width: 100%;
-    @include theme-aware('background', 'active-area');
+    // @include theme-aware('background', 'active-area');
+    @include theme-aware('background', 'listing-cell-bg');
     @include margins (25px , 0, 33px, 0);
-    @include paddings (14px , 28px, 14px, 28px);
+    padding-inline: 26px;
+    // @include paddings (14px , 28px, 14px, 28px);
+    height: 50px;
     align-items: center;
     border-radius: 5px;
     .bulb-icon {
@@ -45,6 +61,10 @@
       font-weight: $mediumFontWeight;
       line-height: 22px;
       @include margins (0 , 0, 0, 0);
+    }
+
+    &:first-of-type {
+      margin-top: 0;
     }
   }
   .steps-wraper {

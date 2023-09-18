@@ -25,7 +25,7 @@
     filter: drop-shadow(0px 2px 20px rgba(0, 0, 0, 0.2));
     transition: all cubic-bezier(0.87, 0.13, 0.25, 1) 0.3s;
 
-    &::after { 
+    &::after {
       content: "";
       position: absolute;
       transform-origin: 50% 50%;
@@ -211,8 +211,8 @@
   // }
 
   &.fr-tooltipPro-query,
-  &.fr-tooltipPro-info,
-  &.fr-tooltipPro-query-2 {
+  &.fr-tooltipPro-query-gray,
+  &.fr-tooltipPro-info {
     .fr-tooltipPro-content {
       @include theme-aware("background-color", "tooltip-bg");
       @include theme-aware("color", "tooltip-text");
@@ -223,6 +223,12 @@
         @include theme-aware("background-color", "tooltip-bg");
         @include border-radius(0);
       }
+    }
+  }
+
+  &.fr-tooltipPro-query-gray {
+    .fr-tooltipPro-content {
+      padding: 10px;
     }
   }
 

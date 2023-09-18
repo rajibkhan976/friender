@@ -1,5 +1,6 @@
 import { history } from "./history";
 import moment from "moment";
+import { DateTime } from 'luxon';
 
 export const utils = {
     /**
@@ -102,6 +103,23 @@ export const utils = {
         const formattedDate = moment(date).format(dateFormat);
         if(!timezone) return formattedDate;
         return moment(formattedDate).tz(timezone).utc().format(dateFormat);
-    }
+    },
+
+   
+
+     convertUTCtoLocal(utcTime,formated=false) {
+      try {
+        const utcDateTime = DateTime.fromISO(utcTime, { zone: 'utc' });
+        const localDateTime = utcDateTime.toLocal();
+
+        return localDateTime.toFormat(formated?'d MMMM yyyy, h:mm a':'yyyy-MM-dd HH:mm:ss');
+      } catch (error) {
+        console.error('Error converting UTC to local time:', error);
+        return null; // Handle the error gracefully in your application
+      }
+    },
+
+   // formattedDateTime(dateTime){return dateTime.toFormat('d MMMM yyyy, h:mm a');}
+    
 
 }

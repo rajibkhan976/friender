@@ -11,6 +11,7 @@ import axios from "axios";
 import { frInstance } from "./configuration/fr-instance";
 import { frInstance1 } from './configuration/fr-instance';
 // import {frInstanceResponse} from "./configuration/fr-instance";
+//import 'draft-js-emoji-plugin/lib/plugin.css'; // Import the Message TextEditor plugin's CSS
 import './index.css';
 axios.interceptors.request.use(frInstance.authorizerInterceptor);
 axios.interceptors.response.use(frInstance1.authorizerInterceptor);

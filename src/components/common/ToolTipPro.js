@@ -1,5 +1,5 @@
-import { memo, useEffect } from "react";
-import { InfoIcon, InfoIcon2, QueryIcon, QueryIconTwo } from "../../assets/icons/Icons";
+import React, { memo, useEffect } from "react";
+import {InfoIcon, InfoIcon2, QueryIcon, QueryIconGrey} from "../../assets/icons/Icons";
 import '../../assets/scss/component/common/_tooltip.scss'
 import useComponentVisible from "../../helpers/useComponentVisible";
 
@@ -8,6 +8,7 @@ function ToolTipPro({
   textContent = "Hello World",
   type = "",
   isInteract = true,
+  extraClassToOptimise = "",
 }) {
   const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
   useEffect(() => {
@@ -23,9 +24,9 @@ function ToolTipPro({
         ref={clickedRef}
         onMouseLeave={() => !isInteract && setIsComponentVisible(false)}
       >
-        {type === "query" ? <QueryIcon /> : type === "query-2" ? <QueryIconTwo /> : type === "info" ? <InfoIcon2 /> : <InfoIcon />}
+        {type === "query" ? <QueryIcon /> : type === "info" ? <InfoIcon2 /> : type === "query-gray" ? <QueryIconGrey /> : <InfoIcon />}
       </figure>
-      {isComponentVisible && <span className="fr-tooltipPro-content">
+      {isComponentVisible && <span className={`fr-tooltipPro-content ${extraClassToOptimise}`}>
         {isInteract && <h3>Quick Info</h3>}
 
         {textContent}

@@ -30,6 +30,11 @@ $themePrimaryBlue10: rgba(0, 148, 255, 0.1);
 $themePrimaryBlue11: #827EFF;
 $themePrimaryBlue12: rgba(3, 2, 41, 0.7);
 $themePrimaryBlue13: #004373;
+$themePrimaryBlue14: #007ED9;
+$themePrimaryBlue15: #5EBCFF;
+$themePrimaryBlue16: #91D1FF;
+$themePrimaryBlue17: #00C9F5;
+$themePrimaryBlue18: #0294B4;
 
 // Secondary
 
@@ -49,7 +54,7 @@ $themeDefaultSecondary6: #FAFAFB;
 $themeDefaultSecondary7: #EDF0F9;
 $themeDefaultSecondary8: #242424;
 $themeDefaultSecondary10: #A8A8A8;
-$themeDefaultSecondary11: #222226;
+$themeDefaultSecondary11: #1A1A1A;
 $themeDefaultSecondary12: #555555;
 
 // Theme Secondary Blue
@@ -78,6 +83,9 @@ $themeSecondaryGrey14: #47474D;
 $themeSecondaryGrey15:#56555b;
 $themeSecondaryGrey16: #dbdbdb;
 $themeSecondaryGrey17: #151516;
+$themeSecondaryGrey18: #575757;
+$themeSecondaryGrey19: #373737;
+$themeSecondaryGrey20: #C7C7C7;
 
 // Shades
 
@@ -100,6 +108,10 @@ $themeGreen7: #49CE56;
 $themeGreen8: #a4cea8;
 $themeGreen9: rgba(17, 230, 180, 0.2);
 $themeGreen10: #83C68A;
+$themeGreen11: #112420;
+$themeGreen12: #086751;
+$themeGreen13: #00C22B;
+$themeGreen14: #3AA545;
 
 // Theme Yellow
 $themeYellow1: #FEC600;
@@ -114,6 +126,7 @@ $themeYellow9: #F29339;
 $themeYellow10: #6D5413;
 $themeYellow11: #C3BF92;
 $themeYellow12: #FFE600;
+$themeYellow13: #FF9900;
 
 // Theme Red
 $themeRed1: #FF6A77;
@@ -125,6 +138,7 @@ $themeRed6: #B54B54;
 $themeRed7: #FFDBDE;
 $themeRed8: #D1A8A8;
 $themeRed9: rgba(115, 48, 54,1);
+$themeRed10: #733036;
 
 // Theme Orange
 $themeOrange1: rgba(242, 147, 57, 0.1);
@@ -132,6 +146,7 @@ $themeOrange1: rgba(242, 147, 57, 0.1);
 // Theme Pink
 $themePink: #EF37FF;
 $themePink2: rgb(239 55 255 / 10%);
+$themePink3: #C745C2;
 
 // Theme Gradients
 $themeGradient1_1: #5BC4FF;
@@ -143,3 +158,6 @@ $themeNavDark:#272729;
 $themeNavLight:#27272938;
 $themeColorList: $themePrimaryBlue11 -1.45%, $themeGreen2 101.45%; 
 $themeBackground: rgba($themeDefaultPrimary1, 0.15);
+
+// Purple
+$themePurple1: #9B98FF;

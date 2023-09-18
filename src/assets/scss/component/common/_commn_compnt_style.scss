@@ -118,9 +118,10 @@
 //common modal
 .modal-background {
   //backdrop-filter: blur(3px);
-  display: none; /* Hidden by default */
+  display: flex;/* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 99999; /* Sit on top */
+  // z-index: 99999; /* Sit on top */
+  z-index: 90;
   padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
@@ -248,12 +249,20 @@
       /* Dark/Primary/grey-td100 */
 
       color: $themeDefaultPrimary3;
+
+      &:empty {
+        margin: 0;
+      }
       b {
         color: $themeDefaultPrimary2;
       }
     }
     .modal-buttons {
       margin-top: 30px;
+
+      button {
+        margin-block: 0;
+      }
     }
   }
 }

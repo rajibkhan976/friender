@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Themewitch from "../common/Themeswitch";
+//import Themewitch from "../common/Themeswitch";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
 import SidebarPopUp from "./SidebarPopUp";
 import logoClosed from "../../assets/images/fab-icon.png";
@@ -13,7 +13,7 @@ import { userLogout } from "../../actions/AuthAction";
 import { asyncLocalStorage } from "../../helpers/AsyncLocalStorage";
 import useComponentVisible from "../../helpers/useComponentVisible";
 import { crealFilter, removeSelectedFriends } from "../../actions/FriendListAction";
-import {SidebarIcon, SettingIcon, HomeIcon,FriendIcon, LogoutIcon, OpenInNewTab} from "../../assets/icons/Icons";
+import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon } from "../../assets/icons/Icons";
 import {
   setProfileSpaces,
   setDefaultProfileId,
@@ -48,6 +48,7 @@ const Sidebar = (props) => {
   const navigate = useNavigate();
   const [sidebarToogle, setSidebarToogle] = useState(true);
   const [subMenuFriends, setSubMenuFriends] = useState(true);
+  const [subMenuMessage, setSubMenuMessage] = useState(true);
   // const [profiles, setProfiles] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
   const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
@@ -60,7 +61,8 @@ const Sidebar = (props) => {
 
   const [sidebarOpenFriends, setSidebarOpenFriends] = useState(false);
   const profiles = useSelector((state) => state.profilespace.profiles);
-  const [token,setToken]=useState(localStorage.getItem('fr_token'))
+  const [token, setToken] = useState(localStorage.getItem('fr_token'))
+
   const defaultProfileId = useSelector(
     (state) => state.profilespace.defaultProfileId
   );
@@ -137,7 +139,7 @@ const Sidebar = (props) => {
     setSidebarOpenFriends(false);
   }
 
-  },[props.isSynced])
+  }, [props.isSynced])
 
   useEffect(() => {
     // alert("c")
@@ -196,6 +198,11 @@ const Sidebar = (props) => {
     e.preventDefault();
     setSubMenuFriends(!subMenuFriends);
   };
+  const setSubMenuMessageFn = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSubMenuMessage(!subMenuMessage)
+  }
   const [dontSendFrindReqIRejct, setDontSendFrindReqIRejct] = useState(false);
   const setSidebarToogleFn = (e) => {
     localStorage.setItem("fr_sidebarToogle", !sidebarToogle);
@@ -288,10 +295,10 @@ const Sidebar = (props) => {
     }
   };
 
-  const listClick = () => {    
-    if(!localStorage.getItem('fr_token')){      
+  const listClick = () => {
+    if (!localStorage.getItem('fr_token')) {
       store.dispatch(userLogout())
-    }    
+    }
     dispatch(removeSelectedFriends());
     dispatch(crealFilter());
     setSidebarOpenFn();
@@ -326,8 +333,8 @@ const Sidebar = (props) => {
           {authenticated && facebookAuthInfoStatus?.accessToken &&(
             <span
               className={sidebarToogle ? "menu-toogle closed" : "menu-toogle"}
-              onClick={setSidebarToogleFn} 
-              // aria-label="Menu Toggle"
+              onClick={setSidebarToogleFn}
+            // aria-label="Menu Toggle"
             >
               <SidebarIcon />
             </span>
@@ -338,12 +345,12 @@ const Sidebar = (props) => {
       <div className="sidebar-opened-wraper d-flex d-flex-column f-justify-start">
         <div className="sidebar-top-wraper d-flex">
           <figure className="sidebar-logo logo-closed opened-sidebar">
-              <img 
-                src={darkMode ? logoDefault : logoLight} 
-                alt="" 
-                loading="lazy"
-              />
-              <span className="logoText">Your organic marketing best friend</span>
+            <img
+              src={darkMode ? logoDefault : logoLight}
+              alt=""
+              loading="lazy"
+            />
+            <span className="logoText">Your organic marketing best friend</span>
           </figure>
           <figure
             className={
@@ -356,11 +363,11 @@ const Sidebar = (props) => {
           </figure>
           {authenticated && facebookAuthInfoStatus?.accessToken && (
             <span className="settings-menu" onClick={setSidebarHomeOpenFn}>
-              <NavLink 
-                to="/settings/settings" 
+              <NavLink
+                to="/settings/settings"
                 aria-label="Settings"
-                className={() =>   [
-                  '/settings/settings', 
+                className={() => [
+                  '/settings/settings',
                   '/settings/request-history',
                   '/settings/browser-manager'].includes(location.pathname) ? "active" : ''}
 
@@ -380,7 +387,7 @@ const Sidebar = (props) => {
               >
                 {/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
                 <NavLink to="/" aria-label="Home">
-                  
+
 
                   <HomeIcon />
                   <span className="nav-menu-name">Home</span>
@@ -399,15 +406,15 @@ const Sidebar = (props) => {
                 <NavLink
                   onClick={() => setSubMenuFriends(true)}
                   to="/friends/friend-list"
-                  className={() =>   [
-                    '/friends/friend-list', 
+                  className={() => [
+                    '/friends/friend-list',
                     '/friends/pending-request',
                     '/friends/unfriended-friends',
                     '/friends/whitelisted-friends',
                     '/friends/deactivated-friends',
                     '/friends/lost-friends',
                     '/friends/blacklisted-friends'].includes(location.pathname) ? "active" : ''}
-                    aria-label="Friends"
+                  aria-label="Friends"
                 >
                   <FriendIcon />
                   <span
@@ -490,40 +497,68 @@ const Sidebar = (props) => {
               </li>
               {/* <span className="seperator"></span> */}
               {/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
-              {/* 
-              Commented out Message feature before launch
+
               <li
-                className="nav-menu link-seperator"
-                onClick={setSidebarHomeOpenFn}
+                className={
+                  sidebarOpenFriends
+                    ? "nav-menu has-child activated link-seperator"
+                    : "nav-menu has-child link-seperator"
+                }
+                onClick={setSidebarOpenFn}
               >
-                <NavLink to="/message">
-                  <svg
-                    width="16"
-                    height="15"
-                    viewBox="0 0 16 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3.81655 11.5571C3.67207 11.6169 3.56486 11.7266 3.51383 11.7788C3.50863 11.7842 3.50401 11.7889 3.5 11.7929L1.35355 13.9393C1.03857 14.2543 0.5 14.0312 0.5 13.5858V8C0.5 6.10025 0.501062 4.72573 0.641988 3.67754C0.78098 2.64373 1.04772 2.00253 1.52513 1.52513C2.00253 1.04772 2.64373 0.78098 3.67754 0.641988C4.72573 0.501062 6.10025 0.5 8 0.5H10C10.9387 0.5 11.6177 0.500271 12.1546 0.5369C12.687 0.573224 13.0429 0.643622 13.3394 0.766422C14.197 1.12165 14.8783 1.80301 15.2336 2.66061C15.3564 2.95707 15.4268 3.31304 15.4631 3.84541C15.4997 4.38227 15.5 5.06128 15.5 6C15.5 6.93872 15.4997 7.61773 15.4631 8.15459C15.4268 8.68696 15.3564 9.04293 15.2336 9.33939C14.8783 10.197 14.197 10.8783 13.3394 11.2336C13.0429 11.3564 12.687 11.4268 12.1546 11.4631C11.6177 11.4997 10.9387 11.5 10 11.5H4.20711C4.20143 11.5 4.19483 11.4999 4.18739 11.4998C4.11438 11.499 3.96102 11.4972 3.81655 11.5571ZM3.81655 11.5571L4.00788 12.019L3.81654 11.5571C3.81654 11.5571 3.81654 11.5571 3.81655 11.5571Z"
-                      fill="#BDBDBD"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4.5 4.5H12.5"
-                      stroke="#131314"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M4.49984 7.49981L10 7.5"
-                      stroke="#131314"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <span className="nav-menu-name">Message</span>
+                <NavLink 
+                  to="/messages/groups"
+                  onClick={() => { setSubMenuMessage(true) }} 
+                  className={() => [
+                    '/messages/groups', 
+                    '/messages/segments', 
+                    '/messages/dmf'
+                  ].includes(location.pathname) ? "active" : ''}
+                  aria-label="Messages"
+                >
+                  <NavMessageIcon color={'#0094FF'} />
+                  <span className="nav-menu-name">Message
+
+                    <span
+                      onClick={(e) => setSubMenuMessageFn(e)}
+                      className={
+                        subMenuMessage
+                          ? "sub-menu-toogle"
+                          : "sub-menu-toogle sub-closed"
+                      }
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M13.5 6.75L9 11.25L4.5 6.75" stroke="white" />
+                      </svg>
+                    </span>
+                  </span>
+
                 </NavLink>
-              </li> */}
+
+                {subMenuMessage && <ul className="sub-menus">
+                  <li className="nav-menu" >
+                    <NavLink to="/messages/groups" aria-label="Friends">
+                      <span className="nav-menu-name">- Groups</span>
+                    </NavLink>
+                  </li>
+                  <li className="nav-menu" >
+                    <NavLink to="/messages/segments" aria-label="Friends">
+                      <span className="nav-menu-name">- Segment</span>
+                    </NavLink>
+                  </li>
+                  <li className="nav-menu no-click">
+                    <NavLink to="/messages/dmf" aria-label="Friends" className="no-click">
+                      <span className="nav-menu-name">- DMF <span className="warn-badget">Coming soon</span></span>
+                    </NavLink>
+                  </li>
+                </ul>}
+              </li>
             </ul>
           )}
         </nav>
@@ -553,8 +588,8 @@ const Sidebar = (props) => {
 
         <ul className="bottom-nav-bar m-top-a">
           {/* {sidebarToogle && ( */}
-            <>
-              {/* <li
+          <>
+            {/* <li
                 className={
                   authenticated
                     ? "nav-menu closed-only no-click"
@@ -592,13 +627,48 @@ const Sidebar = (props) => {
                 </NavLink>
               </li> */}
 
+            <li
+              ref={clickedRef}
+              className={
+                isComponentVisible
+                  ? "nav-menu user-profile-image profile-opened"
+                  : "nav-menu user-profile-image"
+              }
+            >
+              <span
+                className="profile-photo"
+                onClick={setShowProfileFn}
+                style={{
+                  backgroundImage: `url(${profiles?.filter(
+                    (el) => el.fb_user_id == defaultProfileId
+                  )[0]?.fb_profile_picture
+                    ? profiles?.filter(
+                      (el) => el.fb_user_id == defaultProfileId
+                    )[0]?.fb_profile_picture
+                    : ProfilePhoto
+                    })`,
+                }}
+              >
+                {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
+              </span>
+
+              {isComponentVisible && (
+
+                <SidebarPopUp
+                  authenticated={authenticated}
+                  profiles={profiles}
+                  switchProfile={switchProfile}
+                  setShowProfileFn={setShowProfileFn}
+                  userEmail={userEmail}
+                  closePopupFn={closePopupFn}
+                  logoOut={logoOut}
+                  defaultProfileId={defaultProfileId}
+                />
+              )}
+            </li>
+            {!sidebarToogle &&
               <li
-                ref={clickedRef}
-                className={
-                  isComponentVisible
-                    ? "nav-menu user-profile-image profile-opened"
-                    : "nav-menu user-profile-image"
-                }
+                className="nav-menu feedback-nav"
               >
                 {
                   console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
@@ -629,7 +699,7 @@ const Sidebar = (props) => {
                   )
                 } */}
 
-                {isComponentVisible && (
+                {/* {isComponentVisible && (
 
                   <SidebarPopUp 
                     authenticated={authenticated}
@@ -642,29 +712,24 @@ const Sidebar = (props) => {
                     defaultProfileId = {defaultProfileId}
                     facebookAuthInfoStatus={facebookAuthInfoStatus}            
                   />
-                )}
+                )} */}
+                <Link to="https://lnkw.co/friender-feedback" target="_blank" className="btn">
+                  Feedback <OpenInNewTab />
+                </Link>
               </li>
-              {!sidebarToogle && 
-                <li
-                  className="nav-menu feedback-nav"
-                >
-                  <Link to="https://lnkw.co/friender-feedback" target="_blank" className="btn">
-                    Feedback <OpenInNewTab />
-                  </Link>
-                </li>
-              }
-              {sidebarToogle ? <li className="nav-menu closed-only">
-                <button
-                  className="btn-transparent logout-btn"
-                  aria-label="button"
-                  onClick={logoOut}
-                >
-                 <LogoutIcon />
-                </button>
-              </li> : ''}
+            }
+            {sidebarToogle ? <li className="nav-menu closed-only">
+              <button
+                className="btn-transparent logout-btn"
+                aria-label="button"
+                onClick={logoOut}
+              >
+                <LogoutIcon />
+              </button>
+            </li> : ''}
 
 
-              {/* <li className="nav-menu opened-only no-click">
+            {/* <li className="nav-menu opened-only no-click">
                 <button
                   className="btn-transparent menu-detail"
                   aria-label="Invite" 
@@ -706,10 +771,10 @@ const Sidebar = (props) => {
                   </svg>
                 </button>
               </li>  */}
-              {/* <li className="nav-menu opened-only no-click">
+            {/* <li className="nav-menu opened-only no-click">
                 <button className="btn-primary upgrade-btn">Upgrade</button>
               </li>  */}
-              {/* <li className="nav-menu opened-only no-click">
+            {/* <li className="nav-menu opened-only no-click">
                 <NavLink to="/" aria-label="FAQ">
                   <svg
                     width="24"
@@ -740,7 +805,7 @@ const Sidebar = (props) => {
                   </svg>
                 </NavLink>
               </li> */}
-            </>
+          </>
 
         </ul>
       </div>

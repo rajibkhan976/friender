@@ -1,0 +1,128 @@
+@use "../../../../assets/scss/abstract/color" as *;
+@use "../../../../assets/scss/abstract/color-themes" as *;
+@use "../../../../assets/scss/abstract/mixins" as *;
+@use "../../../../assets/scss/abstract/font" as *;
+
+.custom-dropdown {
+  width: 100px;
+  /* Customize the desired width */
+  height: auto;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+
+.editor-wrapper {
+  box-sizing: border-box;
+  //width: 800px;
+  width: 100%;
+  //height: 300px;
+  border: none;
+  border-radius: 5px;
+  @include theme-aware('background', 'message-editor-background');
+  border: 1px solid ;
+  @include theme-aware('border-color', 'message-editor-background');
+
+  .editor-main {
+    min-height: 300px;
+    padding: 10px;
+    // border: 1px solid #000;
+    // background-color: #000;
+    @include theme-aware('color', 'text-para-color');
+    line-height: 28px;
+    border-radius: 0px 0px 5px 5px;
+    font-weight: $smallFontWeight;
+    font-size: $smallFontSize;
+
+    .public-DraftStyleDefault-block {
+      margin-block: 15px;
+    }
+  }
+
+  .editor-toolbar {
+    border: none;
+    background-color: transparent;
+    // background-color: #313037;
+    /* padding: 5px; */
+    border-radius: 5px 5px 0px 0px;
+  }
+
+  &:focus-within {
+    @include theme-aware('border-color', 'dark-light-border');
+    // box-shadow: 1px solid #0094FF;
+
+    .editor-main {
+      background-color: $themeBlack1;
+    }
+  }
+}
+
+.editor-wrapper:focus-within {
+  border: none;
+  border: 1px solid #0094FF;
+}
+
+.editor-main {
+  min-height: 300px;
+  padding: 10px;
+  border: 1px solid #000;
+  background-color: #000;
+  color: white;
+  border-radius: 0px 0px 5px 5px;
+}
+
+.editor-toolbar {
+  border: none;
+  /* background-color: #313037; */
+  background-color: #313037;
+  /* padding: 5px; */
+  border-radius: 5px 5px 0px 0px;
+}
+
+.rdw-editor-toolbar {
+  margin: 0;
+}
+
+.rdw-option-wrapper {
+  border: none;
+  background: none;
+}
+
+
+/*
+  ====== Emoji Suggesiton List Styles ======
+*/
+.draftJsEmojiPlugin__emojiSelectPopover__1J1s0 {
+  background-color: #000 !important;
+  box-shadow: 0 5px 10px 0 #313037 !important;
+  /* border: none !important; */
+  border-color: #313037 !important;
+  border-radius: 5px !important;
+}
+
+
+/****
+  ======== ToolBar Icons ========
+****/
+.rdw-option-wrapper:hover,
+.draftJsEmojiPlugin__emojiSelectButton__3sPol:hover,
+.draftJsEmojiPlugin__emojiSelectButtonPressed__2Tezu:hover {
+  box-shadow: none;
+  background: #000 !important;
+  border-radius: 5px !important;
+}
+
+.draftJsEmojiPlugin__emojiSelectButton__3sPol,
+.draftJsEmojiPlugin__emojiSelectButtonPressed__2Tezu {
+  background: none !important;
+  border: none !important;
+}
+
+
+.fr-text-editor {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}

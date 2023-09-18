@@ -39,25 +39,25 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
    * @returns 
    */
   useEffect(() => {
-    if(MessageObj){
+    if (MessageObj) {
       setEditorOn(false);
       setMessageObjState(MessageObj);
       dataObj = MessageObj;
 
-      if(activationStatus === "add"){
+      if (activationStatus === "add") {
         setActiveSubdmfId(MessageObj && MessageObj?.sub_dmfs[MessageObj?.sub_dmfs.length - 1]?._id);
         setActiveSubdmf(MessageObj && MessageObj?.sub_dmfs[MessageObj?.sub_dmfs.length - 1]);
         setActiveSubdmfEdit(MessageObj && MessageObj?.sub_dmfs[MessageObj?.sub_dmfs.length - 1]);
       }
-      if(activationStatus === "default"){
+      if (activationStatus === "default") {
         setActiveSubdmfId(MessageObj && MessageObj?.sub_dmfs[0]?._id);
         setActiveSubdmf(MessageObj && MessageObj?.sub_dmfs[0]);
         setActiveSubdmfEdit(MessageObj && MessageObj?.sub_dmfs[0]);
       }
-      if(activationStatus === "edit"){
+      if (activationStatus === "edit") {
         // console.log("***")
         // console.log("activeSubdmf ::: ", activeSubdmf)
-        const currentSubdmf = MessageObj && MessageObj?.sub_dmfs.filter(el=>el?._id===activeSubdmf?._id)
+        const currentSubdmf = MessageObj && MessageObj?.sub_dmfs.filter(el => el?._id === activeSubdmf?._id)
         // console.log("currentSubdmf :: ", currentSubdmf)
         currentSubdmf && currentSubdmf.length > 0 && setActiveSubdmfId(currentSubdmf[0]?._id)
         setActiveSubdmf(currentSubdmf && currentSubdmf.length > 0 && currentSubdmf[0]);
@@ -65,14 +65,14 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
       }
       setActivationStatus("default")
     }
-    if(MessageObj == null) {
+    if (MessageObj == null) {
       setMessageObjState(null)
       setActiveSubdmfId(null);
       setActiveSubdmf(null);
       setActiveSubdmfEdit(null);
     }
   }, [MessageObj]);
-  
+
   /**
    * on click of any subdmf
    * make that subdmf active , along wiith id
@@ -104,43 +104,43 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
     // console.log("ADD NEW************")
 
     const defaultPayload = {
-        "dmf_id": messageObjState._id,
-        "subdmf_name": "Sub DMF ",
-        "priority": messageObjState.sub_dmfs.length,
-        "subdmf_content": "This is your default sub dmf content",
-        "use_as": { 
-          "keyword": false, 
-          "label": false, 
-          "tags": false
-        }
+      "dmf_id": messageObjState._id,
+      "subdmf_name": "Sub DMF ",
+      "priority": messageObjState.sub_dmfs.length,
+      "subdmf_content": "This is your default sub dmf content",
+      "use_as": {
+        "keyword": false,
+        "label": false,
+        "tags": false
+      }
     }
 
     dispatch(addSubDmf(defaultPayload))
-    .unwrap()
-    .then((res) => {
-      if(res) {
-        // console.log("response.......... ", res)
-        RemoveQueryParams()
-        const dmfsPlaceholder = {...messageObjState, sub_dmfs: [...messageObjState.sub_dmfs, res.data]}
-        // console.log("dmfsPlaceholder", dmfsPlaceholder);
-        
-        const storedDmfsPlaceholder = MessageArray.map(obj => {
-          if(obj._id === dmfsPlaceholder._id) {
-            return dmfsPlaceholder
-          }
+      .unwrap()
+      .then((res) => {
+        if (res) {
+          // console.log("response.......... ", res)
+          RemoveQueryParams()
+          const dmfsPlaceholder = { ...messageObjState, sub_dmfs: [...messageObjState.sub_dmfs, res.data] }
+          // console.log("dmfsPlaceholder", dmfsPlaceholder);
 
-          return obj
-        })
+          const storedDmfsPlaceholder = MessageArray.map(obj => {
+            if (obj._id === dmfsPlaceholder._id) {
+              return dmfsPlaceholder
+            }
 
-        // dispatch(updatelocalDmf(storedDmfsPlaceholder));
-        console.log('after adding new subdmf', storedDmfsPlaceholder);
-        setMessageObj(storedDmfsPlaceholder)
-        console.log("storedDmfsPlaceholder?.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]", storedDmfsPlaceholder);
-        // setActiveSubdmfId(storedDmfsPlaceholder && storedDmfsPlaceholder?.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]?._id);
-        // setActiveSubdmf(storedDmfsPlaceholder && storedDmfsPlaceholder.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]);
-        // setActiveSubdmfEdit(storedDmfsPlaceholder && storedDmfsPlaceholder.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length])
-      }
-    })
+            return obj
+          })
+
+          // dispatch(updatelocalDmf(storedDmfsPlaceholder));
+          console.log('after adding new subdmf', storedDmfsPlaceholder);
+          setMessageObj(storedDmfsPlaceholder)
+          console.log("storedDmfsPlaceholder?.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]", storedDmfsPlaceholder);
+          // setActiveSubdmfId(storedDmfsPlaceholder && storedDmfsPlaceholder?.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]?._id);
+          // setActiveSubdmf(storedDmfsPlaceholder && storedDmfsPlaceholder.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length]);
+          // setActiveSubdmfEdit(storedDmfsPlaceholder && storedDmfsPlaceholder.sub_dmfs[storedDmfsPlaceholder?.sub_dmfs.length])
+        }
+      })
   };
 
   /**
@@ -157,31 +157,31 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
     }
 
     let dmfsArrayClone = [...MessageArray].map(dmfMap => {
-      if(dmfMap._id === MessageObj._id) {
+      if (dmfMap._id === MessageObj._id) {
         return {
           ...dmfMap,
           sub_dmfs: dmfMap.sub_dmfs.filter(mapDmf => mapDmf._id !== activeSubdmf._id)
         }
       } else {
-        return {...dmfMap}
+        return { ...dmfMap }
       }
     });
     console.log("Deleted array", dmfsArrayClone);
 
     try {
       dispatch(deleteSubDmf(deleteSubDmfPayload))
-      .unwrap()
-      .then((res) => {
-        RemoveQueryParams()
-        setMessageObj(dmfsArrayClone)
-        setActiveSubdmfId(MessageObj && MessageObj?.sub_dmfs[0]?._id);
-        setActiveSubdmf(MessageObj && MessageObj?.sub_dmfs[0]);
-        setActiveSubdmfEdit(MessageObj && MessageObj?.sub_dmfs[0]);
-        setEditorOn(false)
-      })
+        .unwrap()
+        .then((res) => {
+          RemoveQueryParams()
+          setMessageObj(dmfsArrayClone)
+          setActiveSubdmfId(MessageObj && MessageObj?.sub_dmfs[0]?._id);
+          setActiveSubdmf(MessageObj && MessageObj?.sub_dmfs[0]);
+          setActiveSubdmfEdit(MessageObj && MessageObj?.sub_dmfs[0]);
+          setEditorOn(false)
+        })
     } catch (error) {
       console.log(error);
-    } finally{
+    } finally {
       setModalOpen(false)
     }
   };
@@ -208,22 +208,22 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
 
     try {
       dispatch(addSubDmf(clonePayload))
-      .then((res) => {
-        if(res) {
-          RemoveQueryParams()
-          let dmfsPlaceholder = {...messageObjState, sub_dmfs: [...messageObjState.sub_dmfs, res.payload.data]}
-          // console.log("dmfStored", dmfStored);
-          
-          let storedDmfsPlaceholder = MessageArray.map(obj => {
-            if(obj._id === dmfsPlaceholder._id) {
-              return dmfsPlaceholder
-            }
-  
-            return obj
-          })
-          setMessageObj(storedDmfsPlaceholder)
-        }
-      })
+        .then((res) => {
+          if (res) {
+            RemoveQueryParams()
+            let dmfsPlaceholder = { ...messageObjState, sub_dmfs: [...messageObjState.sub_dmfs, res.payload.data] }
+            // console.log("dmfStored", dmfStored);
+
+            let storedDmfsPlaceholder = MessageArray.map(obj => {
+              if (obj._id === dmfsPlaceholder._id) {
+                return dmfsPlaceholder
+              }
+
+              return obj
+            })
+            setMessageObj(storedDmfsPlaceholder)
+          }
+        })
     } catch (error) {
       console.log(error);
     }
@@ -262,7 +262,7 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
    * @returns updated subdmf, updated dmf array
    */
   const saveActiveSubdmf = () => {
-    if(activeSubdmfEdit.subdmf_name.trim() !== "" && activeSubdmfEdit.subdmf_content.trim() !== "") {
+    if (activeSubdmfEdit.subdmf_name.trim() !== "" && activeSubdmfEdit.subdmf_content.trim() !== "") {
       setActivationStatus("edit")
       const editedPayload = {
         "dmf_id": activeSubdmfEdit.dmf_id,
@@ -271,46 +271,46 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
         "priority": activeSubdmfEdit.priority,
         "subdmf_content": activeSubdmfEdit.subdmf_content,
         "use_as": {
-            "keyword": activeSubdmfEdit.use_as.keyword,
-            "label": activeSubdmfEdit.use_as.label,
-            "tags": activeSubdmfEdit.use_as.tags
+          "keyword": activeSubdmfEdit.use_as.keyword,
+          "label": activeSubdmfEdit.use_as.label,
+          "tags": activeSubdmfEdit.use_as.tags
         }
       };
       // console.log("main load", messageObjState);
-  
+
       dispatch(addSubDmf(editedPayload))
-      .unwrap()
-      .then((res) => {
-        if(res) {
-          RemoveQueryParams()
-          // console.log('res>>>', res.data);
-          let subPlaceholder = messageObjState.sub_dmfs.map(elSub => {
-            if(elSub._id === res.data._id) {
-              return res.data
-            }
-            else {
-              return elSub
-            }
-          })
-          // [...messageObjState.sub_dmfs, res.data]
-          let dmfsPlaceholder = {...messageObjState, sub_dmfs: subPlaceholder}
-          
-          let storedDmfsPlaceholder = MessageArray.map(obj => {
-            if(obj._id === dmfsPlaceholder._id) {
-              return dmfsPlaceholder
-            }
-  
-            return obj
-          })
-  
-          console.log("storedDmfsPlaceholder", storedDmfsPlaceholder);
-          // dispatch(updatelocalDmf(storedDmfsPlaceholder));
-          setMessageObj(storedDmfsPlaceholder)
-          setEditorOn(false)
-          setActiveSubdmfEdit(null)
-          setActiveSubdmfId(null)
-        }
-      })
+        .unwrap()
+        .then((res) => {
+          if (res) {
+            RemoveQueryParams()
+            // console.log('res>>>', res.data);
+            let subPlaceholder = messageObjState.sub_dmfs.map(elSub => {
+              if (elSub._id === res.data._id) {
+                return res.data
+              }
+              else {
+                return elSub
+              }
+            })
+            // [...messageObjState.sub_dmfs, res.data]
+            let dmfsPlaceholder = { ...messageObjState, sub_dmfs: subPlaceholder }
+
+            let storedDmfsPlaceholder = MessageArray.map(obj => {
+              if (obj._id === dmfsPlaceholder._id) {
+                return dmfsPlaceholder
+              }
+
+              return obj
+            })
+
+            console.log("storedDmfsPlaceholder", storedDmfsPlaceholder);
+            // dispatch(updatelocalDmf(storedDmfsPlaceholder));
+            setMessageObj(storedDmfsPlaceholder)
+            setEditorOn(false)
+            setActiveSubdmfEdit(null)
+            setActiveSubdmfId(null)
+          }
+        })
     }
   }
 
@@ -351,16 +351,16 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
     setMessageObjState(MessageObj);
   }
 
-    /**
-     * get subdf edit id from param and make active
-     */
-  useEffect(()=> {
+  /**
+   * get subdf edit id from param and make active
+   */
+  useEffect(() => {
     // console.log("QueryEdit", QueryEdit.get('dmf'), QueryEdit.get('subdmf'), "Message Aobject", MessageObj);
-    if(QueryEdit.get('dmf')){
+    if (QueryEdit.get('dmf')) {
       try {
         setActiveSubdmfId(QueryEdit?.get('subdmf'));
         setEditorOn(false);
-        if(MessageObj) {
+        if (MessageObj) {
           // console.log("trying sub edit", MessageObj?.sub_dmfs.find(el => el._id === '63f6f223ce01410008c0fb12'), QueryEdit.get('subdmf'));
           setActiveSubdmf(MessageObj?.sub_dmfs.find(el => el._id === QueryEdit?.get('subdmf')));
           setActiveSubdmfEdit(MessageObj?.sub_dmfs?.find(el => el._id === QueryEdit?.get('subdmf')));
@@ -373,7 +373,7 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
 
   return (
     <div className="message-content">
-      <div className="paper d-flex message dmf-listing-wraper">
+      <div className="paper-simple d-flex message dmf-listing-wraper">
         {messageObjState && (
           <div className="dmf-leftbar">
             <div className="dmf-left-nav-header">
@@ -386,9 +386,9 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                     messageObjState?.sub_dmfs?.length}
                 </span>
               </div>
-              <button 
-                className="btn add-new-message sub" 
-                onClick={(e)=>{
+              <button
+                className="btn add-new-message sub"
+                onClick={(e) => {
                   resetSearch();
                   AddFunNew(e)
                 }}
@@ -415,7 +415,7 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                 setDataObj={setMessageObjState}
                 activeObjId={activeSubdmfId}
               />
-              
+
             )}
             {messageObjState?.sub_dmfs?.length === 0 &&
               <div className="nothing-found-item">
@@ -456,7 +456,7 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                   <div className="dmf-body-header-left d-flex">
                     <div className="dmf-header-icon">
                       {console.log("activeSubdmf", activeSubdmf)}
-                      <span className="dragable-file" style={{background:`${activeSubdmf?.color+"1e"}`}}>
+                      <span className="dragable-file" style={{ background: `${activeSubdmf?.color + "1e"}` }}>
                         <FileDocIcon fillColor={activeSubdmf?.color} />
                       </span>
                     </div>
@@ -492,7 +492,7 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                       <button
                         className="action-btn delete-btn"
                         // onClick={() => deleteClick(activeSubdmf)}
-                        onClick={()=>{
+                        onClick={() => {
                           resetSearch();
                           setModalOpen(true)
                         }}
@@ -502,10 +502,10 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                         </figure>
                       </button>
                     )}
-                    <button className="action-btn copy-btn" onClick={()=>{
-                        resetSearch();
-                        copyClick()
-                        }}>
+                    <button className="action-btn copy-btn" onClick={() => {
+                      resetSearch();
+                      copyClick()
+                    }}>
                       <figure>
                         <CopyIcon />
                       </figure>
@@ -600,18 +600,18 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
 
                 <div className="messagearea-wraper">
 
-                <TextAreaInput
-                  label="DMF Message*"
-                  value={activeSubdmfEdit.subdmf_content}
-                  onChange={(e) => {
-                    setActiveSubdmfEdit({
-                      ...activeSubdmfEdit,
-                      subdmf_content: e.target.value,
-                    });
-                  }}
-                />
+                  <TextAreaInput
+                    label="DMF Message*"
+                    value={activeSubdmfEdit.subdmf_content}
+                    onChange={(e) => {
+                      setActiveSubdmfEdit({
+                        ...activeSubdmfEdit,
+                        subdmf_content: e.target.value,
+                      });
+                    }}
+                  />
 
-                {/* <div 
+                  {/* <div 
                   className="pseudo-field"
                   contentEditable="true"
                   onInput={(e) => pseudoType(e)}
@@ -624,24 +624,24 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
                   }
                 </div> */}
 
-                <div className="dmf-editor-btn d-flex">
-                  <button
-                    className="btn-primary outline"
-                    onClick={() => {
-                      cancelEdit()
-                      // setEditorOn(false);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    className="btn-primary btn-save"
-                    onClick={saveActiveSubdmf}
-                    disabled={
-                      activeSubdmfEdit.subdmf_name.trim() === "" || activeSubdmfEdit.subdmf_content.trim() === ""
-                    }
-                  >Save</button>
-                </div>
+                  <div className="dmf-editor-btn d-flex">
+                    <button
+                      className="btn-primary outline"
+                      onClick={() => {
+                        cancelEdit()
+                        // setEditorOn(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn-primary btn-save"
+                      onClick={saveActiveSubdmf}
+                      disabled={
+                        activeSubdmfEdit.subdmf_name.trim() === "" || activeSubdmfEdit.subdmf_content.trim() === ""
+                      }
+                    >Save</button>
+                  </div>
                 </div>
               </div>
             )}
@@ -652,11 +652,11 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
         {!messageObjState && <NothingSelected />}
       </div>
 
-      <Modal 
+      <Modal
         headerText="Delete"
         bodyText="Are you sure you want to delete this sub-dmf?"
         btnText="Yes, Delete"
-        ModalFun={()=>deleteClick(activeSubdmf)}
+        ModalFun={() => deleteClick(activeSubdmf)}
         open={modalOpen}
         setOpen={setModalOpen}
         ModalIconElement={DangerIcon}
@@ -668,10 +668,10 @@ function DynamicMergeFields({ MessageObj, setMessageObj, MessageArray, QueryEdit
 
 const CardRender = (item, active, color) => (
   <>
-  {/* {console.log(item, active, color)} */}
-    <Card 
-      item={item} 
-      active={active} 
+    {/* {console.log(item, active, color)} */}
+    <Card
+      item={item}
+      active={active}
       color={color}
     />
   </>

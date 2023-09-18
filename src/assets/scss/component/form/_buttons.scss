@@ -56,6 +56,8 @@
   &:disabled {
     @include theme-aware("background", "btn-disabled");
     @include theme-aware("color", "disabled-text");
+    pointer-events: none;
+    cursor: not-allowed;
   }
   // &:hover {
    
@@ -234,9 +236,8 @@
   }
 
   &:disabled {
-    //@include theme-aware('background', 'btn-disabled');
-    background: #B54B54;
-    color: $themeSecondaryDarkBlue3;
+    @include theme-aware("background", "btn-disabled");
+    @include theme-aware("color", "disabled-text");
     cursor: not-allowed;
     pointer-events: none;
     opacity: .7;
@@ -272,3 +273,13 @@
 
 /*=====  End of Buttton Danger (Delete Button)  ======*/
 
+
+.btn-grey {
+  @include theme-aware('color', 'link-text-color');
+  @include theme-aware('background-color', 'input-bg');
+
+  &:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+  }
+}

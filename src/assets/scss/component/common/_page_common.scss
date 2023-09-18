@@ -8,25 +8,6 @@
 
 /*::::::|| Message || all message style Start || style structure >> LeftBar >> D.M.F >> Segment >> Group ||::::*/
 
-.main-message {
-  flex: 1 1 auto;
-  overflow: hidden;
-}
-
-.message-content {
-  overflow: hidden;
-  flex: 1 1 auto;
-  margin-left: 30px;
-
-  .modal-header {
-    align-items: center;
-
-    .icon-modal-comm {
-      margin-right: 10px;
-    }
-  }
-}
-
 .message {
   width: 100%;
   height: 100%;
@@ -36,131 +17,6 @@
 
 //Message>Leftbar start
 
-.paper-non-padded {
-  &.message-page-left-nav {
-    width: 359px;
-    height: 100%;
-    padding: 0 0 20px 0;
-    @include theme-aware("background-color", "listing-cell-bg");
-    .message-left-nav-header {
-      @include theme-aware("color", "text-color");
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 30px 20px 30px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      @include theme-aware("border-color", "sidebar-border-color");
-      .d-flex {
-        align-items: center;
-        span {
-          margin-left: 3px;
-        }
-        h4 {
-          font-weight: 700;
-          font-size: 16px;
-          line-height: 22px;
-          margin-right: 10px;
-        }
-      }
-      .add-new-message {
-        figure {
-          svg {
-            circle {
-              @include theme-aware("fill", "message-add-btn");
-            }
-            path {
-              @include theme-aware("stroke", "text-color");
-            }
-          }
-          &:hover {
-            svg {
-              circle {
-                @include theme-aware("fill", "message-add-btn-hover-back");
-              }
-              path {
-                @include theme-aware("stroke", "pagination-arrow-hover");
-              }
-            }
-          }
-        }
-      }
-    }
-    .message-left-nav-content {
-      height: calc(100% - 86px);
-      overflow-y: auto;
-      margin-top: 24px;
-      @include theme-aware("border-color", "sidebar-border-color");
-      ul {
-        .message-leftbar-item {
-          margin: 0 30px;
-          //padding: 0 20px;
-          cursor: pointer;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          position: relative;
-          height: 70px;
-          p {
-            @include theme-aware("color", "link-text-color");
-          }
-          .btn {
-            svg {
-              path {
-                @include theme-aware("fill", "link-text-color");
-              }
-            }
-          }
-          &:hover {
-            @include theme-aware("background", "navBg");
-            border-radius: 5px;
-            p {
-              @include theme-aware("color", "text-color");
-            }
-          }
-          &.message-leftbar-item-active {
-            @include theme-aware("background", "navBg");
-            border-radius: 5px;
-            .message-editable-text-Field {
-              p {
-                @include theme-aware("color", "text-color");
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                max-width: 80%;
-                overflow: hidden;
-              }
-              .inner-menu-message {
-                .btn {
-                  svg {
-                    path {
-                      @include theme-aware("fill", "text-color");
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .inner-menu-message {
-        .btn {
-          background-color: transparent;
-          height: 30px;
-          padding: 0;
-          width: 30px;
-        }
-      }
-    }
-    .modal-header {
-      .icon-modal-comm {
-        margin-right: 10px;
-        font-size: 0;
-        line-height: 1;
-      }
-    }
-  }
-}
 .message-editable-text-Field {
   width: 100%;
   height: 100%;
@@ -598,13 +454,10 @@
   }
 }
 
-.message-content .paper.message {
-  @include theme-aware("background-color", "message-background");
+.message-content .paper-non-radius.message {
+ // @include theme-aware("background-color", "message-background");
 }
-.paper-non-padded.message-page-left-nav
-  .message-left-nav-content
-  ul
-  .message-leftbar-item.main-dmf-lists {
+.paper-simple.message-page-left-nav .message-left-nav-content ul .message-leftbar-item.main-dmf-lists {
   // margin: 0;
   padding: 0;
 }

@@ -1,0 +1,67 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/font" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/variables" as *;
+
+
+// Editor Modal..
+.editor-modal {
+  background-color: #131314;
+  padding: 10px 30px;
+}
+
+// Modal Header..
+.editor-modal-header {
+  display: flex !important;
+  justify-content: space-between;
+  position: relative;
+
+  .editor-modal-header-text {
+    color: #fff;
+    font-family: Nunito;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .editor-feature-block {
+    background: #222222;
+    display: inline-flex;
+    padding: 9px 15px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 40px;
+    font-size: 12px;
+    border-radius: 5px;
+  }
+
+  .editor-modal-legend-wrapper {
+    margin-top: -10px;
+    margin-bottom: 5px;
+  }
+}
+
+// HR...
+.editor-modal-hr {
+  width: 100%;
+  height: 0;
+  flex-shrink: 0;
+  border: 1px solid #29292b;
+  border-radius: 10px;
+  box-shadow: -14px 30px 20px 0px rgba(0, 0, 0, 0.05);
+}
+
+// Modal Content..
+.editor-modal-content {
+  .editor-msg-title {
+    color: $themeDefaultPrimary3;
+    margin-bottom: 5px;
+  }
+
+  .editor-btn {
+    padding: 10px 20px 11px 20px;
+    margin: 8px 0 8px 10px;
+  }
+}
+

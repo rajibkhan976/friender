@@ -7,7 +7,8 @@ const NumberInput = ({
   numberName,
   hasControl=false,
   setValuation,
-  hasPrefix=""
+  hasPrefix="",
+  extraClass="extraClass"
 }) => {  
   useEffect(() => {
     console.log('numberValue', numberValue);
@@ -23,6 +24,7 @@ const NumberInput = ({
         min='0'
         step="1"
         pattern="^\d*(\.\d{0,2})?$"
+        className={extraClass}
       />
       {hasControl &&
         <span

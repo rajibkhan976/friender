@@ -81,7 +81,13 @@ $themes: (
     red-delete-active: $themeRed7,
     input-hover-button-background: $themePrimaryBlue13,
     themed-highlighted-background: $themeLightPrimary3,
-    themed-highlighted-content-color: $themeDefaultSecondary8
+    themed-highlighted-content-color: $themeDefaultSecondary8,
+    messages-add-btn: $themeDefaultPrimary1,
+    messages-add-btn-disabled: $themeDefaultSecondary2,
+    message-context-menu-btn-active: $themePrimaryBlue13,
+    message-menu-active-color: $themePrimaryBlue15,
+    message-inactive-header-buttons: $themeDefaultSecondary8,
+    message-editor-background: $themeDefaultSecondary11
   ),
   light: (
     text-color: $themeBlack1,
@@ -166,6 +172,12 @@ $themes: (
     red-delete-active: $themeRed7,
     input-hover-button-background: $themePrimaryBlue13,
     themed-highlighted-background: $themeLightPrimary3,
-    themed-highlighted-content-color: $themeDefaultSecondary8
+    themed-highlighted-content-color: $themeDefaultSecondary8,
+    messages-add-btn: $themeDefaultPrimary1,
+    messages-add-btn-disabled: $themeDefaultSecondary2,
+    message-context-menu-btn-active: $themePrimaryBlue13,
+    message-menu-active-color: $themePrimaryBlue15,
+    message-inactive-header-buttons: $themeDefaultSecondary8,
+    message-editor-background: $themeDefaultSecondary11
   ),
 );

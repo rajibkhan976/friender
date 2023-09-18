@@ -412,10 +412,16 @@ function PageHeader({ headerText = "" }) {
           syncManual: true
         });
         break;
-      case "message":
+      case "groups":
         setHeaderOptions({
           ...headerOptions,
-          messageOption: true,
+          syncManual: true
+        });
+        break;
+      case "segments":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true
         });
         break;
       case "pending-request":

@@ -1,10 +1,49 @@
 import axios from "axios";
 import config from "../configuration/config";
+
 let headers = {
   "Content-Type": "application/json",
 };
 
+console.log("AUTH TOKEN -- ", localStorage.getItem('fr_token'));
 
+
+/**
+ * ===== Fetch the Group By GroupID =====
+ * @param groupId
+ * @returns {Promise<unknown>}
+ */
+export const fetchGroupById = (groupId) => {
+  return new Promise((res, rej) => {
+    axios
+        .get(config.fetchGroupByIdUrl+`/${groupId}`, { headers: headers })
+        .then((result) => {
+          res(result.data);
+        })
+        .catch((error) => {
+          rej(error?.response?.data ? error.response.data : error.message);
+        });
+  });
+};
+
+
+/**
+ * ===== Fetch All Group Messages =====
+ * @param data
+ * @returns {Promise<unknown>}
+ */
+export const fetchAllGroupMessages = () => {
+  return new Promise((res, rej) => {
+    axios
+        .get(config.fetchAllGroupMessagesUrl, { headers: headers })
+        .then((result) => {
+          res(result.data);
+        })
+        .catch((error) => {
+          rej(error?.response?.data ? error.response.data : error.message);
+        });
+  });
+};
 
 /**
  * ==== Fetch All Pending Friend Request ====

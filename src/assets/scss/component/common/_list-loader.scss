@@ -1,0 +1,15 @@
+.list-loader {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+
+    .page-loader-row {
+        width: 100%;
+        height: 42px;
+        
+        &:has(+ .page-loader-row) {
+            margin-bottom: 10px;
+        }
+    }
+}

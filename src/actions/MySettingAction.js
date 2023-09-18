@@ -1,12 +1,44 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, deletePendingFrndRequest, saveSettings } from "../services/SettingServices";
+import {
+    fetchProfileSetting,
+    fetchDiviceHistory,
+    fetchAllPendingFrndRequest,
+    deletePendingFrndRequest,
+    saveSettings,
+    fetchAllGroupMessages,
+    fetchGroupById,
+} from "../services/SettingServices";
 
  const initialState = {
      mySettings: null,
     isLoading: true,
   };
-  
-  /**
+
+
+/**
+ * ------- Fetch Group By GroupID --------
+ * @type {AsyncThunk<Promise<*>, void, AsyncThunkConfig>}
+ */
+export const getGroupById = createAsyncThunk(
+     "",
+     async (groupId) => {
+         const res = await fetchGroupById(groupId);
+         return res;
+     }
+ );
+
+/**
+ * ------ Fetch all Group Messages -------
+ */
+export const getAllGroupMessages = createAsyncThunk(
+    "settings/getAllGroupMessages",
+    async () => {
+        const res = await fetchAllGroupMessages();
+        return res;
+    }
+);
+
+/**
    * ------ Delete Pending Friend Request -------
    */
   export const makeDeletePendingFrndReq = createAsyncThunk(
@@ -53,11 +85,11 @@ import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, de
 
   export const getMySettings = createAsyncThunk(
     "settings/getMySettings",
-    async (payload) => {   
+    async (payload) => {
           const res=await fetchProfileSetting(payload)
          // console.log("getsetting payload",res);
           return res;
-       
+
     }
   );
 
@@ -78,7 +110,7 @@ import { fetchProfileSetting, fetchDiviceHistory, fetchAllPendingFrndRequest, de
     return res;
     }
   );
-  
+
 
   export const settingSlice=createSlice({
     name:"settings",

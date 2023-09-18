@@ -118,3 +118,167 @@ export const prioritySubDMF = (updatePrioritySubDmf)=>{
         })
     })
 }
+
+export const fetchAllGroups = () => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get(config.fetchMessageGroupsUrl, {headers:headers})
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                console.log("error fount in fetching", err);
+            })
+    })
+}
+
+export const fetchAllSegments = () => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get(config.fetchMessageSegmentsUrl, {headers:headers})
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                console.log("error fount in fetching", err);
+            })
+    })
+}
+
+export const addOneSegment = (newSegment) => {
+    return new Promise((resolve, reject) => {
+        axios.post(config.createMessageSegmentUrl, newSegment, {headers:headers})
+            .then((result) => {
+                resolve(result?.data);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
+}
+
+export const deleteOneSegment = (groupId) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.deleteMessageSegmentUrl,
+                groupId,
+                {headers: headers}
+            )
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+    })
+}
+
+export const addNewSegmentMessage = (newSegmentMessage) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.addNewMessageSegmentMessageUrl,
+                newSegmentMessage,
+                {headers:headers}
+            )
+            .then((res) => {
+                console.log('res', res);
+                resolve(res.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const deleteSegmentMessage = (messageId) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.deleteMessageSegmentMessageUrl,
+                {
+                    "messageId": messageId
+                },
+                {headers: headers}
+            )
+            .then((res) => {
+                resolve(res?.data)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}
+
+export const addOneGroup = (newGroup) => {
+    console.log('got new message group', newGroup);
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.createMessageGroupUrl,
+                newGroup,
+                {headers:headers}
+            )
+            .then((result) => {
+                resolve(result?.data);
+            })
+            .catch((error) => {
+                reject(error);
+            })
+    })
+}
+
+export const deleteOneGroup = (groupId) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.deleteMessageGroupUrl,
+                groupId,
+                {headers: headers}
+            )
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                reject(err)
+            })
+    })
+}
+
+export const addNewGroupMessage = (newGroupMessage) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.addNewMessageGroupMessageUrl,
+                newGroupMessage,
+                {headers:headers}
+            )
+            .then((res) => {
+                console.log('res', res);
+                resolve(res.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const deleteGroupMessage = (messageId) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .post(
+                config.deleteMessageGroupMessageUrl,
+                {
+                    "messageId": messageId
+                },
+                {headers: headers}
+            )
+            .then((res) => {
+                resolve(res?.data)
+            })
+            .catch(error => {
+                reject(error)
+            })
+    })
+}

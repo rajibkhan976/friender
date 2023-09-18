@@ -25,6 +25,7 @@ import helper from "../../helpers/helper";
 //import { removeSelectedFriends } from "../../actions/FriendListAction";
 import { Link } from "react-router-dom";
 import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
+import { utils } from "../../helpers/utils";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
 
 export const handlewhiteListUser = (dispatch, friendId, status) => {
@@ -280,7 +281,11 @@ export const CreationRenderer = memo((params) => {
 });
 
 export const AgeRenderer = memo((params) => {
-  const statusSync = params.data.created_at.toLowerCase();
+  let statusSync = params.data.created_at.toLowerCase();
+  // inputTimeString.replace(" ", "T") + ".000Z";
+  //console.log("utc time>>",statusSync);
+  const localTime=utils.convertUTCtoLocal(statusSync.replace(" ", "T") + ".000Z");
+ // console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
   let days = diffTime / (24 * 60 * 60 * 1000);
@@ -301,7 +306,7 @@ export const AgeRenderer = memo((params) => {
   else if (minutes) age = minutes + " Minute(s)";
   else age = secs + " Sec(s)";
 
- let showingDate = new Date(statusSync); 
+ let showingDate = new Date(localTime); 
  function getMonthName(monthNumber) {
  // const date = new Date();
   showingDate.setMonth(monthNumber - 1);

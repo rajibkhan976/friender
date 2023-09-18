@@ -39,6 +39,8 @@ import helper from "./helpers/helper"
 import { useDispatch } from "react-redux";
 import { getSendFriendReqst } from "./actions/FriendsAction"
 
+import Messages from "./pages/messages"
+
 const LoginComponent = AuthLayout(LoginPage);
 // const SignupComponent = AuthLayout(SignupPage);
 const ForgetPasswordComponent = AuthLayout(ForgetPasswordPage);
@@ -55,6 +57,11 @@ const DeactivatedFriends = lazy(() => import("./pages/Friends/DeactivatedFriends
 const SendRequest = lazy(() => import("./pages/Friends/SendRequest"));
 const BlackList = lazy(() => import("./pages/Friends/BlackList"));
 const InstallSuccess = lazy(() => import("./pages/extension/InstallSuccess"));
+
+// Message pages
+const MessageGroups = lazy(() => import("./pages/messages/group/MessageGroups"))
+const MessageSegments = lazy(() => import('./pages/messages/segment/MessageSegments'))
+
 
 
 const Routeing = () => {
@@ -128,8 +135,24 @@ const Routeing = () => {
               ></Route>
             </Route>
             {/* <Route path="dmf" element={<DynamicMergeFields />}></Route> */}
-            {/* <Route path="message" element={<Message />}>
-            </Route> */}
+            <Route path="messages" element={<Messages />}>
+              <Route 
+                path="groups" 
+                element={
+                  <Suspense fallback={""}>
+                    <MessageGroups />
+                  </Suspense>
+                }
+              />
+              <Route 
+                path="segments" 
+                element={
+                  <Suspense fallback={""}>
+                    <MessageSegments />
+                  </Suspense>
+                }
+              />
+            </Route>
 
             {/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}
             <Route path="friends" element={<Friends />}>
@@ -170,7 +193,7 @@ const Routeing = () => {
                 path="pending-request"
                 element={
                   <Suspense fallback={""}>
-                    <SendRequest deleteAllInterval={deleteAllInterval}/>
+                    <SendRequest deleteAllInterval={deleteAllInterval} />
                   </Suspense>
                 }
               ></Route>

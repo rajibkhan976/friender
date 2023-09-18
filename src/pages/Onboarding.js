@@ -187,7 +187,7 @@ const OnboardingPage = () => {
           </p>
         </div>
         <form onSubmit={handelerSubmit}>
-          <div className="selectbox-wraper">
+          <div className="selectbox-wraper element-wraper">
             <p>What kind of work did you do?</p>
             <DropSelector
               selects={select_one}
@@ -196,9 +196,11 @@ const OnboardingPage = () => {
                 setSelectedValueOne(e.target.value);
               }}
               width={"100%"}
+              extraClass="form-field"
+              elementClass="form-control"
             />
           </div>
-          <div className="selectbox-wraper">
+          <div className="selectbox-wraper element-wraper">
             <p>What is your role?</p>
             <DropSelector
               selects={select_two}
@@ -206,9 +208,11 @@ const OnboardingPage = () => {
                 setSelectedValueTwo(e.target.value);
               }}
               width={"100%"}
+              extraClass="form-field"
+              elementClass="form-control"
             />
           </div>
-          <div className="selectbox-wraper">
+          <div className="selectbox-wraper element-wraper">
             <p>What are you planing to do in Friender?</p>
             <DropSelector
               selects={select_three}
@@ -216,12 +220,14 @@ const OnboardingPage = () => {
                 setSelectedValueThree(e.target.value);
               }}
               width={"100%"}
+              extraClass="form-field"
+              elementClass="form-control"
             />
           </div>
-          <div className="selectbox-wraper">
+          <div className="selectbox-wraper element-wraper">
             <p>How much do you value 1 hour of your time in dollars?</p>
             {console.log('valuationValue in onboarding', valuationValue)}
-            <div className={(valuationValue === "" || valuationValue <= 0) ? "input-wrapper error-wrapper" : "input-wrapper"}>
+            <div className={(valuationValue === "" || valuationValue <= 0) ? "input-wrapper error-wrapper form-field" : "input-wrapper form-field"}>
               <NumberInput
                 numberName="valuation"
                 numberValue={valuationValue}
@@ -229,6 +235,7 @@ const OnboardingPage = () => {
                 hasControl={true}
                 setValuation={setValuationValue}
                 hasPrefix="$"
+                extraClass="form-control"
               />
             </div>
               {valuationValue === "" && <span className="error-mesage">Blank not allowed</span>}

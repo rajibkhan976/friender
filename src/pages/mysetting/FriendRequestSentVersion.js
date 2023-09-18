@@ -12,6 +12,7 @@ import {
 import Alertbox from "../../components/common/Toast";
 import Tooltip from "../../components/common/Tooltip";
 import "../../assets/scss/component/common/_requestSent.scss"
+import { utils } from "../../helpers/utils";
 
 
 
@@ -295,9 +296,9 @@ const FriendRequestSentVersion = () => {
                 </svg>
               </figure>
               <p className="info-texts">
-                <Moment format=" Do MMMM YYYY,  h:mm a">
-                  {item.created_at}
-                </Moment>
+                {/* <Moment format=" Do MMMM YYYY,  h:mm a"> */}
+                  {utils.convertUTCtoLocal(item.created_at.replace(" ", "T") + ".000Z",true)}
+                {/* </Moment> */}
               </p>
             </div>
           </div>
@@ -321,9 +322,10 @@ const FriendRequestSentVersion = () => {
                 </svg>
               </figure>
               <p className="info-texts">
-                <Moment format=" Do MMMM YYYY,  h:mm a">
-                  {item?.settings_end_date!=undefined&& item?.settings_end_date?item?.settings_end_date:item?.created_at}
-                </Moment>
+                {/* <Moment format=" Do MMMM YYYY,  h:mm a">
+                  {}
+                </Moment> */}
+                {utils.convertUTCtoLocal(item.updated_at.replace(" ", "T") + ".000Z",true)}
               </p>
             </div>
           </div>

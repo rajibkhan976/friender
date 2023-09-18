@@ -485,16 +485,28 @@
           align-items: center;
           border-left: 2px solid transparent;
           pointer-events: all;
+          
+          svg {
+            flex: 0 0 24px;
+          }
+
+          svg {
+            flex: 0 0 24px;
+          }
 
           span {
             font-size: 14px;
             color: $themeDefaultPrimary3;
             font-weight: 600;
             line-height: 19px;
-            margin-left: 15px;
+            // margin-left: 15px;
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
 
             &.nav-menu-name {
               flex: 1 1 auto;
+              margin-left: 6px;
             }
           }
 
@@ -557,13 +569,13 @@
             border-left: 2px solid transparent;
             cursor: pointer;
 
-            > svg path {
-              fill: $themeDefaultPrimary2;
-            }
+            // > svg path {
+            //   fill: $themeDefaultPrimary2;
+            // }
 
-            > svg ellipse {
-              fill: $themeDefaultPrimary2;
-            }
+            // > svg ellipse {
+            //   fill: $themeDefaultPrimary2;
+            // }
 
             .nav-menu-name {
               color: $themeDefaultPrimary2;
@@ -585,7 +597,7 @@
                 border-left: none;
 
                 .nav-menu-name {
-                  color: $themeDefaultPrimary1;
+                  color: $themeDefaultPrimary1 !important;
                   font-weight: 500;
                 }
               }
@@ -689,7 +701,7 @@
           margin-left: auto;
           display: inline-flex;
           align-items: center;
-          
+
           .btn {
             padding-inline: 8px;
             height: 22px;
@@ -717,7 +729,7 @@
 
               svg {
                 margin-left: 5px;
-  
+
                 path[stroke] {
                   @include theme-aware('stroke', 'text-color');
                 }
@@ -853,7 +865,7 @@
     }
 
     .nav-menu-name {
-      display: none;
+      display: none !important;
     }
 
     .sub-menus {
@@ -1087,6 +1099,17 @@
 
           &.opened-only {
             display: none;
+          }
+        }
+      }
+    }
+
+    .nav-bar {
+      > ul {
+        > .nav-menu:has(.active) {
+          .active{
+            border-color: $themeDefaultPrimary1;
+            background: linear-gradient(90deg, rgba(0, 148, 255, 0.1) 0.73%, rgba(0, 148, 255, 0) 100%);
           }
         }
       }

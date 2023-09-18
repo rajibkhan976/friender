@@ -20,6 +20,7 @@ import "../../assets/scss/component/common/_listing.scss";
 import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
 // import 'ag-grid-community/styles/ag-theme-alpine.css';
+import 'ag-grid-community/styles/ag-grid.css';
 import DropSelector from "../formComponents/DropSelector"
 // import e from "cors";
 

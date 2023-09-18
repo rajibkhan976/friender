@@ -15,7 +15,9 @@ const Modal = ({
   ModalIconElement,
   ExtraProps = {},
   modalButtons = true,
-  additionalClass
+  additionalClass,
+  modalWithChild = false,
+  children,
 }) => {
   return (
     <div
@@ -35,7 +37,7 @@ const Modal = ({
           >
             <XMarkIcon />
           </span>
-          <div className={`modal-header ${modalType}`}>
+          <div className={`modal-header d-flex f-align-center ${modalType}`}>
             {modalIcon && (
               <figure>
                 <img src={modalIcon} className="modal-icon" alt="" loading='lazy' />
@@ -54,6 +56,9 @@ const Modal = ({
             <span style={{color: modalType === "DELETE" ? '#FF6A77' : '#fff'}}>{headerText}</span>
           </div>
           <div className="modal-content">{bodyText} </div>
+
+          { modalWithChild && <div className="modal-content">{ children }</div> }
+
           {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
             <button
               className="btn-primary outline"
