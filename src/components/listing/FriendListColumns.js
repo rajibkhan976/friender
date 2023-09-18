@@ -13,6 +13,10 @@ import {
   OpenInNewTab,
   SourceGroupIcon,
   SyncSourceIcon,
+  NeuterIcon,
+  Tier3Icon,
+  Tier2Icon,
+  Tier1Icon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -255,14 +259,25 @@ export const CommentRenderer = memo((params) => {
   const commentCount = params.value;
 
   return (
-    <span className={`sync-date d-flex f-align-center`}>
-      <figure className={`sync-ico text-center`}>
+    <span className={`sync-date d-flex f-align-center h-100 w-100`}>
+      {/* <figure className={`sync-ico text-center`}>
         <CommentIcon />
       </figure>
-      <span className={`sync-dt`}>{commentCount || 0}</span>
+      <span className={`sync-dt`}>{commentCount || 0}</span> */}
+      {commentCount || 0}
     </span>
   );
 });
+
+export const EngagementRenderer = memo((params) => {
+  const engagementCount = params.value;
+
+  return (
+    <span className={`sync-date d-flex f-align-center h-100 w-100`}>
+      {engagementCount || 0}
+    </span>
+  )
+})
 
 export const CreationRenderer = memo((params) => {
   const statusSync = params.value.toLowerCase();
@@ -353,15 +368,16 @@ export const RecentEngagementRenderer = memo((params) => {
   }, [params])
 
   return (
-    <span className={` d-flex f-align-center`}>
+    <span className={`h-100 w-100 d-flex f-align-center`}>
       <span 
         className={
           !(inactiveAfter && statusSync)  ? 
-            "" : "tooltipFullName small"
+            "" : "tooltipFullName small h-100 w-100 d-flex"
         } data-text={(inactiveAfter && statusSync) && "Last engaged on " + dateFormat}>
         {(inactiveAfter && statusSync) ?
             <span className={days > inactiveAfter ? "activeEngaged notAct" : "activeEngaged actUser"}>
-              <span className="dot"></span> {days} day(s)
+              {/* <span className="dot"></span> {days} day(s) */}
+              <span className="dot"></span> {days}
             </span> : <span className="activeEngaged notAct"><span className="dot"></span> Never</span>}
       </span>
     </span>
@@ -376,7 +392,7 @@ export const GenderRenderer = memo((params) => {
 
   return (
     <div className={`friend-gender d-flex fa-align-center`}>
-      {genderFriend === "male" || genderFriend === "female" ? (
+      {genderFriend === "male" || genderFriend === "female" || genderFriend === "neuter" ? (
         <figure
           className={
             genderFriend === "male"
@@ -388,14 +404,16 @@ export const GenderRenderer = memo((params) => {
             <MaleIcon />
           ) : genderFriend === "female" ? (
             <FeMaleIcon />
+          ) : genderFriend === "neuter" ? (
+            <NeuterIcon />
           ) : (
-            ""
+            "-"
           )}
         </figure>
       ) : (
-        ""
+        "-"
       )}
-      <span className={genderFriend === "N/A" ? "muted-text" : ""}>{genderFriend}</span>
+      {/* <span className={genderFriend === "N/A" ? "muted-text" : ""}>{genderFriend}</span> */}
     </div>
   );
 });
@@ -418,11 +436,12 @@ export const MessageRenderer = memo((params) => {
   const messageCount = params.value;
 
   return (
-    <span className={`sync-date d-flex f-align-center`}>
-      <figure className={`sync-ico text-center`}>
+    <span className={`sync-date d-flex f-align-center h-100 w-100`}>
+      {/* <figure className={`sync-ico text-center`}>
         <MessageIcon />
       </figure>
-      <span className={`sync-dt`}>{messageCount || 0}</span>
+      <span className={`sync-dt`}>{messageCount || 0}</span> */}
+      {messageCount || 0}
     </span>
   );
 });
@@ -431,11 +450,12 @@ export const ReactionRenderer = memo((params) => {
   const reactionCount = params.value;
 
   return (
-    <span className={`sync-date d-flex f-align-center`}>
-      <figure className={`sync-ico text-center`}>
-        <ReactionIcon />
-      </figure>
-      <span className={`sync-dt`}>{reactionCount || 0}</span>
+    <span className={`sync-date d-flex f-align-center w-100 h-100`}>
+      {/* <figure className={`sync-ico text-center`}> */}
+        {/* <ReactionIcon /> */}
+      {/* </figure> */}
+      {/* <span className={`sync-dt`}>{reactionCount || 0}</span> */}
+      {reactionCount || 0}
     </span>
   );
 });
@@ -583,7 +603,16 @@ export const CountryRenderer = memo((params) => {
 
   return (
     <span className={` d-flex f-align-center`}>
-      <span className={countryName === "N/A" ? `muted-text` : `capText sync-txt`}>{countryName} </span>
+      <span className={countryName === "N/A" ? `d-flex muted-text f-align-center` : `d-flex f-align-center capText sync-txt`}>
+        <span className="inline-icon tier-icon">
+          {
+            params?.data?.tier === "Tier3" ? <Tier3Icon /> : 
+            params?.data?.tier === "Tier2" ? <Tier2Icon /> :
+            <Tier1Icon />
+          }
+        </span>
+        <span className="country-name">{countryName}</span>
+      </span>
     </span>
   );
 });

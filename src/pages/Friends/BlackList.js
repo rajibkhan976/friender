@@ -185,7 +185,7 @@ const BlackList = () => {
     },
     {
       field: "country",
-      headerName: "Country Name",
+      headerName: "Country",
       cellRenderer: CountryRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -233,7 +233,7 @@ const BlackList = () => {
             displayName: 'Contains',
             predicate: ([filterValue], cellValue) => {
               console.log([filterValue][0], cellValue);
-              if([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
+              if ([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
                 return cellValue === undefined || cellValue === "undefined" || !cellValue || cellValue === null || cellValue === "NA" || cellValue === "N/A"
               }
               else {

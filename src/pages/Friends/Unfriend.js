@@ -127,7 +127,7 @@ const FriendsList = () => {
     },
     {
       field: "country",
-      headerName: "Country Name",
+      headerName: "Country",
       filter: "agTextColumnFilter",
       cellRenderer: CountryRenderer,
       filterParams: {
@@ -174,7 +174,7 @@ const FriendsList = () => {
             displayName: 'Contains',
             predicate: ([filterValue], cellValue) => {
               console.log([filterValue][0], cellValue);
-              if([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
+              if ([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
                 return cellValue === undefined || cellValue === "undefined" || !cellValue || cellValue === null || cellValue === "NA" || cellValue === "N/A"
               }
               else {
@@ -335,32 +335,32 @@ const FriendsList = () => {
   ];
   return (
     <div className="main-content-inner d-flex d-flex-column">
-    {modalOpen && (
-      <Modal
-        modalType="normal-type"
-        modalIcon={null}
-        headerText={"Keyword(s)"}
-        bodyText={
-          <>
-            {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
-            {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
-              keyWords?.matchedKeyword.map((el, i) =>
-              (<span className={`tags positive-tags`} key={`key-${i}`}>
-                {el}
-              </span>)
-              ) : (
-                "No specific keyword used"
-              )}
-          </>
-        }
-        open={modalOpen}
-        setOpen={setModalOpen}
-        ModalFun={null}
-        btnText={" "}
-        modalButtons={false}
-        additionalClass="modal-keywords"
-      />
-    )}
+      {modalOpen && (
+        <Modal
+          modalType="normal-type"
+          modalIcon={null}
+          headerText={"Keyword(s)"}
+          bodyText={
+            <>
+              {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+              {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
+                keyWords?.matchedKeyword.map((el, i) =>
+                (<span className={`tags positive-tags`} key={`key-${i}`}>
+                  {el}
+                </span>)
+                ) : (
+                  "No specific keyword used"
+                )}
+            </>
+          }
+          open={modalOpen}
+          setOpen={setModalOpen}
+          ModalFun={null}
+          btnText={" "}
+          modalButtons={false}
+          additionalClass="modal-keywords"
+        />
+      )}
       {unfriendList?.length > 0 && (
         <>
           {!loading && (

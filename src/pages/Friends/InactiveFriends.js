@@ -109,7 +109,7 @@ const InactiveFriends = () => {
     },
     {
       field: "country",
-      headerName: "Country Name",
+      headerName: "Country",
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

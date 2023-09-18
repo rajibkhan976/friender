@@ -120,9 +120,9 @@
         }
       }
 
-      &.engagementCell {
-        color: $themeTransparent
-      }
+      // &.engagementCell {
+      //   color: $themeTransparent
+      // }
     }
 
     &:hover {
@@ -476,6 +476,37 @@
       &:not(:hover) {
       }
     }
+    &.header-gender {
+      .ag-header-cell-text {
+        font-size: 0;
+        content: url('../../../images/gender-icon.svg');
+      }
+    }
+    &.header-reaction {
+      .ag-header-cell-text {
+        content: url('../../../images/reaction-icon.svg');
+      }
+    }
+    &.header-comments {
+      .ag-header-cell-text {
+        content: url('../../../images/comments-icon.svg');
+      }
+    }
+    &.header-messages {
+      .ag-header-cell-text {
+        content: url('../../../images/messages-icon.svg');
+      }
+    }
+    &.header-engagement {
+      .ag-header-cell-text {
+        content: url('../../../images/engagement-icon.svg');
+      }
+    }
+    &.header-recent-engagement {
+      .ag-header-cell-text {
+        content: url('../../../images/recent-engagement-icon.svg');
+      }
+    }
   }
   .ag-picker-field-icon {
     .ag-icon {
@@ -603,11 +634,11 @@
     align-items: center;
     justify-content: center;
 
-    &.male {
-      svg path {
-        @include theme-aware("fill", "text-color");
-      }
-    }
+    // &.male {
+    //   svg path {
+    //     @include theme-aware("fill", "text-color");
+    //   }
+    // }
   }
 
   span {
@@ -891,4 +922,13 @@
 .ag-theme-fr-table {
   .ag-row{
   }
+}
+
+.tier-icon {
+  width: 25px;
+  margin-right: 10px;
+}
+
+.country-name {
+  text-transform: capitalize;
 }
