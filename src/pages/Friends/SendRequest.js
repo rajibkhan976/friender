@@ -149,6 +149,7 @@ const SendRequest = ({ deleteAllInterval }) => {
       headerName: "Country",
       filter: "agTextColumnFilter",
       cellRenderer: CountryRenderer,
+      headerClass: 'header-query-tooltip',
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -233,7 +234,7 @@ const SendRequest = ({ deleteAllInterval }) => {
     },
     {
       field: "groupName" ? "groupName" : "finalSource",
-      headerName: "Friends source",
+      headerName: "Source",
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
       tooltipComponent: CustomHeaderTooltip,

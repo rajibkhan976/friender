@@ -22,7 +22,8 @@ import {
   SourceRendererPending,
   CountryRenderer,
   CountryTierRenderer,
-  KeywordRenderer
+  KeywordRenderer,
+  MessageRenderer
 } from "../../components/listing/FriendListColumns";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import Modal from "../../components/common/Modal";
@@ -84,6 +85,8 @@ const LostFriends = () => {
     {
       field: "friendGender",
       headerName: "Gender ",
+      headerClass: 'header-gender',
+      headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
@@ -97,7 +100,10 @@ const LostFriends = () => {
     {
       field: "country",
       headerName: "Country",
+      headerTooltip: 'Country',
+      tooltipComponent: CustomHeaderTooltip,
       cellRenderer: CountryRenderer,
+      headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -107,19 +113,19 @@ const LostFriends = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-    {
-      field: "tier",
-      headerName: "Country Tier",
-      cellRenderer: CountryTierRenderer,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
+    // {
+    //   field: "tier",
+    //   headerName: "Country Tier",
+    //   cellRenderer: CountryTierRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   }
+    // },
     {
       field: "created_at",
       headerName: "Age",
@@ -217,7 +223,7 @@ const LostFriends = () => {
     },
     {
       field: "groupName" ? "groupName" : "finalSource",
-      headerName: "Friends source",
+      headerName: "Source",
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
       tooltipComponent: CustomHeaderTooltip,
@@ -234,8 +240,10 @@ const LostFriends = () => {
     },
     {
       field: "message_thread",
-      headerName: "Has Conversation",
-      cellRenderer: HasConversationRenderer,
+      headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
+      cellRenderer: MessageRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

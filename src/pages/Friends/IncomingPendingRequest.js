@@ -87,6 +87,8 @@ const IncomingPendingRequest = () => {
     {
       field: "friendGender",
       headerName: "Gender ",
+      headerClass: 'header-gender',
+      headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
@@ -134,6 +136,8 @@ const IncomingPendingRequest = () => {
     {
       field: "reactionThread",
       headerName: "Total Reaction",
+      headerTooltip: 'Reactions',
+      headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -153,6 +157,8 @@ const IncomingPendingRequest = () => {
     {
       field: "commentThread",
       headerName: "Total Comment",
+      headerTooltip: 'Comments',
+      headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -172,6 +178,8 @@ const IncomingPendingRequest = () => {
     {
       field: "message_thread",
       headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {

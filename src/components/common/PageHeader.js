@@ -839,6 +839,8 @@ function PageHeader({ headerText = "" }) {
       // setIsStopingSync(true);
       await helper.sleep(refethingDelayAfterSync);
       await completeSync();
+      setIsSyncing(false)
+      console.log('now ending:::::::');
     }
   };
 

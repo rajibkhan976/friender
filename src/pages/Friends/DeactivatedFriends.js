@@ -76,6 +76,8 @@ const DeactivatedFriends = () => {
     {
       field: "friendGender",
       headerName: "Gender ",
+      headerClass: 'header-gender',
+      headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       lockPosition: "right",
@@ -169,7 +171,7 @@ const DeactivatedFriends = () => {
     // },
     {
       field: "groupName" ? "groupName" : "finalSource",
-      headerName: "Friends source",
+      headerName: "Source",
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
       tooltipComponent: CustomHeaderTooltip,
@@ -187,6 +189,8 @@ const DeactivatedFriends = () => {
     {
       field: "reactionThread",
       headerName: "Total Reaction",
+      headerTooltip: 'Reactions',
+      headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -204,6 +208,8 @@ const DeactivatedFriends = () => {
     {
       field: "commentThread",
       headerName: "Total Comment",
+      headerTooltip: 'Comments',
+      headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -218,27 +224,29 @@ const DeactivatedFriends = () => {
         ],
       },
     },
+    // {
+    //   field: "message_thread",
+    //   headerName: "Message Count",
+    //   cellRenderer: MessageRenderer,
+    //   filter: "agNumberColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //     ],
+    //   },
+    // },
     {
       field: "message_thread",
       headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-        ],
-      },
-    },
-    {
-      field: "message_thread",
-      headerName: "Has Conversation",
-      cellRenderer: HasConversationRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

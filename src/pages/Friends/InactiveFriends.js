@@ -10,6 +10,8 @@ import {
   //StatusRenderer,
   CommentRenderer,
   GenderRenderer,
+  AgeRenderer,
+  CountryRenderer,
   // CreationRenderer,
   // AgeRenderer
 } from "../../components/listing/FriendListColumns";
@@ -17,6 +19,7 @@ import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
 import { useEffect, useState } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
+import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 
 const InactiveFriends = () => {
   //::::Friend List geting data from Redux::::
@@ -83,6 +86,8 @@ const InactiveFriends = () => {
     {
       field: "friendGender",
       headerName: "Gender ",
+      headerClass: 'header-gender',
+      headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
@@ -96,6 +101,8 @@ const InactiveFriends = () => {
     {
       field: "created_at",
       headerName: "Age",
+      cellRenderer: AgeRenderer,
+      headerClass: 'header-query-tooltip',
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       filter: "agTextColumnFilter",
       filterParams: {
@@ -110,6 +117,10 @@ const InactiveFriends = () => {
     {
       field: "country",
       headerName: "Country",
+      cellRenderer: CountryRenderer,
+      headerTooltip: 'Country',
+      tooltipComponent: CustomHeaderTooltip,
+      headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -119,18 +130,18 @@ const InactiveFriends = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-    {
-      field: "tier",
-      headerName: "Country Tier",
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
+    // {
+    //   field: "tier",
+    //   headerName: "Country Tier",
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   }
+    // },
     // {
     //   field: "created_at",
     //   headerName: "Sync & Added Date &  Time ",
@@ -167,6 +178,8 @@ const InactiveFriends = () => {
     {
       field: "reactionThread",
       headerName: "Total Reaction",
+      headerTooltip: 'Reactions',
+      headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -184,6 +197,8 @@ const InactiveFriends = () => {
     {
       field: "commentThread",
       headerName: "Total Comment",
+      headerTooltip: 'Comments',
+      headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -198,27 +213,29 @@ const InactiveFriends = () => {
         ],
       },
     },
+    // {
+    //   field: "message_thread",
+    //   headerName: "Message Count",
+    //   cellRenderer: MessageRenderer,
+    //   filter: "agNumberColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //     ],
+    //   },
+    // },
     {
       field: "message_thread",
       headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-        ],
-      },
-    },
-    {
-      field: "message_thread",
-      headerName: "Has Conversation",
-      cellRenderer: HasConversationRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

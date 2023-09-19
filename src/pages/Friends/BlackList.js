@@ -11,6 +11,7 @@ import {
   CountryTierRenderer,
   CreationRenderer,
   EngagementGetter,
+  EngagementRenderer,
   GenderRenderer,
   HasConversationRenderer,
   KeywordRenderer,
@@ -118,6 +119,8 @@ const BlackList = () => {
     {
       field: "friendGender",
       headerName: "Gender ",
+      headerClass: 'header-gender',
+      headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
@@ -131,6 +134,8 @@ const BlackList = () => {
     {
       field: "last_engagement_date",
       headerName: "Recent engagement",
+      headerTooltip: 'Recent Engagement',
+      headerClass: 'header-recent-engagement',
       cellRenderer: RecentEngagementRenderer,
       cellRendererParams: {
         inactiveAfter
@@ -185,9 +190,11 @@ const BlackList = () => {
     },
     {
       field: "country",
-      headerName: "Country",
       cellRenderer: CountryRenderer,
+      headerTooltip: 'Country',
+      tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
+      headerClass: 'header-query-tooltip',
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -196,20 +203,19 @@ const BlackList = () => {
         filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
       }
     },
-    {
-      field: "tier",
-      headerName: "Country Tier",
-      cellRenderer: CountryTierRenderer,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
-
+    // {
+    //   field: "tier",
+    //   headerName: "Country Tier",
+    //   cellRenderer: CountryTierRenderer,
+    //   filter: "agTextColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   }
+    // },
     {
       field: "keywords",
       headerName: "Keyword",
@@ -293,7 +299,7 @@ const BlackList = () => {
     // },
     {
       field: "groupName" ? "groupName" : "finalSource",
-      headerName: "Friends source",
+      headerName: "Source",
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
       tooltipComponent: CustomHeaderTooltip,
@@ -311,6 +317,8 @@ const BlackList = () => {
     {
       field: "reactionThread",
       headerName: "Total Reaction",
+      headerTooltip: 'Reactions',
+      headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -328,6 +336,8 @@ const BlackList = () => {
     {
       field: "commentThread",
       headerName: "Total Comment",
+      headerTooltip: 'Comments',
+      headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -342,27 +352,29 @@ const BlackList = () => {
         ],
       },
     },
+    // {
+    //   field: "message_thread",
+    //   headerName: "Message Count",
+    //   cellRenderer: MessageRenderer,
+    //   filter: "agNumberColumnFilter",
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: [
+    //       "lessThan",
+    //       "greaterThan",
+    //       "lessThanOrEqual",
+    //       "greaterThanOrEqual",
+    //     ],
+    //   },
+    // },
     {
       field: "message_thread",
       headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: [
-          "lessThan",
-          "greaterThan",
-          "lessThanOrEqual",
-          "greaterThanOrEqual",
-        ],
-      },
-    },
-    {
-      field: "message_thread",
-      headerName: "Has Conversation",
-      cellRenderer: HasConversationRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -373,8 +385,11 @@ const BlackList = () => {
     },
     {
       field: "engagement",
-      headerName: "Eng",
+      headerName: "Engagement",
+      headerTooltip: 'Total Engagement',
+      headerClass: 'header-engagement',
       filter: "agNumberColumnFilter",
+      cellRenderer: EngagementRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,
@@ -387,8 +402,8 @@ const BlackList = () => {
         ],
       },
       valueGetter: EngagementGetter,
-      minWidth: 0,
-      maxWidth: 0,
+      // minWidth: 0,
+      // maxWidth: 0,
       cellClass: 'engagementCell'
     },
   ];
