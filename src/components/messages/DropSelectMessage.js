@@ -18,39 +18,35 @@ const DropSelectMessage = ({
     quickMsgModalOpen,
     setQuickMsgOpen,
     isDisabled,
-    usingOptions,
-    setUsingOptions,
-    // editorStateValue,
-    // setEditorStateValue
+    type,
+    setUsingSelectOptions,
+    usingSelectOptions,
+    saveMySetting
 }) => {
     const [selectOption, setSelectOption] = useState(() => groupSelect ? groupSelect.group_name : '');
-    const [selectedOptionId, setSelectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
+    const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
     const [showTooltip, setShowTooltip] = useState(false);
     const [editorStateValue, setEditorStateValue] = useState("");
 
     useEffect(() => {
-        console.log("QUICKKK -- ", quickMessage);
+        if (quickMessage && type === "ACCEPT_REQ") {
+            // setEditorStateValue(quickMessage?.__raw);
+            localStorage.setItem('fr_quickMessage_accept_req', quickMessage?.__raw);
+        }
 
-        if (quickMessage) {
-            console.log('====================================');
-            console.log("QUICKKK -- ", quickMessage);
-            console.log('====================================');
-            
-            setEditorStateValue(quickMessage?.__raw);
+        if (quickMessage && type === "REJECT_REQ") {
+            localStorage.setItem("fr_quickMessage_reject_req", quickMessage?.__raw);
         }
     }, [quickMessage]);
 
-
+    /**
+     * Saving manually when selecting the options only..
+     */
     useEffect(() => {
-        console.log("Editor State Value --- ", editorStateValue);
-    }, [editorStateValue]);
-
-
-    useEffect(() => {
-        setUsingOptions(false);
-    }, []);
-
-    console.log("Using OPtions AT DROP-SELECT-MSG -- ", usingOptions);
+        if (usingSelectOptions !== false) {
+            saveMySetting();
+        }
+    }, [usingSelectOptions]);
 
     /**
      * ====== Make Text to Truncate when gets upper then 32 character ======
@@ -73,7 +69,7 @@ const DropSelectMessage = ({
                     <li
                         key={_id}
                         className={showTooltip && `tooltipFullName quick-msg-tooltip-inline`}
-                        data-text={group_name}
+                        data-text={`${group_name}`}
                         onClick={() => handleClickToSelectOption(option)}
                         onMouseEnter={() => group_name.length > 32 ? setShowTooltip(true) : setShowTooltip(false)}
                         onMouseLeave={() => setShowTooltip(false)}
@@ -113,11 +109,58 @@ const DropSelectMessage = ({
         setSelectOption(group_name);
         setGroupSelect(optionObj);
         handleIsOpenSelectOption(false);
-        setUsingOptions(true);
+        // setUsingOptions(true);
+        setUsingSelectOptions(true);
+
+        if (type === "ACCEPT_REQ") {
+            localStorage.setItem("fr_using_select_accept", true);
+        }
+
+        if (type === "REJECT_REQ") {
+            localStorage.setItem("fr_using_select_rejt", true);
+        }
     };
+
+    // Rendering select options..
+    const renderSelectOption = () => {
+        if (type === "ACCEPT_REQ") {
+            const isSelectUsing = localStorage.getItem("fr_using_select_accept");
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
+
+        if (type === "REJECT_REQ") {
+            const isSelectUsing = localStorage.getItem("fr_using_select_rejt");
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
+    };
+
 
     return (
         <>
+            {/* Modal for Quick Message Sending Text Editor  */}
+            <EditorModal
+                type={type}
+                open={quickMsgModalOpen}
+                setOpen={setQuickMsgOpen}
+                setMessage={setQuickMessage}
+                editorStateValue={editorStateValue}
+                setEditorStateValue={setEditorStateValue}
+            />
+
             <div className='custom-select-option-wrapper'>
                 {/* ====== SELECT BAR ====== */}
                 <div
@@ -128,7 +171,7 @@ const DropSelectMessage = ({
                     }}
                     onClick={() => handleIsOpenSelectOption(!openSelectOption)}
                 >
-                    <span>{truncateTextTo32(selectOption || "Select the message")}</span>
+                    <span>{renderSelectOption()}</span>
                     {/*<span className="select-arrow"></span>*/}
                     <figure className="icon-arrow-down">
                         {!openSelectOption ? <ChevronDownArrowIcon size={18} color={isDisabled === false ? 'white' : 'gray'} /> : <ChevronUpArrowIcon size={18} />}
@@ -174,15 +217,6 @@ const DropSelectMessage = ({
                     </div>
                 </div>
             </div>
-
-            {/* Modal for Quick Message Sending Text Editor  */}
-            <EditorModal
-                open={quickMsgModalOpen}
-                setOpen={setQuickMsgOpen}
-                setMessage={setQuickMessage}
-                editorStateValue={editorStateValue}
-                setEditorStateValue={setEditorStateValue}
-            />
         </>
     )
 }

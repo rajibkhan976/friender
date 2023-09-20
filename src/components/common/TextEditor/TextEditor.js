@@ -4,7 +4,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 //import {LexicalEditorRefPlugin} from "@lexical/react/LexicalEditorRefPlugin"
-import {$generateHtmlFromNodes} from '@lexical/html';
+import { $generateHtmlFromNodes } from '@lexical/html';
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 //import TreeViewPlugin from "./plugins/TreeViewPlugin";
@@ -17,7 +17,7 @@ import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS} from "@lexical/markdown";
+import { TRANSFORMERS } from "@lexical/markdown";
 import "./editor.css";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useRef, useState } from "react";
@@ -109,14 +109,15 @@ function OnChangePlugin({ onChange }) {
 }
 
 export default function TextEditor({
-                                     editorStateValue,
-                                     setEditorStateValue,
-                                     useForModal = false,
-                                     isEditing = {readyToEdit:true,addNewSub:false},
-                                     cancleFun,
-                                     saveMessage,
-                                     needSegment = true
-                                   }) {
+  editorStateValue,
+  setEditorStateValue,
+  useForModal = false,
+  isEditing = { readyToEdit: true, addNewSub: false },
+  cancleFun,
+  saveMessage,
+  needSegment = true,
+  setModalOpen = null,
+}) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
     // Call toJSON on the EditorState object, which produces a serialization safe string
@@ -133,65 +134,71 @@ export default function TextEditor({
     setEditorStateValue(editorState);
   }, [editorState]);
 
-  const handleSavebtnClick=()=>{
+  const handleSavebtnClick = () => {
 
-    const tempMsgObj=JSON.parse(editorState);
+    const tempMsgObj = JSON.parse(editorState);
     // console.log("at saveeeeeeee",tempMsgObj)
-    const msgObj={
-      __raw:editorState,
-      html:tools.$generateHtmlFromNodeState(tempMsgObj),
-      text:tools.$convertPureString(tempMsgObj).join(" "),
-      messengerText:tools.$generateMessengerText(tempMsgObj)
+    const msgObj = {
+      __raw: editorState,
+      html: tools.$generateHtmlFromNodeState(tempMsgObj),
+      text: tools.$convertPureString(tempMsgObj).join(" "),
+      messengerText: tools.$generateMessengerText(tempMsgObj)
     }
     saveMessage(msgObj)
+
+    if (useForModal) {
+      localStorage.removeItem("fr_using_select_accept");
+      localStorage.removeItem("fr_using_select_rejt");
+      setModalOpen(false);
+    }
   }
   return (
-      <div className="fr-text-editor">
-        <LexicalComposer initialConfig={editorConfig}>
-          <div className="text-editor-container">
-            <ToolbarPlugin />
-            <div className="editor-inner">
-              <RichTextPlugin
-                  contentEditable={<ContentEditable className="editor-input" />}
-                  placeholder={<Placeholder />}
-                  ErrorBoundary={LexicalErrorBoundary}
-              />
-              <HistoryPlugin />
-              {/* <LexicalEditorRefPlugin ref={editorRef} /> */}
-              {/* <TreeViewPlugin /> */}
-              <UpdateEditorPlugin editorValueData={isEditing.addNewSub?"":editorStateValue} />
-              { needSegment && <SegmentPlugin /> }
-              <MergeFieldPlugin />
-              <OnChangePlugin onChange={onChange} />
-              <AutoFocusPlugin />
-              {/* <CodeHighlightPlugin /> */}
-              <ListPlugin />
-              <LinkPlugin />
-              {/* <AutoLinkPlugin />
+    <div className="fr-text-editor">
+      <LexicalComposer initialConfig={editorConfig}>
+        <div className="text-editor-container">
+          <ToolbarPlugin />
+          <div className="editor-inner">
+            <RichTextPlugin
+              contentEditable={<ContentEditable className="editor-input" />}
+              placeholder={<Placeholder />}
+              ErrorBoundary={LexicalErrorBoundary}
+            />
+            <HistoryPlugin />
+            {/* <LexicalEditorRefPlugin ref={editorRef} /> */}
+            {/* <TreeViewPlugin /> */}
+            <UpdateEditorPlugin editorValueData={isEditing.addNewSub ? "" : editorStateValue} />
+            {needSegment && <SegmentPlugin />}
+            <MergeFieldPlugin />
+            <OnChangePlugin onChange={onChange} />
+            <AutoFocusPlugin />
+            {/* <CodeHighlightPlugin /> */}
+            <ListPlugin />
+            <LinkPlugin />
+            {/* <AutoLinkPlugin />
           <ListMaxIndentLevelPlugin maxDepth={7} /> */}
-              <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-            </div>
+            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
           </div>
-        </LexicalComposer>
-        <footer className="editor-edit-controls d-flex f-align-center f-justify-end">
-          <Button
-              disable={(!useForModal && !isEditing.readyToEdit) || false}
-              extraClass="editor-cancel btn-grey editor-btn"
-              clickEv={(e) => {
-                cancleFun()
-              }}
-              btnText={useForModal ? "Close" : "Cancel"}
-          />
-          {/* {// console.log('isEditingisEditingisEditingisEditing', isEditing)} */}
-          <Button
-              disable={
-                  editorState &&tools.$convertPureString(JSON.parse(editorState)).length<=0
-              }
-              extraClass="editor-cancel editor-btn"
-              btnText="Save"
-              clickEv={(e) => {handleSavebtnClick(e)}}
-          />
-        </footer>
-      </div>
+        </div>
+      </LexicalComposer>
+      <footer className="editor-edit-controls d-flex f-align-center f-justify-end">
+        <Button
+          disable={(!useForModal && !isEditing.readyToEdit) || false}
+          extraClass="editor-cancel btn-grey editor-btn"
+          clickEv={(e) => {
+            cancleFun()
+          }}
+          btnText={useForModal ? "Close" : "Cancel"}
+        />
+        {/* {// console.log('isEditingisEditingisEditingisEditing', isEditing)} */}
+        <Button
+          disable={
+            editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
+          }
+          extraClass="editor-cancel editor-btn"
+          btnText="Save"
+          clickEv={(e) => { handleSavebtnClick(e) }}
+        />
+      </footer>
+    </div>
   );
 }

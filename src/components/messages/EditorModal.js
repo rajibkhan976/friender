@@ -1,6 +1,7 @@
 // import { XMarkIcon } from "../../assets/icons/Icons";
 import TextEditor from '../common/TextEditor/TextEditor';
 import { MergeFieldsIcon, QueryIconGrey, SpintaxIcon } from "../../assets/icons/Icons";
+import {useState} from "react";
 
 /**
  * Editor Modal Component
@@ -9,9 +10,17 @@ import { MergeFieldsIcon, QueryIconGrey, SpintaxIcon } from "../../assets/icons/
  * @returns {Element}
  * @constructor
  */
-const EditorModal = ({ open, setOpen, setMessage, editorStateValue, setEditorStateValue }) => {
+const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, setSendMessage }) => {
+    const [editorStateValue] = useState(() => {
+        if (type === "ACCEPT_REQ") {
+            return localStorage.getItem("fr_quickMessage_accept_req") || "";
+        }
 
-    
+        if (type === "REJECT_REQ") {
+            return localStorage.getItem("fr_quickMessage_reject_req") || "";
+        }
+    });
+
     return (
         <div
             className={`modal-background`}
@@ -77,19 +86,16 @@ const EditorModal = ({ open, setOpen, setMessage, editorStateValue, setEditorSta
                     {/* MODAL BODY */}
                     <div className="modal-content editor-modal-content">
                         <p className={"editor-msg-title"}>Message*</p>
-
-
-
-
                             <TextEditor
-                                useForModal={true}
+                                useForModal
+                                needSegment={false}
                                 cancleFun={() => setOpen(false)}
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}
                                 saveMessage={setMessage}
-                                needSegment={false}
+                                setModalOpen={setOpen}
+                                setSendMessage={setSendMessage}
                             />
-
                     </div>
                 </div>
             </div>

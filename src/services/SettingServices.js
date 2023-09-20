@@ -83,9 +83,6 @@ export const fetchAllPendingFrndRequest = (data) => {
 };
 
 export const saveSettings = (data) => {
-
-  console.log('API Config -- ', config.mysettingSaveUrl);
-
   // console.log("API PAYLOAD", data);
   return new Promise((res, rej) => {
     axios

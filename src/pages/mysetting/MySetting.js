@@ -62,42 +62,22 @@ const MySetting = () => {
 
   const [groupsToSelect, setGroupsToSelect] = useState([]);
 
-  // Editor State Values which needs for Editor to preview of previous message
-  const [editorStateValueAcptFrndReq, setEditorStateValueActFrndReq] = useState("");
-  const [editorStateValueRejtFrndReq, setEditorStateValueRejtFrndReq] = useState("");
-
   const [sndMsgAcptsFrndReqOpen, setSndMsgAcptsFrndReqOpen] = useState(false);
   const [sndMsgAcptsFrndReqToggle, setSndMsgAcptsFrndReqToggle] = useState(false);
   const [selectMsgTempAcceptsFrndReq, setSelectMsgTempAcceptsFrndReq] = useState(false);
-  const [sndMsgAcptsFrndReqGroupSelect, setSndMsgAcptsFrndReqGroupSelect] = useState({});
-  const [quickMsgAcptsFrndReq, setQuickMsgAcptsFrndReq] = useState("");
+  const [sndMsgAcptsFrndReqGroupSelect, setSndMsgAcptsFrndReqGroupSelect] = useState(null);
+  const [quickMsgAcptsFrndReq, setQuickMsgAcptsFrndReq] = useState(null);
   const [sndMsgAcptsQuickMsgModalOpen, setSndMsgAcptsQuickMsgOpen] = useState(false);
   const [selectOptionUsingForSelect, setSelectOptionUsingForSelect] = useState(null);
+  const [usingSelectOptions, setUsingSelectOptions] = useState(false);
 
   const [sndMsgRejtFrndReqOpen, setSndMsgRejtFrndReqOpen] = useState(false);
   const [sndMsgRejtFrndReqToggle, setSndMsgRejtFrndReqToggle] = useState(false);
   const [selectMsgTempRejectFrndReq, setSelectMsgTempRejectFrndReq] = useState(false);
-  const [sndMsgRejtFrndReqGroupSelect, setSndMsgRejtFrndReqGroupSelect] = useState({});
-  const [quickMsgRejtFrndReq, setQuickMsgRejtFrndReq] = useState("");
+  const [sndMsgRejtFrndReqGroupSelect, setSndMsgRejtFrndReqGroupSelect] = useState(null);
+  const [quickMsgRejtFrndReq, setQuickMsgRejtFrndReq] = useState(null);
   const [sndMsgRejtQuickMsgModalOpen, setSndMsgRejtQuickMsgOpen] = useState(false);
-
-  // const [editorStateValue1, setEditorStateValue1] = useState("");
-  // const [editorStateValue2, setEditorStateValue2] = useState("");
-
-  // useEffect(() => {
-  //   console.log("1 (QUICK MSGG) Setting the quick message -- ", quickMsgAcptsFrndReq);
-  //   if (quickMsgAcptsFrndReq) {
-  //     setEditorStateValue1(quickMsgAcptsFrndReq.__raw);
-  //   }
-  // }, [quickMsgAcptsFrndReq]);
-
-  // useEffect(() => {
-  //   console.log("2 (QUICK MSGG) Setting the quick message -- ", quickMsgRejtFrndReq);
-
-  //   if (quickMsgRejtFrndReq) {
-  //     setEditorStateValue2(quickMsgRejtFrndReq.__raw);
-  //   }
-  // }, [quickMsgRejtFrndReq])
+  const [usingSelectOptions2, setUsingSelectOptions2] = useState(false);
 
   //period selctor obj
   const periodObj = [
@@ -143,6 +123,7 @@ const MySetting = () => {
   ];
 
   //time object
+
   const timeObj = [
     {
       value: "00:00",
@@ -408,9 +389,7 @@ const MySetting = () => {
     frndWillInactiveAfterDays,
     sndMsgAcptsFrndReqToggle,
     sndMsgRejtFrndReqToggle,
-    selectOptionUsingForSelect !== null && sndMsgAcptsFrndReqGroupSelect,
     quickMsgAcptsFrndReq,
-    selectOptionUsingForSelect !== null && sndMsgRejtFrndReqGroupSelect,
     quickMsgRejtFrndReq,
   ]);
 
@@ -706,22 +685,17 @@ const MySetting = () => {
     //     );
     //     return;
     //   }
-    //   // payload.send_message_when_decline_friend_request_settings = {
-    //   //   message_template_id: 1,
-    //   //   send_message_time: sndMsgDlcFrndRquInput ? sndMsgDlcFrndRquInput : 1,
-    //   //   send_message_time_type: sndMsgDlcFrndRquMsgSelect,
-    //   // };
     // }
+
     //send_message_when_decline_friend_request_settings end
-    //
-    // if (sndMsgExptFrndRqu) {
-    //   if (sndMsgExptFrndRquInput && Number(sndMsgExptFrndRquInput) !== 0) {
+    // if (sndMsgExptFrndRquOpen) {
+    //   if (sndMsgExptFrndRquOpenInput && Number(sndMsgExptFrndRquOpenInput) !== 0) {
     //     payload.send_message_when_someone_accept_new_friend_request_settings = {
     //       message_template_id: 1,
-    //       send_message_time: sndMsgExptFrndRquInput
-    //         ? sndMsgExptFrndRquInput
+    //       send_message_time: sndMsgExptFrndRquOpenInput
+    //         ? sndMsgExptFrndRquOpenInput
     //         : 1,
-    //       send_message_time_type: sndMsgExptFrndRquSelect,
+    //       send_message_time_type: sndMsgExptFrndRquOpenSelect,
     //     };
     //   } else {
     //     Alertbox(
@@ -750,34 +724,78 @@ const MySetting = () => {
     // Send Message When Someone Accepts My Friend Requests.
     // if (withSaveButton) {
     if (sndMsgAcptsFrndReqToggle) {
-      payload.send_message_when_someone_accept_new_friend_request_settings = {
-        message_group_id: sndMsgAcptsFrndReqGroupSelect?._id || "",
-        quick_message: quickMsgAcptsFrndReq || "",
-        old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+      if (usingSelectOptions) {
+        payload.send_message_when_someone_accept_new_friend_request_settings = {
+          message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
+        setUsingSelectOptions(false);
+      }
+
+      if (quickMsgAcptsFrndReq && !usingSelectOptions) {
+        payload.send_message_when_someone_accept_new_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgAcptsFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
       }
     } else {
-      payload.send_message_when_someone_accept_new_friend_request_settings = {
-        message_group_id: sndMsgAcptsFrndReqGroupSelect?._id || "",
-        quick_message: quickMsgAcptsFrndReq || "",
-        old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+      if (usingSelectOptions) {
+        payload.send_message_when_someone_accept_new_friend_request_settings = {
+          message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
+        setUsingSelectOptions(false);
+      }
+
+      if (quickMsgAcptsFrndReq && !usingSelectOptions) {
+        payload.send_message_when_someone_accept_new_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgAcptsFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
       }
     }
-    // }
 
     // Send Message When someone Rejects My Friend Requests.
     // if (withSaveButton) {
     if (sndMsgRejtFrndReqToggle) {
-      payload.send_message_when_reject_friend_request_settings = {
-        message_group_id: sndMsgRejtFrndReqGroupSelect?._id || "",
-        quick_message: quickMsgRejtFrndReq || "",
-        old_message_group_id: localStorage.getItem("old_message_group_id") || "",
-      };
+      if (usingSelectOptions2) {
+        payload.send_message_when_reject_friend_request_settings = {
+          message_group_id: sndMsgRejtFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
+        setUsingSelectOptions2(false);
+      }
+
+      if (quickMsgRejtFrndReq && !usingSelectOptions2) {
+        payload.send_message_when_reject_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgRejtFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+
     } else {
-      payload.send_message_when_reject_friend_request_settings = {
-        message_group_id: sndMsgRejtFrndReqGroupSelect?._id || "",
-        quick_message: quickMsgRejtFrndReq || "",
-        old_message_group_id: localStorage.getItem("old_message_group_id") || "",
-      };
+      if (usingSelectOptions2) {
+        payload.send_message_when_reject_friend_request_settings = {
+          message_group_id: sndMsgRejtFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        }
+        setUsingSelectOptions2(false);
+      }
+
+      if (quickMsgRejtFrndReq && !usingSelectOptions2) {
+        payload.send_message_when_reject_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgRejtFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
     }
     // }
 
@@ -825,22 +843,20 @@ const MySetting = () => {
     setDontSendFrindReqThyRejct(
       data.dont_send_friend_requests_prople_i_sent_friend_requests_they_rejected
     );
-
-    // Sync Setting for (Automated re-friending)..
     setReFrndng(data.re_friending);
+
     if (data?.re_friending_settings) {
       // console.log("refriender setting****", data.re_friending_settings[0]);
       setReFrndngInput1(
-        data?.re_friending_settings[0]?.remove_pending_friend_request_after
+        data.re_friending_settings[0].remove_pending_friend_request_after
       );
-      setReFrndSelect1(data?.re_friending_settings[0]?.instantly_resend_friend_request);
+      setReFrndSelect1(data.re_friending_settings[0].instantly_resend_friend_request);
 
       // Adding the keywords..
-      setFrndngKeywords(data?.re_friending_settings[0]?.keywords);
-      setReFriendOpenKeywords(data?.re_friending_settings[0]?.use_keyword);
+      setFrndngKeywords(data.re_friending_settings[0].keywords);
+      setReFriendOpenKeywords(data.re_friending_settings[0].use_keyword);
     }
 
-    // Sync Setting for (Auto Cancel Friend requests)
     setAutoCnclFrndRque(data.automatic_cancel_friend_requests);
     if (
       data?.automatic_cancel_friend_requests_settings.length > 0
@@ -927,7 +943,7 @@ const MySetting = () => {
 
     // Syncing Setting for (Interval for auto sync friend list)..
     setDayBackAnlyFrndEng(data.day_bak_to_analyse_friend_engagement);
-    
+
     if (data?.day_bak_to_analyse_friend_engagement_settings.length) {
       setDayBackAnlyFrndEngSelect1(
         data.day_bak_to_analyse_friend_engagement_settings[0]?.from_time
@@ -946,16 +962,17 @@ const MySetting = () => {
     if (data.send_message_when_someone_accept_new_friend_request_settings) {
       const { message_group_id, quick_message } = data?.send_message_when_someone_accept_new_friend_request_settings[0];
 
-      if (message_group_id !== "") {
+      if (message_group_id !== "" && message_group_id !== null) {
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
           const data = res?.data;
           if (data.length) {
             setSndMsgAcptsFrndReqGroupSelect(data[0]);
+            localStorage.setItem("fr_using_select_accept", true);
           }
         });
       }
 
-      if (quick_message !== "") {
+      if (quick_message !== "" && quick_message !== null) {
         setQuickMsgAcptsFrndReq(quick_message);
       }
     }
@@ -966,16 +983,17 @@ const MySetting = () => {
     if (data.send_message_when_reject_friend_request_settings) {
       const { message_group_id, quick_message } = data?.send_message_when_reject_friend_request_settings[0];
 
-      if (message_group_id !== "") {
+      if (message_group_id !== "" && message_group_id !== null) {
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
           const data = res?.data;
           if (data.length) {
             setSndMsgRejtFrndReqGroupSelect(data[0]);
+            localStorage.setItem("fr_using_select_rejt", true);
           }
         });
       }
 
-      if (quick_message !== "") {
+      if (quick_message !== "" && quick_message !== null) {
         setQuickMsgRejtFrndReq(quick_message);
       }
     }
@@ -983,6 +1001,8 @@ const MySetting = () => {
     // --- [ END OF SYNC FUNCTION ] ---
   };
 
+
+  //if you want to use the common debounce function jus use it here I have used wth useCallback
 
   /**
    * set start time
@@ -1434,9 +1454,6 @@ const MySetting = () => {
   };
 
 
-  console.log("Using Option AT SETTINGS - ", selectOptionUsingForSelect);
-
-
   return (
     <div className="setting-content setting-global">
       {settingFetched && (
@@ -1487,6 +1504,7 @@ const MySetting = () => {
                   <DropSelector
                     selects={timeObj.slice(0, timeObj.length - 1)}
                     value={dayBackAnlyFrndEngSelect1}
+                    style={{}}
                     // handleChange={(e) => dayBackAnlyFrndEngDropSelectHandle(e, "select1")}
                     handleChange={e => setStartTime(e)}
                     setDisable={!dayBackAnlyFrndEng}
@@ -1859,20 +1877,20 @@ const MySetting = () => {
                   Select the message template you want to send &nbsp;
                   <TurnOnSettingsWarn enabledFeature={sndMsgAcptsFrndReqToggle}>
                     <DropSelectMessage
+                      type="ACCEPT_REQ"
                       openSelectOption={selectMsgTempAcceptsFrndReq && sndMsgAcptsFrndReqToggle}
                       handleIsOpenSelectOption={sndMsgAcptsFrndReqToggle && setSelectMsgTempAcceptsFrndReq}
                       groupList={groupsToSelect}
                       groupSelect={sndMsgAcptsFrndReqGroupSelect}
                       setGroupSelect={setSndMsgAcptsFrndReqGroupSelect}
-                      quickMessage={quickMsgAcptsFrndReq}
+                      quickMessage={quickMsgAcptsFrndReq && quickMsgAcptsFrndReq}
                       setQuickMessage={setQuickMsgAcptsFrndReq}
                       quickMsgModalOpen={sndMsgAcptsQuickMsgModalOpen}
                       setQuickMsgOpen={setSndMsgAcptsQuickMsgOpen}
                       isDisabled={!sndMsgAcptsFrndReqToggle}
-                      usingOptions={selectOptionUsingForSelect}
-                      setUsingOptions={setSelectOptionUsingForSelect}
-                    // editorStateValue={editorStateValue1}
-                    // setEditorStateValue={setEditorStateValue1}
+                      usingSelectOptions={usingSelectOptions}
+                      setUsingSelectOptions={setUsingSelectOptions}
+                      saveMySetting={saveMySetting}
                     />
                   </TurnOnSettingsWarn>
                 </div>
@@ -1905,20 +1923,20 @@ const MySetting = () => {
                   Select the message template you want to send &nbsp;
                   <TurnOnSettingsWarn enabledFeature={sndMsgRejtFrndReqToggle}>
                     <DropSelectMessage
+                      type="REJECT_REQ"
                       openSelectOption={selectMsgTempRejectFrndReq && sndMsgRejtFrndReqToggle}
                       handleIsOpenSelectOption={sndMsgRejtFrndReqToggle && setSelectMsgTempRejectFrndReq}
                       groupList={groupsToSelect}
                       groupSelect={sndMsgRejtFrndReqGroupSelect}
                       setGroupSelect={setSndMsgRejtFrndReqGroupSelect}
                       isDisabled={!sndMsgRejtFrndReqToggle}
-                      quickMessage={quickMsgRejtFrndReq}
+                      quickMessage={quickMsgRejtFrndReq && quickMsgRejtFrndReq}
                       setQuickMessage={setQuickMsgRejtFrndReq}
                       quickMsgModalOpen={sndMsgRejtQuickMsgModalOpen}
                       setQuickMsgOpen={setSndMsgRejtQuickMsgOpen}
-                      usingOptions={selectOptionUsingForSelect}
-                      setUsingOptions={setSelectOptionUsingForSelect}
-                    // editorStateValue={editorStateValue2}
-                    // setEditorStateValue={setEditorStateValue2}
+                      setUsingSelectOptions={setUsingSelectOptions2}
+                      usingSelectOptions={usingSelectOptions2}
+                      saveMySetting={saveMySetting}
                     />
                   </TurnOnSettingsWarn>
                 </div>
