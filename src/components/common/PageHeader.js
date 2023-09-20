@@ -578,30 +578,51 @@ function PageHeader({ headerText = "" }) {
         console.log("profile datattat",profileData)
           //If auth profile and current logged in profile is not matching then :
           if(facebookProfile?.error == "No response"){
+            // Alertbox(
+            //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+            //   "error",
+            //   1000,
+            //   "bottom-right"
+            // );
             Alertbox(
-              `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
-              "error",
+              `Please login to following facebook account `,
+              "error-toast",
               1000,
-              "bottom-right"
+              "bottom-right",
+              `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
             );
             return false
           }
           if (facebookProfile?.uid !=  profileData[0]?.fb_user_id) {
+            // Alertbox(
+            //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+            //   "error",
+            //   1000,
+            //   "bottom-right"
+            // );
             Alertbox(
-              `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
-              "error",
+              `Please login to following facebook account `,
+              "error-toast",
               1000,
-              "bottom-right"
+              "bottom-right",
+              `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
             );
               return false
         }
 
         if(facebookProfile?.error){
+          // Alertbox(
+          //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+          //   "error",
+          //   1000,
+          //   "bottom-right"
+          // );
           Alertbox(
-            `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
-            "error",
+            `Please login to following facebook account `,
+            "error-toast",
             1000,
-            "bottom-right"
+            "bottom-right",
+            `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
           );
           return false
         }
@@ -1042,7 +1063,8 @@ function PageHeader({ headerText = "" }) {
               <b>
                 {" "}
                 {selectedFriends.length > 0
-                  ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, Number(0))
+                  // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
+                  ? selectedFriends.filter(el => el?.whitelist_status)?.length
                   : Number(0)}{" "}
               </b>{" "}
               of them are currently on your whitelist. Are you sure you want to remove all of these friend(s) from your list?

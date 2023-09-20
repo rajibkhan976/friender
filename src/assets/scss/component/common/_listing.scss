@@ -157,6 +157,7 @@
     @include theme-aware("background-color", "listing-cell-bg");
     transition: all ease-in-out 250ms;
     border: none;
+    padding-left: var(--ag-cell-horizontal-padding);
 
     &.ag-cell-focus:focus-within {
       border: none !important;
@@ -329,6 +330,11 @@
 
     .ag-cell-label-container {
       justify-content: start;
+
+      >.ag-header-icon {
+        order: 1;
+        margin-inline: 0 5px !important;
+      }
 
       > *:not(.ag-header-cell-text):not(.ag-header-cell-label) {
         margin-left: 5px;

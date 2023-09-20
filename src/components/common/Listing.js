@@ -16,11 +16,11 @@ import ListingLoader from "./loaders/ListingLoader";
 import NoDataFound from "./NoDataFound";
 //import Modal from "../common/Modal";
 import { updateFilter, updateSelectedFriends } from "../../actions/FriendListAction";
-import "../../assets/scss/component/common/_listing.scss";
 import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
 // import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-grid.css';
+import "../../assets/scss/component/common/_listing.scss";
 import DropSelector from "../formComponents/DropSelector"
 // import e from "cors";
 

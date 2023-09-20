@@ -358,6 +358,13 @@ const LostFriends = () => {
           />
         </>
       )}
+
+      {
+        !loading &&
+        friendsList?.length === 0 &&
+        <NoDataFound />
+      }
+
       {loading && <ListingLoader />}
       {
         friendsList?.length > 0 && listFilteredCount === 0 && <NoDataFound

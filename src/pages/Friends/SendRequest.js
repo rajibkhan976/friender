@@ -328,6 +328,12 @@ const SendRequest = ({ deleteAllInterval }) => {
           )}
         </>
       )}
+
+      {
+        !loading &&
+        friendsList?.length === 0 &&
+        <NoDataFound />
+      }
       {loading ? (
         <ListingLoader />
       ) : (

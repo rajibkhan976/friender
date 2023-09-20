@@ -302,6 +302,13 @@ const DeactivatedFriends = () => {
           )}
         </>
       )}
+
+      {
+        !loading &&
+        friendsList?.length === 0 &&
+        <NoDataFound />
+      }
+
       {loading ? (
         <ListingLoader />
       ) : (

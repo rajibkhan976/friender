@@ -407,8 +407,9 @@ function MsgLeftMenuNav({
                 <EmptyMessage
                     customText={`
                       ${MsgNavtype === "group" ? 'Empty message groups? Create a new one now and get the conversation rolling!' :
+                        MsgNavtype === "sub-group" ? 'Message box is empty! Get your typing fingers ready!' :
                         MsgNavtype === "segment" ? 'You haven’t created any message segment yet.  It’s time to weave your words in to magical conversations' : 
-                         MsgNavtype === "sub-segment" && 'Paint your canvas with inspiring message(s)'}
+                        MsgNavtype === "sub-segment" && 'Paint your canvas with inspiring message(s)'}
                     `}
                 />
             :

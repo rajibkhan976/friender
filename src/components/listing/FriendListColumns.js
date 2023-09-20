@@ -316,10 +316,10 @@ export const AgeRenderer = memo((params) => {
 
   let age = 0;
 
-  if (days) age = days + " Day(s)";
-  else if (hours) age = hours + " Hour(s)";
-  else if (minutes) age = minutes + " Minute(s)";
-  else age = secs + " Sec(s)";
+  if (days) age = days;
+  else if (hours) age = 1;
+  else if (minutes) age = 1;
+  else age = 1;
 
  let showingDate = new Date(localTime); 
  function getMonthName(monthNumber) {
@@ -330,11 +330,11 @@ export const AgeRenderer = memo((params) => {
 }
 
 let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
-
+console.log('tooltipDateFormat', tooltipDateFormat);
 
  return (
-    <span className={` d-flex f-align-center`}>
-      <span className="tooltipFullName ageTooltip" data-text={tooltipDateFormat}>
+    <span className={` d-flex f-align-center w-100 h-100`}>
+      <span className="tooltipFullName ageTooltip w-100 h-100 d-flex f-align-center" data-text={tooltipDateFormat}>
          {age}
       </span>
     </span>

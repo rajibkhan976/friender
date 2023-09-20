@@ -389,6 +389,13 @@ const FriendsList = () => {
           )}
         </>
       )}
+
+      {
+        !loading &&
+        unfriendList?.length === 0 &&
+        <NoDataFound />
+      }
+
       {loading ? (
         <ListingLoader />
       ) : (
