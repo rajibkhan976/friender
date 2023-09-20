@@ -124,9 +124,14 @@ const DropSelectMessage = ({
     // Rendering select options..
     const renderSelectOption = () => {
         if (type === "ACCEPT_REQ") {
+            console.log("This is SELECT OPTION -- CURRENTLY SAVEDDD --- ", selectOption);
             const isSelectUsing = localStorage.getItem("fr_using_select_accept");
 
-            if (!isSelectUsing) {
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing && !quickMessage) {
                 return 'Select the message';
             }
 
@@ -138,7 +143,11 @@ const DropSelectMessage = ({
         if (type === "REJECT_REQ") {
             const isSelectUsing = localStorage.getItem("fr_using_select_rejt");
 
-            if (!isSelectUsing) {
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing && !quickMessage) {
                 return 'Select the message';
             }
 

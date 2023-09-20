@@ -343,7 +343,29 @@ function PageHeader({ headerText = "" }) {
   };
 
   const validateHeaderOptions = useCallback((pathValue) => {
+    console.log("The Path Value -- ", pathValue);
     switch (pathValue) {
+      case "settings":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true,
+        });
+        break;
+
+      case "request-history":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true,
+        });
+        break;
+
+      case "browser-manager":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true,
+        });
+        break;
+
       case "friend-list":
         setHeaderOptions({
           ...headerOptions,
@@ -497,7 +519,7 @@ function PageHeader({ headerText = "" }) {
               1000,
               "bottom-right"
             );
-            dispatch(updateWhiteListStatusOfSelectesList(res.data));
+          dispatch(updateWhiteListStatusOfSelectesList(res.data));
           //dispatch(removeSelectedFriends());
         })
         .catch((err) => {
@@ -568,8 +590,8 @@ function PageHeader({ headerText = "" }) {
 
     const profileData = await fetchUserProfile()
     // if user id is present already with the facebook auth information then : 
-    if(profileData?.length){
-      if(profileData[0].fb_user_id!= null && profileData[0].fb_user_id){
+    if (profileData?.length) {
+      if (profileData[0].fb_user_id != null && profileData[0].fb_user_id) {
         const facebookProfile = await extensionAccesories.sendMessageToExt({
           action: "syncprofile",
           frLoginToken: localStorage.getItem("fr_token"),
@@ -651,11 +673,11 @@ function PageHeader({ headerText = "" }) {
     let loggedInFb = localStorage.getItem("fr_current_fbId");
 
 
-    
+
 
     let proceedFurther = await checkFBConnection()
-    console.log("proceed further ",proceedFurther)
-    if(!proceedFurther){
+    console.log("proceed further ", proceedFurther)
+    if (!proceedFurther) {
       return
     }
 
@@ -828,7 +850,7 @@ function PageHeader({ headerText = "" }) {
     // setIsStopingSync(false);
     isStopingSync = false;
     localStorage.removeItem("fr_update");
-   // console.log("syncing completed_________________________>")
+    // console.log("syncing completed_________________________>")
     Alertbox(
       "Friends syncing is successfully completed",
       "success",

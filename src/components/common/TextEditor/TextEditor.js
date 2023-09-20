@@ -117,6 +117,7 @@ export default function TextEditor({
   saveMessage,
   needSegment = true,
   setModalOpen = null,
+  modalType = "",
 }) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
@@ -147,8 +148,14 @@ export default function TextEditor({
     saveMessage(msgObj)
 
     if (useForModal) {
-      localStorage.removeItem("fr_using_select_accept");
-      localStorage.removeItem("fr_using_select_rejt");
+      if (modalType === "ACCEPT_REQ") {
+        localStorage.removeItem("fr_using_select_accept");
+      }
+      
+      if (modalType === "REJECT_REQ") {
+        localStorage.removeItem("fr_using_select_rejt");
+      }
+
       setModalOpen(false);
     }
   }

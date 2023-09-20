@@ -95,6 +95,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
                                 saveMessage={setMessage}
                                 setModalOpen={setOpen}
                                 setSendMessage={setSendMessage}
+                                modalType={type}
                             />
                     </div>
                 </div>

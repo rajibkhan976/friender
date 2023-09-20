@@ -941,15 +941,14 @@ const MySetting = () => {
       // });
     }
 
-    // Syncing Setting for (Interval for auto sync friend list)..
     setDayBackAnlyFrndEng(data.day_bak_to_analyse_friend_engagement);
 
     if (data?.day_bak_to_analyse_friend_engagement_settings.length) {
       setDayBackAnlyFrndEngSelect1(
-        data.day_bak_to_analyse_friend_engagement_settings[0]?.from_time
+        data.day_bak_to_analyse_friend_engagement_settings[0].from_time
       );
       setDayBackAnlyFrndEngSelect2(
-        data.day_bak_to_analyse_friend_engagement_settings[0]?.to_time
+        data.day_bak_to_analyse_friend_engagement_settings[0].to_time
       );
     }
 
