@@ -89,15 +89,15 @@ const MessageSegments = () => {
     // }, [deleteId])
 
     useEffect(() => {
+        if (!editorStateValue || JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "") return;
+
         const handleBeforeUnload = (event) => {
             // Perform actions before the component unloads
             event.preventDefault();
             event.returnValue = '';
         };
         if(
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "segments" ||
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "groups" ||
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "dmf"
+            location.pathname.split('/')[location.pathname.split('/').length - 1] === "segments"
         ) {
             window.addEventListener('beforeunload', handleBeforeUnload);
 
@@ -109,7 +109,7 @@ const MessageSegments = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [editorStateValue]);
 
     /**
      * Fetching the segments all data from API

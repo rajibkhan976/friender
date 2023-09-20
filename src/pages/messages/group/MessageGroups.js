@@ -93,15 +93,16 @@ const MessageGroups = () => {
      * on group page force shut down, trigger a browser alert if isEditing or isLoading
      */
     useEffect(() => {
+        if (!editorStateValue || JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "") return;
+
+
         const handleBeforeUnload = (event) => {
             // Perform actions before the component unloads
             event.preventDefault();
-            event.returnValue = '';
+            return (event.returnValue = '');
         };
         if(
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "groups" ||
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "segments" ||
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "dmf"
+            location.pathname.split('/')[location.pathname.split('/').length - 1] === "groups"
         ) {
             window.addEventListener('beforeunload', handleBeforeUnload);
 
@@ -113,7 +114,7 @@ const MessageGroups = () => {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, []);
+    }, [editorStateValue]);
 
 
     useEffect(()=>{

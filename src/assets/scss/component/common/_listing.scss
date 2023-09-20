@@ -1,5 +1,6 @@
 @use "../../abstract/color" as *;
 @use "../../abstract/mixins" as *;
+@use "../../abstract/font" as *;
 
 // .friends-list-table {
 //     display: table;
@@ -513,6 +514,9 @@
         content: url('../../../images/recent-engagement-icon.svg');
       }
     }
+    &:not(:first-child) {
+      padding-inline: 8px;
+    }
   }
   .ag-picker-field-icon {
     .ag-icon {
@@ -920,6 +924,16 @@
   }
 }
 
+.ag-tooltip {
+  &.ag-ltr {
+    &.ag-popup-child {
+      &::after {
+        content: none;
+      }
+    }
+  }
+}
+
 //  .ag-popup {
 //   background-color: #FF0000 !important; /* Replace with your desired background color */
 // }
@@ -930,11 +944,19 @@
   }
 }
 
-.tier-icon {
-  width: 25px;
-  margin-right: 10px;
-}
+#grid-wrapper {
+  .tier-icon {
+    width: 33px;
+    margin-right: 9px;
+    padding-right: 0;
+    vertical-align: middle;
+  }
 
-.country-name {
-  text-transform: capitalize;
+  .country-name {
+    text-transform: capitalize;
+    font-size: $smallFontSize;
+    font-weight: $smallFontWeight;
+    padding-right: 0;
+    vertical-align: middle;
+  }
 }

@@ -44,6 +44,10 @@
                 span{
                   padding-right: 10px;
                 }
+
+                &:last-child {
+                  padding-bottom: 0;
+                }
              }
              &.muted{
               li{

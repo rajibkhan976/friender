@@ -63,7 +63,9 @@ const  CustomHeaderTooltip = (props) => {
           <div className="ag-grid-header-tooltip ">
               <div className="header-tooltip-content"style={{
                 width: '111px',
-                maxWidth: '111px'
+                minWidth: '111px',
+                maxWidth: '111px',
+                padding: '8px 16px'
               }}>
                 <ul className="country-tier">
                   <li>

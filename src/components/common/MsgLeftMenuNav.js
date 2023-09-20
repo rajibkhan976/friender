@@ -379,7 +379,13 @@ function MsgLeftMenuNav({
                 autoFocus
                 ref={inputRef}
                 className="fr-input-inline"
-                placeholder={`${MsgNavtype === 'segment' && 'Enter segment name'}`}
+                placeholder={`${
+                    MsgNavtype === 'segment' ?
+                      'Enter segment name' : 
+                    MsgNavtype === "group" ? 
+                      "Enter message group name" : ''
+                  }
+                `}                  
                 name="new message"
                 value={newCreateName}
                 onChange={e=> {
