@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Moment from "react-moment";
 import Switch from "../../components/formComponents/Switch";
 import SettingLoader from "../../components/common/loaders/SettingLoader";
@@ -38,18 +38,18 @@ const FriendRequestSentVersion = () => {
     setShowDetails((current) => (current != idx ? idx : false));
   };
 
-  const newTimeSavedFun=(objArr)=>{
-    const newArr= objArr.map((item)=>{
-      let startDate=new Date(item.created_at);
-      let endDate=new Date(item?.settings_end_date!= undefined && item?.settings_end_date?item?.settings_end_date:item?.created_at)
+  const newTimeSavedFun = (objArr) => {
+    const newArr = objArr.map((item) => {
+      let startDate = new Date(item.created_at);
+      let endDate = new Date(item?.settings_end_date != undefined && item?.settings_end_date ? item?.settings_end_date : item?.created_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-      console.log("sn:",item.settings_name);
-      console.log("diff:",differenceInSeconds);
-      console.log("time:",startDate.getTime(),endDate.getTime());
-      console.log("profile view",item.profile_viewed,item.profile_viewed!= undefined && item.profile_viewed? item.profile_viewed*30:item.friend_request_send!=undefined && item.friend_request_send?item.friend_request_send*30:0*30)
-      console.log("type of profile viewed",(typeof item?.profile_viewed,item?.profile_viewed!= undefined && item?.profile_viewed && typeof item?.profile == 'number'? item.profile_viewed*30:0*30))
-      item.time_saved=differenceInSeconds+(item?.profile_viewed!= undefined && item?.profile_viewed && typeof item?.profile_viewed == 'number'? item.profile_viewed*30:item?.friend_request_send!=undefined && item?.friend_request_send && typeof item?.friend_request_send == 'number'?item.friend_request_send*30:0*30)
-     console.log("item_saved",item.time_saved)
+      console.log("sn:", item.settings_name);
+      console.log("diff:", differenceInSeconds);
+      console.log("time:", startDate.getTime(), endDate.getTime());
+      console.log("profile view", item.profile_viewed, item.profile_viewed != undefined && item.profile_viewed ? item.profile_viewed * 30 : item.friend_request_send != undefined && item.friend_request_send ? item.friend_request_send * 30 : 0 * 30)
+      console.log("type of profile viewed", (typeof item?.profile_viewed, item?.profile_viewed != undefined && item?.profile_viewed && typeof item?.profile == 'number' ? item.profile_viewed * 30 : 0 * 30))
+      item.time_saved = differenceInSeconds + (item?.profile_viewed != undefined && item?.profile_viewed && typeof item?.profile_viewed == 'number' ? item.profile_viewed * 30 : item?.friend_request_send != undefined && item?.friend_request_send && typeof item?.friend_request_send == 'number' ? item.friend_request_send * 30 : 0 * 30)
+      console.log("item_saved", item.time_saved)
       return item;
     })
     return newArr;
@@ -61,8 +61,8 @@ const FriendRequestSentVersion = () => {
       let savedFbUId = localStorage.getItem("fr_default_fb");
 
       if (!savedFbUId) {
-      //   setDefaultFbId(savedFbUId);
-      // } else {
+        //   setDefaultFbId(savedFbUId);
+        // } else {
         const getCurrentFbProfile = await fetchUserProfile();
         if (getCurrentFbProfile) {
           savedFbUId = localStorage.setItem(
@@ -77,11 +77,11 @@ const FriendRequestSentVersion = () => {
         fbUserId: savedFbUId,
       });
 
-    
+
 
       if (fetchedSets) {
         if (Array.isArray(fetchedSets)) {
-          console.log("timesaved records",newTimeSavedFun(fetchedSets))
+          console.log("timesaved records", newTimeSavedFun(fetchedSets))
           setFriendRequestHistory(newTimeSavedFun(fetchedSets));
         }
         // const totalTime = secToHeaderTotaltime(
@@ -89,36 +89,37 @@ const FriendRequestSentVersion = () => {
         // );
 
         const totalTime = newTimeSavedFun(fetchedSets)?.reduce((acc, curr) => {
-          console.log("reducer",curr,curr.time_saved)
-          return parseInt(acc) + parseInt(curr.time_saved)}, 0) / (60 * 60);
+          console.log("reducer", curr, curr.time_saved)
+          return parseInt(acc) + parseInt(curr.time_saved)
+        }, 0) / (60 * 60);
 
-          console.log("total time ***",totalTime)
-          // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
+        console.log("total time ***", totalTime)
+        // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
 
         let headerOptions = {
           totalRun: fetchedSets?.length,
-          profileViewed:  fetchedSets?.reduce((acc, curr) => {
+          profileViewed: fetchedSets?.reduce((acc, curr) => {
             if (typeof curr.profile_viewed === 'number') {
               return acc + curr.profile_viewed;
             }
             return acc;
           }, 0),
-          requestSent: fetchedSets?.reduce((acc,curr) => acc+curr.friend_request_send,0),
-            
+          requestSent: fetchedSets?.reduce((acc, curr) => acc + curr.friend_request_send, 0),
+
           savedTime: totalTime,
         };
-        
+
         setHeadPoints(headerOptions);
         //TotalSavedTimeFn(headerOptions.savedTime);
       } else {
         setFriendRequestHistory([]);
       }
       setLoading(false);
-     // setNoDataFound(false);
+      // setNoDataFound(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
-     // setNoDataFound(true);
+      // setNoDataFound(true);
     }
   };
 
@@ -166,17 +167,17 @@ const FriendRequestSentVersion = () => {
    */
   const DataSettingsRow = () => {
     const friendRequestListing = friendRequestHitory;
-  
+
     friendRequestListing?.sort((a, b) =>
       sortCriteria.type === "asc"
         ? !isNaN(a[sortCriteria.sort]) && !isNaN(b[sortCriteria.sort])
           ? a[sortCriteria.sort] - b[sortCriteria.sort]
           : a[sortCriteria.sort].localeCompare(b[sortCriteria.sort], "en", {
-              numeric: true,
-            })
+            numeric: true,
+          })
         : !isNaN(a[sortCriteria.sort]) && !isNaN(b[sortCriteria.sort])
-        ? b[sortCriteria.sort] - a[sortCriteria.sort]
-        : b[sortCriteria.sort].localeCompare(a[sortCriteria.sort], "en", {
+          ? b[sortCriteria.sort] - a[sortCriteria.sort]
+          : b[sortCriteria.sort].localeCompare(a[sortCriteria.sort], "en", {
             numeric: true,
           })
     );
@@ -272,7 +273,7 @@ const FriendRequestSentVersion = () => {
                 </svg>
               </figure>
               <p className="info-texts highlighted">
-                 {item?.time_saved===0||!item?.time_saved?"0 sec":secToReadableFormat(item?.time_saved)}
+                {item?.time_saved === 0 || !item?.time_saved ? "0 sec" : secToReadableFormat(item?.time_saved)}
               </p>
             </div>
           </div>
@@ -297,7 +298,7 @@ const FriendRequestSentVersion = () => {
               </figure>
               <p className="info-texts">
                 {/* <Moment format=" Do MMMM YYYY,  h:mm a"> */}
-                  {utils.convertUTCtoLocal(item.created_at.replace(" ", "T") + ".000Z",true)}
+                {utils.convertUTCtoLocal(item.created_at.replace(" ", "T") + ".000Z", true)}
                 {/* </Moment> */}
               </p>
             </div>
@@ -325,7 +326,7 @@ const FriendRequestSentVersion = () => {
                 {/* <Moment format=" Do MMMM YYYY,  h:mm a">
                   {}
                 </Moment> */}
-                {utils.convertUTCtoLocal(item.updated_at.replace(" ", "T") + ".000Z",true)}
+                {utils.convertUTCtoLocal(item.updated_at.replace(" ", "T") + ".000Z", true)}
               </p>
             </div>
           </div>
@@ -390,7 +391,7 @@ const FriendRequestSentVersion = () => {
           <div className="details-listings-wraper paper">
             <div
               className={
-                (item.keyword||item.negative_keyword)
+                (item.keyword || item.negative_keyword)
                   ? "detail-table-wraper detail-grid-wrapper"
                   : "detail-table-wraper"
               }
@@ -405,37 +406,37 @@ const FriendRequestSentVersion = () => {
                   </div>
                 )}
                 {((item.look_up_interval) != null) &&
-                    <div className="detail-table-cell">
+                  <div className="detail-table-cell">
                     <p className="detail-table-heading">Look up interval</p>
                     <p className="detail-table-content">
                       {/* {console.log("item::::::", item)} */}
-                      {((item.look_up_interval) === ".5") ? 
-                      <>
-                      30 Sec
-                      </>
-
-                      :
-                      <>
-
-                        {((item.look_up_interval) === "auto") ? 
+                      {((item.look_up_interval) === ".5") ?
                         <>
-                        {item.look_up_interval}
+                          30 Sec
                         </>
+
                         :
                         <>
-                        {item.look_up_interval} Min
+
+                          {((item.look_up_interval) === "auto") ?
+                            <>
+                              {item.look_up_interval}
+                            </>
+                            :
+                            <>
+                              {item.look_up_interval} Min
+                            </>
+
+
+                          }
                         </>
-                      
-                      
+
                       }
-                      </>
-                      
-                    }
-                      
+
                     </p>
-                    </div>
+                  </div>
                 }
-                
+
                 <div className="detail-table-cell">
                   <p className="detail-table-heading">Profile request limit</p>
                   <p className="detail-table-content">
@@ -458,14 +459,14 @@ const FriendRequestSentVersion = () => {
                   <div className="detail-table-cell">
                     <p className="detail-table-heading">Tier level</p>
                     <p className="detail-table-content">
-                      {item.tier_filter_value?.map((itemTier, indexT) => (
-                        <span key={indexT}>{itemTier}</span>
-                      ))}
+                      {item.tier_filter_value &&
+                        <span >{item.tier_filter_value}</span>
+                      }
                     </p>
                   </div>
                 )}
               </div>
-              {(item.keyword||item.negative_keyword) && (
+              {(item.keyword || item.negative_keyword) && (
                 <div className="detail-table-row">
                   {item.selected_keywords?.length > 0 && (
                     <div className="detail-table-cell key-detail-cell posKey-detail-cell">
@@ -484,22 +485,22 @@ const FriendRequestSentVersion = () => {
                             );
                           })}
                         {item.selected_keywords.length > 10 &&
-                        (expanded === "positive" || expanded === "all")
+                          (expanded === "positive" || expanded === "all")
                           ? item.selected_keywords
-                              .slice(10, item.selected_keywords.length)
-                              .map((keyItem, index) => {
-                                return (
-                                  <li
-                                    className="possitive-keywords"
-                                    key={"positive-" + index}
-                                  >
-                                    {keyItem}
-                                  </li>
-                                );
-                              })
+                            .slice(10, item.selected_keywords.length)
+                            .map((keyItem, index) => {
+                              return (
+                                <li
+                                  className="possitive-keywords"
+                                  key={"positive-" + index}
+                                >
+                                  {keyItem}
+                                </li>
+                              );
+                            })
                           : ""}
                         {item.selected_keywords.length > 10 &&
-                        (expanded === "none" || expanded === "negative") ? (
+                          (expanded === "none" || expanded === "negative") ? (
                           <li
                             className="extra-keywords possitives"
                             onClick={() =>
@@ -533,22 +534,22 @@ const FriendRequestSentVersion = () => {
                             );
                           })}
                         {item.selected_negative_keywords.length > 10 &&
-                        (expanded === "negative" || expanded === "all")
+                          (expanded === "negative" || expanded === "all")
                           ? item.selected_negative_keywords
-                              .slice(10, item.selected_negative_keywords.length)
-                              .map((keyItem, index) => {
-                                return (
-                                  <li
-                                    className="negative-keywords"
-                                    key={"positive-" + index}
-                                  >
-                                    {keyItem}
-                                  </li>
-                                );
-                              })
+                            .slice(10, item.selected_negative_keywords.length)
+                            .map((keyItem, index) => {
+                              return (
+                                <li
+                                  className="negative-keywords"
+                                  key={"positive-" + index}
+                                >
+                                  {keyItem}
+                                </li>
+                              );
+                            })
                           : ""}
                         {item.selected_negative_keywords.length > 10 &&
-                        (expanded === "none" || expanded === "positive") ? (
+                          (expanded === "none" || expanded === "positive") ? (
                           <li
                             className="extra-keywords negatives"
                             onClick={() =>
@@ -592,7 +593,7 @@ const FriendRequestSentVersion = () => {
   };
 
   // useEffect(() => {
-    // console.log("sortCriteria changed to::::", sortCriteria);
+  // console.log("sortCriteria changed to::::", sortCriteria);
   // }, [sortCriteria]);
 
   useEffect(() => {
@@ -601,7 +602,7 @@ const FriendRequestSentVersion = () => {
   }, []);
 
 
-  const secToHeaderTotaltime=(seconds)=> {
+  const secToHeaderTotaltime = (seconds) => {
     let y = Math.floor(seconds / 31536000);
     let mo = Math.floor((seconds % 31536000) / 2628000);
     let d = Math.floor(((seconds % 31536000) % 2628000) / 86400);
@@ -612,22 +613,22 @@ const FriendRequestSentVersion = () => {
     let sqzTime
     if (parseFloat(y) > 0) {
       if (parseFloat(y) > 10) {
-        sqzTime =`10+ Years`;
+        sqzTime = `10+ Years`;
       } else {
-        sqzTime= `${y}${mo > 0 ? "+" : ""} ${y > 1 ? " Years" : "Year"}`;
+        sqzTime = `${y}${mo > 0 ? "+" : ""} ${y > 1 ? " Years" : "Year"}`;
       }
     } else if (parseFloat(mo) > 0) {
-      sqzTime =`${mo}${d > 0 ? "+" : ""} ${mo > 1 ? " Months" : "Month"}`;
+      sqzTime = `${mo}${d > 0 ? "+" : ""} ${mo > 1 ? " Months" : "Month"}`;
     } else if (parseFloat(d) > 0) {
-      sqzTime= `${d}${h > 0 ? "+" : ""} ${d > 1 ? " Days" : "Day"}`;
+      sqzTime = `${d}${h > 0 ? "+" : ""} ${d > 1 ? " Days" : "Day"}`;
     } else if (parseFloat(h) > 0) {
-      sqzTime= `${h}${m > 0 ? "+" : ""} ${h > 1 ? " Hrs" : "Hr"}`;
+      sqzTime = `${h}${m > 0 ? "+" : ""} ${h > 1 ? " Hrs" : "Hr"}`;
     } else if (parseFloat(m) > 0) {
-      sqzTime =`${m}${s > 0 ? "+" : ""} ${m > 1 ? " Mins" : "Min"}`;
-    } else if(parseFloat(s) > 0) {
-      sqzTime= `${s}${s > 1 ? " Secs" : "Sec"}`;
-    }else{
-      sqzTime= "0 Seconds";
+      sqzTime = `${m}${s > 0 ? "+" : ""} ${m > 1 ? " Mins" : "Min"}`;
+    } else if (parseFloat(s) > 0) {
+      sqzTime = `${s}${s > 1 ? " Secs" : "Sec"}`;
+    } else {
+      sqzTime = "0 Seconds";
     }
 
     let yDisplay = y > 0 ? y + (y === 1 ? " year, " : " years, ") : "";
@@ -636,8 +637,8 @@ const FriendRequestSentVersion = () => {
     let hDisplay = h > 0 ? h + (h === 1 ? " hour, " : " hours, ") : "";
     let mDisplay = m > 0 ? m + (m === 1 ? " minute " : " minutes, ") : "";
     let sDisplay = s > 0 ? s + (s === 1 ? " second" : " seconds ") : "";
-    return{
-      smallTime:sqzTime,
+    return {
+      smallTime: sqzTime,
       fullTime: yDisplay + moDisplay + dDisplay + hDisplay + mDisplay + sDisplay
     }
   }
@@ -660,7 +661,7 @@ const FriendRequestSentVersion = () => {
     let hDisplay = h > 0 ? h + (h === 1 ? " hr, " : " hrs, ") : "";
     let mDisplay = m > 0 ? m + (m === 1 ? " min, " : " mins, ") : "";
     let sDisplay = s > 0 ? s + (s === 1 ? " sec" : " secs ") : "";
-    
+
     return yDisplay + moDisplay + dDisplay + hDisplay + mDisplay + sDisplay;
   };
 
@@ -830,7 +831,7 @@ const FriendRequestSentVersion = () => {
                 </svg>
               </figure>
               <div className="individuals-informations">
-              <h4
+                <h4
                   // title={
                   //   headPoints && headPoints?.savedTime && headPoints.savedTime.fullTime&& headPoints.savedTime.fullTime
                   // }
@@ -841,11 +842,11 @@ const FriendRequestSentVersion = () => {
                   }
                 >
                   {headPoints && headPoints?.savedTime &&
-                    headPoints?.savedTime > 1 ? 
-                      (headPoints?.savedTime % 1 === 0 ? headPoints?.savedTime : Math.floor(headPoints?.savedTime)) + '+ hour(s)' : 
-                      headPoints?.savedTime === 0 ? '0 hour(s)' : 
+                    headPoints?.savedTime > 1 ?
+                    (headPoints?.savedTime % 1 === 0 ? headPoints?.savedTime : Math.floor(headPoints?.savedTime)) + '+ hour(s)' :
+                    headPoints?.savedTime === 0 ? '0 hour(s)' :
                       (headPoints?.savedTime === null || headPoints?.savedTime === undefined) ? '' :
-                      'Less than 1 hour'
+                        'Less than 1 hour'
                   }
 
                   {/* {totalTmeSavedDisplay} */}
@@ -866,12 +867,12 @@ const FriendRequestSentVersion = () => {
                   <div className="cutom-table-wraper">
                     <div className={
                       sortCriteria?.sort === "settings_name" ?
-                        sortCriteria?.type === "asc" ? 
+                        sortCriteria?.type === "asc" ?
                           "table-heads asc" : "table-heads dsc" :
                         "table-heads"
-                      }
+                    }
                       onClick={() => setSort("settings_name", "asc")}
-                      >
+                    >
                       <span className="table-head-name">Summary</span>
                       <span
                         className="filter-icons"
@@ -909,10 +910,10 @@ const FriendRequestSentVersion = () => {
 
                     <div className={
                       sortCriteria?.sort === "profile_viewed" ?
-                        sortCriteria?.type === "asc" ? 
+                        sortCriteria?.type === "asc" ?
                           "table-heads asc" : "table-heads dsc" :
                         "table-heads"
-                      }
+                    }
                       onClick={() => setSort("profile_viewed", "asc")}>
                       <span className="table-head-name">Profile Viewed</span>
                       <span
@@ -951,10 +952,10 @@ const FriendRequestSentVersion = () => {
 
                     <div className={
                       sortCriteria?.sort === "friend_request_send" ?
-                        sortCriteria?.type === "asc" ? 
+                        sortCriteria?.type === "asc" ?
                           "table-heads asc" : "table-heads dsc" :
                         "table-heads"
-                      }
+                    }
                       onClick={() => setSort("friend_request_send", "asc")}>
                       <span className="table-head-name">Request Sent</span>
                       <span
@@ -993,10 +994,10 @@ const FriendRequestSentVersion = () => {
 
                     <div className={
                       sortCriteria?.sort === "time_saved" ?
-                        sortCriteria?.type === "asc" ? 
+                        sortCriteria?.type === "asc" ?
                           "table-heads asc" : "table-heads dsc" :
                         "table-heads"
-                      }
+                    }
                       onClick={() => setSort("time_saved", "asc")}>
                       <span className="table-head-name">Time Saved</span>
                       <span
