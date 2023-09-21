@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import NoDataFound from "../../../components/common/NoDataFound";
 import MsgLeftMenuNav from "../../../components/common/MsgLeftMenuNav";
-import {addNewSegment, deleteSegment, fetchSegments, addNewSegmentMessageItem, deleteSegmentItemMessage} from '../../../actions/MessageAction';
+import { addNewSegment, deleteSegment, fetchSegments, addNewSegmentMessageItem, deleteSegmentItemMessage } from '../../../actions/MessageAction';
 import {
     CopyIcon, DeleteIcon,
     EditIcon,
@@ -27,7 +27,7 @@ const MessageSegments = () => {
     const [activeSegmentsItem, setActiveSegmentsItem] = useState();
     const [activeMessage, setActiveMessage] = useState(null);
     const [activeMsgTypeObj, setActiveMsgTypeObj] = useState({});
-    const [isEditing, setIsEditing] = useState({readyToEdit:false,addNewSub:false});
+    const [isEditing, setIsEditing] = useState({ readyToEdit: false, addNewSub: false });
     const [isEditingMessage, setIsEditingMessage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
@@ -39,11 +39,16 @@ const MessageSegments = () => {
 
     // The Segments Data is from redux store came in messagesList and on component level is segmentsArray
     useEffect(() => {
-        fetchSegmentsData();
-    }, []);
+        setLoading(true)
+        if (messagesList.length > 0) {
+            setLoading(false)
+            setIsEditing({ addNewSub: false, readyToEdit: false });
+        }
+        // fetchSegmentsData();
+    }, [messagesList]);
 
     useEffect(() => {
-        console.log("helooooooo accctiva mesggggg >>>>>>> ",activeMessage);
+        console.log("helooooooo accctiva mesggggg >>>>>>> ", activeMessage);
         setEditorStateValue(activeMessage?.message?.__raw)
     }, [activeMessage]);
 
@@ -114,17 +119,17 @@ const MessageSegments = () => {
     /**
      * Fetching the segments all data from API
      */
-    const fetchSegmentsData = () => {
-        setLoading(true)
-        dispatch(fetchSegments())
-            .unwrap()
-            .then((res) => {
-                if(res) {
-                    setLoading(false)
-                    setIsEditing({addNewSub:false,readyToEdit:false});
-                }
-            })
-    };
+    // const fetchSegmentsData = () => {
+    //     setLoading(true)
+    //     dispatch(fetchSegments())
+    //         .unwrap()
+    //         .then((res) => {
+    //             if(res) {
+    //                 setLoading(false)
+    //                 setIsEditing({addNewSub:false,readyToEdit:false});
+    //             }
+    //         })
+    // };
 
     /**
      * Add new segment item with name
@@ -132,11 +137,11 @@ const MessageSegments = () => {
      */
     const SegmentAdd = async (e) => {
         setLoading(true);
-        setIsEditing({addNewSub:false,readyToEdit:false});
+        setIsEditing({ addNewSub: false, readyToEdit: false });
         setActiveMessage(null);
 
         try {
-            await dispatch(addNewSegment({segmentName: e}))
+            await dispatch(addNewSegment({ segmentName: e }))
                 .unwrap()
                 .then((res) => {
                     if (res?.data?.length === 0) {

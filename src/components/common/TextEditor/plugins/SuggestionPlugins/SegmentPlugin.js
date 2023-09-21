@@ -22,6 +22,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { EditorSearchIcon } from "../../../../../assets/icons/Icons";
+import { useSelector } from "react-redux";
 
 //import { $createMentionNode } from "../../nodes/MentionNode"
 
@@ -94,18 +95,12 @@ const SUGGESTION_LIST_LENGTH_LIMIT = 5;
 
 const mentionsCache = new Map();
 
-const dummyMentionsData = [
-  "Welcome",
-  "Hello",
-  "Birthday Wish",
-  "Greetings",
-  "Message for Entrepreneurs",
-];
+
 
 const dummyLookupService = {
-  search(string, callback) {
+  search(dataArr,string, callback) {
     setTimeout(() => {
-      const results = dummyMentionsData.filter((mention) =>
+      const results = dataArr.filter((mention) =>
         mention.toLowerCase().includes(string.toLowerCase())
       );
       callback(results);
@@ -115,6 +110,8 @@ const dummyLookupService = {
 
 function useMentionLookupService(mentionString) {
   const [results, setResults] = useState([]);
+  const messagesList = useSelector((state) => state.message.segmentsArray);
+  const dummyMentionsData =messagesList.map((item)=>item.segment_name);
 
   useEffect(() => {
     const cachedResults = mentionsCache.get(mentionString);
@@ -132,7 +129,7 @@ function useMentionLookupService(mentionString) {
     }
 
     mentionsCache.set(mentionString, null);
-    dummyLookupService.search(mentionString, (newResults) => {
+    dummyLookupService.search(dummyMentionsData,mentionString, (newResults) => {
       mentionsCache.set(mentionString, newResults);
       setResults(newResults);
     });
@@ -251,13 +248,13 @@ export default function SegmentPlugin() {
     (selectedOption, nodeToReplace, closeMenu) => {
       editor.update(() => {
         // Get the RootNode from the EditorState
-        const root = $getRoot();
+        //const root = $getRoot();
 
         // Get the selection from the EditorState
-        const selection = $getSelection();
+        // const selection = $getSelection();
 
         // Create a new ParagraphNode
-        const paragraphNode = $createParagraphNode();
+        //const paragraphNode = $createParagraphNode();
         const textNode = $createTextNode(`[${selectedOption.name}]`);
         if (nodeToReplace) {
           nodeToReplace.replace(textNode);

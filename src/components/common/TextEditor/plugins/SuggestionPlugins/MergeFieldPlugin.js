@@ -85,18 +85,20 @@ const SUGGESTION_LIST_LENGTH_LIMIT = 5
 
 const mentionsCache = new Map()
 
-const dummyMentionsData = [
-"Name",
-"Country Name",
-"Country Tier",
-"Date of Birthday",
-"Company name"
+const mergeFieldsDataLabels = [
+  "Friend Name",
+  "Friend Short Name",
+  "Friend Gender",
+  "Country",
+  "Tier",
+  "groupName",
+  "Keyword"
 ]
 
-const dummyLookupService = {
+const mergeFieldsLookupService = {
   search(string, callback) {
     setTimeout(() => {
-      const results = dummyMentionsData.filter(mention =>
+      const results = mergeFieldsDataLabels.filter(mention =>
         mention.toLowerCase().includes(string.toLowerCase())
       )
       callback(results)
@@ -123,7 +125,7 @@ function useMentionLookupService(mentionString) {
     }
 
     mentionsCache.set(mentionString, null)
-    dummyLookupService.search(mentionString, newResults => {
+    mergeFieldsLookupService.search(mentionString, newResults => {
       mentionsCache.set(mentionString, newResults)
       setResults(newResults)
     })
@@ -242,13 +244,13 @@ export default function MergeFieldPlugin() {
     (selectedOption, nodeToReplace, closeMenu) => {
       editor.update(() => {
         // Get the RootNode from the EditorState
-        const root = $getRoot();
+        //const root = $getRoot();
 
         // Get the selection from the EditorState
-        const selection = $getSelection();
+        //const selection = $getSelection();
 
         // Create a new ParagraphNode
-        const paragraphNode = $createParagraphNode();
+        // const paragraphNode = $createParagraphNode();
         const textNode = $createTextNode(`{{${selectedOption.name}}}`);
         if (nodeToReplace) {
           nodeToReplace.replace(textNode)

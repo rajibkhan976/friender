@@ -4,7 +4,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 //import {LexicalEditorRefPlugin} from "@lexical/react/LexicalEditorRefPlugin"
-import { $generateHtmlFromNodes } from '@lexical/html';
+//import { $generateHtmlFromNodes } from '@lexical/html';
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 //import TreeViewPlugin from "./plugins/TreeViewPlugin";
