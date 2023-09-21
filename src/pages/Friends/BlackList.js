@@ -448,6 +448,11 @@ const BlackList = () => {
           )}
         </>
       )}
+      {
+        !loading &&
+        blackList?.length === 0 &&
+        <NoDataFound />
+      }
       {loading ? (
         <ListingLoader />
       ) : (

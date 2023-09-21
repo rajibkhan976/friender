@@ -293,10 +293,20 @@ function MsgLeftMenuNav({
     e.stopPropagation()
 
     if (MsgNavtype === "group") {
+      console.log('MessageObj', MessageObj?.filter(el => el.group_name === editGroup.group_name).length);
       if (editGroup.group_name.trim() !== "") {
-        multiPurposeFunction(editGroup);
-        setEditGroup(null)
-        setActive(null)
+        if(MessageObj?.filter(el => el.group_name === editGroup.group_name).length > 0) {
+          Alertbox(
+              'Existing group name can’t be saved again.',
+              "error",
+              1000,
+              "bottom-right"
+          );
+        } else {
+          multiPurposeFunction(editGroup);
+          setEditGroup(null)
+          setActive(null)
+        }
       }
     }
 

@@ -604,14 +604,22 @@ export const CountryRenderer = memo((params) => {
   return (
     <span className={` d-flex f-align-center`}>
       <span className={countryName === "N/A" ? `d-flex muted-text f-align-center` : `d-flex f-align-center capText sync-txt`}>
-        <span className="inline-icon tier-icon">
-          {
-            params?.data?.tier === "Tier3" ? <Tier3Icon /> : 
-            params?.data?.tier === "Tier2" ? <Tier2Icon /> :
-            <Tier1Icon />
-          }
-        </span>
-        <span className="country-name">{countryName}</span>
+        {
+          (params?.data?.tier?.toLowerCase() !== "na" &&
+          params?.data?.tier?.toLowerCase() !== "n/a" &&
+          countryName?.toLowerCase() !== "na" &&
+          countryName?.toLowerCase() !== "n/a") ?
+          <>
+            <span className="inline-icon tier-icon">
+              {
+                params?.data?.tier === "Tier3" ? <Tier3Icon /> : 
+                params?.data?.tier === "Tier2" ? <Tier2Icon /> :
+                <Tier1Icon />
+              }
+            </span>
+            <span className="country-name">{countryName}</span>
+          </> : <span className="muted-text">N/A</span>
+        }
       </span>
     </span>
   );

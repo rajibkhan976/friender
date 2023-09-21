@@ -144,33 +144,33 @@ const SendRequest = ({ deleteAllInterval }) => {
       },
       comparator: dateComparator,
     },
-    {
-      field: "country",
-      headerName: "Country",
-      filter: "agTextColumnFilter",
-      cellRenderer: CountryRenderer,
-      headerClass: 'header-query-tooltip',
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
-    {
-      field: "tier",
-      headerName: "Country Tier",
-      filter: "agTextColumnFilter",
-      cellRenderer: CountryTierRenderer,
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      }
-    },
+    // {
+    //   field: "country",
+    //   headerName: "Country",
+    //   filter: "agTextColumnFilter",
+    //   cellRenderer: CountryRenderer,
+    //   headerClass: 'header-query-tooltip',
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   }
+    // },
+    // {
+    //   field: "tier",
+    //   headerName: "Country Tier",
+    //   filter: "agTextColumnFilter",
+    //   cellRenderer: CountryTierRenderer,
+    //   filterParams: {
+    //     buttons: ["apply", "reset"],
+    //     debounceMs: 200,
+    //     suppressMiniFilter: true,
+    //     closeOnApply: true,
+    //     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+    //   }
+    // },
     {
       field: "refriending_attempt",
       headerName: "# Re-friending",

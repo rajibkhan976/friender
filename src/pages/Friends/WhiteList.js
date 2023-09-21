@@ -466,6 +466,11 @@ const WhiteList = () => {
           )}
         </>
       )}
+      {
+        !loading &&
+        whiteList?.length === 0 &&
+        <NoDataFound />
+      }
       {loading ? (
         <ListingLoader />
       ) : (
