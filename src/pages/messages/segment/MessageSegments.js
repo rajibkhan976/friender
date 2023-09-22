@@ -19,6 +19,7 @@ import Alertbox from "../../../components/common/Toast";
 import Modal from "../../../components/common/Modal";
 import DeleteImgIcon from "../../../assets/images/deleteModal.png";
 import { useLocation } from "react-router-dom";
+import { utils } from "../../../helpers/utils";
 
 const MessageSegments = () => {
     const location = useLocation();
@@ -397,11 +398,12 @@ const MessageSegments = () => {
      */
     const duplicateThisMessageItem = async () => {
         setLoading(true);
+        const copiedMessage=utils.addCopyStamp(activeMessage?.message);
 
         try {
             await dispatch(addNewSegmentMessageItem({
                 segmentId:activeMessage?.segment_id,
-                message: activeMessage?.message
+                message: copiedMessage?copiedMessage:activeMessage?.message
             }))
                 .then((res) => {
                     if (res) {
@@ -715,7 +717,7 @@ const MessageSegments = () => {
                                     <TextEditor
                                         editorStateValue={editorStateValue}
                                         setEditorStateValue={setEditorStateValue}
-                                        isEditing={isEditing}
+                                        isEditing={{...isEditing,addNewSub:true}}
                                         cancleFun={cancleFun}
                                         saveMessage={saveMessage}
                                         needSegment={false}

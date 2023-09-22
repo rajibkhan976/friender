@@ -10,6 +10,7 @@ import Modal from "../../../components/common/Modal";
 import DeleteImgIcon from "../../../assets/images/deleteModal.png";
 import { useLocation } from "react-router-dom";
 import TextEditor from "../../../components/common/TextEditor/TextEditor";
+import { utils } from "../../../helpers/utils";
 
 const MessageGroups = () => {
     const dispatch = useDispatch()
@@ -75,6 +76,10 @@ const MessageGroups = () => {
         } else {
             console.log('same');
         }
+
+        // if(activeGroupsItem?.group_messages?.length===0){
+        //     setIsEditing({readyToEdit:true,addNewSub:true})
+        // }
     }, [activeGroupsItem])
 
 
@@ -478,14 +483,15 @@ const MessageGroups = () => {
     /**
      * Function to duplicate group message
      */
-
     const duplicateThisMessageItem = async () => {
         setLoading(true);
+        const copiedMessage=utils.addCopyStamp(activeMessage?.message);
+        //console.log("current message_____>>",copiedMessage);
 
         try {
             await dispatch(addNewGroupMessageItem({
                 groupId:activeMessage?.group_id,
-                message: activeMessage?.message
+                message: copiedMessage?copiedMessage:activeMessage?.message
             }))
                 .then((res) => {
                     if (res) {
@@ -1046,10 +1052,10 @@ const MessageGroups = () => {
                         </>
                     ) : (
                         <>
-                            <TextEditor
+                           <TextEditor
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}
-                                isEditing={isEditing}
+                                isEditing={{...isEditing,addNewSub:true}}
                                 cancleFun={cancleFun}
                                 saveMessage={saveMessage}
                             />

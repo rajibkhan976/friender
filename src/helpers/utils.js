@@ -120,6 +120,19 @@ export const utils = {
     },
 
    // formattedDateTime(dateTime){return dateTime.toFormat('d MMMM yyyy, h:mm a');}
+   addCopyStamp(message){
+    
+    const parsedStateObj=JSON.parse(message.__raw);
+    parsedStateObj.root.children[0].children[0].text="Copy -"+parsedStateObj.root.children[0].children[0].text;
+    
+    message={
+       html:"Copy -"+message.html,
+       messengerText:"Copy -"+message.messengerText,
+       text:"Copy -"+message.text,
+       __raw:JSON.stringify(parsedStateObj),
+    }
+    return message;
+}
     
 
 }
