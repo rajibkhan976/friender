@@ -7,7 +7,14 @@
 // Editor Modal..
 .editor-modal {
   background-color: #131314;
-  padding: 10px 30px;
+  padding: 0;
+  transition: 0.3s;
+  //height: 500px;
+  //width: 500px;
+}
+
+.modal-content-wraper {
+  padding: 10px 20px 0px;
 }
 
 // Modal Header..
@@ -65,3 +72,18 @@
   }
 }
 
+// Extanding The Modal To Full Size..
+.expanded-modal {
+  width: 90%;
+  margin-left: 2rem;
+  margin-top: 2rem;
+}
+
+.modal-expanding-icon {
+  margin: auto;
+  margin-right: 0;
+  height: 24px;
+  width: 24px;
+  margin-top: 13px;
+  cursor: pointer;
+}

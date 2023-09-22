@@ -118,6 +118,7 @@ export default function TextEditor({
   needSegment = true,
   setModalOpen = null,
   modalType = "",
+  isExtanded = false,
 }) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
@@ -151,7 +152,7 @@ export default function TextEditor({
       if (modalType === "ACCEPT_REQ") {
         localStorage.removeItem("fr_using_select_accept");
       }
-      
+
       if (modalType === "REJECT_REQ") {
         localStorage.removeItem("fr_using_select_rejt");
       }
@@ -166,7 +167,7 @@ export default function TextEditor({
           <ToolbarPlugin />
           <div className="editor-inner">
             <RichTextPlugin
-              contentEditable={<ContentEditable className="editor-input" />}
+              contentEditable={<ContentEditable className={`editor-input ${isExtanded && 'expanded-editor-input'}`} />}
               placeholder={<Placeholder />}
               ErrorBoundary={LexicalErrorBoundary}
             />

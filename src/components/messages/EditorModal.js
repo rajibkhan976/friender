@@ -1,7 +1,8 @@
 // import { XMarkIcon } from "../../assets/icons/Icons";
+import { useState } from "react";
 import TextEditor from '../common/TextEditor/TextEditor';
 import { MergeFieldsIcon, QueryIconGrey, SpintaxIcon } from "../../assets/icons/Icons";
-import {useState} from "react";
+import { ModalExpandIcon } from '../../assets/icons/Icons';
 
 /**
  * Editor Modal Component
@@ -11,6 +12,7 @@ import {useState} from "react";
  * @constructor
  */
 const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, setSendMessage }) => {
+    const [isExtanded, setExtanded] = useState(false);
     const [editorStateValue] = useState(() => {
         if (type === "ACCEPT_REQ") {
             return localStorage.getItem("fr_quickMessage_accept_req") || "";
@@ -29,7 +31,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
         //   setOpen(false);
         // }}
         >
-            <div className="modal editor-modal">
+            <div className={`modal editor-modal ${isExtanded && 'expanded-modal'}`}>
                 <div className="modal-content-wraper">
 
                     {/* MODAL HEADER */}
@@ -86,18 +88,23 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
                     {/* MODAL BODY */}
                     <div className="modal-content editor-modal-content">
                         <p className={"editor-msg-title"}>Message*</p>
-                            <TextEditor
-                                useForModal
-                                needSegment={false}
-                                cancleFun={() => setOpen(false)}
-                                editorStateValue={editorStateValue}
-                                setEditorStateValue={setEditorStateValue}
-                                saveMessage={setMessage}
-                                setModalOpen={setOpen}
-                                setSendMessage={setSendMessage}
-                                modalType={type}
-                            />
+                        <TextEditor
+                            useForModal
+                            needSegment={false}
+                            cancleFun={() => setOpen(false)}
+                            editorStateValue={editorStateValue}
+                            setEditorStateValue={setEditorStateValue}
+                            saveMessage={setMessage}
+                            setModalOpen={setOpen}
+                            setSendMessage={setSendMessage}
+                            modalType={type}
+                            isExtanded={isExtanded}
+                        />
                     </div>
+                </div>
+
+                <div className="modal-expanding-icon" onClick={() => setExtanded(!isExtanded)}>
+                    <ModalExpandIcon />
                 </div>
             </div>
         </div>

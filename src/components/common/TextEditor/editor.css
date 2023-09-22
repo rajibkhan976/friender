@@ -67,7 +67,7 @@
   .text-editor-container :focus-within  {
     /* border:none; */
    /* border:1px  solid #0094FF; */
-    
+
   }
 
   .editor-inner {
@@ -98,6 +98,11 @@
     outline: 0;
     padding: 15px 10px;
     caret-color: var(--true-white, #FFF);
+  }
+
+  .expanded-editor-input {
+    /*min-height: 650px;*/
+    min-height: 60vh;
   }
 
   /* .editor-input:focus-within {

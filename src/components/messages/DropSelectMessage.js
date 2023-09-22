@@ -9,7 +9,7 @@ import ToolTipPro from "../common/ToolTipPro";
  */
 const DropSelectMessage = ({
     openSelectOption,
-    handleIsOpenSelectOption,
+    handleIsOpenSelectOption = null,
     groupList,
     groupSelect,
     setGroupSelect,
@@ -131,7 +131,7 @@ const DropSelectMessage = ({
                 return "Quick Message";
             }
 
-            if (!isSelectUsing && !quickMessage) {
+            if (!isSelectUsing) {
                 return 'Select the message';
             }
 
@@ -147,7 +147,7 @@ const DropSelectMessage = ({
                 return "Quick Message";
             }
 
-            if (!isSelectUsing && !quickMessage) {
+            if (!isSelectUsing) {
                 return 'Select the message';
             }
 
@@ -178,7 +178,7 @@ const DropSelectMessage = ({
                         borderColor: openSelectOption && '#0094FFFF',
                         color: 'lightgray'
                     }}
-                    onClick={() => handleIsOpenSelectOption(!openSelectOption)}
+                    onClick={() => !isDisabled && handleIsOpenSelectOption(!openSelectOption)}
                 >
                     <span>{renderSelectOption()}</span>
                     {/*<span className="select-arrow"></span>*/}
