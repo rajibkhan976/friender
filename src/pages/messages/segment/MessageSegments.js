@@ -22,7 +22,6 @@ import { useLocation } from "react-router-dom";
 import { utils } from "../../../helpers/utils";
 
 const MessageSegments = () => {
-    const location = useLocation();
     const dispatch = useDispatch();
     const [segmentsArray, setSegmentsArray] = useState(null);
     const [activeSegmentsItem, setActiveSegmentsItem] = useState();
@@ -95,27 +94,29 @@ const MessageSegments = () => {
     // }, [deleteId])
 
     useEffect(() => {
-        if (!editorStateValue || JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "") return;
-
-        const handleBeforeUnload = (event) => {
-            // Perform actions before the component unloads
-            event.preventDefault();
-            event.returnValue = '';
-        };
+        console.log('here');
         if(
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "segments"
+            !editorStateValue ||
+            JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" ||
+            (!isEditing.addNewSub && !isEditing.readyToEdit)
         ) {
+            return
+        } else {
+            const handleBeforeUnload = (event) => {
+                // Perform actions before the component unloads
+                event.preventDefault();
+                console.log('here', (!isEditing.addNewSub && !isEditing.readyToEdit), ':::::::',
+                JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
+                event.returnValue = '';
+            };
+            
             window.addEventListener('beforeunload', handleBeforeUnload);
-
+    
             return () => {
                 window.removeEventListener('beforeunload', handleBeforeUnload);
             };
         }
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, [editorStateValue]);
+    }, [isEditing, editorStateValue]);
 
     /**
      * Fetching the segments all data from API
@@ -475,6 +476,12 @@ const MessageSegments = () => {
 
     const cancleFun = () => {
         setIsEditing({addNewSub:false,readyToEdit:false})
+        setIsEditingMessage(null)
+        if(activeSegmentsItem?.segment_messages?.length) {
+            setActiveMessage(activeSegmentsItem?.segment_messages[0])
+        } else {
+            setActiveMessage(null)
+        }
     }
 
     const subNavAddFun = (showEditorState) => {

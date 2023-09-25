@@ -293,7 +293,6 @@ function MsgLeftMenuNav({
     e.stopPropagation()
 
     if (MsgNavtype === "group") {
-      console.log('MessageObj', MessageObj?.filter(el => el.group_name === editGroup.group_name).length);
       if (editGroup.group_name.trim() !== "") {
         if(MessageObj?.filter(el => el.group_name === editGroup.group_name).length > 0) {
           Alertbox(
@@ -307,14 +306,37 @@ function MsgLeftMenuNav({
           setEditGroup(null)
           setActive(null)
         }
+      } else {
+        Alertbox(
+            'Message group name cannot be empty.',
+            "error",
+            1000,
+            "bottom-right"
+        );
       }
     }
 
     if (MsgNavtype === "segment") {
       if (editGroup.segment_name.trim() !== "") {
-        multiPurposeFunction(editGroup);
-        setEditGroup(null);
-        setActive(null);
+        if(MessageObj?.filter(el => el.segment_name === editGroup.segment_name).length > 0) {
+          Alertbox(
+              'Existing segment name can’t be saved again.',
+              "error",
+              1000,
+              "bottom-right"
+          );
+        } else {
+          multiPurposeFunction(editGroup);
+          setEditGroup(null);
+          setActive(null);
+        }
+      } else {
+        Alertbox(
+            'Message segment name cannot be empty.',
+            "error",
+            1000,
+            "bottom-right"
+        );
       }
     }
   }

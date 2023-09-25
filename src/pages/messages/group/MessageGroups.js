@@ -14,7 +14,6 @@ import { utils } from "../../../helpers/utils";
 
 const MessageGroups = () => {
     const dispatch = useDispatch()
-    const location = useLocation()
     const [loading, setLoading] = useState(false);
     const [groupsArray, setGroupsArray] = useState(null)
     const [activeGroupsItem, setActiveGroupsItem] = useState(null)
@@ -98,27 +97,25 @@ const MessageGroups = () => {
      * on group page force shut down, trigger a browser alert if isEditing or isLoading
      */
     useEffect(() => {
-        if (!editorStateValue || JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "") return;
-
-
-        const handleBeforeUnload = (event) => {
-            // Perform actions before the component unloads
-            event.preventDefault();
-            return (event.returnValue = '');
-        };
-        if(
-            location.pathname.split('/')[location.pathname.split('/').length - 1] === "groups"
+        if (
+            !editorStateValue || 
+            JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" || 
+            (!isEditing.addNewSub && !isEditing.readyToEdit)
         ) {
+            return
+        } else {
+            const handleBeforeUnload = (event) => {
+                // Perform actions before the component unloads
+                event.preventDefault();
+                return (event.returnValue = '');
+            };
+            
             window.addEventListener('beforeunload', handleBeforeUnload);
 
             return () => {
                 window.removeEventListener('beforeunload', handleBeforeUnload);
             };
         }
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
     }, [editorStateValue]);
 
 
@@ -339,7 +336,7 @@ const MessageGroups = () => {
 
     const saveMessage = async (data) => {
         setLoading(true);
-
+        
         try {
             await dispatch(addNewGroupMessageItem({
                 groupId:activeGroupsItem?._id,
@@ -350,7 +347,7 @@ const MessageGroups = () => {
                         console.log("saved message resss",res);
                         let placeholderGroupsArray = [...groupsArray]
                         let matchingGroupObject = placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0];
-                        console.log();
+                        
                         placeholderGroupsArray = placeholderGroupsArray
                             .map(el => el._id !== res?.payload?.data?.group_id ? el : {
                                 ...matchingGroupObject,
@@ -374,8 +371,8 @@ const MessageGroups = () => {
                         );
                     }
                     setIsEditingMessage(null)
-                    setActiveMessage(null)
-                    setActiveTextContent("")
+                    // setActiveMessage(null)
+                    // setActiveTextContent("")
                     setIsEditing({addNewSub:false,readyToEdit:false})
                     setLoading(false)
                 })
@@ -407,6 +404,7 @@ const MessageGroups = () => {
 
     const editMessage = async (data) => {
         setLoading(true);
+        console.log('here');
 
         let placeholderGroupsArray = [...groupsArray];
         placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== isEditingMessage?.groupId ? el : {
@@ -603,6 +601,12 @@ const MessageGroups = () => {
 
     const cancleFun=()=>{
         setIsEditing({addNewSub:false,readyToEdit:false})
+        setIsEditingMessage(null)
+        if(activeGroupsItem?.group_messages?.length) {
+            setActiveMessage(activeGroupsItem?.group_messages[0])
+        } else {
+            setActiveMessage(null)
+        }
     }
 
     const subNavAddFun=(showEditorstate)=>{
