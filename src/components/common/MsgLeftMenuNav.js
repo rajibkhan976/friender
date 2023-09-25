@@ -8,6 +8,7 @@ import EmptyMessage from "../messages/EmptyMessage";
 import { Cross, DeleteIcon, EditIcon, ThreeDotIcon } from "../../assets/icons/Icons";
 import Button from "../formComponents/Button";
 import Alertbox from "./Toast";
+import { tools } from "./TextEditor/tools/tools";
 
 /**
  * Check type and return empty sidebar for new creation
@@ -91,23 +92,23 @@ function MsgLeftMenuNav({
    * Detecting Scrolling of user and loads Data
    */
   function handleScroll(event) {
-   if (MessageObj && MessageObj.length) {
-     const container = event.target;
-     const scrollTop = container.scrollTop;
-     const scrollHeight = container.scrollHeight;
-     const clientHeight = container.clientHeight;
+    if (MessageObj && MessageObj.length) {
+      const container = event.target;
+      const scrollTop = container.scrollTop;
+      const scrollHeight = container.scrollHeight;
+      const clientHeight = container.clientHeight;
 
-     console.log("CALLED THE SCROLL EFFECT");
-     console.log("Scroll TOp -- ", scrollTop);
-     console.log("scrollHeight -- ", scrollHeight);
-     console.log("Client height -- ", clientHeight);
+      console.log("CALLED THE SCROLL EFFECT");
+      console.log("Scroll TOp -- ", scrollTop);
+      console.log("scrollHeight -- ", scrollHeight);
+      console.log("Client height -- ", clientHeight);
 
-     // Adjust the threshold as needed
-     if (scrollHeight - scrollTop === clientHeight) {
-       // Load more data here
-       loadMoreData();
-     }
-   }
+      // Adjust the threshold as needed
+      if (scrollHeight - scrollTop === clientHeight) {
+        // Load more data here
+        loadMoreData();
+      }
+    }
   }
 
   /**
@@ -146,8 +147,8 @@ function MsgLeftMenuNav({
    * @returns {*}
    */
   const renderToolTipWhenText32Upper = (element) => (
-      MsgNavtype === 'group' ? element?.group_name.length > 32 && 'style-tooltip' :
-          MsgNavtype === 'segment' ? element?.segment_name.length > 32 && 'style-tooltip' : ''
+    MsgNavtype === 'group' ? element?.group_name.length > 32 && 'style-tooltip' :
+      MsgNavtype === 'segment' ? element?.segment_name.length > 32 && 'style-tooltip' : ''
   );
 
   // Toggle Context menu
@@ -175,21 +176,21 @@ function MsgLeftMenuNav({
     return (
       MsgNavtype === "group" ?
         (limit && item.group_name.length > limit) ?
-          item.group_name.slice(0, limit)+"..." :
+          item.group_name.slice(0, limit) + "..." :
           item.group_name :
-      MsgNavtype === "segment" ?
-        (limit && item.segment_name.length > limit) ?
-          item.segment_name.slice(0, limit)+"..." :
-          item.segment_name :
-      MsgNavtype === "sub-group" ?
-        (limit && item?.message.text.length > limit) ?
-          item?.message.text.slice(0, limit)+"..." :
-          item?.message.text :
-      MsgNavtype === "sub-segment" ?
-          (limit && item?.message.text.length > limit) ?
-              item?.message.text.slice(0, limit)+"..." :
+        MsgNavtype === "segment" ?
+          (limit && item.segment_name.length > limit) ?
+            item.segment_name.slice(0, limit) + "..." :
+            item.segment_name :
+          MsgNavtype === "sub-group" ?
+            (limit && item?.message.text.length > limit) ?
+              item?.message.text.slice(0, limit) + "..." :
               item?.message.text :
-        item.dmf_name
+            MsgNavtype === "sub-segment" ?
+              (limit && item?.message.text.length > limit) ?
+                item?.message.text.slice(0, limit) + "..." :
+                item?.message.text :
+              item.dmf_name
     )
   }
 
@@ -198,42 +199,43 @@ function MsgLeftMenuNav({
   const setActiveMessage = (item) => {
     // console.log('item????????', item);
     setActiveObj(currentActive => currentActive?._id !== item?._id ? item : currentActive);
-    if(MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
+    if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
       AddFun(false)
     }
   }
 
   const addNewMessageParent = () => {
-    if(MsgNavtype === "group" || MsgNavtype === "segment") {
+    if (MsgNavtype === "group" || MsgNavtype === "segment") {
       setIsLoading(true)
       setIsEditingName(true);
     }
 
-    if(MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
-      // console.log('here now');
+    if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
       setActiveObj(null)
 
       if (textContentInEditor) {
-        const currenttextState = convertToRaw(textContentInEditor?.getCurrentContent());
-        if (
-            currenttextState?.blocks?.length &&
-            currenttextState?.blocks[0]?.text.trim() !== ""
-          ) {
-          if(currenttextState?.blocks?.length && currenttextState?.blocks[0]?.text.trim() !== "") {
-            try {
-              AddFun(false)
-              saveMessage(JSON.stringify(currenttextState))
-                .then((res) => {
-                  AddFun(true)
-                  console.log('turning on the editor');
-                })
-            } catch (error) {
-              console.log(error);
-            }
+        const tempMsgObj = JSON.parse(textContentInEditor);
+
+         if (tempMsgObj?.root?.children|| tempMsgObj?.root?.children[0]?.children?.length > -1) {
+
+          const msgObj = {
+            __raw: textContentInEditor,
+            html: tools.$generateHtmlFromNodeState(tempMsgObj),
+            text: tools.$convertPureString(tempMsgObj).join(" "),
+            messengerText: tools.$generateMessengerText(tempMsgObj)
           }
-        } else {
-          AddFun(true)
-        }
+          try {
+            AddFun(false)
+            saveMessage(msgObj)
+              .then((res) => {
+                AddFun(true)
+              })
+          } catch (error) {
+            console.log(error);
+          }
+         } else {
+           AddFun(true)
+         }
       } else {
         AddFun(true)
       }
@@ -244,22 +246,47 @@ function MsgLeftMenuNav({
     e.preventDefault();
     e.stopPropagation()
 
-    if(newCreateName.trim() !== ""){
+    if (newCreateName.trim() !== "") {
       try {
-        if(MessageObj?.filter(el => el.group_name === newCreateName)?.length !== 0) {
+        if (MessageObj?.filter(el => el.group_name === newCreateName)?.length !== 0) {
           setErrorCreation(true)
           Alertbox(
-              'Existing group name can’t be saved again.',
-              "error",
-              1000,
-              "bottom-right"
+            'Existing group name can’t be saved again.',
+            "error",
+            1000,
+            "bottom-right"
           );
           setTimeout(() => {
             setErrorCreation(false)
           }, 800);
         } else {
-          setErrorCreation(false)
-          AddFun(newCreateName)
+          if (textContentInEditor) {
+            const tempMsgObj = JSON.parse(textContentInEditor);
+
+            if (tempMsgObj?.root?.children|| tempMsgObj?.root?.children[0]?.children?.length > -1) {
+              const msgObj = {
+                __raw: textContentInEditor,
+                html: tools.$generateHtmlFromNodeState(tempMsgObj),
+                text: tools.$convertPureString(tempMsgObj).join(" "),
+                messengerText: tools.$generateMessengerText(tempMsgObj)
+              }
+              try {
+                saveMessage(msgObj)
+                  .then((res) => {
+                    setErrorCreation(false)
+                    AddFun(newCreateName)
+                  })
+              } catch (error) {
+                console.log(error);
+              }
+            } else {
+              setErrorCreation(false)
+              AddFun(newCreateName)
+            }
+          } else {
+            setErrorCreation(false)
+            AddFun(newCreateName)
+          }
         }
         // console.log('here');
       } catch (error) {
@@ -273,10 +300,10 @@ function MsgLeftMenuNav({
     } else {
       setErrorCreation(true)
       Alertbox(
-          `Please enter a proper group name.`,
-          "error",
-          1000,
-          "bottom-right"
+        `Please enter a proper group name.`,
+        "error",
+        1000,
+        "bottom-right"
       );
     }
   }
@@ -294,12 +321,12 @@ function MsgLeftMenuNav({
 
     if (MsgNavtype === "group") {
       if (editGroup.group_name.trim() !== "") {
-        if(MessageObj?.filter(el => el.group_name === editGroup.group_name).length > 0) {
+        if (MessageObj?.filter(el => el.group_name === editGroup.group_name).length > 0) {
           Alertbox(
-              'Existing group name can’t be saved again.',
-              "error",
-              1000,
-              "bottom-right"
+            'Existing group name can’t be saved again.',
+            "error",
+            1000,
+            "bottom-right"
           );
         } else {
           multiPurposeFunction(editGroup);
@@ -308,22 +335,22 @@ function MsgLeftMenuNav({
         }
       } else {
         Alertbox(
-            'Message group name cannot be empty.',
-            "error",
-            1000,
-            "bottom-right"
+          'Message group name cannot be empty.',
+          "error",
+          1000,
+          "bottom-right"
         );
       }
     }
 
     if (MsgNavtype === "segment") {
       if (editGroup.segment_name.trim() !== "") {
-        if(MessageObj?.filter(el => el.segment_name === editGroup.segment_name).length > 0) {
+        if (MessageObj?.filter(el => el.segment_name === editGroup.segment_name).length > 0) {
           Alertbox(
-              'Existing segment name can’t be saved again.',
-              "error",
-              1000,
-              "bottom-right"
+            'Existing segment name can’t be saved again.',
+            "error",
+            1000,
+            "bottom-right"
           );
         } else {
           multiPurposeFunction(editGroup);
@@ -332,10 +359,10 @@ function MsgLeftMenuNav({
         }
       } else {
         Alertbox(
-            'Message segment name cannot be empty.',
-            "error",
-            1000,
-            "bottom-right"
+          'Message segment name cannot be empty.',
+          "error",
+          1000,
+          "bottom-right"
         );
       }
     }
@@ -356,7 +383,7 @@ function MsgLeftMenuNav({
   useEffect(() => {
     // console.log('MessageObj<<<<<<<<<<<<<<<<', MessageObj);
     if (MsgNavtype === "group" || MsgNavtype === "segment") {
-      if(MessageObj?.length <= 0) {
+      if (MessageObj?.length <= 0) {
         setIsEditingName(true)
         inputRef?.current?.focus()
       } else {
@@ -371,24 +398,24 @@ function MsgLeftMenuNav({
   //   console.log('activeObj updated', activeObj);
   // }, [activeObj])
 
-    const handleOutsideClick = (e) => {
-      e.stopPropagation();
+  const handleOutsideClick = (e) => {
+    e.stopPropagation();
 
-      if (
-        active &&
-        contenxtMenu && Object.keys(contenxtMenu.current).length !== 0 && contenxtMenu?.current &&
-        contenxtMenu && Object.keys(contenxtMenu.current).length !== 0 && contenxtMenu?.current?.hasOwnProperty(active) &&
-        !contenxtMenu?.current[active].contains(e.target)
-      ) {
-        setActive(null)
-      }
-    };
+    if (
+      active &&
+      contenxtMenu && Object.keys(contenxtMenu.current).length !== 0 && contenxtMenu?.current &&
+      contenxtMenu && Object.keys(contenxtMenu.current).length !== 0 && contenxtMenu?.current?.hasOwnProperty(active) &&
+      !contenxtMenu?.current[active].contains(e.target)
+    ) {
+      setActive(null)
+    }
+  };
 
   useEffect(() => {
-      document.addEventListener("mousedown", handleOutsideClick);
-      return () => {
-          document.removeEventListener("mousedown", handleOutsideClick);
-      };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
   });
 
   return (
@@ -402,7 +429,7 @@ function MsgLeftMenuNav({
       />
       <div className="message-left-nav-content h-100" onScroll={handleScroll}>
         {
-            isEditingName ?
+          isEditingName ?
             <form
               className={`creating-new d-flex f-justify-between ${errorCreation ? 'error' : ''}`}
               onSubmit={e => createNew(e)}
@@ -411,16 +438,15 @@ function MsgLeftMenuNav({
                 autoFocus
                 ref={inputRef}
                 className="fr-input-inline"
-                placeholder={`${
-                    MsgNavtype === 'segment' ?
-                      'Enter segment name' : 
-                    MsgNavtype === "group" ? 
+                placeholder={`${MsgNavtype === 'segment' ?
+                    'Enter segment name' :
+                    MsgNavtype === "group" ?
                       "Enter message group name" : ''
                   }
-                `}                  
+                `}
                 name="new message"
                 value={newCreateName}
-                onChange={e=> {
+                onChange={e => {
                   setErrorCreation(false)
                   setNewCreateName(e.target.value)
                 }}
@@ -442,98 +468,98 @@ function MsgLeftMenuNav({
         }
         {
           !MessageObj?.length ?
-                <EmptyMessage
-                    customText={`
+            <EmptyMessage
+              customText={`
                       ${MsgNavtype === "group" ? 'Empty message groups? Create a new one now and get the conversation rolling!' :
-                        MsgNavtype === "sub-group" ? 'Message box is empty! Get your typing fingers ready!' :
-                        MsgNavtype === "segment" ? 'You haven’t created any message segment yet.  It’s time to weave your words in to magical conversations' : 
-                        MsgNavtype === "sub-segment" && 'Paint your canvas with inspiring message(s)'}
+                  MsgNavtype === "sub-group" ? 'Message box is empty! Get your typing fingers ready!' :
+                    MsgNavtype === "segment" ? 'You haven’t created any message segment yet.  It’s time to weave your words in to magical conversations' :
+                      MsgNavtype === "sub-segment" && 'Paint your canvas with inspiring message(s)'}
                     `}
-                />
+            />
             :
             <div className="fr-message-listing h-100 w-100">
               <ul className="d-flex d-flex-column h-100 w-100">
                 {MessageObj?.map(el => (
                   <li
                     className={el?._id === activeObj?._id ? `active-sub-message ${renderToolTipWhenText32Upper(el)}` : `${renderToolTipWhenText32Upper(el)}`}
-                    key={'message-item-'+el._id}
+                    key={'message-item-' + el._id}
                     onClick={() => setActiveMessage(el)}
                     data-text={showKeyContent(el, null)}
                   >
                     {
                       editGroup?._id === el?._id ?
-                      <div className="edit-message-group-name">
-                        <form
-                          className="creating-new d-flex f-justify-between"
-                          onSubmit={e => editMessageName(e, el)}
-                        >
-                          <input
-                            autoFocus
-                            className="fr-input-inline"
-                            name="new message"
-                            value={editGroup?.group_name || editGroup?.segment_name}
-                            onChange={e=>setEditGroup({
-                              ...editGroup,
-                              group_name: e.target.value,
-                              segment_name: e.target.value,
-                            })}
-                          />
-                          <Button
-                            extraClass={`create-message-${MsgNavtype} btn-inline`}
-                            btnText='Save'
-                            clickEv={e => editMessageName(e, el)}
-                          />
-                          <span
-                            className="reset-creation"
-                            onClick={()=>{
-                              setEditGroup(null)
-                              setActive(null)
-                            }}
+                        <div className="edit-message-group-name">
+                          <form
+                            className="creating-new d-flex f-justify-between"
+                            onSubmit={e => editMessageName(e, el)}
                           >
-                            <Cross />
-                          </span>
-                        </form>
-                      </div>:
-                      <div
-                          className={`content-message-list-item d-flex f-align-center f-justify-between ${showMsgContent(el).length > 77 && 'style-sub-tooltip'}`}
-                          data-text={showMsgContent(el)}
-                      >
-                        <span className="message-name">
-                          {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
-                        </span>
-                        <aside>
-                          <span className="message-date">
-                            {formatDate(el.created_at)}
-                          </span>
-
-                          {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
-                            <div
-                              className="message-context-menu"
-                              ref={element => {
-                                if(element) {
-                                  contenxtMenu.current[el._id] = element
-                                } else {
-                                  delete contenxtMenu.current[el._id]
-                                }
+                            <input
+                              autoFocus
+                              className="fr-input-inline"
+                              name="new message"
+                              value={editGroup?.group_name || editGroup?.segment_name}
+                              onChange={e => setEditGroup({
+                                ...editGroup,
+                                group_name: e.target.value,
+                                segment_name: e.target.value,
+                              })}
+                            />
+                            <Button
+                              extraClass={`create-message-${MsgNavtype} btn-inline`}
+                              btnText='Save'
+                              clickEv={e => editMessageName(e, el)}
+                            />
+                            <span
+                              className="reset-creation"
+                              onClick={() => {
+                                setEditGroup(null)
+                                setActive(null)
                               }}
                             >
-                              <button
-                                className={`context-menu-trigger ${active === el._id ? 'active' :''}`}
-                                onClick={e => contextMenuToggle(e, el._id)}
-                              >
-                                <ThreeDotIcon />
-                              </button>
+                              <Cross />
+                            </span>
+                          </form>
+                        </div> :
+                        <div
+                          className={`content-message-list-item d-flex f-align-center f-justify-between ${showMsgContent(el)?.length > 77 && 'style-sub-tooltip'}`}
+                          data-text={showMsgContent(el)}
+                        >
+                          <span className="message-name">
+                            {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
+                          </span>
+                          <aside>
+                            <span className="message-date">
+                              {formatDate(el.created_at)}
+                            </span>
 
-                              {active === el._id &&
-                                <div className="context-menu">
-                                  <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
-                                  <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
-                                </div>
-                              }
-                            </div>
+                            {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
+                              <div
+                                className="message-context-menu"
+                                ref={element => {
+                                  if (element) {
+                                    contenxtMenu.current[el._id] = element
+                                  } else {
+                                    delete contenxtMenu.current[el._id]
+                                  }
+                                }}
+                              >
+                                <button
+                                  className={`context-menu-trigger ${active === el._id ? 'active' : ''}`}
+                                  onClick={e => contextMenuToggle(e, el._id)}
+                                >
+                                  <ThreeDotIcon />
+                                </button>
+
+                                {active === el._id &&
+                                  <div className="context-menu">
+                                    <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
+                                    <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
+                                  </div>
+                                }
+                              </div>
                             }
-                        </aside>
-                      </div>
+                          </aside>
+                        </div>
                     }
                   </li>
                 ))}

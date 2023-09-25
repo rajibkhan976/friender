@@ -7,9 +7,6 @@ function ListHeader({HeaderText,DataLength,AddFun,HeaderIcon,isLoading}) {
     /**@param args  DataLength="string" list data length*/
     /**@param args  AddFun=function() for add button*/
 
-  useEffect(() => {
-    console.log(HeaderText, isLoading, isLoadingMessage);
-  }, [isLoading, isLoadingMessage])
   return (
     <div className="message-left-nav-header d-flex justifyContent-spaceBetween">
       <h3 className='message-header-text d-flex f-align-center'>

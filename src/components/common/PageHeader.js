@@ -343,7 +343,7 @@ function PageHeader({ headerText = "" }) {
   };
 
   const validateHeaderOptions = useCallback((pathValue) => {
-    console.log("The Path Value -- ", pathValue);
+    // console.log("The Path Value -- ", pathValue);
     switch (pathValue) {
       case "settings":
         setHeaderOptions({

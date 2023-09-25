@@ -73,7 +73,7 @@ const MessageGroups = () => {
                 setActiveMessage(activeGroupsItem?.group_messages[0])
             }
         } else {
-            console.log('same');
+            // console.log('same');
         }
 
         // if(activeGroupsItem?.group_messages?.length===0){
@@ -159,10 +159,13 @@ const MessageGroups = () => {
                         );
 
                         setActiveGroupsItem(res?.data)
-                        if(res?.data?.group_messages?.length) {
-                            setActiveMessage(res?.data?.group_messages[0])
-                        }
+                        // if(res?.data?.group_messages?.length) {
+                        //     setActiveMessage(res?.data?.group_messages[0])
+                        // }
+                        setIsEditingMessage(null)
                         setIsEditing({addNewSub:false,readyToEdit:true})
+                        setActiveTextContent("")
+                        setEditorStateValue("")
                     }
                     setLoading(false);
                 })
@@ -362,7 +365,7 @@ const MessageGroups = () => {
                         setActiveMessage(
                             placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0]?.group_messages?.filter(el => el._id === res?.payload?.data?._id)[0]
                         )
-
+                        setActiveTextContent("")
                         Alertbox(
                             `Message created successfully`,
                             "success",
@@ -440,6 +443,7 @@ const MessageGroups = () => {
                         setIsEditing({addNewSub:false,readyToEdit:false})
                         setLoading(false)
 
+                        setActiveTextContent("")
                         Alertbox(
                             `Message edited successfully`,
                             "success",
@@ -713,6 +717,9 @@ const MessageGroups = () => {
                     setIsLoading={setLoading}
                     multiPurposeFunction={GroupNameEdit}
                     textContentInEditor={activeTextContent}
+                    saveMessage={
+                        isEditingMessage !== null ? editMessage : saveMessage
+                    }
                 />
             </div>
             <div className="message-content d-flex h-100">
@@ -1038,6 +1045,7 @@ const MessageGroups = () => {
                                 isEditing={isEditing}
                                 cancleFun={cancleFun}
                                 saveMessage={isEditingMessage !== null ? editMessage : saveMessage}
+                                setTextContent={setActiveTextContent}
                             />
                         </>
                     ) : activeGroupsItem?.group_messages?.length > 0 ? (

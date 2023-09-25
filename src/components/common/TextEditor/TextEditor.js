@@ -119,6 +119,7 @@ export default function TextEditor({
   setModalOpen = null,
   modalType = "",
   isExtanded = false,
+  setTextContent=null
 }) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
@@ -134,6 +135,7 @@ export default function TextEditor({
     // const editorStateJSON = editorState.toJSON();
     // console.log("hellooeee", editorState);
     setEditorStateValue(editorState);
+    setTextContent && setTextContent(editorState)
   }, [editorState]);
 
   const handleSavebtnClick = () => {
