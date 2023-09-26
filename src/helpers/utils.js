@@ -112,7 +112,7 @@ export const utils = {
         const utcDateTime = DateTime.fromISO(utcTime, { zone: 'utc' });
         const localDateTime = utcDateTime.toLocal();
 
-        return localDateTime.toFormat(formated?'d MMMM yyyy, h:mm a':'yyyy-MM-dd HH:mm:ss');
+        return localDateTime.toFormat(formated?'d MMM yyyy, h:mm a':'yyyy-MM-dd HH:mm:ss');
       } catch (error) {
         console.error('Error converting UTC to local time:', error);
         return null; // Handle the error gracefully in your application

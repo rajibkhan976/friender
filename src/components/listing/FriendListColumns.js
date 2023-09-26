@@ -299,8 +299,8 @@ export const AgeRenderer = memo((params) => {
   let statusSync = params.data.created_at.toLowerCase();
   // inputTimeString.replace(" ", "T") + ".000Z";
   //console.log("utc time>>",statusSync);
-  const localTime=utils.convertUTCtoLocal(statusSync.replace(" ", "T") + ".000Z");
- // console.log("status sysnc>>>>>>local date",localTime);
+  const localTime=utils.convertUTCtoLocal(statusSync.replace(" ", "T") + ".000Z",true);
+  console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
   let days = diffTime / (24 * 60 * 60 * 1000);
@@ -321,20 +321,20 @@ export const AgeRenderer = memo((params) => {
   else if (minutes) age = 1;
   else age = 1;
 
- let showingDate = new Date(localTime); 
- function getMonthName(monthNumber) {
- // const date = new Date();
-  showingDate.setMonth(monthNumber - 1);
+//  let showingDate = new Date(localTime); 
+//  function getMonthName(monthNumber) {
+//  // const date = new Date();
+//   showingDate.setMonth(monthNumber - 1);
 
-  return showingDate.toLocaleString('en-US', { month: 'short' });
-}
+//   return showingDate.toLocaleString('en-US', { month: 'short' });
+// }
 
-let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
-console.log('tooltipDateFormat', tooltipDateFormat);
+// let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
+// console.log('tooltipDateFormat', tooltipDateFormat);
 
  return (
     <span className={` d-flex f-align-center w-100 h-100`}>
-      <span className="tooltipFullName ageTooltip w-100 h-100 d-flex f-align-center" data-text={tooltipDateFormat}>
+      <span className="tooltipFullName ageTooltip w-100 h-100 d-flex f-align-center" data-text={localTime}>
          {age}
       </span>
     </span>
