@@ -162,6 +162,13 @@ export default function TextEditor({
       setModalOpen(false);
     }
   }
+
+  useEffect(() => {
+    return () => {
+      setEditorState()
+    }
+  }, [])
+
   return (
     <div className="fr-text-editor">
       <LexicalComposer initialConfig={editorConfig}>

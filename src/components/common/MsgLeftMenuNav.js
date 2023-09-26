@@ -59,7 +59,9 @@ function MsgLeftMenuNav({
   setIsLoading,
   multiPurposeFunction,
   textContentInEditor,
-  saveMessage
+  setActiveTextContent,
+  saveMessage,
+  setIsEditing
 }) {
   /**@param  MsgNavtype="dmf"*/
   /**@param  MessageObj={}*/
@@ -197,11 +199,14 @@ function MsgLeftMenuNav({
   const showMsgContent = (item) => MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? item?.message?.text : '';
 
   const setActiveMessage = (item) => {
-    // console.log('item????????', item);
-    setActiveObj(currentActive => currentActive?._id !== item?._id ? item : currentActive);
+    console.log('item????????', item);
     if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
       AddFun(false)
     }
+    setIsEditing({readyToEdit:false,addNewSub:false})
+    setActiveObj(currentActive => currentActive?._id !== item?._id ? item : currentActive);
+    setActiveTextContent("")
+    console.log('>>>>>>>>>>>>>>>>>>>', textContentInEditor)
   }
 
   const addNewMessageParent = () => {
@@ -212,6 +217,7 @@ function MsgLeftMenuNav({
 
     if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
       setActiveObj(null)
+      AddFun(false)
 
       if (textContentInEditor) {
         const tempMsgObj = JSON.parse(textContentInEditor);

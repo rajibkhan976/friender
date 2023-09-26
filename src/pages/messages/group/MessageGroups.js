@@ -339,6 +339,7 @@ const MessageGroups = () => {
 
     const saveMessage = async (data) => {
         setLoading(true);
+        setIsEditing({addNewSub:false,readyToEdit:false})
         
         try {
             await dispatch(addNewGroupMessageItem({
@@ -346,6 +347,9 @@ const MessageGroups = () => {
                 message: data
             }))
                 .then((res) => {
+                    setActiveTextContent("");
+                    cancleFun()
+
                     if (res) {
                         console.log("saved message resss",res);
                         let placeholderGroupsArray = [...groupsArray]
@@ -372,12 +376,11 @@ const MessageGroups = () => {
                             1000,
                             "bottom-right"
                         );
+                        setIsEditingMessage(null)
+                        setLoading(false)
+                        // setActiveMessage(null)
+                        // setActiveTextContent("")
                     }
-                    setIsEditingMessage(null)
-                    // setActiveMessage(null)
-                    // setActiveTextContent("")
-                    setIsEditing({addNewSub:false,readyToEdit:false})
-                    setLoading(false)
                 })
                 .catch((error) => {
                     console.log('error while saving group message', error);
@@ -717,6 +720,8 @@ const MessageGroups = () => {
                     setIsLoading={setLoading}
                     multiPurposeFunction={GroupNameEdit}
                     textContentInEditor={activeTextContent}
+                    setActiveTextContent={setActiveTextContent}
+                    setIsEditing={setIsEditing}
                     saveMessage={
                         isEditingMessage !== null ? editMessage : saveMessage
                     }
@@ -738,6 +743,8 @@ const MessageGroups = () => {
                         isLoading={loading || groupsArray?.length <= 0}
                         setIsLoading={setLoading}
                         textContentInEditor={activeTextContent}
+                        setActiveTextContent={setActiveTextContent}
+                        setIsEditing={setIsEditing}
                         saveMessage={
                             isEditingMessage !== null ? editMessage : saveMessage
                         }
