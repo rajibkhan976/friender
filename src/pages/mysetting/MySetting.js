@@ -725,10 +725,11 @@ const MySetting = () => {
     // if (withSaveButton) {
     if (sndMsgAcptsFrndReqToggle) {
       if (usingSelectOptions) {
+        console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
         payload.send_message_when_someone_accept_new_friend_request_settings = {
           message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
           quick_message: null,
-          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+          old_message_group_id: sndMsgAcptsFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
         }
         setUsingSelectOptions(false);
       }
@@ -745,7 +746,7 @@ const MySetting = () => {
         payload.send_message_when_someone_accept_new_friend_request_settings = {
           message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
           quick_message: null,
-          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+          old_message_group_id: sndMsgAcptsFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
         }
         setUsingSelectOptions(false);
       }
@@ -766,7 +767,7 @@ const MySetting = () => {
         payload.send_message_when_reject_friend_request_settings = {
           message_group_id: sndMsgRejtFrndReqGroupSelect?._id,
           quick_message: null,
-          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+          old_message_group_id: sndMsgRejtFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
         }
         setUsingSelectOptions2(false);
       }
@@ -784,7 +785,7 @@ const MySetting = () => {
         payload.send_message_when_reject_friend_request_settings = {
           message_group_id: sndMsgRejtFrndReqGroupSelect?._id,
           quick_message: null,
-          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+          old_message_group_id: sndMsgRejtFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
         }
         setUsingSelectOptions2(false);
       }

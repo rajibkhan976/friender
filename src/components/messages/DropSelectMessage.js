@@ -201,7 +201,7 @@ const DropSelectMessage = ({
                                     <ToolTipPro
                                         type={"query-gray"}
                                         isInteract={false}
-                                        textContent={'If you need to send a quick message without creating a group, you cancreate a message for immediate use'}
+                                        textContent={'If you need to send a quick message without creating a group, you can create a message for immediate use'}
                                         extraClassToOptimise="tooltip-pro-content-modify-drop-select-msg"
                                     />
                                 </span>
