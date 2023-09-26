@@ -4,6 +4,10 @@
 @use "../../abstract/variables" as *;
 
 
+.editor-modal-background {
+  z-index: 90;
+}
+
 // Editor Modal..
 .editor-modal {
   background-color: #131314;

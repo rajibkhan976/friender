@@ -25,7 +25,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
 
     return (
         <div
-            className={`modal-background`}
+            className={`modal-background editor-modal-background`}
             style={{ display: open ? "block" : "none" }}
         // onClick={() => {
         //   setOpen(false);

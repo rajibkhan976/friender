@@ -216,7 +216,7 @@ function MsgLeftMenuNav({
       if (textContentInEditor) {
         const tempMsgObj = JSON.parse(textContentInEditor);
 
-         if (tempMsgObj?.root?.children|| tempMsgObj?.root?.children[0]?.children?.length > -1) {
+        if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
 
           const msgObj = {
             __raw: textContentInEditor,
@@ -233,9 +233,9 @@ function MsgLeftMenuNav({
           } catch (error) {
             console.log(error);
           }
-         } else {
-           AddFun(true)
-         }
+        } else {
+          AddFun(true)
+        }
       } else {
         AddFun(true)
       }
@@ -248,46 +248,93 @@ function MsgLeftMenuNav({
 
     if (newCreateName.trim() !== "") {
       try {
-        if (MessageObj?.filter(el => el.group_name === newCreateName)?.length !== 0) {
-          setErrorCreation(true)
-          Alertbox(
-            'Existing group name can’t be saved again.',
-            "error",
-            1000,
-            "bottom-right"
-          );
-          setTimeout(() => {
-            setErrorCreation(false)
-          }, 800);
-        } else {
-          if (textContentInEditor) {
-            const tempMsgObj = JSON.parse(textContentInEditor);
+        if (MsgNavtype === 'group') {
+          if (MessageObj?.filter(el => el.group_name === newCreateName)?.length !== 0) {
+            setErrorCreation(true)
+            Alertbox(
+              'Existing group name can’t be saved again.',
+              "error",
+              1000,
+              "bottom-right"
+            );
+            setTimeout(() => {
+              setErrorCreation(false)
+            }, 800);
+          } else {
+            if (textContentInEditor) {
+              const tempMsgObj = JSON.parse(textContentInEditor);
 
-            if (tempMsgObj?.root?.children|| tempMsgObj?.root?.children[0]?.children?.length > -1) {
-              const msgObj = {
-                __raw: textContentInEditor,
-                html: tools.$generateHtmlFromNodeState(tempMsgObj),
-                text: tools.$convertPureString(tempMsgObj).join(" "),
-                messengerText: tools.$generateMessengerText(tempMsgObj)
-              }
-              try {
-                saveMessage(msgObj)
-                  .then((res) => {
-                    setErrorCreation(false)
-                    AddFun(newCreateName)
-                  })
-              } catch (error) {
-                console.log(error);
+              if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
+                const msgObj = {
+                  __raw: textContentInEditor,
+                  html: tools.$generateHtmlFromNodeState(tempMsgObj),
+                  text: tools.$convertPureString(tempMsgObj).join(" "),
+                  messengerText: tools.$generateMessengerText(tempMsgObj)
+                }
+                try {
+                  saveMessage(msgObj)
+                    .then((res) => {
+                      setErrorCreation(false)
+                      AddFun(newCreateName)
+                    })
+                } catch (error) {
+                  console.log(error);
+                }
+              } else {
+                setErrorCreation(false)
+                AddFun(newCreateName)
               }
             } else {
               setErrorCreation(false)
               AddFun(newCreateName)
             }
-          } else {
-            setErrorCreation(false)
-            AddFun(newCreateName)
           }
         }
+
+        // Segment..
+        if (MsgNavtype === 'segment') {
+          if (MessageObj?.filter(el => el.segment_name === newCreateName)?.length !== 0) {
+            setErrorCreation(true)
+            Alertbox(
+              'Segment group name can\'t be saved again',
+              "error",
+              1000,
+              "bottom-right"
+            );
+            setTimeout(() => {
+              setErrorCreation(false)
+            }, 800);
+          } else {
+            if (textContentInEditor) {
+              const tempMsgObj = JSON.parse(textContentInEditor);
+
+              if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
+                const msgObj = {
+                  __raw: textContentInEditor,
+                  html: tools.$generateHtmlFromNodeState(tempMsgObj),
+                  text: tools.$convertPureString(tempMsgObj).join(" "),
+                  messengerText: tools.$generateMessengerText(tempMsgObj)
+                }
+                try {
+                  saveMessage(msgObj)
+                    .then((res) => {
+                      setErrorCreation(false)
+                      AddFun(newCreateName)
+                    })
+                } catch (error) {
+                  console.log(error);
+                }
+              } else {
+                setErrorCreation(false)
+                AddFun(newCreateName)
+              }
+            } else {
+              setErrorCreation(false)
+              AddFun(newCreateName)
+            }
+          }
+        }
+
         // console.log('here');
       } catch (error) {
         Alertbox(
@@ -300,7 +347,7 @@ function MsgLeftMenuNav({
     } else {
       setErrorCreation(true)
       Alertbox(
-        `Please enter a proper group name.`,
+        `${MsgNavtype === 'group' ? 'Please enter a proper group name.' : 'Please enter a proper segment name.'}`,
         "error",
         1000,
         "bottom-right"
@@ -439,9 +486,9 @@ function MsgLeftMenuNav({
                 ref={inputRef}
                 className="fr-input-inline"
                 placeholder={`${MsgNavtype === 'segment' ?
-                    'Enter segment name' :
-                    MsgNavtype === "group" ?
-                      "Enter message group name" : ''
+                  'Enter segment name' :
+                  MsgNavtype === "group" ?
+                    "Enter message group name" : ''
                   }
                 `}
                 name="new message"
