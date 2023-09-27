@@ -25,6 +25,7 @@ const MessageGroups = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(null)
     const [activeTextContent, setActiveTextContent] = useState("")
     const [editorStateValue, setEditorStateValue] = useState("");
+    const [pageRef, setPageRef] = useState(1)
     const messagesList = useSelector((state) =>
         state.message.groupArray
     );
@@ -34,7 +35,7 @@ const MessageGroups = () => {
      */
     const fetchGroupsData = () => {
         setLoading(true)
-        dispatch(fetchGroups())
+        dispatch(fetchGroups(pageRef))
             .unwrap()
             .then((res) => {
                 if(res) {

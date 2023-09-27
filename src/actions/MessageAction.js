@@ -285,9 +285,7 @@ export const messageSlice = createSlice({
       state.isLoading = true
     },
     [addNewGroup.fulfilled]: (state, action) => {
-      if(action?.payload?.data?.length) {
-        state.groupArray = [action.payload.data, ...state.groupArray]
-      }
+      state.groupArray = action?.payload?.data ? [...state.groupArray, action?.payload?.data] : [...state.groupArray];
       state.isLoading = false;
     },
     [addNewGroup.rejected]: (state) => {

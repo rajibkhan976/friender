@@ -119,10 +119,10 @@ export const prioritySubDMF = (updatePrioritySubDmf)=>{
     })
 }
 
-export const fetchAllGroups = () => {
+export const fetchAllGroups = (pageRef) => {
     return new Promise((resolve, reject) => {
         axios
-            .get(config.fetchMessageGroupsUrl, {headers:headers})
+            .get(`${config.fetchMessageGroupsUrl}/${pageRef}`, {headers:headers})
             .then((res) => {
                 resolve(res.data)
             })
