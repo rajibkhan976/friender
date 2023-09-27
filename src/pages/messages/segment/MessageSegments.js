@@ -109,9 +109,9 @@ const MessageSegments = () => {
                 JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
                 event.returnValue = '';
             };
-            
+
             window.addEventListener('beforeunload', handleBeforeUnload);
-    
+
             return () => {
                 window.removeEventListener('beforeunload', handleBeforeUnload);
             };
@@ -545,6 +545,11 @@ const MessageSegments = () => {
                     multiPurposeFunction={SegmentNameEdit}
                     deletePayload={setDeleteId}
                     textContentInEditor={activeTextContent}
+                    setActiveTextContent={setActiveTextContent}
+                    setIsEditing={setIsEditing}
+                    saveMessage={
+                        isEditingMessage !== null ? editMessage : saveMessage
+                    }
                 />
             </div>
 
@@ -564,6 +569,8 @@ const MessageSegments = () => {
                         isLoading={loading || segmentsArray?.length <= 0}
                         setIsLoading={setLoading}
                         textContentInEditor={activeTextContent}
+                        setActiveTextContent={setActiveTextContent}
+                        setIsEditing={setIsEditing}
                         saveMessage={isEditingMessage !== null ? editMessage : saveMessage}
                     />
                 </div>

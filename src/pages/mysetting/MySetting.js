@@ -431,10 +431,10 @@ const MySetting = () => {
     // Fetching All Group Messages.
     dispatch(getAllGroupMessages()).unwrap().then((res) => {
       const data = res?.data;
-      if (data.length) {
+      if (data && data.length) {
         setGroupsToSelect(data);
       }
-    });
+    }).catch((error) => console.log("Error when try to fetching all groups -- ", error));
 
     //update api call with redux
     // fetchProfileSetting({
