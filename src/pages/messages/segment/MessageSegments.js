@@ -108,7 +108,7 @@ const MessageSegments = () => {
                 // Perform actions before the component unloads
                 event.preventDefault();
                 console.log('here', (!isEditing.addNewSub && !isEditing.readyToEdit), ':::::::',
-                JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
+                    JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
                 event.returnValue = '';
             };
 
@@ -326,45 +326,45 @@ const MessageSegments = () => {
      * @returns {Promise<void>}
      */
     const editMessage = async (data) => {
-            setLoading(true);
+        setLoading(true);
 
-            let segmentsArrayPlaceholder = [...segmentsArray];
-            segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(element => element._id !== isEditingMessage?.segmentId ? element : {
-                ...element,
-                segment_messages: element?.segment_messages.map(element2 => element2?._id !== isEditingMessage.messageId ? element2 : {
-                    ...element2,
-                    message: data
-                })
-            });
+        let segmentsArrayPlaceholder = [...segmentsArray];
+        segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(element => element._id !== isEditingMessage?.segmentId ? element : {
+            ...element,
+            segment_messages: element?.segment_messages.map(element2 => element2?._id !== isEditingMessage.messageId ? element2 : {
+                ...element2,
+                message: data
+            })
+        });
 
-            setSegmentsArray(segmentsArrayPlaceholder);
-            setActiveSegmentsItem(segmentsArrayPlaceholder?.filter(element => element._id === isEditingMessage?.segmentId)[0]);
-            setActiveMessage(segmentsArrayPlaceholder?.filter(element => element._id === isEditingMessage?.segmentId)[0]
-                ?.segment_messages?.filter(element => element._id === isEditingMessage?.messageId)[0]);
+        setSegmentsArray(segmentsArrayPlaceholder);
+        setActiveSegmentsItem(segmentsArrayPlaceholder?.filter(element => element._id === isEditingMessage?.segmentId)[0]);
+        setActiveMessage(segmentsArrayPlaceholder?.filter(element => element._id === isEditingMessage?.segmentId)[0]
+            ?.segment_messages?.filter(element => element._id === isEditingMessage?.messageId)[0]);
 
-            try {
-                await dispatch(addNewSegmentMessageItem({
-                    ...isEditingMessage,
-                    message: data
-                }))
-                    .then(res => {
-                        if (res) {
-                            setIsEditingMessage(null);
-                            setActiveMessage(res?.payload?.data);
-                            setActiveTextContent("");
-                            setIsEditing({addNewSub:false,readyToEdit:false});
-                            setIsEditing(false);
-                            setLoading(false);
-                            Alertbox(`Message edited successfully`, "success", 1000, "bottom-right");
-                        }
-                    });
+        try {
+            await dispatch(addNewSegmentMessageItem({
+                ...isEditingMessage,
+                message: data
+            }))
+                .then(res => {
+                    if (res) {
+                        setIsEditingMessage(null);
+                        setActiveMessage(res?.payload?.data);
+                        setActiveTextContent("");
+                        setIsEditing({addNewSub:false,readyToEdit:false});
+                        setIsEditing(false);
+                        setLoading(false);
+                        Alertbox(`Message edited successfully`, "success", 1000, "bottom-right");
+                    }
+                });
 
-            } catch (err) {
-                setIsEditingMessage(null);
-                setIsEditing({addNewSub:false,readyToEdit:false})
-                setLoading(false);
-                Alertbox(err, 'error', 1000, 'bottom-right');
-            }
+        } catch (err) {
+            setIsEditingMessage(null);
+            setIsEditing({addNewSub:false,readyToEdit:false})
+            setLoading(false);
+            Alertbox(err, 'error', 1000, 'bottom-right');
+        }
     };
 
 
@@ -753,3 +753,4 @@ const MessageSegments = () => {
 };
 
 export default MessageSegments;
+

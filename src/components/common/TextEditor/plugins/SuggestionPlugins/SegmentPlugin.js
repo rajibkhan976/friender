@@ -27,7 +27,7 @@ import { useSelector } from "react-redux";
 //import { $createMentionNode } from "../../nodes/MentionNode"
 
 const PUNCTUATION =
-  "\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'\"~=<>_:;";
+    "\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%'\"~=<>_:;";
 const NAME = "\\b[A-Z][^\\s" + PUNCTUATION + "]";
 
 const DocumentMentionsRegex = {
@@ -36,7 +36,7 @@ const DocumentMentionsRegex = {
 };
 
 const CapitalizedNameMentionsRegex = new RegExp(
-  "(^|[^#])((?:" + DocumentMentionsRegex.NAME + "{" + 1 + ",})$)"
+    "(^|[^#])((?:" + DocumentMentionsRegex.NAME + "{" + 1 + ",})$)"
 );
 
 const PUNC = DocumentMentionsRegex.PUNCTUATION;
@@ -49,18 +49,18 @@ const VALID_CHARS = "[^" + TRIGGERS + PUNC + "\\s]";
 // Non-standard series of chars. Each series must be preceded and followed by
 // a valid char.
 const VALID_JOINS =
-  "(?:" +
-  "\\.[ |$]|" + // E.g. "r. " in "Mr. Smith"
-  " |" + // E.g. " " in "Josh Duck"
-  "[" +
-  PUNC +
-  "]|" + // E.g. "-' in "Salier-Hellendag"
-  ")";
+    "(?:" +
+    "\\.[ |$]|" + // E.g. "r. " in "Mr. Smith"
+    " |" + // E.g. " " in "Josh Duck"
+    "[" +
+    PUNC +
+    "]|" + // E.g. "-' in "Salier-Hellendag"
+    ")";
 
 const LENGTH_LIMIT = 75;
 
 const AtSignMentionsRegex = new RegExp(
-  "(^|\\s|\\()(" +
+    "(^|\\s|\\()(" +
     "[" +
     TRIGGERS +
     "]" +
@@ -78,7 +78,7 @@ const ALIAS_LENGTH_LIMIT = 50;
 
 // Regex used to match alias.
 const AtSignMentionsRegexAliasRegex = new RegExp(
-  "(^|\\s|\\()(" +
+    "(^|\\s|\\()(" +
     "[" +
     TRIGGERS +
     "]" +
@@ -101,7 +101,7 @@ const dummyLookupService = {
   search(dataArr,string, callback) {
     setTimeout(() => {
       const results = dataArr.filter((mention) =>
-        mention.toLowerCase().includes(string.toLowerCase())
+          mention.toLowerCase().includes(string.toLowerCase())
       );
       callback(results);
     }, 500);
@@ -202,31 +202,31 @@ class MentionTypeaheadOption extends MenuOption {
 }
 
 function MentionsTypeaheadMenuItem({
-  index,
-  isSelected,
-  onClick,
-  onMouseEnter,
-  option,
-}) {
+                                     index,
+                                     isSelected,
+                                     onClick,
+                                     onMouseEnter,
+                                     option,
+                                   }) {
   let className = "item";
   if (isSelected) {
     className += " selected";
   }
   return (
-    <li
-      key={option.key}
-      tabIndex={-1}
-      className={className}
-      ref={option.setRefElement}
-      role="option"
-      aria-selected={isSelected}
-      id={"typeahead-item-" + index}
-      onMouseEnter={onMouseEnter}
-      onClick={onClick}
-    >
-      {option.picture}
-      <span className="text">{option.name}</span>
-    </li>
+      <li
+          key={option.key}
+          tabIndex={-1}
+          className={className}
+          ref={option.setRefElement}
+          role="option"
+          aria-selected={isSelected}
+          id={"typeahead-item-" + index}
+          onMouseEnter={onMouseEnter}
+          onClick={onClick}
+      >
+        {option.picture}
+        <span className="text">{option.name}</span>
+      </li>
   );
 }
 
@@ -242,105 +242,105 @@ export default function SegmentPlugin() {
   });
 
   const options = useMemo(
-    () =>
-      results
-        .map(
-          (result) =>
-            new MentionTypeaheadOption(result, <i className="icon user" />)
-        )
-        .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
-    [results]
+      () =>
+          results
+              .map(
+                  (result) =>
+                      new MentionTypeaheadOption(result, <i className="icon user" />)
+              )
+              .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
+      [results]
   );
 
   const onSelectOption = useCallback(
-    (selectedOption, nodeToReplace, closeMenu) => {
-      editor.update(() => {
-        // Get the RootNode from the EditorState
-        //const root = $getRoot();
+      (selectedOption, nodeToReplace, closeMenu) => {
+        editor.update(() => {
+          // Get the RootNode from the EditorState
+          //const root = $getRoot();
 
-        // Get the selection from the EditorState
-        // const selection = $getSelection();
+          // Get the selection from the EditorState
+          // const selection = $getSelection();
 
-        // Create a new ParagraphNode
-        //const paragraphNode = $createParagraphNode();
-        const textNode = $createTextNode(`[${selectedOption.name}]`);
-        if (nodeToReplace) {
-          nodeToReplace.replace(textNode);
-        }
-        textNode.select();
-        closeMenu();
-      });
-    },
-    [editor]
+          // Create a new ParagraphNode
+          //const paragraphNode = $createParagraphNode();
+          const textNode = $createTextNode(`[${selectedOption.name}]`);
+          if (nodeToReplace) {
+            nodeToReplace.replace(textNode);
+          }
+          textNode.select();
+          closeMenu();
+        });
+      },
+      [editor]
   );
 
   const checkForMentionMatch = useCallback(
-    (text) => {
-      const slashMatch = checkForSlashTriggerMatch(text, editor);
-      if (slashMatch !== null) {
-        return null;
-      }
-      return getPossibleQueryMatch(text);
-    },
-    [checkForSlashTriggerMatch, editor]
+      (text) => {
+        const slashMatch = checkForSlashTriggerMatch(text, editor);
+        if (slashMatch !== null) {
+          return null;
+        }
+        return getPossibleQueryMatch(text);
+      },
+      [checkForSlashTriggerMatch, editor]
   );
 
   return (
-    <LexicalTypeaheadMenuPlugin
-      onQueryChange={setQueryString}
-      onSelectOption={onSelectOption}
-      triggerFn={checkForMentionMatch}
-      options={options}
-      menuRenderFn={(
-        anchorElementRef,
-        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
-      ) =>
-        anchorElementRef.current && results.length
-          ? ReactDOM.createPortal(
-              <div className="typeahead-popover mentions-menu">
+      <LexicalTypeaheadMenuPlugin
+          onQueryChange={setQueryString}
+          onSelectOption={onSelectOption}
+          triggerFn={checkForMentionMatch}
+          options={options}
+          menuRenderFn={(
+              anchorElementRef,
+              { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
+          ) =>
+              anchorElementRef.current && results.length
+                  ? ReactDOM.createPortal(
+                      <div className="typeahead-popover mentions-menu">
 
-               <div className='suggestion-search'>
-                    <EditorSearchIcon width={18} height={18} />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="suggestion-searchbar"
-                        onChange={(e) => {
-                          setQueryString(e.target.value);
-                        }}
-                    />
-                </div>
+                        <div className='suggestion-search'>
+                          <EditorSearchIcon width={18} height={18} />
+                          <input
+                              type="text"
+                              placeholder="Search"
+                              className="suggestion-searchbar"
+                              onChange={(e) => {
+                                setQueryString(e.target.value);
+                              }}
+                          />
+                        </div>
 
 
-                {/* <input
+                        {/* <input
                   className="popover-search-input"
                   style={{ width: "100%" }}
                   onChange={(e) => {
                     setQueryString(e.target.value);
                   }}
                 /> */}
-                <ul>
-                  {options.map((option, i) => (
-                    <MentionsTypeaheadMenuItem
-                      index={i}
-                      isSelected={selectedIndex === i}
-                      onClick={() => {
-                        setHighlightedIndex(i);
-                        selectOptionAndCleanUp(option);
-                      }}
-                      onMouseEnter={() => {
-                        setHighlightedIndex(i);
-                      }}
-                      key={option.key}
-                      option={option}
-                    />
-                  ))}
-                </ul>
-              </div>,
-              anchorElementRef.current
-            )
-          : null
-      }
-    />
+                        <ul>
+                          {options.map((option, i) => (
+                              <MentionsTypeaheadMenuItem
+                                  index={i}
+                                  isSelected={selectedIndex === i}
+                                  onClick={() => {
+                                    setHighlightedIndex(i);
+                                    selectOptionAndCleanUp(option);
+                                  }}
+                                  onMouseEnter={() => {
+                                    setHighlightedIndex(i);
+                                  }}
+                                  key={option.key}
+                                  option={option}
+                              />
+                          ))}
+                        </ul>
+                      </div>,
+                      anchorElementRef.current
+                  )
+                  : null
+          }
+      />
   );
 }

@@ -45,14 +45,14 @@ module.exports = {
     fetchAllGroupMessagesUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-groups/all",
     fetchGroupByIdUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-group",
     // new message services
-    fetchMessageGroupsUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-groups/all",
+    fetchMessageGroupsUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-groups",
     createMessageGroupUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-group",
     deleteMessageGroupUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-group",
     addNewMessageGroupMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-group-message",
     deleteMessageGroupMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-group-message",
     // new segment message services
     createMessageSegmentUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-segment",
-    fetchMessageSegmentsUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-segments/all",
+    fetchMessageSegmentsUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-segments",
     deleteMessageSegmentUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-segment",
     addNewMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-segment-message",
     deleteMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-segment-message",
