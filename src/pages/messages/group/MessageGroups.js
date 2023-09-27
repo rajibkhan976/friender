@@ -41,6 +41,7 @@ const MessageGroups = () => {
                 if(res) {
                     setLoading(false);
                     setIsEditing({addNewSub:false,readyToEdit:false});
+                    setPageRef(prevPage => prevPage+1)
                 }
             })
     }
@@ -442,12 +443,8 @@ const MessageGroups = () => {
                     if(res) {
                         setIsEditingMessage(null)
                         // setActiveMessage(null)
-                        setActiveMessage(res?.payload?.data);
                         setActiveTextContent("")
                         setIsEditing({addNewSub:false,readyToEdit:false})
-                        setLoading(false)
-
-                        setActiveTextContent("")
                         Alertbox(
                             `Message edited successfully`,
                             "success",

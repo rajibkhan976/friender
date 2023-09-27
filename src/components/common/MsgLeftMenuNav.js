@@ -60,7 +60,8 @@ function MsgLeftMenuNav({
   textContentInEditor,
   setActiveTextContent,
   saveMessage,
-  setIsEditing
+  setIsEditing,
+  fetchData
 }) {
   /**@param  MsgNavtype="dmf"*/
   /**@param  MessageObj={}*/
@@ -108,7 +109,7 @@ function MsgLeftMenuNav({
       // Adjust the threshold as needed
       if (scrollHeight - scrollTop === clientHeight) {
         // Load more data here
-        loadMoreData();
+        fetchData();
       }
     }
   }
@@ -219,7 +220,7 @@ function MsgLeftMenuNav({
       setActiveObj(null)
       AddFun(false)
 
-      if (textContentInEditor) {
+      if (textContentInEditor && tools.$convertPureString(JSON.parse(textContentInEditor)).length > 0) {
         const tempMsgObj = JSON.parse(textContentInEditor);
 
         if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
@@ -267,7 +268,7 @@ function MsgLeftMenuNav({
               setErrorCreation(false)
             }, 800);
           } else {
-            if (textContentInEditor) {
+            if (textContentInEditor && tools.$convertPureString(JSON.parse(textContentInEditor)).length > 0) {
               const tempMsgObj = JSON.parse(textContentInEditor);
 
               if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
