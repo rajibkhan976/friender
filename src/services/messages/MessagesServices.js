@@ -132,10 +132,10 @@ export const fetchAllGroups = (pageRef) => {
     })
 }
 
-export const fetchAllSegments = () => {
+export const fetchAllSegments = (pageRef) => {
     return new Promise((resolve, reject) => {
         axios
-            .get(config.fetchMessageSegmentsUrl, {headers:headers})
+            .get(`${config.fetchMessageSegmentsUrl}/${pageRef}`, {headers:headers})
             .then((res) => {
                 resolve(res.data)
             })

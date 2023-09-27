@@ -1,4 +1,3 @@
-
 import { memo, useEffect, useRef, useState } from "react";
 import ListHeader from "./ListHeader";
 import { useDispatch, useSelector } from "react-redux";
@@ -88,6 +87,7 @@ function MsgLeftMenuNav({
       setInitialMessageObj(data);
     }
   }, [MessageObj]);
+
 
   // messageObj is the main property of getting list of data here
   /**

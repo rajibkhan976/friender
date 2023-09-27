@@ -243,9 +243,7 @@ export const messageSlice = createSlice({
       state.isLoading = true
     },
     [addNewSegment.fulfilled]: (state, action) => {
-      if(action?.payload?.data?.length) {
-        state.segmentsArray = [action.payload.data, ...state.segmentsArray]
-      }
+      state.segmentsArray = action?.payload?.data ? [...state.segmentsArray, action?.payload?.data] : [...state.segmentsArray];
       state.isLoading = false;
     },
     [addNewSegment.rejected]: (state) => {

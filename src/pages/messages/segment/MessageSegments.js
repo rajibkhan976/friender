@@ -34,6 +34,7 @@ const MessageSegments = () => {
     const [activeTextContent, setActiveTextContent] = useState("");
     // const [replaceSegmentId, setReplaceSegmentId] = useState(null);
     const [editorStateValue, setEditorStateValue] = useState("");
+    const [pageRef, setPageRef] = useState(1);
     const messagesList = useSelector((state) => state.message.segmentsArray);
 
 
@@ -65,6 +66,7 @@ const MessageSegments = () => {
         try {
             console.log("Messages List -- ", messagesList);
             setSegmentsArray(messagesList);
+
             setActiveSegmentsItem(messagesList[0]);
 
             if (messagesList[0]?.segment_messages) {
@@ -118,20 +120,25 @@ const MessageSegments = () => {
         }
     }, [isEditing, editorStateValue]);
 
+
+    useEffect(() => {
+        fetchSegmentsData(pageRef);
+    }, []);
+
     /**
      * Fetching the segments all data from API
      */
-    // const fetchSegmentsData = () => {
-    //     setLoading(true)
-    //     dispatch(fetchSegments())
-    //         .unwrap()
-    //         .then((res) => {
-    //             if(res) {
-    //                 setLoading(false)
-    //                 setIsEditing({addNewSub:false,readyToEdit:false});
-    //             }
-    //         })
-    // };
+    const fetchSegmentsData = (page) => {
+        setLoading(true)
+        dispatch(fetchSegments(page))
+            .unwrap()
+            .then((res) => {
+                if(res) {
+                    setLoading(false)
+                    setIsEditing({addNewSub:false,readyToEdit:false});
+                }
+            })
+    };
 
     /**
      * Add new segment item with name
@@ -492,6 +499,7 @@ const MessageSegments = () => {
 
     return (
         <>
+            {console.log("Delete ID on Segment -- ", deleteId)}
             {deleteId && deleteId?.is_used !== 0 &&
                 <Modal
                     modalType="DELETE"

@@ -111,7 +111,15 @@ const dummyLookupService = {
 function useMentionLookupService(mentionString) {
   const [results, setResults] = useState([]);
   const messagesList = useSelector((state) => state.message.segmentsArray);
-  const dummyMentionsData =messagesList.map((item)=>item.segment_name);
+  // const dummyMentionsData = messagesList.map((item)=>item.segment_name);
+  const [dummyMentionsData, setDummyMentionsData] = useState(() =>  messagesList.map((item) => item.segment_name) || []);
+
+  console.log("MESSAGE LIST -- ", messagesList);
+  console.log("DUMMY MENTIONS DATA LIST -- ", dummyMentionsData);
+
+  useEffect(() => {
+    setDummyMentionsData( messagesList.map((item) => item.segment_name));
+  }, [messagesList]);
 
   useEffect(() => {
     const cachedResults = mentionsCache.get(mentionString);
@@ -133,7 +141,7 @@ function useMentionLookupService(mentionString) {
       mentionsCache.set(mentionString, newResults);
       setResults(newResults);
     });
-  }, [mentionString]);
+  }, [mentionString, messagesList]);
 
   return results;
 }
