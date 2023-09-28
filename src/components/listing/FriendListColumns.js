@@ -300,7 +300,7 @@ export const AgeRenderer = memo((params) => {
   // inputTimeString.replace(" ", "T") + ".000Z";
   //console.log("utc time>>",statusSync);
   const localTime=utils.convertUTCtoLocal(statusSync.replace(" ", "T") + ".000Z",true);
-  console.log("status sysnc>>>>>>local date",localTime);
+  //console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
   let days = diffTime / (24 * 60 * 60 * 1000);

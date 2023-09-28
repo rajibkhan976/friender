@@ -114,7 +114,11 @@ export const tools = {
   },
   //html genaration end
 
-
+ /**
+  * this function generating massenger specific text use it only if needed very precise manner 
+  * @param {*} editorState 
+  * @returns 
+  */
   $generateMessengerText(editorState) {
     function convertMessengerText(format) {
       switch (format) {

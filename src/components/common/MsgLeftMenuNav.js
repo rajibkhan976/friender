@@ -207,7 +207,7 @@ function MsgLeftMenuNav({
     setIsEditing({readyToEdit:false,addNewSub:false})
     setActiveObj(currentActive => currentActive?._id !== item?._id ? item : currentActive);
     setActiveTextContent("")
-    console.log('>>>>>>>>>>>>>>>>>>>', textContentInEditor)
+   // console.log('>>>>>>>>>>>>>>>>>>>', textContentInEditor)
   }
 
   const addNewMessageParent = () => {

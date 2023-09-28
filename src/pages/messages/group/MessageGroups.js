@@ -1042,7 +1042,9 @@ const MessageGroups = () => {
                         } */}
                     </div>
                     {isEditing.readyToEdit ? (
-                        <>
+                        <> 
+                         {/* the is extra tag for differentciation*/}
+                         <p></p>
                             <TextEditor
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}
@@ -1068,6 +1070,7 @@ const MessageGroups = () => {
                         </>
                     ) : (
                         <>
+                         {/* <div>deff</div> */}
                            <TextEditor
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}

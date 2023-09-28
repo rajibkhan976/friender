@@ -91,7 +91,7 @@ const AtSignMentionsRegexAliasRegex = new RegExp(
 );
 
 // At most, 5 suggestions are shown in the popup.
-const SUGGESTION_LIST_LENGTH_LIMIT = 5;
+const SUGGESTION_LIST_LENGTH_LIMIT = 200;
 
 const mentionsCache = new Map();
 
@@ -114,8 +114,8 @@ function useMentionLookupService(mentionString) {
   // const dummyMentionsData = messagesList.map((item)=>item.segment_name);
   const [dummyMentionsData, setDummyMentionsData] = useState(() =>  messagesList.map((item) => item.segment_name) || []);
 
-  console.log("MESSAGE LIST -- ", messagesList);
-  console.log("DUMMY MENTIONS DATA LIST -- ", dummyMentionsData);
+  // console.log("MESSAGE LIST -- ", messagesList);
+  // console.log("DUMMY MENTIONS DATA LIST -- ", dummyMentionsData);
 
   useEffect(() => {
     setDummyMentionsData( messagesList.map((item) => item.segment_name));
