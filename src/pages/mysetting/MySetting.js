@@ -1125,13 +1125,6 @@ const MySetting = () => {
   };
 
   /**
-   * ===== Handle Change Re-Friending =====
-   */
-  const handleChangeReFrndingToggle = () => {
-    setReFrndng(!reFrndng);
-  };
-
-  /**
    * Set Delete Pending Requests Increment & Decrement..
    */
   const setValOfDeletePendingFrndIncDic = (type) => {
@@ -1481,11 +1474,15 @@ const MySetting = () => {
               <span>General settings</span>
             </p>
 
-            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}>
+            {/* <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}> */}
+            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`}>
               <Switch
                 checked={dayBackAnlyFrndEng}
                 // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
-                handleChange={() => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
+                handleChange={() => {
+                  setDayBackAnlyFrndEng(!dayBackAnlyFrndEng);
+                  setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen);
+                }}
               />
               {/* Day back to analyse friends engagement */}
               {/* Friend list and engagement sync time */}
@@ -1627,22 +1624,26 @@ const MySetting = () => {
 
 
             {/* Re-Friending  setting start*/}
-            <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}`} onClick={() => setRefrienderingOpen(!refrienderingOpen)}>
+            {/* <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}`} onClick={() => setRefrienderingOpen(!refrienderingOpen)}> */}
+            <div className={`setting ${reFrndng ? "setting-actived" : ""}`}>
               <div className="setting-child ">
                 <Switch
                   checked={reFrndng}
-                  handleChange={handleChangeReFrndingToggle}
+                  handleChange={() => {
+                    setReFrndng(!reFrndng);
+                    setRefrienderingOpen(!refrienderingOpen);
+                  }}
                 />
                 Automated re-friending
               </div>
               <div className="setting-control">
                 <figure className="icon-arrow-down">
-                  {!refrienderingOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                  {!reFrndng ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
 
             </div>
-            {refrienderingOpen && (
+            {reFrndng && (
               <div className="setting-child">
 
                 <span className="smallTxt">Automatically cancel friend request(s) that have been pending for more than</span>
@@ -1763,11 +1764,15 @@ const MySetting = () => {
               </div>
             )}
 
-            <div className={`setting ${deletePendingFrndOpen ? "setting-actived" : ""}`} onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}>
+            {/* <div className={`setting ${deletePendingFrndOpen ? "setting-actived" : ""}`} onClick={() => setDeletePendingFrndOpen(!deletePendingFrndOpen)}> */}
+            <div className={`setting ${autoCnclFrndRque ? "setting-actived" : ""}`}>
               <Switch
                 checked={autoCnclFrndRque}
                 // handleOnBlur={e => setAutoCnclFrndRque(!autoCnclFrndRque)}
-                handleChange={() => setAutoCnclFrndRque(!autoCnclFrndRque)}
+                handleChange={() => {
+                  setAutoCnclFrndRque(!autoCnclFrndRque);
+                  setDeletePendingFrndOpen(!deletePendingFrndOpen);
+                }}
               />
               Delete pending friend request(s) automatically
 
@@ -1798,12 +1803,12 @@ const MySetting = () => {
                 </button>
 
                 <figure className="icon-arrow-down">
-                  {!deletePendingFrndOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                  {!autoCnclFrndRque ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
             </div>
 
-            {deletePendingFrndOpen && (
+            {autoCnclFrndRque && (
               <div className="setting-child others">
                 Cancel sent friend request(s) after
                 {" "}
@@ -1853,7 +1858,8 @@ const MySetting = () => {
             </p>
 
             {/* {======= Send Message When someone accepted my friend request =======} */}
-            <div className={`setting ${sndMsgAcptsFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgAcptsFrndReqOpen(!sndMsgAcptsFrndReqOpen)}>
+            {/* <div className={`setting ${sndMsgAcptsFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgAcptsFrndReqOpen(!sndMsgAcptsFrndReqOpen)}> */}
+            <div className={`setting ${sndMsgAcptsFrndReqToggle ? "setting-actived" : ""}`}>
               <div className="setting-child first">
                 <Switch
                   checked={sndMsgAcptsFrndReqToggle}
@@ -1866,12 +1872,12 @@ const MySetting = () => {
 
               <div className="setting-control">
                 <figure className="icon-arrow-down">
-                  {!sndMsgAcptsFrndReqOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                  {!sndMsgAcptsFrndReqToggle ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
             </div>
 
-            {sndMsgAcptsFrndReqOpen && (
+            {sndMsgAcptsFrndReqToggle && (
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
                   Select the message template you want to send &nbsp;
@@ -1899,12 +1905,14 @@ const MySetting = () => {
 
 
             {/* {======= Send Message When someone rejected my friend request =======} */}
-            <div className={`setting ${sndMsgRejtFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen)}>
+            {/* <div className={`setting ${sndMsgRejtFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen)}> */}
+            <div className={`setting ${sndMsgRejtFrndReqToggle ? "setting-actived" : ""}`}>
               <div className="setting-child first">
                 <Switch
                   checked={sndMsgRejtFrndReqToggle}
                   handleChange={() => {
                     setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
+                    setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
                   }}
                 />
                 Send message when someone reject my friend request
@@ -1912,12 +1920,12 @@ const MySetting = () => {
 
               <div className="setting-control">
                 <figure className="icon-arrow-down">
-                  {!sndMsgRejtFrndReqOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                  {!sndMsgRejtFrndReqToggle ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
             </div>
 
-            {sndMsgRejtFrndReqOpen && (
+            {sndMsgRejtFrndReqToggle && (
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
                   Select the message template you want to send &nbsp;

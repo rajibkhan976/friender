@@ -254,7 +254,7 @@ export const messageSlice = createSlice({
     },
     [fetchSegments.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.segmentsArray = action?.payload?.data ? action?.payload?.data?.reverse() : [];
+      state.segmentsArray = action?.payload?.data ? action?.payload?.data : [];
     },
     [fetchSegments.rejected]: (state) => {
       state.isLoading = false;

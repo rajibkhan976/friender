@@ -33,22 +33,22 @@ const MessageGroups = () => {
     /**
      * Fetching stored message groups from backend
      */
-    const fetchGroupsData = () => {
+    const fetchGroupsData = (page) => {
         console.log('calling fetch::::::GROUPS:::::', pageRef);
         setLoading(true)
-        dispatch(fetchGroups(pageRef))
+        dispatch(fetchGroups(page))
             .unwrap()
             .then((res) => {
                 if(res) {
                     setLoading(false);
                     setIsEditing({addNewSub:false,readyToEdit:false});
-                    setPageRef(prevPage => prevPage+1)
+                    // setPageRef(prevPage => prevPage+1)
                 }
             })
     }
 
     useEffect(() => {
-        fetchGroupsData();
+        fetchGroupsData(pageRef);
     }, []);
 
     useEffect(() => {
@@ -101,8 +101,8 @@ const MessageGroups = () => {
      */
     useEffect(() => {
         if (
-            !editorStateValue || 
-            JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" || 
+            !editorStateValue ||
+            JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" ||
             (!isEditing.addNewSub && !isEditing.readyToEdit)
         ) {
             return
@@ -112,7 +112,7 @@ const MessageGroups = () => {
                 event.preventDefault();
                 return (event.returnValue = '');
             };
-            
+
             window.addEventListener('beforeunload', handleBeforeUnload);
 
             return () => {
@@ -340,7 +340,7 @@ const MessageGroups = () => {
     const saveMessage = async (data) => {
         setLoading(true);
         setIsEditing({addNewSub:false,readyToEdit:false})
-        
+
         try {
             await dispatch(addNewGroupMessageItem({
                 groupId:activeGroupsItem?._id,
@@ -354,7 +354,7 @@ const MessageGroups = () => {
                         console.log("saved message resss",res);
                         let placeholderGroupsArray = [...groupsArray]
                         let matchingGroupObject = placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0];
-                        
+
                         placeholderGroupsArray = placeholderGroupsArray
                             .map(el => el._id !== res?.payload?.data?.group_id ? el : {
                                 ...matchingGroupObject,
@@ -434,7 +434,8 @@ const MessageGroups = () => {
         try {
             await dispatch(addNewGroupMessageItem({
                 ...isEditingMessage,
-                message: data
+                message: data,
+                oldMessage: activeMessage?.message
             }))
                 .then((res) => {
                     // console.log('res', res?.payload?.data);
@@ -449,6 +450,7 @@ const MessageGroups = () => {
                             1000,
                             "bottom-right"
                         );
+                        setLoading(false);
                     }
                 })
         } catch (error) {

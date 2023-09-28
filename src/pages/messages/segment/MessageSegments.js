@@ -34,7 +34,7 @@ const MessageSegments = () => {
     const [activeTextContent, setActiveTextContent] = useState("");
     // const [replaceSegmentId, setReplaceSegmentId] = useState(null);
     const [editorStateValue, setEditorStateValue] = useState("");
-    const [pageRef, setPageRef] = useState(1);
+    // const [pageRef, setPageRef] = useState(1);
     const messagesList = useSelector((state) => state.message.segmentsArray);
 
 
@@ -122,13 +122,13 @@ const MessageSegments = () => {
 
 
     useEffect(() => {
-        fetchSegmentsData(pageRef);
+        fetchSegmentsData();
     }, []);
 
     /**
      * Fetching the segments all data from API
      */
-    const fetchSegmentsData = (page) => {
+    const fetchSegmentsData = (page = null) => {
         setLoading(true)
         dispatch(fetchSegments(page))
             .unwrap()
@@ -558,6 +558,7 @@ const MessageSegments = () => {
                     saveMessage={
                         isEditingMessage !== null ? editMessage : saveMessage
                     }
+                    fetchData={fetchSegmentsData}
                 />
             </div>
 

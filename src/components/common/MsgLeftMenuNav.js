@@ -81,13 +81,22 @@ function MsgLeftMenuNav({
   const isLoadingMessage = useSelector((state) => state.message.isLoading);
   //const [messagesList, setMessagesList] = useState(() => MessageObj.length ? MessageObj : []);
   const [initialMessageObj, setInitialMessageObj] = useState([]);
+  // const [page, setPage] = useState(1);
+  const [newMessageObjData, setNewMessageObjData] = useState([]);
 
   useEffect(() => {
-    if (MessageObj && MessageObj.length) {
-      let data = MessageObj.slice(0, 5);
-      setInitialMessageObj(data);
-    }
+    setInitialMessageObj(MessageObj);
   }, [MessageObj]);
+
+
+
+  // useEffect(() => {
+  //   if (newMessageObjData.length) {
+  //     console.log("New Message Object data -- ", newMessageObjData);
+  //     setInitialMessageObj((prevData) => [...prevData, ...newMessageObjData]);
+  //     // setInitialMessageObj(newMessageObjData);
+  //   }
+  // }, [newMessageObjData])
 
 
   // messageObj is the main property of getting list of data here
@@ -100,49 +109,28 @@ function MsgLeftMenuNav({
       const scrollTop = container.scrollTop;
       const scrollHeight = container.scrollHeight;
       const clientHeight = container.clientHeight;
+      const actualScrollHeight = Math.ceil(scrollHeight - scrollTop);
 
       console.log("CALLED THE SCROLL EFFECT");
       console.log("Scroll TOp -- ", scrollTop);
       console.log("scrollHeight -- ", scrollHeight);
       console.log("Client height -- ", clientHeight);
 
+      console.log("ScrollHeight - ScrollTop --==-- ", scrollHeight - scrollTop);
+      console.log("Scroll should be -- ", actualScrollHeight === clientHeight);
+
+      // console.log("===== PAGE ====== :: ", page);
+
       // Adjust the threshold as needed
-      if (scrollHeight - scrollTop === clientHeight) {
+      if (actualScrollHeight === clientHeight) {
         // Load more data here
-        fetchData();
+        // setPage((prevPage) => prevPage + 1);
+        // fetchData(2);
+        console.log("DATAAAAAA --- ", initialMessageObj);
+        setNewMessageObjData(initialMessageObj);
       }
     }
   }
-
-  /**
-   * Load More Data For Infinite Scrolling
-   */
-  const loadMoreData = () => {
-    console.log("== [ NOW I'M LOADING MORE ] ==");
-    if (MessageObj && MessageObj.length) {
-      // // Calculate the next range of data o load
-      // const startIndex = MessageObj.slice(0, 24).length;
-      // const endIndex = startIndex + 25; // Load the next 25 items
-      //
-      // console.log("startIndex -- ", startIndex);
-      // console.log("endIndex -- ", endIndex);
-      // console.log("MessageObj -- ", MessageObj.length);
-      //
-      //   const newMessages = MessageObj.slice(startIndex, endIndex);
-      //   console.log("New Messages -- ", newMessages);
-      //   // setMessageObj([...MessageObj, ...newMessages]);
-      //   setMessageObj((prevMessages) => [...prevMessages, ...newMessages]);
-
-      const startIndex = initialMessageObj && initialMessageObj.length;
-      const endIndex = startIndex + 5;
-
-      console.log("startIndex -- ", initialMessageObj);
-      console.log("endIndex -- ", endIndex);
-
-      const newMessages = MessageObj.slice(startIndex, endIndex);
-      console.log(newMessages);
-    }
-  };
 
   /**
    *  Make Text to Truncate when gets upper then 32 character
@@ -481,7 +469,9 @@ function MsgLeftMenuNav({
         HeaderIcon={HeaderIcon}
         isLoading={isEditingName || isLoading}
       />
-      <div className="message-left-nav-content h-100" onScroll={handleScroll}>
+      <div className="message-left-nav-content h-100"
+           onScroll={handleScroll}
+      >
         {
           isEditingName ?
             <form
@@ -521,7 +511,8 @@ function MsgLeftMenuNav({
             </form> : ''
         }
         {
-          !MessageObj?.length ?
+          // !MessageObj?.length ?
+            initialMessageObj && !initialMessageObj.length ?
             <EmptyMessage
               customText={`
                       ${MsgNavtype === "group" ? 'Empty message groups? Create a new one now and get the conversation rolling!' :
@@ -531,45 +522,45 @@ function MsgLeftMenuNav({
                     `}
             />
             :
-            <div className="fr-message-listing h-100 w-100">
-              <ul className="d-flex d-flex-column h-100 w-100">
-                {MessageObj?.map(el => (
-                  <li
-                    className={el?._id === activeObj?._id ? `active-sub-message ${renderToolTipWhenText32Upper(el)}` : `${renderToolTipWhenText32Upper(el)}`}
-                    key={'message-item-' + el._id}
-                    onClick={() => setActiveMessage(el)}
-                    data-text={showKeyContent(el, null)}
-                  >
-                    {
-                      editGroup?._id === el?._id ?
-                        <div className="edit-message-group-name">
-                          <form
-                            className="creating-new d-flex f-justify-between"
-                            onSubmit={e => editMessageName(e, el)}
-                          >
-                            <input
-                              autoFocus
-                              className="fr-input-inline"
-                              name="new message"
-                              value={editGroup?.group_name || editGroup?.segment_name}
-                              onChange={e => setEditGroup({
-                                ...editGroup,
-                                group_name: e.target.value,
-                                segment_name: e.target.value,
-                              })}
-                            />
-                            <Button
-                              extraClass={`create-message-${MsgNavtype} btn-inline`}
-                              btnText='Save'
-                              clickEv={e => editMessageName(e, el)}
-                            />
-                            <span
-                              className="reset-creation"
-                              onClick={() => {
-                                setEditGroup(null)
-                                setActive(null)
-                              }}
-                            >
+             <div className="fr-message-listing h-100 w-100">
+               <ul className="d-flex d-flex-column h-100 w-100">
+                 {initialMessageObj?.map(el => (
+                     <li
+                         className={el?._id === activeObj?._id ? `active-sub-message ${renderToolTipWhenText32Upper(el)}` : `${renderToolTipWhenText32Upper(el)}`}
+                         key={'message-item-' + el._id}
+                         onClick={() => setActiveMessage(el)}
+                         data-text={showKeyContent(el, null)}
+                     >
+                       {
+                         editGroup?._id === el?._id ?
+                             <div className="edit-message-group-name">
+                               <form
+                                   className="creating-new d-flex f-justify-between"
+                                   onSubmit={e => editMessageName(e, el)}
+                               >
+                                 <input
+                                     autoFocus
+                                     className="fr-input-inline"
+                                     name="new message"
+                                     value={editGroup?.group_name || editGroup?.segment_name}
+                                     onChange={e => setEditGroup({
+                                       ...editGroup,
+                                       group_name: e.target.value,
+                                       segment_name: e.target.value,
+                                     })}
+                                 />
+                                 <Button
+                                     extraClass={`create-message-${MsgNavtype} btn-inline`}
+                                     btnText='Save'
+                                     clickEv={e => editMessageName(e, el)}
+                                 />
+                                 <span
+                                     className="reset-creation"
+                                     onClick={() => {
+                                       setEditGroup(null)
+                                       setActive(null)
+                                     }}
+                                 >
                               <Cross />
                             </span>
                           </form>
@@ -582,44 +573,44 @@ function MsgLeftMenuNav({
                           <span className="message-name">
                             {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
                           </span>
-                          <aside>
+                               <aside>
                             <span className="message-date">
                               {formatDate(el.created_at)}
                             </span>
 
-                            {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
-                              <div
-                                className="message-context-menu"
-                                ref={element => {
-                                  if (element) {
-                                    contenxtMenu.current[el._id] = element
-                                  } else {
-                                    delete contenxtMenu.current[el._id]
-                                  }
-                                }}
-                              >
-                                <button
-                                  className={`context-menu-trigger ${active === el._id ? 'active' : ''}`}
-                                  onClick={e => contextMenuToggle(e, el._id)}
-                                >
-                                  <ThreeDotIcon />
-                                </button>
+                                 {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
+                                     <div
+                                         className="message-context-menu"
+                                         ref={element => {
+                                           if (element) {
+                                             contenxtMenu.current[el._id] = element
+                                           } else {
+                                             delete contenxtMenu.current[el._id]
+                                           }
+                                         }}
+                                     >
+                                       <button
+                                           className={`context-menu-trigger ${active === el._id ? 'active' : ''}`}
+                                           onClick={e => contextMenuToggle(e, el._id)}
+                                       >
+                                         <ThreeDotIcon />
+                                       </button>
 
-                                {active === el._id &&
-                                  <div className="context-menu">
-                                    <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
-                                    <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
-                                  </div>
-                                }
-                              </div>
-                            }
-                          </aside>
-                        </div>
-                    }
-                  </li>
-                ))}
-              </ul>
-            </div>
+                                       {active === el._id &&
+                                           <div className="context-menu">
+                                             <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
+                                             <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
+                                           </div>
+                                       }
+                                     </div>
+                                 }
+                               </aside>
+                             </div>
+                       }
+                     </li>
+                 ))}
+               </ul>
+             </div>
         }
       </div>
     </div>
