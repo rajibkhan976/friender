@@ -283,7 +283,7 @@ export const messageSlice = createSlice({
       state.isLoading = true
     },
     [addNewGroup.fulfilled]: (state, action) => {
-      state.groupArray = action?.payload?.data ? [...state.groupArray, action?.payload?.data] : [...state.groupArray];
+      state.groupArray = action?.payload?.data ? [action?.payload?.data, ...state.groupArray] : [...state.groupArray];
       state.isLoading = false;
     },
     [addNewGroup.rejected]: (state) => {
@@ -294,7 +294,7 @@ export const messageSlice = createSlice({
     },
     [fetchGroups.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.groupArray = action?.payload?.data ? action?.payload?.data?.reverse() : [];
+      state.groupArray = action?.payload?.data ? action?.payload?.data : [];
     },
     [fetchGroups.rejected]: (state) => {
       state.isLoading = false;

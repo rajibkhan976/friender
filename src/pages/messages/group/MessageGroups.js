@@ -34,6 +34,7 @@ const MessageGroups = () => {
      * Fetching stored message groups from backend
      */
     const fetchGroupsData = () => {
+        console.log('calling fetch::::::GROUPS:::::', pageRef);
         setLoading(true)
         dispatch(fetchGroups(pageRef))
             .unwrap()
@@ -197,19 +198,8 @@ const MessageGroups = () => {
      * Edit group name in local array and push api
      */
     const GroupNameEdit = async (updatedGroup) => {
-        console.log('updatedGroup>>>>', updatedGroup);
         setLoading(true);
-
-        let placeholderGroupsArray = [...groupsArray];
-        placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== updatedGroup?._id ? el : updatedGroup)
-
-        setGroupsArray(placeholderGroupsArray);
-        console.log("placearrra",placeholderGroupsArray);
-        const currActiveGroupObj=placeholderGroupsArray?.filter(el => el._id === updatedGroup?._id)[0];
-        setActiveGroupsItem(currActiveGroupObj);
-        setActiveMessage(
-          currActiveGroupObj?.group_messages.length>0?currActiveGroupObj?.group_messages[0]:null
-        )
+        console.log('updatedGroup', updatedGroup);
 
         try {
             await dispatch(addNewGroup({
@@ -218,10 +208,15 @@ const MessageGroups = () => {
             })).unwrap()
                 .then((res) => {
                     if(res){
-                        console.log();
-                        setIsEditingMessage(null)
-                        setIsEditing({addNewSub:false,readyToEdit:false})
-                        setLoading(false);
+                        let placeholderGroupsArray = [...groupsArray];
+                        placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== updatedGroup?._id ? el : updatedGroup)
+                
+                        setGroupsArray(placeholderGroupsArray);
+                        const currActiveGroupObj=placeholderGroupsArray?.filter(el => el._id === updatedGroup?._id)[0];
+                        setActiveGroupsItem(currActiveGroupObj);
+                        setActiveMessage(
+                            currActiveGroupObj?.group_messages.length>0?currActiveGroupObj?.group_messages[0]:null
+                        )
 
                         Alertbox(
                             `Group name updated successfully`,
@@ -229,6 +224,9 @@ const MessageGroups = () => {
                             1000,
                             "bottom-right"
                         );
+                        setIsEditingMessage(null)
+                        setIsEditing({addNewSub:false,readyToEdit:false})
+                        setLoading(false);
                     }
                 })
         } catch (error) {
@@ -720,6 +718,7 @@ const MessageGroups = () => {
                     textContentInEditor={activeTextContent}
                     setActiveTextContent={setActiveTextContent}
                     setIsEditing={setIsEditing}
+                    fetchData={fetchGroupsData}
                     saveMessage={
                         isEditingMessage !== null ? editMessage : saveMessage
                     }

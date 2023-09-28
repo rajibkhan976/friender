@@ -150,8 +150,8 @@ function MsgLeftMenuNav({
    * @returns {*}
    */
   const renderToolTipWhenText32Upper = (element) => (
-    MsgNavtype === 'group' ? element?.group_name.length > 32 && 'style-tooltip' :
-      MsgNavtype === 'segment' ? element?.segment_name.length > 32 && 'style-tooltip' : ''
+    MsgNavtype === 'group' ? element?.group_name?.length > 32 && 'style-tooltip' :
+      MsgNavtype === 'segment' ? element?.segment_name?.length > 32 && 'style-tooltip' : ''
   );
 
   // Toggle Context menu
@@ -178,22 +178,22 @@ function MsgLeftMenuNav({
   const showKeyContent = (item, limit) => {
     return (
       MsgNavtype === "group" ?
-        (limit && item.group_name.length > limit) ?
-          item.group_name.slice(0, limit) + "..." :
-          item.group_name :
+        (limit && item?.group_name?.length > limit) ?
+          item?.group_name?.slice(0, limit) + "..." :
+          item?.group_name :
         MsgNavtype === "segment" ?
-          (limit && item.segment_name.length > limit) ?
-            item.segment_name.slice(0, limit) + "..." :
-            item.segment_name :
+          (limit && item?.segment_name?.length > limit) ?
+            item?.segment_name.slice(0, limit) + "..." :
+            item?.segment_name :
           MsgNavtype === "sub-group" ?
-            (limit && item?.message.text.length > limit) ?
+            (limit && item?.message.text?.length > limit) ?
               item?.message.text.slice(0, limit) + "..." :
               item?.message.text :
             MsgNavtype === "sub-segment" ?
-              (limit && item?.message.text.length > limit) ?
+              (limit && item?.message.text?.length > limit) ?
                 item?.message.text.slice(0, limit) + "..." :
                 item?.message.text :
-              item.dmf_name
+              item?.dmf_name
     )
   }
 
@@ -575,8 +575,9 @@ function MsgLeftMenuNav({
                           </form>
                         </div> :
                         <div
-                          className={`content-message-list-item d-flex f-align-center f-justify-between ${showMsgContent(el)?.length > 77 && 'style-sub-tooltip'}`}
-                          data-text={showMsgContent(el)}
+                          className={`content-message-list-item d-flex f-align-center f-justify-between`}
+                          // ${showMsgContent(el)?.length > 77 && 'style-sub-tooltip'}
+                          // data-text={showMsgContent(el)}
                         >
                           <span className="message-name">
                             {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
