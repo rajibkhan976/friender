@@ -457,11 +457,11 @@ const MessageSegments = () => {
         });
 
         setActiveSegmentsItem(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]);
-        setActiveMessage(
-            segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages?.length ?
-                segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[0] : null
-        )
-
+        // setActiveMessage(
+        //     segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages?.length ?
+        //         segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[0] : null
+        // );
+        setActiveMessage(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[activeSegmentsItem?.segment_messages?.indexOf(activeMessage) - 1]);
         setSegmentsArray(segmentsArrayPlaceholder)
 
         try {

@@ -120,13 +120,16 @@ export const prioritySubDMF = (updatePrioritySubDmf)=>{
 }
 
 export const fetchAllGroups = (pageRef) => {
+    const url = pageRef ? `${config.fetchMessageGroupsUrl}/${pageRef}` : `${config.fetchMessageGroupsUrl}/all`;
+
     return new Promise((resolve, reject) => {
         axios
-            .get(`${config.fetchMessageGroupsUrl}/${pageRef}`, {headers:headers})
+            .get(`${url}`, {headers:headers})
             .then((res) => {
                 resolve(res.data)
             })
             .catch((err) => {
+
                 console.log("error fount in fetching", err);
             })
     })

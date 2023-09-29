@@ -25,7 +25,7 @@ const MessageGroups = () => {
     const [replaceGroupId, setReplaceGroupId] = useState(null)
     const [activeTextContent, setActiveTextContent] = useState("")
     const [editorStateValue, setEditorStateValue] = useState("");
-    const [pageRef, setPageRef] = useState(1)
+    const [pageRef, setPageRef] = useState(2);
     const messagesList = useSelector((state) =>
         state.message.groupArray
     );
@@ -33,7 +33,7 @@ const MessageGroups = () => {
     /**
      * Fetching stored message groups from backend
      */
-    const fetchGroupsData = (page) => {
+    const fetchGroupsData = (page = null) => {
         console.log('calling fetch::::::GROUPS:::::', pageRef);
         setLoading(true)
         dispatch(fetchGroups(page))
@@ -48,7 +48,9 @@ const MessageGroups = () => {
     }
 
     useEffect(() => {
-        fetchGroupsData(pageRef);
+        fetchGroupsData();
+        // For Infinite-Scrolling..
+        // fetchGroupsData(pageRef);
     }, []);
 
     useEffect(() => {
@@ -565,8 +567,7 @@ const MessageGroups = () => {
         // console.log('placeholderGroupsArray', placeholderGroupsArray);
         setActiveGroupsItem(placeholderGroupsArray?.filter(el => el._id === activeMessage?.group_id)[0])
         setActiveMessage(
-            placeholderGroupsArray?.filter(el => el._id === activeMessage?.group_id)[0]?.group_messages?.length ?
-                placeholderGroupsArray?.filter(el => el._id === activeMessage?.group_id)[0]?.group_messages[0] : null
+            placeholderGroupsArray?.filter(el => el._id === activeMessage?.group_id)[0]?.group_messages[activeGroupsItem?.group_messages?.indexOf(activeMessage) - 1]
         )
 
         setGroupsArray(placeholderGroupsArray)
