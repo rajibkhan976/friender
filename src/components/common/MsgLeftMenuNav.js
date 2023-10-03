@@ -62,7 +62,10 @@ function MsgLeftMenuNav({
   setActiveTextContent,
   saveMessage,
   setIsEditing,
-  fetchData
+  fetchData,
+  isPages,
+  listLoading,
+  setListLoading,
 }) {
   /**@param  MsgNavtype="dmf"*/
   /**@param  MessageObj={}*/
@@ -81,14 +84,15 @@ function MsgLeftMenuNav({
   const [newCreateName, setNewCreateName] = useState('')
   const isLoadingMessage = useSelector((state) => state.message.isLoading);
   // For Infinite-Scrolling..
-  //const [messagesList, setMessagesList] = useState(() => MessageObj.length ? MessageObj : []);
-  // const [initialMessageObj, setInitialMessageObj] = useState([]);
-  // const [page, setPage] = useState(1);
-  // const [loading, setLoading] = useState(false);
+  // const [messagesList, setMessagesList] = useState(() => MessageObj.length ? MessageObj : []);
+  const [initialMessageObj, setInitialMessageObj] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  // const [isPages, setIsPages] = useState(true);
 
   // For Infinite-Scrolling..
   // useEffect(() => {
-  //   if (initialMessageObj < MessageObj) {
+  //   if (initialMessageObj < MessageObj && isPages) {
   //     setInitialMessageObj(MessageObj);
   //   }
   // }, [MessageObj]);
@@ -97,7 +101,7 @@ function MsgLeftMenuNav({
   // For Infinite-Scrolling..
   // const loadMore = () => {
   //   console.log("Page -- ", page);
-  //   if (page > 0) {
+  //   if (isPages) {
   //     dispatch(fetchGroups(page))
   //       .unwrap()
   //       .then((res) => {
@@ -106,10 +110,20 @@ function MsgLeftMenuNav({
   //           // setPageRef(prevPage => prevPage+1)
   //           setInitialMessageObj((prev) => [...prev, ...res.data]);
   //           setLoading(false);
+  //           setIsPages(true);
+  //           console.log("Paginate responsese === ", res);
   //         }
-  //       })
+  //       }).catch((error) => {
+  //         console.log("Error While Load more data -- ", error);
+
+  //         setLoading(false);
+  //         if (error.message === "Rejected") {
+  //           setIsPages(false);
+  //         }
+  //       });
   //   }
-  //   setPage(page - 1);
+
+  //   setPage((prevPage) => prevPage + 1);
 
   //   if (page < 0) {
   //     setLoading(false);
@@ -117,6 +131,7 @@ function MsgLeftMenuNav({
   // };
 
   // console.log("INITIAL MESSAGE GROUPS DATA -- ", initialMessageObj);
+  console.log("MSG LEFT MENU NAv LIST -- ", MessageObj);
 
 
   // messageObj is the main property of getting list of data here
@@ -145,6 +160,10 @@ function MsgLeftMenuNav({
         // Load more data here
         // setLoading(true);
         // loadMore();
+
+        // Now that is on parent component..
+        setListLoading(true);
+        fetchData();
       }
     }
   }
@@ -528,8 +547,7 @@ function MsgLeftMenuNav({
             </form> : ''
         }
         {
-          // For Infinite-Scrolling..
-          // initialMessageObj && !initialMessageObj.length ?
+          // !initialMessageObj?.length ?
           !MessageObj?.length ?
             <EmptyMessage
               customText={`
@@ -543,98 +561,98 @@ function MsgLeftMenuNav({
             <div className="fr-message-listing h-100 w-100">
               <ul className="d-flex d-flex-column h-100 w-100">
                 {
-                // initialMessageObj?.map(el => (
-                MessageObj?.map(el => (
-                  <li
-                    className={el?._id === activeObj?._id ? `active-sub-message ${renderToolTipWhenText32Upper(el)}` : `${renderToolTipWhenText32Upper(el)}`}
-                    key={'message-item-' + el._id}
-                    onClick={() => setActiveMessage(el)}
-                    data-text={showKeyContent(el, null)}
-                  >
-                    {
-                      editGroup?._id === el?._id ?
-                        <div className="edit-message-group-name">
-                          <form
-                            className="creating-new d-flex f-justify-between"
-                            onSubmit={e => editMessageName(e, el)}
-                          >
-                            <input
-                              autoFocus
-                              className="fr-input-inline"
-                              name="new message"
-                              value={editGroup?.group_name || editGroup?.segment_name}
-                              onChange={e => setEditGroup({
-                                ...editGroup,
-                                group_name: e.target.value,
-                                segment_name: e.target.value,
-                              })}
-                            />
-                            <Button
-                              extraClass={`create-message-${MsgNavtype} btn-inline`}
-                              btnText='Save'
-                              clickEv={e => editMessageName(e, el)}
-                            />
-                            <span
-                              className="reset-creation"
-                              onClick={() => {
-                                setEditGroup(null)
-                                setActive(null)
-                              }}
+                  // initialMessageObj?.map(el => (
+                  MessageObj?.map(el => (
+                    <li
+                      className={el?._id === activeObj?._id ? `active-sub-message ${renderToolTipWhenText32Upper(el)}` : `${renderToolTipWhenText32Upper(el)}`}
+                      key={'message-item-' + el._id}
+                      onClick={() => setActiveMessage(el)}
+                      data-text={showKeyContent(el, null)}
+                    >
+                      {
+                        editGroup?._id === el?._id ?
+                          <div className="edit-message-group-name">
+                            <form
+                              className="creating-new d-flex f-justify-between"
+                              onSubmit={e => editMessageName(e, el)}
                             >
-                              <Cross />
-                            </span>
-                          </form>
-                        </div> :
-                        <div
-                          className={`content-message-list-item d-flex f-align-center f-justify-between`}
-                        // ${showMsgContent(el)?.length > 77 && 'style-sub-tooltip'}
-                        // data-text={showMsgContent(el)}
-                        >
-                          <span className="message-name">
-                            {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
-                          </span>
-                          <aside>
-                            <span className="message-date">
-                              {formatDate(el.created_at)}
-                            </span>
-
-                            {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
-                              <div
-                                className="message-context-menu"
-                                ref={element => {
-                                  if (element) {
-                                    contenxtMenu.current[el._id] = element
-                                  } else {
-                                    delete contenxtMenu.current[el._id]
-                                  }
+                              <input
+                                autoFocus
+                                className="fr-input-inline"
+                                name="new message"
+                                value={editGroup?.group_name || editGroup?.segment_name}
+                                onChange={e => setEditGroup({
+                                  ...editGroup,
+                                  group_name: e.target.value,
+                                  segment_name: e.target.value,
+                                })}
+                              />
+                              <Button
+                                extraClass={`create-message-${MsgNavtype} btn-inline`}
+                                btnText='Save'
+                                clickEv={e => editMessageName(e, el)}
+                              />
+                              <span
+                                className="reset-creation"
+                                onClick={() => {
+                                  setEditGroup(null)
+                                  setActive(null)
                                 }}
                               >
-                                <button
-                                  className={`context-menu-trigger ${active === el._id ? 'active' : ''}`}
-                                  onClick={e => contextMenuToggle(e, el._id)}
-                                >
-                                  <ThreeDotIcon />
-                                </button>
+                                <Cross />
+                              </span>
+                            </form>
+                          </div> :
+                          <div
+                            className={`content-message-list-item d-flex f-align-center f-justify-between`}
+                          // ${showMsgContent(el)?.length > 77 && 'style-sub-tooltip'}
+                          // data-text={showMsgContent(el)}
+                          >
+                            <span className="message-name">
+                              {showKeyContent(el, MsgNavtype === "segment" || MsgNavtype === "group" ? 32 : MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? 77 : null)}
+                            </span>
+                            <aside>
+                              <span className="message-date">
+                                {formatDate(el.created_at)}
+                              </span>
 
-                                {active === el._id &&
-                                  <div className="context-menu">
-                                    <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
-                                    <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
-                                  </div>
-                                }
-                              </div>
-                            }
-                          </aside>
-                        </div>
-                    }
-                  </li>
-                ))}
-                
-                {/*// For Infinite-Scrolling.. {loading && (
+                              {(MsgNavtype !== 'sub-group' && MsgNavtype !== 'sub-segment') &&
+                                <div
+                                  className="message-context-menu"
+                                  ref={element => {
+                                    if (element) {
+                                      contenxtMenu.current[el._id] = element
+                                    } else {
+                                      delete contenxtMenu.current[el._id]
+                                    }
+                                  }}
+                                >
+                                  <button
+                                    className={`context-menu-trigger ${active === el._id ? 'active' : ''}`}
+                                    onClick={e => contextMenuToggle(e, el._id)}
+                                  >
+                                    <ThreeDotIcon />
+                                  </button>
+
+                                  {active === el._id &&
+                                    <div className="context-menu">
+                                      <button className="btn btn-edit" onClick={e => setEditGroup(el)}><span className="context-icon"><EditIcon /></span>Rename</button>
+                                      <button className="btn btn-delete" onClick={e => deleteMessageGroup(e, el)}><span className="context-icon"><DeleteIcon /></span>Delete</button>
+                                    </div>
+                                  }
+                                </div>
+                              }
+                            </aside>
+                          </div>
+                      }
+                    </li>
+                  ))}
+
+                {listLoading && isPages && (
                   <li className="active-sub-message">
                     <h3>Loading..</h3>
                   </li>
-                )} */}
+                )}
               </ul>
             </div>
         }

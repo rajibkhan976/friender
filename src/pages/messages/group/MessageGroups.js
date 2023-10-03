@@ -19,38 +19,71 @@ const MessageGroups = () => {
     const [activeGroupsItem, setActiveGroupsItem] = useState(null)
     const [activeMessage, setActiveMessage] = useState(null);
     //to recognise what type edit need: {readyToEdit:showEditorstate,addNewSub:false}
-    const [isEditing, setIsEditing] = useState({readyToEdit:false,addNewSub:false});
+    const [isEditing, setIsEditing] = useState({ readyToEdit: false, addNewSub: false });
     const [isEditingMessage, setIsEditingMessage] = useState(null)
     const [deleteId, setDeleteId] = useState(null);
     const [replaceGroupId, setReplaceGroupId] = useState(null)
     const [activeTextContent, setActiveTextContent] = useState("")
     const [editorStateValue, setEditorStateValue] = useState("");
-    const [pageRef, setPageRef] = useState(2);
+    const [pageRef, setPageRef] = useState(1);
     const messagesList = useSelector((state) =>
         state.message.groupArray
     );
+    const [messagesListWithPaginate, setMessagesListWithPaginate] = useState([]);
+    const [isPages, setIsPages] = useState(true);
+    const [listLoading, setListLoading] = useState(false);
 
     /**
      * Fetching stored message groups from backend
      */
-    const fetchGroupsData = (page = null) => {
-        console.log('calling fetch::::::GROUPS:::::', pageRef);
-        setLoading(true)
-        dispatch(fetchGroups(page))
-            .unwrap()
-            .then((res) => {
-                if(res) {
-                    setLoading(false);
-                    setIsEditing({addNewSub:false,readyToEdit:false});
-                    // setPageRef(prevPage => prevPage+1)
-                }
-            })
+    // const fetchGroupsData = (page = null) => {
+    //     console.log('calling fetch::::::GROUPS:::::', page);
+    //     setLoading(true)
+    //     dispatch(fetchGroups(page))
+    //         .unwrap()
+    //         .then((res) => {
+    //             if(res) {
+    //                 setLoading(false);
+    //                 setIsEditing({addNewSub:false,readyToEdit:false});
+    //                 // setPageRef(prevPage => prevPage+1)
+    //                 console.log("Dispatch responsese === ", res);
+    //             }
+    //         })
+    // }
+
+    const fetchGroupsData = () => {
+        console.log("Page -- ", pageRef);
+        if (isPages) {
+            dispatch(fetchGroups(pageRef))
+                .unwrap()
+                .then((res) => {
+                    if (res) {
+                        setIsEditing({ addNewSub: false, readyToEdit: false });
+                        // setGroupsArray((prev) => [...prev, ...res.data]);
+                        setMessagesListWithPaginate((prev) => [...prev, ...res.data]);
+                        setListLoading(false);
+                        setIsPages(true);
+                        console.log("Paginate responsese === ", res);
+                    }
+                }).catch((error) => {
+                    console.log("Error While Load more data -- ", error);
+
+                    setListLoading(false);
+                    if (error.message === "Rejected") {
+                        setIsPages(false);
+                    }
+                });
+        }
+        setPageRef((prevPage) => prevPage + 1);
     }
 
+    // console.log("Group Data -- ", messagesListWithPaginate);
+    console.log("Redux Message List -- ", messagesList);
+
     useEffect(() => {
-        fetchGroupsData();
+        // fetchGroupsData();
         // For Infinite-Scrolling..
-        // fetchGroupsData(pageRef);
+        fetchGroupsData();
     }, []);
 
     useEffect(() => {
@@ -93,7 +126,7 @@ const MessageGroups = () => {
      * if yes, set initial replace item
      */
     useEffect(() => {
-        if(deleteId !== null && groupsArray.filter(el => el._id !== deleteId?._id)?.length !== 0) {
+        if (deleteId !== null && groupsArray.filter(el => el._id !== deleteId?._id)?.length !== 0) {
             setReplaceGroupId(groupsArray.filter(el => el._id !== deleteId?._id)[0]?._id)
         }
     }, [deleteId])
@@ -124,25 +157,25 @@ const MessageGroups = () => {
     }, [editorStateValue]);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         //console.log("helooooooo accctiva mesggggg>>>>>>>",activeMessage);
         setEditorStateValue(activeMessage?.message?.__raw)
 
-    },[activeMessage])
+    }, [activeMessage])
 
     /**
      * Add new group item with name
      */
     const GroupAdd = async (e) => {
         setLoading(true);
-        setIsEditing({addNewSub:false,readyToEdit:false})
+        setIsEditing({ addNewSub: false, readyToEdit: false })
         setActiveMessage(null)
 
         try {
-            await dispatch(addNewGroup({groupName: e}))
+            await dispatch(addNewGroup({ groupName: e }))
                 .unwrap()
                 .then((res) => {
-                    if(res?.data?.length === 0) {
+                    if (res?.data?.length === 0) {
                         Alertbox(
                             'Existing group name can’t be saved again.',
                             "error",
@@ -150,9 +183,9 @@ const MessageGroups = () => {
                             "bottom-right"
                         );
                     } else {
-                      const resObj={...res.data,group_messages:res?.data?.group_messages?.length>0?res.data.group_messages:[]}
+                        const resObj = { ...res.data, group_messages: res?.data?.group_messages?.length > 0 ? res.data.group_messages : [] }
                         setGroupsArray([
-                          resObj,
+                            resObj,
                             ...groupsArray
                         ])
 
@@ -168,7 +201,7 @@ const MessageGroups = () => {
                         //     setActiveMessage(res?.data?.group_messages[0])
                         // }
                         setIsEditingMessage(null)
-                        setIsEditing({addNewSub:false,readyToEdit:true})
+                        setIsEditing({ addNewSub: false, readyToEdit: true })
                         setActiveTextContent("")
                         setEditorStateValue("")
                     }
@@ -205,19 +238,19 @@ const MessageGroups = () => {
 
         try {
             await dispatch(addNewGroup({
-                groupId:updatedGroup._id,
+                groupId: updatedGroup._id,
                 groupName: updatedGroup.group_name
             })).unwrap()
                 .then((res) => {
-                    if(res){
+                    if (res) {
                         let placeholderGroupsArray = [...groupsArray];
                         placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== updatedGroup?._id ? el : updatedGroup)
-                
+
                         setGroupsArray(placeholderGroupsArray);
-                        const currActiveGroupObj=placeholderGroupsArray?.filter(el => el._id === updatedGroup?._id)[0];
+                        const currActiveGroupObj = placeholderGroupsArray?.filter(el => el._id === updatedGroup?._id)[0];
                         setActiveGroupsItem(currActiveGroupObj);
                         setActiveMessage(
-                            currActiveGroupObj?.group_messages.length>0?currActiveGroupObj?.group_messages[0]:null
+                            currActiveGroupObj?.group_messages.length > 0 ? currActiveGroupObj?.group_messages[0] : null
                         )
 
                         Alertbox(
@@ -227,14 +260,14 @@ const MessageGroups = () => {
                             "bottom-right"
                         );
                         setIsEditingMessage(null)
-                        setIsEditing({addNewSub:false,readyToEdit:false})
+                        setIsEditing({ addNewSub: false, readyToEdit: false })
                         setLoading(false);
                     }
                 })
         } catch (error) {
             console.log(error, ':::while renaming edit');
             setIsEditingMessage(null)
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            setIsEditing({ addNewSub: false, readyToEdit: false })
             setLoading(false);
             Alertbox(
                 error,
@@ -255,18 +288,18 @@ const MessageGroups = () => {
         if (groupArrayPlaceholder?.length) {
             setActiveGroupsItem(groupArrayPlaceholder[0])
 
-            if(groupArrayPlaceholder?.group_messages?.length) {
+            if (groupArrayPlaceholder?.group_messages?.length) {
                 setActiveMessage(groupArrayPlaceholder?.group_messages[0])
             } else {
                 setActiveMessage(null)
             }
-        }  else {
+        } else {
             setActiveGroupsItem(null)
             setActiveMessage(null)
         }
         try {
-            const groupDelete = await dispatch(deleteGroup({groupId: deleteId?._id})).unwrap();
-            if(groupDelete) {
+            const groupDelete = await dispatch(deleteGroup({ groupId: deleteId?._id })).unwrap();
+            if (groupDelete) {
                 Alertbox(
                     `Group deleted successfully`,
                     "success",
@@ -341,11 +374,11 @@ const MessageGroups = () => {
 
     const saveMessage = async (data) => {
         setLoading(true);
-        setIsEditing({addNewSub:false,readyToEdit:false})
+        setIsEditing({ addNewSub: false, readyToEdit: false })
 
         try {
             await dispatch(addNewGroupMessageItem({
-                groupId:activeGroupsItem?._id,
+                groupId: activeGroupsItem?._id,
                 message: data
             }))
                 .then((res) => {
@@ -353,7 +386,7 @@ const MessageGroups = () => {
                     cancleFun()
 
                     if (res) {
-                        console.log("saved message resss",res);
+                        console.log("saved message resss", res);
                         let placeholderGroupsArray = [...groupsArray]
                         let matchingGroupObject = placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0];
 
@@ -416,12 +449,12 @@ const MessageGroups = () => {
 
         let placeholderGroupsArray = [...groupsArray];
         placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== isEditingMessage?.groupId ? el : {
-                ...el,
-                group_messages: el?.group_messages.map(em => em?._id !== isEditingMessage.messageId ? em : {
-                    ...em,
-                    message: data
-                })
-            }
+            ...el,
+            group_messages: el?.group_messages.map(em => em?._id !== isEditingMessage.messageId ? em : {
+                ...em,
+                message: data
+            })
+        }
         )
 
         setGroupsArray(placeholderGroupsArray);
@@ -441,11 +474,11 @@ const MessageGroups = () => {
             }))
                 .then((res) => {
                     // console.log('res', res?.payload?.data);
-                    if(res) {
+                    if (res) {
                         setIsEditingMessage(null)
                         // setActiveMessage(null)
                         setActiveTextContent("")
-                        setIsEditing({addNewSub:false,readyToEdit:false})
+                        setIsEditing({ addNewSub: false, readyToEdit: false })
                         Alertbox(
                             `Message edited successfully`,
                             "success",
@@ -458,7 +491,7 @@ const MessageGroups = () => {
         } catch (error) {
             console.log(error, ':::while saving edit');
             setIsEditingMessage(null)
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            setIsEditing({ addNewSub: false, readyToEdit: false })
             setLoading(false);
             Alertbox(
                 error,
@@ -479,7 +512,7 @@ const MessageGroups = () => {
                 groupId: activeMessage?.group_id,
                 messageId: activeMessage?._id,
             });
-            setIsEditing({addNewSub:false,readyToEdit:true});
+            setIsEditing({ addNewSub: false, readyToEdit: true });
         } else {
             Alertbox(`Select some Message to edit`, "error", 3000, "bottom-right");
         }
@@ -490,13 +523,13 @@ const MessageGroups = () => {
      */
     const duplicateThisMessageItem = async () => {
         setLoading(true);
-        const copiedMessage=utils.addCopyStamp(activeMessage?.message);
+        const copiedMessage = utils.addCopyStamp(activeMessage?.message);
         //console.log("current message_____>>",copiedMessage);
 
         try {
             await dispatch(addNewGroupMessageItem({
-                groupId:activeMessage?.group_id,
-                message: copiedMessage?copiedMessage:activeMessage?.message
+                groupId: activeMessage?.group_id,
+                message: copiedMessage ? copiedMessage : activeMessage?.message
             }))
                 .then((res) => {
                     if (res) {
@@ -528,7 +561,7 @@ const MessageGroups = () => {
                             "bottom-right"
                         );
                     }
-                    setIsEditing({addNewSub:false,readyToEdit:false})
+                    setIsEditing({ addNewSub: false, readyToEdit: false })
                     setLoading(false)
                 })
                 .catch((error) => {
@@ -585,12 +618,12 @@ const MessageGroups = () => {
                         1000,
                         "bottom-right"
                     );
-                    setIsEditing({addNewSub:false,readyToEdit:false})
+                    setIsEditing({ addNewSub: false, readyToEdit: false })
                 })
                 .catch((error) => {
                     console.log('error while saving group message', error);
                     setLoading(false)
-                    setIsEditing({addNewSub:false,readyToEdit:false})
+                    setIsEditing({ addNewSub: false, readyToEdit: false })
                 })
         } catch (error) {
             console.log('error deleting group message', error);
@@ -600,24 +633,24 @@ const MessageGroups = () => {
                 1000,
                 "bottom-right"
             );
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            setIsEditing({ addNewSub: false, readyToEdit: false })
         }
     }
 
 
-    const cancleFun=()=>{
-        setIsEditing({addNewSub:false,readyToEdit:false})
+    const cancleFun = () => {
+        setIsEditing({ addNewSub: false, readyToEdit: false })
         setIsEditingMessage(null)
-        if(activeGroupsItem?.group_messages?.length) {
+        if (activeGroupsItem?.group_messages?.length) {
             setActiveMessage(activeGroupsItem?.group_messages[0])
         } else {
             setActiveMessage(null)
         }
     }
 
-    const subNavAddFun=(showEditorstate)=>{
+    const subNavAddFun = (showEditorstate) => {
         //when we are adding sub message then only we have to make "addNewSub":true
-        setIsEditing({readyToEdit:showEditorstate,addNewSub:true})
+        setIsEditing({ readyToEdit: showEditorstate, addNewSub: true })
     }
 
 
@@ -630,7 +663,7 @@ const MessageGroups = () => {
                     headerText={"Delete Alert"}
                     bodyText={
                         groupsArray.filter((el) => el._id !== deleteId?._id)?.length ===
-                        0 ? (
+                            0 ? (
                             <>
                                 Before deleting the current message group, it is necessary to
                                 create another group as a replacement. Once the new group is
@@ -663,25 +696,24 @@ const MessageGroups = () => {
                     additionalClass="delete-group"
                 >
                     {groupsArray.filter((el) => el._id !== deleteId?._id)?.length !==
-                        0 && <h6>Reassign another group</h6>}
-                    <span className="select-wrapers w-100">
-              <select
-                  value={replaceGroupId || ""}
-                  onChange={(e) => setReplaceGroupId(e.target.value)}
-                  className="selector_box"
-              >
-                {groupsArray
-                    .filter((el) => el._id !== deleteId?._id)
-                    .map((item, index) => {
-                        return (
-                            <option value={item._id} key={"fr-select" + index}>
-                                {item?.group_name}
-                            </option>
-                        );
-                    })}
-              </select>
-              <span className="select-arrow"></span>
-            </span>
+                        0 && <><h6>Reassign another group</h6>  <span className="select-wrapers w-100">
+                            <select
+                                value={replaceGroupId || ""}
+                                onChange={(e) => setReplaceGroupId(e.target.value)}
+                                className="selector_box"
+                            >
+                                {groupsArray
+                                    .filter((el) => el._id !== deleteId?._id)
+                                    .map((item, index) => {
+                                        return (
+                                            <option value={item._id} key={"fr-select" + index}>
+                                                {item?.group_name}
+                                            </option>
+                                        );
+                                    })}
+                            </select>
+                            <span className="select-arrow"></span>
+                        </span></>}
                 </Modal>
             )}
             {deleteId && deleteId?.is_used === 0 && (
@@ -707,7 +739,8 @@ const MessageGroups = () => {
             <div className="message-menu message-menu-left message-menu-groups">
                 <MsgLeftMenuNav
                     MsgNavtype="group"
-                    MessageObj={groupsArray}
+                    // MessageObj={groupsArray}
+                    MessageObj={messagesListWithPaginate}
                     setMessageObj={setGroupsArray}
                     HeaderText={"Group(s)"}
                     AddFun={GroupAdd}
@@ -722,6 +755,9 @@ const MessageGroups = () => {
                     setActiveTextContent={setActiveTextContent}
                     setIsEditing={setIsEditing}
                     fetchData={fetchGroupsData}
+                    isPages={isPages}
+                    listLoading={listLoading}
+                    setListLoading={setListLoading}
                     saveMessage={
                         isEditingMessage !== null ? editMessage : saveMessage
                     }
@@ -755,18 +791,17 @@ const MessageGroups = () => {
                             messages-editor 
                             d-flex 
                             d-flex-column 
-                            ${
-                        groupsArray?.length <= 0
+                            ${groupsArray?.length <= 0
                             ? "no-messages-found"
                             : isEditing.readyToEdit
                                 ? "message-edit"
                                 : "active-not-editing"
-                    }
+                        }
                         `}
                 >
                     <div className="message-editor-header d-flex f-align-center f-justify-between">
                         {groupsArray?.length > 0 &&
-                        activeGroupsItem?.group_messages?.length > 0 ? (
+                            activeGroupsItem?.group_messages?.length > 0 ? (
                             // Not Editing
                             isEditing.readyToEdit ? (
                                 // Edit, Duplicate, Delete :
@@ -780,30 +815,30 @@ const MessageGroups = () => {
                                             <div className="edit-text-type">
                                                 Spintax
                                                 <span className="fr-tooltip-side-overflow icon-inline">
-                            <QueryIconGrey />
-                            <div className="legend-tooltip">
-                              <span className="legend-tooltip-icon">
-                                <SpintaxIcon />
-                              </span>
-                              <div className="lengend-text-details">
-                                <span className="legend-header">
-                                  How to use spintax?
-                                </span>
-                                <span className="legend-text">
-                                  To use spintax, start your sentence with an
-                                  open curly brace '&#123;' and then list out
-                                  the alternate variations that you want to use,
-                                  separated by a pipe symbol '|'.
-                                </span>
-                                <span className="legend-footer">
-                                  e.g.{" "}
-                                    <small>
-                                    &#123;option1|option2|option3&#125;
-                                  </small>
-                                </span>
-                              </div>
-                            </div>
-                          </span>
+                                                    <QueryIconGrey />
+                                                    <div className="legend-tooltip">
+                                                        <span className="legend-tooltip-icon">
+                                                            <SpintaxIcon />
+                                                        </span>
+                                                        <div className="lengend-text-details">
+                                                            <span className="legend-header">
+                                                                How to use spintax?
+                                                            </span>
+                                                            <span className="legend-text">
+                                                                To use spintax, start your sentence with an
+                                                                open curly brace '&#123;' and then list out
+                                                                the alternate variations that you want to use,
+                                                                separated by a pipe symbol '|'.
+                                                            </span>
+                                                            <span className="legend-footer">
+                                                                e.g.{" "}
+                                                                <small>
+                                                                    &#123;option1|option2|option3&#125;
+                                                                </small>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </li>
                                         <li>
@@ -813,28 +848,28 @@ const MessageGroups = () => {
                                             <div className="edit-text-type">
                                                 Merge field
                                                 <span className="fr-tooltip-side-overflow icon-inline">
-                            <QueryIconGrey />
-                            <div className="legend-tooltip">
-                              <span className="legend-tooltip-icon">
-                                <MergeFieldsIcon />
-                              </span>
-                              <div className="lengend-text-details">
-                                <span className="legend-header">
-                                  How to use merge fields?
-                                </span>
-                                <span className="legend-text">
-                                  To use merge fields, type '&#123;&#123;' at
-                                  the beginning of the field you want to insert
-                                  from the list, followed by the corresponding
-                                  field name.
-                                </span>
-                                <span className="legend-footer">
-                                  e.g.{" "}
-                                    <small>&#123;&#123;option&#125;&#125;</small>
-                                </span>
-                              </div>
-                            </div>
-                          </span>
+                                                    <QueryIconGrey />
+                                                    <div className="legend-tooltip">
+                                                        <span className="legend-tooltip-icon">
+                                                            <MergeFieldsIcon />
+                                                        </span>
+                                                        <div className="lengend-text-details">
+                                                            <span className="legend-header">
+                                                                How to use merge fields?
+                                                            </span>
+                                                            <span className="legend-text">
+                                                                To use merge fields, type '&#123;&#123;' at
+                                                                the beginning of the field you want to insert
+                                                                from the list, followed by the corresponding
+                                                                field name.
+                                                            </span>
+                                                            <span className="legend-footer">
+                                                                e.g.{" "}
+                                                                <small>&#123;&#123;option&#125;&#125;</small>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </li>
                                         <li>
@@ -844,26 +879,26 @@ const MessageGroups = () => {
                                             <div className="edit-text-type">
                                                 Segment
                                                 <span className="fr-tooltip-side-overflow icon-inline">
-                            <QueryIconGrey />
-                            <div className="legend-tooltip">
-                              <span className="legend-tooltip-icon">
-                                <SegmentIcon />
-                              </span>
-                              <div className="lengend-text-details">
-                                <span className="legend-header">
-                                  How to use segment?
-                                </span>
-                                <span className="legend-text">
-                                  To use a segment, type '[' and choose the
-                                  segment you created from the dropdown list and
-                                  it will be inserted into your textbox.
-                                </span>
-                                <span className="legend-footer">
-                                  e.g. <small>[option]</small>
-                                </span>
-                              </div>
-                            </div>
-                          </span>
+                                                    <QueryIconGrey />
+                                                    <div className="legend-tooltip">
+                                                        <span className="legend-tooltip-icon">
+                                                            <SegmentIcon />
+                                                        </span>
+                                                        <div className="lengend-text-details">
+                                                            <span className="legend-header">
+                                                                How to use segment?
+                                                            </span>
+                                                            <span className="legend-text">
+                                                                To use a segment, type '[' and choose the
+                                                                segment you created from the dropdown list and
+                                                                it will be inserted into your textbox.
+                                                            </span>
+                                                            <span className="legend-footer">
+                                                                e.g. <small>[option]</small>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </li>
                                     </ul>
@@ -881,9 +916,9 @@ const MessageGroups = () => {
                                             disabled={loading}
                                             onClick={editThisMessageItem}
                                         >
-                        <span className="icon-inline">
-                          <EditIcon />
-                        </span>
+                                            <span className="icon-inline">
+                                                <EditIcon />
+                                            </span>
                                             Edit
                                         </button>
                                         <button
@@ -891,9 +926,9 @@ const MessageGroups = () => {
                                             disabled={loading}
                                             onClick={duplicateThisMessageItem}
                                         >
-                        <span className="icon-inline">
-                          <CopyIcon />
-                        </span>
+                                            <span className="icon-inline">
+                                                <CopyIcon />
+                                            </span>
                                             Duplicate
                                         </button>
                                         <button
@@ -901,9 +936,9 @@ const MessageGroups = () => {
                                             disabled={loading}
                                             onClick={deleteThisMessageItem}
                                         >
-                        <span className="icon-inline">
-                          <DeleteIcon />
-                        </span>
+                                            <span className="icon-inline">
+                                                <DeleteIcon />
+                                            </span>
                                             Delete
                                         </button>
                                     </div>
@@ -920,30 +955,30 @@ const MessageGroups = () => {
                                         <div className="edit-text-type">
                                             Spintax
                                             <span className="fr-tooltip-side-overflow icon-inline">
-                          <QueryIconGrey />
-                          <div className="legend-tooltip">
-                            <span className="legend-tooltip-icon">
-                              <SpintaxIcon />
-                            </span>
-                            <div className="lengend-text-details">
-                              <span className="legend-header">
-                                How to use spintax?
-                              </span>
-                              <span className="legend-text">
-                                To use spintax, start your sentence with an open
-                                curly brace '&#123;' and then list out the
-                                alternate variations that you want to use,
-                                separated by a pipe symbol '|'.
-                              </span>
-                              <span className="legend-footer">
-                                e.g.{" "}
-                                  <small>
-                                  &#123;option1|option2|option3&#125;
-                                </small>
-                              </span>
-                            </div>
-                          </div>
-                        </span>
+                                                <QueryIconGrey />
+                                                <div className="legend-tooltip">
+                                                    <span className="legend-tooltip-icon">
+                                                        <SpintaxIcon />
+                                                    </span>
+                                                    <div className="lengend-text-details">
+                                                        <span className="legend-header">
+                                                            How to use spintax?
+                                                        </span>
+                                                        <span className="legend-text">
+                                                            To use spintax, start your sentence with an open
+                                                            curly brace '&#123;' and then list out the
+                                                            alternate variations that you want to use,
+                                                            separated by a pipe symbol '|'.
+                                                        </span>
+                                                        <span className="legend-footer">
+                                                            e.g.{" "}
+                                                            <small>
+                                                                &#123;option1|option2|option3&#125;
+                                                            </small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
                                         </div>
                                     </li>
                                     <li>
@@ -953,28 +988,28 @@ const MessageGroups = () => {
                                         <div className="edit-text-type">
                                             Merge field
                                             <span className="fr-tooltip-side-overflow icon-inline">
-                          <QueryIconGrey />
-                          <div className="legend-tooltip">
-                            <span className="legend-tooltip-icon">
-                              <MergeFieldsIcon />
-                            </span>
-                            <div className="lengend-text-details">
-                              <span className="legend-header">
-                                How to use merge fields?
-                              </span>
-                              <span className="legend-text">
-                                To use merge fields, type '&#123;&#123;' at the
-                                beginning of the field you want to insert from
-                                the list, followed by the corresponding field
-                                name.
-                              </span>
-                              <span className="legend-footer">
-                                e.g.{" "}
-                                  <small>&#123;&#123;option&#125;&#125;</small>
-                              </span>
-                            </div>
-                          </div>
-                        </span>
+                                                <QueryIconGrey />
+                                                <div className="legend-tooltip">
+                                                    <span className="legend-tooltip-icon">
+                                                        <MergeFieldsIcon />
+                                                    </span>
+                                                    <div className="lengend-text-details">
+                                                        <span className="legend-header">
+                                                            How to use merge fields?
+                                                        </span>
+                                                        <span className="legend-text">
+                                                            To use merge fields, type '&#123;&#123;' at the
+                                                            beginning of the field you want to insert from
+                                                            the list, followed by the corresponding field
+                                                            name.
+                                                        </span>
+                                                        <span className="legend-footer">
+                                                            e.g.{" "}
+                                                            <small>&#123;&#123;option&#125;&#125;</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
                                         </div>
                                     </li>
                                     <li>
@@ -984,26 +1019,26 @@ const MessageGroups = () => {
                                         <div className="edit-text-type">
                                             Segment
                                             <span className="fr-tooltip-side-overflow icon-inline">
-                          <QueryIconGrey />
-                          <div className="legend-tooltip">
-                            <span className="legend-tooltip-icon">
-                              <SegmentIcon />
-                            </span>
-                            <div className="lengend-text-details">
-                              <span className="legend-header">
-                                How to use segment?
-                              </span>
-                              <span className="legend-text">
-                                To use a segment, type '[' and choose the
-                                segment you created from the dropdown list and
-                                it will be inserted into your textbox.
-                              </span>
-                              <span className="legend-footer">
-                                e.g. <small>[option]</small>
-                              </span>
-                            </div>
-                          </div>
-                        </span>
+                                                <QueryIconGrey />
+                                                <div className="legend-tooltip">
+                                                    <span className="legend-tooltip-icon">
+                                                        <SegmentIcon />
+                                                    </span>
+                                                    <div className="lengend-text-details">
+                                                        <span className="legend-header">
+                                                            How to use segment?
+                                                        </span>
+                                                        <span className="legend-text">
+                                                            To use a segment, type '[' and choose the
+                                                            segment you created from the dropdown list and
+                                                            it will be inserted into your textbox.
+                                                        </span>
+                                                        <span className="legend-footer">
+                                                            e.g. <small>[option]</small>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </span>
                                         </div>
                                     </li>
                                 </ul>
@@ -1045,9 +1080,9 @@ const MessageGroups = () => {
                         } */}
                     </div>
                     {isEditing.readyToEdit ? (
-                        <> 
-                         {/* the is extra tag for differentciation*/}
-                         <p></p>
+                        <>
+                            {/* the is extra tag for differentciation*/}
+                            <p></p>
                             <TextEditor
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}
@@ -1064,8 +1099,8 @@ const MessageGroups = () => {
                                 dangerouslySetInnerHTML={{
                                     __html: modifyPatterns(
                                         activeMessage &&
-                                        activeMessage?.message ?
-                                            activeMessage?.message?.html:
+                                            activeMessage?.message ?
+                                            activeMessage?.message?.html :
                                             ''
                                     )
                                 }}
@@ -1073,11 +1108,11 @@ const MessageGroups = () => {
                         </>
                     ) : (
                         <>
-                         {/* <div>deff</div> */}
-                           <TextEditor
+                            {/* <div>deff</div> */}
+                            <TextEditor
                                 editorStateValue={editorStateValue}
                                 setEditorStateValue={setEditorStateValue}
-                                isEditing={{...isEditing,addNewSub:true}}
+                                isEditing={{ ...isEditing, addNewSub: true }}
                                 cancleFun={cancleFun}
                                 saveMessage={saveMessage}
                             />

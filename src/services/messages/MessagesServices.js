@@ -128,9 +128,9 @@ export const fetchAllGroups = (pageRef) => {
             .then((res) => {
                 resolve(res.data)
             })
-            .catch((err) => {
-
-                console.log("error fount in fetching", err);
+            .catch((error) => {
+                console.log("error fount in fetching", error);
+                reject(error?.response?.data ? error.response.data : error.message);
             })
     })
 }
