@@ -34,22 +34,40 @@ const MessageSegments = () => {
     const [activeTextContent, setActiveTextContent] = useState("");
     // const [replaceSegmentId, setReplaceSegmentId] = useState(null);
     const [editorStateValue, setEditorStateValue] = useState("");
-    // const [pageRef, setPageRef] = useState(1);
+    const [pageRef, setPageRef] = useState(1);
     const messagesList = useSelector((state) => state.message.segmentsArray);
+    const [isPages, setIsPages] = useState(true);
+    const [listLoading, setListLoading] = useState(false);
+
+    // console.log("Message List - ", messagesList);
 
 
     // The Segments Data is from redux store came in messagesList and on component level is segmentsArray
     useEffect(() => {
-        setLoading(true)
-        if (messagesList.length > 0) {
-            setLoading(false)
-            setIsEditing({ addNewSub: false, readyToEdit: false });
-        }
+        // setLoading(true)
+        // if (messagesList.length > 0) {
+        //     setLoading(false)
+        //     setIsEditing({ addNewSub: false, readyToEdit: false });
+        // }
         // fetchSegmentsData();
+
+        setLoading(true)
+        try {
+            setSegmentsArray(messagesList)
+            setActiveSegmentsItem(messagesList[0])
+            // console.log('messagesList?.data', messagesList?.data?.group_messages);
+            if (messagesList[0]?.segment_messages) {
+                setActiveMessage(messagesList[0]?.segment_messages[0])
+            }
+        } catch (error) {
+            console.log('error fetching groups:::', error);
+        } finally {
+            setLoading(false)
+        }
     }, [messagesList]);
 
     useEffect(() => {
-        console.log("helooooooo accctiva mesggggg >>>>>>> ", activeMessage);
+        // console.log("helooooooo accctiva mesggggg >>>>>>> ", activeMessage);
         setEditorStateValue(activeMessage?.message?.__raw)
     }, [activeMessage]);
 
@@ -64,9 +82,7 @@ const MessageSegments = () => {
     useEffect(() => {
         setLoading(true);
         try {
-            console.log("Messages List -- ", messagesList);
             setSegmentsArray(messagesList);
-
             setActiveSegmentsItem(messagesList[0]);
 
             if (messagesList[0]?.segment_messages) {
@@ -97,7 +113,7 @@ const MessageSegments = () => {
 
     useEffect(() => {
         console.log('here');
-        if(
+        if (
             !editorStateValue ||
             JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" ||
             (!isEditing.addNewSub && !isEditing.readyToEdit)
@@ -107,9 +123,10 @@ const MessageSegments = () => {
             const handleBeforeUnload = (event) => {
                 // Perform actions before the component unloads
                 event.preventDefault();
-                console.log('here', (!isEditing.addNewSub && !isEditing.readyToEdit), ':::::::',
-                    JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
-                event.returnValue = '';
+                // console.log('here', (!isEditing.addNewSub && !isEditing.readyToEdit), ':::::::',
+                //     JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text);
+                // event.returnValue = '';
+                return (event.returnValue = '');
             };
 
             window.addEventListener('beforeunload', handleBeforeUnload);
@@ -118,7 +135,7 @@ const MessageSegments = () => {
                 window.removeEventListener('beforeunload', handleBeforeUnload);
             };
         }
-    }, [isEditing, editorStateValue]);
+    }, [editorStateValue]);
 
 
     useEffect(() => {
@@ -126,18 +143,27 @@ const MessageSegments = () => {
     }, []);
 
     /**
-     * Fetching the segments all data from API
+     * Fetching the segments all data by paginate
      */
-    const fetchSegmentsData = (page = null) => {
-        setLoading(true)
-        dispatch(fetchSegments(page))
-            .unwrap()
-            .then((res) => {
-                if(res) {
-                    setLoading(false)
-                    setIsEditing({addNewSub:false,readyToEdit:false});
-                }
-            })
+    const fetchSegmentsData = () => {
+        if (isPages) {
+            dispatch(fetchSegments(pageRef))
+                .unwrap()
+                .then((res) => {
+                    if (res) {
+                        setIsEditing({ addNewSub: false, readyToEdit: false });
+                        setSegmentsArray(segmentsArray?.length ? [...segmentsArray, ...res?.data] : res?.data);
+                        setListLoading(false);
+                        setIsPages(true);
+                    }
+                }).catch((error) => {
+                    setListLoading(false);
+                    if (error.message === "Rejected") {
+                        setIsPages(false);
+                    }
+                });
+        }
+        setPageRef((prevPage) => prevPage + 1);
     };
 
     /**
@@ -162,7 +188,7 @@ const MessageSegments = () => {
                         );
                     } else {
 
-                        const resObj={...res.data,segment_messages:res?.data?.segment_messages?.length>0?res.data.segment_messages:[]}
+                        const resObj = { ...res.data, segment_messages: res?.data?.segment_messages?.length > 0 ? res.data.segment_messages : [] }
 
 
                         setSegmentsArray([
@@ -178,11 +204,10 @@ const MessageSegments = () => {
                         );
 
                         setActiveSegmentsItem(res?.data)
-
-                        if (res?.data?.segment_messages?.length) {
-                            setActiveMessage(res?.data?.segment_messages[0])
-                        }
-                        setIsEditing({addNewSub:false,readyToEdit:true});
+                        setIsEditingMessage(null)
+                        setIsEditing({ addNewSub: false, readyToEdit: true })
+                        setActiveTextContent("")
+                        setEditorStateValue("")
                     }
                     setLoading(false);
                 })
@@ -220,9 +245,9 @@ const MessageSegments = () => {
                 segmentName: updatedSegment.segment_name
             })).unwrap()
                 .then((res) => {
-                    if (res){
+                    if (res) {
                         setIsEditingMessage(null);
-                        setIsEditing({addNewSub:false,readyToEdit:false})
+                        setIsEditing({ addNewSub: false, readyToEdit: false })
                         setLoading(false);
                         Alertbox(`${res?.message || 'Group name updated successfully'}`, "success", 1000, "bottom-right");
                     }
@@ -230,7 +255,7 @@ const MessageSegments = () => {
 
         } catch (err) {
             setIsEditingMessage(null);
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            setIsEditing({ addNewSub: false, readyToEdit: false })
             setLoading(false);
             Alertbox(err, "error", 1000, "bottom-right");
         }
@@ -305,7 +330,7 @@ const MessageSegments = () => {
                     setIsEditingMessage(null);
                     // setActiveMessage(null);
                     // setActiveTextContent("");
-                    setIsEditing({addNewSub:false,readyToEdit:false});
+                    setIsEditing({ addNewSub: false, readyToEdit: false });
                     setLoading(false);
                 })
                 .catch(e => {
@@ -313,7 +338,7 @@ const MessageSegments = () => {
                     Alertbox(e, 'error', 1000, 'bottom-right');
                 });
 
-        } catch(err) {
+        } catch (err) {
             setLoading(false);
             Alertbox(err, "error", 1000, "bottom-right");
         }
@@ -352,7 +377,7 @@ const MessageSegments = () => {
                         setIsEditingMessage(null);
                         setActiveMessage(res?.payload?.data);
                         setActiveTextContent("");
-                        setIsEditing({addNewSub:false,readyToEdit:false});
+                        setIsEditing({ addNewSub: false, readyToEdit: false });
                         setIsEditing(false);
                         setLoading(false);
                         Alertbox(`Message edited successfully`, "success", 1000, "bottom-right");
@@ -361,7 +386,7 @@ const MessageSegments = () => {
 
         } catch (err) {
             setIsEditingMessage(null);
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            setIsEditing({ addNewSub: false, readyToEdit: false })
             setLoading(false);
             Alertbox(err, 'error', 1000, 'bottom-right');
         }
@@ -394,7 +419,7 @@ const MessageSegments = () => {
      * Function to set group message edit item
      */
     const editThisMessageItem = () => {
-        setIsEditing({addNewSub:false,readyToEdit:true});
+        setIsEditing({ addNewSub: false, readyToEdit: true });
         setIsEditingMessage({
             segmentId: activeMessage.segment_id,
             messageId: activeMessage._id
@@ -406,12 +431,12 @@ const MessageSegments = () => {
      */
     const duplicateThisMessageItem = async () => {
         setLoading(true);
-        const copiedMessage=utils.addCopyStamp(activeMessage?.message);
+        const copiedMessage = utils.addCopyStamp(activeMessage?.message);
 
         try {
             await dispatch(addNewSegmentMessageItem({
-                segmentId:activeMessage?.segment_id,
-                message: copiedMessage?copiedMessage:activeMessage?.message
+                segmentId: activeMessage?.segment_id,
+                message: copiedMessage ? copiedMessage : activeMessage?.message
             }))
                 .then((res) => {
                     if (res) {
@@ -429,18 +454,18 @@ const MessageSegments = () => {
                         setActiveMessage(segmentsArrayPlaceholder?.filter(element => element._id === res?.payload?.data?.segment_id)[0]?.segment_messages?.filter(element => element._id === res?.payload?.data?._id)[0]);
                         Alertbox(`Message duplicated successfully`, "success", 1000, "bottom-right");
                     }
-                    setIsEditing({addNewSub:false,readyToEdit:false});
+                    setIsEditing({ addNewSub: false, readyToEdit: false });
                     setLoading(false);
                 })
                 .catch((error) => {
                     setLoading(false)
-                    Alertbox(error,"error", 1000, "bottom-right");
+                    Alertbox(error, "error", 1000, "bottom-right");
                 });
 
         } catch (error) {
             setLoading(false)
             Alertbox(
-                error,"error", 1000, "bottom-right"
+                error, "error", 1000, "bottom-right"
             );
         }
     }
@@ -468,23 +493,23 @@ const MessageSegments = () => {
             await dispatch(deleteSegmentItemMessage(activeMessage?._id))
                 .unwrap()
                 .then((res) => {
-                    Alertbox("Message deleted successfully.","success",1000,"bottom-right");
-                    setIsEditing({addNewSub:false,readyToEdit:false})
+                    Alertbox("Message deleted successfully.", "success", 1000, "bottom-right");
+                    setIsEditing({ addNewSub: false, readyToEdit: false })
                 })
                 .catch((error) => {
                     setLoading(false)
-                    setIsEditing({addNewSub:false,readyToEdit:false})
+                    setIsEditing({ addNewSub: false, readyToEdit: false })
                 });
         } catch (error) {
-            Alertbox(error,"error",1000,"bottom-right");
-            setIsEditing({addNewSub:false,readyToEdit:false})
+            Alertbox(error, "error", 1000, "bottom-right");
+            setIsEditing({ addNewSub: false, readyToEdit: false })
         }
     }
 
     const cancleFun = () => {
-        setIsEditing({addNewSub:false,readyToEdit:false})
+        setIsEditing({ addNewSub: false, readyToEdit: false })
         setIsEditingMessage(null)
-        if(activeSegmentsItem?.segment_messages?.length) {
+        if (activeSegmentsItem?.segment_messages?.length) {
             setActiveMessage(activeSegmentsItem?.segment_messages[0])
         } else {
             setActiveMessage(null)
@@ -493,7 +518,7 @@ const MessageSegments = () => {
 
     const subNavAddFun = (showEditorState) => {
         //when we are adding sub message then only we have to make "addNewSub":true
-        setIsEditing({readyToEdit:showEditorState, addNewSub:true});
+        setIsEditing({ readyToEdit: showEditorState, addNewSub: true });
     };
 
 
@@ -511,9 +536,9 @@ const MessageSegments = () => {
                         </>
                     }
                     closeBtnTxt={"Close"}
-                    closeBtnFun={()=>setDeleteId(null)}
+                    closeBtnFun={() => setDeleteId(null)}
                     open={deleteId !== null && deleteId?.is_used !== 0}
-                    setOpen={()=>setDeleteId(null)}
+                    setOpen={() => setDeleteId(null)}
                     additionalClass="delete-group"
                 />
             }
@@ -528,9 +553,9 @@ const MessageSegments = () => {
                         </>
                     }
                     closeBtnTxt={"Close"}
-                    closeBtnFun={()=>setDeleteId(null)}
+                    closeBtnFun={() => setDeleteId(null)}
                     open={deleteId !== null && deleteId?.is_used === 0}
-                    setOpen={()=>setDeleteId(null)}
+                    setOpen={() => setDeleteId(null)}
                     ModalFun={deleteSegmentItem}
                     btnText={"Yes. Delete"}
                     modalWithChild={true}
@@ -559,6 +584,9 @@ const MessageSegments = () => {
                         isEditingMessage !== null ? editMessage : saveMessage
                     }
                     fetchData={fetchSegmentsData}
+                    isPages={isPages}
+                    listLoading={listLoading}
+                    setListLoading={setListLoading}
                 />
             </div>
 
@@ -671,18 +699,18 @@ const MessageSegments = () => {
                                             <div className="edit-text-type">
                                                 Spintax
                                                 <span className="fr-tooltip-side-overflow icon-inline">
-                                                        <QueryIconGrey />
-                                                        <div className="legend-tooltip">
-                                                            <span className="legend-tooltip-icon">
-                                                                <SpintaxIcon />
-                                                            </span>
-                                                            <div className="lengend-text-details">
-                                                                <span className="legend-header">How to use spintax?</span>
-                                                                <span className="legend-text">To use spintax, start your sentence with an open curly brace '&#123;' and then list out the alternate variations that you want to use, separated by a pipe symbol '|'.</span>
-                                                                <span className="legend-footer">e.g.  <small>&#123;option1|option2|option3&#125;</small></span>
-                                                            </div>
+                                                    <QueryIconGrey />
+                                                    <div className="legend-tooltip">
+                                                        <span className="legend-tooltip-icon">
+                                                            <SpintaxIcon />
+                                                        </span>
+                                                        <div className="lengend-text-details">
+                                                            <span className="legend-header">How to use spintax?</span>
+                                                            <span className="legend-text">To use spintax, start your sentence with an open curly brace '&#123;' and then list out the alternate variations that you want to use, separated by a pipe symbol '|'.</span>
+                                                            <span className="legend-footer">e.g.  <small>&#123;option1|option2|option3&#125;</small></span>
                                                         </div>
-                                                    </span>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </li>
                                         <li>
@@ -690,18 +718,18 @@ const MessageSegments = () => {
                                             <div className="edit-text-type">
                                                 Merge field
                                                 <span className="fr-tooltip-side-overflow icon-inline">
-                                                        <QueryIconGrey />
-                                                        <div className="legend-tooltip">
-                                                            <span className="legend-tooltip-icon">
-                                                                <MergeFieldsIcon />
-                                                            </span>
-                                                            <div className="lengend-text-details">
-                                                                <span className="legend-header">How to use merge fields?</span>
-                                                                <span className="legend-text">To use merge fields, type '&#123;&#123;' at the beginning of the field you want to insert from the list, followed by the corresponding field name.</span>
-                                                                <span className="legend-footer">e.g.  <small>&#123;&#123;option&#125;&#125;</small></span>
-                                                            </div>
+                                                    <QueryIconGrey />
+                                                    <div className="legend-tooltip">
+                                                        <span className="legend-tooltip-icon">
+                                                            <MergeFieldsIcon />
+                                                        </span>
+                                                        <div className="lengend-text-details">
+                                                            <span className="legend-header">How to use merge fields?</span>
+                                                            <span className="legend-text">To use merge fields, type '&#123;&#123;' at the beginning of the field you want to insert from the list, followed by the corresponding field name.</span>
+                                                            <span className="legend-footer">e.g.  <small>&#123;&#123;option&#125;&#125;</small></span>
                                                         </div>
-                                                    </span>
+                                                    </div>
+                                                </span>
                                             </div>
                                         </li>
                                     </ul>
@@ -728,8 +756,8 @@ const MessageSegments = () => {
                                         dangerouslySetInnerHTML={{
                                             __html: modifyPatterns(
                                                 activeMessage &&
-                                                activeMessage?.message ?
-                                                    activeMessage?.message?.html:
+                                                    activeMessage?.message ?
+                                                    activeMessage?.message?.html :
                                                     ''
                                             )
                                         }}
@@ -740,10 +768,11 @@ const MessageSegments = () => {
                                     <TextEditor
                                         editorStateValue={editorStateValue}
                                         setEditorStateValue={setEditorStateValue}
-                                        isEditing={{...isEditing,addNewSub:true}}
+                                        isEditing={{ ...isEditing, addNewSub: true }}
                                         cancleFun={cancleFun}
                                         saveMessage={saveMessage}
                                         needSegment={false}
+                                        autoFocus={false}
                                     />
                                 </>
                     }

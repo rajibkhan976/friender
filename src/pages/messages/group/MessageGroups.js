@@ -29,45 +29,24 @@ const MessageGroups = () => {
     const messagesList = useSelector((state) =>
         state.message.groupArray
     );
-    const [messagesListWithPaginate, setMessagesListWithPaginate] = useState([]);
     const [isPages, setIsPages] = useState(true);
     const [listLoading, setListLoading] = useState(false);
 
     /**
-     * Fetching stored message groups from backend
+     * Fetching Groups with Pagination
      */
-    // const fetchGroupsData = (page = null) => {
-    //     console.log('calling fetch::::::GROUPS:::::', page);
-    //     setLoading(true)
-    //     dispatch(fetchGroups(page))
-    //         .unwrap()
-    //         .then((res) => {
-    //             if(res) {
-    //                 setLoading(false);
-    //                 setIsEditing({addNewSub:false,readyToEdit:false});
-    //                 // setPageRef(prevPage => prevPage+1)
-    //                 console.log("Dispatch responsese === ", res);
-    //             }
-    //         })
-    // }
-
     const fetchGroupsData = () => {
-        console.log("Page -- ", pageRef);
         if (isPages) {
             dispatch(fetchGroups(pageRef))
                 .unwrap()
                 .then((res) => {
                     if (res) {
                         setIsEditing({ addNewSub: false, readyToEdit: false });
-                        // setGroupsArray((prev) => [...prev, ...res.data]);
-                        setMessagesListWithPaginate((prev) => [...prev, ...res.data]);
+                        setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
                         setListLoading(false);
                         setIsPages(true);
-                        console.log("Paginate responsese === ", res);
                     }
                 }).catch((error) => {
-                    console.log("Error While Load more data -- ", error);
-
                     setListLoading(false);
                     if (error.message === "Rejected") {
                         setIsPages(false);
@@ -78,11 +57,9 @@ const MessageGroups = () => {
     }
 
     // console.log("Group Data -- ", messagesListWithPaginate);
-    console.log("Redux Message List -- ", messagesList);
+    // console.log("Redux Message List -- ", messagesList);
 
     useEffect(() => {
-        // fetchGroupsData();
-        // For Infinite-Scrolling..
         fetchGroupsData();
     }, []);
 
@@ -739,8 +716,7 @@ const MessageGroups = () => {
             <div className="message-menu message-menu-left message-menu-groups">
                 <MsgLeftMenuNav
                     MsgNavtype="group"
-                    // MessageObj={groupsArray}
-                    MessageObj={messagesListWithPaginate}
+                    MessageObj={groupsArray}
                     setMessageObj={setGroupsArray}
                     HeaderText={"Group(s)"}
                     AddFun={GroupAdd}
@@ -768,7 +744,6 @@ const MessageGroups = () => {
                     <MsgLeftMenuNav
                         MsgNavtype="sub-group"
                         MessageObj={activeGroupsItem?.group_messages}
-                        //MessageObj={[]}
                         setMessageObj={setActiveGroupsItem}
                         HeaderText={"Message(s)"}
                         AddFun={subNavAddFun}
@@ -1115,6 +1090,7 @@ const MessageGroups = () => {
                                 isEditing={{ ...isEditing, addNewSub: true }}
                                 cancleFun={cancleFun}
                                 saveMessage={saveMessage}
+                                autoFocus={false}
                             />
                         </>
                     )}

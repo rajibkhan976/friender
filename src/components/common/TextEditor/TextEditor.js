@@ -119,7 +119,8 @@ export default function TextEditor({
   setModalOpen = null,
   modalType = "",
   isExtanded = false,
-  setTextContent=null
+  setTextContent = null,
+  autoFocus = true,
 }) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
@@ -187,7 +188,7 @@ export default function TextEditor({
             {needSegment && <SegmentPlugin />}
             <MergeFieldPlugin />
             <OnChangePlugin onChange={onChange} />
-            <AutoFocusPlugin />
+            {autoFocus && <AutoFocusPlugin />}
             {/* <CodeHighlightPlugin /> */}
             <ListPlugin />
             <LinkPlugin />

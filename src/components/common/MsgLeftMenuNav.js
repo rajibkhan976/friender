@@ -62,10 +62,10 @@ function MsgLeftMenuNav({
   setActiveTextContent,
   saveMessage,
   setIsEditing,
-  fetchData,
-  isPages,
-  listLoading,
-  setListLoading,
+  fetchData = null,
+  isPages = null,
+  listLoading = null,
+  setListLoading = null,
 }) {
   /**@param  MsgNavtype="dmf"*/
   /**@param  MessageObj={}*/
@@ -83,58 +83,7 @@ function MsgLeftMenuNav({
   const [errorCreation, setErrorCreation] = useState(false)
   const [newCreateName, setNewCreateName] = useState('')
   const isLoadingMessage = useSelector((state) => state.message.isLoading);
-  // For Infinite-Scrolling..
-  // const [messagesList, setMessagesList] = useState(() => MessageObj.length ? MessageObj : []);
-  const [initialMessageObj, setInitialMessageObj] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  // const [isPages, setIsPages] = useState(true);
 
-  // For Infinite-Scrolling..
-  // useEffect(() => {
-  //   if (initialMessageObj < MessageObj && isPages) {
-  //     setInitialMessageObj(MessageObj);
-  //   }
-  // }, [MessageObj]);
-
-
-  // For Infinite-Scrolling..
-  // const loadMore = () => {
-  //   console.log("Page -- ", page);
-  //   if (isPages) {
-  //     dispatch(fetchGroups(page))
-  //       .unwrap()
-  //       .then((res) => {
-  //         if (res) {
-  //           setIsEditing({ addNewSub: false, readyToEdit: false });
-  //           // setPageRef(prevPage => prevPage+1)
-  //           setInitialMessageObj((prev) => [...prev, ...res.data]);
-  //           setLoading(false);
-  //           setIsPages(true);
-  //           console.log("Paginate responsese === ", res);
-  //         }
-  //       }).catch((error) => {
-  //         console.log("Error While Load more data -- ", error);
-
-  //         setLoading(false);
-  //         if (error.message === "Rejected") {
-  //           setIsPages(false);
-  //         }
-  //       });
-  //   }
-
-  //   setPage((prevPage) => prevPage + 1);
-
-  //   if (page < 0) {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // console.log("INITIAL MESSAGE GROUPS DATA -- ", initialMessageObj);
-  console.log("MSG LEFT MENU NAv LIST -- ", MessageObj);
-
-
-  // messageObj is the main property of getting list of data here
   /**
    * Detecting Scrolling of user and loads Data
    */
@@ -146,13 +95,13 @@ function MsgLeftMenuNav({
       const clientHeight = container.clientHeight;
       const actualScrollHeight = Math.ceil(scrollHeight - scrollTop);
 
-      console.log("CALLED THE SCROLL EFFECT");
-      console.log("Scroll TOp -- ", scrollTop);
-      console.log("scrollHeight -- ", scrollHeight);
-      console.log("Client height -- ", clientHeight);
+      // console.log("CALLED THE SCROLL EFFECT");
+      // console.log("Scroll TOp -- ", scrollTop);
+      // console.log("scrollHeight -- ", scrollHeight);
+      // console.log("Client height -- ", clientHeight);
 
-      console.log("ScrollHeight - ScrollTop --==-- ", scrollHeight - scrollTop);
-      console.log("Scroll should be -- ", actualScrollHeight === clientHeight);
+      // console.log("ScrollHeight - ScrollTop --==-- ", scrollHeight - scrollTop);
+      // console.log("Scroll should be -- ", actualScrollHeight === clientHeight);
 
       // Adjust the threshold as needed
       if (actualScrollHeight === clientHeight) {
@@ -162,8 +111,10 @@ function MsgLeftMenuNav({
         // loadMore();
 
         // Now that is on parent component..
-        setListLoading(true);
-        fetchData();
+        if (listLoading !== null) {
+          setListLoading(true);
+          fetchData();
+        }
       }
     }
   }
@@ -650,7 +601,7 @@ function MsgLeftMenuNav({
 
                 {listLoading && isPages && (
                   <li className="active-sub-message">
-                    <h3>Loading..</h3>
+                    <h4 style={{textAlign: 'center'}}>Loading...</h4>
                   </li>
                 )}
               </ul>
