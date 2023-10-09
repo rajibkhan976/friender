@@ -1,6 +1,6 @@
 const mergeFieldsDataKeys = {
   "Friend Name": "friendName",
-  "Friend Short Name": "friendShortName",
+  "Friend First Name": "friendShortName",
   "Friend Gender": "friendGender",
   "Country": "country",
   "Tier": "tier",
@@ -115,9 +115,9 @@ export const tools = {
   //html genaration end
 
  /**
-  * this function generating massenger specific text use it only if needed very precise manner 
-  * @param {*} editorState 
-  * @returns 
+  * this function generating massenger specific text use it only if needed very precise manner
+  * @param {*} editorState
+  * @returns
   */
   $generateMessengerText(editorState) {
     function convertMessengerText(format) {

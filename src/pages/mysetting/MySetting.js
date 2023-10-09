@@ -414,7 +414,7 @@ const MySetting = () => {
     }
 
     dispatch(getMySettings({ fbUserId: `${current_fb_id}` })).unwrap().then((res) => {
-      syncSettings(res.data[0]);
+       syncSettings(res.data[0]);
       //console.log("setting res", res);
       setSettingFetched(true);
       // setLoading(false);
@@ -725,7 +725,7 @@ const MySetting = () => {
     // if (withSaveButton) {
     if (sndMsgAcptsFrndReqToggle) {
       if (usingSelectOptions) {
-        console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
+        // console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
         payload.send_message_when_someone_accept_new_friend_request_settings = {
           message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
           quick_message: null,
@@ -963,8 +963,11 @@ const MySetting = () => {
       const { message_group_id, quick_message } = data?.send_message_when_someone_accept_new_friend_request_settings[0];
 
       if (message_group_id !== "" && message_group_id !== null) {
+        console.log("DATA MESSAGE GROUP ID -- ", message_group_id);
+
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
           const data = res?.data;
+          console.log("See the Data -- ", res);
           if (data.length) {
             setSndMsgAcptsFrndReqGroupSelect(data[0]);
             localStorage.setItem("fr_using_select_accept", true);
@@ -1001,6 +1004,8 @@ const MySetting = () => {
     // --- [ END OF SYNC FUNCTION ] ---
   };
 
+
+  console.log("ROOOT DATA --- ", sndMsgAcptsFrndReqGroupSelect);
 
   //if you want to use the common debounce function jus use it here I have used wth useCallback
 
@@ -1876,6 +1881,8 @@ const MySetting = () => {
                 </figure>
               </div>
             </div>
+
+            {console.log("SELECTED GROUP ON PARENT COMPONENT HERE -- ", sndMsgAcptsFrndReqGroupSelect)}
 
             {sndMsgAcptsFrndReqToggle && (
               <div className="setting-child others">

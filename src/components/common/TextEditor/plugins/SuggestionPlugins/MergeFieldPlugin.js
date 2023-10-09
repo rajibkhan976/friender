@@ -55,7 +55,7 @@ const LENGTH_LIMIT = 75
 
 const AtSignMentionsRegex = new RegExp(
   "(^|\\s|\\()(" +
-  TRIGGERS + 
+  TRIGGERS +
   "((?:" +
   VALID_CHARS +
   VALID_JOINS +
@@ -87,7 +87,7 @@ const mentionsCache = new Map()
 
 const mergeFieldsDataLabels = [
   "Friend Name",
-  "Friend Short Name",
+  "Friend First Name",
   "Friend Gender",
   "Country",
   "Tier",
@@ -324,4 +324,3 @@ export default function MergeFieldPlugin() {
 }
 
 
- 

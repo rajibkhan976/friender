@@ -255,7 +255,7 @@ const MessageGroups = () => {
         }
     }
 
-    const deleteGroupItem = async () => {
+    const deleteGroupItem = async (withReplaceId = true) => {
         setLoading(true);
         let groupArrayPlaceholder = [...groupsArray];
         groupArrayPlaceholder = groupArrayPlaceholder?.filter(el => el._id !== deleteId?._id);
@@ -274,8 +274,26 @@ const MessageGroups = () => {
             setActiveGroupsItem(null)
             setActiveMessage(null)
         }
+
         try {
-            const groupDelete = await dispatch(deleteGroup({ groupId: deleteId?._id })).unwrap();
+            let deletePayload = {
+                groupId: deleteId?._id
+            }
+
+            if (replaceGroupId && withReplaceId) {
+                deletePayload.replaceGroupId = replaceGroupId;
+            }
+
+            // let deletePayload = {
+            //     groupId: deleteId?._id
+            // }
+            //
+            // if (replaceGroupId && withReplaceId) {
+            //     deletePayload.replaceGroupId = deleteId?._id;
+            //     deletePayload.groupId = replaceGroupId;
+            // }
+
+            const groupDelete = await dispatch(deleteGroup(deletePayload)).unwrap();
             if (groupDelete) {
                 Alertbox(
                     `Group deleted successfully`,
@@ -708,7 +726,7 @@ const MessageGroups = () => {
                     closeBtnFun={() => setDeleteId(null)}
                     open={deleteId !== null && deleteId?.is_used === 0}
                     setOpen={() => setDeleteId(null)}
-                    ModalFun={deleteGroupItem}
+                    ModalFun={() => deleteGroupItem(false)}
                     btnText={"Yes. Delete"}
                     modalWithChild={true}
                 />

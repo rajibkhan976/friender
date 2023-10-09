@@ -231,14 +231,6 @@ const MessageSegments = () => {
     const SegmentNameEdit = async (updatedSegment) => {
         setLoading(true);
 
-        let segmentsArrayPlaceholder = [...segmentsArray];
-        segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(element => element._id !== updatedSegment?._id ? element : updatedSegment);
-        setSegmentsArray(segmentsArrayPlaceholder);
-
-        const currActiveSegmentObj = segmentsArrayPlaceholder?.filter(el => el._id === updatedSegment?._id)[0];
-        setActiveSegmentsItem(currActiveSegmentObj);
-        setActiveMessage(currActiveSegmentObj?.segment_messages.length > 0 ? currActiveSegmentObj?.segment_messages[0] : null);
-
         try {
             await dispatch(addNewSegment({
                 segmentId: updatedSegment._id,
@@ -249,6 +241,15 @@ const MessageSegments = () => {
                         setIsEditingMessage(null);
                         setIsEditing({ addNewSub: false, readyToEdit: false })
                         setLoading(false);
+
+                        let segmentsArrayPlaceholder = [...segmentsArray];
+                        segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(element => element._id !== updatedSegment?._id ? element : updatedSegment);
+                        setSegmentsArray(segmentsArrayPlaceholder);
+
+                        const currActiveSegmentObj = segmentsArrayPlaceholder?.filter(el => el._id === updatedSegment?._id)[0];
+                        setActiveSegmentsItem(currActiveSegmentObj);
+                        setActiveMessage(currActiveSegmentObj?.segment_messages.length > 0 ? currActiveSegmentObj?.segment_messages[0] : null);
+
                         Alertbox(`${res?.message || 'Group name updated successfully'}`, "success", 1000, "bottom-right");
                     }
                 });

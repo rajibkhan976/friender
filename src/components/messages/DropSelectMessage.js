@@ -96,6 +96,8 @@ const DropSelectMessage = ({
         handleIsOpenSelectOption(false);
     };
 
+    // console.log("Check the Select Option group IDDD -- ", selectedOptionId);
+
     /**
      * ===== Select From Option =====
      */
@@ -103,8 +105,10 @@ const DropSelectMessage = ({
         const { group_name } = optionObj;
 
         // store the old group ID before updating it.
-        localStorage.getItem("old_message_group_id");
-        localStorage.setItem("old_message_group_id", selectedOptionId);
+        // localStorage.getItem("old_message_group_id");
+        if (selectedOptionId) {
+            localStorage.setItem("old_message_group_id", selectedOptionId);
+        }
 
         setSelectOption(group_name);
         setGroupSelect(optionObj);
@@ -124,7 +128,6 @@ const DropSelectMessage = ({
     // Rendering select options..
     const renderSelectOption = () => {
         if (type === "ACCEPT_REQ") {
-            console.log("This is SELECT OPTION -- CURRENTLY SAVEDDD --- ", selectOption);
             const isSelectUsing = localStorage.getItem("fr_using_select_accept");
 
             if (quickMessage && !isSelectUsing) {

@@ -209,8 +209,12 @@ export default function TextEditor({
         />
         {/* {// console.log('isEditingisEditingisEditingisEditing', isEditing)} */}
         <Button
+          // disable={
+          //   editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
+          // }
           disable={
-            editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
+              editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0 ||
+              (isEditing.addNewSub && !isEditing.readyToEdit)
           }
           extraClass="editor-cancel editor-btn"
           btnText="Save"
