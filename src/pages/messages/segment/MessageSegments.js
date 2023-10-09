@@ -510,6 +510,8 @@ const MessageSegments = () => {
     const cancleFun = () => {
         setIsEditing({ addNewSub: false, readyToEdit: false })
         setIsEditingMessage(null)
+        setEditorStateValue("")
+        setActiveTextContent("")
         if (activeSegmentsItem?.segment_messages?.length) {
             setActiveMessage(activeSegmentsItem?.segment_messages[0])
         } else {
@@ -741,6 +743,7 @@ const MessageSegments = () => {
                     {
                         isEditing.readyToEdit ?
                             <>
+                                <p></p>
                                 <TextEditor
                                     editorStateValue={editorStateValue}
                                     setEditorStateValue={setEditorStateValue}

@@ -80,12 +80,16 @@ const MessageGroups = () => {
     }, [messagesList])
 
     useEffect(() => {
-        //  console.log('active group   ',activeGroupsItem);
+        // console.log('active group   ',activeGroupsItem);
         if (activeGroupsItem?._id !== activeMessage?.group_id) {
             // console.log('not same');
             if (activeGroupsItem?.group_messages?.length) {
                 // console.log('groupsArray[0]?.group_messages[0]', groupsArray[0]?.group_messages[0]);
                 setActiveMessage(activeGroupsItem?.group_messages[0])
+                setEditorStateValue(activeGroupsItem?.group_messages[0]?.__raw)
+            } else {
+                setActiveMessage(null)
+                setEditorStateValue("")
             }
         } else {
             // console.log('same');
@@ -371,6 +375,8 @@ const MessageGroups = () => {
         setLoading(true);
         setIsEditing({ addNewSub: false, readyToEdit: false })
 
+        console.log('data', data);
+
         try {
             await dispatch(addNewGroupMessageItem({
                 groupId: activeGroupsItem?._id,
@@ -636,6 +642,8 @@ const MessageGroups = () => {
     const cancleFun = () => {
         setIsEditing({ addNewSub: false, readyToEdit: false })
         setIsEditingMessage(null)
+        setEditorStateValue("")
+        setActiveTextContent("")
         if (activeGroupsItem?.group_messages?.length) {
             setActiveMessage(activeGroupsItem?.group_messages[0])
         } else {
