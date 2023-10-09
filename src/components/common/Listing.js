@@ -46,6 +46,7 @@ const Listing = (props) => {
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [showPaginate, setShowPaginate] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [currentPage,setCurrentPage]=useState(0);
   // const isFirstColumn = (params) => {
   //   var displayedColumns = params.columnApi.getAllDisplayedColumns();
   //   var thisIsFirstColumn = displayedColumns[0] === params.column;
@@ -405,6 +406,7 @@ const Listing = (props) => {
 
   const navigateToNumPage = useCallback((e) => {
     gridRef.current.api.paginationGoToPage(Number(e.selected));
+    setCurrentPage(Number(e.selected));
   }, []);
 
   const onGridSizeChanged = useCallback((params) => {
@@ -651,6 +653,7 @@ const Listing = (props) => {
             <footer className="table-footer d-flex f-align-center">
               <Suspense fallback={""}>
                 <Pagination
+                currentPage={currentPage}
                     pageNum={maxSelect}
                     itemsPerPage={itemsPerPage}
                     onNumClick={navigateToNumPage}

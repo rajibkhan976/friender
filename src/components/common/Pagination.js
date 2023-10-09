@@ -3,15 +3,24 @@ import ReactPaginate from "react-paginate";
 
 import "../../assets/scss/component/common/_pagination.scss"
 
-const Pagination = ({ pageNum, itemsPerPage, onNumClick }) => {
-  const [currentItems, setCurrentItems] = useState(null);
+const Pagination = ({ currentPage,pageNum, itemsPerPage, onNumClick }) => {
+  //const [currentItems, setCurrentItems] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
+  const [initPage,setInitPage]=useState(currentPage);
+
+  useEffect(()=>{
+    const totalPages=Math.ceil(pageNum/itemsPerPage);
+          if(totalPages-1<initPage){
+            setInitPage(totalPages-1);
+          }   
+  },[itemsPerPage])
+  useEffect(()=>{setInitPage(currentPage)},[currentPage])
 
   useEffect(() => {
-    const endOffset = itemOffset + itemsPerPage;
+    //const endOffset = itemOffset + itemsPerPage;
     // console.log("This the pagination com[p]",pageNum)
-    setCurrentItems([...Array(Number(pageNum)).keys()].slice(itemOffset, endOffset));
+   // setCurrentItems([...Array(Number(pageNum)).keys()].slice(itemOffset, endOffset));
     setPageCount(Math.ceil([...Array(Number(pageNum)).keys()].length / itemsPerPage));
   }, [itemOffset, itemsPerPage, pageNum]);
 
@@ -25,6 +34,7 @@ const Pagination = ({ pageNum, itemsPerPage, onNumClick }) => {
     <>
       <ReactPaginate
         // nextLabel="next >"
+        forcePage={initPage}
         onPageChange={handlePageClick}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}

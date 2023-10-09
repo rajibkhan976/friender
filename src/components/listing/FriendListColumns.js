@@ -296,10 +296,10 @@ export const CreationRenderer = memo((params) => {
 });
 
 export const AgeRenderer = memo((params) => {
-  let statusSync = params.data.created_at.toLowerCase();
+  let statusSync = params?.data?.created_at?.toLowerCase();
   // inputTimeString.replace(" ", "T") + ".000Z";
   //console.log("utc time>>",statusSync);
-  const localTime=utils.convertUTCtoLocal(statusSync.replace(" ", "T") + ".000Z",true);
+  const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
   //console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
