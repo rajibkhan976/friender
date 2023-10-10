@@ -1477,7 +1477,7 @@ const MySetting = () => {
             </p>
 
             {/* <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}> */}
-            <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`}>
+            <div className={`setting ${dayBackAnlyFrndEng ? "setting-actived" : ""}`}>
               <Switch
                 checked={dayBackAnlyFrndEng}
                 // handleOnBlur={e => setDayBackAnlyFrndEng(!dayBackAnlyFrndEng)}
@@ -1492,11 +1492,11 @@ const MySetting = () => {
 
               <div className="setting-control">
                 <figure className="icon-arrow-down">
-                  {!dayBackAnlyFrndEngOpen ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                  {!dayBackAnlyFrndEng ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
             </div>
-            {dayBackAnlyFrndEngOpen && (
+            {dayBackAnlyFrndEng && (
               <div className="setting-child others">
                 Select the time: From &nbsp;
                 <TurnOnSettingsWarn enabledFeature={dayBackAnlyFrndEng}>

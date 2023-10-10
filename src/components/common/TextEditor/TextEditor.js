@@ -150,7 +150,10 @@ export default function TextEditor({
       text: tools.$convertPureString(tempMsgObj).join(" "),
       messengerText: tools.$generateMessengerText(tempMsgObj)
     }
-    saveMessage(msgObj)
+    
+    if (msgObj?.text.trim() !== ''){
+      saveMessage(msgObj)
+    }
 
     if (oldGroupId) {
       localStorage.setItem("old_message_group_id", oldGroupId);
