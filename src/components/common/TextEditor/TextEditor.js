@@ -121,6 +121,7 @@ export default function TextEditor({
   isExtanded = false,
   setTextContent = null,
   autoFocus = true,
+  oldGroupId = null,
 }) {
   const [editorState, setEditorState] = useState();
   function onChange(editorState) {
@@ -150,6 +151,10 @@ export default function TextEditor({
       messengerText: tools.$generateMessengerText(tempMsgObj)
     }
     saveMessage(msgObj)
+
+    if (oldGroupId) {
+      localStorage.setItem("old_message_group_id", oldGroupId);
+    }
 
     if (useForModal) {
       if (modalType === "ACCEPT_REQ") {

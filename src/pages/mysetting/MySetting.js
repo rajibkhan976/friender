@@ -963,11 +963,11 @@ const MySetting = () => {
       const { message_group_id, quick_message } = data?.send_message_when_someone_accept_new_friend_request_settings[0];
 
       if (message_group_id !== "" && message_group_id !== null) {
-        console.log("DATA MESSAGE GROUP ID -- ", message_group_id);
+        // console.log("DATA MESSAGE GROUP ID -- ", message_group_id);
 
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
           const data = res?.data;
-          console.log("See the Data -- ", res);
+          // console.log("See the Data -- ", res);
           if (data.length) {
             setSndMsgAcptsFrndReqGroupSelect(data[0]);
             localStorage.setItem("fr_using_select_accept", true);
@@ -1003,9 +1003,6 @@ const MySetting = () => {
 
     // --- [ END OF SYNC FUNCTION ] ---
   };
-
-
-  console.log("ROOOT DATA --- ", sndMsgAcptsFrndReqGroupSelect);
 
   //if you want to use the common debounce function jus use it here I have used wth useCallback
 
@@ -1296,7 +1293,7 @@ const MySetting = () => {
 
   const checkDeletePFRProgress = async () => {
     let checkingIntv = setInterval(() => {
-      console.log("checking deleting PFR status");
+      // console.log("checking deleting PFR status");
       const isDeleting = helper.getCookie("deleteAllPendingFR");
       if (isDeleting) {
         switch (isDeleting) {
@@ -1881,8 +1878,6 @@ const MySetting = () => {
                 </figure>
               </div>
             </div>
-
-            {console.log("SELECTED GROUP ON PARENT COMPONENT HERE -- ", sndMsgAcptsFrndReqGroupSelect)}
 
             {sndMsgAcptsFrndReqToggle && (
               <div className="setting-child others">

@@ -171,6 +171,7 @@ const DropSelectMessage = ({
                 setMessage={setQuickMessage}
                 editorStateValue={editorStateValue}
                 setEditorStateValue={setEditorStateValue}
+                oldGroupId={selectedOptionId}
             />
 
             <div className='custom-select-option-wrapper'>

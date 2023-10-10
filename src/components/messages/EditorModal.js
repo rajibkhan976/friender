@@ -11,7 +11,7 @@ import { ModalExpandIcon } from '../../assets/icons/Icons';
  * @returns {Element}
  * @constructor
  */
-const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, setSendMessage }) => {
+const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, setSendMessage, oldGroupId }) => {
     const [isExtanded, setExtanded] = useState(false);
     const [editorStateValue] = useState(() => {
         if (type === "ACCEPT_REQ") {
@@ -99,6 +99,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
                             setSendMessage={setSendMessage}
                             modalType={type}
                             isExtanded={isExtanded}
+                            oldGroupId={oldGroupId}
                         />
                     </div>
                 </div>
