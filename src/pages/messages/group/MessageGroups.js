@@ -514,6 +514,7 @@ const MessageGroups = () => {
                 messageId: activeMessage?._id,
             });
             setIsEditing({ addNewSub: false, readyToEdit: true });
+            setEditorStateValue(activeMessage?.message?.__raw)
         } else {
             Alertbox(`Select some Message to edit`, "error", 3000, "bottom-right");
         }
@@ -644,10 +645,13 @@ const MessageGroups = () => {
         setIsEditingMessage(null)
         setEditorStateValue("")
         setActiveTextContent("")
-        if (activeGroupsItem?.group_messages?.length) {
-            setActiveMessage(activeGroupsItem?.group_messages[0])
-        } else {
-            setActiveMessage(null)
+        
+        if (!activeMessage || activeMessage == null) {
+            if (activeGroupsItem?.group_messages?.length) {
+                setActiveMessage(activeGroupsItem?.group_messages[0])
+            } else {
+                setActiveMessage(null)
+            }
         }
     }
 

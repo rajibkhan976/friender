@@ -54,6 +54,7 @@
     text-align: left;
     border-radius: 5px;
    border:1px  solid var(--dark-primary-blue, rgb(80, 80, 80));
+   user-select: all;
 
   }
   /* .text-editor-container {

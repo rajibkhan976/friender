@@ -425,6 +425,7 @@ const MessageSegments = () => {
             segmentId: activeMessage.segment_id,
             messageId: activeMessage._id
         });
+        setEditorStateValue(activeMessage?.message?.__raw)
     }
 
     /**
@@ -512,10 +513,13 @@ const MessageSegments = () => {
         setIsEditingMessage(null)
         setEditorStateValue("")
         setActiveTextContent("")
-        if (activeSegmentsItem?.segment_messages?.length) {
-            setActiveMessage(activeSegmentsItem?.segment_messages[0])
-        } else {
-            setActiveMessage(null)
+        
+        if (!activeMessage || activeMessage == null) {
+            if (activeSegmentsItem?.segment_messages?.length) {
+                setActiveMessage(activeSegmentsItem?.segment_messages[0])
+            } else {
+                setActiveMessage(null)
+            }
         }
     }
 
