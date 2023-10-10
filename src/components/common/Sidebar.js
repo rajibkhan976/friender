@@ -176,7 +176,7 @@ const Sidebar = (props) => {
   };
 
   const setShowProfileFn = (e) => {
-    console.log('clicked', facebookAuthInfoStatus);
+    // console.log('clicked', facebookAuthInfoStatus);
     // setShowProfile((current) => profiles?.length > 0 ? !current : false)
     setIsComponentVisible((current) => !current);
     setSubMenuFriends(false);
@@ -670,9 +670,9 @@ const Sidebar = (props) => {
               <li
                 className="nav-menu feedback-nav"
               >
-                {
+                {/* {
                   console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
-                }
+                } */}
                 <span
                   className="profile-photo"
                   onClick={setShowProfileFn}

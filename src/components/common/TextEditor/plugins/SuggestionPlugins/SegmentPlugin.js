@@ -122,21 +122,21 @@ function useMentionLookupService(mentionString) {
   }, [messagesList]);
 
   useEffect(() => {
-    const cachedResults = mentionsCache.get(mentionString);
+    // const cachedResults = mentionsCache.get(mentionString);
 
-    if (mentionString == null) {
-      setResults([]);
-      return;
-    }
+    // if (mentionString == null) {
+    //   setResults([]);
+    //   return;
+    // }
 
-    if (cachedResults === null) {
-      return;
-    } else if (cachedResults !== undefined) {
-      setResults(cachedResults);
-      return;
-    }
+    // if (cachedResults === null) {
+    //   return;
+    // } else if (cachedResults !== undefined) {
+    //   setResults(cachedResults);
+    //   return;
+    // }
 
-    mentionsCache.set(mentionString, null);
+    // mentionsCache.set(mentionString, null);
     dummyLookupService.search(dummyMentionsData,mentionString, (newResults) => {
       mentionsCache.set(mentionString, newResults);
       setResults(newResults);
@@ -194,10 +194,10 @@ function getPossibleQueryMatch(text) {
 }
 
 class MentionTypeaheadOption extends MenuOption {
-  constructor(name, picture) {
+  constructor(name) {
     super(name);
     this.name = name;
-    this.picture = picture;
+    // this.picture = picture;
   }
 }
 
@@ -235,22 +235,18 @@ export default function SegmentPlugin() {
 
   const [queryString, setQueryString] = useState(null);
 
-  const results = useMentionLookupService(queryString);
+  const results = useMentionLookupService(queryString ? queryString : '');
 
   const checkForSlashTriggerMatch = useBasicTypeaheadTriggerMatch("/", {
     minLength: 0,
   });
 
-  const options = useMemo(
-      () =>
-          results
+  const options = results
               .map(
                   (result) =>
                       new MentionTypeaheadOption(result, <i className="icon user" />)
               )
-              .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
-      [results]
-  );
+              .slice(0)
 
   const onSelectOption = useCallback(
       (selectedOption, nodeToReplace, closeMenu) => {
@@ -295,7 +291,7 @@ export default function SegmentPlugin() {
               anchorElementRef,
               { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
           ) =>
-              anchorElementRef.current && results.length
+              anchorElementRef.current 
                   ? ReactDOM.createPortal(
                       <div className="typeahead-popover mentions-menu">
 

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
   deleteSegmentMessage,
   addNewSegmentMessage,
@@ -105,7 +105,7 @@ export const addNewSegment = createAsyncThunk(
     "messages/addNewMessageSegment",
     async (payload) => {
       const res = await addOneSegment(payload);
-      console.log('Response of new Segment: ', res);
+      // console.log('Response of new Segment: ', res);
       return res;
     }
 );
@@ -114,7 +114,7 @@ export const deleteSegment = createAsyncThunk(
     "messages/deleteSegment",
     async (payload) => {
       const res = await deleteOneSegment(payload);
-      return res
+      return payload
     }
 )
 
@@ -243,7 +243,21 @@ export const messageSlice = createSlice({
       state.isLoading = true
     },
     [addNewSegment.fulfilled]: (state, action) => {
-      state.segmentsArray = action?.payload?.data ? [action?.payload?.data, ...state.segmentsArray] : [...state.segmentsArray];
+      const placeholderArray = current(state.segmentsArray);
+      let newAdd = true;
+      placeholderArray.forEach((el) => {
+        if (el._id === action.payload.data._id) {
+          newAdd = false
+        }
+      })
+      // state.segmentsArray = action?.payload?.data ? [action?.payload?.data, ...state.segmentsArray] : [...state.segmentsArray];
+      console.log(placeholderArray, action)
+      // state.segmentsArray = action?.payload?.data ? placeholderArray.map(el => el._id === action.payload.data._id ? action.payload.data : [el, ...placeholderArray]) : placeholderArray;
+      if (newAdd) {
+        state.segmentsArray = [action?.payload?.data, ...state.segmentsArray]
+      } else {
+        state.segmentsArray = action?.payload?.data ? placeholderArray.map(el => el._id === action.payload.data._id ? action.payload.data : el) : placeholderArray;
+      }
       state.isLoading = false;
     },
     [addNewSegment.rejected]: (state) => {
@@ -263,6 +277,8 @@ export const messageSlice = createSlice({
       state.isLoading = true;
     },
     [deleteSegment.fulfilled]: (state, action) => {
+      const placeholderArray = current(state.segmentsArray);
+      state.segmentsArray = placeholderArray?.filter(el => el._id !== action.payload.segmentId)
       state.isLoading = false;
     },
     [deleteSegment.rejected]: (state) => {

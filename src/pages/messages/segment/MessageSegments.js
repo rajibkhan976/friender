@@ -101,7 +101,7 @@ const MessageSegments = () => {
                 setActiveMessage(activeSegmentsItem?.segment_messages[0]);
             }
         } else {
-            console.log('updated');
+            // console.log('updated');
         }
     }, [activeSegmentsItem]);
 
@@ -112,7 +112,7 @@ const MessageSegments = () => {
     // }, [deleteId])
 
     useEffect(() => {
-        console.log('here');
+        // console.log('here');
         if (
             !editorStateValue ||
             JSON.parse(editorStateValue)?.root?.children[0]?.children[0]?.text?.trim() === "" ||
@@ -250,7 +250,7 @@ const MessageSegments = () => {
                         setActiveSegmentsItem(currActiveSegmentObj);
                         setActiveMessage(currActiveSegmentObj?.segment_messages.length > 0 ? currActiveSegmentObj?.segment_messages[0] : null);
 
-                        Alertbox(`${res?.message || 'Group name updated successfully'}`, "success", 1000, "bottom-right");
+                        Alertbox(`${res?.message || 'Segment name updated successfully'}`, "success", 1000, "bottom-right");
                     }
                 });
 
@@ -477,24 +477,24 @@ const MessageSegments = () => {
      * Function to delete group message
      */
     const deleteThisMessageItem = async () => {
-        let segmentsArrayPlaceholder = [...segmentsArray];
-        segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(el => el?._id !== activeMessage?.segment_id ? el : {
-            ...el,
-            segment_messages: el?.segment_messages?.filter(em => em?._id !== activeMessage?._id)
-        });
-
-        setActiveSegmentsItem(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]);
-        // setActiveMessage(
-        //     segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages?.length ?
-        //         segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[0] : null
-        // );
-        setActiveMessage(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[activeSegmentsItem?.segment_messages?.indexOf(activeMessage) - 1]);
-        setSegmentsArray(segmentsArrayPlaceholder)
-
         try {
             await dispatch(deleteSegmentItemMessage(activeMessage?._id))
                 .unwrap()
                 .then((res) => {
+                    let segmentsArrayPlaceholder = [...segmentsArray];
+                    segmentsArrayPlaceholder = segmentsArrayPlaceholder?.map(el => el?._id !== activeMessage?.segment_id ? el : {
+                        ...el,
+                        segment_messages: el?.segment_messages?.filter(em => em?._id !== activeMessage?._id)
+                    });
+            
+                    setActiveSegmentsItem(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]);
+                    // setActiveMessage(
+                    //     segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages?.length ?
+                    //         segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[0] : null
+                    // );
+                    setActiveMessage(segmentsArrayPlaceholder?.filter(el => el._id === activeMessage?.segment_id)[0]?.segment_messages[activeSegmentsItem?.segment_messages?.indexOf(activeMessage) - 1]);
+                    setSegmentsArray(segmentsArrayPlaceholder)
+
                     Alertbox("Message deleted successfully.", "success", 1000, "bottom-right");
                     setIsEditing({ addNewSub: false, readyToEdit: false })
                 })
@@ -531,7 +531,7 @@ const MessageSegments = () => {
 
     return (
         <>
-            {console.log("Delete ID on Segment -- ", deleteId)}
+            {/* {console.log("Delete ID on Segment -- ", deleteId)} */}
             {deleteId && deleteId?.is_used !== 0 &&
                 <Modal
                     modalType="DELETE"
@@ -539,7 +539,7 @@ const MessageSegments = () => {
                     headerText={"Delete Alert"}
                     bodyText={
                         <>
-                            The current segment is already in use by certain group(s). To delete this segment, you must first remove it from the group(s) where it is being used.
+                            The current segment is already in use by certain segment(s). To delete this segment, you must first remove it from the segment(s) where it is being used.
                         </>
                     }
                     closeBtnTxt={"Close"}

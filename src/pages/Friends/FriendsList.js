@@ -32,6 +32,7 @@ import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
 import helper from "../../helpers/helper"
+import { utils } from "../../helpers/utils";
 
 
 
@@ -110,6 +111,33 @@ const FriendsList = () => {
         ((nodeA.data.matchedKeyword > nodeB.data.matchedKeyword) ? 1 : -1));
   }
 
+  const ageComparator = (targetDate) => {
+    let statusSync = targetDate?.toLowerCase();
+    const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+    let currentUTC = helper.curretUTCTime();
+    let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
+    let days = diffTime / (24 * 60 * 60 * 1000);
+    let hours = (days % 1) * 24;
+    let minutes = (hours % 1) * 60;
+    let secs = (minutes % 1) * 60;
+    [days, hours, minutes, secs] = [
+      Math.floor(days),
+      Math.floor(hours),
+      Math.floor(minutes),
+      Math.floor(secs),
+    ];
+
+    let age = 0;
+
+    if (days) age = days;
+    else if (hours) age = 1;
+    else if (minutes) age = 1;
+    else age = 1;
+
+    // console.log(filterValue, age);
+    return age
+  }
+
   const friendsListinRef = [
     {
       field: "friendName",
@@ -168,13 +196,42 @@ const FriendsList = () => {
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
-      filter: "agTextColumnFilter",
+      filter: "agNumberColumnFilter",
+      // filterParams: {
+      //   buttons: ["apply", "reset"],
+      //   debounceMs: 200,
+      //   suppressMiniFilter: true,
+      //   closeOnApply: true,
+      //   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      // },
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
         suppressMiniFilter: true,
         closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+        filterOptions: [
+          {
+            displayKey: 'lessThan',
+            displayName: 'Less than',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(cellValue) < filterValue
+            }
+          },
+          {
+            displayKey: 'greaterThan',
+            displayName: 'Greater than',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(cellValue) > filterValue
+            }
+          },
+          {
+            displayKey: 'equals',
+            displayName: 'Equals',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(cellValue) == filterValue
+            }
+          },
+        ],
       },
       comparator: dateComparator,
     },

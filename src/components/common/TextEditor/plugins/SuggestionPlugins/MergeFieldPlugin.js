@@ -283,7 +283,7 @@ export default function MergeFieldPlugin() {
         anchorElementRef,
         { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
       ) =>
-        anchorElementRef.current && results.length
+        anchorElementRef.current
           ? ReactDOM.createPortal(
             <div className="typeahead-popover mentions-menu">
               <div className='suggestion-search'>

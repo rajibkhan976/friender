@@ -410,7 +410,7 @@ function MsgLeftMenuNav({
   }
 
   useEffect(() => {
-    console.log('MessageObj<<<<<<<<<<<<<<<<', MessageObj, 'setActiveObj', activeObj);
+    // console.log('MessageObj<<<<<<<<<<<<<<<<', MessageObj, 'setActiveObj', activeObj);
     if (MsgNavtype === "group" || MsgNavtype === "segment") {
       if (MessageObj?.length <= 0) {
         setIsEditingName(true)

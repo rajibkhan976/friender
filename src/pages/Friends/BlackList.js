@@ -29,6 +29,7 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
 import helper from "../../helpers/helper"
+import { utils } from "../../helpers/utils";
 
 const BlackList = () => {
   //::::Friend List geting data from Redux::::
@@ -80,6 +81,33 @@ const BlackList = () => {
     let valB = new Date(nodeB.data.created_at);
 
     return valB - valA
+  }
+
+  const ageComparator = (targetDate) => {
+    let statusSync = targetDate?.toLowerCase();
+    const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+    let currentUTC = helper.curretUTCTime();
+    let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
+    let days = diffTime / (24 * 60 * 60 * 1000);
+    let hours = (days % 1) * 24;
+    let minutes = (hours % 1) * 60;
+    let secs = (minutes % 1) * 60;
+    [days, hours, minutes, secs] = [
+      Math.floor(days),
+      Math.floor(hours),
+      Math.floor(minutes),
+      Math.floor(secs),
+    ];
+
+    let age = 0;
+
+    if (days) age = days;
+    else if (hours) age = 1;
+    else if (minutes) age = 1;
+    else age = 1;
+
+    // console.log(filterValue, age);
+    return age
   }
 
   const friendsListinRef = [
@@ -184,7 +212,29 @@ const BlackList = () => {
         debounceMs: 200,
         suppressMiniFilter: true,
         closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+        filterOptions: [
+          {
+            displayKey: 'lessThan',
+            displayName: 'Less than',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(filterValue,cellValue) < filterValue
+            }
+          },
+          {
+            displayKey: 'greaterThan',
+            displayName: 'Greater than',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(filterValue,cellValue) > filterValue
+            }
+          },
+          {
+            displayKey: 'equals',
+            displayName: 'Equals',
+            predicate: ([filterValue], cellValue) => {
+              return ageComparator(filterValue,cellValue) == filterValue
+            }
+          },
+        ],
       },
       comparator: dateComparator,
     },
