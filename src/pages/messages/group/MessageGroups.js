@@ -668,6 +668,7 @@ const MessageGroups = () => {
 
     const subNavAddFun = (showEditorstate) => {
         //when we are adding sub message then only we have to make "addNewSub":true
+        console.log('active message', activeMessage);
         setIsEditing({ readyToEdit: showEditorstate, addNewSub: true })
     }
 

@@ -199,14 +199,10 @@ function MsgLeftMenuNav({
     }
 
     if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
-      setActiveObj(null)
-      AddFun(false)
-
       if (textContentInEditor && tools.$convertPureString(JSON.parse(textContentInEditor)).length > 0) {
         const tempMsgObj = JSON.parse(textContentInEditor);
 
         if (tempMsgObj?.root?.children || tempMsgObj?.root?.children[0]?.children?.length > -1) {
-
           const msgObj = {
             __raw: textContentInEditor,
             html: tools.$generateHtmlFromNodeState(tempMsgObj),
@@ -217,6 +213,8 @@ function MsgLeftMenuNav({
           if (msgObj?.text?.trim() === ''){
             return false;
           }
+          setActiveObj(null)
+          AddFun(false)
 
           try {
             AddFun(false)
