@@ -136,7 +136,8 @@ function MsgLeftMenuNav({
 
     console.log(e);
 
-    setActive(current => current === elID ? null : elID)
+    setActive(current => current === elID ? null : elID);
+    setEditGroup(null);
   }
 
   // Format Date
@@ -182,6 +183,12 @@ function MsgLeftMenuNav({
     setIsEditing({ readyToEdit: false, addNewSub: false })
     setActiveObj(currentActive => currentActive?._id !== item?._id ? item : currentActive);
     setActiveTextContent("")
+
+    if (editGroup != null && item?._id !== editGroup?._id) {
+      setEditGroup(null)
+      setActive(null)
+    }
+    
     // console.log('>>>>>>>>>>>>>>>>>>>', textContentInEditor)
   }
 

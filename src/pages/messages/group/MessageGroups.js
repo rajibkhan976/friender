@@ -374,8 +374,12 @@ const MessageGroups = () => {
     const saveMessage = async (data) => {
         setLoading(true);
         setIsEditing({ addNewSub: false, readyToEdit: false })
+        // console.log('data', data);
 
-        console.log('data', data);
+        if (data?.text?.trim() === ''){
+            setLoading(false)
+            return false;
+        }
 
         try {
             await dispatch(addNewGroupMessageItem({

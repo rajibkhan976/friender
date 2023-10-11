@@ -962,7 +962,7 @@ const MySetting = () => {
     if (data.send_message_when_someone_accept_new_friend_request_settings) {
       const { message_group_id, quick_message } = data?.send_message_when_someone_accept_new_friend_request_settings[0];
 
-      if (message_group_id !== "" && message_group_id !== null) {
+      if (message_group_id !== "" && message_group_id !== null && message_group_id !== undefined) {
         // console.log("DATA MESSAGE GROUP ID -- ", message_group_id);
 
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
@@ -975,7 +975,7 @@ const MySetting = () => {
         });
       }
 
-      if (quick_message !== "" && quick_message !== null) {
+      if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
         setQuickMsgAcptsFrndReq(quick_message);
       }
     }
@@ -986,7 +986,7 @@ const MySetting = () => {
     if (data.send_message_when_reject_friend_request_settings) {
       const { message_group_id, quick_message } = data?.send_message_when_reject_friend_request_settings[0];
 
-      if (message_group_id !== "" && message_group_id !== null) {
+      if (message_group_id !== "" && message_group_id !== null && message_group_id !== undefined) {
         dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
           const data = res?.data;
           if (data.length) {
@@ -996,7 +996,7 @@ const MySetting = () => {
         });
       }
 
-      if (quick_message !== "" && quick_message !== null) {
+      if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
         setQuickMsgRejtFrndReq(quick_message);
       }
     }
