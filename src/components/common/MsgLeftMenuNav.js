@@ -176,7 +176,7 @@ function MsgLeftMenuNav({
   const showMsgContent = (item) => MsgNavtype === "sub-segment" || MsgNavtype === "sub-group" ? item?.message?.text : '';
 
   const setActiveMessage = (item) => {
-    console.log('item????????', item);
+    // console.log('item????????', item);
     if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
       AddFun(false)
     }
@@ -213,6 +213,11 @@ function MsgLeftMenuNav({
             text: tools.$convertPureString(tempMsgObj).join(" "),
             messengerText: tools.$generateMessengerText(tempMsgObj)
           }
+
+          if (msgObj?.text?.trim() === ''){
+            return false;
+          }
+
           try {
             AddFun(false)
             saveMessage(msgObj)
@@ -345,7 +350,7 @@ function MsgLeftMenuNav({
   }
 
   const resetCreateNew = () => {
-    console.log('clicked reset', isEditingName, isLoading);
+    // console.log('clicked reset', isEditingName, isLoading);
     setIsEditingName(false)
     setIsLoading(false)
     setNewCreateName('')

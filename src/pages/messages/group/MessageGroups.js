@@ -299,6 +299,13 @@ const MessageGroups = () => {
 
             const groupDelete = await dispatch(deleteGroup(deletePayload)).unwrap();
             if (groupDelete) {
+                if (replaceGroupId && withReplaceId) {
+                    setGroupsArray(prevArray => prevArray.map(el => el._id === replaceGroupId ? {
+                        ...el,
+                        is_used: 1
+                    } : el))
+                }
+
                 Alertbox(
                     `Group deleted successfully`,
                     "success",
@@ -376,7 +383,7 @@ const MessageGroups = () => {
         setIsEditing({ addNewSub: false, readyToEdit: false })
         // console.log('data', data);
 
-        if (data?.text?.trim() === ''){
+        if (data?.text?.trim() === '') {
             setLoading(false)
             return false;
         }
@@ -649,7 +656,7 @@ const MessageGroups = () => {
         setIsEditingMessage(null)
         setEditorStateValue("")
         setActiveTextContent("")
-        
+
         if (!activeMessage || activeMessage == null) {
             if (activeGroupsItem?.group_messages?.length) {
                 setActiveMessage(activeGroupsItem?.group_messages[0])
