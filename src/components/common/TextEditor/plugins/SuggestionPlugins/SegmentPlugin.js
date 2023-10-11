@@ -189,8 +189,9 @@ function checkForAtSignMentions(text, minMatchLength) {
 }
 
 function getPossibleQueryMatch(text) {
-  const match = checkForAtSignMentions(text, 0);
-  return match === null ? checkForCapitalizedNameMentions(text, 3) : match;
+  // const match = checkForAtSignMentions(text, 0);
+  // return match === null ? checkForCapitalizedNameMentions(text, 3) : match;
+  return checkForAtSignMentions(text, 0);
 }
 
 class MentionTypeaheadOption extends MenuOption {
@@ -259,7 +260,7 @@ export default function SegmentPlugin() {
 
           // Create a new ParagraphNode
           //const paragraphNode = $createParagraphNode();
-          const textNode = $createTextNode(`[${selectedOption.name}]`);
+          const textNode = $createTextNode(`[${selectedOption.name}] `);
           if (nodeToReplace) {
             nodeToReplace.replace(textNode);
           }

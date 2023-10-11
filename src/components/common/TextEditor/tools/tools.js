@@ -143,7 +143,7 @@ export const tools = {
       if (node.type === "text" && node.text) {
         const formatSign = convertMessengerText(node.format);
         const textHtml = node.text.replace(/\n/g, '<br>');
-        html += `${formatSign}${textHtml}${formatSign}`;
+        html += ` ${formatSign}${textHtml.trim()}${formatSign} `;
       }
 
       if (node.children && Array.isArray(node.children)) {
