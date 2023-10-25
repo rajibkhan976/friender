@@ -21,6 +21,18 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
         if (type === "REJECT_REQ") {
             return localStorage.getItem("fr_quickMessage_reject_req") || "";
         }
+
+        if (type === "SOMEONE_SEND_REQ") {
+            return localStorage.getItem("fr_quickMessage_someone_send_req") || "";
+        }
+
+        if (type === "REJT_INCOMING_REQ") {
+            return localStorage.getItem("fr_quickMessage_someone_send_req") || "";
+        }
+
+        if (type === "ACCEPT_INCOMING_REQ") {
+            return localStorage.getItem("fr_quickMessage_accept_send_req") || "";
+        }
     });
 
     return (

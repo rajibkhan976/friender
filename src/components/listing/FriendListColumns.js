@@ -17,6 +17,7 @@ import {
   Tier3Icon,
   Tier2Icon,
   Tier1Icon,
+  IncomingRequestIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -646,54 +647,70 @@ export const RefriendCountRenderer = memo((params) => {
 })
 
 export const SourceRendererPending = memo((params) => {
-  // console.log('params?.data?.groupName', params?.data);
-  const sourceFriend = params?.data?.groupName;
-
-  return (
-    <>
-      {params?.data?.groupUrl && sourceFriend ? (
+  if (params?.data?.finalSource?.toLowerCase() === 'group') {
+    const groupName = params?.data?.groupName;
+        
+    if (params?.data?.groupUrl && groupName) {
+      return (
         <div
-          className="friend-sync-source d-flex f-align-center"
-        >
-        {/* {console.log('here')} */}
-          {sourceFriend ? (
-            <>
-              <figure className="friend-source text-center">
-                {sourceFriend === "sync" ? <FacebookSyncIcon /> : ""}
-              </figure>
-              <span className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}>
+        className="friend-sync-source d-flex f-align-center"
+      >
+      {/* {console.log('here')} */}
+        {groupName ? (
+          <>
+            <figure className="friend-source text-center">
+              {groupName === "sync" ? <FacebookSyncIcon /> : ""}
+            </figure>
+            <span className={groupName.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={groupName.length > 12 && groupName}>
 
-                <SourceGroupIcon /> <span >{sourceFriend.length > 12 ? sourceFriend.substring(0, 12) + "..." : sourceFriend}</span>
-                <Link
-                  to={params?.data?.groupUrl}
-                  className="ico-open-link"
-                  target="_blank"
-                >
-                  <OpenInNewTab />
-                </Link>
-              </span>
-            </>
-          ) : (
-            <span className="no-keywords muted-text">N/A</span>
-          )}
-        </div>
-      ) : (
-        <div className="friend-sync-source d-flex f-align-center">
-        {/* {console.log('here')} */}
-          {params?.data?.finalSource ? (
-            <>
-              <figure className="friend-source text-center">
-                <SyncSourceIcon />
-              </figure>
-              <span className={params?.data?.finalSource.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={params?.data?.finalSource}>
-                {params?.data?.finalSource.length > 12 ? params?.data?.finalSource.substring(0, 12) + "..." : params?.data?.finalSource}
-              </span>
-            </>
-          ) : (
-            <span className="no-keywords muted-text">N/A</span>
-          )}
-        </div>
-      )}
-    </>
-  );
+              <SourceGroupIcon /> <span >{groupName.length > 12 ? groupName.substring(0, 12) + "..." : groupName}</span>
+              <Link
+                to={params?.data?.groupUrl}
+                className="ico-open-link"
+                target="_blank"
+              >
+                <OpenInNewTab />
+              </Link>
+            </span>
+          </>
+        ) : (
+          <span className="no-keywords muted-text">N/A</span>
+        )}
+      </div>
+      )
+    }
+  }
+
+  if (params?.data?.finalSource?.toLowerCase() === 'sync') {
+    return (
+      <div className="friend-sync-source d-flex f-align-center">
+      {/* {console.log('here')} */}
+        {params?.data?.finalSource ? (
+          <>
+            <figure className="friend-source text-center">
+              <SyncSourceIcon />
+            </figure>
+            <span className={params?.data?.finalSource.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={params?.data?.finalSource}>
+              {params?.data?.finalSource.length > 12 ? params?.data?.finalSource.substring(0, 12) + "..." : params?.data?.finalSource}
+            </span>
+          </>
+        ) : (
+          <span className="no-keywords muted-text">N/A</span>
+        )}
+      </div>
+    )
+  }
+
+  if (params?.data?.finalSource?.toLowerCase() === 'incoming') {
+    return (
+      <div className="friend-sync-source d-flex f-align-center">
+        <figure className="friend-source text-center">
+          <IncomingRequestIcon />
+        </figure>
+        <span className={params?.data?.finalSource.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={params?.data?.finalSource}>
+          Incoming request
+        </span>
+      </div>
+    )
+  }
 });

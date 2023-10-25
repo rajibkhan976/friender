@@ -57,20 +57,19 @@ const MySetting = () => {
   const [frndWillInactiveAfterDays, setFrndInactiveAfterDays] = useState(30);
 
 
-  // Send message when someone accepts my friend request / Send message when someone reject my friend request.
+  // Send message when someone accepts my friend request..
   const [sndMsgExptFrndRquOpen, setsndMsgExptFrndRquOpen] = useState(false);
 
   const [groupsToSelect, setGroupsToSelect] = useState([]);
 
-  const [sndMsgAcptsFrndReqOpen, setSndMsgAcptsFrndReqOpen] = useState(false);
   const [sndMsgAcptsFrndReqToggle, setSndMsgAcptsFrndReqToggle] = useState(false);
   const [selectMsgTempAcceptsFrndReq, setSelectMsgTempAcceptsFrndReq] = useState(false);
   const [sndMsgAcptsFrndReqGroupSelect, setSndMsgAcptsFrndReqGroupSelect] = useState(null);
   const [quickMsgAcptsFrndReq, setQuickMsgAcptsFrndReq] = useState(null);
   const [sndMsgAcptsQuickMsgModalOpen, setSndMsgAcptsQuickMsgOpen] = useState(false);
-  const [selectOptionUsingForSelect, setSelectOptionUsingForSelect] = useState(null);
   const [usingSelectOptions, setUsingSelectOptions] = useState(false);
 
+  // Send message when someone reject my friend request..
   const [sndMsgRejtFrndReqOpen, setSndMsgRejtFrndReqOpen] = useState(false);
   const [sndMsgRejtFrndReqToggle, setSndMsgRejtFrndReqToggle] = useState(false);
   const [selectMsgTempRejectFrndReq, setSelectMsgTempRejectFrndReq] = useState(false);
@@ -78,6 +77,31 @@ const MySetting = () => {
   const [quickMsgRejtFrndReq, setQuickMsgRejtFrndReq] = useState(null);
   const [sndMsgRejtQuickMsgModalOpen, setSndMsgRejtQuickMsgOpen] = useState(false);
   const [usingSelectOptions2, setUsingSelectOptions2] = useState(false);
+
+  // Send message when someone sends me a friend request..
+  const [sndMsgSomeoneSndFrndReqToggle, sertSndMsgSomeoneSndFrndReqToggle] = useState(false);
+  const [selectMsgSomeoneSndFrndReq, setSelectMsgSomeoneSndFrndReq] = useState(false);
+  const [sndMsgSomeoneSndFrndReqGroupSelect, setSndMsgSomeoneSndFrndReqGroupSelect] = useState(null);
+  const [quickMsgSomeoneSndFrndReq, setQuickMsgSomeoneSndFrndReq] = useState(null);
+  const [sndMsgSomeoneSndFrndReqQuickMsgModalOpen, setSndMsgSomeoneSndFrndReqQuickMsgModalOpen] = useState(false);
+  const [usingSelectOptions3, setUsingSelectOptions3] = useState(false);
+
+  // Send message when I reject an incoming friend request..
+  const [sndMsgRejtIncomingFrndReqToggle, setSndMsgRejtIncomingFrndReqToggle] = useState(false);
+  const [selectMsgRejtIncomingFrndReq, setSelectMsgRejtIncomingFrndReq] = useState(false);
+  const [sndMsgRejtIncomingFrndReqGroupSelect, setSndMsgRejtIncomingFrndReqGroupSelect] = useState(null);
+  const [quickMsgRejtIncomingFrndReqFrndReq, setQuickMsgRejtIncomingFrndReqFrndReq] = useState(null);
+  const [sndMsgRejtIncomingFrndReqQuickMsgModalOpen, setSndMsgRejtIncomingFrndReqQuickMsgModalOpen] = useState(false);
+  const [usingSelectOptions4, setUsingSelectOptions4] = useState(false);
+
+
+  // Send message when I accept an incoming friend request..
+  const [sndMsgAcptsIncomingFrndReqToggle, setSndMsgAcptsIncomingFrndReqToggle] = useState(false);
+  const [selectMsgAcptsIncomingFrndReq, setSelectMsgAcptsIncomingFrndReq] = useState(false);
+  const [sndMsgAcptsIncomingFrndReqGroupSelect, setSndMsgAcptsIncomingFrndReqGroupSelect] = useState(null);
+  const [quickMsgAcptsIncomingFrndReqFrndReq, setQuickMsgAcptsIncomingFrndReqFrndReq] = useState(null);
+  const [sndMsgAcptsIncomingFrndReqQuickMsgModalOpen, setSndMsgAcptsIncomingFrndReqQuickMsgModalOpen] = useState(false);
+  const [usingSelectOptions5, setUsingSelectOptions5] = useState(false);
 
   //period selctor obj
   const periodObj = [
@@ -414,7 +438,7 @@ const MySetting = () => {
     }
 
     dispatch(getMySettings({ fbUserId: `${current_fb_id}` })).unwrap().then((res) => {
-       syncSettings(res.data[0]);
+      syncSettings(res.data[0]);
       //console.log("setting res", res);
       setSettingFetched(true);
       // setLoading(false);
@@ -1597,10 +1621,12 @@ const MySetting = () => {
               </div>
             </div>
 
-            <div className="setting no-click">
-              <div className="setting-child muted-text">
+            {/* <div className="setting no-click"> */}
+            <div className="setting">
+              {/* <div className="setting-child muted-text"> */}
+              <div className="setting-child">
                 <Switch
-                  upComing
+                  // upComing
                   checked={dontSendFrindReqIRejct}
                   handleChange={() => {
                     setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
@@ -1954,124 +1980,16 @@ const MySetting = () => {
             )}
 
 
-            <div className="setting  setting-paper no-click">
-              <div className="setting-child first muted-text">
+            {/* {======= Send message when someone sends me a friend request =======} */}
+            {/* <div className="setting  setting-paper no-click"> */}
+            <div className={`setting ${sndMsgSomeoneSndFrndReqToggle ? "setting-actived" : ""}`}>
+              {/* <div className="setting-child first muted-text"> */}
+              <div className="setting-child first">
                 <Switch
-                  upComing
-                  checked={sndMsgRcvFrndRqu}
+                  // upComing
+                  checked={sndMsgSomeoneSndFrndReqToggle}
                   handleChange={() => {
-                    setSndMsgRcvFrndRqu(!sndMsgRcvFrndRqu);
-                  }}
-                />
-                Send message when I accept an incoming friend request
-
-                <span className="warn-badget">Coming soon</span>
-              </div>
-
-              <div className="setting-control">
-                <figure className="icon-arrow-down">
-                  <ChevronDownArrowIcon color={"gray"} />
-                </figure>
-              </div>
-            </div>
-
-            {sndMsgRcvFrndRqu && (
-              <div className="setting-child others no-click">
-                Select the message template you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgRcvFrndRquMsgSelect}
-
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgRcvFrndRquMsgSelect(e.target.value);
-                  }}
-                />
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  type="number"
-                  className="setting-input"
-                  value={sndMsgRcvFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgRcvFrndRquInput(e.target.value);
-                  }}
-                />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgRcvFrndRquSelect}
-
-                  handleChange={(e) => {
-                    setSndMsgRcvFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
-              </div>
-            )}
-
-
-            <div className="setting  setting-paper no-click">
-              <div className="setting-child first muted-text">
-                {" "}
-                <Switch
-                  upComing
-                  checked={sndMsgAcptFrndRqu}
-                  handleChange={() => {
-                    setSndMsgAcptFrndRqu(!sndMsgAcptFrndRqu);
-                  }}
-                />
-                Send message when I reject an incoming friend request
-
-                <span className="warn-badget">Coming soon</span>
-              </div>
-
-              <div className="setting-control">
-                <figure className="icon-arrow-down">
-                  <ChevronDownArrowIcon color={"gray"} />
-                </figure>
-              </div>
-            </div>
-
-            {sndMsgAcptFrndRqu && (
-              <div className="setting-child others">
-                Select the message template you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgAcptFrndRquMsgSelect}
-
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgAcptFrndRquMsgSelect(e.target.value);
-                  }}
-                />{" "}
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  type="number"
-                  className="setting-input"
-                  value={sndMsgAcptFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgAcptFrndRquInput(e.target.value);
-                  }}
-                />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgAcptFrndRquSelect}
-
-                  handleChange={(e) => {
-                    setSndMsgAcptFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
-              </div>
-            )}
-
-
-            <div className="setting  setting-paper no-click">
-              <div className="setting-child first muted-text">
-                <Switch
-                  upComing
-                  checked={sndMsgDlcFrndRqu}
-                  handleChange={() => {
-                    setSndMsgDlcFrndRqu(!sndMsgDlcFrndRqu);
+                    sertSndMsgSomeoneSndFrndReqToggle(!sndMsgSomeoneSndFrndReqToggle);
                   }}
                 />
                 Send message when someone sends me a friend request
@@ -2081,43 +1999,134 @@ const MySetting = () => {
 
               <div className="setting-control">
                 <figure className="icon-arrow-down">
-                  <ChevronDownArrowIcon color={"gray"} />
+                  {!sndMsgSomeoneSndFrndReqToggle ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
                 </figure>
               </div>
             </div>
 
-            {sndMsgDlcFrndRqu && (
+            {sndMsgSomeoneSndFrndReqToggle && (
               <div className="setting-child others">
-                Select the message template you want to send &nbsp;
-                <DropSelector
-                  selects={msgTmpltObj}
-                  value={sndMsgDlcFrndRquMsgSelect}
-
-                  width={"297px"}
-                  handleChange={(e) => {
-                    setSndMsgDlcFrndRquMsgSelect(e.target.value);
-                  }}
-                />{" "}
-                &nbsp; and then, &nbsp;{" "}
-                <input
-                  type="number"
-                  className="setting-input"
-                  value={sndMsgDlcFrndRquInput}
-                  onChange={(e) => {
-                    setSndMsgDlcFrndRquinput(e.target.value);
-                  }}
-                />
-                <DropSelector
-                  selects={periodObj}
-                  value={sndMsgDlcFrndRquSelect}
-
-                  handleChange={(e) => {
-                    setSndMsgDlcFrndRquSelect(e.target.value);
-                  }}
-                />
-                &nbsp; the mesage will be sent
+                <div className="custom-select-drop-area">
+                  Select the message &nbsp;
+                  <TurnOnSettingsWarn enabledFeature={sndMsgSomeoneSndFrndReqToggle}>
+                    <DropSelectMessage
+                      type="SOMEONE_SEND_REQ"
+                      openSelectOption={selectMsgSomeoneSndFrndReq && sndMsgSomeoneSndFrndReqToggle}
+                      handleIsOpenSelectOption={sndMsgSomeoneSndFrndReqToggle && setSelectMsgSomeoneSndFrndReq}
+                      groupList={groupsToSelect}
+                      groupSelect={sndMsgSomeoneSndFrndReqGroupSelect}
+                      setGroupSelect={setSndMsgSomeoneSndFrndReqGroupSelect}
+                      isDisabled={!sndMsgSomeoneSndFrndReqToggle}
+                      quickMessage={quickMsgSomeoneSndFrndReq && quickMsgSomeoneSndFrndReq}
+                      setQuickMessage={setQuickMsgSomeoneSndFrndReq}
+                      quickMsgModalOpen={sndMsgSomeoneSndFrndReqQuickMsgModalOpen}
+                      setQuickMsgOpen={setSndMsgSomeoneSndFrndReqQuickMsgModalOpen}
+                      setUsingSelectOptions={setUsingSelectOptions3}
+                      usingSelectOptions={usingSelectOptions3}
+                      saveMySetting={saveMySetting}
+                    />
+                  </TurnOnSettingsWarn>
+                </div>
               </div>
             )}
+
+
+            {/* {======= Send message when I reject an incoming friend request =======} */}
+            <div className={`setting ${sndMsgRejtIncomingFrndReqToggle ? "setting-actived" : ""}`}>
+              <div className="setting-child first">
+                {" "}
+                <Switch
+                  checked={sndMsgRejtIncomingFrndReqToggle}
+                  handleChange={() => {
+                    setSndMsgRejtIncomingFrndReqToggle(!sndMsgRejtIncomingFrndReqToggle);
+                  }}
+                />
+                Send message when I reject an incoming friend request
+
+                <span className="warn-badget">Coming soon</span>
+              </div>
+
+              <div className="setting-control">
+                <figure className="icon-arrow-down">
+                  {!sndMsgRejtIncomingFrndReqToggle ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
+              </div>
+            </div>
+
+            {sndMsgRejtIncomingFrndReqToggle && (
+              <div className="setting-child others">
+                <div className="custom-select-drop-area">
+                  Select the message &nbsp;
+                  <TurnOnSettingsWarn enabledFeature={sndMsgRejtIncomingFrndReqToggle}>
+                    <DropSelectMessage
+                      type="REJT_INCOMING_REQ"
+                      openSelectOption={selectMsgRejtIncomingFrndReq && sndMsgRejtIncomingFrndReqToggle}
+                      handleIsOpenSelectOption={sndMsgRejtIncomingFrndReqToggle && setSelectMsgRejtIncomingFrndReq}
+                      groupList={groupsToSelect}
+                      groupSelect={sndMsgRejtIncomingFrndReqGroupSelect}
+                      setGroupSelect={setSndMsgRejtIncomingFrndReqGroupSelect}
+                      isDisabled={!sndMsgRejtIncomingFrndReqToggle}
+                      quickMessage={quickMsgRejtIncomingFrndReqFrndReq && quickMsgRejtIncomingFrndReqFrndReq}
+                      setQuickMessage={setQuickMsgRejtIncomingFrndReqFrndReq}
+                      quickMsgModalOpen={sndMsgRejtIncomingFrndReqQuickMsgModalOpen}
+                      setQuickMsgOpen={setSndMsgRejtIncomingFrndReqQuickMsgModalOpen}
+                      setUsingSelectOptions={setUsingSelectOptions4}
+                      usingSelectOptions={usingSelectOptions4}
+                      saveMySetting={saveMySetting}
+                    />
+                  </TurnOnSettingsWarn>
+                </div>
+              </div>
+            )}
+
+
+            {/* {======= Send message when I accept an incoming friend request =======} */}
+            <div className={`setting ${sndMsgAcptsIncomingFrndReqToggle ? "setting-actived" : ""}`}>
+              <div className="setting-child first">
+                <Switch
+                  checked={sndMsgAcptsIncomingFrndReqToggle}
+                  handleChange={() => {
+                    setSndMsgAcptsIncomingFrndReqToggle(!sndMsgAcptsIncomingFrndReqToggle);
+                  }}
+                />
+                Send message when I accept an incoming friend request
+
+                <span className="warn-badget">Coming soon</span>
+              </div>
+
+              <div className="setting-control">
+                <figure className="icon-arrow-down">
+                  {!sndMsgAcptsIncomingFrndReqToggle ? <ChevronDownArrowIcon /> : <ChevronUpArrowIcon />}
+                </figure>
+              </div>
+            </div>
+
+            {sndMsgAcptsIncomingFrndReqToggle && (
+              <div className="setting-child others">
+                <div className="custom-select-drop-area">
+                  Select the message &nbsp;
+                  <TurnOnSettingsWarn enabledFeature={sndMsgAcptsIncomingFrndReqToggle}>
+                    <DropSelectMessage
+                      type="ACCEPT_INCOMING_REQ"
+                      openSelectOption={selectMsgAcptsIncomingFrndReq && sndMsgAcptsIncomingFrndReqToggle}
+                      handleIsOpenSelectOption={sndMsgAcptsIncomingFrndReqToggle && setSelectMsgAcptsIncomingFrndReq}
+                      groupList={groupsToSelect}
+                      groupSelect={sndMsgAcptsIncomingFrndReqGroupSelect}
+                      setGroupSelect={setSndMsgAcptsIncomingFrndReqGroupSelect}
+                      isDisabled={!sndMsgAcptsIncomingFrndReqToggle}
+                      quickMessage={quickMsgAcptsIncomingFrndReqFrndReq && quickMsgAcptsIncomingFrndReqFrndReq}
+                      setQuickMessage={setQuickMsgAcptsIncomingFrndReqFrndReq}
+                      quickMsgModalOpen={sndMsgAcptsIncomingFrndReqQuickMsgModalOpen}
+                      setQuickMsgOpen={setSndMsgAcptsIncomingFrndReqQuickMsgModalOpen}
+                      setUsingSelectOptions={setUsingSelectOptions5}
+                      usingSelectOptions={usingSelectOptions5}
+                      saveMySetting={saveMySetting}
+                    />
+                  </TurnOnSettingsWarn>
+                </div>
+              </div>
+            )}
+
 
             {/* <div className="setting  setting-paper setting-checked">
                     <div className="setting-child first">

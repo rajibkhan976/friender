@@ -37,6 +37,18 @@ const DropSelectMessage = ({
         if (quickMessage && type === "REJECT_REQ") {
             localStorage.setItem("fr_quickMessage_reject_req", quickMessage?.__raw);
         }
+
+        if (quickMessage && type === "SOMEONE_SEND_REQ") {
+            localStorage.setItem("fr_quickMessage_someone_send_req", quickMessage?.__raw);
+        }
+
+        if (quickMessage && type === "REJT_INCOMING_REQ") {
+            localStorage.setItem("fr_quickMessage_rejt_send_req", quickMessage?.__raw);
+        }
+
+        if (quickMessage && type === "ACCEPT_INCOMING_REQ") {
+            localStorage.setItem("fr_quickMessage_accept_send_req", quickMessage?.__raw);
+        }
     }, [quickMessage]);
 
     /**
@@ -123,6 +135,18 @@ const DropSelectMessage = ({
         if (type === "REJECT_REQ") {
             localStorage.setItem("fr_using_select_rejt", true);
         }
+
+        if (type === "SOMEONE_SEND_REQ") {
+            localStorage.setItem("fr_using_someone_send", true);
+        }
+
+        if (type === "REJT_INCOMING_REQ") {
+            localStorage.setItem("fr_using_rejt_incoming", true);
+        }
+
+        if (type === "ACCEPT_INCOMING_REQ") {
+            localStorage.setItem("fr_using_accept_incoming", true);
+        }
     };
 
     // Rendering select options..
@@ -145,6 +169,54 @@ const DropSelectMessage = ({
 
         if (type === "REJECT_REQ") {
             const isSelectUsing = localStorage.getItem("fr_using_select_rejt");
+
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
+
+        if (type === "SOMEONE_SEND_REQ") {
+            const isSelectUsing = localStorage.getItem("fr_using_someone_send");
+
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
+
+        if (type === "REJT_INCOMING_REQ") {
+            const isSelectUsing = localStorage.getItem("fr_using_rejt_incoming");
+
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
+
+        if (type === "ACCEPT_INCOMING_REQ") {
+            const isSelectUsing = localStorage.getItem("fr_using_accept_incoming");
 
             if (quickMessage && !isSelectUsing) {
                 return "Quick Message";

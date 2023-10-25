@@ -150,8 +150,8 @@ export default function TextEditor({
       text: tools.$convertPureString(tempMsgObj).join(" "),
       messengerText: tools.$generateMessengerText(tempMsgObj)
     }
-    
-    if (msgObj?.text.trim() !== ''){
+
+    if (msgObj?.text.trim() !== '') {
       saveMessage(msgObj)
     }
 
@@ -166,6 +166,18 @@ export default function TextEditor({
 
       if (modalType === "REJECT_REQ") {
         localStorage.removeItem("fr_using_select_rejt");
+      }
+
+      if (modalType === "SOMEONE_SEND_REQ") {
+        localStorage.removeItem("fr_using_someone_send");
+      }
+
+      if (modalType === "REJT_INCOMING_REQ") {
+        localStorage.removeItem("fr_using_rejt_incoming");
+      }
+
+      if (modalType === "ACCEPT_INCOMING_REQ") {
+        localStorage.removeItem("fr_using_accept_incoming");
       }
 
       setModalOpen(false);
@@ -221,8 +233,8 @@ export default function TextEditor({
           //   editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
           // }
           disable={
-              editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0 ||
-              (isEditing.addNewSub && !isEditing.readyToEdit)
+            editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0 ||
+            (isEditing.addNewSub && !isEditing.readyToEdit)
           }
           extraClass="editor-cancel editor-btn"
           btnText="Save"
