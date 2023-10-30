@@ -94,7 +94,6 @@ const MySetting = () => {
   const [sndMsgRejtIncomingFrndReqQuickMsgModalOpen, setSndMsgRejtIncomingFrndReqQuickMsgModalOpen] = useState(false);
   const [usingSelectOptions4, setUsingSelectOptions4] = useState(false);
 
-
   // Send message when I accept an incoming friend request..
   const [sndMsgAcptsIncomingFrndReqToggle, setSndMsgAcptsIncomingFrndReqToggle] = useState(false);
   const [selectMsgAcptsIncomingFrndReq, setSelectMsgAcptsIncomingFrndReq] = useState(false);
@@ -415,6 +414,12 @@ const MySetting = () => {
     sndMsgRejtFrndReqToggle,
     quickMsgAcptsFrndReq,
     quickMsgRejtFrndReq,
+    sndMsgSomeoneSndFrndReqToggle,
+    sndMsgRejtIncomingFrndReqToggle,
+    sndMsgAcptsIncomingFrndReqToggle,
+    quickMsgSomeoneSndFrndReq,
+    quickMsgRejtIncomingFrndReqFrndReq,
+    quickMsgAcptsIncomingFrndReqFrndReq,
   ]);
 
 
@@ -552,7 +557,26 @@ const MySetting = () => {
         message_group_id: sndMsgRejtFrndReqGroupSelect?._id || null,
         quick_message: quickMsgRejtFrndReq || null,
       },
-    };
+
+      //.. New Payload..
+      send_message_when_someone_sends_me_friend_request: sndMsgSomeoneSndFrndReqToggle,
+      send_message_when_someone_sends_me_friend_request_settings: {
+        message_group_id: sndMsgSomeoneSndFrndReqGroupSelect?._id || null,
+        quick_message: quickMsgSomeoneSndFrndReq || null,
+      },
+
+      send_message_when_reject_incoming_friend_request: sndMsgRejtIncomingFrndReqToggle,
+      send_message_when_reject_incoming_friend_request_settings: {
+        message_group_id: sndMsgRejtIncomingFrndReqGroupSelect?._id || null,
+        quick_message: quickMsgRejtIncomingFrndReqFrndReq || null,
+      },
+
+      send_message_when_accept_incoming_friend_request: sndMsgAcptsIncomingFrndReqToggle,
+      send_message_when_accept_incoming_friend_request_settings: {
+        message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id || null,
+        quick_message: quickMsgAcptsIncomingFrndReqFrndReq || null,
+      },
+    }
 
     /**
      * "send_message_when_reject_friend_request": false,
@@ -746,7 +770,6 @@ const MySetting = () => {
     }
 
     // Send Message When Someone Accepts My Friend Requests.
-    // if (withSaveButton) {
     if (sndMsgAcptsFrndReqToggle) {
       if (usingSelectOptions) {
         // console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
@@ -785,7 +808,6 @@ const MySetting = () => {
     }
 
     // Send Message When someone Rejects My Friend Requests.
-    // if (withSaveButton) {
     if (sndMsgRejtFrndReqToggle) {
       if (usingSelectOptions2) {
         payload.send_message_when_reject_friend_request_settings = {
@@ -822,7 +844,120 @@ const MySetting = () => {
         };
       }
     }
-    // }
+
+    // Send message when someone sends me a friend request..
+    if (sndMsgSomeoneSndFrndReqToggle) {
+      if (usingSelectOptions3) {
+        payload.send_message_when_someone_sends_me_friend_request_settings = {
+          message_group_id: sndMsgSomeoneSndFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgSomeoneSndFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions3(false);
+      }
+
+      if (quickMsgSomeoneSndFrndReq && !usingSelectOptions3) {
+        payload.send_message_when_someone_sends_me_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgSomeoneSndFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+
+    } else {
+      if (usingSelectOptions3) {
+        payload.send_message_when_someone_sends_me_friend_request_settings = {
+          message_group_id: sndMsgSomeoneSndFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgSomeoneSndFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions3(false);
+      }
+
+      if (quickMsgSomeoneSndFrndReq && !usingSelectOptions3) {
+        payload.send_message_when_someone_sends_me_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgSomeoneSndFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+    }
+
+    // Send message when I reject an incoming friend request..
+    if (sndMsgRejtIncomingFrndReqToggle) {
+      if (usingSelectOptions4) {
+        payload.send_message_when_reject_incoming_friend_request_settings = {
+          message_group_id: sndMsgRejtIncomingFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgRejtIncomingFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions4(false);
+      }
+
+      if (quickMsgRejtIncomingFrndReqFrndReq && !usingSelectOptions4) {
+        payload.send_message_when_reject_incoming_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgRejtIncomingFrndReqFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+
+    } else {
+      if (usingSelectOptions4) {
+        payload.send_message_when_reject_incoming_friend_request_settings = {
+          message_group_id: sndMsgRejtIncomingFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgRejtIncomingFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions4(false);
+      }
+
+      if (quickMsgRejtIncomingFrndReqFrndReq && !usingSelectOptions4) {
+        payload.send_message_when_reject_incoming_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgRejtIncomingFrndReqFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+    }
+
+    // Send message when I accept an incoming friend request..
+    if (sndMsgAcptsIncomingFrndReqToggle) {
+      if (usingSelectOptions5) {
+        payload.send_message_when_accept_incoming_friend_request_settings = {
+          message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions5(false);
+      }
+
+      if (quickMsgAcptsIncomingFrndReqFrndReq && !usingSelectOptions5) {
+        payload.send_message_when_accept_incoming_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgAcptsIncomingFrndReqFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+
+    } else {
+      if (usingSelectOptions5) {
+        payload.send_message_when_accept_incoming_friend_request_settings = {
+          message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id,
+          quick_message: null,
+          old_message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id !== localStorage.getItem("old_message_group_id") ? localStorage.getItem("old_message_group_id") : null || "",
+        }
+        setUsingSelectOptions5(false);
+      }
+
+      if (quickMsgAcptsIncomingFrndReqFrndReq && !usingSelectOptions5) {
+        payload.send_message_when_accept_incoming_friend_request_settings = {
+          message_group_id: null,
+          quick_message: quickMsgAcptsIncomingFrndReqFrndReq,
+          old_message_group_id: localStorage.getItem("old_message_group_id") || "",
+        };
+      }
+    }
 
 
     // console.log("Saving to API OUTSITE -- ", sndMsgAcptsFrndReqGroupSelect);
@@ -1022,6 +1157,71 @@ const MySetting = () => {
 
       if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
         setQuickMsgRejtFrndReq(quick_message);
+      }
+    }
+
+
+    // Send message when someone sends me a friend request (SYNC-DATA).
+    sertSndMsgSomeoneSndFrndReqToggle(data?.send_message_when_someone_sends_me_friend_request);
+
+    if (data.send_message_when_someone_sends_me_friend_request_settings) {
+      const { message_group_id, quick_message } = data?.send_message_when_someone_sends_me_friend_request_settings[0];
+
+      if (message_group_id !== "" && message_group_id !== null && message_group_id !== undefined) {
+        dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
+          const data = res?.data;
+          if (data.length) {
+            setSndMsgSomeoneSndFrndReqGroupSelect(data[0]);
+            localStorage.setItem("fr_using_someone_send", true);
+          }
+        });
+      }
+
+      if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
+        setQuickMsgSomeoneSndFrndReq(quick_message);
+      }
+    }
+
+    // Send message when I reject an incoming friend request (SYNC-DATA).
+    setSndMsgRejtIncomingFrndReqToggle(data?.send_message_when_reject_incoming_friend_request);
+
+    if (data.send_message_when_reject_incoming_friend_request_settings) {
+      const { message_group_id, quick_message } = data?.send_message_when_reject_incoming_friend_request_settings[0];
+
+      if (message_group_id !== "" && message_group_id !== null && message_group_id !== undefined) {
+        dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
+          const data = res?.data;
+          if (data.length) {
+            setSndMsgRejtIncomingFrndReqGroupSelect(data[0]);
+            localStorage.setItem("fr_using_rejt_incoming", true);
+          }
+        });
+      }
+
+      if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
+        setQuickMsgRejtIncomingFrndReqFrndReq(quick_message);
+      }
+    }
+
+
+    // Send message when I accept an incoming friend request (SYNC-DATA).
+    setSndMsgAcptsIncomingFrndReqToggle(data?.send_message_when_accept_incoming_friend_request);
+
+    if (data.send_message_when_accept_incoming_friend_request_settings) {
+      const { message_group_id, quick_message } = data?.send_message_when_accept_incoming_friend_request_settings[0];
+
+      if (message_group_id !== "" && message_group_id !== null && message_group_id !== undefined) {
+        dispatch(getGroupById(message_group_id)).unwrap().then((res) => {
+          const data = res?.data;
+          if (data.length) {
+            setSndMsgAcptsIncomingFrndReqGroupSelect(data[0]);
+            localStorage.setItem("fr_using_accept_incoming", true);
+          }
+        });
+      }
+
+      if (quick_message !== "" && quick_message !== null && quick_message !== undefined) {
+        setQuickMsgAcptsIncomingFrndReqFrndReq(quick_message);
       }
     }
 
@@ -1635,7 +1835,7 @@ const MySetting = () => {
                 Don’t send friend request(s) to people who sent me friend request and I rejected.
               </div>
 
-              <span className="warn-badget">Coming soon</span>
+              {/* <span className="warn-badget">Coming soon</span> */}
             </div>
 
             <div className="setting">
@@ -1994,7 +2194,7 @@ const MySetting = () => {
                 />
                 Send message when someone sends me a friend request
 
-                <span className="warn-badget">Coming soon</span>
+                {/* <span className="warn-badget">Coming soon</span> */}
               </div>
 
               <div className="setting-control">
@@ -2043,7 +2243,7 @@ const MySetting = () => {
                 />
                 Send message when I reject an incoming friend request
 
-                <span className="warn-badget">Coming soon</span>
+                {/* <span className="warn-badget">Coming soon</span> */}
               </div>
 
               <div className="setting-control">
@@ -2091,7 +2291,7 @@ const MySetting = () => {
                 />
                 Send message when I accept an incoming friend request
 
-                <span className="warn-badget">Coming soon</span>
+                {/* <span className="warn-badget">Coming soon</span> */}
               </div>
 
               <div className="setting-control">

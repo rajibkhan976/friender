@@ -80,6 +80,7 @@ export const deleteFriends = (payload)=>{
           payload,
           {headers: headers}
       ).then((result)=>{
+          console.log("RESULT __ ", result);
           resolve(result.data);
       })
       .catch((error)=>{

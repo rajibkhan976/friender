@@ -51,7 +51,7 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
         1000,
         "bottom-right"
       );
-     // console.log("response after white listing >>>>>>",res)
+      // console.log("response after white listing >>>>>>",res)
       dispatch(updateWhiteListStatusOfSelectesList(res.data));
     })
     .catch((err) => {
@@ -298,9 +298,21 @@ export const CreationRenderer = memo((params) => {
 
 export const AgeRenderer = memo((params) => {
   let statusSync = params?.data?.created_at?.toLowerCase();
+
+  if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
+    statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
+
+  } else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
+    statusSync = params?.data?.updated_at?.toLowerCase();
+
+  } else if (params?.data?.deleted_status === 1) {
+    statusSync = params?.data?.deleted_at?.toLowerCase();
+  }
+
+  // let statusSync = params?.data?.created_at?.toLowerCase();
   // inputTimeString.replace(" ", "T") + ".000Z";
   //console.log("utc time>>",statusSync);
-  const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+  const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
   //console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
@@ -322,24 +334,62 @@ export const AgeRenderer = memo((params) => {
   else if (minutes) age = 1;
   else age = 1;
 
-//  let showingDate = new Date(localTime); 
-//  function getMonthName(monthNumber) {
-//  // const date = new Date();
-//   showingDate.setMonth(monthNumber - 1);
 
-//   return showingDate.toLocaleString('en-US', { month: 'short' });
-// }
+  console.log("Params Here for FriendListColumn --- ", params.data);
 
-// let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
-// console.log('tooltipDateFormat', tooltipDateFormat);
+  // Calculates the Age for all..
+  const ageCalculator = (bornDate) => {
+    const today = new Date();
+    const timeDifference = today - new Date(bornDate);
+    // Calculate age in days..
+    let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+    if (ageInDays === 0) {
+      ageInDays = 1;
+    }
+    return ageInDays;
+  };
 
- return (
+  if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
+    const requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
+    const ageInDays = ageCalculator(requestDate);
+    age = ageInDays;
+
+  } else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
+    // const lostDate = new Date(params?.data?.lost_friend_at?.toLowerCase());
+    const lostDate = new Date(params?.data?.updated_at?.toLowerCase());
+    const ageInDays = ageCalculator(lostDate);
+    age = ageInDays
+
+  } else if (params?.data?.deleted_status === 1) {
+    const unfriendedDate = new Date(params?.data?.deleted_at?.toLowerCase());
+    const ageInDays = ageCalculator(unfriendedDate);
+    age = ageInDays;
+
+  } else {
+    const actionDate = new Date(params?.data?.created_at?.toLowerCase());
+    const ageInDays = ageCalculator(actionDate);
+    age = ageInDays
+  }
+
+
+  //  let showingDate = new Date(localTime); 
+  //  function getMonthName(monthNumber) {
+  //  // const date = new Date();
+  //   showingDate.setMonth(monthNumber - 1);
+
+  //   return showingDate.toLocaleString('en-US', { month: 'short' });
+  // }
+
+  // let tooltipDateFormat = showingDate.getDate() +" " + getMonthName(showingDate.getMonth() + 1, ) + ", "+ showingDate.getFullYear() + "  "+ JSON.stringify(showingDate).slice(12, 17);
+  // console.log('tooltipDateFormat', tooltipDateFormat);
+
+  return (
     <span className={` d-flex f-align-center w-100 h-100`}>
       <span className="tooltipFullName ageTooltip w-100 h-100 d-flex f-align-center" data-text={localTime}>
-         {age}
+        {age}
       </span>
     </span>
-   );
+  );
 
 });
 
@@ -358,28 +408,28 @@ export const RecentEngagementRenderer = memo((params) => {
     currentMonth = "0" + currentMonth
   }
   let dateFormat = currentMonth + " / " + currentDay + " / " + currentYear;
-  
+
   useEffect(() => {
-    if(params?.inactiveAfter) {
+    if (params?.inactiveAfter) {
       setInactiveAfter(params?.inactiveAfter)
     }
-    if(params?.data?.last_engagement_date) {
+    if (params?.data?.last_engagement_date) {
       setStatusSync(params?.data?.last_engagement_date)
     }
   }, [params])
 
   return (
     <span className={`h-100 w-100 d-flex f-align-center`}>
-      <span 
+      <span
         className={
-          !(inactiveAfter && statusSync)  ? 
+          !(inactiveAfter && statusSync) ?
             "" : "tooltipFullName small h-100 w-100 d-flex"
         } data-text={(inactiveAfter && statusSync) && "Last engaged on " + dateFormat}>
         {(inactiveAfter && statusSync) ?
-            <span className={days > inactiveAfter ? "activeEngaged notAct" : "activeEngaged actUser"}>
-              {/* <span className="dot"></span> {days} day(s) */}
-              <span className="dot"></span> {days}
-            </span> : <span className="activeEngaged notAct"><span className="dot"></span> Never</span>}
+          <span className={days > inactiveAfter ? "activeEngaged notAct" : "activeEngaged actUser"}>
+            {/* <span className="dot"></span> {days} day(s) */}
+            <span className="dot"></span> {days}
+          </span> : <span className="activeEngaged notAct"><span className="dot"></span> Never</span>}
       </span>
     </span>
   );
@@ -453,7 +503,7 @@ export const ReactionRenderer = memo((params) => {
   return (
     <span className={`sync-date d-flex f-align-center w-100 h-100`}>
       {/* <figure className={`sync-ico text-center`}> */}
-        {/* <ReactionIcon /> */}
+      {/* <ReactionIcon /> */}
       {/* </figure> */}
       {/* <span className={`sync-dt`}>{reactionCount || 0}</span> */}
       {reactionCount || 0}
@@ -607,19 +657,19 @@ export const CountryRenderer = memo((params) => {
       <span className={countryName === "N/A" ? `d-flex muted-text f-align-center` : `d-flex f-align-center capText sync-txt`}>
         {
           (params?.data?.tier?.toLowerCase() !== "na" &&
-          params?.data?.tier?.toLowerCase() !== "n/a" &&
-          countryName?.toLowerCase() !== "na" &&
-          countryName?.toLowerCase() !== "n/a") ?
-          <>
-            <span className="inline-icon tier-icon">
-              {
-                params?.data?.tier === "Tier3" ? <Tier3Icon /> : 
-                params?.data?.tier === "Tier2" ? <Tier2Icon /> :
-                <Tier1Icon />
-              }
-            </span>
-            <span className="country-name">{countryName}</span>
-          </> : <span className="muted-text">N/A</span>
+            params?.data?.tier?.toLowerCase() !== "n/a" &&
+            countryName?.toLowerCase() !== "na" &&
+            countryName?.toLowerCase() !== "n/a") ?
+            <>
+              <span className="inline-icon tier-icon">
+                {
+                  params?.data?.tier === "Tier3" ? <Tier3Icon /> :
+                    params?.data?.tier === "Tier2" ? <Tier2Icon /> :
+                      <Tier1Icon />
+                }
+              </span>
+              <span className="country-name">{countryName}</span>
+            </> : <span className="muted-text">N/A</span>
         }
       </span>
     </span>
@@ -649,34 +699,34 @@ export const RefriendCountRenderer = memo((params) => {
 export const SourceRendererPending = memo((params) => {
   if (params?.data?.finalSource?.toLowerCase() === 'group') {
     const groupName = params?.data?.groupName;
-        
+
     if (params?.data?.groupUrl && groupName) {
       return (
         <div
-        className="friend-sync-source d-flex f-align-center"
-      >
-      {/* {console.log('here')} */}
-        {groupName ? (
-          <>
-            <figure className="friend-source text-center">
-              {groupName === "sync" ? <FacebookSyncIcon /> : ""}
-            </figure>
-            <span className={groupName.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={groupName.length > 12 && groupName}>
+          className="friend-sync-source d-flex f-align-center"
+        >
+          {/* {console.log('here')} */}
+          {groupName ? (
+            <>
+              <figure className="friend-source text-center">
+                {groupName === "sync" ? <FacebookSyncIcon /> : ""}
+              </figure>
+              <span className={groupName.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={groupName.length > 12 && groupName}>
 
-              <SourceGroupIcon /> <span >{groupName.length > 12 ? groupName.substring(0, 12) + "..." : groupName}</span>
-              <Link
-                to={params?.data?.groupUrl}
-                className="ico-open-link"
-                target="_blank"
-              >
-                <OpenInNewTab />
-              </Link>
-            </span>
-          </>
-        ) : (
-          <span className="no-keywords muted-text">N/A</span>
-        )}
-      </div>
+                <SourceGroupIcon /> <span >{groupName.length > 12 ? groupName.substring(0, 12) + "..." : groupName}</span>
+                <Link
+                  to={params?.data?.groupUrl}
+                  className="ico-open-link"
+                  target="_blank"
+                >
+                  <OpenInNewTab />
+                </Link>
+              </span>
+            </>
+          ) : (
+            <span className="no-keywords muted-text">N/A</span>
+          )}
+        </div>
       )
     }
   }
@@ -684,7 +734,7 @@ export const SourceRendererPending = memo((params) => {
   if (params?.data?.finalSource?.toLowerCase() === 'sync') {
     return (
       <div className="friend-sync-source d-flex f-align-center">
-      {/* {console.log('here')} */}
+        {/* {console.log('here')} */}
         {params?.data?.finalSource ? (
           <>
             <figure className="friend-source text-center">

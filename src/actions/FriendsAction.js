@@ -121,6 +121,7 @@ const updateUnfriendList = (currnList, payload) => {
   payload.forEach((item) => {
     let upateItem = currnList.find((obj) => obj.friendFbId === item.friendFbId);
     upateItem.deleted_status = item.status;
+    upateItem.deleted_at = String(new Date());
   });
   return currnList;
 };
@@ -269,6 +270,8 @@ const fbSlice = createSlice({
         state.current_friend_list,
         action.meta.arg.payload
       );
+
+      console.log("Meta Action ===== ", action);
     },
     [deleteFriend.rejected]: () => {
       //console.log("it is delete rejected");
