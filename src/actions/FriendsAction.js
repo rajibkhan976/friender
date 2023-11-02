@@ -120,8 +120,19 @@ const updateBlockList = (currnList, payload) => {
 const updateUnfriendList = (currnList, payload) => {
   payload.forEach((item) => {
     let upateItem = currnList.find((obj) => obj.friendFbId === item.friendFbId);
-    upateItem.deleted_status = item.status;
-    upateItem.deleted_at = String(new Date());
+    upateItem.deleted_status = item.deleted_status;
+    upateItem.deleted_at = item.deleted_at;
+
+    // Parse the input date
+    // const date = new Date();
+
+    // // Format the date to the desired output format
+    // const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+    //   .toString()
+    //   .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date.getHours().toString().padStart(2, "0")
+    //   }:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
+
+    // upateItem.deleted_at = String(formattedDate);
   });
   return currnList;
 };
@@ -268,10 +279,11 @@ const fbSlice = createSlice({
     [deleteFriend.fulfilled]: (state, action) => {
       state.current_friend_list = updateUnfriendList(
         state.current_friend_list,
-        action.meta.arg.payload
+        action.payload.data
       );
 
-      console.log("Meta Action ===== ", action);
+      // console.log("CURRENT FRIEND LIST -- ", state.current_friend_list);
+      // console.log("Meta Action ===== ", action);
     },
     [deleteFriend.rejected]: () => {
       //console.log("it is delete rejected");

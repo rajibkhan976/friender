@@ -297,7 +297,7 @@ export const CreationRenderer = memo((params) => {
 });
 
 export const AgeRenderer = memo((params) => {
-  let statusSync = params?.data?.created_at?.toLowerCase();
+  let statusSync = null;
 
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
     statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
@@ -307,12 +307,14 @@ export const AgeRenderer = memo((params) => {
 
   } else if (params?.data?.deleted_status === 1) {
     statusSync = params?.data?.deleted_at?.toLowerCase();
+    
+  } else {
+    statusSync = params?.data?.created_at?.toLowerCase();
   }
 
   // let statusSync = params?.data?.created_at?.toLowerCase();
   // inputTimeString.replace(" ", "T") + ".000Z";
-  //console.log("utc time>>",statusSync);
-  const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
+  let localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
   //console.log("status sysnc>>>>>>local date",localTime);
   let currentUTC = helper.curretUTCTime();
   let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
@@ -327,6 +329,9 @@ export const AgeRenderer = memo((params) => {
     Math.floor(secs),
   ];
 
+  // console.log("Params Here for FriendListColumn --- ", params.data, statusSync);
+  // console.log(`Days - ${days} | Hours - ${hours} | Minutes - ${minutes} | Secs - ${secs}`);
+
   let age = 0;
 
   if (days) age = days;
@@ -335,7 +340,7 @@ export const AgeRenderer = memo((params) => {
   else age = 1;
 
 
-  console.log("Params Here for FriendListColumn --- ", params.data);
+  // console.log("Params Here for FriendListColumn --- ", params.data);
 
   // Calculates the Age for all..
   const ageCalculator = (bornDate) => {
@@ -343,10 +348,16 @@ export const AgeRenderer = memo((params) => {
     const timeDifference = today - new Date(bornDate);
     // Calculate age in days..
     let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+    // To showing 0 less Age..
+    // if (ageInDays === 0) {
+    //   ageInDays = 1;
+    // }
+
     if (ageInDays === 0) {
-      ageInDays = 1;
+      localTime = hours !== 0 ? `Today ${hours}h ${minutes}m Ago` : `Today ${minutes}m Ago`
     }
-    return ageInDays;
+
+    return Number(ageInDays);
   };
 
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
@@ -370,7 +381,6 @@ export const AgeRenderer = memo((params) => {
     const ageInDays = ageCalculator(actionDate);
     age = ageInDays
   }
-
 
   //  let showingDate = new Date(localTime); 
   //  function getMonthName(monthNumber) {

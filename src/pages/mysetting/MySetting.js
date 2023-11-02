@@ -2207,7 +2207,7 @@ const MySetting = () => {
             {sndMsgSomeoneSndFrndReqToggle && (
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
-                  Select the message &nbsp;
+                  Select the message template you want to send &nbsp;
                   <TurnOnSettingsWarn enabledFeature={sndMsgSomeoneSndFrndReqToggle}>
                     <DropSelectMessage
                       type="SOMEONE_SEND_REQ"
@@ -2256,7 +2256,7 @@ const MySetting = () => {
             {sndMsgRejtIncomingFrndReqToggle && (
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
-                  Select the message &nbsp;
+                  Select the message template you want to send &nbsp;
                   <TurnOnSettingsWarn enabledFeature={sndMsgRejtIncomingFrndReqToggle}>
                     <DropSelectMessage
                       type="REJT_INCOMING_REQ"
@@ -2304,7 +2304,7 @@ const MySetting = () => {
             {sndMsgAcptsIncomingFrndReqToggle && (
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
-                  Select the message &nbsp;
+                  Select the message template you want to send &nbsp;
                   <TurnOnSettingsWarn enabledFeature={sndMsgAcptsIncomingFrndReqToggle}>
                     <DropSelectMessage
                       type="ACCEPT_INCOMING_REQ"
