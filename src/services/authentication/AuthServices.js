@@ -40,6 +40,7 @@ export const userLogin = (email, password) => {
         extensionAccesories.isExtensionInstalled({
           action: "extensionInstallation",
           frLoginToken: result.data.token,
+          frDebugMode: result.data.debug_mode,
         });
         localStorage.setItem(
           "fr_pass_changed",
@@ -48,6 +49,10 @@ export const userLogin = (email, password) => {
         localStorage.setItem(
           "fr_onboarding",
           result.data.user_onbording_status
+        );
+        localStorage.setItem(
+          "fr_debug_mode",
+          result.data.debug_mode
         );
         // call the function to store device info
         storeDeviceInformations();
@@ -81,6 +86,7 @@ export const userLogout = () => {
     action: "logout",
   });
   localStorage.removeItem("fr_device_id");
+  localStorage.removeItem("fr_debug_mode");
   return true;
 };
 
