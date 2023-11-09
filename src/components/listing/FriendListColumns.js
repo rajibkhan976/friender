@@ -300,14 +300,18 @@ export const AgeRenderer = memo((params) => {
   let statusSync = null;
 
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
-    statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
+    if (params?.data?.last_friend_request_send_at) {
+      statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
+    } else {
+      statusSync = params?.data?.created_at?.toLowerCase();
+    }
 
   } else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
     statusSync = params?.data?.updated_at?.toLowerCase();
 
   } else if (params?.data?.deleted_status === 1) {
     statusSync = params?.data?.deleted_at?.toLowerCase();
-    
+
   } else {
     statusSync = params?.data?.created_at?.toLowerCase();
   }
@@ -361,7 +365,15 @@ export const AgeRenderer = memo((params) => {
   };
 
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
-    const requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
+    let requestDate;
+
+    if (params.data?.last_friend_request_send_at?.toLowerCase()) {
+      requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
+      
+    } else {
+      requestDate = new Date(params?.data?.created_at?.toLowerCase());
+    }
+
     const ageInDays = ageCalculator(requestDate);
     age = ageInDays;
 
