@@ -129,8 +129,11 @@ export const fetchAllGroups = (pageRef) => {
                 resolve(res.data)
             })
             .catch((error) => {
-                // console.log("error fount in fetching", error);
-                reject(error?.response?.data ? error.response.data : error.message);
+                if (error === "Request failed with status code 500") {
+                    resolve(error)
+                } else {
+                    reject(error?.response?.data ? error.response.data : error.message);
+                }
             })
     })
 }

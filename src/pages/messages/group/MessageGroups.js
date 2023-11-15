@@ -41,12 +41,19 @@ const MessageGroups = () => {
                 .unwrap()
                 .then((res) => {
                     if (res) {
+                        if (res === "Request failed with status code 500") {
+                            setGroupsArray([])
+                        }
+                        else {
+                            setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
+                        }
+                        
                         setIsEditing({ addNewSub: false, readyToEdit: false });
-                        setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
                         setListLoading(false);
                         setIsPages(true);
                     }
                 }).catch((error) => {
+                    console.log('error <<<<', error);
                     setListLoading(false);
                     if (error.message === "Rejected") {
                         setIsPages(false);
