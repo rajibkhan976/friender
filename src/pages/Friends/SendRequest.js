@@ -148,6 +148,7 @@ const SendRequest = ({ deleteAllInterval }) => {
       field: "gender",
       headerName: "Gender ",
       filter: "agTextColumnFilter",
+      headerClass: 'header-gender',
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
