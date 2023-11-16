@@ -27,7 +27,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
         }
 
         if (type === "REJT_INCOMING_REQ") {
-            return localStorage.getItem("fr_quickMessage_someone_send_req") || "";
+            return localStorage.getItem("fr_quickMessage_rejt_send_req") || "";
         }
 
         if (type === "ACCEPT_INCOMING_REQ") {

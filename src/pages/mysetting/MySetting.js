@@ -102,6 +102,50 @@ const MySetting = () => {
   const [sndMsgAcptsIncomingFrndReqQuickMsgModalOpen, setSndMsgAcptsIncomingFrndReqQuickMsgModalOpen] = useState(false);
   const [usingSelectOptions5, setUsingSelectOptions5] = useState(false);
 
+  useEffect(() => {
+    if (selectMsgTempAcceptsFrndReq) {
+      setSelectMsgTempRejectFrndReq(false);
+      setSelectMsgSomeoneSndFrndReq(false);
+      setSelectMsgRejtIncomingFrndReq(false);
+      setSelectMsgAcptsIncomingFrndReq(false);
+    }
+
+    if (selectMsgTempRejectFrndReq) {
+      setSelectMsgTempAcceptsFrndReq(false);
+      setSelectMsgSomeoneSndFrndReq(false);
+      setSelectMsgRejtIncomingFrndReq(false);
+      setSelectMsgAcptsIncomingFrndReq(false);
+    }
+
+    if (selectMsgSomeoneSndFrndReq) {
+      setSelectMsgTempAcceptsFrndReq(false);
+      setSelectMsgTempRejectFrndReq(false);
+      setSelectMsgRejtIncomingFrndReq(false);
+      setSelectMsgAcptsIncomingFrndReq(false);
+    }
+
+    if (selectMsgRejtIncomingFrndReq) {
+      setSelectMsgTempAcceptsFrndReq(false);
+      setSelectMsgSomeoneSndFrndReq(false);
+      setSelectMsgTempRejectFrndReq(false);
+      setSelectMsgAcptsIncomingFrndReq(false);
+    }
+
+    if (selectMsgAcptsIncomingFrndReq) {
+      setSelectMsgTempRejectFrndReq(false);
+      setSelectMsgTempAcceptsFrndReq(false);
+      setSelectMsgSomeoneSndFrndReq(false);
+      setSelectMsgRejtIncomingFrndReq(false);
+    }
+
+  }, [
+    selectMsgTempAcceptsFrndReq,
+    selectMsgTempRejectFrndReq,
+    selectMsgSomeoneSndFrndReq,
+    selectMsgRejtIncomingFrndReq,
+    selectMsgAcptsIncomingFrndReq,
+  ]);
+
   //period selctor obj
   const periodObj = [
     {
