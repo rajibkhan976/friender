@@ -65,12 +65,14 @@ $selectOptionsWidth: 290px;
   border-radius: 5px;
   border: 1px solid gray;
   width: 290px;
-  height: 209px;
+  // height: 209px;
+  height: 180px;
   position: absolute;
   background: $themeDefaultSecondary3;
   left: 50%;
   top: 50%;
-  transform: translate(-44.5%, 9%);
+  // transform: translate(-44.5%, 9%);
+  transform: translate(-44.5%, 10%);
   z-index: 9;
 
   &.select-panel-page {
@@ -114,7 +116,7 @@ $selectOptionsWidth: 290px;
   }
 }
 
- // For Quick Message text Tooltip..
+// For Quick Message text Tooltip..
 .quick-msg-tooltip {
   cursor: pointer;
 
@@ -129,7 +131,7 @@ $selectOptionsWidth: 290px;
   }
 }
 
- // For Group Messages Line Tooltip..
+// For Group Messages Line Tooltip..
 .quick-msg-tooltip-inline {
   @extend .quick-msg-title;
 

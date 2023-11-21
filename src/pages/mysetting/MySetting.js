@@ -4,10 +4,6 @@ import DropSelector from "../../components/formComponents/DropSelector";
 import Switch from "../../components/formComponents/Switch";
 import SettingLoader from "../../components/common/loaders/SettingLoader";
 import Modal from "../../components/common/Modal";
-import {
-  fetchProfileSetting,
-  saveSettings,
-} from "../../services/SettingServices";
 import Alertbox from "../../components/common/Toast";
 import { useDispatch, useSelector } from "react-redux";
 import { getMySettings, saveAllSettings, getAllGroupMessages, getGroupById } from "../../actions/MySettingAction";
@@ -24,7 +20,6 @@ import helper from "../../helpers/helper"
 import ToolTipPro from "../../components/common/ToolTipPro"
 import Keyword from "../../components/common/Keyword"
 import DropSelectMessage from "../../components/messages/DropSelectMessage";
-import message from "../message";
 
 
 const MySetting = () => {
@@ -102,49 +97,50 @@ const MySetting = () => {
   const [sndMsgAcptsIncomingFrndReqQuickMsgModalOpen, setSndMsgAcptsIncomingFrndReqQuickMsgModalOpen] = useState(false);
   const [usingSelectOptions5, setUsingSelectOptions5] = useState(false);
 
-  useEffect(() => {
-    if (selectMsgTempAcceptsFrndReq) {
-      setSelectMsgTempRejectFrndReq(false);
-      setSelectMsgSomeoneSndFrndReq(false);
-      setSelectMsgRejtIncomingFrndReq(false);
-      setSelectMsgAcptsIncomingFrndReq(false);
-    }
+  // To Turn only one Message settings at a time.
+  // useEffect(() => {
+  //   if (selectMsgTempAcceptsFrndReq) {
+  //     setSelectMsgTempRejectFrndReq(false);
+  //     setSelectMsgSomeoneSndFrndReq(false);
+  //     setSelectMsgRejtIncomingFrndReq(false);
+  //     setSelectMsgAcptsIncomingFrndReq(false);
+  //   }
 
-    if (selectMsgTempRejectFrndReq) {
-      setSelectMsgTempAcceptsFrndReq(false);
-      setSelectMsgSomeoneSndFrndReq(false);
-      setSelectMsgRejtIncomingFrndReq(false);
-      setSelectMsgAcptsIncomingFrndReq(false);
-    }
+  //   if (selectMsgTempRejectFrndReq) {
+  //     setSelectMsgTempAcceptsFrndReq(false);
+  //     setSelectMsgSomeoneSndFrndReq(false);
+  //     setSelectMsgRejtIncomingFrndReq(false);
+  //     setSelectMsgAcptsIncomingFrndReq(false);
+  //   }
 
-    if (selectMsgSomeoneSndFrndReq) {
-      setSelectMsgTempAcceptsFrndReq(false);
-      setSelectMsgTempRejectFrndReq(false);
-      setSelectMsgRejtIncomingFrndReq(false);
-      setSelectMsgAcptsIncomingFrndReq(false);
-    }
+  //   if (selectMsgSomeoneSndFrndReq) {
+  //     setSelectMsgTempAcceptsFrndReq(false);
+  //     setSelectMsgTempRejectFrndReq(false);
+  //     setSelectMsgRejtIncomingFrndReq(false);
+  //     setSelectMsgAcptsIncomingFrndReq(false);
+  //   }
 
-    if (selectMsgRejtIncomingFrndReq) {
-      setSelectMsgTempAcceptsFrndReq(false);
-      setSelectMsgSomeoneSndFrndReq(false);
-      setSelectMsgTempRejectFrndReq(false);
-      setSelectMsgAcptsIncomingFrndReq(false);
-    }
+  //   if (selectMsgRejtIncomingFrndReq) {
+  //     setSelectMsgTempAcceptsFrndReq(false);
+  //     setSelectMsgSomeoneSndFrndReq(false);
+  //     setSelectMsgTempRejectFrndReq(false);
+  //     setSelectMsgAcptsIncomingFrndReq(false);
+  //   }
 
-    if (selectMsgAcptsIncomingFrndReq) {
-      setSelectMsgTempRejectFrndReq(false);
-      setSelectMsgTempAcceptsFrndReq(false);
-      setSelectMsgSomeoneSndFrndReq(false);
-      setSelectMsgRejtIncomingFrndReq(false);
-    }
+  //   if (selectMsgAcptsIncomingFrndReq) {
+  //     setSelectMsgTempRejectFrndReq(false);
+  //     setSelectMsgTempAcceptsFrndReq(false);
+  //     setSelectMsgSomeoneSndFrndReq(false);
+  //     setSelectMsgRejtIncomingFrndReq(false);
+  //   }
 
-  }, [
-    selectMsgTempAcceptsFrndReq,
-    selectMsgTempRejectFrndReq,
-    selectMsgSomeoneSndFrndReq,
-    selectMsgRejtIncomingFrndReq,
-    selectMsgAcptsIncomingFrndReq,
-  ]);
+  // }, [
+  //   selectMsgTempAcceptsFrndReq,
+  //   selectMsgTempRejectFrndReq,
+  //   selectMsgSomeoneSndFrndReq,
+  //   selectMsgRejtIncomingFrndReq,
+  //   selectMsgAcptsIncomingFrndReq,
+  // ]);
 
   //period selctor obj
   const periodObj = [
@@ -1715,7 +1711,19 @@ const MySetting = () => {
       </span>
     );
   };
+  
 
+  /**
+   * Turn off the select option of message selections when toggle is off.
+   * @param {Boolean} isToggle 
+   * @param {Function} setPanelOpen 
+   */
+  const TurnOffMsgPanelDependsOnToggle = (isToggle, setPanelOpen) => {
+    if (isToggle === false) {
+      setPanelOpen(false);
+    }
+  };
+  
 
   return (
     <div className="setting-content setting-global">
@@ -2137,6 +2145,7 @@ const MySetting = () => {
                   checked={sndMsgAcptsFrndReqToggle}
                   handleChange={() => {
                     setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
+                    TurnOffMsgPanelDependsOnToggle(sndMsgAcptsFrndReqToggle, setSelectMsgTempAcceptsFrndReq);
                   }}
                 />
                 Send message when someone accepts my friend request
@@ -2185,6 +2194,7 @@ const MySetting = () => {
                   handleChange={() => {
                     setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
                     setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
+                    TurnOffMsgPanelDependsOnToggle(sndMsgRejtFrndReqToggle, setSelectMsgTempRejectFrndReq);
                   }}
                 />
                 Send message when someone reject my friend request
@@ -2234,6 +2244,7 @@ const MySetting = () => {
                   checked={sndMsgSomeoneSndFrndReqToggle}
                   handleChange={() => {
                     sertSndMsgSomeoneSndFrndReqToggle(!sndMsgSomeoneSndFrndReqToggle);
+                    TurnOffMsgPanelDependsOnToggle(sndMsgSomeoneSndFrndReqToggle, setSelectMsgSomeoneSndFrndReq);
                   }}
                 />
                 Send message when someone sends me a friend request
@@ -2283,6 +2294,7 @@ const MySetting = () => {
                   checked={sndMsgRejtIncomingFrndReqToggle}
                   handleChange={() => {
                     setSndMsgRejtIncomingFrndReqToggle(!sndMsgRejtIncomingFrndReqToggle);
+                    TurnOffMsgPanelDependsOnToggle(sndMsgRejtIncomingFrndReqToggle, setSelectMsgRejtIncomingFrndReq);
                   }}
                 />
                 Send message when I reject an incoming friend request
@@ -2331,6 +2343,7 @@ const MySetting = () => {
                   checked={sndMsgAcptsIncomingFrndReqToggle}
                   handleChange={() => {
                     setSndMsgAcptsIncomingFrndReqToggle(!sndMsgAcptsIncomingFrndReqToggle);
+                    TurnOffMsgPanelDependsOnToggle(sndMsgAcptsIncomingFrndReqToggle, setSelectMsgAcptsIncomingFrndReq);
                   }}
                 />
                 Send message when I accept an incoming friend request
