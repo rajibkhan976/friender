@@ -35,13 +35,13 @@ const  CustomHeaderTooltip = (props) => {
                   <li><span><IncomingIcon/></span>Incoming</li>
                   <li><span><SyncIcon/></span>Sync</li>
                   <li><span><GroupIcon/></span>Request from group</li>
+                  <li><span> <IncomingRequest/></span> Incoming request</li>
                 </ul>
                 <div className="commingSoon"><span className="warn-badget">Coming Soon</span></div>
                 <ul className="muted">
                   <li><span> <FriendsFriendIcon/></span> Request from friends friend</li>
                   <li><span> <SuggestFriendIcon/></span> Request from suggested friends</li>
                   <li><span> <PostIcon/></span> Request from post</li>
-                  <li><span> <IncomingRequest/></span> Incoming request</li>
                 </ul>
               </div>
           </div>
