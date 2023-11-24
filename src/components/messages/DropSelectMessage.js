@@ -21,7 +21,8 @@ const DropSelectMessage = ({
     type,
     setUsingSelectOptions,
     usingSelectOptions,
-    saveMySetting
+    saveMySetting,
+    others = []
 }) => {
     const [selectOption, setSelectOption] = useState(() => groupSelect ? groupSelect.group_name : '');
     const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
@@ -80,7 +81,7 @@ const DropSelectMessage = ({
                 return (
                     <li
                         key={_id}
-                        className={showTooltip && `tooltipFullName quick-msg-tooltip-inline`}
+                        className={showTooltip ? `tooltipFullName quick-msg-tooltip-inline` : ''}
                         data-text={`${group_name}`}
                         onClick={() => handleClickToSelectOption(option)}
                         onMouseEnter={() => group_name.length > 32 ? setShowTooltip(true) : setShowTooltip(false)}
@@ -232,6 +233,19 @@ const DropSelectMessage = ({
         }
     };
 
+    /**
+     * Select Bar Click Handler Function.
+     */
+    const handleSelectBarClick = () => {
+        if (!isDisabled) {
+            handleIsOpenSelectOption(!openSelectOption)
+        }
+
+        if (others && others.length) {
+            others.forEach((func) => func(false));
+        }
+    };
+
 
     return (
         <>
@@ -254,7 +268,7 @@ const DropSelectMessage = ({
                         borderColor: openSelectOption && '#0094FFFF',
                         color: 'lightgray'
                     }}
-                    onClick={() => !isDisabled && handleIsOpenSelectOption(!openSelectOption)}
+                    onClick={handleSelectBarClick}
                 >
                     <span>{renderSelectOption()}</span>
                     {/*<span className="select-arrow"></span>*/}

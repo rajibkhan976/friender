@@ -65,14 +65,12 @@ $selectOptionsWidth: 290px;
   border-radius: 5px;
   border: 1px solid gray;
   width: 290px;
-  // height: 209px;
-  height: 180px;
+  height: 209px;
   position: absolute;
   background: $themeDefaultSecondary3;
   left: 50%;
   top: 50%;
-  // transform: translate(-44.5%, 9%);
-  transform: translate(-44.5%, 10%);
+  transform: translate(-44.5%, 9%);
   z-index: 9;
 
   &.select-panel-page {

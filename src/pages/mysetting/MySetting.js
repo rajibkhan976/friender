@@ -97,51 +97,6 @@ const MySetting = () => {
   const [sndMsgAcptsIncomingFrndReqQuickMsgModalOpen, setSndMsgAcptsIncomingFrndReqQuickMsgModalOpen] = useState(false);
   const [usingSelectOptions5, setUsingSelectOptions5] = useState(false);
 
-  // To Turn only one Message settings at a time.
-  // useEffect(() => {
-  //   if (selectMsgTempAcceptsFrndReq) {
-  //     setSelectMsgTempRejectFrndReq(false);
-  //     setSelectMsgSomeoneSndFrndReq(false);
-  //     setSelectMsgRejtIncomingFrndReq(false);
-  //     setSelectMsgAcptsIncomingFrndReq(false);
-  //   }
-
-  //   if (selectMsgTempRejectFrndReq) {
-  //     setSelectMsgTempAcceptsFrndReq(false);
-  //     setSelectMsgSomeoneSndFrndReq(false);
-  //     setSelectMsgRejtIncomingFrndReq(false);
-  //     setSelectMsgAcptsIncomingFrndReq(false);
-  //   }
-
-  //   if (selectMsgSomeoneSndFrndReq) {
-  //     setSelectMsgTempAcceptsFrndReq(false);
-  //     setSelectMsgTempRejectFrndReq(false);
-  //     setSelectMsgRejtIncomingFrndReq(false);
-  //     setSelectMsgAcptsIncomingFrndReq(false);
-  //   }
-
-  //   if (selectMsgRejtIncomingFrndReq) {
-  //     setSelectMsgTempAcceptsFrndReq(false);
-  //     setSelectMsgSomeoneSndFrndReq(false);
-  //     setSelectMsgTempRejectFrndReq(false);
-  //     setSelectMsgAcptsIncomingFrndReq(false);
-  //   }
-
-  //   if (selectMsgAcptsIncomingFrndReq) {
-  //     setSelectMsgTempRejectFrndReq(false);
-  //     setSelectMsgTempAcceptsFrndReq(false);
-  //     setSelectMsgSomeoneSndFrndReq(false);
-  //     setSelectMsgRejtIncomingFrndReq(false);
-  //   }
-
-  // }, [
-  //   selectMsgTempAcceptsFrndReq,
-  //   selectMsgTempRejectFrndReq,
-  //   selectMsgSomeoneSndFrndReq,
-  //   selectMsgRejtIncomingFrndReq,
-  //   selectMsgAcptsIncomingFrndReq,
-  // ]);
-
   //period selctor obj
   const periodObj = [
     {
@@ -1711,7 +1666,7 @@ const MySetting = () => {
       </span>
     );
   };
-  
+
 
   /**
    * Turn off the select option of message selections when toggle is off.
@@ -1723,7 +1678,7 @@ const MySetting = () => {
       setPanelOpen(false);
     }
   };
-  
+
 
   return (
     <div className="setting-content setting-global">
@@ -2178,6 +2133,12 @@ const MySetting = () => {
                       usingSelectOptions={usingSelectOptions}
                       setUsingSelectOptions={setUsingSelectOptions}
                       saveMySetting={saveMySetting}
+                      others={[
+                        setSelectMsgTempRejectFrndReq,
+                        setSelectMsgSomeoneSndFrndReq,
+                        setSelectMsgRejtIncomingFrndReq,
+                        setSelectMsgAcptsIncomingFrndReq
+                      ]}
                     />
                   </TurnOnSettingsWarn>
                 </div>
@@ -2211,6 +2172,7 @@ const MySetting = () => {
               <div className="setting-child others">
                 <div className="custom-select-drop-area">
                   Select the message template you want to send &nbsp;
+                  {/* <div ref={dropdownRef}> */}
                   <TurnOnSettingsWarn enabledFeature={sndMsgRejtFrndReqToggle}>
                     <DropSelectMessage
                       type="REJECT_REQ"
@@ -2227,8 +2189,15 @@ const MySetting = () => {
                       setUsingSelectOptions={setUsingSelectOptions2}
                       usingSelectOptions={usingSelectOptions2}
                       saveMySetting={saveMySetting}
+                      others={[
+                        setSelectMsgTempAcceptsFrndReq,
+                        setSelectMsgSomeoneSndFrndReq,
+                        setSelectMsgRejtIncomingFrndReq,
+                        setSelectMsgAcptsIncomingFrndReq,
+                      ]}
                     />
                   </TurnOnSettingsWarn>
+                  {/* </div> */}
                 </div>
               </div>
             )}
@@ -2279,6 +2248,12 @@ const MySetting = () => {
                       setUsingSelectOptions={setUsingSelectOptions3}
                       usingSelectOptions={usingSelectOptions3}
                       saveMySetting={saveMySetting}
+                      others={[
+                        setSelectMsgTempAcceptsFrndReq,
+                        setSelectMsgTempRejectFrndReq,
+                        setSelectMsgRejtIncomingFrndReq,
+                        setSelectMsgAcptsIncomingFrndReq,
+                      ]}
                     />
                   </TurnOnSettingsWarn>
                 </div>
@@ -2329,6 +2304,12 @@ const MySetting = () => {
                       setUsingSelectOptions={setUsingSelectOptions4}
                       usingSelectOptions={usingSelectOptions4}
                       saveMySetting={saveMySetting}
+                      others={[
+                        setSelectMsgTempAcceptsFrndReq,
+                        setSelectMsgSomeoneSndFrndReq,
+                        setSelectMsgTempRejectFrndReq,
+                        setSelectMsgAcptsIncomingFrndReq,
+                      ]}
                     />
                   </TurnOnSettingsWarn>
                 </div>
@@ -2378,6 +2359,12 @@ const MySetting = () => {
                       setUsingSelectOptions={setUsingSelectOptions5}
                       usingSelectOptions={usingSelectOptions5}
                       saveMySetting={saveMySetting}
+                      others={[
+                        setSelectMsgTempRejectFrndReq,
+                        setSelectMsgTempAcceptsFrndReq,
+                        setSelectMsgSomeoneSndFrndReq,
+                        setSelectMsgRejtIncomingFrndReq,
+                      ]}
                     />
                   </TurnOnSettingsWarn>
                 </div>
