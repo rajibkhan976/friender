@@ -649,7 +649,7 @@ export const KeywordRenderer = memo((params) => {
   //className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}
   return (
     <>
-      {matchedKeyword?.length > 0 ?
+      {matchedKeyword?.length > 0 && !params.data.is_incoming ?
         <span
           className={`sync-box-wrap d-flex f-align-center key-box-wrap`}
         >
