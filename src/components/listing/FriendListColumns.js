@@ -301,7 +301,11 @@ export const AgeRenderer = memo((params) => {
 
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
     if (params?.data?.last_friend_request_send_at) {
-      statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
+      if (params?.data?.refriending_attempt > 0) {
+        statusSync = params?.data?.created_at?.toLowerCase();
+      } else {
+        statusSync = params?.data?.last_friend_request_send_at?.toLowerCase();
+      }
     } else {
       statusSync = params?.data?.created_at?.toLowerCase();
     }
@@ -368,8 +372,11 @@ export const AgeRenderer = memo((params) => {
     let requestDate;
 
     if (params.data?.last_friend_request_send_at?.toLowerCase()) {
-      requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
-      
+      if (params?.data?.refriending_attempt > 0) {
+        requestDate = new Date(params?.data?.created_at?.toLowerCase());
+      } else {
+        requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
+      }
     } else {
       requestDate = new Date(params?.data?.created_at?.toLowerCase());
     }

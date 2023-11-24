@@ -671,6 +671,12 @@
     }
   }
 
+  .friendSource {
+    > span {
+      line-height: normal;
+    }
+  }
+
   span {
     text-transform: capitalize;
     line-height: 1;
