@@ -722,7 +722,7 @@ export const CountryTierRenderer = memo((params) => {
 
 export const RefriendCountRenderer = memo((params) => {
   // console.log('params?.value', params?.value);
-  return params?.value ? params?.value : <span className="muted-text">N/A</span>
+  return params?.value &&!params.data.is_incoming? params?.value : <span className="muted-text">N/A</span>
 })
 
 export const SourceRendererPending = memo((params) => {
