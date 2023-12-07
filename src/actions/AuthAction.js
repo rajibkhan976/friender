@@ -120,7 +120,8 @@ export const authSlice=createSlice({
         helper.deleteCookie("fr_isSyncing");
         helper.deleteCookie("deleteAllPendingFR");
         localStorage.clear();
-        extensionAccesories.isExtensionInstalled({
+        console.log("User is getting log out");
+        extensionAccesories.sendMessageToExt({
           action : "logout", 
         });
         removeVariablesWithPrefix("fr_")
