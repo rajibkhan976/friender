@@ -117,6 +117,8 @@ const LostFriends = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      // maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -133,6 +135,8 @@ const LostFriends = () => {
       tooltipComponent: CustomHeaderTooltip,
       cellRenderer: CountryRenderer,
       headerClass: 'header-query-tooltip',
+      width: 158,
+      // maxWidth: 158,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -156,12 +160,30 @@ const LostFriends = () => {
     //   }
     // },
     {
+      field: "message_thread",
+      headerName: "Message Count",
+      headerTooltip: 'Messages',
+      headerClass: 'header-messages',
+      cellRenderer: MessageRenderer,
+      width: 100,
+      // maxWidth: 100,
+      filter: "agNumberColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
+      },
+    },
+    {
       field: "created_at",
       headerName: "Age",
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
+      width: 110,
+      // maxWidth: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -282,20 +304,7 @@ const LostFriends = () => {
       cellRenderer: SourceRendererPending,
       // lockPosition: "right",
       minWidth: 185,
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
-    {
-      field: "message_thread",
-      headerName: "Message Count",
-      headerTooltip: 'Messages',
-      headerClass: 'header-messages',
-      cellRenderer: MessageRenderer,
-      filter: "agNumberColumnFilter",
+      // maxWidth: 185,
       filterParams: {
         buttons: ["apply", "reset"],
         suppressMiniFilter: true,

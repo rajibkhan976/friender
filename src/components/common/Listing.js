@@ -31,7 +31,7 @@ const Listing = (props) => {
   //  const selectRef = useRef(null);
   const gridRef = useRef(null);
   const selectedFrnd = useSelector(
-      (state) => state.friendlist.selected_friends
+    (state) => state.friendlist.selected_friends
   );
   let selectedPageSet = new Set();
   const textFilter = useSelector((state) => state.friendlist.searched_filter);
@@ -46,7 +46,7 @@ const Listing = (props) => {
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [showPaginate, setShowPaginate] = useState(false);
   const [selectedFriends, setSelectedFriends] = useState([]);
-  const [currentPage,setCurrentPage]=useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   // const isFirstColumn = (params) => {
   //   var displayedColumns = params.columnApi.getAllDisplayedColumns();
   //   var thisIsFirstColumn = displayedColumns[0] === params.column;
@@ -126,12 +126,12 @@ const Listing = (props) => {
     } else {
       selectedPageSet.add(currentPageNum);
     }
- //after two click the code is not working on every page
-    if (!event.target.checked && gridRef?.current?.api) { 
+    //after two click the code is not working on every page
+    if (!event.target.checked && gridRef?.current?.api) {
       onChangeCheck(false);
       setTimeout(() => {
         resetPaginationSelection(gridRef.current);
-      },100);
+      }, 100);
     }
 
 
@@ -198,11 +198,11 @@ const Listing = (props) => {
   }, []);
 
 
-  const addIconToCol=()=>{
+  const addIconToCol = () => {
 
     let ageCol = document.querySelectorAll(".ag-header-cell-text");
     let colInterval = setInterval(() => {
-      if (ageCol?.length <= 0 ) {
+      if (ageCol?.length <= 0) {
         ageCol = document.querySelectorAll(".ag-header-cell-text");
       } else {
         clearInterval(colInterval);
@@ -266,9 +266,9 @@ const Listing = (props) => {
 
   useEffect(() => {
     gridRef &&
-    gridRef.current &&
-    gridRef.current.api &&
-    gridRef.current.api.setQuickFilter(textFilter);
+      gridRef.current &&
+      gridRef.current.api &&
+      gridRef.current.api.setQuickFilter(textFilter);
 
     // gridRef &&
     //   gridRef.current &&
@@ -293,11 +293,11 @@ const Listing = (props) => {
     }
 
     if (!selectAllChecked) {
-     // console.log("is ieeee checked", selectAllChecked);
-      if (gridRef?.current?.api) {  resetPaginationSelection(gridRef.current);}
+      // console.log("is ieeee checked", selectAllChecked);
+      if (gridRef?.current?.api) { resetPaginationSelection(gridRef.current); }
 
-   }
-   //after removing the return it worked the staying selectAll issue
+    }
+    //after removing the return it worked the staying selectAll issue
     // return () => {
     //   if (gridRef?.current?.api) {
     //     gridRef.current.api.removeEventListener('paginationChanged', onPaginationChanged);
@@ -309,7 +309,6 @@ const Listing = (props) => {
   // DefaultColDef sets props common to all Columns
   const defaultColDef = useMemo(() => ({
     sortable: true,
-    initialWidth: 200,
     cellClass: "cell-vertical-align",
     // autoHeaderHeight: true,
     suppressDragLeaveHidesColumns: true,
@@ -438,24 +437,24 @@ const Listing = (props) => {
   }, []);
 
   const filterChanged = useCallback(
-      (e) => {
-        let filteredCount = 0;
-        gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
-        props.getFilterNum(filteredCount)
+    (e) => {
+      let filteredCount = 0;
+      gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
+      props.getFilterNum(filteredCount)
 
-        if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
-          setMaxSelect(filteredCount);
-          //console.log("filtered:::", filteredCount);
-        } else if (textFilter) {
-          //console.log("::Gobal List filter active:::>", filteredCount);
-          setMaxSelect(filteredCount);
-        } else {
-          setMaxSelect(props.friendsData.length);
-          //console.log("not filtered", filteredCount);
-        }
-        // gridRef.current.api.deselectAll();
-      },
-      [textFilter]
+      if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
+        setMaxSelect(filteredCount);
+        //console.log("filtered:::", filteredCount);
+      } else if (textFilter) {
+        //console.log("::Gobal List filter active:::>", filteredCount);
+        setMaxSelect(filteredCount);
+      } else {
+        setMaxSelect(props.friendsData.length);
+        //console.log("not filtered", filteredCount);
+      }
+      // gridRef.current.api.deselectAll();
+    },
+    [textFilter]
   );
 
 
@@ -479,7 +478,7 @@ const Listing = (props) => {
     }
     else {
       gridRef.current.api.deselectAll();
-      if(gridRef?.current){
+      if (gridRef?.current) {
         resetPaginationSelection(gridRef.current);
       }
     }
@@ -515,12 +514,12 @@ const Listing = (props) => {
 
     // friendFbId
     setSelectedFriends(
-        selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
+      selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
     );
     if (selectedUsers?.length) {
       localStorage.setItem(
-          "fr-selected-friends",
-          JSON.stringify(selectedUsers)
+        "fr-selected-friends",
+        JSON.stringify(selectedUsers)
       );
     }
   }, [currentWhiteList, currentBlackList]);
@@ -551,116 +550,116 @@ const Listing = (props) => {
 
 
   return (
-      <>
-        {selectedFriends &&
+    <>
+      {selectedFriends &&
         selectedFriends.length > 0 &&
         selectedFrnd &&
         selectedFrnd.length > 0 ? (
-            <div className="selection-popup d-flex f-justify-center f-align-center">
-              <p>
-                {selectedFriends.length === gridRef.current.props.rowData.length &&
-                    "All"}{" "}
-                {selectedFriends.length ? (
-                    <strong>{selectedFriends.length}</strong>
-                ) : (
-                    ""
-                )}{" "}
-                Friend{selectedFriends.length > 1 && "s"}{" "}
-                {selectedFriends.length > 1 ? "are" : "is"} selected.
-                {gridRef.current.props.rowData.length !== selectedFriends.length &&
-                maxSelect - Number(selectedFriends.length) > 0 ? (
-                    <span>
+        <div className="selection-popup d-flex f-justify-center f-align-center">
+          <p>
+            {selectedFriends.length === gridRef.current.props.rowData.length &&
+              "All"}{" "}
+            {selectedFriends.length ? (
+              <strong>{selectedFriends.length}</strong>
+            ) : (
+              ""
+            )}{" "}
+            Friend{selectedFriends.length > 1 && "s"}{" "}
+            {selectedFriends.length > 1 ? "are" : "is"} selected.
+            {gridRef.current.props.rowData.length !== selectedFriends.length &&
+              maxSelect - Number(selectedFriends.length) > 0 ? (
+              <span>
                 Do you want to select other all{" "}
-                      {maxSelect - Number(selectedFriends.length)} Friends{" "}
+                {maxSelect - Number(selectedFriends.length)} Friends{" "}
               </span>
-                ) : (
-                    <span>Uncheck All </span>
-                )}{" "}
-                {maxSelect - Number(selectedFriends.length) === 0 ? (
-                    <Checkbox
-                        onChangeCheck={onChangeCheck}
-                        checkValue={maxSelect === Number(selectedFriends.length)}
-                    />
-                ) : (
-                    <Checkbox
-                        onChangeCheck={onChangeCheck}
-                        checkValue={
-                            gridRef.current.props.rowData.length ===
-                            selectedFriends.length
-                        }
-                    />
-                )}
-              </p>
-            </div>
-        ) : (
-            ""
-        )}
-        <div
-            id="grid-wrapper"
-            className={`ag-theme-fr-table 
+            ) : (
+              <span>Uncheck All </span>
+            )}{" "}
+            {maxSelect - Number(selectedFriends.length) === 0 ? (
+              <Checkbox
+                onChangeCheck={onChangeCheck}
+                checkValue={maxSelect === Number(selectedFriends.length)}
+              />
+            ) : (
+              <Checkbox
+                onChangeCheck={onChangeCheck}
+                checkValue={
+                  gridRef.current.props.rowData.length ===
+                  selectedFriends.length
+                }
+              />
+            )}
+          </p>
+        </div>
+      ) : (
+        ""
+      )}
+      <div
+        id="grid-wrapper"
+        className={`ag-theme-fr-table 
             ag-theme-alpine 
             ${showPaginate ? "defaultPaginate" : ""} 
             ${selectedFriends &&
             selectedFriends.length > 0 &&
             selectedFrnd &&
             selectedFrnd.length > 0
-                ? "selected-options"
-                : ""
-            }
+            ? "selected-options"
+            : ""
+          }
             `}
-            style={maxSelect === 0 ? {
-              height: "inherit",
-              width: "100%",
-            } : tableStyle}
-        >
-          <AgGridReact
-              onGridReady={onGridReady}
-              // onRowDataChanged={()=>{}}
-              ref={gridRef}
-              rowData={rowData}
-              columnDefs={columnDefs}
-              defaultColDef={defaultColDef}
-              animateRows={true}
-              rowSelection="multiple"
-              suppressRowClickSelection={true}
-              onFirstDataRendered={onFirstDataRendered}
-              //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
-              rowHeight={55}
-              headerHeight={50}
-              //onColumnMoved={onColumnMoved}
-              pagination={true}
-              paginationPageSize={15}
-              suppressScrollOnNewData={false}
-              onGridSizeChanged={onGridSizeChanged}
-              onFilterChanged={filterChanged}
-              rowModelType={showPaginate ? `infinite` : `clientSide`}
-              cacheBlockSize={15}
-              cacheOverflowSize={2}
-              onSelectionChanged={selectionChanged}
-              loadingOverlayComponent={ListingLoader}
-              noRowsOverlayComponent={NoDataFound}
-              cacheQuickFilter={true}
-              // cacheBlockSize={listLimit}
-              //enableBrowserTooltips={true}
-              tooltipShowDelay={0}
-              tooltipHideDelay={1000000}
-              alwaysShowHorizontalScroll={true}
-              suppressMenuHide={true}
-              //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
-          />
-        </div>
-        {maxSelect !== 0 && !showPaginate ? (
-            <footer className="table-footer d-flex f-align-center">
-              <Suspense fallback={""}>
-                <Pagination
-                currentPage={currentPage}
-                    pageNum={maxSelect}
-                    itemsPerPage={itemsPerPage}
-                    onNumClick={navigateToNumPage}
-                />
-              </Suspense>
-              <div className="select-page">
-                {/* <select
+        style={maxSelect === 0 ? {
+          height: "inherit",
+          width: "100%",
+        } : tableStyle}
+      >
+        <AgGridReact
+          onGridReady={onGridReady}
+          // onRowDataChanged={()=>{}}
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          animateRows={true}
+          rowSelection="multiple"
+          suppressRowClickSelection={true}
+          onFirstDataRendered={onFirstDataRendered}
+          //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
+          rowHeight={55}
+          headerHeight={50}
+          //onColumnMoved={onColumnMoved}
+          pagination={true}
+          paginationPageSize={15}
+          suppressScrollOnNewData={false}
+          onGridSizeChanged={onGridSizeChanged}
+          onFilterChanged={filterChanged}
+          rowModelType={showPaginate ? `infinite` : `clientSide`}
+          cacheBlockSize={15}
+          cacheOverflowSize={2}
+          onSelectionChanged={selectionChanged}
+          loadingOverlayComponent={ListingLoader}
+          noRowsOverlayComponent={NoDataFound}
+          cacheQuickFilter={true}
+          // cacheBlockSize={listLimit}
+          //enableBrowserTooltips={true}
+          tooltipShowDelay={0}
+          tooltipHideDelay={1000000}
+          alwaysShowHorizontalScroll={true}
+          suppressMenuHide={true}
+        //onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
+        />
+      </div>
+      {maxSelect !== 0 && !showPaginate ? (
+        <footer className="table-footer d-flex f-align-center">
+          <Suspense fallback={""}>
+            <Pagination
+              currentPage={currentPage}
+              pageNum={maxSelect}
+              itemsPerPage={itemsPerPage}
+              onNumClick={navigateToNumPage}
+            />
+          </Suspense>
+          <div className="select-page">
+            {/* <select
               onChange={onPageSizeChanged}
               id="page-size"
               defaultValue={"15"}
@@ -673,24 +672,24 @@ const Listing = (props) => {
               <option value="180">180 view</option>
               <option value={maxSelect}>All</option>
             </select>  */}
-                <DropSelector
-                    handleChange={onPageSizeChanged}
-                    id="page-size"
-                    defaultValue={"15"}
-                    // ref={selectRef}
-                    selects={pageNumbers}
-                    extraClass="pageNo"
-                    height="30px"
-                    width="90px"
-                />
-              </div>
-            </footer>
-        ) : (
-            ""
-        )}
+            <DropSelector
+              handleChange={onPageSizeChanged}
+              id="page-size"
+              defaultValue={"15"}
+              // ref={selectRef}
+              selects={pageNumbers}
+              extraClass="pageNo"
+              height="30px"
+              width="90px"
+            />
+          </div>
+        </footer>
+      ) : (
+        ""
+      )}
 
-        {/* <Modal /> */}
-      </>
+      {/* <Modal /> */}
+    </>
   );
 };
 

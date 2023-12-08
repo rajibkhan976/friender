@@ -85,7 +85,7 @@ const BlackList = () => {
 
   const ageComparator = (targetDate) => {
     let statusSync = targetDate?.toLowerCase();
-    const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+    const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
     let currentUTC = helper.curretUTCTime();
     let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -130,7 +130,7 @@ const BlackList = () => {
       },
       cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      // maxWidth: 350,
     },
     // {
     //   field: "friendStatus",
@@ -150,6 +150,7 @@ const BlackList = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -169,6 +170,8 @@ const BlackList = () => {
         inactiveAfter
       },
       filter: "agNumberColumnFilter",
+      width: 100,
+      // maxWidth: 100,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -206,6 +209,7 @@ const BlackList = () => {
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
+      width: 110,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -217,21 +221,21 @@ const BlackList = () => {
             displayKey: 'lessThan',
             displayName: 'Less than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue,cellValue) < filterValue
+              return ageComparator(filterValue, cellValue) < filterValue
             }
           },
           {
             displayKey: 'greaterThan',
             displayName: 'Greater than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue,cellValue) > filterValue
+              return ageComparator(filterValue, cellValue) > filterValue
             }
           },
           {
             displayKey: 'equals',
             displayName: 'Equals',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue,cellValue) == filterValue
+              return ageComparator(filterValue, cellValue) == filterValue
             }
           },
         ],
@@ -244,6 +248,7 @@ const BlackList = () => {
       headerTooltip: 'Country',
       tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
+      width: 158,
       headerClass: 'header-query-tooltip',
       filterParams: {
         buttons: ["apply", "reset"],
@@ -319,7 +324,7 @@ const BlackList = () => {
     //   headerName: "Sync & Added Date &  Time",
     //   cellRenderer: CreationRenderer,
     //   minWidth: 240,
-    //   maxWidth: 250,
+    // //   maxWidth: 250,
     //   filter: "agDateColumnFilter",
     //   filterParams: {
     //     buttons: ["apply", "reset"],
@@ -369,6 +374,7 @@ const BlackList = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
+      width: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -389,6 +395,7 @@ const BlackList = () => {
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
+      width: 75,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -425,6 +432,7 @@ const BlackList = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
+      width: 100,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -438,6 +446,7 @@ const BlackList = () => {
       headerName: "Engagement",
       headerTooltip: 'Total Engagement',
       headerClass: 'header-engagement',
+      width: 75,
       filter: "agNumberColumnFilter",
       cellRenderer: EngagementRenderer,
       filterParams: {
@@ -453,7 +462,7 @@ const BlackList = () => {
       },
       valueGetter: EngagementGetter,
       // minWidth: 0,
-      // maxWidth: 0,
+      // // maxWidth: 0,
       cellClass: 'engagementCell'
     },
   ];

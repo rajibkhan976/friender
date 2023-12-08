@@ -74,7 +74,7 @@ const IncomingRejectngRequest = () => {
       },
       cellRenderer: NameCellRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      maxWidth: 350,
     },
     {
       field: "friendStatus",
@@ -94,6 +94,8 @@ const IncomingRejectngRequest = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -143,6 +145,8 @@ const IncomingRejectngRequest = () => {
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
+      width: 75,
+      maxWidth: 75,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -163,6 +167,8 @@ const IncomingRejectngRequest = () => {
       headerName: "Total Comment",
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
+      width: 75,
+      maxWidth: 75,
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -204,6 +210,8 @@ const IncomingRejectngRequest = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
+      width: 100,
+      maxWidth: 100,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

@@ -70,7 +70,7 @@ const IncomingPendingRequest = () => {
       },
       cellRenderer: NameCellRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      maxWidth: 350,
     },
     // {
     //   field: "friendStatus",
@@ -90,6 +90,8 @@ const IncomingPendingRequest = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -138,6 +140,8 @@ const IncomingPendingRequest = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
+      width: 75,
+      maxWidth: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -159,6 +163,8 @@ const IncomingPendingRequest = () => {
       headerName: "Total Comment",
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
+      width: 75,
+      maxWidth: 75,
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -181,6 +187,8 @@ const IncomingPendingRequest = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
+      width: 100,
+      maxWidth: 100,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

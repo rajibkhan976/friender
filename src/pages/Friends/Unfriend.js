@@ -67,7 +67,7 @@ const FriendsList = () => {
 
   const ageComparator = (targetDate) => {
     let statusSync = targetDate?.toLowerCase();
-    const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+    const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
     let currentUTC = helper.curretUTCTime();
     let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -112,7 +112,7 @@ const FriendsList = () => {
       },
       cellRenderer: UnlinkedNameCellRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      // maxWidth: 350,
     },
     // {
     //   field: "friendStatus",
@@ -132,6 +132,8 @@ const FriendsList = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      // maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -148,6 +150,7 @@ const FriendsList = () => {
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
+      width: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -186,6 +189,8 @@ const FriendsList = () => {
       cellRenderer: CountryRenderer,
       headerTooltip: 'Country',
       tooltipComponent: CustomHeaderTooltip,
+      width: 158,
+      // maxWidth: 158,
       headerClass: 'header-query-tooltip',
       filterParams: {
         buttons: ["apply", "reset"],
@@ -261,7 +266,7 @@ const FriendsList = () => {
     //   headerName: "Sync & Added Date &  Time",
     //   cellRenderer: CreationRenderer,
     //   minWidth: 240,
-    //   maxWidth: 250,
+    // //   maxWidth: 250,
     //   filter: "agDateColumnFilter",
     //   filterParams: {
     //     buttons: ["apply", "reset"],
@@ -312,6 +317,8 @@ const FriendsList = () => {
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
       cellRenderer: ReactionRenderer,
+      width: 75,
+      // maxWidth: 75,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -331,6 +338,8 @@ const FriendsList = () => {
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
+      width: 75,
+      // maxWidth: 75,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -367,6 +376,8 @@ const FriendsList = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
+      width: 100,
+      // maxWidth: 100,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -380,6 +391,8 @@ const FriendsList = () => {
       headerName: "Engagement",
       headerTooltip: 'Total Engagement',
       headerClass: 'header-engagement',
+      width: 75,
+      // maxWidth: 75,
       filter: "agNumberColumnFilter",
       cellRenderer: EngagementRenderer,
       filterParams: {
@@ -395,7 +408,7 @@ const FriendsList = () => {
       },
       valueGetter: EngagementGetter,
       // minWidth: 0,
-      // maxWidth: 0,
+      // // maxWidth: 0,
       cellClass: 'engagementCell'
     },
   ];

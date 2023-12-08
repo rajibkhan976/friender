@@ -124,6 +124,12 @@
       // &.engagementCell {
       //   color: $themeTransparent
       // }
+
+      &:not(:first-child) {
+        > * {
+          padding-left: 18px;
+        }
+      }
     }
 
     &:hover {

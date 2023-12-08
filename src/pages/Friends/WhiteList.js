@@ -92,7 +92,7 @@ const WhiteList = () => {
 
   const ageComparator = (targetDate) => {
     let statusSync = targetDate?.toLowerCase();
-    const localTime=utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z",true);
+    const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
     let currentUTC = helper.curretUTCTime();
     let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -137,7 +137,7 @@ const WhiteList = () => {
       },
       cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      // maxWidth: 350,
     },
     // {
     //   field: "friendStatus",
@@ -157,6 +157,8 @@ const WhiteList = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      // maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -173,6 +175,8 @@ const WhiteList = () => {
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
+      width: 110,
+      // maxWidth: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -211,6 +215,8 @@ const WhiteList = () => {
       tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
       headerClass: 'header-query-tooltip',
+      width: 158,
+      // maxWidth: 158,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -238,6 +244,8 @@ const WhiteList = () => {
       headerTooltip: 'Recent Engagement',
       headerClass: 'header-recent-engagement',
       cellRenderer: RecentEngagementRenderer,
+      width: 100,
+      // maxWidth: 100,
       cellRendererParams: {
         inactiveAfter
       },
@@ -325,7 +333,7 @@ const WhiteList = () => {
     //   headerName: "Sync & Added Date &  Time",
     //   cellRenderer: CreationRenderer,
     //   minWidth: 240,
-    //   maxWidth: 250,
+    // //   maxWidth: 250,
     //   filter: "agDateColumnFilter",
     //   filterParams: {
     //     buttons: ["apply", "reset"],
@@ -387,6 +395,8 @@ const WhiteList = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
+      width: 75,
+      // maxWidth: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -406,6 +416,8 @@ const WhiteList = () => {
       headerName: "Total Comment",
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
+      width: 75,
+      // maxWidth: 75,
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -442,6 +454,8 @@ const WhiteList = () => {
       headerName: "Message Count",
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
+      width: 100,
+      // maxWidth: 100,
       cellRenderer: MessageRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -457,6 +471,8 @@ const WhiteList = () => {
       headerTooltip: 'Total Engagement',
       headerClass: 'header-engagement',
       filter: "agNumberColumnFilter",
+      width: 75,
+      // maxWidth: 75,
       cellRenderer: EngagementRenderer,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -471,7 +487,7 @@ const WhiteList = () => {
       },
       valueGetter: EngagementGetter,
       // minWidth: 0,
-      // maxWidth: 0,
+      // // maxWidth: 0,
       cellClass: 'engagementCell'
     },
   ];

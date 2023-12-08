@@ -69,7 +69,7 @@ const InactiveFriends = () => {
       },
       cellRenderer: NameCellRenderer,
       minWidth: 250,
-      maxWidth: 300,
+      maxWidth: 350,
     },
     // {
     //   field: "friendStatus",
@@ -89,6 +89,8 @@ const InactiveFriends = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
+      width: 80,
+      maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -105,6 +107,8 @@ const InactiveFriends = () => {
       headerClass: 'header-query-tooltip',
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       filter: "agTextColumnFilter",
+      width: 110,
+      maxWidth: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -121,6 +125,8 @@ const InactiveFriends = () => {
       headerTooltip: 'Country',
       tooltipComponent: CustomHeaderTooltip,
       headerClass: 'header-query-tooltip',
+      width: 158,
+      maxWidth: 158,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -180,6 +186,8 @@ const InactiveFriends = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
+      width: 75,
+      maxWidth: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -198,6 +206,8 @@ const InactiveFriends = () => {
       field: "commentThread",
       headerName: "Total Comment",
       headerTooltip: 'Comments',
+      width: 75,
+      maxWidth: 75,
       headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
@@ -235,6 +245,8 @@ const InactiveFriends = () => {
       headerName: "Message Count",
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
+      width: 100,
+      maxWidth: 100,
       cellRenderer: MessageRenderer,
       filter: "agTextColumnFilter",
       filterParams: {
