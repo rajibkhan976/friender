@@ -2277,20 +2277,6 @@ const MySetting = () => {
 								</figure>
 							</div>
 						</div>
-
-						<div className='setting'>
-							<div className='setting-child'>
-								<Switch
-									checked={dontSendFrindReqFbRejct}
-									handleChange={() => {
-										setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
-									}}
-								/>
-								Avoid sending friend request(s) repeatedly to people if facebook
-								restricts sending request(s) to their profile
-							</div>
-						</div>
-
 						{autoCnclFrndRque && (
 							<div className='setting-child others'>
 								Cancel sent friend request(s) after{" "}
@@ -2350,7 +2336,19 @@ const MySetting = () => {
 								)}
 							</div>
 						)}
-
+						{/* new settings */}
+						<div className='setting'>
+							<div className='setting-child'>
+								<Switch
+									checked={dontSendFrindReqFbRejct}
+									handleChange={() => {
+										setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
+									}}
+								/>
+								Avoid sending friend request(s) repeatedly to people if facebook
+								restricts sending request(s) to their profile
+							</div>
+						</div>
 						{/* ========== Message Settings ============ */}
 						<p className='fr-heading'>
 							{/*<span>Message settings<span className="warn-badget">Coming soon</span></span>*/}
