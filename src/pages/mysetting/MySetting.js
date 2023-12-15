@@ -2068,7 +2068,19 @@ const MySetting = () => {
 								and they rejected.
 							</div>
 						</div>
-
+						{/* new settings */}
+						<div className='setting'>
+							<div className='setting-child'>
+								<Switch
+									checked={dontSendFrindReqFbRejct}
+									handleChange={() => {
+										setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
+									}}
+								/>
+								Avoid sending friend request(s) repeatedly to people if facebook
+								restricts sending request(s) to their profile
+							</div>
+						</div>
 						{/* Re-Friending  setting start*/}
 						{/* <div className={`setting ${refrienderingOpen ? "setting-actived" : ""}`} onClick={() => setRefrienderingOpen(!refrienderingOpen)}> */}
 						<div className={`setting ${reFrndng ? "setting-actived" : ""}`}>
@@ -2336,19 +2348,6 @@ const MySetting = () => {
 								)}
 							</div>
 						)}
-						{/* new settings */}
-						<div className='setting'>
-							<div className='setting-child'>
-								<Switch
-									checked={dontSendFrindReqFbRejct}
-									handleChange={() => {
-										setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
-									}}
-								/>
-								Avoid sending friend request(s) repeatedly to people if facebook
-								restricts sending request(s) to their profile
-							</div>
-						</div>
 						{/* ========== Message Settings ============ */}
 						<p className='fr-heading'>
 							{/*<span>Message settings<span className="warn-badget">Coming soon</span></span>*/}
