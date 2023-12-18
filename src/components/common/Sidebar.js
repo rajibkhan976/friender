@@ -13,7 +13,7 @@ import { userLogout } from "../../actions/AuthAction";
 import { asyncLocalStorage } from "../../helpers/AsyncLocalStorage";
 import useComponentVisible from "../../helpers/useComponentVisible";
 import { crealFilter, removeSelectedFriends } from "../../actions/FriendListAction";
-import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon } from "../../assets/icons/Icons";
+import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon, WorldIcon } from "../../assets/icons/Icons";
 import {
   setProfileSpaces,
   setDefaultProfileId,
@@ -587,6 +587,18 @@ const Sidebar = (props) => {
         )}
 
         <ul className="bottom-nav-bar m-top-a">
+          <li
+            className="nav-menu nav-wiki"
+          >
+            <Link 
+              to="https://wiki.friender.io/"
+              target="_blank"
+            >
+              <WorldIcon />
+
+              Friender wiki <OpenInNewTab />
+            </Link>
+          </li>
           {/* {sidebarToogle && ( */}
           <>
             {/* <li

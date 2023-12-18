@@ -620,8 +620,8 @@
 
     .bottom-nav-bar {
       width: 100%;
-      display: flex;
-      align-items: center;
+      // display: flex;
+      // align-items: center;
       // grid-column-gap: 10px;
       // -webkit-column-gap: 10px;
       // column-gap: 10px;
@@ -648,6 +648,9 @@
           // overflow: hidden;
           @include border-radius(5px);
           max-width: 40px;
+          clear: left;
+          float: left;
+          width: 40px;
 
           &.profile-opened {
             background: linear-gradient(to right, #827eff, #52d9bb);
@@ -701,6 +704,7 @@
           margin-left: auto;
           display: inline-flex;
           align-items: center;
+          float: right;
 
           .btn {
             padding-inline: 8px;
@@ -738,6 +742,47 @@
                   stroke: none;
                 }
               }
+            }
+          }
+        }
+
+        &.nav-wiki {
+          text-align: left;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          line-height: 1;
+          height: inherit;
+          margin-bottom: 15px;
+          padding-block: 15px;
+          border-bottom: 1px solid transparentize($themeDefaultPrimary2, 0.5);
+          @include theme-aware('color', 'dark-light-border');
+
+          a > svg {
+            pointer-events: none;
+
+            &:not(:last-child) {
+              vertical-align: middle;
+              margin-inline-end: 10px;
+            }
+            &:last-child {
+              path {
+                &:first-child {
+                  @include theme-aware('stroke', 'dark-light-border');
+                }
+                &:last-child {
+                  @include theme-aware('fill', 'dark-light-border');
+                }
+              }
+            }
+          }
+
+          a:hover {
+            *[fill] {
+              fill: initial;
+            }
+            *[stroke] {
+              stroke: initial;
             }
           }
         }
@@ -800,6 +845,14 @@
   &.closed {
     flex: 0 0 80px;
     max-width: 80px;
+
+    .bottom-nav-bar {
+      display: flex;
+    }
+
+    .nav-wiki {
+      display: none !important;
+    }
 
     .sidebar-opened-wraper {
       .nav-bar {
@@ -1113,6 +1166,10 @@
           }
         }
       }
+    }
+
+    .user-profile-image {
+      float: none !important;
     }
   }
 
