@@ -32,6 +32,8 @@ import { Link } from "react-router-dom";
 import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
 import { utils } from "../../helpers/utils";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
+import moment from "moment";
+
 
 export const handlewhiteListUser = (dispatch, friendId, status) => {
   const payload = [
@@ -347,19 +349,21 @@ export const AgeRenderer = memo((params) => {
   else if (minutes) age = 1;
   else age = 1;
 
-
   // console.log("Params Here for FriendListColumn --- ", params.data);
 
   // Calculates the Age for all..
   const ageCalculator = (bornDate) => {
-    const today = new Date();
-    const timeDifference = today - new Date(bornDate);
+    const todayUTC = moment().utc();
+    const bornDateUTC = moment(bornDate, "YYYY-MM-DD HH:mm:ss").utc();
+
+    // Age Differences..
+    const timeDifference = Math.abs(todayUTC - bornDateUTC);
+
+    // Calculate the time difference in milliseconds
+    // const timeDifference = todayUTC.diff(bornDateUTC);
+
     // Calculate age in days..
     let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
-    // To showing 0 less Age..
-    // if (ageInDays === 0) {
-    //   ageInDays = 1;
-    // }
 
     if (ageInDays === 0) {
       localTime = hours !== 0 ? `Today ${hours}h ${minutes}m Ago` : `Today ${minutes}m Ago`
@@ -368,17 +372,18 @@ export const AgeRenderer = memo((params) => {
     return Number(ageInDays);
   };
 
+
   if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
     let requestDate;
 
     if (params.data?.last_friend_request_send_at?.toLowerCase()) {
       if (params?.data?.refriending_attempt > 0) {
-        requestDate = new Date(params?.data?.created_at?.toLowerCase());
+        requestDate = params?.data?.created_at?.toLowerCase();
       } else {
-        requestDate = new Date(params?.data?.last_friend_request_send_at?.toLowerCase());
+        requestDate = params?.data?.last_friend_request_send_at?.toLowerCase();
       }
     } else {
-      requestDate = new Date(params?.data?.created_at?.toLowerCase());
+      requestDate = params?.data?.created_at?.toLowerCase();
     }
 
     const ageInDays = ageCalculator(requestDate);
@@ -386,17 +391,17 @@ export const AgeRenderer = memo((params) => {
 
   } else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
     // const lostDate = new Date(params?.data?.lost_friend_at?.toLowerCase());
-    const lostDate = new Date(params?.data?.updated_at?.toLowerCase());
+    const lostDate = params?.data?.updated_at?.toLowerCase();
     const ageInDays = ageCalculator(lostDate);
     age = ageInDays
 
   } else if (params?.data?.deleted_status === 1) {
-    const unfriendedDate = new Date(params?.data?.deleted_at?.toLowerCase());
+    const unfriendedDate = params?.data?.deleted_at?.toLowerCase();
     const ageInDays = ageCalculator(unfriendedDate);
     age = ageInDays;
 
   } else {
-    const actionDate = new Date(params?.data?.created_at?.toLowerCase());
+    const actionDate = params?.data?.created_at?.toLowerCase();
     const ageInDays = ageCalculator(actionDate);
     age = ageInDays
   }
@@ -722,7 +727,7 @@ export const CountryTierRenderer = memo((params) => {
 
 export const RefriendCountRenderer = memo((params) => {
   // console.log('params?.value', params?.value);
-  return params?.value &&!params.data.is_incoming? params?.value : <span className="muted-text">N/A</span>
+  return params?.value && !params.data.is_incoming ? params?.value : <span className="muted-text">N/A</span>
 })
 
 export const SourceRendererPending = memo((params) => {
