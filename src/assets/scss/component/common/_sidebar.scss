@@ -851,7 +851,24 @@
     }
 
     .nav-wiki {
-      display: none !important;
+      // display: none !important;
+      font-size: 0;
+      padding-top: 0 !important;
+      margin-left: 3px;
+
+      a {
+        text-align: center;
+      }
+
+      svg {
+        &:first-child {
+          margin: 0 !important;
+          max-width: 18px;
+        }
+        &:last-child {
+          display: none;
+        }
+      }
     }
 
     .sidebar-opened-wraper {
