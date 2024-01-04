@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import EditorModal from './EditorModal';
 import { ChevronDownArrowIcon, ChevronUpArrowIcon, NotFoundGroupMessagesIcon } from '../../assets/icons/Icons';
 import ToolTipPro from "../common/ToolTipPro";
+import moment from "moment";
+
+
+// Current Time as UTC format..
+const getCurrentUTCTime = () => moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
 
 /**
  * ==== Dropdown for Select Message ====
@@ -164,6 +170,10 @@ const DropSelectMessage = ({
 
         if (type === "ACCEPT_REQ") {
             localStorage.setItem("fr_using_select_accept", true);
+
+            // When Turn Of Setting then setting the Current UTC Time.. 
+            // payload.send_message_when_someone_accept_new_friend_request_settings.settings_added_time = getCurrentUTCTime();
+            localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
         }
 
         if (type === "REJECT_REQ") {

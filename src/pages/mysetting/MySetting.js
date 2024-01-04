@@ -25,6 +25,8 @@ import helper from "../../helpers/helper";
 import ToolTipPro from "../../components/common/ToolTipPro";
 import Keyword from "../../components/common/Keyword";
 import DropSelectMessage from "../../components/messages/DropSelectMessage";
+import moment from "moment";
+
 
 
 const MySetting = () => {
@@ -588,6 +590,10 @@ const MySetting = () => {
 			});
 	}, []);
 
+
+	// Current Time as UTC format..
+	const getCurrentUTCTime = () => moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
 	/**
 	 * ====== Setting API Payload Saving Function =======
 	 * @returns
@@ -619,6 +625,7 @@ const MySetting = () => {
 			send_message_when_someone_accept_new_friend_request_settings: {
 				message_group_id: sndMsgAcptsFrndReqGroupSelect?._id || null,
 				quick_message: quickMsgAcptsFrndReq || null,
+				settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
 			},
 			send_message_when_reject_friend_request: sndMsgRejtFrndReqToggle,
 			send_message_when_reject_friend_request_settings: {
@@ -859,6 +866,7 @@ const MySetting = () => {
 		}
 
 		// Send Message When Someone Accepts My Friend Requests.
+		// Turn On..
 		if (sndMsgAcptsFrndReqToggle) {
 			if (usingSelectOptions) {
 				// console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
@@ -867,10 +875,18 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
+					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
 				};
+
+				// if (selectMsgTempAcceptsFrndReq || sndMsgAcptsFrndReqToggle) {
+				// 	// When Turn Of Setting then setting the Current UTC Time.. 
+				// 	// payload.send_message_when_someone_accept_new_friend_request_settings.settings_added_time = getCurrentUTCTime();
+				// 	localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+				// }
+
 				setUsingSelectOptions(false);
 			}
 
@@ -880,18 +896,29 @@ const MySetting = () => {
 					quick_message: quickMsgAcptsFrndReq,
 					old_message_group_id:
 						localStorage.getItem("old_message_group_id") || "",
+					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
 				};
+
+				// This Code is Shifted to TextEditor.js file..
+				// if (selectMsgTempAcceptsFrndReq || sndMsgAcptsFrndReqToggle) {
+				// 	console.log("UPDATE DATE FOR UTC");
+				// 	// When Turn Of Setting then setting the Current UTC Time.. 
+				// 	payload.send_message_when_someone_accept_new_friend_request_settings.settings_added_time = getCurrentUTCTime();
+				// 	localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+				// }
 			}
 		} else {
+			// Turn Off..
 			if (usingSelectOptions) {
 				payload.send_message_when_someone_accept_new_friend_request_settings = {
 					message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
+					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
 				};
 				setUsingSelectOptions(false);
 			}
@@ -902,6 +929,7 @@ const MySetting = () => {
 					quick_message: quickMsgAcptsFrndReq,
 					old_message_group_id:
 						localStorage.getItem("old_message_group_id") || "",
+					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
 				};
 			}
 		}
@@ -914,7 +942,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -936,7 +964,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -961,7 +989,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -983,7 +1011,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1008,7 +1036,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1030,7 +1058,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1055,7 +1083,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1077,7 +1105,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -2385,6 +2413,11 @@ const MySetting = () => {
 									checked={sndMsgAcptsFrndReqToggle}
 									handleChange={() => {
 										setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
+
+										if (!sndMsgAcptsFrndReqToggle) {
+											localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+										}
+
 										TurnOffMsgPanelDependsOnToggle(
 											sndMsgAcptsFrndReqToggle,
 											setSelectMsgTempAcceptsFrndReq
