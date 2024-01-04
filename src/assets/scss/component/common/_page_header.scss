@@ -191,7 +191,8 @@
 
 .fr-radio-block {
     @include theme-aware('background-color', 'interactive-bg');
-    @include border-radius(10px);
+    // @include border-radius(10px);
+    @include border-radius(4px);
     overflow: hidden;
 
     .fr-radio-option {
@@ -222,7 +223,8 @@
 
         input:checked+.fr-radio-design {
             @include theme-aware('background-color', 'button-bg');
-            @include border-radius(10px);
+            // @include border-radius(10px);
+            @include border-radius(4px);
             color: $themeDefaultPrimary2;
         }
     }

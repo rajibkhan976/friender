@@ -146,25 +146,8 @@ const FriendsList = () => {
       checkboxSelection: true,
       showDisabledCheckboxes: true,
       lockPosition: "left",
-      filter: "agTextColumnFilter",
-      eaderCheckboxSelectionCurrentPageOnly: true,
-      headerCheckboxSelectionFilteredOnly: true,
-      // headerComponentFramework: CustomHeaderCheckbox,
-      filterParams: {
-        buttons: ["apply", "reset"],
-        debounceMs: 200,
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
       cellRenderer: UnlinkedNameCellWithOptionsRenderer,
       minWidth: 280,
-      // maxWidth: 350,
-      // headerComponentParams:{
-      //   onChange: handleHeaderCheckboxChange, // Pass the custom function to the header component
-      //   checked: false, // Pass the checked state if needed
-      //   indeterminate: false, // Pass the indeterminate state if needed
-      // }
     },
     // {
     //   field: "friendStatus",

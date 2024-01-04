@@ -291,3 +291,102 @@ export const deleteGroupMessage = (messageId) => {
             })
     })
 }
+
+
+export const fetchClickedCampaign = (campaignId) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            let result;
+
+            if (campaignId == 1) {
+                result = {data: {
+                    _id: 1,
+                    friends: [
+                        {
+                            friendName: 'Friend in ID 1', 
+                            friendProfilePicture: "https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100001469604723.jpeg",
+                            friendProfileUrl: "https://www.facebook.com/profile.php?id=100001469604723", 
+                            groupName: 'KFC Group Rocksssss.......',
+                            groupUrl: "https://www.facebook.com/groups/kfcrockss", 
+                            keywords: [
+                                {
+                                    selected_keywords: [
+                                        "FIFA",
+                                        "soccer",
+                                        "football"
+                                    ],
+                                    matchedKeyword: "FIFA",
+                                },
+                            ],
+                            matchedKeyword:"FIFA, soccer, football",
+                            status: 'Successful',
+                            finalSource: "Sync",
+                            created_at: '2014-11-13 09:41:15',
+                            updated_at: '2023-11-13 09:41:15',
+                            message: 'Message Group 1'
+                        }
+                    ]
+                }}
+            } else if (campaignId == 2){
+                    result = {data: {
+                        _id: 2,
+                        friends: [
+                            {
+                                friendName: 'Friend in ID 2', 
+                                friendProfilePicture: "https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100001469604723.jpeg",
+                                friendProfileUrl: "https://www.facebook.com/profile.php?id=100001469604723", 
+                                groupName: 'KFC Group Rocksssss.......',
+                                groupUrl: "https://www.facebook.com/groups/kfcrockss", 
+                                keywords: [
+                                    {
+                                        selected_keywords: [
+                                            "FIFA",
+                                            "gamse",
+                                            "PC"
+                                        ],
+                                        matchedKeyword: "FIFA, PC",
+                                    },
+                                ],
+                                matchedKeyword:"FIFA, games, PC",
+                                status: 'Pending',
+                                finalSource: "Sync",
+                                created_at: '2014-11-13 09:41:15',
+                                updated_at: '2023-11-13 09:41:15',
+                                message: 'Message Group 2'
+                            }
+                        ]
+                    }}
+                } else {
+                    result = {data: {
+                        _id: 3,
+                        friends: [
+                            {
+                                friendName: 'Friend in ID 3', 
+                                friendProfilePicture: "https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100001469604723.jpeg",
+                                friendProfileUrl: "https://www.facebook.com/profile.php?id=100001469604723", 
+                                groupName: 'KFC Group Rocksssss.......',
+                                groupUrl: "https://www.facebook.com/groups/kfcrockss", 
+                                keywords: [
+                                    {
+                                        selected_keywords: [
+                                            "FIFA",
+                                            "gamse",
+                                            "PC"
+                                        ],
+                                        matchedKeyword: "PC",
+                                    },
+                                ],
+                                matchedKeyword:"FIFA",
+                                finalSource: "Sync",
+                                status: 'Successful',
+                                created_at: '2014-11-13 09:41:15',
+                                updated_at: '2023-11-13 09:41:15',
+                            }
+                        ]
+                    }}
+                }
+
+            resolve(result)
+        }, 1000);
+    })
+}

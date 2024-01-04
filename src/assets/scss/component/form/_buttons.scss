@@ -130,6 +130,44 @@
     margin: 0;
   }
 
+  &.btn-light-bg {
+    background-color: transparentize($themeDefaultPrimary1, 0.8);
+    color: $themeDefaultPrimary1;
+
+    svg {
+      margin-right: 8px;
+      path {
+        transition: all ease-in-out 0.4s;
+      }
+    }
+
+    &:hover {
+      color: $themeDefaultPrimary2;
+
+      path {
+        stroke: $themeDefaultPrimary2;
+      }
+    }
+  }
+
+  &.btn-go-back {
+    background-color: $themeDefaultSecondary1;
+
+    &:hover {
+      path[stroke] {
+        stroke: $themeDefaultPrimary2;
+      }
+      path[fill] {
+        stroke: $themeDefaultPrimary2;
+      }
+    }
+  }
+
+  &.btn-circular {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+  }
+
   &:hover {
     @include theme-aware('background-color', 'btn-hover');
   }
@@ -172,6 +210,10 @@
       font-size: 14px;
       margin-bottom: 0;
       height: 40px;
+      &:disabled {
+        @include theme-aware('border-color', 'disabled-text');
+        @include theme-aware('color', 'disabled-text');
+      }
       &:hover {
         color: #0094FF!important;
         border: 1px solid #0094FF;

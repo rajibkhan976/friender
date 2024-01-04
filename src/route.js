@@ -61,6 +61,9 @@ const InstallSuccess = lazy(() => import("./pages/extension/InstallSuccess"));
 // Message pages
 const MessageGroups = lazy(() => import("./pages/messages/group/MessageGroups"))
 const MessageSegments = lazy(() => import('./pages/messages/segment/MessageSegments'))
+const MessageCampaigns = lazy(() => import('./pages/messages/campaigns'))
+const CreateCampaign = lazy(() => import('./pages/messages/campaigns/create/CreateCampaign'))
+const EditCampaign = lazy(() => import('./pages/messages/campaigns/edit/EditCampaign'))
 
 
 
@@ -136,22 +139,47 @@ const Routeing = () => {
             </Route>
             {/* <Route path="dmf" element={<DynamicMergeFields />}></Route> */}
             <Route path="messages" element={<Messages />}>
-              <Route 
-                path="groups" 
+              <Route
+                path="groups"
                 element={
                   <Suspense fallback={""}>
                     <MessageGroups />
                   </Suspense>
                 }
               />
-              <Route 
-                path="segments" 
+              <Route
+                path="segments"
                 element={
                   <Suspense fallback={""}>
                     <MessageSegments />
                   </Suspense>
                 }
               />
+              <Route
+                path="campaigns"
+                element={
+                  <Suspense fallback={""}>
+                    <MessageCampaigns />
+                  </Suspense>
+                }
+              >
+                <Route
+                  path="create-campaign"
+                  element={
+                    <Suspense fallback={""}>
+                      <CreateCampaign />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path='/messages/campaigns/:campaignId'
+                  element={
+                    <Suspense fallback={""}>
+                      <EditCampaign />
+                    </Suspense>
+                  }
+                />
+              </Route>
             </Route>
 
             {/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}

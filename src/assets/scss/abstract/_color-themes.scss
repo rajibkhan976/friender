@@ -87,7 +87,10 @@ $themes: (
     message-context-menu-btn-active: $themePrimaryBlue13,
     message-menu-active-color: $themePrimaryBlue15,
     message-inactive-header-buttons: $themeDefaultSecondary8,
-    message-editor-background: $themeDefaultSecondary11
+    message-editor-background: $themeDefaultSecondary11,
+    note-warning: $themeYellow14,
+    secondary-cell-text-color: $themeSecondaryDarkBlue5,
+    secondary-link-color: $themeSecondaryRoyalBlue2
   ),
   light: (
     text-color: $themeBlack1,
@@ -178,6 +181,9 @@ $themes: (
     message-context-menu-btn-active: $themePrimaryBlue13,
     message-menu-active-color: $themePrimaryBlue15,
     message-inactive-header-buttons: $themeDefaultSecondary8,
-    message-editor-background: $themeDefaultSecondary11
+    message-editor-background: $themeDefaultSecondary11,
+    note-warning: $themeYellow14,
+    secondary-cell-text-color: $themeSecondaryDarkBlue5,
+    secondary-link-color: $themeSecondaryRoyalBlue2
   ),
 );

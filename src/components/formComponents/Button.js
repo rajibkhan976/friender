@@ -18,7 +18,6 @@ const Button = ({
         :
         btnText
         }
-        
       </button>
   );
 }

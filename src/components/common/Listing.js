@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import 'ag-grid-community/styles/ag-grid.css';
 import "../../assets/scss/component/common/_listing.scss";
 import DropSelector from "../formComponents/DropSelector"
+import Alertbox from "./Toast";
 // import e from "cors";
 
 const Pagination = lazy(() => import("./Pagination"));
@@ -194,7 +195,6 @@ const Listing = (props) => {
     // return () => {
     //   document.removeEventListener('click', headerCheckBoxAll[0]);
     // };
-
   }, []);
 
 
@@ -410,14 +410,14 @@ const Listing = (props) => {
 
   const onGridSizeChanged = useCallback((params) => {
     // get the current grids width
-    var gridWidth = document.getElementById("grid-wrapper").offsetWidth;
+    var gridWidth = document.getElementById("grid-wrapper")?.offsetWidth;
     // keep track of which columns to hide/show
     var columnsToShow = [];
     var columnsToHide = [];
     // iterate over all columns (visible or not) and work out
     // now many columns can fit (based on their minWidth)
     var totalColsWidth = 0;
-    var allColumns = gridRef.current.columnApi.getColumns();
+    var allColumns = gridRef?.current?.columnApi?.getColumns();
     if (allColumns && allColumns.length > 0) {
       for (var i = 0; i < allColumns.length; i++) {
         var column = allColumns[i];
@@ -430,10 +430,10 @@ const Listing = (props) => {
       }
     }
     // show/hide columns based on current grid width
-    gridRef.current.columnApi.setColumnsVisible(columnsToShow, true);
-    gridRef.current.columnApi.setColumnsVisible(columnsToHide, false);
+    gridRef?.current?.columnApi?.setColumnsVisible(columnsToShow, true);
+    gridRef?.current?.columnApi?.setColumnsVisible(columnsToHide, false);
     // fill out any available space to ensure there are no gaps
-    gridRef.current.api.sizeColumnsToFit();
+    gridRef?.current?.api?.sizeColumnsToFit();
   }, []);
 
   const filterChanged = useCallback(
@@ -456,6 +456,47 @@ const Listing = (props) => {
     },
     [textFilter]
   );
+
+  const removeFriendFromCampaign = useCallback(() => {
+    // add Remove selected friends from campaign code here
+
+    try {
+      Alertbox(
+        `${selectedFriends.length > 1 ? "Friends" : "Friend"
+        } removed from Campaign successfully!`,
+        "success",
+        1000,
+        "bottom-right"
+      );
+    } catch (error) {
+      Alertbox(
+        error,
+        "error-toast",
+        1000,
+        "bottom-right"
+      );
+    }
+  }, [selectedFriends, selectedFrnd])
+
+  const deleteSelectedCampaigns = useCallback(() => {
+    // add Remove selected campaigns code here
+
+    try {
+      Alertbox(
+        `Campaign(s) has been deleted successfully.`,
+        "success",
+        1000,
+        "bottom-right"
+      );
+    } catch (error) {
+      Alertbox(
+        error,
+        "error-toast",
+        1000,
+        "bottom-right"
+      );
+    }
+  }, [selectedFriends, selectedFrnd])
 
 
 
@@ -564,13 +605,13 @@ const Listing = (props) => {
             ) : (
               ""
             )}{" "}
-            Friend{selectedFriends.length > 1 && "s"}{" "}
+            {props?.isListing === "campaign" ? 'Campaign' : 'Friend'}{selectedFriends.length > 1 && "s"}{" "}
             {selectedFriends.length > 1 ? "are" : "is"} selected.
             {gridRef.current.props.rowData.length !== selectedFriends.length &&
               maxSelect - Number(selectedFriends.length) > 0 ? (
               <span>
                 Do you want to select other all{" "}
-                {maxSelect - Number(selectedFriends.length)} Friends{" "}
+                {maxSelect - Number(selectedFriends.length)} {props?.isListing === "campaign" ? 'Campaigns' : 'Friends'}{" "}
               </span>
             ) : (
               <span>Uncheck All </span>
@@ -589,6 +630,20 @@ const Listing = (props) => {
                 }
               />
             )}
+
+            {
+              props?.isListing === "campaign-friends" &&
+              <button
+                className="remove-friends btn-inline red-text"
+                onClick={removeFriendFromCampaign}
+              >Remove friend(s)</button>}
+
+            {
+              props?.isListing === "campaign" &&
+              <button
+                className="remove-friends btn-inline red-text"
+                onClick={deleteSelectedCampaigns}
+              >Delete campaign(s)</button>}
           </p>
         </div>
       ) : (

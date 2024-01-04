@@ -90,7 +90,8 @@ body {
   }
   // For message drag n drop
 }
-*[data-disabled="true"] {
+*[data-disabled="true"],
+*[disabled] {
   pointer-events: none !important;
 }
 a,

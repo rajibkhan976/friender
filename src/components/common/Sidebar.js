@@ -512,7 +512,8 @@ const Sidebar = (props) => {
                   className={() => [
                     '/messages/groups', 
                     '/messages/segments', 
-                    '/messages/dmf'
+                    '/messages/dmf',
+                    '/messages/campaigns'
                   ].includes(location.pathname) ? "active" : ''}
                   aria-label="Messages"
                 >
@@ -555,6 +556,11 @@ const Sidebar = (props) => {
                   <li className="nav-menu no-click">
                     <NavLink to="/messages/dmf" aria-label="Friends" className="no-click">
                       <span className="nav-menu-name">- DMF <span className="warn-badget">Coming soon</span></span>
+                    </NavLink>
+                  </li>
+                  <li className="nav-menu">
+                    <NavLink to="/messages/campaigns" aria-label="Friends">
+                      <span className="nav-menu-name">- Campaigns</span>
                     </NavLink>
                   </li>
                 </ul>}

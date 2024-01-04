@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, memo } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
 import { io } from "socket.io-client";
@@ -14,7 +14,11 @@ import {
   DeleteIcon,
   WhitelabelIcon,
   BlockIcon,
-  UnfriendIcon
+  UnfriendIcon,
+  CampaignQuicActionIcon,
+  CampaignModalIcon,
+  OpenInNewTab,
+  InfoIcon
 } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
@@ -186,8 +190,12 @@ function PageHeader({ headerText = "" }) {
   const [isSyncing, setIsSyncing] = useState(true);
   const [toolTip, setTooltip] = useState('');
   const [whiteCountInUnfriend, setWhiteCountInUnfriend] = useState(null);
+  const [blackCountInAddCampaign, setBlackCountInAddCampaign] = useState(null);
   const [messageTypeOpt, setMessageTypeOpt] = useState("dmf");
   const [runningUnfriend, setRunningUnfriend] = useState(false);
+  const [isAddingToCampaign, setIsAddingToCampaign] = useState(false)
+  const [selectedCampaign, setSelectedCampaign] = useState('Select')
+  const campaignsCreated = useSelector((state) => state.message.campaignsArray)
   // const onChangeHandler = useCallback((e) => {
   //   //console.log(e);
   // }, []);
@@ -446,6 +454,25 @@ function PageHeader({ headerText = "" }) {
           syncManual: true
         });
         break;
+      case "campaigns":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true,
+          listingLengthWell: true,
+        });
+        break;
+      case "connect-&-win":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true
+        });
+        break;
+      case "create-campaign":
+        setHeaderOptions({
+          ...headerOptions,
+          syncManual: true
+        });
+        break;
       case "pending-request":
         setHeaderOptions({
           ...headerOptions,
@@ -596,43 +623,43 @@ function PageHeader({ headerText = "" }) {
           action: "syncprofile",
           frLoginToken: localStorage.getItem("fr_token"),
         });
-        console.log("facewbook data",facebookProfile)
-        console.log("profile datattat",profileData)
-          //If auth profile and current logged in profile is not matching then :
-          if(facebookProfile?.error == "No response"){
-            // Alertbox(
-            //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
-            //   "error",
-            //   1000,
-            //   "bottom-right"
-            // );
-            Alertbox(
-              `Please login to following facebook account `,
-              "error-toast",
-              1000,
-              "bottom-right",
-              `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
-            );
-            return false
-          }
-          if (facebookProfile?.uid !=  profileData[0]?.fb_user_id) {
-            // Alertbox(
-            //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
-            //   "error",
-            //   1000,
-            //   "bottom-right"
-            // );
-            Alertbox(
-              `Please login to following facebook account `,
-              "error-toast",
-              1000,
-              "bottom-right",
-              `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
-            );
-              return false
+        console.log("facewbook data", facebookProfile)
+        console.log("profile datattat", profileData)
+        //If auth profile and current logged in profile is not matching then :
+        if (facebookProfile?.error == "No response") {
+          // Alertbox(
+          //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+          //   "error",
+          //   1000,
+          //   "bottom-right"
+          // );
+          Alertbox(
+            `Please login to following facebook account `,
+            "error-toast",
+            1000,
+            "bottom-right",
+            `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
+          );
+          return false
+        }
+        if (facebookProfile?.uid != profileData[0]?.fb_user_id) {
+          // Alertbox(
+          //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
+          //   "error",
+          //   1000,
+          //   "bottom-right"
+          // );
+          Alertbox(
+            `Please login to following facebook account `,
+            "error-toast",
+            1000,
+            "bottom-right",
+            `https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`
+          );
+          return false
         }
 
-        if(facebookProfile?.error){
+        if (facebookProfile?.error) {
           // Alertbox(
           //   `Please login to following facebook account https://www.facebook.com/profile.php?id=${profileData[0]?.fb_user_id}`,
           //   "error",
@@ -1068,6 +1095,59 @@ function PageHeader({ headerText = "" }) {
     // ""
   }
 
+  const checkBeforeAddToCampaign = async (item) => {
+    if (item) {
+      closeFilterDropdown(item);
+    }
+    if (selectedFriends && selectedFriends.length > 0) {
+      let backCount = 0;
+      for (let item of selectedFriends) {
+        if (item.blacklist_status === 1) {
+          backCount++;
+        }
+      }
+      setBlackCountInAddCampaign(backCount);
+      setIsAddingToCampaign(true)
+    }
+  }
+
+  const skipBlackList = () => {
+    console.log('SKIP BLACKLISTED');
+    const listWithOutBlacklisted = selectedFriends.filter((item) => {
+      return item.blacklist_status !== 1;
+    });
+    AddToCampaign(listWithOutBlacklisted);
+  };
+
+  // Add selected / forwarded friends to campaign
+  const AddToCampaign = (addFriendsToCampaign = selectedFriends) => {
+    console.log('FRIENDS SELECTED :::::::::');
+    try {
+      // console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
+      setIsAddingToCampaign(false)
+      setSelectedCampaign('Select');
+      Alertbox(
+        `${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
+        "success",
+        1000,
+        "bottom-right"
+      );
+    } catch (error) {
+      Alertbox(
+        `${error}`,
+        "error",
+        1000,
+        "bottom-right"
+      );
+    }
+  };
+
+  const skipAddingToCampaign = () => {
+    dispatch(removeSelectedFriends())
+    setSelectedCampaign('Select')
+    setIsAddingToCampaign(false)
+  }
+
   return (
     <>
       {/* <Prompt
@@ -1107,6 +1187,79 @@ function PageHeader({ headerText = "" }) {
           }}
         />
       )}
+
+      {/* Modal for Campaign Add */}
+      {
+        (selectedFriends?.length > 0 && isAddingToCampaign) &&
+        <Modal
+          ModalIconElement={CampaignModalIcon}
+          headerText={"Add to Campaign"}
+          bodyText={
+            <>
+              You have selected <b>{selectedFriends.length}</b> friend(s){
+                selectedFriends?.filter(el => el?.blacklist_status)?.length > 0 ?
+                  <>, and <b>{selectedFriends?.filter(el => el?.blacklist_status)?.length}</b> of them
+                    {selectedFriends?.filter(el => el?.blacklist_status)?.length > 1 ? ' are' : ' is'} currently on your blacklist</> : ''
+              }. Are you sure you want to add {selectedFriends?.filter(el => el?.blacklist_status)?.length > 1 ? 'all of these friends' : 'this friend'} to campaign?
+            </>
+          }
+          closeBtnTxt={(selectedFriends?.filter(el => el?.blacklist_status)?.length > 0) ? "Skip blacklisted" : "Cancel"}
+          closeBtnFun={(selectedFriends?.filter(el => el?.blacklist_status)?.length > 0) ? skipBlackList : skipAddingToCampaign}
+          open={isAddingToCampaign}
+          setOpen={() => {
+            setIsAddingToCampaign(null)
+            setSelectedCampaign('Select')
+          }}
+          ModalFun={AddToCampaign}
+          btnText={(selectedFriends?.filter(el => el?.blacklist_status)?.length > 0) ? "Yes, add all" : "Add"}
+          modalWithChild={true}
+          ExtraProps={{
+            primaryBtnDisable:(campaignsCreated?.length <= 0 || selectedCampaign === 'Select'),
+            cancelBtnDisable:
+              selectedFriends?.filter(el => el?.blacklist_status)?.length ? 
+                selectedFriends?.length === selectedFriends?.filter(el => el?.blacklist_status)?.length ?
+                  true : selectedCampaign === 'Select' ? true : false :
+                campaignsCreated?.length <= 0 ?
+                  true : selectedCampaign === 'Select' ? true : false
+          }}
+          additionalClass="add-campaign-modal"
+        >
+          {/* If Campaign created, list else disable and show link for creation */}
+          <>
+            <h6>Choose campaign</h6>
+            <span className="select-wrapers w-100">
+              <select
+                value={selectedCampaign}
+                onChange={(e) => setSelectedCampaign(e.target.value)}
+                className="selector_box"
+                disabled={campaignsCreated?.length <= 0}
+              >
+                <option value={null}>Select</option>
+                {campaignsCreated
+                  ?.map((item, index) => {
+                    return (
+                      <option value={item._id} key={"fr-select" + index}>
+                        {item?.campaign_name}
+                      </option>
+                    );
+                  })}
+              </select>
+              <span className="select-arrow"></span>
+            </span>
+            {(campaignsCreated?.length <= 0) &&
+              <span className="inline-note warning-note-inline">
+                <InfoIcon />You haven’t created any campaign(s) yet. <Link
+                  to="/messages/campaigns/create-campaign"
+                  className="inline-icon"
+                  // target="_blank"
+                  onClick={() => setIsAddingToCampaign(false)}
+                >Create campaign <OpenInNewTab /></Link>
+              </span>
+            }
+          </>
+        </Modal>
+      }
+
       <div className="common-header d-flex f-align-center f-justify-between">
         <div className="left-div d-flex d-flex-column">
           <div className="header-breadcrumb">
@@ -1114,7 +1267,8 @@ function PageHeader({ headerText = "" }) {
               {headerText != ""
                 ? headerText
                 : links.length > 0
-                  ? links[links.length - 1].location
+                  ? links[links.length - 2]?.location !== "campaigns" ?
+                    links[links.length - 1].location : 'Campaigns'
                   : ""}
               {headerOptions.listingLengthWell && (
                 <span className="num-header-count num-well">{listCount}</span>
@@ -1289,6 +1443,16 @@ function PageHeader({ headerText = "" }) {
                                 <BlockIcon color={"#767485"} />
                               </figure>
                               <span>Blacklist</span>
+                            </li>
+                            <li
+                              className="campaign-fr-action"
+                              onClick={() => checkBeforeAddToCampaign(accessItem)}
+                              data-disabled={!selectedFriends || selectedFriends.length === 0}
+                            >
+                              <figure>
+                                <CampaignQuicActionIcon />
+                              </figure>
+                              <span>Campaign</span>
                             </li>
                           </ul>
                         </div>

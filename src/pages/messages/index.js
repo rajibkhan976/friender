@@ -1,9 +1,10 @@
 import { Outlet } from "react-router-dom";
-
-import "./scss/_messages.scss"
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+
 import { fetchSegments } from "../../actions/MessageAction";
+
+import "./scss/_messages.scss"
 
 const Messages = () => {
     const dispatch = useDispatch();

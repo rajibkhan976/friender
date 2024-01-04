@@ -62,6 +62,7 @@ const Modal = ({
           {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
             <button
               className="btn-primary outline"
+              disabled={ExtraProps?.cancelBtnDisable}
               onClick={
                 closeBtnFun
                   ? ()=>{closeBtnFun()}

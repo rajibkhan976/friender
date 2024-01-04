@@ -6,10 +6,10 @@ function BreadCrumb({ links }) {
     <ul className="breadcrumb">
       {links.map((item, index) => {
         return links.length - 1 === index ? (
-          <li key={index}>{item.location}</li>
+          <li key={index}>{item.location?.replace('-', ' ')}</li>
         ) : (
           <li key={index}>
-            <NavLink to={item.location}>{item.location}</NavLink>
+            <NavLink to={item.location}>{item.location?.replace('-', ' ')}</NavLink>
           </li>
         );
       })}

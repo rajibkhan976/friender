@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
-const Radio = ({name, options, onChangeMethod}) => {
+const Radio = ({name, options, isIcon=false, onChangeMethod, extraClass}) => {
     const [radioOptions, setRadioOptions] = useState([]);
 
     const onOptionChange = (itemChecked) => {
-        onChangeMethod(itemChecked);
+        let itemCheckedObject = {...itemChecked, checked: true}
+        onChangeMethod(itemCheckedObject);
     }
 
     useState(() => {
         setRadioOptions(options);
-    }, [radioOptions])
+    }, [options])
     
     return (
-        <div className="fr-radio-block d-flex f-align-center f-justify-between">
-            {radioOptions.map((optionItem, i) => (
+        <div className={`fr-radio-block d-flex f-align-center f-justify-between ${extraClass ? extraClass : ''}`}>
+            {radioOptions?.map((optionItem, i) => (
                 <label className="fr-radio-option f-align-center f-justify-between" key={'fr-option-'+i}>
                     <input 
                         type="radio" 
@@ -22,7 +23,11 @@ const Radio = ({name, options, onChangeMethod}) => {
                         onChange={() => onOptionChange(optionItem)}
                     />
                     <span className="fr-radio-design">
-                        {optionItem.label}
+                        {
+                            isIcon ?
+                                optionItem?.iconItem:
+                                optionItem?.label
+                        }
                     </span>
                 </label>
             ))}
@@ -30,4 +35,4 @@ const Radio = ({name, options, onChangeMethod}) => {
     )
 };
 
-export default Radio;
+export default memo(Radio);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 function DropSelector({ selects, value, defaultValue, id, handleChange, height = "40px", width = "103px", setDisable = false, extraClass="", elementClass=""}) {
   // selects should be array of Object 
@@ -21,4 +21,4 @@ function DropSelector({ selects, value, defaultValue, id, handleChange, height =
   )
 }
 
-export default DropSelector
+export default memo(DropSelector)

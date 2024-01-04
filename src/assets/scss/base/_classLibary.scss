@@ -1,6 +1,7 @@
 @use '../abstract/mixins' as *;
 @use '../abstract/variables' as *;
 @use '../abstract/color' as *;
+@use '../abstract/font' as *;
 
 @each $alignment, $value in $alignments {
   .text-#{$alignment} {
@@ -228,4 +229,55 @@
   display: inline-flex;
   align-items: center;
   vertical-align: middle;
+}
+
+.inline-note {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: $mediumFontWeight;
+
+  &.warning-note-inline {
+    background: linear-gradient(90deg, rgba(255, 230, 0, 0.15) 0%, rgba(255, 230, 0, 0.00) 90%);
+    @include theme-aware('color', 'note-warning');
+
+    > svg {
+      margin-inline-end: 6px;
+      *[fill] {
+        @include theme-aware('fill', 'note-warning');
+      }
+      *[stroke] {
+        @include theme-aware('stroke', 'note-warning');
+      }
+
+      g {
+        opacity: 1
+      }
+    }
+  }
+
+  a {
+    margin-inline-start: 4px;
+
+    @include theme-aware('color', 'dark-light-border');
+
+    > svg {
+      width: 10px;
+      margin-inline-start: 3px;
+
+      *[fill] {
+        @include theme-aware('fill', 'dark-light-border');
+      }
+      *[stroke] {
+        @include theme-aware('stroke', 'dark-light-border');
+      }
+    }
+  }
+}
+
+
+.red-text {
+  color: $themeRed1;
 }
