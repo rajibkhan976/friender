@@ -26,6 +26,7 @@ import ToolTipPro from "../../components/common/ToolTipPro";
 import Keyword from "../../components/common/Keyword";
 import DropSelectMessage from "../../components/messages/DropSelectMessage";
 
+
 const MySetting = () => {
 	//:::: This is a child Setting my-setting::::
 	const current_fb_id = localStorage.getItem("fr_default_fb");
@@ -406,10 +407,10 @@ const MySetting = () => {
 				//setLoading(false)
 				return () => clearTimeout(handler);
 				/* ::::Never delete the Comment::::
-        optiMizedSave();
-        setTimeout(() => {
-          saveMySetting();
-        }, 1000);*/
+		optiMizedSave();
+		setTimeout(() => {
+		  saveMySetting();
+		}, 1000);*/
 			} else {
 				return;
 			}
@@ -858,7 +859,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -880,7 +881,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -905,7 +906,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -927,7 +928,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -952,7 +953,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -974,7 +975,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -999,7 +1000,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1021,7 +1022,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1046,7 +1047,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1068,7 +1069,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-						localStorage.getItem("old_message_group_id")
+							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1905,9 +1906,8 @@ const MySetting = () => {
 
 						{/* <div className={`setting ${dayBackAnlyFrndEngOpen ? "setting-actived" : ""}`} onClick={() => setDayBackAnlyFrndEngOpen(!dayBackAnlyFrndEngOpen)}> */}
 						<div
-							className={`setting ${
-								dayBackAnlyFrndEng ? "setting-actived" : ""
-							}`}
+							className={`setting ${dayBackAnlyFrndEng ? "setting-actived" : ""
+								}`}
 						>
 							<Switch
 								checked={dayBackAnlyFrndEng}
@@ -1952,12 +1952,12 @@ const MySetting = () => {
 										selects={
 											dayBackAnlyFrndEngSelect1
 												? timeObj.slice(
-														timeObj.indexOf(
-															timeObj.filter(
-																(el) => el.value == dayBackAnlyFrndEngSelect1
-															)[0]
-														) + 1
-												  )
+													timeObj.indexOf(
+														timeObj.filter(
+															(el) => el.value == dayBackAnlyFrndEngSelect1
+														)[0]
+													) + 1
+												)
 												: timeObj
 										}
 										value={dayBackAnlyFrndEngSelect2}
@@ -2132,7 +2132,7 @@ const MySetting = () => {
 											value={reFrndngInput1}
 											//onKeyDown={e => checkData(e)}
 											onChange={reFriendingInput1Handle}
-											// onBlur={deletePendingRequestWithDaysHandle}
+										// onBlur={deletePendingRequestWithDaysHandle}
 										/>
 
 										<div className='input-arrows'>
@@ -2316,7 +2316,7 @@ const MySetting = () => {
 											value={cnclFrndRqueInput}
 											onKeyDown={(e) => checkData(e)}
 											onChange={deletePendingFrndInputHandle}
-											// onBlur={deletePendingRequestWithDaysHandle}
+										// onBlur={deletePendingRequestWithDaysHandle}
 										/>
 
 										<div className='input-arrows'>
@@ -2357,9 +2357,8 @@ const MySetting = () => {
 						{/* {======= Send Message When someone accepted my friend request =======} */}
 						{/* <div className={`setting ${sndMsgAcptsFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgAcptsFrndReqOpen(!sndMsgAcptsFrndReqOpen)}> */}
 						<div
-							className={`setting ${
-								sndMsgAcptsFrndReqToggle ? "setting-actived" : ""
-							}`}
+							className={`setting ${sndMsgAcptsFrndReqToggle ? "setting-actived" : ""
+								}`}
 						>
 							<div className='setting-child first'>
 								<Switch
@@ -2428,9 +2427,8 @@ const MySetting = () => {
 						{/* {======= Send Message When someone rejected my friend request =======} */}
 						{/* <div className={`setting ${sndMsgRejtFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen)}> */}
 						<div
-							className={`setting ${
-								sndMsgRejtFrndReqToggle ? "setting-actived" : ""
-							}`}
+							className={`setting ${sndMsgRejtFrndReqToggle ? "setting-actived" : ""
+								}`}
 						>
 							<div className='setting-child first'>
 								<Switch
@@ -2499,9 +2497,8 @@ const MySetting = () => {
 						{/* {======= Send message when someone sends me a friend request =======} */}
 						{/* <div className="setting  setting-paper no-click"> */}
 						<div
-							className={`setting ${
-								sndMsgSomeoneSndFrndReqToggle ? "setting-actived" : ""
-							}`}
+							className={`setting ${sndMsgSomeoneSndFrndReqToggle ? "setting-actived" : ""
+								}`}
 						>
 							{/* <div className="setting-child first muted-text"> */}
 							<div className='setting-child first'>
@@ -2581,9 +2578,8 @@ const MySetting = () => {
 
 						{/* {======= Send message when I reject an incoming friend request =======} */}
 						<div
-							className={`setting ${
-								sndMsgRejtIncomingFrndReqToggle ? "setting-actived" : ""
-							}`}
+							className={`setting ${sndMsgRejtIncomingFrndReqToggle ? "setting-actived" : ""
+								}`}
 						>
 							<div className='setting-child first'>
 								{" "}
@@ -2663,9 +2659,8 @@ const MySetting = () => {
 
 						{/* {======= Send message when I accept an incoming friend request =======} */}
 						<div
-							className={`setting ${
-								sndMsgAcptsIncomingFrndReqToggle ? "setting-actived" : ""
-							}`}
+							className={`setting ${sndMsgAcptsIncomingFrndReqToggle ? "setting-actived" : ""
+								}`}
 						>
 							<div className='setting-child first'>
 								<Switch

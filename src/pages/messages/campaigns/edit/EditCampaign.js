@@ -7,6 +7,10 @@ import NoDataFound from '../../../../components/common/NoDataFound';
 import { CampaignFriendMessageRenderer, CampaignFriendStatusRenderer } from '../../../../components/messages/campaigns/CampaignListingColumns';
 import Modal from '../../../../components/common/Modal';
 import CustomHeaderTooltip from '../../../../components/common/CustomHeaderTooltip';
+import DropSelectMessage from '../../../../components/messages/DropSelectMessage';
+import NumberRangeInput from '../../../../components/common/NumberRangeInput';
+import Switch from '../../../../components/formComponents/Switch';
+
 
 const EditCampaign = () => {
     const [isEditingCampaign, setIsEditingCampaign, editViews] = useOutletContext()
@@ -15,6 +19,17 @@ const EditCampaign = () => {
     const [loading, setLoading] = useState(false)
     const [keyWords, setKeyWords] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
+
+    const [campaignName, setCampaignName] = useState('Connect and Win');
+
+    const [selectMessageOptionOpen, setSelectMessageOptionOpen] = useState(false);
+    const [groupMsgSelect, setGroupMsgSelect] = useState(null);
+    const [quickMsg, setQuickMsg] = useState(null);
+    const [quickMsgModalOpen, setQuickMsgModalOpen] = useState(false);
+    const [usingSelectOption, setUsingSelectOption] = useState(false);
+
+    const [msgLimit, setMsgLimit] = useState(1);
+    const [showEndDataAndTime, setShowEndDataAndTime] = useState(false);
 
 
     const campaignFriendsRef = [
@@ -71,6 +86,26 @@ const EditCampaign = () => {
         },
     ]
 
+
+    // Handle Campaign Name function..
+    const handleCampaignName = (event) => {
+        // event.preventDefault();
+        const value = event.target.value;
+        setCampaignName(value);
+    };
+
+    // Incrementing and decrementing for Message limit/25hr..
+    const incrementDecrementVal = (type) => {
+        if (type === "INCREMENT") {
+            setMsgLimit(Number(msgLimit) + 1);
+        }
+
+        if (type === "DECREMENT") {
+            setMsgLimit(Number(msgLimit) - 1);
+        }
+    }
+
+
     const RenderEditComponentData = useCallback(() => {
         if (view && isEditingCampaign?.friends) {
             if (view === 'view') {
@@ -93,10 +128,117 @@ const EditCampaign = () => {
                 </>
             } else {
                 console.log('rendering EDIT now', view);
-                // return <></>
+
+                return (
+                    <>
+                        {/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
+                        <div className='campaigns-edit-inputs'>
+                            <div className='campaigns-input w-250'>
+                                <label>Campaign name</label>
+
+                                <input
+                                    type="text"
+                                    className='campaigns-name-field'
+                                    value={campaignName}
+                                    onChange={handleCampaignName}
+                                />
+                            </div>
+
+                            <div className='campaigns-input'>
+                                <label>Select message</label>
+
+                                <DropSelectMessage
+                                    type='ACCEPT_REQ'
+                                    openSelectOption={selectMessageOptionOpen}
+                                    handleIsOpenSelectOption={setSelectMessageOptionOpen}
+                                    groupList={[]}
+                                    groupSelect={groupMsgSelect}
+                                    setGroupSelect={setGroupMsgSelect}
+                                    quickMessage={quickMsg}
+                                    setQuickMessage={setQuickMsg}
+                                    quickMsgModalOpen={quickMsgModalOpen}
+                                    setQuickMsgOpen={setQuickMsgModalOpen}
+                                    isDisabled={false}
+                                    usingSelectOptions={usingSelectOption}
+                                    setUsingSelectOptions={setUsingSelectOption}
+                                    customWrapperClass="campaigns-select-msg-wrapper"
+                                    customSelectPanelClass="campaigns-select-panel"
+                                    customSelectPanelPageClass="campaigns-select-panel-page"
+                                />
+                            </div>
+
+                            <div className='campaigns-input w-200'>
+                                <label>Time delay</label>
+                                <select className='campaigns-select'>
+                                    <option value="3">3 min</option>
+                                    <option value="5">5 min</option>
+                                    <option value="10">10 min</option>
+                                    <option value="15">15 min</option>
+                                </select>
+                            </div>
+
+                            <div className='campaigns-input w-200'>
+                                <label>Message limit/24hr</label>
+
+                                <NumberRangeInput
+                                    value={msgLimit}
+                                    handleChange={(event) => setMsgLimit(event.target.value)}
+                                    setIncrementDecrementVal={incrementDecrementVal}
+                                    customStyleClass="campaigns-num-input"
+                                />
+
+                            </div>
+
+                            <div className='campaigns-input w-220'>
+                                <label className='d-flex'>
+                                    <div>
+                                        <Switch
+                                            // isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
+                                            checked={showEndDataAndTime}
+                                            handleChange={() => setShowEndDataAndTime(!showEndDataAndTime)}
+                                            smallVariant
+                                        />
+                                    </div>
+
+                                    <span>End date & time</span>
+                                </label>
+
+                                <input
+                                    type="datetime-local"
+                                    className='campaigns-datetime-select'
+                                    style={{ visibility: !showEndDataAndTime ? 'hidden' : 'visible' }}
+                                />
+                            </div>
+                        </div>
+
+
+                        {/* CAMPAIGNS CALENDERS SECTION MIDDLE */}
+                        <div style={{ paddingLeft: '30px' }}>
+                            <h5>Campaigns Calender</h5>
+                        </div>
+
+
+                        {/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
+                        <div className='campaigns-save-buttons-container'>
+                            <button className='btn btn-grey'>Cancel</button>
+                            <button className='btn'>Save campaign</button>
+                        </div>
+                    </>
+                );
             }
         }
-    }, [view, isEditingCampaign])
+
+    }, [
+        view,
+        isEditingCampaign,
+        setMsgLimit,
+        msgLimit,
+        incrementDecrementVal,
+        selectMessageOptionOpen,
+        setSelectMessageOptionOpen,
+        campaignName
+    ])
+
 
     useEffect(() => {
         setView(editViews?.find(el => el.checked).label)
@@ -110,7 +252,7 @@ const EditCampaign = () => {
                 setView(JSON.parse(localStorage.getItem('fr_editCampaign_view'))?.mode)
             } else {
                 setView('view')
-                localStorage.setItem('fr_editCampaign_view', JSON.stringify({mode: 'view'}))
+                localStorage.setItem('fr_editCampaign_view', JSON.stringify({ mode: 'view' }))
             }
         }
 
@@ -118,6 +260,8 @@ const EditCampaign = () => {
             setIsEditingCampaign(null)
         }
     }, [])
+
+
     return (
         <>
             {modalOpen && (
@@ -145,6 +289,7 @@ const EditCampaign = () => {
                     additionalClass="modal-keywords"
                 />
             )}
+
             <div className='campaigns-edit d-flex d-flex-column'>
                 {
                     loading ?

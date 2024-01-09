@@ -1,0 +1,80 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/color-themes" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/font" as *;
+
+
+.input-num {
+    display: inline-flex;
+    background: #000;
+    width: 4.5rem;
+    border: 1px solid #313037;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding-block: 1px;
+    padding-inline: 0;
+    position: relative;
+    height: 30px;
+    overflow: hidden;
+  
+    &:hover {
+      @include theme-aware("border-color", "input-hover-button-background");
+    }
+  
+    .setting-input {
+      box-sizing: border-box;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      background: none;
+      width: 100%;
+      padding-inline: 10px 24px;
+      font-size: 12px;
+    }
+  
+    .input-arrows {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #1c1c1e;
+      line-height: 0px;
+      border-radius: 0 5px 5px 0;
+  
+      .btn {
+        height: 14px;
+        width: 100%;
+  
+        svg {
+          fill: #fff;
+          cursor: pointer;
+          width: 100%;
+  
+          &:hover {
+            @include theme-aware("background-color", "input-hover-button-background");
+          }
+        }
+      }
+    }
+    &.disabled{
+      background: #1C1C1E;
+      pointer-events: none;
+      .setting-input {
+        color: #767485;
+      }
+      .input-arrows{
+        .btn {
+          svg{
+            path{
+              fill:#767485;
+            }
+          }
+        }
+      }
+    }
+  }

@@ -109,24 +109,24 @@
 
                     .fr-input-inline {
                         border-bottom: 1px solid;
-                        @include theme-aware('border-color', 'sidebar-border-color');
+                        @include theme-aware("border-color", "sidebar-border-color");
                         padding: 9px 14px;
                         padding-right: 90px;
-                        @include theme-aware('color', 'text-color');
+                        @include theme-aware("color", "text-color");
                         letter-spacing: 0.32px;
                         font-size: $footerFontSize;
                         font-weight: $smallFontWeight;
                         letter-spacing: 0.24px;
 
                         &:focus {
-                            @include theme-aware('border-color', 'dark-light-border');
+                            @include theme-aware("border-color", "dark-light-border");
                         }
                     }
 
                     .btn-inline {
                         background-color: transparent;
                         padding: 0;
-                        @include theme-aware('color', 'sidebar-border-color');
+                        @include theme-aware("color", "sidebar-border-color");
                         letter-spacing: 0.24px;
                         font-size: $footerFontSize;
                         font-weight: $mediumFontWeight;
@@ -150,7 +150,7 @@
 
                         &:hover {
                             *[stroke] {
-                                @include theme-aware('stroke', 'text-color');
+                                @include theme-aware("stroke", "text-color");
                             }
                         }
                     }
@@ -163,7 +163,7 @@
 
                     &:focus-within {
                         .btn-inline {
-                            @include theme-aware('color', 'dark-light-border');
+                            @include theme-aware("color", "dark-light-border");
                         }
                     }
                 }
@@ -233,7 +233,7 @@
         &.message-menu-segments {
             .message-header-text {
                 figure {
-                    background-color: transparentize($themePink3, 0.8)
+                    background-color: transparentize($themePink3, 0.8);
                 }
             }
         }
@@ -262,17 +262,17 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                @include theme-aware('background-color', 'messages-header-icon-background');
+                @include theme-aware("background-color", "messages-header-icon-background");
                 border-radius: 50%;
             }
 
             .num-header-count {
-                margin-inline-start: 10px
+                margin-inline-start: 10px;
             }
         }
 
         .add-message {
-            @include theme-aware('background-color', 'messages-add-btn');
+            @include theme-aware("background-color", "messages-add-btn");
             color: $themeBlack1;
             height: 22px;
             padding-inline: 9px;
@@ -281,7 +281,7 @@
 
             &:disabled {
                 @include theme-aware("background-color", "messages-add-btn-disabled");
-                @include theme-aware('color', "link-text-color");
+                @include theme-aware("color", "link-text-color");
             }
 
             &:hover {
@@ -371,12 +371,12 @@
             font-size: $smallFontSize;
             font-weight: $smallFontWeight;
             overflow: auto;
-            @include theme-aware('color', 'text-para-color');
+            @include theme-aware("color", "text-para-color");
 
             * {
                 font-size: $smallFontSize;
                 font-weight: $smallFontWeight;
-                @include theme-aware('color', 'text-para-color');
+                @include theme-aware("color", "text-para-color");
 
                 &.message-string-spintax {
                     color: $themePrimaryBlue18;
@@ -401,7 +401,7 @@
             .editor-edit-controls {
                 .btn {
                     @include theme-aware("background-color", "messages-add-btn-disabled");
-                    @include theme-aware('color', 'link-text-color');
+                    @include theme-aware("color", "link-text-color");
                 }
             }
         }
@@ -414,7 +414,7 @@
         &.message-edit {
             .editor-container,
             .text-editor-container {
-                @include theme-aware('border-color', 'dark-light-border');
+                @include theme-aware("border-color", "dark-light-border");
             }
         }
         .editor-container,
@@ -430,7 +430,7 @@
                 inset: 0;
                 bottom: auto;
             }
-            
+
             .editor-inner {
                 overflow: hidden;
                 flex: 1 1 auto;
@@ -444,7 +444,6 @@
                 }
             }
         }
-
     }
 
     .fr-message-listing {
@@ -556,11 +555,11 @@
             .campaign-status {
                 padding-inline: 12px;
                 @include border-radius(4px);
-                @include theme-aware('background-color', 'menu-bg');
+                @include theme-aware("background-color", "menu-bg");
 
                 > span {
                     font-size: $smallFontSize;
-                    @include theme-aware('color', 'text-para-color');
+                    @include theme-aware("color", "text-para-color");
                     margin-right: 8px;
                 }
             }
@@ -582,7 +581,7 @@
                     .ag-header-cell-label {
                         font-size: $footerFontSize;
                         font-weight: $smallFontWeight;
-                        @include theme-aware('color', 'text-color')
+                        @include theme-aware("color", "text-color");
                     }
                 }
 
@@ -593,12 +592,12 @@
 
                         .campaign-count-cell,
                         .campaign-pending-cell {
-                            @include theme-aware('color', 'secondary-cell-text-color')
+                            @include theme-aware("color", "secondary-cell-text-color");
                         }
 
                         .campaign-schedule-cell {
                             a {
-                                @include theme-aware('color', 'secondary-link-color');
+                                @include theme-aware("color", "secondary-link-color");
                                 font-size: $footerFontSize;
                                 display: inline-flex;
                                 align-items: center;
@@ -608,10 +607,10 @@
                                     vertical-align: middle;
 
                                     *[fill] {
-                                        @include theme-aware('fill', 'link-text-color');
+                                        @include theme-aware("fill", "link-text-color");
                                     }
                                     *[stroke] {
-                                        @include theme-aware('stroke', 'link-text-color')
+                                        @include theme-aware("stroke", "link-text-color");
                                     }
                                 }
                             }
@@ -623,7 +622,7 @@
 
                             &.end-time-exceeded {
                                 color: $themeYellow9;
-                                
+
                                 svg {
                                     path {
                                         fill: $themeYellow9;
@@ -634,12 +633,12 @@
 
                         .campaign-pending-cell {
                             border: 1px solid;
-                            @include theme-aware('border-color', 'sidebar-border-color');
+                            @include theme-aware("border-color", "sidebar-border-color");
                             padding-inline: 2px;
                             width: 60px;
                             border-radius: 30px;
-                            @include theme-aware('color', 'checkbox-border');
-                            @include theme-aware('background-color', 'listing-popup-bg');
+                            @include theme-aware("color", "checkbox-border");
+                            @include theme-aware("background-color", "listing-popup-bg");
                             text-align: center;
                             font-size: $smallFontSize;
                             font-weight: $fontWeight;
@@ -648,7 +647,7 @@
                             &.nothing-pending {
                                 background-color: $themeYellow9;
                                 border-color: $themeYellow9;
-                                @include theme-aware('color', 'listing-cell-bg');
+                                @include theme-aware("color", "listing-cell-bg");
                             }
                         }
                     }
@@ -666,13 +665,12 @@
                 }
             }
         }
-        .campaigns-create {
 
+        
+        .campaigns-create {
         }
         .campaigns-edit {
             flex: 1 1 auto;
-            padding-inline: 30px;
-            position: relative;
 
             .table-footer {
                 margin-block: 10px;
@@ -680,10 +678,10 @@
 
             .sync-ico {
                 *[fill] {
-                    @include theme-aware('fill', 'secondary-link-color');
+                    @include theme-aware("fill", "secondary-link-color");
                 }
                 *[stroke] {
-                    @include theme-aware('stroke', 'secondary-link-color');
+                    @include theme-aware("stroke", "secondary-link-color");
                 }
             }
 
@@ -693,6 +691,119 @@
                     max-width: 250px;
                     line-height: 24px;
                 }
+            }
+
+            // Campaigns EDIT Page Elements and structures.
+            .w-250 {
+                width: 240px;
+            }
+            .w-220 {
+                width: 220px;
+            }
+            .w-200 {
+                width: 200px;
+            }
+
+            .campaigns-edit-inputs {
+                display: inline-flex;
+                flex-direction: row;
+                gap: 40px;
+                margin-top: 1rem;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+                border-bottom: 1px solid #313037;
+
+                .campaigns-input {
+                    display: grid;
+                    border-left: 1px solid #313037;
+                    padding-left: 40px;
+
+                    &:first-child {
+                        border-left: none;
+                    }
+
+                    &:last-child {
+                        margin-right: 30px;
+                    }
+
+                    label {
+                        font-size: 12px;
+                        color: #767485;
+                    }
+                }
+
+                .campaigns-select-msg-wrapper {
+                    width: 240px;
+                    margin-top: 5px;
+                }
+
+                .campaigns-select-panel {
+                    margin: 0;
+                    height: 40px;
+                    background: #313037;
+                    border: 1px solid #313037;
+                }
+
+                .campaigns-select-panel-page {
+                    width: 240px;
+                    height: 215px;
+                    transform: translate(-49.5%, 10%);
+                }
+
+                .campaigns-select,
+                .campaigns-name-field,
+                .campaigns-datetime-select,
+                .campaigns-num-input {
+                    // background: black;
+                    background: #313037;
+                    color: white;
+                    border-radius: 5px;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    border: 1px solid #313037;
+                    height: 40px;
+                    font-size: 12px;
+                    margin-top: 10px;
+
+                    &:focus {
+                        border-color: rgb(0, 148, 255);
+                    }
+                }
+
+                .campaigns-num-input,
+                .campaigns-select {
+                    width: 100%;
+                    margin: 0;
+                    margin-top: 5px;
+                }
+
+                ::-webkit-calendar-picker-indicator {
+                    filter: invert(1);
+                }
+
+
+                .campaigns-endDateTime-toggle {
+                    margin-top: 5px;
+                }
+            }
+        }
+
+        .campaigns-save-buttons-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid #313037;
+
+            button {
+                padding: 10px;
+                border-radius: 5px;
+                height: 40px;
+                font-size: 14px;
+                cursor: pointer;
             }
         }
 
@@ -723,19 +834,19 @@
         svg {
             *[fill] {
                 // fill: $themeSecondaryGrey19;
-                @include theme-aware("fill", 'text-color');
+                @include theme-aware("fill", "text-color");
             }
         }
 
         &:hover,
         &.active {
             // @include theme-aware("background-color", "message-context-menu-btn-active");
-            @include theme-aware('background-color', 'dark-light-border');
+            @include theme-aware("background-color", "dark-light-border");
 
             svg {
                 *[fill] {
                     // fill: $themePrimaryBlue16;
-                    @include theme-aware('fill', 'listing-popup-bg');
+                    @include theme-aware("fill", "listing-popup-bg");
                 }
             }
         }
@@ -751,9 +862,9 @@
     text-align: left;
     padding: 10px;
     border-radius: 10px;
-    @include theme-aware('background-color', 'listing-popup-bg');
+    @include theme-aware("background-color", "listing-popup-bg");
     border: 1px solid;
-    @include theme-aware('border-color', 'sidebar-border-color');
+    @include theme-aware("border-color", "sidebar-border-color");
     z-index: 2;
     margin-top: 5px;
     // pointer-events: none;
@@ -765,7 +876,7 @@
         height: 27px;
         background-color: transparent;
         padding: 0 10px;
-        @include theme-aware('color', 'link-text-color');
+        @include theme-aware("color", "link-text-color");
         font-size: $smallestFontSize;
         font-weight: $fontWeight;
 
@@ -817,7 +928,6 @@
     }
 }
 
-
 .btn-inline {
     display: inline-flex;
     align-items: center;
@@ -841,9 +951,9 @@
     column-gap: 10px;
 
     .btn-inline {
-        @include theme-aware('background', 'message-inactive-header-buttons');
+        @include theme-aware("background", "message-inactive-header-buttons");
         letter-spacing: 0.12px;
-        @include theme-aware('color', 'text-secondary-color');
+        @include theme-aware("color", "text-secondary-color");
         font-weight: $mediumFontWeight;
         height: 22px;
         padding-inline: 8px 10px;
@@ -903,7 +1013,7 @@
 }
 
 .fr-editor-legend {
-    @include theme-aware('background', 'message-editor-background');
+    @include theme-aware("background", "message-editor-background");
     height: 42px;
     padding-inline: 15px;
     border-radius: 5px;
@@ -914,7 +1024,7 @@
         align-items: center;
         justify-content: center;
 
-            figure {
+        figure {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -946,7 +1056,7 @@
     }
 
     .edit-text-type {
-        @include theme-aware('color', 'text-color');
+        @include theme-aware("color", "text-color");
         margin-inline: 10px 0;
         font-size: $smallestFontSize;
         font-weight: $smallFontWeight;
@@ -976,11 +1086,11 @@
             z-index: 2;
             top: 100%;
             margin-top: 10px;
-            right:30px;
-            @include theme-aware('background-color', 'sidebar-border-color');
+            right: 30px;
+            @include theme-aware("background-color", "sidebar-border-color");
             border-radius: 2px;
             padding: 10px;
-            transition: all cubic-bezier(0.98,-0.4, 0.6, 0.98) 0.3s;
+            transition: all cubic-bezier(0.98, -0.4, 0.6, 0.98) 0.3s;
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -1011,28 +1121,28 @@
                     font-size: $smallestFontSize;
                     font-weight: $smallFontWeight;
                     line-height: normal;
-                    @include theme-aware('color', 'link-text-color');
+                    @include theme-aware("color", "link-text-color");
                 }
 
                 .legend-footer {
-                    @include theme-aware('color', 'link-text-color');
+                    @include theme-aware("color", "link-text-color");
                     line-height: normal;
 
                     small {
                         letter-spacing: 0.1px;
-                        @include theme-aware('color', 'text-color');
+                        @include theme-aware("color", "text-color");
                         font-size: $smallestFontSize;
-                        font-weight: $smallFontWeight
+                        font-weight: $smallFontWeight;
                     }
                 }
             }
 
             &::before {
-                content: '';
+                content: "";
                 position: absolute;
                 bottom: 100%;
                 border: 6.5px solid transparent;
-                @include theme-aware('border-bottom-color', 'sidebar-border-color');
+                @include theme-aware("border-bottom-color", "sidebar-border-color");
                 border-bottom: 9px solid;
                 border-radius: 3px;
                 margin-bottom: -1px;
@@ -1041,7 +1151,7 @@
 
             &::after {
                 clear: both;
-                content: '';
+                content: "";
                 display: table;
             }
         }
@@ -1063,7 +1173,7 @@
     &::before,
     &::after {
         position: absolute;
-        content: '';
+        content: "";
         transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
         pointer-events: none;
     }
@@ -1071,7 +1181,7 @@
     &:after {
         opacity: 0;
         padding: 6px 8px;
-        @include theme-aware('background-color', 'sidebar-border-color');
+        @include theme-aware("background-color", "sidebar-border-color");
         top: 100%;
         width: 149px;
         min-height: 1px;
@@ -1088,7 +1198,7 @@
         word-wrap: break-word;
         display: -webkit-box;
         -webkit-line-clamp: 4;
-                line-clamp: 4;
+        line-clamp: 4;
         -webkit-box-orient: vertical;
         max-height: calc(18px * 5);
         overflow: hidden;
@@ -1110,12 +1220,11 @@
 
     &:hover {
         &::before,
-        &::after  {
+        &::after {
             opacity: 1;
         }
     }
 }
-
 
 .style-sub-tooltip {
     position: relative;
@@ -1123,7 +1232,7 @@
     &::before,
     &::after {
         position: absolute;
-        content: '';
+        content: "";
         transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
         pointer-events: none;
     }
@@ -1131,7 +1240,7 @@
     &:after {
         opacity: 0;
         padding: 6px 8px;
-        @include theme-aware('background-color', 'sidebar-border-color');
+        @include theme-aware("background-color", "sidebar-border-color");
         top: 100%;
         width: 200px;
         border-radius: 2px;
@@ -1164,7 +1273,7 @@
 
     &:hover {
         &::before,
-        &::after  {
+        &::after {
             opacity: 1;
         }
     }
@@ -1184,21 +1293,21 @@
     .modal-content {
         h6 {
             margin-block: 0 10px;
-            @include theme-aware('color', 'text-color');
+            @include theme-aware("color", "text-color");
             font-size: $smallFontSize;
             font-weight: $fontWeight;
         }
         .selector_box {
-            @include theme-aware('background-color', 'input-bg');
-            @include theme-aware('border-color', 'input-bg');
+            @include theme-aware("background-color", "input-bg");
+            @include theme-aware("border-color", "input-bg");
             height: 40px;
             padding: 0 20px;
             width: 100%;
-            @include theme-aware('color', 'text-color');
+            @include theme-aware("color", "text-color");
         }
 
         .select-arrow {
-            background-image: url('../../../assets/images/arrow1.svg');
+            background-image: url("../../../assets/images/arrow1.svg");
             top: 50%;
             transform: translateY(-50%);
             width: 18px;

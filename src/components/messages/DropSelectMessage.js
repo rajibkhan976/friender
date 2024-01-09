@@ -19,10 +19,13 @@ const DropSelectMessage = ({
     setQuickMsgOpen,
     isDisabled,
     type,
-    setUsingSelectOptions,
-    usingSelectOptions,
-    saveMySetting,
-    others = []
+    setUsingSelectOptions = null,
+    usingSelectOptions = null,
+    saveMySetting = null,
+    others = [],
+    customWrapperClass = null,
+    customSelectPanelClass = null,
+    customSelectPanelPageClass = null
 }) => {
     const [selectOption, setSelectOption] = useState(() => groupSelect ? groupSelect.group_name : '');
     const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
@@ -237,7 +240,13 @@ const DropSelectMessage = ({
      * Select Bar Click Handler Function.
      */
     const handleSelectBarClick = () => {
+        
+        console.log("I am here bro -- ");
+
         if (!isDisabled) {
+
+            console.log("I am here bro --  FROM INSIDE -- ", openSelectOption);
+
             handleIsOpenSelectOption(!openSelectOption)
         }
 
@@ -260,10 +269,10 @@ const DropSelectMessage = ({
                 oldGroupId={selectedOptionId}
             />
 
-            <div className='custom-select-option-wrapper'>
+            <div className={`custom-select-option-wrapper ${customWrapperClass !== null ? customWrapperClass : ''}`}>
                 {/* ====== SELECT BAR ====== */}
                 <div
-                    className={`select-wrapers ${isDisabled ? 'disable-custom-select-panel' : ' select-panel'}`}
+                    className={`select-wrapers ${isDisabled ? 'disable-custom-select-panel' : ' select-panel'} ${customSelectPanelClass !== null ? customSelectPanelClass : ''}`}
                     style={{
                         borderColor: openSelectOption && '#0094FFFF',
                         color: 'lightgray'
@@ -279,7 +288,7 @@ const DropSelectMessage = ({
 
                 {/* ======== SELECT OPTIONS LIST ======== */}
                 <div
-                    className={`select-panel-page`}
+                    className={`select-panel-page ${customSelectPanelPageClass ? customSelectPanelPageClass : ''}`}
                     style={{ display: !openSelectOption ? 'none' : 'block' }}
                 >
                     {/* ======== Quick Message ======== */}
@@ -321,3 +330,4 @@ const DropSelectMessage = ({
 }
 
 export default DropSelectMessage;
+
