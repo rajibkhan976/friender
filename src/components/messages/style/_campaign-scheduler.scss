@@ -1,0 +1,119 @@
+.create-campaign-scheduler-container {
+	overflow-y: auto;
+
+    .create-campaign-form-container {
+        padding: 2rem;
+        border-bottom: 1px solid #313037;
+    }
+
+    .create-campaign-scheduler {
+        padding: 1rem;
+    }
+
+    .rbc-time-view {
+        border: 1px solid #313037;
+        border-radius: 4px;
+    }
+
+    .rbc-allday-cell {
+        width: 0 !important;
+        height: 0 !important;
+        display: none;
+        visibility: none;
+        border: none;
+        outline: none;
+    }
+
+    .rbc-header {
+        border-left: 1px solid #313037;
+        border-bottom: none !important;
+        padding-top: 10px;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16.37px;
+    }
+
+    .rbc-time-header-content {
+        border-left: 1px solid #313037;
+    }
+
+    .rbc-time-content {
+        border-top: 1px solid #313037;
+    }
+
+    .rbc-time-view .rbc-row {
+        min-height: 35px;
+    }
+
+    .rbc-time-column .rbc-timeslot-group {
+        align-items: center;
+        padding-top: 19px;
+        padding-bottom: 19px;
+        border-bottom: 1px solid #313037;
+        font-size: 10px;
+        font-weight: 600;
+        color: #767485;
+        line-height: 14px;
+    }
+
+    .rbc-time-content > * + * > * {
+        border-left: 1px solid #313037;
+    }
+
+    .rbc-time-content > .rbc-time-gutter {
+        width: 166.55px;
+    }
+
+    .rbc-day-slot > .rbc-timeslot-group {
+        padding-top: 25.6px;
+        padding-bottom: 25.6px;
+    }
+
+    .rbc-today {
+        background-color: rgba(0, 148, 255, 0.1);
+        color: rgba(0, 148, 255, 1);
+    }
+
+    .create-campaign-btn-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 400;
+        text-align: center;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid #313037;
+
+        .save-campaign-btn {
+            width: 129px;
+            height: 40px;
+            background-color: #605BFF;
+            border-radius: 4px;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+    
+        .cancel-campaign-btn {
+            width: 76px;
+            height: 40px;
+            background-color: #313037;
+            border-radius: 4px;
+            margin-right: 1rem;
+            color: #767485;
+            cursor: pointer;
+        }
+    }
+
+    // .campaign-scheduler-popup-container {
+    //     width: 268px;
+    //     height: 198px;
+    //     background-color: #1C1C1E;
+    //     border-radius: 4px;
+    //     position: relative;
+    //     top: 0;
+    //     right: 0;
+    //     z-index: 10;
+    // }
+}

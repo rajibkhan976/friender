@@ -1,155 +1,215 @@
 /* //Toast styling start */
 
 :root {
-  --toastify-color-light: #fff;
-  --toastify-color-dark: #121212;
-  --toastify-color-info: #3498db;
-  --toastify-color-success: #49ce56;
-  --toastify-color-warning: #ffe600;
-  --toastify-color-error: #ff6a77;
-  --toastify-color-transparent: rgba(255, 255, 255, 0.7);
-  --toastify-color-transparent-light: rgba(255, 255, 255, 0.99);
+	--toastify-color-light: #fff;
+	--toastify-color-dark: #121212;
+	--toastify-color-info: #3498db;
+	--toastify-color-success: #49ce56;
+	--toastify-color-warning: #ffe600;
+	--toastify-color-error: #ff6a77;
+	--toastify-color-transparent: rgba(255, 255, 255, 0.7);
+	--toastify-color-transparent-light: rgba(255, 255, 255, 0.99);
 
-  --toastify-icon-color-info: var(--toastify-color-info);
-  --toastify-icon-color-success: var(--toastify-color-success);
-  --toastify-icon-color-warning: var(--toastify-color-warning);
-  --toastify-icon-color-error: var(--toastify-color-error);
+	--toastify-icon-color-info: var(--toastify-color-info);
+	--toastify-icon-color-success: var(--toastify-color-success);
+	--toastify-icon-color-warning: var(--toastify-color-warning);
+	--toastify-icon-color-error: var(--toastify-color-error);
 
-  --toastify-toast-width: 320px;
-  --toastify-toast-background: #fff;
-  --toastify-toast-min-height: 64px;
-  --toastify-toast-max-height: 800px;
-  --toastify-font-family: sans-serif;
-  --toastify-z-index: 9999;
+	--toastify-toast-width: 320px;
+	--toastify-toast-background: #fff;
+	--toastify-toast-min-height: 64px;
+	--toastify-toast-max-height: 800px;
+	--toastify-font-family: sans-serif;
+	--toastify-z-index: 9999;
 
-  --toastify-text-color-light: #757575;
-  --toastify-text-color-dark: #fff;
+	--toastify-text-color-light: #757575;
+	--toastify-text-color-dark: #fff;
 
-  /* //Used only for colored theme */
-  --toastify-text-color-info: #fff;
-  --toastify-text-color-success: #fff;
-  --toastify-text-color-warning: #fff;
-  --toastify-text-color-error: #fff;
+	/* //Used only for colored theme */
+	--toastify-text-color-info: #fff;
+	--toastify-text-color-success: #fff;
+	--toastify-text-color-warning: #fff;
+	--toastify-text-color-error: #fff;
 
-  --toastify-spinner-color: #616161;
-  --toastify-spinner-color-empty-area: #e0e0e0;
+	--toastify-spinner-color: #616161;
+	--toastify-spinner-color-empty-area: #e0e0e0;
 
-  /* // Used when no type is provided */
-  /* // toast("**hello**") */
-  --toastify-color-progress-light: linear-gradient(
-    to right,
-    #4cd964,
-    #5ac8fa,
-    #007aff,
-    #34aadc,
-    #5856d6,
-    #ff2d55
-  );
-  /* // Used when no type is provided */
-  --toastify-color-progress-dark: #bb86fc;
-  --toastify-color-progress-info: var(--toastify-color-info);
-  --toastify-color-progress-success: var(--toastify-color-success);
-  --toastify-color-progress-warning: var(--toastify-color-warning);
-  --toastify-color-progress-error: var(--toastify-color-error);
+	/* // Used when no type is provided */
+	/* // toast("**hello**") */
+	--toastify-color-progress-light: linear-gradient(
+		to right,
+		#4cd964,
+		#5ac8fa,
+		#007aff,
+		#34aadc,
+		#5856d6,
+		#ff2d55
+	);
+	/* // Used when no type is provided */
+	--toastify-color-progress-dark: #bb86fc;
+	--toastify-color-progress-info: var(--toastify-color-info);
+	--toastify-color-progress-success: var(--toastify-color-success);
+	--toastify-color-progress-warning: var(--toastify-color-warning);
+	--toastify-color-progress-error: var(--toastify-color-error);
 }
 
 /** Used to define container behavior: width, position: fixed etc... **/
-
 
 /** Used to define the position of the ToastContainer **/
 
 /** Classes for the displayed toast **/
 .Toastify__toast {
-  border-radius: 10px;
+	border-radius: 10px;
 }
 
-
 /** Used to position the icon **/
-
 
 /** handle the notification color and the text color based on the theme **/
 
 .Toastify__toast-theme--colored.Toastify__toast--success {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 255, 132, 0.2),
-    rgba(27, 27, 29, 0.6)
-  );
+	background: linear-gradient(
+		90deg,
+		rgba(0, 255, 132, 0.2),
+		rgba(27, 27, 29, 0.6)
+	);
 }
 .Toastify__toast-theme--colored.Toastify__toast--warning {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 230, 0, 0.2),
-    rgba(27, 27, 29, 0.6)
-  );
+	background: linear-gradient(
+		90deg,
+		rgba(255, 230, 0, 0.2),
+		rgba(27, 27, 29, 0.6)
+	);
 }
 .Toastify__toast-theme--colored.Toastify__toast--error {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 106, 118, 0.2),
-    rgba(27, 27, 29, 0.6)
-  );
+	background: linear-gradient(
+		90deg,
+		rgba(255, 106, 118, 0.2),
+		rgba(27, 27, 29, 0.6)
+	);
 }
 /** colored notifications share the same progress bar color **/
 
 /** Classes for the close button. Better use your own closeButton **/
 .Toastify__close-button {
-  position: absolute;
-  top: 50%;
-  right: 2%;
-  transform: translate(0%, -50%);
+	position: absolute;
+	top: 50%;
+	right: 2%;
+	transform: translate(0%, -50%);
 }
 
 /*My custom*/
 .alert-inner {
-  display: flex;
-  font-family: "Nunito";
-  font-style: normal;
+	display: flex;
+	font-family: "Nunito";
+	font-style: normal;
 }
 
 .alert-inner .alert-divider {
-  width: 0px;
-  height: 80%;
-  opacity: 0.1;
-  position: absolute;
-  top: 50%;
-  right: 10%;
-  transform: translate(0%, -50%);
-  border-right: 1px solid #ffffff;
+	width: 0px;
+	height: 80%;
+	opacity: 0.1;
+	position: absolute;
+	top: 50%;
+	right: 10%;
+	transform: translate(0%, -50%);
+	border-right: 1px solid #ffffff;
 }
 .alert-inner .alert-inner-sec .msg-header {
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
+	font-weight: 600;
+	font-size: 16px;
+	line-height: 20px;
 }
 .alert-inner .alert-inner-sec .msg {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 19px;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 19px;
 }
 
 .success-header {
-  /* color: var(--toastify-color-success); */
-  color: #02af12;
+	/* color: var(--toastify-color-success); */
+	color: #02af12;
 }
 .warning-header {
-  /* color: var(--toastify-color-warning); */
-  color: #aba600;
+	/* color: var(--toastify-color-warning); */
+	color: #aba600;
 }
 .error-header {
-  /* color: var(--toastify-color-error); */
-  color: #df1022;
+	/* color: var(--toastify-color-error); */
+	color: #df1022;
 }
 
 .success-txt {
-  /* color: #a4cea8; */
-  color: #048d12;
+	/* color: #a4cea8; */
+	color: #048d12;
 }
 .warning-txt {
-  /* color: #c3bf92; */
-  color: #7c751c;
+	/* color: #c3bf92; */
+	color: #7c751c;
 }
 .error-txt {
-  /* color: #d1a8a8; */
-  color: #ab1724;
+	/* color: #d1a8a8; */
+	color: #ab1724;
+}
+
+.campaign-scheduler-popup-container {
+	width: 268px;
+	height: 198px;
+	background-color: #1c1c1e;
+	border-radius: 4px;
+	position: absolute;
+	z-index: 10;
+}
+
+.campaign-scheduler-popup-header {
+	width: 100%;
+	height: 35%;
+	color: #767485;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 16px;
+	padding: 1rem;
+}
+
+.campaign-scheduler-popup-body {
+	width: 100%;
+	height: 50%;
+	color: #767485;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 16px;
+	padding: 1rem;
+}
+
+.campaign-scheduler-popup-footer {
+	width: 100%;
+	height: 15%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.scheduler-popup-save-btn {
+	width: 47px;
+	height: 22px;
+	background-color: #605bff;
+	color: #ffffff;
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 14px;
+	margin-right: 10px;
+	margin-right: 10px;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.scheduler-popup-cancel-btn {
+	width: 47px;
+	height: 22px;
+	background-color: #313037;
+	color: #767485;
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 14px;
+	margin-right: 10px;
+	border-radius: 3px;
+	cursor: pointer;
 }

@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const CampaignsCalendar = () => {
-    return (
-        <div>
-            Campaigns Calendar
-        </div>
-    );
+	return <div>Campaigns Calendar</div>;
 };
 
 export default CampaignsCalendar;
