@@ -18,6 +18,8 @@ import CustomHeaderTooltip from "../../../../components/common/CustomHeaderToolt
 import DropSelectMessage from "../../../../components/messages/DropSelectMessage";
 import NumberRangeInput from "../../../../components/common/NumberRangeInput";
 import Switch from "../../../../components/formComponents/Switch";
+import CampaignScheduler from "../../../../components/messages/campaigns/CampaignScheduler";
+import CampaignSchedulerPopup from "../../../../components/messages/campaigns/CampaignScedulerPopup";
 
 const EditCampaign = () => {
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
@@ -38,6 +40,8 @@ const EditCampaign = () => {
 
 	const [msgLimit, setMsgLimit] = useState(1);
 	const [showEndDataAndTime, setShowEndDataAndTime] = useState(false);
+	const [showPopup, setShowPopup] = useState(false);
+	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 
 	const campaignFriendsRef = [
 		{
@@ -222,8 +226,21 @@ const EditCampaign = () => {
 						</div>
 
 						{/* CAMPAIGNS CALENDERS SECTION MIDDLE */}
-						<div style={{ paddingLeft: "30px" }}>
-							<h5>Campaigns Calender</h5>
+						<div className='create-campaign-scheduler-container'>
+							<div className='create-campaign-scheduler'>
+								{showPopup && (
+									<CampaignSchedulerPopup
+										popupCoordPos={popupCoordPos}
+										handleSetShowPopup={(status) => setShowPopup(status)}
+									/>
+								)}
+								<CampaignScheduler
+									handleSetShowPopup={(status) => setShowPopup(status)}
+									handleSetPopupPos={(pos) => {
+										setPopupCoordPos({ x: pos.X, y: pos.Y });
+									}}
+								/>
+							</div>
 						</div>
 
 						{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}

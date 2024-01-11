@@ -5,8 +5,7 @@ import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CreateCampaignWrapper = () => {
 	const [showPopup, setShowPopup] = useState(false);
-	const [popupTopPos, setPopupTopPos] = useState(0);
-	const [popupLeftPos, setPopupLeftPos] = useState(0);
+	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 
 	return (
 		<div className='create-campaign-scheduler-container'>
@@ -16,16 +15,14 @@ const CreateCampaignWrapper = () => {
 			<div className='create-campaign-scheduler'>
 				{showPopup && (
 					<CampaignSchedulerPopup
-						topPos={popupTopPos}
-						leftPos={popupLeftPos}
+						popupCoordPos={popupCoordPos}
 						handleSetShowPopup={(status) => setShowPopup(status)}
 					/>
 				)}
 				<CampaignScheduler
 					handleSetShowPopup={(status) => setShowPopup(status)}
 					handleSetPopupPos={(pos) => {
-						setPopupTopPos(pos.Y);
-						setPopupLeftPos(pos.X);
+						setPopupCoordPos({ x: pos.X, y: pos.Y });
 					}}
 				/>
 			</div>

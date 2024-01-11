@@ -170,6 +170,81 @@
 	padding: 1rem;
 }
 
+.scheduler-popup-header-content {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.5rem;
+}
+
+.scheduler-popup-header-content > .popup-header-content-item {
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #313037;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.today-circle {
+	background-color: #0094ff !important;
+	color: #000000 !important;
+	font-weight: 700;
+}
+
+.scheduler-popup-body-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 0.5rem;
+}
+
+.fr-select-new .selector_box {
+	padding-right: 42px;
+	padding-left: 16px;
+	min-width: 108px;
+	color: #bdbdbd;
+}
+
+.tinyWrap .selector_box {
+	border-radius: 5px;
+	border: 1px solid #313037;
+	background: #313037;
+	color: #bdbdbd;
+	padding: 1px 9px;
+	font-size: 12px;
+}
+
+#start-time-span + .select-arrow {
+	right: 155px;
+}
+
+#end-time-span + .select-arrow {
+	right: 24px;
+}
+
+.fr-select-new .select-arrow {
+	top: 130px;
+	bottom: auto;
+	transform: translateY(-50%);
+}
+
+.tinyWrap .select-arrow {
+	background-position: none;
+	background: url(../src/assets/images/arrow1.svg) 0 1px no-repeat;
+	width: 10px;
+	height: 9px;
+	pointer-events: none;
+}
+
+.select-wrapers .select-arrow {
+	display: block;
+	position: absolute;
+	cursor: pointer;
+	overflow: hidden;
+}
+
 .campaign-scheduler-popup-body {
 	width: 100%;
 	height: 50%;
