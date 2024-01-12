@@ -43,6 +43,11 @@ $selectOptionsWidth: 290px;
   }
 }
 
+.select-panel-error {
+  border: 1px solid #FF6A77 !important;
+  background: none !important;
+}
+
 .disable-custom-select-panel {
   @extend .select-panel;
   background-color: #19191d;

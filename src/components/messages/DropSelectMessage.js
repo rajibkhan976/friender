@@ -31,6 +31,7 @@ const DropSelectMessage = ({
     const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
     const [showTooltip, setShowTooltip] = useState(false);
     const [editorStateValue, setEditorStateValue] = useState("");
+    const [unselectedError, setUnselectedError] = useState(false);
 
     useEffect(() => {
         if (quickMessage && type === "ACCEPT_REQ") {
@@ -53,6 +54,12 @@ const DropSelectMessage = ({
         if (quickMessage && type === "ACCEPT_INCOMING_REQ") {
             localStorage.setItem("fr_quickMessage_accept_send_req", quickMessage?.__raw);
         }
+
+        if (quickMessage && type === "CAMPAIGNS_MESSAGE") {
+            localStorage.setItem("fr_quickMessage_campaigns_message", quickMessage?.__raw);
+            setUnselectedError(false);
+        }
+
     }, [quickMessage]);
 
     /**
@@ -151,6 +158,10 @@ const DropSelectMessage = ({
         if (type === "ACCEPT_INCOMING_REQ") {
             localStorage.setItem("fr_using_accept_incoming", true);
         }
+
+        if (type === "CAMPAIGNS_MESSAGE") {
+            localStorage.setItem("fr_using_campaigns_message", true);
+        }
     };
 
     // Rendering select options..
@@ -234,20 +245,40 @@ const DropSelectMessage = ({
                 return truncateTextTo32(selectOption || "Select the message");
             }
         }
+
+        if (type === "CAMPAIGNS_MESSAGE") {
+            const isSelectUsing = localStorage.getItem("fr_using_campaigns_message");
+
+            if (quickMessage && !isSelectUsing) {
+                return "Quick Message";
+            }
+
+            if (!isSelectUsing) {
+                return 'Select the message';
+            }
+
+            if (isSelectUsing) {
+                return truncateTextTo32(selectOption || "Select the message");
+            }
+        }
     };
 
     /**
      * Select Bar Click Handler Function.
      */
     const handleSelectBarClick = () => {
-        
-        console.log("I am here bro -- ");
-
         if (!isDisabled) {
-
-            console.log("I am here bro --  FROM INSIDE -- ", openSelectOption);
-
             handleIsOpenSelectOption(!openSelectOption)
+        }
+
+        // UNSELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
+        if (openSelectOption && !selectOption && type === "CAMPAIGNS_MESSAGE") {
+            setUnselectedError(true);
+        }
+
+        // SELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
+        if (openSelectOption && selectOption && type === "CAMPAIGNS_MESSAGE") {
+            setUnselectedError(false);
         }
 
         if (others && others.length) {
@@ -272,7 +303,10 @@ const DropSelectMessage = ({
             <div className={`custom-select-option-wrapper ${customWrapperClass !== null ? customWrapperClass : ''}`}>
                 {/* ====== SELECT BAR ====== */}
                 <div
-                    className={`select-wrapers ${isDisabled ? 'disable-custom-select-panel' : ' select-panel'} ${customSelectPanelClass !== null ? customSelectPanelClass : ''}`}
+                    className={`select-wrapers 
+                    ${isDisabled ? 'disable-custom-select-panel' : ' select-panel'} 
+                    ${customSelectPanelClass !== null ? customSelectPanelClass : ''}
+                    ${unselectedError ? 'select-panel-error' : ''}`}
                     style={{
                         borderColor: openSelectOption && '#0094FFFF',
                         color: 'lightgray'
@@ -285,6 +319,9 @@ const DropSelectMessage = ({
                         {!openSelectOption ? <ChevronDownArrowIcon size={18} color={isDisabled === false ? 'white' : 'gray'} /> : <ChevronUpArrowIcon size={18} />}
                     </figure>
                 </div>
+
+                {/* == ERROR SITUATIION HANDLE WITH MESSAGE == */}
+                {unselectedError && <span className='text-red'>Select a message</span>}
 
                 {/* ======== SELECT OPTIONS LIST ======== */}
                 <div

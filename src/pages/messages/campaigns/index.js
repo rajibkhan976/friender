@@ -14,16 +14,17 @@ import {
 	UserIcon,
 } from "../../../assets/icons/Icons";
 
-import ListingLoader from "../../../components/common/loaders/ListLoader";
-import CampaignsHeader from "../../../components/messages/campaigns/CampaignsHeader";
-import CreateCampaignWrapper from "../../../components/messages/campaigns/CreateCampaignWrapper";
-import NoDataFound from "../../../components/common/NoDataFound";
+import ListingLoader from "components/common/loaders/ListLoader";
+import CampaignsHeader from "components/messages/campaigns/CampaignsHeader";
+import NoDataFound from "components/common/NoDataFound";
+import Alertbox from "components/common/Toast";
+import CreateCampaign from "./create/CreateCampaign";
 
 const CampaignsCalendar = lazy(() =>
-	import("../../../components/messages/campaigns/CampaignsCalendar")
+	import("components/messages/campaigns/CampaignsCalendar")
 );
 const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
-const Alertbox = lazy(() => import("../../../components/common/Toast"));
+
 
 // VIEW OPTIONS FOR BASE CAMPAIGN PAGE
 const radioOptions = [
@@ -316,7 +317,7 @@ const Campaigns = () => {
 							context={[isEditingCampaign, setIsEditingCampaign, editViews]}
 						/>
 					) : (
-						<CreateCampaignWrapper />
+						<CreateCampaign />
 					)}
 				</>
 			)}
