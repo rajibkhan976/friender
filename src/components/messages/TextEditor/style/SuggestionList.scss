@@ -17,9 +17,14 @@
   border-radius: 5px;
   padding: 5px;
   display: inline-flex;
+
+  svg {
+    height: inherit;
+    line-height: 1;
+  }
 }
-.suggestion-search:focus-within{
-  border-color: #0094FF;
+.suggestion-search:focus-within {
+  border-color: #0094ff;
 }
 
 .suggestion-searchbar {

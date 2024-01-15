@@ -95,6 +95,14 @@
     will-change: auto;
     &:hover {
       z-index: 60;
+
+      .message-context-menu {
+        > svg {
+          *[fill] {
+            @include theme-aware("fill", "text-color");
+          }
+        }
+      }
     }
     .ag-cell {
       .key-box-wrap {

@@ -192,6 +192,7 @@ export default function TextEditor({
 
   return (
     <div className="fr-text-editor">
+      <p className="editor-title-announce">Message <span className="important-asterisk">*</span></p>
       <LexicalComposer initialConfig={editorConfig}>
         <div className="text-editor-container">
           <ToolbarPlugin />

@@ -168,6 +168,11 @@
     border-radius: 50%;
   }
 
+  &.reset-search {
+    padding: 0;
+    background: transparent;
+  }
+
   &:hover {
     @include theme-aware('background-color', 'btn-hover');
   }

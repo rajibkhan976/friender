@@ -16,7 +16,7 @@ import { $createParagraphNode, $createTextNode, $getRoot, $getSelection } from "
 import { useCallback, useEffect, useMemo, useState } from "react"
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import { EditorSearchIcon } from "../../../../../assets/icons/Icons"
+import { Cross, EditorSearchIcon } from "../../../../../assets/icons/Icons"
 
 //import { $createMentionNode } from "../../nodes/MentionNode"
 
@@ -220,6 +220,7 @@ function MentionsTypeaheadMenuItem({
 }
 
 export default function MergeFieldPlugin() {
+  const inputRef = React.useRef(null)
   const [editor] = useLexicalComposerContext()
 
   const [queryString, setQueryString] = useState(null)
@@ -274,6 +275,13 @@ export default function MergeFieldPlugin() {
     [checkForSlashTriggerMatch, editor]
   )
 
+  // reset search message on reset button click
+  const resetMessageSearch = () => {
+    setQueryString('')
+    inputRef.current.value = ''
+    inputRef?.current?.focus()
+  }
+
   return (
     <LexicalTypeaheadMenuPlugin
       onQueryChange={setQueryString}
@@ -288,16 +296,24 @@ export default function MergeFieldPlugin() {
           ? ReactDOM.createPortal(
             <div className="typeahead-popover mentions-menu">
               <div className='suggestion-search'>
-                    <EditorSearchIcon width={18} height={18} />
-                    <input
-                        type="text"
-                        placeholder="Search"
-                        className="suggestion-searchbar"
-                        onChange={(e) => {
-                          setQueryString(e.target.value);
-                        }}
-                    />
-                </div>
+                <EditorSearchIcon width={18} height={18} />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  placeholder="Search"
+                  className="suggestion-searchbar"
+                  onChange={(e) => {
+                    setQueryString(e.target.value);
+                  }}
+                />
+
+                <button
+                  className="btn btn-inline reset-search"
+                  onClick={resetMessageSearch}
+                >
+                  <Cross />
+                </button>
+              </div>
               <ul>
                 {options.map((option, i) => (
                   <MentionsTypeaheadMenuItem

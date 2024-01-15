@@ -882,7 +882,7 @@ export const EditorSearchIcon = ({ width = 14, height = 14 }) => {
 			width={width}
 			height={height}
 			viewBox='0 0 14 14'
-			fill='gray'
+			fill='rgba(0,0,0,0)'
 			xmlns='http://www.w3.org/2000/svg'
 		>
 			<path
