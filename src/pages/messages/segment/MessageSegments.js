@@ -311,6 +311,9 @@ const MessageSegments = () => {
             // AddNewSegmentMessageItem..
             await dispatch(addNewSegmentMessageItem({ segmentId: activeSegmentsItem?._id, message: data }))
                 .then(res => {
+                    setActiveTextContent("");
+                    cancleFun()
+                    
                     if (res) {
                         let segmentsArrayPlaceholder = [...segmentsArray];
                         let matchingSegmentObject = segmentsArrayPlaceholder?.filter(element => element._id === res?.payload?.data?.segment_id)[0];
@@ -755,6 +758,7 @@ const MessageSegments = () => {
                                     cancleFun={cancleFun}
                                     saveMessage={isEditingMessage !== null ? editMessage : saveMessage}
                                     needSegment={false}
+                                    setTextContent={setActiveTextContent}
                                 />
                             </> :
                             activeSegmentsItem?.segment_messages?.length > 0 ?

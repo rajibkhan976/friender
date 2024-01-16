@@ -53,7 +53,7 @@ const MessageGroups = () => {
                         setIsPages(true);
                     }
                 }).catch((error) => {
-                    console.log('error <<<<', error);
+                    // console.log('error <<<<', error);
                     setListLoading(false);
                     if (error.message === "Rejected") {
                         setIsPages(false);
@@ -222,7 +222,7 @@ const MessageGroups = () => {
      */
     const GroupNameEdit = async (updatedGroup) => {
         setLoading(true);
-        console.log('updatedGroup', updatedGroup);
+        // console.log('updatedGroup', updatedGroup);
 
         try {
             await dispatch(addNewGroup({
@@ -405,7 +405,7 @@ const MessageGroups = () => {
                     cancleFun()
 
                     if (res) {
-                        console.log("saved message resss", res);
+                        // console.log("saved message resss", res);
                         let placeholderGroupsArray = [...groupsArray]
                         let matchingGroupObject = placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0];
 
@@ -464,7 +464,7 @@ const MessageGroups = () => {
 
     const editMessage = async (data) => {
         setLoading(true);
-        console.log('here');
+        // console.log('here');
 
         let placeholderGroupsArray = [...groupsArray];
         placeholderGroupsArray = placeholderGroupsArray?.map(el => el._id !== isEditingMessage?.groupId ? el : {
@@ -555,7 +555,7 @@ const MessageGroups = () => {
                     if (res) {
                         let placeholderGroupsArray = [...groupsArray]
 
-                        console.log('OLD >>>> placeholderGroupsArray', placeholderGroupsArray);
+                        // console.log('OLD >>>> placeholderGroupsArray', placeholderGroupsArray);
 
                         let matchingGroupObject = placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0];
                         placeholderGroupsArray = placeholderGroupsArray
@@ -566,7 +566,7 @@ const MessageGroups = () => {
                                         .group_messages, res?.payload?.data
                                 ]
                             })
-                        console.log('NEW >>> placeholderGroupsArray', placeholderGroupsArray);
+                        // console.log('NEW >>> placeholderGroupsArray', placeholderGroupsArray);
 
                         setGroupsArray(placeholderGroupsArray);
                         setActiveGroupsItem(placeholderGroupsArray?.filter(el => el._id === res?.payload?.data?.group_id)[0]);
@@ -675,7 +675,7 @@ const MessageGroups = () => {
 
     const subNavAddFun = (showEditorstate) => {
         //when we are adding sub message then only we have to make "addNewSub":true
-        console.log('active message', activeMessage);
+        // console.log('active message', activeMessage);
         setIsEditing({ readyToEdit: showEditorstate, addNewSub: true })
     }
 

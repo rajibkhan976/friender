@@ -134,7 +134,7 @@ function MsgLeftMenuNav({
     e.preventDefault();
     e.stopPropagation();
 
-    console.log(e);
+    // console.log(e);
 
     setActive(current => current === elID ? null : elID);
     setEditGroup(null);
@@ -188,17 +188,21 @@ function MsgLeftMenuNav({
       setEditGroup(null)
       setActive(null)
     }
-    
+
     // console.log('>>>>>>>>>>>>>>>>>>>', textContentInEditor)
   }
 
   const addNewMessageParent = () => {
     if (MsgNavtype === "group" || MsgNavtype === "segment") {
+      console.log('yo');
       setIsLoading(true)
       setIsEditingName(true);
     }
 
     if (MsgNavtype === "sub-group" || MsgNavtype === "sub-segment") {
+      // console.log('yo');
+      // console.log('here', textContentInEditor && tools.$convertPureString(JSON.parse(textContentInEditor)).length > 0);
+      // console.log('--------------------------------');
       if (textContentInEditor && tools.$convertPureString(JSON.parse(textContentInEditor)).length > 0) {
         const tempMsgObj = JSON.parse(textContentInEditor);
 
@@ -210,7 +214,7 @@ function MsgLeftMenuNav({
             messengerText: tools.$generateMessengerText(tempMsgObj)
           }
 
-          if (msgObj?.text?.trim() === ''){
+          if (msgObj?.text?.trim() === '') {
             return false;
           }
           setActiveObj(null)
@@ -611,7 +615,7 @@ function MsgLeftMenuNav({
 
                 {listLoading && isPages && (
                   <li className="active-sub-message">
-                    <h4 style={{textAlign: 'center'}}>Loading...</h4>
+                    <h4 style={{ textAlign: 'center' }}>Loading...</h4>
                   </li>
                 )}
               </ul>
