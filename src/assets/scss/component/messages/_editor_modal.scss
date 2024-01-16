@@ -3,6 +3,15 @@
 @use "../../abstract/mixins" as *;
 @use "../../abstract/variables" as *;
 
+.campaign-editor-modal-bg {
+  position: fixed;
+  left: -78%;
+  top: -30%;
+}
+
+.campaign-editor-modal {
+  padding: 10px !important;
+}
 
 .editor-modal-background {
   z-index: 90;

@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import CampaignCreateEditLayout from "./../layout/CampaignCreateEditLayout";
+import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import CreateCampaignWrapper from "components/messages/campaigns/CreateCampaignWrapper";
 
 const CreateCampaign = () => {

@@ -1,6 +1,13 @@
 import { ChevronUpArrowIcon, ChevronDownArrowIcon } from '../../assets/icons/Icons';
 
-const NumberRangeInput = ({ value, handleChange, handleBlur = (_event) => null, setIncrementDecrementVal, customStyleClass = null }) => {
+const NumberRangeInput = ({
+    value,
+    handleChange,
+    handleBlur = (_event) => null,
+    setIncrementDecrementVal,
+    customStyleClass = null,
+    placeholder = ''
+}) => {
     return (
         <div className={`input-num ${customStyleClass ? customStyleClass : ''}`}>
             <input
@@ -9,6 +16,7 @@ const NumberRangeInput = ({ value, handleChange, handleBlur = (_event) => null, 
                 value={value}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                placeholder={placeholder}
             />
 
             <div className='input-arrows'>

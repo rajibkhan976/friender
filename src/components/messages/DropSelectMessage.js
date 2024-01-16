@@ -21,11 +21,13 @@ const DropSelectMessage = ({
     type,
     setUsingSelectOptions = null,
     usingSelectOptions = null,
-    saveMySetting = null,
+    saveMySetting = () => null,
     others = [],
     customWrapperClass = null,
     customSelectPanelClass = null,
-    customSelectPanelPageClass = null
+    customSelectPanelPageClass = null,
+    customErrorMsgStyleClass = null,
+    customQuickMsgTooltipStyleClass = null,
 }) => {
     const [selectOption, setSelectOption] = useState(() => groupSelect ? groupSelect.group_name : '');
     const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
@@ -55,7 +57,7 @@ const DropSelectMessage = ({
             localStorage.setItem("fr_quickMessage_accept_send_req", quickMessage?.__raw);
         }
 
-        if (quickMessage && type === "CAMPAIGNS_MESSAGE") {
+        if (quickMessage && (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")) {
             localStorage.setItem("fr_quickMessage_campaigns_message", quickMessage?.__raw);
             setUnselectedError(false);
         }
@@ -68,6 +70,11 @@ const DropSelectMessage = ({
     useEffect(() => {
         if (usingSelectOptions !== false) {
             saveMySetting();
+
+            // SELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
+            if (type === 'CAMPAIGNS_MESSAGE') {
+                setUnselectedError(false);
+            }
         }
     }, [usingSelectOptions]);
 
@@ -159,7 +166,7 @@ const DropSelectMessage = ({
             localStorage.setItem("fr_using_accept_incoming", true);
         }
 
-        if (type === "CAMPAIGNS_MESSAGE") {
+        if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
             localStorage.setItem("fr_using_campaigns_message", true);
         }
     };
@@ -246,7 +253,7 @@ const DropSelectMessage = ({
             }
         }
 
-        if (type === "CAMPAIGNS_MESSAGE") {
+        if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
             const isSelectUsing = localStorage.getItem("fr_using_campaigns_message");
 
             if (quickMessage && !isSelectUsing) {
@@ -272,12 +279,12 @@ const DropSelectMessage = ({
         }
 
         // UNSELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
-        if (openSelectOption && !selectOption && type === "CAMPAIGNS_MESSAGE") {
+        if (openSelectOption && !selectOption && (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")) {
             setUnselectedError(true);
         }
 
         // SELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
-        if (openSelectOption && selectOption && type === "CAMPAIGNS_MESSAGE") {
+        if (openSelectOption && selectOption && (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")) {
             setUnselectedError(false);
         }
 
@@ -321,7 +328,7 @@ const DropSelectMessage = ({
                 </div>
 
                 {/* == ERROR SITUATIION HANDLE WITH MESSAGE == */}
-                {unselectedError && <span className='text-red'>Select a message</span>}
+                {unselectedError && <span className={`text-red ${customErrorMsgStyleClass ? customErrorMsgStyleClass : ''}`}>Select a message</span>}
 
                 {/* ======== SELECT OPTIONS LIST ======== */}
                 <div
@@ -346,7 +353,7 @@ const DropSelectMessage = ({
                         </div>
 
                         <p
-                            className="tooltipFullName quick-msg-tooltip"
+                            className={`tooltipFullName quick-msg-tooltip ${customQuickMsgTooltipStyleClass ? customQuickMsgTooltipStyleClass : ''}`}
                             data-text={`If you need to send a quick message without creating a group, you can create a message for immediate use`}
                         >
                             Click on edit to create a quick message..

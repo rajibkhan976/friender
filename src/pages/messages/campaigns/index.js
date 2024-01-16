@@ -4,15 +4,15 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchEditCampaign,
 	updateCampaignsArray,
-} from "../../../actions/MessageAction";
-import { countCurrentListsize } from "../../../actions/FriendListAction";
+} from "actions/MessageAction";
+import { countCurrentListsize } from "actions/FriendListAction";
 
 import {
 	ListingIcon,
 	CampaignsCalendarIcon,
 	SettingIconLarge,
 	UserIcon,
-} from "../../../assets/icons/Icons";
+} from "assets/icons/Icons";
 
 import ListingLoader from "components/common/loaders/ListLoader";
 import CampaignsHeader from "components/messages/campaigns/CampaignsHeader";

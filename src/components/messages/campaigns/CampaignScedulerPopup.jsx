@@ -294,6 +294,7 @@ const CampaignSchedulerPopup = (props) => {
 					/>
 				</div>
 			</div>
+			
 			<div className='campaign-scheduler-popup-footer'>
 				<button
 					type='button'

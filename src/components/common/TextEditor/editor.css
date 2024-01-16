@@ -818,7 +818,7 @@
     margin-top: 25px;
     padding: 8px;
     position: absolute;
-    z-index: 99;
+    z-index: 9999;
   }
 
 .suggestion-search {

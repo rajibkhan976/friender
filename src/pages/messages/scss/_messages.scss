@@ -819,6 +819,15 @@
                         font-size: 12px;
                         color: #767485;
                     }
+
+                    label.campaigns-end-dateTime-label {
+                        position: relative;
+                        top: 150%;
+                    }
+
+                    label.campaigns-end-dateTime-label-enabled {
+                        position: inherit;
+                    }
                 }
 
                 .campaigns-select-msg-wrapper {
@@ -878,6 +887,12 @@
 
                 .campaigns-endDateTime-toggle {
                     margin-top: 5px;
+                }
+
+                .campaigns-quick-msg-tooltip {
+                    &::before {
+                        bottom: -103%;
+                    }
                 }
             }
         }

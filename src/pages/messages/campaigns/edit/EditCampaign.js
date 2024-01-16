@@ -15,14 +15,16 @@ import Modal from "components/common/Modal";
 import CustomHeaderTooltip from "components/common/CustomHeaderTooltip";
 import CampaignScheduler from "components/messages/campaigns/CampaignScheduler";
 import CampaignSchedulerPopup from "components/messages/campaigns/CampaignScedulerPopup";
-
-import CampaignCreateEditLayout from "../layout/CampaignCreateEditLayout";
+import NoDataFound from "components/common/NoDataFound";
+import Listing from "components/common/Listing";
+import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 
 
 const EditCampaign = () => {
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
 		useOutletContext();
 	const [view, setView] = useState(null);
+	const [isReset, setIsReset] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -91,6 +93,52 @@ const EditCampaign = () => {
 		},
 	];
 
+
+	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
+	const RenderComponentsView = () => {
+		if (view && isEditingCampaign?.friends) {
+			if (view === 'view') {
+				return <>
+					{
+						isEditingCampaign?.friends?.length === 0 ?
+							<NoDataFound
+								customText={`Whoops!`}
+								additionalText={`We couldn’t find any friends added to this campaign`}
+							/> :
+							<Listing
+								friendsData={isEditingCampaign?.friends}
+								friendsListingRef={campaignFriendsRef}
+								getFilterNum={isEditingCampaign?.friends?.length}
+								reset={isReset}
+								setReset={setIsReset}
+								isListing='campaign-friends'
+							/>
+					}
+				</>
+			} else {
+				return (
+					<CampaignCreateEditLayout type="EDIT" handleClickSaveForm={handleSavedData}>
+						<div className='create-campaign-scheduler'>
+							{showPopup && (
+								<CampaignSchedulerPopup
+									popupCoordPos={popupCoordPos}
+									handleSetShowPopup={(status) => setShowPopup(status)}
+								/>
+							)}
+							<CampaignScheduler
+								handleSetShowPopup={(status) => setShowPopup(status)}
+								handleSetPopupPos={(pos) => {
+									setPopupCoordPos({ x: pos.X, y: pos.Y });
+								}}
+							/>
+						</div>
+					</CampaignCreateEditLayout>
+				);
+			}
+		}
+	};
+
+
 	useEffect(() => {
 		setView(editViews?.find((el) => el.checked).label);
 	}, [editViews]);
@@ -149,29 +197,12 @@ const EditCampaign = () => {
 				/>
 			)}
 
-			
-				{loading ? <ListingLoader />
-					:
-					(
-						<CampaignCreateEditLayout type="EDIT" handleClickSaveForm={handleSavedData}>
-							<div className='create-campaign-scheduler'>
-								{showPopup && (
-									<CampaignSchedulerPopup
-										popupCoordPos={popupCoordPos}
-										handleSetShowPopup={(status) => setShowPopup(status)}
-									/>
-								)}
-								<CampaignScheduler
-									handleSetShowPopup={(status) => setShowPopup(status)}
-									handleSetPopupPos={(pos) => {
-										setPopupCoordPos({ x: pos.X, y: pos.Y });
-									}}
-								/>
-							</div>
-						</CampaignCreateEditLayout>
-					)
-				}
-			
+
+			{loading ? <ListingLoader />
+				:
+				<RenderComponentsView />
+			}
+
 		</>
 	);
 };

@@ -180,6 +180,10 @@ export default function TextEditor({
         localStorage.removeItem("fr_using_accept_incoming");
       }
 
+      if (modalType === "CAMPAIGNS_MESSAGE" || modalType === "CAMPAIGNS_MODAL_MESSAGE") {
+        localStorage.removeItem("fr_using_campaigns_message");
+      }
+
       setModalOpen(false);
     }
   }

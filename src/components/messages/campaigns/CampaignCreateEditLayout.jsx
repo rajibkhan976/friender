@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DropSelectMessage from 'components/messages/DropSelectMessage';
 import NumberRangeInput from 'components/common/NumberRangeInput';
 import Switch from 'components/formComponents/Switch';
+import CampaignModal from "components/common/CampaignModal";
+import { fetchGroups } from 'actions/MessageAction';
+import { useDispatch } from "react-redux";
 
 
 const CampaignCreateEditLayout = ({ children, ...rest }) => {
+    const dispatch = useDispatch();
     // COLLECTING THE REST PROPS ITEMS..
     const { type = "CREATE" || "EDIT", handleClickSaveForm } = rest;
 
@@ -17,6 +21,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 	});
 
 	// SELECT MESSAGE SATES..
+    const [groupMessages, setGroupMessages] = useState([]);
 	const [selectMessageOptionOpen, setSelectMessageOptionOpen] = useState(false);
 	const [groupMsgSelect, setGroupMsgSelect] = useState(null);
 	const [quickMsg, setQuickMsg] = useState(null);
@@ -36,16 +41,6 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
         const value = event.target.value;
         setCampaignName({ ...campaignName, value });
     };
-
-    // HANDLE MESSAGE SELECT OPTION'S ON BLUR..
-    // const handleSelectMessageOnBlur = (_event) => {
-    // 	console.log("I AM ON BLUR FOR MESSAGE SELECT AREA");
-    // 	if (!groupMsgSelect) {
-    // 		setSelectMsgError(true);
-    // 	} else {
-    // 		setSelectMsgError(false);
-    // 	}
-    // };
 
     // INCREMENTING AND DECREMENTING FOR MESSAGE LIMIT/25HR..
     const incrementDecrementVal = (type) => {
@@ -97,7 +92,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
     // HANDLE CLICK ON THE SAVE CAMPAIGNS..
     const handleClickToSaveCampaign = (event) => {
         event.preventDefault();
-        // TRANSFERING DATA..
+        // TRANSFERING DATA..`
         handleClickSaveForm({
             campaignName: campaignName?.value,
             selectedGroupMsg: groupMsgSelect,
@@ -108,8 +103,28 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
     };
 
 
+    useEffect(() => {
+        // Fetching All Group Messages.
+        dispatch(fetchGroups())
+            .unwrap()
+            .then((res) => {
+                const data = res?.data;
+                if (data && data.length) {
+                    setGroupMessages(data);
+                }
+            })
+            .catch((error) =>
+                console.log("Error when try to fetching all groups -- ", error)
+            );
+    }, []);
+
+
     return (
         <div className='campaigns-edit d-flex d-flex-column'>
+
+            {/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
+            {/* <CampaignModal open={true} /> */}
+
             {/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
             <div className='campaigns-edit-inputs'>
                 <div className='campaigns-input w-250'>
@@ -134,7 +149,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
                         type='CAMPAIGNS_MESSAGE'
                         openSelectOption={selectMessageOptionOpen}
                         handleIsOpenSelectOption={setSelectMessageOptionOpen}
-                        groupList={[]}
+                        groupList={groupMessages}
                         groupSelect={groupMsgSelect}
                         setGroupSelect={setGroupMsgSelect}
                         quickMessage={quickMsg}
@@ -147,11 +162,13 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
                         customWrapperClass='campaigns-select-msg-wrapper'
                         customSelectPanelClass='campaigns-select-panel'
                         customSelectPanelPageClass='campaigns-select-panel-page'
+                        customQuickMsgTooltipStyleClass='campaigns-quick-msg-tooltip'
                     />
                 </div>
 
                 <div className='campaigns-input w-200'>
                     <label>Time delay</label>
+                    
                     <select className='campaigns-select'>
                         <option value='3'>3 min</option>
                         <option value='5'>5 min</option>
@@ -173,7 +190,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
                 </div>
 
                 <div className='campaigns-input w-220'>
-                    <label className='d-flex'>
+                    <label className={`d-flex ${!showEndDataAndTime ? 'campaigns-end-dateTime-label' : 'campaigns-end-dateTime-label-enabled'}`}>
                         <div>
                             <Switch
                                 // isDisabled={!editCampaign || editCampaign?.friends_pending === 0}

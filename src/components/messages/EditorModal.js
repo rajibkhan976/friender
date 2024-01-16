@@ -33,17 +33,21 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
         if (type === "ACCEPT_INCOMING_REQ") {
             return localStorage.getItem("fr_quickMessage_accept_send_req") || "";
         }
+
+        if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
+            return localStorage.getItem("fr_quickMessage_campaigns_message") || "";
+        }
     });
 
     return (
         <div
-            className={`modal-background editor-modal-background`}
+            className={`modal-background editor-modal-background ${type === "CAMPAIGNS_MODAL_MESSAGE" ? 'campaign-editor-modal-bg' : ''}`}
             style={{ display: open ? "block" : "none" }}
         // onClick={() => {
         //   setOpen(false);
         // }}
         >
-            <div className={`modal editor-modal ${isExtanded && 'expanded-modal'}`}>
+            <div className={`modal editor-modal ${isExtanded && 'expanded-modal'} ${type === "CAMPAIGNS_MODAL_MESSAGE" ? 'campaign-editor-modal' : ''}`}>
                 <div className="modal-content-wraper">
 
                     {/* MODAL HEADER */}
