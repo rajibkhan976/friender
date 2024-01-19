@@ -17,6 +17,8 @@ import {
 	fetchDMFs,
 	prioritySubDMF,
 	fetchClickedCampaign,
+	createOrUpdateCampaignService,
+	updateCampaignStatusService,
 } from "../services/messages/MessagesServices";
 
 const messageType = localStorage.getItem("fr_messageTabType");
@@ -248,7 +250,7 @@ export const addNewGroupMessageItem = createAsyncThunk(
 	"messages/newGroupMessage",
 	async (payload) => {
 		const res = await addNewGroupMessage(payload);
-		return res;
+		return res; 
 	}
 );
 
@@ -256,6 +258,31 @@ export const deleteGroupItemMessage = createAsyncThunk(
 	"messages/deleteMessage",
 	async (payload) => {
 		const res = await deleteGroupMessage(payload);
+		return res;
+	}
+);
+
+
+export const createCampaign = createAsyncThunk(
+	"messages/addCampaign",
+	async (payload) => {
+		const res = await createOrUpdateCampaignService(payload);
+		return res;
+	}
+);
+
+export const updateCampaign = createAsyncThunk(
+	"messages/updateCampaign",
+	async (payload) => {
+		const res = await createOrUpdateCampaignService(payload);
+		return res;
+	}
+);
+
+export const updateCampaignStatus = createAsyncThunk(
+	"messages/updateCampaignStatus",
+	async (payload) => {
+		const res = await updateCampaignStatusService(payload);
 		return res;
 	}
 );
@@ -367,8 +394,8 @@ export const messageSlice = createSlice({
 			} else {
 				state.segmentsArray = action?.payload?.data
 					? placeholderArray.map((el) =>
-							el._id === action.payload.data._id ? action.payload.data : el
-					  )
+						el._id === action.payload.data._id ? action.payload.data : el
+					)
 					: placeholderArray;
 			}
 			state.isLoading = false;

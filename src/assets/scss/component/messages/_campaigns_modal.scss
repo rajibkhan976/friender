@@ -40,7 +40,7 @@
             border-radius: 0;
             border-left: 1px solid #313037;
             top: 20px;
-            height: 20px;
+            height: 25px;
 
             &:hover {
                 background: none;
@@ -89,7 +89,7 @@
                 }
 
                 .campaigns-error-input-field {
-                    border: 1px solid #FF6A77;
+                    border: 1px solid #ff6a77;
                     background: #1c1c1e;
                 }
 
@@ -168,7 +168,8 @@
                 gap: 10px;
 
                 .campaign-time-select-half {
-                    #start-time-span + .select-arrow, #end-time-span + .select-arrow {
+                    #start-time-span + .select-arrow,
+                    #end-time-span + .select-arrow {
                         right: -10px;
                         top: 25px;
                     }
@@ -187,4 +188,98 @@
             font-size: 14px;
         }
     }
+}
+
+// VIEW DETAILS TYPE MODAL..
+div.campaign-view-details-modal {
+    .campaign-view-details-header {
+        .campaign-modal-header-actions {
+            display: inline-flex;
+            gap: 20px;
+            position: relative;
+            left: 33%;
+
+            .campaign-view-details-toggle {
+                border-right: 1px solid #313037;
+                height: 25px;
+            }
+
+            .campaign-edit-pen,
+            .campaign-delete-bin {
+                cursor: pointer;
+                width: 25px;
+                border-radius: 100%;
+                text-align: center;
+
+                &:active {
+                    cursor: progress;
+                }
+            }
+
+            .campaign-edit-pen:hover {
+                background: rgb(255 255 0 / 15%);
+            }
+            .campaign-delete-bin:hover {
+                background: rgb(255 0 0 / 15%);
+            }
+        }
+    }
+
+    .campaign-view-details-col {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+        margin-top: 15px;
+
+        .icon {
+            // background-color: red;
+            height: 48px;
+            width: 48px;
+            align-items: center;
+            position: inherit;
+            border-radius: 100%;
+            text-align: center;
+            position: relative;
+            align-content: center;
+            align-items: center;
+            padding-top: 13px;
+        }
+
+        .icon-checked-schedular {
+            background-color: #ff8f6b33;
+        }
+        .icon-clock-calender {
+            background-color: #5db56633;
+        }
+        .icon-message-calender {
+            background-color: #7d79ff33;
+        }
+        .icon-messages-limit-calender {
+            background-color: #3cebc233;
+        }
+
+        .text {
+            line-height: 20px;
+
+            p {
+                color: white;
+                font-size: 14px;
+            }
+
+            span {
+                color: #8998b8;
+                font-size: 12px;
+            }
+        }
+    }
+
+    .campaign-modal-footer {
+        margin-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+// CAMPAIGN DELETE MODAL..
+.campaign-view-details-delete-modal {
+    z-index: 999999 !important;
 }

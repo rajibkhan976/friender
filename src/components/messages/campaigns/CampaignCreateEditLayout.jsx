@@ -123,7 +123,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
         <div className='campaigns-edit d-flex d-flex-column'>
 
             {/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
-            {/* <CampaignModal open={true} /> */}
+            {/* <CampaignModal type="VIEW_DETAILS" open={true} /> */}
 
             {/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
             <div className='campaigns-edit-inputs'>

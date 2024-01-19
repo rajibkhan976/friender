@@ -261,7 +261,7 @@ const Campaigns = () => {
 		) {
 			setIsEditingCampaign(null);
 		}
-	}, [location.pathname]);
+	}, [location.pathname]);  
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>

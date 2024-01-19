@@ -23,9 +23,9 @@ const Modal = ({
     <div
       className={`modal-background ${additionalClass}`}
       style={{ display: open ? "block" : "none" }}
-      // onClick={() => {
-      //   setOpen(false);
-      // }}
+    // onClick={() => {
+    //   setOpen(false);
+    // }}
     >
       <div className="modal">
         <div className="modal-content-wraper">
@@ -53,11 +53,11 @@ const Modal = ({
                 <ModalIconElement />
               </span>
             )}
-            <span style={{color: modalType === "DELETE" ? '#FF6A77' : '#fff'}}>{headerText}</span>
+            <span style={{ color: modalType === "DELETE" ? '#FF6A77' : '#fff' }}>{headerText}</span>
           </div>
           <div className="modal-content">{bodyText} </div>
 
-          { modalWithChild && <div className="modal-content">{ children }</div> }
+          {modalWithChild && <div className="modal-content">{children}</div>}
 
           {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
             <button
@@ -65,10 +65,10 @@ const Modal = ({
               disabled={ExtraProps?.cancelBtnDisable}
               onClick={
                 closeBtnFun
-                  ? ()=>{closeBtnFun()}
+                  ? () => { closeBtnFun() }
                   : () => {
-                      setOpen(false);
-                    }
+                    setOpen(false);
+                  }
               }
             >
               {closeBtnTxt}

@@ -358,3 +358,45 @@ export const fetchClickedCampaign = (campaignId) => {
 		}, 1000);
 	});
 };
+
+/**
+ * CAMPAIGN CREATE/UPDATE SERVICE..
+ * @param {Object} newCampaign 
+ * @returns 
+ */
+export const createOrUpdateCampaignService = (newCampaign) => {
+	return new Promise((resolve, reject) => {
+		axios
+			.post(config.createCampaignUrl, newCampaign, {
+				headers: headers,
+			})
+			.then((res) => {
+				console.log("res", res);
+				resolve(res.data);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+/**
+ * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
+ * @param {Object} campaignData 
+ * @returns 
+ */
+export const updateCampaignStatusService = (campaignData) => {
+	return new Promise((resolve, reject) => {
+		axios
+			.post(config.updateCampaignStatusUrl, campaignData, {
+				headers: headers,
+			})
+			.then((res) => {
+				console.log("res", res);
+				resolve(res.data);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};

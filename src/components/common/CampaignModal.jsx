@@ -7,9 +7,25 @@ import NumberRangeInput from 'components/common/NumberRangeInput';
 import ColorPickerBalls from 'components/common/ColorPickerBalls';
 import { fetchGroups } from 'actions/MessageAction';
 import { useDispatch, useSelector } from "react-redux";
+import { createCampaign, updateCampaign, updateCampaignStatus } from 'actions/MessageAction';
+import { useNavigate } from 'react-router-dom';
+import {
+    ClockedSchedularIcon,
+    MessagesLimitCalenderIcon,
+    MessageCalenderIcon,
+    ClockCalenderIcon,
+    CheckedSchedulerIcon,
+    DeleteIcon,
+    EditPenIcon,
+    DangerIcon
+} from 'assets/icons/Icons';
+import Switch from 'components/formComponents/Switch';
+import Modal from "components/common/Modal";
+import Alertbox from "components/common/Toast";
 
 
-const CalenderModal = ({ open = false, setOpen }) => {
+const CalenderModal = ({ type = 'CREATE_CAMPAIGN', open = false, setOpen }) => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [calenderModalOpen, setCalenderModalOpen] = useState(open);
 
@@ -285,6 +301,18 @@ const CalenderModal = ({ open = false, setOpen }) => {
         },
     ];
 
+    // CAMPAIGN HEADER TOGGLE..
+    const [isCampaignToggleOn, setCampaignToggle] = useState(false);
+
+    // MOUSEOVER EVENTS STATES..
+    const [isMouseOverBtn, setMouseOverBtn] = useState({
+        editBtn: false,
+        deleteBtn: false
+    });
+
+    // CAMPAIGN DELETE MODAL OPEN/CLOSE..
+    const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] = useState(false);
+
 
     // HANDLE CAMPAIGNS NAME FUNCTION..
     const handleCampaignName = (event) => {
@@ -322,7 +350,7 @@ const CalenderModal = ({ open = false, setOpen }) => {
         const value = event.target.value;
 
         if (value?.trim() === '') {
-            setMsgLimit(100); 
+            setMsgLimit(100);
         }
 
         if (value?.trim() !== '' && value?.trim() < 1) {
@@ -354,6 +382,49 @@ const CalenderModal = ({ open = false, setOpen }) => {
         }
     };
 
+    // STORE VIEW MODE FOR SPECIFIC VIEW/SETTINGS PAGE..
+    const storeEdit = (viewMode = "view") => {
+        localStorage.setItem(
+            "fr_editCampaign_view",
+            JSON.stringify({
+                mode: viewMode,
+            })
+        );
+    };
+
+    // HANDLE EDIT CAMPAIGN BUTTON..
+    const handleEditCampaignBtn = (_event) => {
+        storeEdit("settings");
+        // NAVIGATE TO THE EDIT PAGE..
+        navigate(`/messages/campaigns/${1}`);
+        setCalenderModalOpen(false);
+    };
+
+    // HANDLE DELETE CAMPAIGN BUTTON..
+    const handleDeleteCampaignBtn = (_event) => {
+        // DELETE FUNCTION..
+        setCampaignDeleteModalOpen(true);
+    };
+
+    // HANDLE SUBMIT MODEL..
+    const handleSubmitModalCampaign = (event) => {
+        event.preventDefault();
+
+        console.log('Campaign Name: ', campaignName);
+        console.log('Group Message Select: ', groupMsgSelect);
+        console.log('Quick Message: ', quickMsg);
+        console.log('Time Delay: ', timeDelay);
+        console.log('Message limit: ', msgLimit);
+        console.log('Time duration start and end: ', startTime, endTime);
+    };
+
+
+    useEffect(() => {
+        if (isCampaignToggleOn) {
+            Alertbox("Campaign Toggleed", "success", 3000, "bottom-right");
+        }
+    }, [isCampaignToggleOn]);
+
     useEffect(() => {
         // Fetching All Group Messages.
         dispatch(fetchGroups())
@@ -376,172 +447,322 @@ const CalenderModal = ({ open = false, setOpen }) => {
     //     }
     // }, [quickMsgModalOpen, calenderModalOpen]);
 
+    if (type === "CREATE_CAMPAIGN") {
+        return (
+            <div className="modal campaigns-modal" style={{ display: calenderModalOpen ? "block" : "none" }}>
+                <div className="modal-content-wraper">
+                    <span
+                        className="close-modal campaign-close-modal"
+                        onClick={() => {
+                            setOpen(false);
+                            setCalenderModalOpen(false);
+                        }}
+                    >
+                        <XMarkIcon color='lightgray' />
+                    </span>
 
-    return (
-        <div className="modal campaigns-modal" style={{ display: calenderModalOpen ? "block" : "none" }}>
-            <div className="modal-content-wraper">
-                <span
-                    className="close-modal campaign-close-modal"
-                    onClick={() => {
-                        setOpen(false);
-                        setCalenderModalOpen(false);
-                    }}
-                >
-                    <XMarkIcon color='lightgray' />
-                </span>
-
-                <div className='modal-header d-flex f-align-center campaign-modal-header'>
-                    <span style={{ color: '#fff', fontSize: '15px' }}>{"Create new campaign"}</span>
-                </div>
-
-                <div className="modal-content campaign-modal-content">
-                    {/* NAME / MESSAGE SELECT COMPONENT */}
-                    <div className="row">
-                        <div className="col">
-                            <label className='mb'>Name</label>
-
-                            <input
-                                type="text"
-                                className={`campaigns-name-field ${campaignName?.isError ? 'campaigns-error-input-field' : ''}`}
-                                placeholder={campaignName?.placeholder}
-                                value={campaignName?.value}
-                                onChange={handleCampaignName}
-                                onBlur={handleBlurValidationOnTextField}
-                            />
-
-                            {campaignName?.isError && <span className="text-red campaign-modal-name-error">{campaignName?.errorMsg}</span>}
-                        </div>
-
-                        <div className="col">
-                            <label className='mb'>Message</label>
-
-                            <DropSelectMessage
-                                type='CAMPAIGNS_MODAL_MESSAGE'
-                                openSelectOption={selectMessageOptionOpen}
-                                handleIsOpenSelectOption={setSelectMessageOptionOpen}
-                                groupList={groupMessages}
-                                groupSelect={groupMsgSelect}
-                                setGroupSelect={setGroupMsgSelect}
-                                quickMessage={quickMsg}
-                                setQuickMessage={setQuickMsg}
-                                quickMsgModalOpen={quickMsgModalOpen}
-                                setQuickMsgOpen={setQuickMsgModalOpen}
-                                isDisabled={false}
-                                usingSelectOptions={usingSelectOption}
-                                setUsingSelectOptions={setUsingSelectOption}
-                                customWrapperClass='campaigns-modal-select-msg-wrapper'
-                                customSelectPanelClass='campaigns-modal-select-panel'
-                                customSelectPanelPageClass='campaigns-modal-select-panel-page'
-                                customErrorMsgStyleClass='campaigns-modal-name-error'
-                                customQuickMsgTooltipStyleClass='campaign-quick-msg-tooltip'
-                            />
-                        </div>
+                    <div className='modal-header d-flex f-align-center campaign-modal-header'>
+                        <span style={{ color: '#fff', fontSize: '15px' }}>{"Create new campaign"}</span>
                     </div>
 
-                    {/* TIME DELAY / MESSAGE LIMIT COMPONENT */}
-                    <div className="row mt-2">
-                        <div className="col">
-                            <label className='mb'>Time delay</label>
+                    <div className="modal-content campaign-modal-content">
+                        {/* NAME / MESSAGE SELECT COMPONENT */}
+                        <div className="row">
+                            <div className="col">
+                                <label className='mb'>Name</label>
 
-                            <DropSelector
-                                selects={timeDelays}
-                                // id='start-time-span'
-                                defaultValue={
-                                    timeDelays?.find((el) => el.value === timeDelay)?.value
-                                }
-                                extraClass='campaign-time-select-full'
-                                height='40px'
-                                width='inherit'
-                                handleChange={onChangeTimeDelay}
-                            />
-                        </div>
-
-                        <div className="col">
-                            <label className='mb'>Message limit/24hr</label>
-
-                            <NumberRangeInput
-                                value={msgLimit}
-                                handleChange={(event) => setMsgLimit(event.target.value)}
-                                handleBlur={handleMessageLimitOnBlur}
-                                setIncrementDecrementVal={incrementDecrementVal}
-                                customStyleClass='campaign-modal-num-input'
-                                placeholder='Enter value'
-                            />
-                        </div>
-                    </div>
-
-
-                    {/* CHOOSE DAY(S) BALLS COMPONENT */}
-                    <div className="row mt-2">
-                        <div className="col">
-                            <label>Choose day(s)</label>
-
-                            <div className='ml'>
-                                <DayChooseBalls />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* COLOR PICKER COMPONENT */}
-                    <div className="row mt-2">
-                        <div className="col-full">
-                            <label>Pick color</label>
-
-                            <div className="ml mt">
-                                <ColorPickerBalls />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* TIME DURATION / END DATE & TIME COMPONENT */}
-                    <div className="row mt-2">
-                        <div className="col">
-                            <label>Time duration</label>
-
-                            <div className="col-sm mt">
-                                <DropSelector
-                                    selects={timeOptions}
-                                    id='start-time-span'
-                                    defaultValue={
-                                        timeOptions?.find((el) => el.value === startTime)?.value
-                                    }
-                                    extraClass='fr-select-new tinyWrap campaign-time-select-half'
-                                    height='40px'
-                                    width='120px'
-                                    handleChange={onChangeStartingTime}
+                                <input
+                                    type="text"
+                                    className={`campaigns-name-field ${campaignName?.isError ? 'campaigns-error-input-field' : ''}`}
+                                    placeholder={campaignName?.placeholder}
+                                    value={campaignName?.value}
+                                    onChange={handleCampaignName}
+                                    onBlur={handleBlurValidationOnTextField}
                                 />
 
-                                <span>to</span>
+                                {campaignName?.isError && <span className="text-red campaign-modal-name-error">{campaignName?.errorMsg}</span>}
+                            </div>
 
-                                <DropSelector
-                                    selects={timeOptions}
-                                    id='end-time-span'
-                                    defaultValue={
-                                        timeOptions?.find((el) => el.value === endTime)?.value
-                                    }
-                                    extraClass='fr-select-new tinyWrap campaign-time-select-half'
-                                    height='40px'
-                                    width='120px'
-                                    handleChange={onChangeEndingTime}
+                            <div className="col">
+                                <label className='mb'>Message</label>
+
+                                <DropSelectMessage
+                                    type='CAMPAIGNS_MODAL_MESSAGE'
+                                    openSelectOption={selectMessageOptionOpen}
+                                    handleIsOpenSelectOption={setSelectMessageOptionOpen}
+                                    groupList={groupMessages}
+                                    groupSelect={groupMsgSelect}
+                                    setGroupSelect={setGroupMsgSelect}
+                                    quickMessage={quickMsg}
+                                    setQuickMessage={setQuickMsg}
+                                    quickMsgModalOpen={quickMsgModalOpen}
+                                    setQuickMsgOpen={setQuickMsgModalOpen}
+                                    isDisabled={false}
+                                    usingSelectOptions={usingSelectOption}
+                                    setUsingSelectOptions={setUsingSelectOption}
+                                    customWrapperClass='campaigns-modal-select-msg-wrapper'
+                                    customSelectPanelClass='campaigns-modal-select-panel'
+                                    customSelectPanelPageClass='campaigns-modal-select-panel-page'
+                                    customErrorMsgStyleClass='campaigns-modal-name-error'
+                                    customQuickMsgTooltipStyleClass='campaign-quick-msg-tooltip'
                                 />
                             </div>
                         </div>
 
-                        <div className="col">
-                            <label>End date & time</label>
+                        {/* TIME DELAY / MESSAGE LIMIT COMPONENT */}
+                        <div className="row mt-2">
+                            <div className="col">
+                                <label className='mb'>Time delay</label>
 
-                            <input type="datetime-local" className='mt' />
+                                <DropSelector
+                                    selects={timeDelays}
+                                    // id='start-time-span'
+                                    defaultValue={
+                                        timeDelays?.find((el) => el.value === timeDelay)?.value
+                                    }
+                                    extraClass='campaign-time-select-full'
+                                    height='40px'
+                                    width='inherit'
+                                    handleChange={onChangeTimeDelay}
+                                />
+                            </div>
+
+                            <div className="col">
+                                <label className='mb'>Message limit/24hr</label>
+
+                                <NumberRangeInput
+                                    value={msgLimit}
+                                    handleChange={(event) => setMsgLimit(event.target.value)}
+                                    handleBlur={handleMessageLimitOnBlur}
+                                    setIncrementDecrementVal={incrementDecrementVal}
+                                    customStyleClass='campaign-modal-num-input'
+                                    placeholder='Enter value'
+                                />
+                            </div>
+                        </div>
+
+
+                        {/* CHOOSE DAY(S) BALLS COMPONENT */}
+                        <div className="row mt-2">
+                            <div className="col">
+                                <label>Choose day(s)</label>
+
+                                <div className='ml'>
+                                    <DayChooseBalls />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* COLOR PICKER COMPONENT */}
+                        <div className="row mt-2">
+                            <div className="col-full">
+                                <label>Pick color</label>
+
+                                <div className="ml mt">
+                                    <ColorPickerBalls />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* TIME DURATION / END DATE & TIME COMPONENT */}
+                        <div className="row mt-2">
+                            <div className="col">
+                                <label>Time duration</label>
+
+                                <div className="col-sm mt">
+                                    <DropSelector
+                                        selects={timeOptions}
+                                        id='start-time-span'
+                                        defaultValue={
+                                            timeOptions?.find((el) => el.value === startTime)?.value
+                                        }
+                                        extraClass='fr-select-new tinyWrap campaign-time-select-half'
+                                        height='40px'
+                                        width='120px'
+                                        handleChange={onChangeStartingTime}
+                                    />
+
+                                    <span>to</span>
+
+                                    <DropSelector
+                                        selects={timeOptions}
+                                        id='end-time-span'
+                                        defaultValue={
+                                            timeOptions?.find((el) => el.value === endTime)?.value
+                                        }
+                                        extraClass='fr-select-new tinyWrap campaign-time-select-half'
+                                        height='40px'
+                                        width='120px'
+                                        handleChange={onChangeEndingTime}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col">
+                                <label>End date & time</label>
+
+                                <input type="datetime-local" className='mt' />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="modal-buttons d-flex justifyContent-end campaign-modal-buttons" style={{ gap: '10px' }}>
-                    <button className='btn btn-grey'>Cancel</button>
-                    <button className='btn' disabled={false}>Save</button>
+                    <div className="modal-buttons d-flex justifyContent-end campaign-modal-buttons" style={{ gap: '10px' }}>
+                        <button className='btn btn-grey'>Cancel</button>
+                        <button
+                            className='btn'
+                            disabled={false}
+                            onClick={handleSubmitModalCampaign}
+                        >
+                            Save
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    );
+        );
+
+    } else if (type === "VIEW_DETAILS") {
+        return (
+            <>
+                <Modal
+                    modalType='DELETE'
+                    headerText={"Delete"}
+                    bodyText={
+                        "Are you sure you want to delete ?"
+                    }
+                    open={isCampaignDeleteModalOpen}
+                    setOpen={setCampaignDeleteModalOpen}
+                    ModalFun={() => { }}
+                    btnText={"Yes, Delete"}
+                    ModalIconElement={() => <DangerIcon />}
+                    additionalClass={`campaign-view-details-delete-modal`}
+                />
+
+                <div className="modal campaigns-modal campaign-view-details-modal" style={{ display: calenderModalOpen ? "block" : "none" }}>
+                    <div className="modal-content-wraper">
+                        <div className='d-flex'>
+                            <span
+                                className="close-modal campaign-close-modal"
+                                onClick={() => {
+                                    setOpen(false);
+                                    setCalenderModalOpen(false);
+                                }}
+                            >
+                                <XMarkIcon color='lightgray' size={13} />
+                            </span>
+                        </div>
+
+                        {/* CAMPAIGN VIEW DETAILS HEADER */}
+                        <div className='modal-header d-flex f-align-center campaign-modal-header campaign-view-details-header'>
+                            <span style={{ color: '#fff', fontSize: '15px' }}>{"My Events of this campaigns view"}</span>
+
+                            <div className='campaign-modal-header-actions'>
+                                <div className="campaign-view-details-toggle">
+                                    <Switch
+                                        checked={isCampaignToggleOn}
+                                        handleChange={() => setCampaignToggle(!isCampaignToggleOn)}
+                                    // isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
+                                    // smallVariant
+                                    />
+                                </div>
+
+                                <div
+                                    className='mb campaign-edit-pen'
+                                    onClick={handleEditCampaignBtn}
+                                    onMouseEnter={() => setMouseOverBtn({ ...isMouseOverBtn, editBtn: !isMouseOverBtn?.editBtn })}
+                                    onMouseLeave={() => setMouseOverBtn({ ...isMouseOverBtn, editBtn: false })}
+                                >
+                                    <EditPenIcon size={13} color={`${!isMouseOverBtn?.editBtn ? '#767485' : 'yellow'}`} />
+                                </div>
+
+                                <div
+                                    className='mb campaign-delete-bin'
+                                    onClick={handleDeleteCampaignBtn}
+                                    onMouseEnter={() => setMouseOverBtn({ ...isMouseOverBtn, deleteBtn: !isMouseOverBtn?.deleteBtn })}
+                                    onMouseLeave={() => setMouseOverBtn({ ...isMouseOverBtn, deleteBtn: false })}
+                                >
+                                    <DeleteIcon size={13} color={`${!isMouseOverBtn?.deleteBtn ? '#767485' : 'red'}`} />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CAMPAIGN VIEW DETAILS CONTENT */}
+                        <div className="modal-content campaign-modal-content">
+                            <div className="row">
+                                <div className="col-full campaign-view-details-col">
+                                    <div className='icon icon-checked-schedular'>
+                                        <CheckedSchedulerIcon />
+                                    </div>
+
+                                    <div className='text'>
+                                        <p>Tuesday | 04:00am - 06:00am</p>
+                                        <span>Scheduled for</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-full campaign-view-details-col">
+                                    <div className='icon icon-clock-calender'>
+                                        <ClockCalenderIcon />
+                                    </div>
+
+                                    <div className='text'>
+                                        <p>Auto (15-20 sec)</p>
+                                        <span>Time delay</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-full campaign-view-details-col">
+                                    <div className='icon icon-message-calender'>
+                                        <MessageCalenderIcon />
+                                    </div>
+
+                                    <div className='text'>
+                                        <p>Group name will be here</p>
+                                        <span>Message</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-full campaign-view-details-col">
+                                    <div className='icon icon-messages-limit-calender'>
+                                        <MessagesLimitCalenderIcon />
+                                    </div>
+
+                                    <div className='text'>
+                                        <p>23</p>
+                                        <span>Message limit / 24hr</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CAMPAIGN VIEW DETAILS FOOTER */}
+                        <div className="campaign-modal-footer">
+                            {/* == */}
+                            <div className="row">
+                                <div className="col-full campaign-view-details-col">
+                                    <div className='icon icon-checked-schedular'>
+                                        <ClockedSchedularIcon />
+                                    </div>
+
+                                    <div className='text'>
+                                        <p>01 Dec, 2023 06:00am</p>
+                                        <span>Campaign end date & time</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    } else {
+        return null;
+    }
 };
 
 export default CalenderModal;
