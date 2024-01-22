@@ -85,6 +85,7 @@ const CampaignsListing = (props) => {
 		setRowData(props?.campaignsData);
 		setMaxSelect(props?.campaignsData?.length);
 	}, []);
+
 	return (
 		<>
 			<div

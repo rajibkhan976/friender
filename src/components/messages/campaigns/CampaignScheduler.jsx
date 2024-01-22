@@ -1,38 +1,94 @@
-import { useState } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import { CampaignContext } from "../../../pages/messages/index";
+import {
+	updateCampaignSchedule,
+	updateSelectedCampaignSchedule,
+} from "../../../actions/MessageAction";
+import { utils } from "../../../helpers/utils";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../style/_campaign-scheduler.scss";
 
 const localizer = momentLocalizer(moment);
 
-const WeekViewHeader = ({ date }) => {
+const CustomWeekViewHeader = ({ date }) => {
 	const dayName = moment(date).format("ddd");
 	return <>{dayName}</>;
 };
 
-const CampaignScheduler = (props) => {
-	const { handleSetPopupPos, handleSetShowPopup } = props;
-	const [selectedEvent, setSelectedEvent] = useState(null);
-	const [events, setEvents] = useState([
-		{
-			id: 1,
-			title: "Meeting",
-			start: new Date(2023, 10, 16, 10, 0),
-			end: new Date(2023, 10, 16, 12, 0),
-		},
-	]);
+const CustomEventWrapper = ({ event }) => {
+	console.log(event);
+	return <>{event.title}</>;
+};
 
-	const components = {
-		week: {
-			header: WeekViewHeader,
-			toolbar: () => null, // Override the toolbar to render nothing
-		},
-	};
+const CampaignScheduler = (props) => {
+	const {
+		campaignsList = [],
+		handleSetPopupPos,
+		handleSetShowPopup,
+		setCalenderModalType,
+	} = props;
+	const dispatch = useDispatch();
+	const { campaignViewMode } = useContext(CampaignContext);
+	const campaignSchedule = useSelector(
+		(state) => state.message.campaignSchedule
+	);
+
+	useEffect(() => {
+		if (Array.isArray(campaignsList)) {
+			const campaignArr = [];
+			campaignsList.forEach((campaign) => {
+				campaign?.schedule?.forEach((campaignSchedule) => {
+					campaignArr.push({
+						id: campaign._id,
+						color: campaign.campaign_label_color,
+						title: campaign?.campaign_name,
+						start: new Date(campaignSchedule?.from_time),
+						end: new Date(campaignSchedule?.to_time),
+					});
+				});
+			});
+			const updatedCampaignSchedule = [...campaignArr];
+			dispatch(updateCampaignSchedule(updatedCampaignSchedule));
+		}
+	}, []);
+
+	const components = useMemo(
+		() => ({
+			// eventWrapper: CustomEventWrapper,
+			week: {
+				header: CustomWeekViewHeader,
+				toolbar: () => null, // Override the toolbar to render nothing,
+				// event: CustomEventWrapper,
+			},
+		}),
+		[campaignSchedule, campaignViewMode]
+	);
+
+	const eventPropGetter = useCallback((event, start, end, isSelected) => {
+		console.log(utils.hex2rgb(event.color));
+		return {
+			...(event.color && {
+				className: "global-campaign",
+				style: {
+					backgroundColor: `${utils.hex2rgb(event.color)}`,
+					borderLeft: `4px solid ${event.color}`,
+					fontSize: "12px",
+					fontWeight: "500",
+					lineHeight: "17px",
+					color: "rgba(240, 239, 255, 1)",
+				},
+			}),
+		};
+	}, []);
 
 	const handleSelectEvent = (event, e) => {
 		console.log("selected envet", event);
-		setSelectedEvent(event);
+		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
+		dispatch(updateSelectedCampaignSchedule(event));
+		campaignViewMode === "campaignCalendar" && handleSetShowPopup(true);
 	};
 
 	const handleSelectSlot = (slotInfo) => {
@@ -40,21 +96,27 @@ const CampaignScheduler = (props) => {
 		const { start, end } = slotInfo;
 		// Update the selected event with the new start and end times
 		// if (selectedEvent) {
-		const updatedEvents = events.map((event) =>
-			event.id === 1 ? { ...event, start, end } : event
-		);
+		const selectedSchedules = [];
+		selectedSchedules.push({
+			start: start,
+			end: end,
+		});
 		slotInfo?.box
-			? handleSetPopupPos({ X: slotInfo?.box?.x, Y: slotInfo?.box?.y })
-			: handleSetPopupPos({
+			? handleSetPopupPos &&
+			  handleSetPopupPos({ X: slotInfo?.box?.x, Y: slotInfo?.box?.y })
+			: handleSetPopupPos &&
+			  handleSetPopupPos({
 					X: slotInfo?.bounds?.left,
 					Y: slotInfo?.bounds?.top,
 			  });
+		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
 		handleSetShowPopup(true);
+		console.log(selectedSchedules);
 		// Update the events array with the new start and end times
 		// This is where you would typically make an API call to update the server
-		setEvents(updatedEvents);
-		console.log("Updated Events:", updatedEvents);
-		setSelectedEvent(null);
+		const updatedCampaignSchedule = [...campaignSchedule, ...selectedSchedules];
+		dispatch(updateCampaignSchedule(updatedCampaignSchedule));
+		dispatch(updateSelectedCampaignSchedule(null));
 		// }
 	};
 
@@ -70,10 +132,13 @@ const CampaignScheduler = (props) => {
 			localizer.format(date, "dddd", culture), // Format for the day header
 	};
 
+	console.log(campaignSchedule);
+
 	return (
 		<Calendar
 			localizer={localizer}
-			events={events}
+			events={campaignSchedule}
+			eventPropGetter={eventPropGetter}
 			defaultView='week'
 			views={["week"]}
 			step={120} // The step in minutes for the time slots

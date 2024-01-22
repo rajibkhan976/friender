@@ -29,6 +29,8 @@ const initialState = {
 	dmfArray: [],
 	segmentsArray: [],
 	groupArray: [],
+	campaignSchedule: [],
+	selectedCampaignSchedule: null,
 	campaignsArray: [
 		{
 			_id: 1,
@@ -45,18 +47,18 @@ const initialState = {
 			schedule: [
 				{
 					day: "Monday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-24 09:41:15",
+					to_time: "2024-01-24 12:41:15",
 				},
 				{
 					day: "Wednesday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-23 12:41:15",
+					to_time: "2024-01-23 15:41:15",
 				},
 				{
 					day: "Friday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-25 16:41:15",
+					to_time: "2024-01-25 19:41:15",
 				},
 			],
 		},
@@ -68,25 +70,25 @@ const initialState = {
 			friends_added: 965,
 			friends_pending: 0,
 			// campaign_end_time: '2023-12-31 09:41:15',
-			campaign_label_color: "#C0A9EB", // #C0A9EB,#9FC999,#95D6D4,#E0A8B8,#92B0EA,#D779D9,#CFC778,#8A78CF,#CF7878,#F2C794
+			campaign_label_color: "#9FC999", // #C0A9EB,#9FC999,#95D6D4,#E0A8B8,#92B0EA,#D779D9,#CFC778,#8A78CF,#CF7878,#F2C794
 			message: "I want you to be my friend",
 			message_limit: 20,
 			// time_delay:
 			schedule: [
 				{
 					day: "Monday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-24 09:41:15",
+					to_time: "2024-01-24 12:41:15",
 				},
 				{
 					day: "Wednesday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-23 12:41:15",
+					to_time: "2024-01-23 15:41:15",
 				},
 				{
 					day: "Friday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-25 16:41:15",
+					to_time: "2024-01-25 19:41:15",
 				},
 			],
 		},
@@ -98,25 +100,25 @@ const initialState = {
 			friends_added: 17,
 			friends_pending: 10,
 			campaign_end_time: "2023-11-30 09:41:15",
-			campaign_label_color: "#C0A9EB", // #C0A9EB,#9FC999,#95D6D4,#E0A8B8,#92B0EA,#D779D9,#CFC778,#8A78CF,#CF7878,#F2C794
+			campaign_label_color: "#E0A8B8", // #C0A9EB,#9FC999,#95D6D4,#E0A8B8,#92B0EA,#D779D9,#CFC778,#8A78CF,#CF7878,#F2C794
 			message: "I want you to be my friend",
 			message_limit: 20,
 			// time_delay:
 			schedule: [
 				{
 					day: "Monday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-24 09:41:15",
+					to_time: "2024-01-24 12:41:15",
 				},
 				{
 					day: "Wednesday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-23 12:41:15",
+					to_time: "2024-01-23 15:41:15",
 				},
 				{
 					day: "Friday",
-					from_time: "2023-12-10 09:41:15",
-					to_time: "2023-12-13 09:41:15",
+					from_time: "2024-01-25 16:41:15",
+					to_time: "2024-01-25 19:41:15",
 				},
 			],
 		},
@@ -315,6 +317,12 @@ export const messageSlice = createSlice({
 		updateCampaignsArray: (state, action) => {
 			state.campaignsArray = action.payload;
 		},
+		updateCampaignSchedule: (state, action) => {
+			state.campaignSchedule = action.payload;
+		},
+		updateSelectedCampaignSchedule: (state, action) => {
+			state.selectedCampaignSchedule = action.payload;
+		},
 	},
 	extraReducers: {
 		[getDmfList.pending]: (state) => {
@@ -495,5 +503,7 @@ export const {
 	deleteLocalDmf,
 	updateCampaignContext,
 	updateCampaignsArray,
+	updateCampaignSchedule,
+	updateSelectedCampaignSchedule,
 } = messageSlice.actions;
 export default messageSlice.reducer;

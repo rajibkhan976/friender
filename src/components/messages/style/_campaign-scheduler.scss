@@ -152,3 +152,12 @@
 		}
 	}
 }
+
+.global-campaign-calendar-view {
+	.rbc-day-slot .global-campaign > .rbc-event-content {
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 17px;
+		color: rgba(240, 239, 255, 1);
+	}
+}

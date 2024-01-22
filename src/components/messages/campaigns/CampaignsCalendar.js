@@ -1,25 +1,33 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { CampaignContext } from "../../../pages/messages/index";
 import CampaignScheduler from "./CampaignScheduler";
-import CampaignSchedulerPopup from "./CampaignScedulerPopup";
+import CalenderModal from "../../common/CampaignModal";
 
 const CampaignsCalendar = () => {
-	const [showPopup, setShowPopup] = useState(false);
-	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
+	const campaignsCreated = useSelector((state) => state.message.campaignsArray);
+	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
+	const [open, setOpen] = useState(false);
+	const { setCampaignViewMode } = useContext(CampaignContext);
+
+	useEffect(() => {
+		setCampaignViewMode("campaignCalendar");
+	}, []);
 
 	return (
-		<div className='create-campaign-scheduler-container'>
+		<div className='create-campaign-scheduler-container global-campaign-calendar-view'>
 			<div className='create-campaign-scheduler'>
-				{showPopup && (
-					<CampaignSchedulerPopup
-						popupCoordPos={popupCoordPos}
-						handleSetShowPopup={(status) => setShowPopup(status)}
+				{open && (
+					<CalenderModal
+						type={calendarModalType}
+						open={open}
+						setOpen={setOpen}
 					/>
 				)}
 				<CampaignScheduler
-					handleSetShowPopup={(status) => setShowPopup(status)}
-					handleSetPopupPos={(pos) => {
-						setPopupCoordPos({ x: pos.X, y: pos.Y });
-					}}
+					campaignsList={campaignsCreated}
+					handleSetShowPopup={(status) => setOpen(status)}
+					setCalenderModalType={(type) => setCalenderModalType(type)}
 				/>
 			</div>
 		</div>

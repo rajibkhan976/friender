@@ -1,10 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	fetchEditCampaign,
-	updateCampaignsArray,
-} from "actions/MessageAction";
+import { fetchEditCampaign, updateCampaignsArray } from "actions/MessageAction";
 import { countCurrentListsize } from "actions/FriendListAction";
 
 import {
@@ -24,7 +21,6 @@ const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
 );
 const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
-
 
 // VIEW OPTIONS FOR BASE CAMPAIGN PAGE
 const radioOptions = [

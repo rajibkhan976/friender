@@ -1,5 +1,6 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { CampaignContext } from "../../index";
 import {
 	CreationRenderer,
 	KeywordRenderer,
@@ -19,7 +20,6 @@ import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 
-
 const EditCampaign = () => {
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
 		useOutletContext();
@@ -31,13 +31,16 @@ const EditCampaign = () => {
 
 	const [showPopup, setShowPopup] = useState(false);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
+	const { setCampaignViewMode } = useContext(CampaignContext);
 
+	useEffect(() => {
+		setCampaignViewMode("editCampaign");
+	}, []);
 
 	// HANDLE SAVED DATA FROM CHILD..
 	const handleSavedData = (data) => {
 		console.log("DATA -- ", data);
 	};
-
 
 	const campaignFriendsRef = [
 		{
@@ -93,18 +96,18 @@ const EditCampaign = () => {
 		},
 	];
 
-
 	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
-	const RenderComponentsView = () => {
+	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
-			if (view === 'view') {
-				return <>
-					{
-						isEditingCampaign?.friends?.length === 0 ?
+			if (view === "view") {
+				return (
+					<>
+						{isEditingCampaign?.friends?.length === 0 ? (
 							<NoDataFound
 								customText={`Whoops!`}
 								additionalText={`We couldn’t find any friends added to this campaign`}
-							/> :
+							/>
+						) : (
 							<Listing
 								friendsData={isEditingCampaign?.friends}
 								friendsListingRef={campaignFriendsRef}
@@ -113,11 +116,15 @@ const EditCampaign = () => {
 								setReset={setIsReset}
 								isListing='campaign-friends'
 							/>
-					}
-				</>
+						)}
+					</>
+				);
 			} else {
 				return (
-					<CampaignCreateEditLayout type="EDIT" handleClickSaveForm={handleSavedData}>
+					<CampaignCreateEditLayout
+						type='EDIT'
+						handleClickSaveForm={handleSavedData}
+					>
 						<div className='create-campaign-scheduler'>
 							{showPopup && (
 								<CampaignSchedulerPopup
@@ -137,7 +144,6 @@ const EditCampaign = () => {
 			}
 		}
 	};
-
 
 	useEffect(() => {
 		setView(editViews?.find((el) => el.checked).label);
@@ -166,7 +172,6 @@ const EditCampaign = () => {
 		};
 	}, []);
 
-
 	return (
 		<>
 			{modalOpen && (
@@ -178,13 +183,13 @@ const EditCampaign = () => {
 						<>
 							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
 								? keyWords?.matchedKeyword.map((el, i) => (
-									<span
-										className={`tags positive-tags`}
-										key={`key-${i}`}
-									>
-										{el}
-									</span>
-								))
+										<span
+											className={`tags positive-tags`}
+											key={`key-${i}`}
+										>
+											{el}
+										</span>
+								  ))
 								: "No specific keyword used"}
 						</>
 					}
@@ -197,12 +202,7 @@ const EditCampaign = () => {
 				/>
 			)}
 
-
-			{loading ? <ListingLoader />
-				:
-				<RenderComponentsView />
-			}
-
+			{loading ? <ListingLoader /> : renderComponentsView()}
 		</>
 	);
 };

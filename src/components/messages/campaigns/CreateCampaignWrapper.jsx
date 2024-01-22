@@ -1,6 +1,5 @@
 import { useState } from "react";
 import CampaignScheduler from "./CampaignScheduler";
-import CreateCampaignFormWrapper from "./CreateCampaignFormWrapper";
 import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CreateCampaignWrapper = () => {

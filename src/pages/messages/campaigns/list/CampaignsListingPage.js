@@ -1,7 +1,5 @@
-import { memo, useEffect, useMemo, useState } from "react";
-
-import { updateCampaignsArray } from "../../../../actions/MessageAction";
-
+import { memo, useContext, useEffect, useState } from "react";
+import { CampaignContext } from "../../index";
 import {
 	CampaignNameCellRenderer,
 	CampaignStatusCellRenderer,
@@ -15,7 +13,11 @@ import Listing from "../../../../components/common/Listing";
 
 const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	const [isReset, setIsReset] = useState(null);
-	const [contextMenu, setContextMenu] = useState(null);
+	const { setCampaignViewMode } = useContext(CampaignContext);
+
+	useEffect(() => {
+		setCampaignViewMode("campaignList");
+	}, []);
 
 	// list ref for campaigns list page
 	const campaignsListingRef = () => [
