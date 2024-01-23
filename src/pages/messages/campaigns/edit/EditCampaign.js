@@ -29,6 +29,8 @@ const EditCampaign = () => {
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 
+	const [startTime, setStartTime] = useState("");
+	const [endTime, setEndTime] = useState("");
 	const [showPopup, setShowPopup] = useState(false);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 	const { setCampaignViewMode } = useContext(CampaignContext);
@@ -128,8 +130,12 @@ const EditCampaign = () => {
 						<div className='create-campaign-scheduler'>
 							{showPopup && (
 								<CampaignSchedulerPopup
-									popupCoordPos={popupCoordPos}
+									endTime={endTime}
 									handleSetShowPopup={(status) => setShowPopup(status)}
+									popupCoordPos={popupCoordPos}
+									setEndTime={setEndTime}
+									startTime={startTime}
+									setStartTime={setStartTime}
 								/>
 							)}
 							<CampaignScheduler
@@ -183,13 +189,13 @@ const EditCampaign = () => {
 						<>
 							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
 								? keyWords?.matchedKeyword.map((el, i) => (
-									<span
-										className={`tags positive-tags`}
-										key={`key-${i}`}
-									>
-										{el}
-									</span>
-								))
+										<span
+											className={`tags positive-tags`}
+											key={`key-${i}`}
+										>
+											{el}
+										</span>
+								  ))
 								: "No specific keyword used"}
 						</>
 					}

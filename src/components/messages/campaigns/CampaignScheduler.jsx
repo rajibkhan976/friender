@@ -33,7 +33,7 @@ const CampaignScheduler = (props) => {
 	const dispatch = useDispatch();
 	const { campaignViewMode } = useContext(CampaignContext);
 	const campaignSchedule = useSelector(
-		(state) => state.message.campaignSchedule
+		(state) => state.campaign.campaignSchedule
 	);
 
 	useEffect(() => {
@@ -42,7 +42,7 @@ const CampaignScheduler = (props) => {
 			campaignsList.forEach((campaign) => {
 				campaign?.schedule?.forEach((campaignSchedule) => {
 					campaignArr.push({
-						id: campaign._id,
+						id: campaign.campaign_id,
 						color: campaign.campaign_label_color,
 						title: campaign?.campaign_name,
 						start: new Date(campaignSchedule?.from_time),
@@ -61,14 +61,14 @@ const CampaignScheduler = (props) => {
 			week: {
 				header: CustomWeekViewHeader,
 				toolbar: () => null, // Override the toolbar to render nothing,
-				// event: CustomEventWrapper,
+				event: CustomEventWrapper,
 			},
 		}),
 		[campaignSchedule, campaignViewMode]
 	);
 
 	const eventPropGetter = useCallback((event, start, end, isSelected) => {
-		console.log(utils.hex2rgb(event.color));
+		// console.log(utils.hex2rgb(event.color));
 		return {
 			...(event.color && {
 				className: "global-campaign",

@@ -26,7 +26,7 @@ const CampaignsListing = (props) => {
 		width: "100%",
 	});
 	const selectedCampaigns = useSelector(
-		(state) => state?.message?.selected_campaigns
+		(state) => state?.campaign?.selected_campaigns
 	);
 
 	// DefaultColDef sets props common to all Columns

@@ -4,295 +4,295 @@
 @use "../../abstract/variables" as *;
 
 .campaigns-modal {
-    padding: 0 20px;
-    padding-bottom: 10px;
-    z-index: 999;
-    width: 600px;
+	padding: 0 20px;
+	padding-bottom: 10px;
+	z-index: 1005;
+	width: 600px;
 
-    .text-red {
-        color: #ff6a77;
-        font-size: 12px;
-        margin-top: 5px;
-        font-weight: 400;
-    }
+	.text-red {
+		color: #ff6a77;
+		font-size: 12px;
+		margin-top: 5px;
+		font-weight: 400;
+	}
 
-    &::before {
-        display: none;
-    }
+	&::before {
+		display: none;
+	}
 
-    .mt {
-        margin-top: 3px;
-    }
+	.mt {
+		margin-top: 3px;
+	}
 
-    .mt-2 {
-        margin-top: 15px;
-    }
+	.mt-2 {
+		margin-top: 15px;
+	}
 
-    .mb {
-        margin-bottom: 3px;
-    }
+	.mb {
+		margin-bottom: 3px;
+	}
 
-    .ml {
-        margin-left: 10px;
-    }
+	.ml {
+		margin-left: 10px;
+	}
 
-    .w-100 {
-        width: 100%;
-    }
+	.w-100 {
+		width: 100%;
+	}
 
-    .modal-content-wraper {
-        padding: 0;
+	.modal-content-wraper {
+		padding: 0;
 
-        .campaign-close-modal {
-            border-radius: 0;
-            border-left: 1px solid #313037;
-            top: 20px;
-            height: 25px;
+		.campaign-close-modal {
+			border-radius: 0;
+			border-left: 1px solid #313037;
+			top: 20px;
+			height: 25px;
 
-            &:hover {
-                background: none;
-            }
-        }
-    }
+			&:hover {
+				background: none;
+			}
+		}
+	}
 
-    // HEADER..
-    .campaign-modal-header {
-        height: 40px;
-    }
+	// HEADER..
+	.campaign-modal-header {
+		height: 40px;
+	}
 
-    // CONTENT..
-    .campaign-modal-content {
-        border-top: 1px solid #313037;
-        border-bottom: 1px solid #313037;
-        padding: 10px 0;
+	// CONTENT..
+	.campaign-modal-content {
+		border-top: 1px solid #313037;
+		border-bottom: 1px solid #313037;
+		padding: 10px 0;
 
-        .row {
-            display: inline-flex;
-            gap: 10px;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
+		.row {
+			display: inline-flex;
+			gap: 10px;
+			justify-content: space-between;
+			width: 100%;
+			margin-bottom: 10px;
 
-            ::-webkit-calendar-picker-indicator {
-                filter: invert(1);
-            }
+			::-webkit-calendar-picker-indicator {
+				filter: invert(1);
+			}
 
-            .col {
-                display: grid;
-                width: 50%;
+			.col {
+				display: grid;
+				width: 50%;
 
-                input {
-                    background: #313037;
-                    border: none;
-                    color: #c6c5c9;
-                    height: 40px;
-                    padding: 0 10px;
-                    border-radius: 3px;
+				input {
+					background: #313037;
+					border: none;
+					color: #c6c5c9;
+					height: 40px;
+					padding: 0 10px;
+					border-radius: 3px;
 
-                    &:focus {
-                        background: #1c1c1e !important;
-                        border: 1px solid rgb(0, 148, 255);
-                    }
-                }
+					&:focus {
+						background: #1c1c1e !important;
+						border: 1px solid rgb(0, 148, 255);
+					}
+				}
 
-                .campaigns-error-input-field {
-                    border: 1px solid #ff6a77;
-                    background: #1c1c1e;
-                }
+				.campaigns-error-input-field {
+					border: 1px solid #ff6a77;
+					background: #1c1c1e;
+				}
 
-                .campaign-modal-name-error {
-                    margin: 0;
-                    padding: 0;
-                    margin-bottom: -20px;
-                }
+				.campaign-modal-name-error {
+					margin: 0;
+					padding: 0;
+					margin-bottom: -20px;
+				}
 
-                .campaign-time-select-full {
-                    width: 100%;
+				.campaign-time-select-full {
+					width: 100%;
 
-                    .select-arrow {
-                        right: 0 !important;
-                    }
-                }
+					.select-arrow {
+						right: 0 !important;
+					}
+				}
 
-                .campaign-modal-num-input {
-                    width: 100%;
-                    height: 40px;
-                    margin: 0;
-                    padding: 0;
+				.campaign-modal-num-input {
+					width: 100%;
+					height: 40px;
+					margin: 0;
+					padding: 0;
 
-                    &:focus {
-                        border: 3px solid rgb(0, 148, 255);
-                    }
+					&:focus {
+						border: 3px solid rgb(0, 148, 255);
+					}
 
-                    input {
-                        border: none;
-                    }
-                }
+					input {
+						border: none;
+					}
+				}
 
-                .campaigns-modal-select-msg-wrapper {
-                    width: 100%;
-                    top: 8px;
-                    right: 15px;
-                    height: 40px;
-                }
+				.campaigns-modal-select-msg-wrapper {
+					width: 100%;
+					top: 8px;
+					right: 15px;
+					height: 40px;
+				}
 
-                .campaigns-modal-select-panel {
-                    display: inline-flex;
-                    border-radius: 3px;
-                    padding: 0 10px;
-                    height: 40px;
-                    background-color: #313037;
-                    border-color: #313037;
-                }
+				.campaigns-modal-select-panel {
+					display: inline-flex;
+					border-radius: 3px;
+					padding: 0 10px;
+					height: 40px;
+					background-color: #313037;
+					border-color: #313037;
+				}
 
-                .campaigns-modal-select-panel-page {
-                    width: 275px;
-                    height: 240px;
-                    transform: translate(-44.5%, 7%);
-                }
+				.campaigns-modal-select-panel-page {
+					width: 275px;
+					height: 240px;
+					transform: translate(-44.5%, 7%);
+				}
 
-                .campaigns-modal-name-error {
-                    position: relative;
-                    bottom: 17px;
-                    left: 16px;
-                }
+				.campaigns-modal-name-error {
+					position: relative;
+					bottom: 17px;
+					left: 16px;
+				}
 
-                .campaign-quick-msg-tooltip {
-                    &::before {
-                        bottom: -111%;
-                    }
-                }
-            }
+				.campaign-quick-msg-tooltip {
+					&::before {
+						bottom: -111%;
+					}
+				}
+			}
 
-            .col-full {
-                width: 100%;
-            }
+			.col-full {
+				width: 100%;
+			}
 
-            .col-sm {
-                width: 50%;
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
+			.col-sm {
+				width: 50%;
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
 
-                .campaign-time-select-half {
-                    #start-time-span + .select-arrow,
-                    #end-time-span + .select-arrow {
-                        right: -10px;
-                        top: 25px;
-                    }
-                }
-            }
-        }
-    }
+				.campaign-time-select-half {
+					#start-time-span + .select-arrow,
+					#end-time-span + .select-arrow {
+						right: -10px;
+						top: 25px;
+					}
+				}
+			}
+		}
+	}
 
-    // FOOTER / BUTTONS..
-    .campaign-modal-buttons {
-        height: 40px;
-        margin-top: 15px !important;
+	// FOOTER / BUTTONS..
+	.campaign-modal-buttons {
+		height: 40px;
+		margin-top: 15px !important;
 
-        button {
-            width: 80px;
-            font-size: 14px;
-        }
-    }
+		button {
+			width: 80px;
+			font-size: 14px;
+		}
+	}
 }
 
 // VIEW DETAILS TYPE MODAL..
 div.campaign-view-details-modal {
-    .campaign-view-details-header {
-        .campaign-modal-header-actions {
-            display: inline-flex;
-            gap: 20px;
-            position: relative;
-            left: 33%;
+	.campaign-view-details-header {
+		.campaign-modal-header-actions {
+			display: inline-flex;
+			gap: 20px;
+			position: relative;
+			left: 33%;
 
-            .campaign-view-details-toggle {
-                border-right: 1px solid #313037;
-                height: 25px;
-            }
+			.campaign-view-details-toggle {
+				border-right: 1px solid #313037;
+				height: 25px;
+			}
 
-            .campaign-edit-pen,
-            .campaign-delete-bin {
-                cursor: pointer;
-                width: 25px;
-                border-radius: 100%;
-                text-align: center;
+			.campaign-edit-pen,
+			.campaign-delete-bin {
+				cursor: pointer;
+				width: 25px;
+				border-radius: 100%;
+				text-align: center;
 
-                &:active {
-                    cursor: progress;
-                }
-            }
+				&:active {
+					cursor: progress;
+				}
+			}
 
-            .campaign-edit-pen:hover {
-                background: rgb(255 255 0 / 15%);
-            }
-            .campaign-delete-bin:hover {
-                background: rgb(255 0 0 / 15%);
-            }
-        }
-    }
+			.campaign-edit-pen:hover {
+				background: rgb(255 255 0 / 15%);
+			}
+			.campaign-delete-bin:hover {
+				background: rgb(255 0 0 / 15%);
+			}
+		}
+	}
 
-    .campaign-view-details-col {
-        display: inline-flex;
-        align-items: center;
-        gap: 20px;
-        margin-top: 15px;
+	.campaign-view-details-col {
+		display: inline-flex;
+		align-items: center;
+		gap: 20px;
+		margin-top: 15px;
 
-        .icon {
-            // background-color: red;
-            height: 48px;
-            width: 48px;
-            align-items: center;
-            position: inherit;
-            border-radius: 100%;
-            text-align: center;
-            position: relative;
-            align-content: center;
-            align-items: center;
-            padding-top: 13px;
-        }
+		.icon {
+			// background-color: red;
+			height: 48px;
+			width: 48px;
+			align-items: center;
+			position: inherit;
+			border-radius: 100%;
+			text-align: center;
+			position: relative;
+			align-content: center;
+			align-items: center;
+			padding-top: 13px;
+		}
 
-        .icon-checked-schedular {
-            background-color: #ff8f6b33;
-        }
-        .icon-clock-calender {
-            background-color: #5db56633;
-        }
-        .icon-message-calender {
-            background-color: #7d79ff33;
-        }
-        .icon-messages-limit-calender {
-            background-color: #3cebc233;
-        }
+		.icon-checked-schedular {
+			background-color: #ff8f6b33;
+		}
+		.icon-clock-calender {
+			background-color: #5db56633;
+		}
+		.icon-message-calender {
+			background-color: #7d79ff33;
+		}
+		.icon-messages-limit-calender {
+			background-color: #3cebc233;
+		}
 
-        .text {
-            line-height: 20px;
+		.text {
+			line-height: 20px;
 
-            p {
-                color: white;
-                font-size: 14px;
-            }
+			p {
+				color: white;
+				font-size: 14px;
+			}
 
-            span {
-                color: #8998b8;
-                font-size: 12px;
-            }
-        }
-    }
+			span {
+				color: #8998b8;
+				font-size: 12px;
+			}
+		}
+	}
 
-    .campaign-modal-footer {
-        margin-top: 10px;
-        padding-bottom: 10px;
-    }
+	.campaign-modal-footer {
+		margin-top: 10px;
+		padding-bottom: 10px;
+	}
 }
 
 // CAMPAIGN DELETE MODAL..
 .campaign-view-details-delete-modal {
-    z-index: 999999 !important;
+	z-index: 999999 !important;
 }
 
 .selected {
-    background-color: #0094ff !important;
-    color: #000000 !important;
-    font-weight: 700;
+	background-color: #0094ff !important;
+	color: #000000 !important;
+	font-weight: 700;
 }

@@ -47,6 +47,9 @@
 	}
 
 	.rbc-time-column .rbc-timeslot-group {
+		position: relative;
+		z-index: 1001;
+		cursor: pointer;
 		align-items: center;
 		padding-top: 19px;
 		padding-bottom: 19px;
@@ -90,6 +93,7 @@
 		justify-content: center;
 		align-items: center;
 		padding-top: 10px;
+		z-index: 1003;
 	}
 
 	.rbc-day-slot .rbc-event-content {
@@ -105,7 +109,7 @@
 		justify-content: center;
 	}
 
-	.rbc-today .rbc-events-container > .rbc-event {
+	.rbc-today .rbc-events-container > .rbc-event:not(.global-campaign) {
 		background: repeating-linear-gradient(
 			-45deg,
 			#605bff,
@@ -114,6 +118,13 @@
 			#313037 25px
 		);
 		color: #ffffff;
+	}
+
+	.rbc-day-slot > .rbc-timeslot-group:hover {
+		background-color: rgba(0, 148, 255, 0.5);
+		background-image: url("../../../assets/images/ScheduleIcon.svg");
+		background-repeat: no-repeat;
+		background-position: center;
 	}
 
 	.rbc-today > .rbc-events-container .rbc-event-content {
@@ -154,6 +165,10 @@
 }
 
 .global-campaign-calendar-view {
+	.rbc-day-slot .global-campaign {
+		z-index: 1003;
+	}
+
 	.rbc-day-slot .global-campaign > .rbc-event-content {
 		font-size: 12px;
 		font-weight: 500;

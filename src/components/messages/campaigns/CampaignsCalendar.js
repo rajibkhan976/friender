@@ -5,7 +5,9 @@ import CampaignScheduler from "./CampaignScheduler";
 import CalenderModal from "../../common/CampaignModal";
 
 const CampaignsCalendar = () => {
-	const campaignsCreated = useSelector((state) => state.message.campaignsArray);
+	const campaignsCreated = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
 	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
 	const [open, setOpen] = useState(false);
 	const { setCampaignViewMode } = useContext(CampaignContext);

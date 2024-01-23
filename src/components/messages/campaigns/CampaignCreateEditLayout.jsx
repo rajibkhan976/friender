@@ -7,7 +7,6 @@ import { fetchGroups } from "actions/MessageAction";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 
-
 const CampaignCreateEditLayout = ({ children, ...rest }) => {
 	const dispatch = useDispatch();
 	// COLLECTING THE REST PROPS ITEMS..
@@ -38,7 +37,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 	// END DATE & TIME STATE..
 	const [showEndDateAndTime, setShowEndDateAndTime] = useState(false);
-	const [endDateAndTime, setEndDateAndTime] = useState('');
+	const [endDateAndTime, setEndDateAndTime] = useState("");
 
 	// TIME DELAY..
 	const [timeDelay, setTimeDelay] = useState(3);
@@ -69,7 +68,18 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 	// RANDOM COLORS PICKED FOR CAMPAIGN CREATION..
 	const getRandomCampaignColor = () => {
-		const randomColors = ['#C0A9EB', '#9FC999', '#95D6D4', '#E0A8B8', '#92B0EA', '#D779D9', '#CFC778', '#8A78CF', '#CF7878', '#F2C794'];
+		const randomColors = [
+			"#C0A9EB",
+			"#9FC999",
+			"#95D6D4",
+			"#E0A8B8",
+			"#92B0EA",
+			"#D779D9",
+			"#CFC778",
+			"#8A78CF",
+			"#CF7878",
+			"#F2C794",
+		];
 		const randomIndex = Math.floor(Math.random() * randomColors.length);
 		return randomColors[randomIndex];
 	};
@@ -141,7 +151,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 	const handleChangeEndDateAndTime = (event) => {
 		const value = event.target.value;
 		const parsedDate = moment(value);
-		const formattedDate = parsedDate.format('YYYY-MM-DD HH:mm:ss');
+		const formattedDate = parsedDate.format("YYYY-MM-DD HH:mm:ss");
 		setEndDateAndTime(formattedDate);
 	};
 
@@ -159,16 +169,19 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 			}
 
 			// TRANSFERING DATA..
-			handleClickSaveForm({
-				campaignName: campaignName?.value,
-				messageGroupId: groupMsgSelect?._id,
-				quickMessage: quickMsg,
-				messageLimit: msgLimit,
-				campaignEndTimeStatus: showEndDateAndTime,
-				campaignEndTime: endDateAndTime,
-				timeDelay: timeDelay,
-				campaignLabelColor: getRandomCampaignColor(),
-			}, setLoadingBtn);
+			handleClickSaveForm(
+				{
+					campaignName: campaignName?.value,
+					messageGroupId: groupMsgSelect?._id,
+					quickMessage: quickMsg,
+					messageLimit: msgLimit,
+					campaignEndTimeStatus: showEndDateAndTime,
+					campaignEndTime: endDateAndTime,
+					timeDelay: timeDelay,
+					campaignLabelColor: getRandomCampaignColor(),
+				},
+				setLoadingBtn
+			);
 		}
 	};
 
@@ -189,7 +202,6 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 	return (
 		<div className='campaigns-edit d-flex d-flex-column'>
-
 			{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
 			{/* <CampaignModal type="VIEW_DETAILS" open={true} /> */}
 
@@ -200,14 +212,18 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 					<input
 						type='text'
-						className={`campaigns-name-field ${campaignName?.isError ? 'campaigns-error-input-field' : ''}`}
+						className={`campaigns-name-field ${
+							campaignName?.isError ? "campaigns-error-input-field" : ""
+						}`}
 						placeholder={campaignName?.placeholder}
 						value={campaignName?.value}
 						onChange={handleCampaignName}
 						onBlur={handleBlurValidationOnTextField}
 					/>
 
-					{campaignName?.isError && <span className="text-red">{campaignName?.errorMsg}</span>}
+					{campaignName?.isError && (
+						<span className='text-red'>{campaignName?.errorMsg}</span>
+					)}
 				</div>
 
 				<div className='campaigns-input'>
@@ -265,14 +281,18 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 				</div>
 
 				<div className='campaigns-input w-220'>
-					<label className={`d-flex ${!showEndDateAndTime ? 'campaigns-end-dateTime-label' : 'campaigns-end-dateTime-label-enabled'}`}>
+					<label
+						className={`d-flex ${
+							!showEndDateAndTime
+								? "campaigns-end-dateTime-label"
+								: "campaigns-end-dateTime-label-enabled"
+						}`}
+					>
 						<div>
 							<Switch
 								// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
 								checked={showEndDateAndTime}
-								handleChange={() =>
-									setShowEndDateAndTime(!showEndDateAndTime)
-								}
+								handleChange={() => setShowEndDateAndTime(!showEndDateAndTime)}
 								smallVariant
 							/>
 						</div>
@@ -293,19 +313,17 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 			</div>
 
 			{/* CAMPAIGNS CALENDERS SECTION MIDDLE */}
-			<div className='create-campaign-scheduler-container'>
-				{children}
-			</div>
+			<div className='create-campaign-scheduler-container'>{children}</div>
 
 			{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
 			<div className='campaigns-save-buttons-container'>
 				<button className='btn btn-grey'>Cancel</button>
 				<button
-					className={`btn ${isLoadingBtn ? 'campaign-loading-save-btn' : ''}`}
+					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}
-					disabled={campaignName.value.trim() === '' || unselectedError}
+					disabled={campaignName.value.trim() === "" || unselectedError}
 				>
-					{isLoadingBtn ? 'Loading...' : 'Save campaign'}
+					{isLoadingBtn ? "Loading..." : "Save campaign"}
 				</button>
 			</div>
 		</div>

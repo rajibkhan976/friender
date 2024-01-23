@@ -11,54 +11,54 @@
 $selectOptionsWidth: 290px;
 
 .custom-select-drop-area {
-  display: inline-flex;
-  padding-top: 1rem;
+	display: inline-flex;
+	padding-top: 1rem;
 }
 
 .custom-select-option-wrapper {
-  position: relative;
-  width: $selectOptionsWidth;
+	position: relative;
+	width: $selectOptionsWidth;
 }
 
 .select-panel {
-  border: 1px solid gray;
-  border-radius: 5px;
-  padding: 0.5rem;
-  margin: 1rem;
-  font-size: 14px;
-  color: gray;
-  cursor: pointer;
-  width: 100%;
-  margin-top: -0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 0.5rem;
+	margin: 1rem;
+	font-size: 14px;
+	color: gray;
+	cursor: pointer;
+	width: 100%;
+	margin-top: -0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-  &:hover {
-    border-color: $themeDefaultPrimary1;
-    color: lightgray;
-  }
-  .icon-arrow-down {
-    height: 16px;
-  }
+	&:hover {
+		border-color: $themeDefaultPrimary1;
+		color: lightgray;
+	}
+	.icon-arrow-down {
+		height: 16px;
+	}
 }
 
 .select-panel-error {
-  border: 1px solid #FF6A77 !important;
-  background: none !important;
+	border: 1px solid #ff6a77 !important;
+	background: none !important;
 }
 
 .disable-custom-select-panel {
-  @extend .select-panel;
-  background-color: #19191d;
-  border: 1px solid #2a2830;
-  color: #54535f !important;
-  cursor: not-allowed;
+	@extend .select-panel;
+	background-color: #19191d;
+	border: 1px solid #2a2830;
+	color: #54535f !important;
+	cursor: not-allowed;
 
-  &:hover {
-    border: 1px solid #2a2830;
-    color: #54535f !important;
-  }
+	&:hover {
+		border: 1px solid #2a2830;
+		color: #54535f !important;
+	}
 }
 
 /**
@@ -66,167 +66,167 @@ $selectOptionsWidth: 290px;
 ===== When Opens from Select Panel ====
  */
 .select-panel-page {
-  padding: 1rem 0.5rem 0.5rem;
-  border-radius: 5px;
-  border: 1px solid gray;
-  width: 290px;
-  height: 209px;
-  position: absolute;
-  background: $themeDefaultSecondary3;
-  left: 50%;
-  top: 50%;
-  transform: translate(-44.5%, 9%);
-  z-index: 9;
+	padding: 1rem 0.5rem 0.5rem;
+	border-radius: 5px;
+	border: 1px solid gray;
+	width: 290px;
+	height: 209px;
+	position: absolute;
+	background: $themeDefaultSecondary3;
+	left: 50%;
+	top: 50%;
+	transform: translate(-44.5%, 9%);
+	z-index: 1002;
 
-  &.select-panel-page {
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-  }
+	&.select-panel-page {
+		overflow-y: scroll;
+		scroll-behavior: smooth;
+	}
 }
 
 /**
 ====== Quick Message Group/Section =====
  */
 .quick-msg-section {
-  p {
-    font-size: 12px;
-    padding: 1rem;
-    color: gray;
-  }
+	p {
+		font-size: 12px;
+		padding: 1rem;
+		color: gray;
+	}
 }
 
 .quick-msg-heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
-  h4 {
-    margin-right: 10px;
-  }
+	h4 {
+		margin-right: 10px;
+	}
 
-  .quick-msg-title {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
+	.quick-msg-title {
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
 
-  button {
-    border: none;
-    background: none;
-    color: $themeDefaultPrimary1;
-    cursor: pointer;
-  }
+	button {
+		border: none;
+		background: none;
+		color: $themeDefaultPrimary1;
+		cursor: pointer;
+	}
 }
 
 // For Quick Message text Tooltip..
 .quick-msg-tooltip {
-  cursor: pointer;
+	cursor: pointer;
 
-  &:after {
-    bottom: 0;
-  }
+	&:after {
+		bottom: 0;
+	}
 
-  &:before {
-    padding: 10px;
-    width: 220px;
-    bottom: -130%;
-  }
+	&:before {
+		padding: 10px;
+		width: 220px;
+		bottom: -130%;
+	}
 }
 
 // For Group Messages Line Tooltip..
 .quick-msg-tooltip-inline {
-  @extend .quick-msg-title;
+	@extend .quick-msg-title;
 
-  &:after {
-    bottom: 30px;
-  }
-  &:before {
-    width: 230px;
-    bottom: 35px;
-  }
+	&:after {
+		bottom: 30px;
+	}
+	&:before {
+		width: 230px;
+		bottom: 35px;
+	}
 }
 
 // Quick Message Tooltip Pro - ICons..
 .tooltip-pro-content-modify-drop-select-msg {
-  left: 30px !important;
+	left: 30px !important;
 
-  &::after {
-    left: 65% !important;
-    transform-origin: -20% -322% !important;
-  }
+	&::after {
+		left: 65% !important;
+		transform-origin: -20% -322% !important;
+	}
 }
 
 // Quick message Text
 .quick-message-text {
-  color: white !important;
+	color: white !important;
 }
 
 /**
 ====== Group Message Group/Section ======
  */
 .group-msg-section {
-  .group-msg-title {
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-  }
+	.group-msg-title {
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
 
-  ul {
-    padding: 0.5rem;
+	ul {
+		padding: 0.5rem;
 
-    li {
-      list-style: none;
-      cursor: pointer;
-      margin-bottom: 5px;
-      padding: 8px;
-      border-radius: 5px;
-      font-size: 12px;
+		li {
+			list-style: none;
+			cursor: pointer;
+			margin-bottom: 5px;
+			padding: 8px;
+			border-radius: 5px;
+			font-size: 12px;
 
-      &:hover {
-        background: #313037;
-        color: lightgray;
-      }
-    }
-  }
+			&:hover {
+				background: #313037;
+				color: lightgray;
+			}
+		}
+	}
 
-  .not-found-group-messages-section {
-    text-align: center;
-    color: #767485;
-    font-weight: 500;
-    font-size: 12px;
-  }
+	.not-found-group-messages-section {
+		text-align: center;
+		color: #767485;
+		font-weight: 500;
+		font-size: 12px;
+	}
 
-  .option {
-    position: relative;
-    max-width: $selectOptionsWidth;
-    white-space: nowrap;
-    //overflow: hidden;
-    //text-overflow: ellipsis;
+	.option {
+		position: relative;
+		max-width: $selectOptionsWidth;
+		white-space: nowrap;
+		//overflow: hidden;
+		//text-overflow: ellipsis;
 
-    // Custom Title (As Tooltip)..
-    &::before {
-      content: attr(data-tooltip);
-      position: absolute;
-      display: none;
-      background-color: gray;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      white-space: normal;
-      max-width: 200px;
-      left: 50%;
-      top: -5px;
-      transform: translate(-50%, -100%);
-    }
+		// Custom Title (As Tooltip)..
+		&::before {
+			content: attr(data-tooltip);
+			position: absolute;
+			display: none;
+			background-color: gray;
+			color: white;
+			padding: 4px 8px;
+			border-radius: 4px;
+			white-space: normal;
+			max-width: 200px;
+			left: 50%;
+			top: -5px;
+			transform: translate(-50%, -100%);
+		}
 
-    &:hover::before {
-      display: block;
-    }
-  }
+		&:hover::before {
+			display: block;
+		}
+	}
 
-  .hidden-title {
-    overflow: hidden;
-  }
+	.hidden-title {
+		overflow: hidden;
+	}
 }

@@ -1,14 +1,18 @@
 import { createPortal } from "react-dom";
-import { useState } from "react";
 import moment from "moment";
 import DropSelector from "../../formComponents/DropSelector";
 
 const CampaignSchedulerPopup = (props) => {
-	const { handleSetShowPopup, popupCoordPos } = props;
+	const {
+		endTime,
+		setEndTime,
+		handleSetShowPopup,
+		popupCoordPos,
+		startTime,
+		setStartTime,
+	} = props;
 	const weekdaysArr = moment.weekdays();
 	const today = moment().format("dddd");
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
 
 	const timeOptions = [
 		{
@@ -294,7 +298,7 @@ const CampaignSchedulerPopup = (props) => {
 					/>
 				</div>
 			</div>
-			
+
 			<div className='campaign-scheduler-popup-footer'>
 				<button
 					type='button'

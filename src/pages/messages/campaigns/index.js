@@ -97,7 +97,9 @@ const Campaigns = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.campaign.isLoading);
-	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
+	const campaignsCreated = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -108,7 +110,7 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaigns())
+			dispatch(fetchAllCampaigns());
 		} catch (error) {
 			Alertbox(
 				`
@@ -118,7 +120,7 @@ const Campaigns = () => {
 				"bottom-right"
 			);
 		}
-	}
+	};
 
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
@@ -279,8 +281,8 @@ const Campaigns = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		fetchAll()
-	}, [])
+		fetchAll();
+	}, []);
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>
@@ -320,7 +322,7 @@ const Campaigns = () => {
 									</Suspense>
 								)
 							) : campaignsCreated?.length <= 0 ? (
-								<NoDataFound 
+								<NoDataFound
 									customText={`No campaign(s) has been created yet`}
 								/>
 							) : (

@@ -15,7 +15,7 @@ import {
 	deleteSubDMF,
 	fetchAllGroups,
 	fetchDMFs,
-	prioritySubDMF
+	prioritySubDMF,
 } from "../services/messages/MessagesServices";
 
 const messageType = localStorage.getItem("fr_messageTabType");
@@ -25,7 +25,7 @@ const initialState = {
 	messageType: messageType ? messageType : "dmf",
 	dmfArray: [],
 	segmentsArray: [],
-	groupArray: []
+	groupArray: [],
 };
 
 export const getDmfList = createAsyncThunk(
@@ -152,7 +152,7 @@ export const addNewGroupMessageItem = createAsyncThunk(
 	"messages/newGroupMessage",
 	async (payload) => {
 		const res = await addNewGroupMessage(payload);
-		return res; 
+		return res;
 	}
 );
 
@@ -256,8 +256,8 @@ export const messageSlice = createSlice({
 			} else {
 				state.segmentsArray = action?.payload?.data
 					? placeholderArray.map((el) =>
-						el._id === action.payload.data._id ? action.payload.data : el
-					)
+							el._id === action.payload.data._id ? action.payload.data : el
+					  )
 					: placeholderArray;
 			}
 			state.isLoading = false;
@@ -342,9 +342,6 @@ export const messageSlice = createSlice({
 		},
 	},
 });
-export const {
-	updateMessageType,
-	updatelocalDmf,
-	deleteLocalDmf
-} = messageSlice.actions;
+export const { updateMessageType, updatelocalDmf, deleteLocalDmf } =
+	messageSlice.actions;
 export default messageSlice.reducer;
