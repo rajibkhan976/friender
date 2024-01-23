@@ -4,7 +4,7 @@ import CreateCampaignWrapper from "components/messages/campaigns/CreateCampaignW
 import { CampaignContext } from "pages/messages/index";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
-import { createCampaign } from 'actions/MessageAction';
+import { createCampaign } from 'actions/CampaignsActions';
 import Alertbox from "components/common/Toast";
 import { useNavigate } from 'react-router-dom';
 

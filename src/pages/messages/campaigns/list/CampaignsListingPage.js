@@ -1,5 +1,7 @@
 import { memo, useContext, useEffect, useState } from "react";
 import { CampaignContext } from "../../index";
+
+import { updateCampaignsArray } from "../../../../actions/CampaignsActions";
 import {
 	CampaignNameCellRenderer,
 	CampaignStatusCellRenderer,

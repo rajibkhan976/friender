@@ -89,7 +89,7 @@ const CampaignsHeader = ({
 				}
 			}
 
-			fetchCampaign(params?.campaignId);
+			// fetchCampaign(params?.campaignId)
 		} else {
 			localStorage.removeItem("fr_editCampaign_view");
 		}

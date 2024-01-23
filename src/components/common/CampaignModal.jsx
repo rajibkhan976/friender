@@ -11,7 +11,7 @@ import {
 	createCampaign,
 	updateCampaign,
 	updateCampaignStatus,
-} from "actions/MessageAction";
+} from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
 	ClockedSchedularIcon,

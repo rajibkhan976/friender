@@ -17,7 +17,7 @@ import {
 import {
 	updateCampaignContext,
 	updateCampaignsArray,
-} from "../../../actions/MessageAction";
+} from "../../../actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 
@@ -34,7 +34,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 	return (
 		<div className='campaign-name-cell'>
 			<Link
-				to={`https://localhost:3000/messages/campaigns/${params?.data?._id}`}
+				to={`https://localhost:3000/messages/campaigns/${params?.data?.campaign_id}`}
 				onClick={storeEdit}
 			>
 				{params?.value}
@@ -172,7 +172,7 @@ export const CampaignContextMenuCellRenderer = (params) => {
 					mode: "settings",
 				})
 			);
-			navigate(`/messages/campaigns/${params?.data?._id}`);
+			navigate(`/messages/campaigns/${params?.data?.campaign_id}`);
 		} catch (error) {
 			Alertbox(error, "error", 1000, "bottom-right");
 		} finally {

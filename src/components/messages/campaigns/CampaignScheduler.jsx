@@ -6,7 +6,7 @@ import { CampaignContext } from "../../../pages/messages/index";
 import {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
-} from "../../../actions/MessageAction";
+} from "../../../actions/CampaignsActions";
 import { utils } from "../../../helpers/utils";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../style/_campaign-scheduler.scss";

@@ -1,7 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchEditCampaign, updateCampaignsArray } from "actions/MessageAction";
+import {
+	fetchAllCampaigns,
+	fetchEditCampaign,
+	updateCampaignsArray,
+} from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
 
 import {
@@ -92,14 +96,29 @@ const Campaigns = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const campaignsCreated = useSelector((state) => state.message.campaignsArray);
-	const [loading, setLoading] = useState(false);
+	const loading = useSelector((state) => state.campaign.isLoading);
+	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
+	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
 	const [spanOption, setSpanOption] = useState(spanOptions);
 	const [statusOption, setStatusOption] = useState(statusOptions);
 	const [editViews, setEditViews] = useState(editView);
 	const [isEditingCampaign, setIsEditingCampaign] = useState(null); //{isPaused: true}
+
+	const fetchAll = async () => {
+		try {
+			dispatch(fetchAllCampaigns())
+		} catch (error) {
+			Alertbox(
+				`
+                ${error} `,
+				"error",
+				3000,
+				"bottom-right"
+			);
+		}
+	}
 
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
@@ -257,7 +276,11 @@ const Campaigns = () => {
 		) {
 			setIsEditingCampaign(null);
 		}
-	}, [location.pathname]);  
+	}, [location.pathname]);
+
+	useEffect(() => {
+		fetchAll()
+	}, [])
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>
@@ -297,7 +320,9 @@ const Campaigns = () => {
 									</Suspense>
 								)
 							) : campaignsCreated?.length <= 0 ? (
-								<NoDataFound />
+								<NoDataFound 
+									customText={`No campaign(s) has been created yet`}
+								/>
 							) : (
 								<Suspense fallback='Loading Calendar View for your Campaigns'>
 									<CampaignsCalendar
