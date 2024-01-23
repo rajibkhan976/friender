@@ -28,12 +28,13 @@ const DropSelectMessage = ({
     customSelectPanelPageClass = null,
     customErrorMsgStyleClass = null,
     customQuickMsgTooltipStyleClass = null,
+    unselectedError = false,
+    setUnselectedError = () => {}
 }) => {
     const [selectOption, setSelectOption] = useState(() => groupSelect ? groupSelect.group_name : '');
     const [selectedOptionId] = useState(() => groupSelect ? groupSelect._id : '');
     const [showTooltip, setShowTooltip] = useState(false);
     const [editorStateValue, setEditorStateValue] = useState("");
-    const [unselectedError, setUnselectedError] = useState(false);
 
     useEffect(() => {
         if (quickMessage && type === "ACCEPT_REQ") {
@@ -72,7 +73,7 @@ const DropSelectMessage = ({
             saveMySetting();
 
             // SELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
-            if (type === 'CAMPAIGNS_MESSAGE') {
+            if (type === 'CAMPAIGNS_MESSAGE' || type === 'CAMPAIGNS_MODAL_MESSAGE') {
                 setUnselectedError(false);
             }
         }

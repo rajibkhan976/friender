@@ -183,13 +183,13 @@ const EditCampaign = () => {
 						<>
 							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
 								? keyWords?.matchedKeyword.map((el, i) => (
-										<span
-											className={`tags positive-tags`}
-											key={`key-${i}`}
-										>
-											{el}
-										</span>
-								  ))
+									<span
+										className={`tags positive-tags`}
+										key={`key-${i}`}
+									>
+										{el}
+									</span>
+								))
 								: "No specific keyword used"}
 						</>
 					}

@@ -9,6 +9,13 @@
     z-index: 999;
     width: 600px;
 
+    .text-red {
+        color: #ff6a77;
+        font-size: 12px;
+        margin-top: 5px;
+        font-weight: 400;
+    }
+
     &::before {
         display: none;
     }
@@ -18,7 +25,7 @@
     }
 
     .mt-2 {
-        margin-top: 8px;
+        margin-top: 15px;
     }
 
     .mb {
@@ -282,4 +289,10 @@ div.campaign-view-details-modal {
 // CAMPAIGN DELETE MODAL..
 .campaign-view-details-delete-modal {
     z-index: 999999 !important;
+}
+
+.selected {
+    background-color: #0094ff !important;
+    color: #000000 !important;
+    font-weight: 700;
 }

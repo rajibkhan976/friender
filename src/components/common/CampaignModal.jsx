@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { XMarkIcon } from "assets/icons/Icons";
 import DropSelectMessage from "components/messages/DropSelectMessage";
 import DropSelector from "components/formComponents/DropSelector";
@@ -26,15 +26,20 @@ import {
 import Switch from "components/formComponents/Switch";
 import Modal from "components/common/Modal";
 import Alertbox from "components/common/Toast";
+import moment from "moment";
+
 
 const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [calenderModalOpen, setCalenderModalOpen] = useState(open);
+	const campaignSchedule = useSelector((state) => state.message.campaignSchedule);
+	const current_fb_id = localStorage.getItem("fr_default_fb");
+	const [isLoadingBtn, setLoadingBtn] = useState(false);
 
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
-		value: "Connect and Win",
+		value: "",
 		placeholder: "Ex. Word Boost",
 		isError: false,
 		errorMsg: "",
@@ -47,35 +52,42 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 	const [quickMsg, setQuickMsg] = useState(null);
 	const [quickMsgModalOpen, setQuickMsgModalOpen] = useState(false);
 	const [usingSelectOption, setUsingSelectOption] = useState(false);
+	const [unselectedError, setUnselectedError] = useState(false);
 
 	// TIME DELAY..
-	const [timeDelay, setTimeDelay] = useState("");
+	const [timeDelay, setTimeDelay] = useState(3);
 
 	// MESSAGE LIMIT/24HR STATE..
-	const [msgLimit, setMsgLimit] = useState();
+	const [msgLimit, setMsgLimit] = useState(100);
+
+	// CAMPAIGN COLOR PICK..
+	const [campaginColorPick, setCampaignColorPick] = useState('#92B0EA');
 
 	// TIME DURATIONS..
 	const [startTime, setStartTime] = useState("");
 	const [endTime, setEndTime] = useState("");
 
+	// END DATE AND TIME
+	const [endDateAndTime, setEndDateAndTime] = useState('');
+
 	const timeDelays = [
 		{
-			value: "3 min",
+			value: 3,
 			label: "3 min",
 			selected: true,
 		},
 		{
-			value: "5 min",
+			value: 5,
 			label: "5 min",
 			selected: false,
 		},
 		{
-			value: "10 min",
+			value: 10,
 			label: "10 min",
 			selected: false,
 		},
 		{
-			value: "15 min",
+			value: 15,
 			label: "15 min",
 			selected: false,
 		},
@@ -341,7 +353,7 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 
 	// TIME DELAY..
 	const onChangeTimeDelay = (event) => {
-		setTimeDelay(event.target.value);
+		setTimeDelay(Number(event.target.value));
 	};
 
 	// TIME DURATIONS..
@@ -406,22 +418,109 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 		setCalenderModalOpen(false);
 	};
 
+	// HANDLE END DATE AND TIME VALUE ON CHANGE..
+	const handleChangeEndDateAndTime = (event) => {
+		const value = event.target.value;
+		const parsedDate = moment(value);
+		const formattedDate = parsedDate.format('YYYY-MM-DD HH:mm:ss');
+		setEndDateAndTime(formattedDate);
+	};
+
 	// HANDLE DELETE CAMPAIGN BUTTON..
 	const handleDeleteCampaignBtn = (_event) => {
 		// DELETE FUNCTION..
 		setCampaignDeleteModalOpen(true);
 	};
 
+
+	// CREATE/ADD CAMPAIGN FUNCTION..
+	const campaignAddRequestToAPI = async (payload) => {
+		console.log("PAYLOAD OF MODAL CAMPAIGN CREATION - ", payload);
+
+		try {
+			const response = await dispatch(createCampaign(payload)).unwrap();
+
+			if (response?.data) {
+				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
+				setLoadingBtn(false);
+				navigate('/messages/campaigns');
+				setCalenderModalOpen(false);
+
+			} else {
+				if (response?.error?.code === "resource_conflict") {
+					Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+					setLoadingBtn(false);
+
+				} else if (response?.error?.code === "bad_request") {
+					Alertbox(`${response?.error?.message}`, "error", 1000, "bottom-right");
+					setLoadingBtn(false);
+
+				} else {
+					Alertbox("Failed to create the campaign. Please check your input and try again.", "error", 1000, "bottom-right");
+					setLoadingBtn(false);
+				}
+			}
+
+		} catch (error) {
+			console.log("Error Catch:", error);
+			Alertbox("An unexpected error occurred. Please try again later.", "error", 1000, "bottom-right");
+			setLoadingBtn(false);
+		}
+	};
+
+
+	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
+	const transformCampaignSchedulesPayload = (schedules = []) => {
+		const transformSchedules = schedules?.length && schedules.map((schedule => {
+			const fromTime = moment(schedule.start).format('YYYY-MM-DD HH:mm:ss');
+			const toTime = moment(schedule.end).format('YYYY-MM-DD HH:mm:ss');
+			const day = moment(schedule.start).format('dddd');
+
+			return {
+				day,
+				from_time: fromTime,
+				end_time: toTime,
+			};
+		}));
+
+		return transformSchedules;
+	};
+
+	// SAVE CAMPAIGN..
+	const handleClickToSaveCampaign = (data) => {
+		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
+		const payload = { ...data, fbUserId: current_fb_id, schedule: transformCampaignSchedules };
+		campaignAddRequestToAPI(payload);
+	};
+
 	// HANDLE SUBMIT MODEL..
 	const handleSubmitModalCampaign = (event) => {
 		event.preventDefault();
 
-		console.log("Campaign Name: ", campaignName);
-		console.log("Group Message Select: ", groupMsgSelect);
-		console.log("Quick Message: ", quickMsg);
-		console.log("Time Delay: ", timeDelay);
-		console.log("Message limit: ", msgLimit);
-		console.log("Time duration start and end: ", startTime, endTime);
+		if (!isLoadingBtn) {
+			setLoadingBtn(true);
+
+			// UNHANDLED VALUES.. TIME DURATIONS,
+			console.log("START - END TIME DURATIONS - ", startTime, endTime);
+
+			if (!groupMsgSelect?._id && quickMsg === null) {
+				setUnselectedError(true);
+				setLoadingBtn(false);
+				return false;
+			}
+
+			handleClickToSaveCampaign({
+				campaignName: campaignName?.value,
+				messageGroupId: groupMsgSelect?._id,
+				quickMessage: quickMsg,
+				messageLimit: msgLimit,
+				campaignEndTimeStatus: true,
+				campaignEndTime: endDateAndTime,
+				timeDelay: timeDelay,
+				campaignLabelColor: campaginColorPick,
+
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -482,9 +581,8 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 
 								<input
 									type='text'
-									className={`campaigns-name-field ${
-										campaignName?.isError ? "campaigns-error-input-field" : ""
-									}`}
+									className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
+										}`}
 									placeholder={campaignName?.placeholder}
 									value={campaignName?.value}
 									onChange={handleCampaignName}
@@ -515,6 +613,8 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 									isDisabled={false}
 									usingSelectOptions={usingSelectOption}
 									setUsingSelectOptions={setUsingSelectOption}
+									unselectedError={unselectedError}
+									setUnselectedError={setUnselectedError}
 									customWrapperClass='campaigns-modal-select-msg-wrapper'
 									customSelectPanelClass='campaigns-modal-select-panel'
 									customSelectPanelPageClass='campaigns-modal-select-panel-page'
@@ -573,7 +673,7 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 								<label>Pick color</label>
 
 								<div className='ml mt'>
-									<ColorPickerBalls />
+									<ColorPickerBalls colorPick={campaginColorPick} setColorPick={setCampaignColorPick} />
 								</div>
 							</div>
 						</div>
@@ -618,6 +718,8 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 								<input
 									type='datetime-local'
 									className='mt'
+									value={endDateAndTime}
+									onChange={handleChangeEndDateAndTime}
 								/>
 							</div>
 						</div>
@@ -634,16 +736,17 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 							Cancel
 						</button>
 						<button
-							className='btn'
-							disabled={false}
+							className={`btn ${isLoadingBtn ? 'campaign-loading-save-btn' : ''}`}
+							disabled={campaignName.value.trim() === '' || unselectedError}
 							onClick={handleSubmitModalCampaign}
 						>
-							Save
+							{isLoadingBtn ? 'Loading..' : 'Save'}
 						</button>
 					</div>
 				</div>
 			</div>
 		);
+
 	} else if (type === "VIEW_DETAILS") {
 		return (
 			<>
@@ -653,7 +756,7 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 					bodyText={"Are you sure you want to delete ?"}
 					open={isCampaignDeleteModalOpen}
 					setOpen={setCampaignDeleteModalOpen}
-					ModalFun={() => {}}
+					ModalFun={() => { }}
 					btnText={"Yes, Delete"}
 					ModalIconElement={() => <DangerIcon />}
 					additionalClass={`campaign-view-details-delete-modal`}
@@ -690,8 +793,8 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 									<Switch
 										checked={isCampaignToggleOn}
 										handleChange={() => setCampaignToggle(!isCampaignToggleOn)}
-										// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
-										// smallVariant
+									// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
+									// smallVariant
 									/>
 								</div>
 

@@ -371,10 +371,10 @@ export const createOrUpdateCampaignService = (newCampaign) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {
+				console.log("Catching the error --- ", error);
 				reject(error);
 			});
 	});

@@ -2,17 +2,22 @@ import React, { useState, useEffect } from "react";
 import DropSelectMessage from "components/messages/DropSelectMessage";
 import NumberRangeInput from "components/common/NumberRangeInput";
 import Switch from "components/formComponents/Switch";
+import DropSelector from "components/formComponents/DropSelector";
 import { fetchGroups } from "actions/MessageAction";
 import { useDispatch } from "react-redux";
+import moment from "moment";
+
 
 const CampaignCreateEditLayout = ({ children, ...rest }) => {
 	const dispatch = useDispatch();
 	// COLLECTING THE REST PROPS ITEMS..
 	const { type = "CREATE" || "EDIT", handleClickSaveForm } = rest;
 
+	const [isLoadingBtn, setLoadingBtn] = useState(false);
+
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
-		value: "Connect and Win",
+		value: "",
 		placeholder: "Ex. Word Boost",
 		isError: false,
 		errorMsg: "",
@@ -20,17 +25,59 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 	// SELECT MESSAGE SATES..
 	const [groupMessages, setGroupMessages] = useState([]);
-	const [selectMessageOptionOpen, setSelectMessageOptionOpen] = useState(false);
 	const [groupMsgSelect, setGroupMsgSelect] = useState(null);
 	const [quickMsg, setQuickMsg] = useState(null);
+
+	const [selectMessageOptionOpen, setSelectMessageOptionOpen] = useState(false);
 	const [quickMsgModalOpen, setQuickMsgModalOpen] = useState(false);
 	const [usingSelectOption, setUsingSelectOption] = useState(false);
+	const [unselectedError, setUnselectedError] = useState(false);
 
 	// MESSAGE LIMIT/24HR STATE..
 	const [msgLimit, setMsgLimit] = useState(100);
 
 	// END DATE & TIME STATE..
-	const [showEndDataAndTime, setShowEndDataAndTime] = useState(false);
+	const [showEndDateAndTime, setShowEndDateAndTime] = useState(false);
+	const [endDateAndTime, setEndDateAndTime] = useState('');
+
+	// TIME DELAY..
+	const [timeDelay, setTimeDelay] = useState(3);
+
+	// TIME DELAYS..
+	const timeDelays = [
+		{
+			value: 3,
+			label: "3 min",
+			selected: true,
+		},
+		{
+			value: 5,
+			label: "5 min",
+			selected: false,
+		},
+		{
+			value: 10,
+			label: "10 min",
+			selected: false,
+		},
+		{
+			value: 15,
+			label: "15 min",
+			selected: false,
+		},
+	];
+
+	// RANDOM COLORS PICKED FOR CAMPAIGN CREATION..
+	const getRandomCampaignColor = () => {
+		const randomColors = ['#C0A9EB', '#9FC999', '#95D6D4', '#E0A8B8', '#92B0EA', '#D779D9', '#CFC778', '#8A78CF', '#CF7878', '#F2C794'];
+		const randomIndex = Math.floor(Math.random() * randomColors.length);
+		return randomColors[randomIndex];
+	};
+
+	// TIME DELAY..
+	const onChangeTimeDelay = (event) => {
+		setTimeDelay(event.target.value);
+	};
 
 	// HANDLE CAMPAIGNS NAME FUNCTION..
 	const handleCampaignName = (event) => {
@@ -90,17 +137,39 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 		}
 	};
 
+	// HANDLE END DATE AND TIME VALUE ON CHANGE..
+	const handleChangeEndDateAndTime = (event) => {
+		const value = event.target.value;
+		const parsedDate = moment(value);
+		const formattedDate = parsedDate.format('YYYY-MM-DD HH:mm:ss');
+		setEndDateAndTime(formattedDate);
+	};
+
 	// HANDLE CLICK ON THE SAVE CAMPAIGNS..
 	const handleClickToSaveCampaign = (event) => {
 		event.preventDefault();
-		// TRANSFERING DATA..`
-		handleClickSaveForm({
-			campaignName: campaignName?.value,
-			selectedGroupMsg: groupMsgSelect,
-			selectedQuickMsg: quickMsg,
-			msgLimit: msgLimit,
-			isEndDateAndTime: showEndDataAndTime,
-		});
+		if (!isLoadingBtn) {
+			setLoadingBtn(true);
+
+			// VALIDATE THE FORM..
+			if (!groupMsgSelect?._id && quickMsg === null) {
+				setUnselectedError(true);
+				setLoadingBtn(false);
+				return false;
+			}
+
+			// TRANSFERING DATA..
+			handleClickSaveForm({
+				campaignName: campaignName?.value,
+				messageGroupId: groupMsgSelect?._id,
+				quickMessage: quickMsg,
+				messageLimit: msgLimit,
+				campaignEndTimeStatus: showEndDateAndTime,
+				campaignEndTime: endDateAndTime,
+				timeDelay: timeDelay,
+				campaignLabelColor: getRandomCampaignColor(),
+			}, setLoadingBtn);
+		}
 	};
 
 	useEffect(() => {
@@ -119,34 +188,30 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 	}, []);
 
 	return (
-		<>
-			<div className='campaigns-edit d-flex d-flex-column'>
-				{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
-				{/* <CampaignModal open={true} /> */}
+		<div className='campaigns-edit d-flex d-flex-column'>
 
-				{/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
-				<div className='campaigns-edit-inputs'>
-					<div className='campaigns-input w-250'>
-						<label>Campaign name</label>
+			{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
+			{/* <CampaignModal type="VIEW_DETAILS" open={true} /> */}
 
-						<input
-							type='text'
-							className={`campaigns-name-field ${
-								campaignName?.isError ? "campaigns-error-input-field" : ""
-							}`}
-							placeholder={campaignName?.placeholder}
-							value={campaignName?.value}
-							onChange={handleCampaignName}
-							onBlur={handleBlurValidationOnTextField}
-						/>
+			{/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
+			<div className='campaigns-edit-inputs'>
+				<div className='campaigns-input w-250'>
+					<label>Campaign name</label>
 
-						{campaignName?.isError && (
-							<span className='text-red'>{campaignName?.errorMsg}</span>
-						)}
-					</div>
+					<input
+						type='text'
+						className={`campaigns-name-field ${campaignName?.isError ? 'campaigns-error-input-field' : ''}`}
+						placeholder={campaignName?.placeholder}
+						value={campaignName?.value}
+						onChange={handleCampaignName}
+						onBlur={handleBlurValidationOnTextField}
+					/>
 
-					{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
-					{/* <CampaignModal type="VIEW_DETAILS" open={true} /> */}
+					{campaignName?.isError && <span className="text-red">{campaignName?.errorMsg}</span>}
+				</div>
+
+				<div className='campaigns-input'>
+					<label>Select message</label>
 
 					<DropSelectMessage
 						type='CAMPAIGNS_MESSAGE'
@@ -162,6 +227,8 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 						isDisabled={false}
 						usingSelectOptions={usingSelectOption}
 						setUsingSelectOptions={setUsingSelectOption}
+						unselectedError={unselectedError}
+						setUnselectedError={setUnselectedError}
 						customWrapperClass='campaigns-select-msg-wrapper'
 						customSelectPanelClass='campaigns-select-panel'
 						customSelectPanelPageClass='campaigns-select-panel-page'
@@ -172,12 +239,17 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 				<div className='campaigns-input w-200'>
 					<label>Time delay</label>
 
-					<select className='campaigns-select'>
-						<option value='3'>3 min</option>
-						<option value='5'>5 min</option>
-						<option value='10'>10 min</option>
-						<option value='15'>15 min</option>
-					</select>
+					<DropSelector
+						selects={timeDelays}
+						// id='start-time-span'
+						defaultValue={
+							timeDelays?.find((el) => el.value === timeDelay)?.value
+						}
+						extraClass='campaigns-time-delay-bar'
+						height='40px'
+						width='inherit'
+						handleChange={onChangeTimeDelay}
+					/>
 				</div>
 
 				<div className='campaigns-input w-200'>
@@ -193,18 +265,14 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 				</div>
 
 				<div className='campaigns-input w-220'>
-					<label
-						className={`d-flex ${
-							!showEndDataAndTime
-								? "campaigns-end-dateTime-label"
-								: "campaigns-end-dateTime-label-enabled"
-						}`}
-					>
+					<label className={`d-flex ${!showEndDateAndTime ? 'campaigns-end-dateTime-label' : 'campaigns-end-dateTime-label-enabled'}`}>
 						<div>
 							<Switch
 								// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
-								checked={showEndDataAndTime}
-								handleChange={() => setShowEndDataAndTime(!showEndDataAndTime)}
+								checked={showEndDateAndTime}
+								handleChange={() =>
+									setShowEndDateAndTime(!showEndDateAndTime)
+								}
 								smallVariant
 							/>
 						</div>
@@ -215,27 +283,32 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					<input
 						type='datetime-local'
 						className='campaigns-datetime-select'
+						value={endDateAndTime}
 						style={{
-							visibility: !showEndDataAndTime ? "hidden" : "visible",
+							visibility: !showEndDateAndTime ? "hidden" : "visible",
 						}}
+						onChange={handleChangeEndDateAndTime}
 					/>
 				</div>
 			</div>
 
 			{/* CAMPAIGNS CALENDERS SECTION MIDDLE */}
-			<div className='create-campaign-scheduler-container'>{children}</div>
+			<div className='create-campaign-scheduler-container'>
+				{children}
+			</div>
 
 			{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
 			<div className='campaigns-save-buttons-container'>
 				<button className='btn btn-grey'>Cancel</button>
 				<button
-					className='btn'
+					className={`btn ${isLoadingBtn ? 'campaign-loading-save-btn' : ''}`}
 					onClick={handleClickToSaveCampaign}
+					disabled={campaignName.value.trim() === '' || unselectedError}
 				>
-					Save campaign
+					{isLoadingBtn ? 'Loading...' : 'Save campaign'}
 				</button>
 			</div>
-		</>
+		</div>
 	);
 };
 
