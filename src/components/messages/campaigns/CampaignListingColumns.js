@@ -44,12 +44,13 @@ export const CampaignNameCellRenderer = memo((params) => {
 });
 
 export const CampaignStatusCellRenderer = memo((params) => {
-	const [campaignStatus, setCampaignStatus] = useState(params?.value);
+	const [campaignStatus, setCampaignStatus] = useState(params?.value ? params?.value : false);
 
 	const doSomething = (e) => {
 		if (
-			params?.data?.friends_pending === 0 ||
-			new Date(params?.data?.campaign_end_time) < new Date()
+			(params?.data?.friends_pending === 0 ||
+			new Date(params?.data?.campaign_end_time) < new Date()) &&
+			e.target.checked
 		) {
 			Alertbox(
 				`${
@@ -62,7 +63,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				"bottom-right"
 			);
 
-			return false;
+			e.preventDefault()
+			e.stopPropagation();
+			return false
 		} else {
 			params?.setIsEditingCampaign({
 				...params?.data,

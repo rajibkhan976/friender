@@ -85,14 +85,14 @@ const CampaignScheduler = (props) => {
 	}, []);
 
 	const handleSelectEvent = (event, e) => {
-		console.log("selected envet", event);
+		// console.log("selected envet", event);
 		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
 		dispatch(updateSelectedCampaignSchedule(event));
 		campaignViewMode === "campaignCalendar" && handleSetShowPopup(true);
 	};
 
 	const handleSelectSlot = (slotInfo) => {
-		console.log("handle slot", slotInfo);
+		// console.log("handle slot", slotInfo);
 		const { start, end } = slotInfo;
 		// Update the selected event with the new start and end times
 		// if (selectedEvent) {
@@ -111,7 +111,7 @@ const CampaignScheduler = (props) => {
 			  });
 		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
 		handleSetShowPopup(true);
-		console.log(selectedSchedules);
+		// console.log(selectedSchedules);
 		// Update the events array with the new start and end times
 		// This is where you would typically make an API call to update the server
 		const updatedCampaignSchedule = [...campaignSchedule, ...selectedSchedules];
@@ -132,7 +132,7 @@ const CampaignScheduler = (props) => {
 			localizer.format(date, "dddd", culture), // Format for the day header
 	};
 
-	console.log(campaignSchedule);
+	// console.log(campaignSchedule);
 
 	return (
 		<Calendar

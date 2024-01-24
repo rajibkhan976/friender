@@ -102,6 +102,7 @@ const EditCampaign = () => {
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
+				console.log('here');
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -122,6 +123,7 @@ const EditCampaign = () => {
 					</>
 				);
 			} else {
+				console.log('here');
 				return (
 					<CampaignCreateEditLayout
 						type='EDIT'
@@ -156,6 +158,7 @@ const EditCampaign = () => {
 	}, [editViews]);
 
 	useEffect(() => {
+		console.log(localStorage?.getItem("fr_editCampaign_view"));
 		if (isEditingCampaign) {
 			// console.log('GOT TO EDIT ::::', isEditingCampaign);
 			setLoading(false);
@@ -207,7 +210,9 @@ const EditCampaign = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-
+			{
+				console.log('loading', loading)
+			}
 			{loading ? <ListingLoader /> : renderComponentsView()}
 		</>
 	);

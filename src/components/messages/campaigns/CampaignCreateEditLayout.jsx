@@ -207,7 +207,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 			{/* CAMPAIGNS CREATE/EDIT FORM INPUT TOP SECTION */}
 			<div className='campaigns-edit-inputs'>
-				<div className='campaigns-input w-250'>
+				<div className='campaigns-input campaign-name-field'>
 					<label>Campaign name</label>
 
 					<input
@@ -226,7 +226,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					)}
 				</div>
 
-				<div className='campaigns-input'>
+				<div className='campaigns-input campaign-message-field'>
 					<label>Select message</label>
 
 					<DropSelectMessage
@@ -252,7 +252,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					/>
 				</div>
 
-				<div className='campaigns-input w-200'>
+				<div className='campaigns-input campaign-time-field w-200'>
 					<label>Time delay</label>
 
 					<DropSelector
@@ -268,7 +268,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					/>
 				</div>
 
-				<div className='campaigns-input w-200'>
+				<div className='campaigns-input campaign-limit-field w-200'>
 					<label>Message limit/24hr</label>
 
 					<NumberRangeInput
@@ -280,7 +280,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					/>
 				</div>
 
-				<div className='campaigns-input w-220'>
+				<div className='campaigns-input campaign-end-field'>
 					<label
 						className={`d-flex ${
 							!showEndDateAndTime
@@ -288,14 +288,12 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 								: "campaigns-end-dateTime-label-enabled"
 						}`}
 					>
-						<div>
 							<Switch
 								// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
 								checked={showEndDateAndTime}
 								handleChange={() => setShowEndDateAndTime(!showEndDateAndTime)}
 								smallVariant
 							/>
-						</div>
 
 						<span>End date & time</span>
 					</label>
@@ -308,6 +306,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 							visibility: !showEndDateAndTime ? "hidden" : "visible",
 						}}
 						onChange={handleChangeEndDateAndTime}
+						placeholder="Choose date & time"
 					/>
 				</div>
 			</div>

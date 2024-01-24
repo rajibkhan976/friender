@@ -133,9 +133,24 @@
       //   color: $themeTransparent
       // }
 
+      .campaign-status-cell,
+      .campaign-count-cell,
+      .campaign-schedule-cell,
+      .campaign-endTime-cell,
+      .campaign-contextMenu-cell {
+          padding-left: 0;
+      }
+
       &:not(:first-child) {
         > * {
-          padding-left: 18px;
+          &:not( > .campaign-status-cell)
+          :not( > .campaign-count-cell)
+          :not( > .campaign-schedule-cell)
+          :not( > .campaign-endTime-cell)
+          :not( > .campaign-contextMenu-cell)
+          :not( > .campaign-pending-cell) {
+            padding-left: 18px;
+          }
         }
       }
     }

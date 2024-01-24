@@ -806,52 +806,91 @@
 			}
 
 			.campaigns-edit-inputs {
-				display: inline-flex;
-				flex-direction: row;
-				gap: 40px;
-				margin-top: 1rem;
-				padding-bottom: 1rem;
+				// display: inline-flex;
+				display: flex;
+				// flex-direction: row;
+				gap: 92px;
+				justify-content: flex-start;
+				// margin-top: 1rem;
+				// padding-bottom: 1rem;
 				// margin-bottom: 1rem;
 				border-bottom: 1px solid #313037;
+				flex: 0 0 93px;
+				align-items: center;
+				max-width: 1920px;
 
 				.campaigns-input {
 					display: grid;
-					border-left: 1px solid #313037;
-					padding-left: 40px;
+					// border-left: 1px solid #313037;
+					// padding-left: 40px;
+					position: relative;
 
 					&:first-child {
 						border-left: none;
 					}
 
 					&:last-child {
-						margin-right: 30px;
+						// margin-right: 30px;
 					}
 
-					label {
+					label:not(.switch) {
 						font-size: 12px;
-						color: #767485;
+						// color: #767485;
+						margin-bottom: 4px;
+						@include theme-aware('color', 'link-text-color');
 					}
 
 					label.campaigns-end-dateTime-label {
 						position: relative;
 						top: 150%;
+
+						.switch {
+							margin-inline-end: 8px;
+						}
 					}
 
 					label.campaigns-end-dateTime-label-enabled {
 						position: inherit;
 					}
+
+					&.campaign-name-field, 
+					&.campaign-message-field, 
+					&.campaign-end-field {
+						flex: 1 0 200px;
+
+						.custom-select-option-wrapper {
+							width: 100%;
+						}
+					}
+
+					&:not(:first-child) {
+						&:before {
+							content: '';
+							position: absolute;
+							left: 0;
+							margin-left: -46px;
+							width: 1px;
+							height: 60px;
+							top: 50%;
+							transform: translateY(-50%);
+							@include theme-aware('background', 'sidebar-border-color');
+						}
+					}
 				}
 
-				.campaigns-select-msg-wrapper {
-					width: 240px;
-					margin-top: 5px;
-				}
+				// .campaigns-select-msg-wrapper {
+				// 	width: 240px;
+				// 	margin-top: 5px;
+				// }
 
 				.campaigns-select-panel {
 					margin: 0;
 					height: 40px;
-					background: #313037;
-					border: 1px solid #313037;
+					@include theme-aware('background', 'sidebar-border-color');
+					border: 1px solid;
+					@include theme-aware('border-color', 'sidebar-border-color')
+					// background: #313037;
+					// border: 1px solid #313037;
 				}
 
 				.campaigns-select-panel-page {
@@ -868,12 +907,12 @@
 					background: #313037;
 					color: white;
 					border-radius: 5px;
-					padding-left: 5px;
+					padding-left: 13px;
 					padding-right: 5px;
 					border: 1px solid #313037;
 					height: 40px;
 					font-size: 12px;
-					margin-top: 10px;
+					// margin-top: 10px;
 
 					&:focus {
 						border-color: rgb(0, 148, 255);
@@ -890,11 +929,14 @@
 				.campaigns-select {
 					width: 100%;
 					margin: 0;
-					margin-top: 5px;
+					// margin-top: 5px;
 				}
 
 				::-webkit-calendar-picker-indicator {
-					filter: invert(1);
+					// filter: invert(1);
+					background-image: url('../../../assets/images/date-time.svg');
+					background-repeat: no-repeat;
+					background-position: center center;
 				}
 
 				.campaigns-endDateTime-toggle {
@@ -917,6 +959,9 @@
 				}
 				.selector_box {
 					color: #d3d3d3;
+					border: 1px solid;
+					@include theme-aware('background', 'sidebar-border-color');
+					@include theme-aware('border-color', 'sidebar-border-color')
 				}
 			}
 		}

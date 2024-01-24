@@ -41,7 +41,8 @@
 
 .switch-sm {
   @extend .switch;
-  width: 28px;
+  // width: 28px;
+  flex: 0 0 28px;
   height: 15px;
 }
 

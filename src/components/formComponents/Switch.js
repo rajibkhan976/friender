@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 
 function Switch({checked,handleChange,isDisabled=false, upComing=false, handleOnBlur, smallVariant = false}) {
   return (

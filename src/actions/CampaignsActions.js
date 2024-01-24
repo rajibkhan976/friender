@@ -174,7 +174,7 @@ export const campaignSlice = createSlice({
 		},
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			console.log("action?.payload", action?.payload);
+			// console.log("action?.payload", action?.payload);
 			state.campaignsArray = action?.payload;
 		},
 		[fetchEditCampaign.pending]: (state) => {

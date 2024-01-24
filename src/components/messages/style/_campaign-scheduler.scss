@@ -1,3 +1,5 @@
+@use "../../../assets/scss/abstract/color" as *;
+
 .create-campaign-scheduler-container {
 	overflow-y: auto;
 	height: 100%;
@@ -8,7 +10,8 @@
 	}
 
 	.create-campaign-scheduler {
-		padding: 1rem;
+		// padding: 1rem;
+		padding-block: 12px;
 	}
 
 	.rbc-time-view {
@@ -110,13 +113,7 @@
 	}
 
 	.rbc-today .rbc-events-container > .rbc-event:not(.global-campaign) {
-		background: repeating-linear-gradient(
-			-45deg,
-			#605bff,
-			#605bff 10px,
-			#313037 15px,
-			#313037 25px
-		);
+		background: $clickedEventDay;
 		color: #ffffff;
 	}
 

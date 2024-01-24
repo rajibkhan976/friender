@@ -1314,10 +1314,10 @@ function PageHeader({ headerText = "" }) {
 				<div className='left-div d-flex d-flex-column'>
 					<div className='header-breadcrumb'>
 						<h2 className='d-flex'>
-							{console.log(
+							{/* {console.log(
 								"links[links.length - 1]",
 								links[links.length - 2]?.location
-							)}
+							)} */}
 							{headerText != ""
 								? headerText
 								: links.length > 0
