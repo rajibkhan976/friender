@@ -265,7 +265,7 @@ const Listing = (props) => {
 	//   }
 	// }, [selectedFrnd]);
 	//const headerCheckBoxHandler=()=>{}
-	useEffect(() => {}, []);
+	useEffect(() => { }, []);
 
 	useEffect(() => {
 		gridRef &&
@@ -466,8 +466,7 @@ const Listing = (props) => {
 
 		try {
 			Alertbox(
-				`${
-					selectedFriends.length > 1 ? "Friends" : "Friend"
+				`${selectedFriends.length > 1 ? "Friends" : "Friend"
 				} removed from Campaign successfully!`,
 				"success",
 				1000,
@@ -478,6 +477,7 @@ const Listing = (props) => {
 		}
 	}, [selectedFriends, selectedFrnd]);
 
+	// DELETE THE SELECTED CAMPAIGNS FROM ROW..
 	const deleteSelectedCampaigns = useCallback(() => {
 		// add Remove selected campaigns code here
 
@@ -585,9 +585,9 @@ const Listing = (props) => {
 	return (
 		<>
 			{selectedFriends &&
-			selectedFriends.length > 0 &&
-			selectedFrnd &&
-			selectedFrnd.length > 0 ? (
+				selectedFriends.length > 0 &&
+				selectedFrnd &&
+				selectedFrnd.length > 0 ? (
 				<div className='selection-popup d-flex f-justify-center f-align-center'>
 					<p>
 						{selectedFriends.length === gridRef.current.props.rowData.length &&
@@ -601,7 +601,7 @@ const Listing = (props) => {
 						{selectedFriends.length > 1 && "s"}{" "}
 						{selectedFriends.length > 1 ? "are" : "is"} selected.
 						{gridRef.current.props.rowData.length !== selectedFriends.length &&
-						maxSelect - Number(selectedFriends.length) > 0 ? (
+							maxSelect - Number(selectedFriends.length) > 0 ? (
 							<span>
 								Do you want to select other all{" "}
 								{maxSelect - Number(selectedFriends.length)}{" "}
@@ -650,21 +650,20 @@ const Listing = (props) => {
 				className={`ag-theme-fr-table 
             ag-theme-alpine 
             ${showPaginate ? "defaultPaginate" : ""} 
-            ${
-							selectedFriends &&
-							selectedFriends.length > 0 &&
-							selectedFrnd &&
-							selectedFrnd.length > 0
-								? "selected-options"
-								: ""
-						}
+            ${selectedFriends &&
+						selectedFriends.length > 0 &&
+						selectedFrnd &&
+						selectedFrnd.length > 0
+						? "selected-options"
+						: ""
+					}
             `}
 				style={
 					maxSelect === 0
 						? {
-								height: "inherit",
-								width: "100%",
-						  }
+							height: "inherit",
+							width: "100%",
+						}
 						: tableStyle
 				}
 			>
@@ -701,7 +700,7 @@ const Listing = (props) => {
 					tooltipHideDelay={1000000}
 					alwaysShowHorizontalScroll={true}
 					suppressMenuHide={true}
-					//onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
+				//onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
 				/>
 			</div>
 			{maxSelect !== 0 && !showPaginate ? (

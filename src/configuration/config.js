@@ -58,9 +58,10 @@ module.exports = {
     addNewMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-segment-message",
     deleteMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-segment-message",
     // campaign services
-    fetchAllCampaigns: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-user-campaigns",
-    createCampaign: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-campaign",
-    deleteCampaign: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-campaign",
-    updateCampaignStatus: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/update-campaign-status",
-    addFriendsToCampaign: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/add-friends-to-campaign"
+    fetchAllCampaignsUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-user-campaigns",
+    createCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-campaign",
+    deleteCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-campaign",
+    updateCampaignStatusUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/update-campaign-status",
+    addFriendsToCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/add-friends-to-campaign",
+    fetchCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-campaign",
 }

@@ -17,7 +17,7 @@ import {
 import {
 	updateCampaignContext,
 	updateCampaignsArray,
-} from "../../../actions/CampaignsActions";
+} from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 
@@ -53,10 +53,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			e.target.checked
 		) {
 			Alertbox(
-				`${
-					params?.data?.friends_pending === 0
-						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+				`${params?.data?.friends_pending === 0
+					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 				}`,
 				"warning",
 				3000,
@@ -74,8 +73,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			setCampaignStatus(e.target.checked);
 
 			Alertbox(
-				`The campaign has been successfully turned ${
-					e.target.checked ? "ON" : "OFF"
+				`The campaign has been successfully turned ${e.target.checked ? "ON" : "OFF"
 				}`,
 				"success",
 				3000,
@@ -88,7 +86,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			<Switch
 				checked={campaignStatus}
 				handleChange={doSomething}
-				// isDisabled={params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()}
+			// isDisabled={params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()}
 			/>
 		</div>
 	);
@@ -101,9 +99,8 @@ export const CampaignFriendsCountCellRenderer = memo((params) => {
 export const CampaignFriendsPendingCellRenderer = memo((params) => {
 	return (
 		<div
-			className={`campaign-pending-cell ${
-				params?.value === 0 ? "nothing-pending" : ""
-			}`}
+			className={`campaign-pending-cell ${params?.value === 0 ? "nothing-pending" : ""
+				}`}
 		>
 			{params?.value}
 		</div>
@@ -140,9 +137,8 @@ export const CampaignEndTimeCellRenderer = memo((params) => {
 
 	return (
 		<div
-			className={`campaign-endTime-cell ${
-				new Date() > new Date(params?.value) ? "end-time-exceeded" : ""
-			}`}
+			className={`campaign-endTime-cell ${new Date() > new Date(params?.value) ? "end-time-exceeded" : ""
+				}`}
 		>
 			{params?.value ? (
 				<>
@@ -156,18 +152,20 @@ export const CampaignEndTimeCellRenderer = memo((params) => {
 	);
 });
 
+// CAMPAIGN LIST'S OPTION MENU TO EDIT / DELETE CAMPAIGN..
 export const CampaignContextMenuCellRenderer = (params) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const campaignId = params?.data?.campaign_id;
+	const { setCampaignDeleteModalOpen, setCampaignId } = params;
 
-	const { clickedRef, isComponentVisible, setIsComponentVisible } =
-		useComponentVisible(false);
+	const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
 	const togggleContext = () => {
 		setIsComponentVisible((current) => !current);
 		dispatch(updateCampaignContext(params?.data?._id));
 	};
 
-	const editCampaign = () => {
+	const handleEditCampaignOnClick = () => {
 		try {
 			localStorage.setItem(
 				"fr_editCampaign_view",
@@ -175,7 +173,7 @@ export const CampaignContextMenuCellRenderer = (params) => {
 					mode: "settings",
 				})
 			);
-			navigate(`/messages/campaigns/${params?.data?.campaign_id}`);
+			navigate(`/messages/campaigns/${campaignId}`);
 		} catch (error) {
 			Alertbox(error, "error", 1000, "bottom-right");
 		} finally {
@@ -183,19 +181,9 @@ export const CampaignContextMenuCellRenderer = (params) => {
 		}
 	};
 
-	const deleteCampaign = () => {
-		try {
-			Alertbox(
-				`Campaign(s) has been deleted successfully.`,
-				"success",
-				1000,
-				"bottom-right"
-			);
-		} catch (error) {
-			Alertbox(error, "error", 1000, "bottom-right");
-		} finally {
-			togggleContext();
-		}
+	const handleDeleteCampaignOnClick = async () => {
+		setCampaignDeleteModalOpen(true);
+		setCampaignId(campaignId);
 	};
 
 	return (
@@ -221,7 +209,7 @@ export const CampaignContextMenuCellRenderer = (params) => {
 					<div className='context-menu'>
 						<button
 							className='btn btn-edit'
-							onClick={editCampaign}
+							onClick={handleEditCampaignOnClick}
 						>
 							<span className='context-icon'>
 								<EditIcon />
@@ -230,7 +218,7 @@ export const CampaignContextMenuCellRenderer = (params) => {
 						</button>
 						<button
 							className='btn btn-delete'
-							onClick={deleteCampaign}
+							onClick={handleDeleteCampaignOnClick}
 						>
 							<span className='context-icon'>
 								<DeleteIcon />

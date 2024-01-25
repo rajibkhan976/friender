@@ -4,15 +4,29 @@ import NumberRangeInput from "components/common/NumberRangeInput";
 import Switch from "components/formComponents/Switch";
 import DropSelector from "components/formComponents/DropSelector";
 import { fetchGroups } from "actions/MessageAction";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
+import { useParams, useNavigate } from 'react-router-dom';
+import { createCampaign, updateCampaign, fetchCampaignById } from "actions/CampaignsActions";
+import Alertbox from "components/common/Toast";
 
-const CampaignCreateEditLayout = ({ children, ...rest }) => {
+
+const CampaignCreateEditLayout = ({ children }) => {
+	const params = useParams();
 	const dispatch = useDispatch();
-	// COLLECTING THE REST PROPS ITEMS..
-	const { type = "CREATE" || "EDIT", handleClickSaveForm } = rest;
+	const navigate = useNavigate();
 
 	const [isLoadingBtn, setLoadingBtn] = useState(false);
+	const [type, setType] = useState("CREATE");
+
+	const campaignSchedule = useSelector(
+		(state) => state.campaign.campaignSchedule
+	);
+	const campaignsArray = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
+
+	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
@@ -155,6 +169,84 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 		setEndDateAndTime(formattedDate);
 	};
 
+
+	// CREATE/UPDATE CAMPAIGN FUNCTION..
+	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
+		const campaignExistsCheck = campaignsArray.findIndex(
+			(campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim()
+		);
+
+		if (campaignExistsCheck > -1) {
+			Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+			setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
+			setLoadingBtn(false);
+			return false;
+		}
+
+		try {
+			let response;
+
+			if (type === "CREATE") {
+				response = await dispatch(createCampaign(payload)).unwrap();
+			}
+			if (type === "EDIT") {
+				response = await dispatch(updateCampaign(payload)).unwrap();
+			}
+
+			if (response?.data?.length === 0) {
+				Alertbox(
+					"The campaign name is already in use, please try a different name.",
+					"error",
+					1000,
+					"bottom-right"
+				);
+				setLoadingBtn(false);
+			} else {
+				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
+				setLoadingBtn(false);
+				navigate("/messages/campaigns");
+			}
+
+		} catch (error) {
+			// Handle other unexpected errors
+			console.log("Error Catch:", error);
+			Alertbox(
+				error?.message,
+				"error",
+				1000,
+				"bottom-right"
+			);
+			setLoadingBtn(false);
+		}
+	};
+
+
+	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
+	const transformCampaignSchedulesPayload = (schedules = []) => {
+		const transformSchedules =
+			schedules?.length &&
+			schedules.map((schedule) => {
+				const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
+				const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+				const day = moment(schedule.start).format("dddd");
+
+				return {
+					day,
+					from_time: fromTime,
+					end_time: toTime,
+				};
+			});
+
+		return transformSchedules;
+	};
+
+	// HANDLE SAVED DATA FROM CHILD..
+	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
+		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
+		const payload = { ...data, fbUserId: current_fb_id, schedule: transformCampaignSchedules };
+		campaignAddOrUpdateRequestToAPI(type, payload, setLoadingBtn);
+	};
+
 	// HANDLE CLICK ON THE SAVE CAMPAIGNS..
 	const handleClickToSaveCampaign = (event) => {
 		event.preventDefault();
@@ -168,20 +260,39 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 				return false;
 			}
 
+			const campaignData = {
+				campaignName: campaignName?.value,
+				messageGroupId: groupMsgSelect?._id,
+				quickMessage: quickMsg,
+				messageLimit: msgLimit,
+				campaignEndTimeStatus: showEndDateAndTime,
+				campaignEndTime: endDateAndTime,
+				timeDelay: timeDelay,
+				campaignLabelColor: getRandomCampaignColor(),
+			};
+
+			if (type === "EDIT") {
+				campaignData.campaignId = params?.campaignId;
+			}
+
 			// TRANSFERING DATA..
-			handleClickSaveForm(
-				{
-					campaignName: campaignName?.value,
-					messageGroupId: groupMsgSelect?._id,
-					quickMessage: quickMsg,
-					messageLimit: msgLimit,
-					campaignEndTimeStatus: showEndDateAndTime,
-					campaignEndTime: endDateAndTime,
-					timeDelay: timeDelay,
-					campaignLabelColor: getRandomCampaignColor(),
-				},
-				setLoadingBtn
-			);
+			handleSavedData(type, campaignData, setLoadingBtn);
+		}
+	};
+
+	const fetchCampaignDetails = async () => {
+		try {
+			const res = await dispatch(fetchCampaignById({ fbUserId: current_fb_id, campaignId: params?.campaignId })).unwrap();
+			const data = res?.data;
+
+			if (data && data.length) {
+				console.log("MY CAMAPIGN -- ", data);
+			}
+
+		} catch (error) {
+			// Handle other unexpected errors
+			console.log("Error Catch:", error);
+			Alertbox("An unexpected error occurred. Please try again later.", "error", 1000, "bottom-right");
 		}
 	};
 
@@ -200,6 +311,12 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 			);
 	}, []);
 
+	useEffect(() => {
+		if (params?.campaignId) {
+			setType("EDIT");
+		}
+	}, [params]);
+
 	return (
 		<div className='campaigns-edit d-flex d-flex-column'>
 			{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
@@ -212,9 +329,8 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 					<input
 						type='text'
-						className={`campaigns-name-field ${
-							campaignName?.isError ? "campaigns-error-input-field" : ""
-						}`}
+						className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
+							}`}
 						placeholder={campaignName?.placeholder}
 						value={campaignName?.value}
 						onChange={handleCampaignName}
@@ -282,18 +398,17 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 
 				<div className='campaigns-input campaign-end-field'>
 					<label
-						className={`d-flex ${
-							!showEndDateAndTime
-								? "campaigns-end-dateTime-label"
-								: "campaigns-end-dateTime-label-enabled"
-						}`}
+						className={`d-flex ${!showEndDateAndTime
+							? "campaigns-end-dateTime-label"
+							: "campaigns-end-dateTime-label-enabled"
+							}`}
 					>
-							<Switch
-								// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
-								checked={showEndDateAndTime}
-								handleChange={() => setShowEndDateAndTime(!showEndDateAndTime)}
-								smallVariant
-							/>
+						<Switch
+							// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
+							checked={showEndDateAndTime}
+							handleChange={() => setShowEndDateAndTime(!showEndDateAndTime)}
+							smallVariant
+						/>
 
 						<span>End date & time</span>
 					</label>
@@ -322,7 +437,7 @@ const CampaignCreateEditLayout = ({ children, ...rest }) => {
 					onClick={handleClickToSaveCampaign}
 					disabled={campaignName.value.trim() === "" || unselectedError}
 				>
-					{isLoadingBtn ? "Loading..." : "Save campaign"}
+					{isLoadingBtn ? type === "EDIT" ? "Updating..." : "Saving..." : "Save campaign"}
 				</button>
 			</div>
 		</div>

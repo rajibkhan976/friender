@@ -70,7 +70,7 @@ const CampaignsListing = (props) => {
 		gridRef.current.api.sizeColumnsToFit();
 	}, []);
 
-	const selectionChanged = useCallback((e) => {}, []);
+	const selectionChanged = useCallback((e) => { }, []);
 
 	const onGridReady = (params) => {
 		try {
@@ -93,18 +93,17 @@ const CampaignsListing = (props) => {
 				className={`ag-theme-fr-table 
                 ag-theme-alpine 
                 ${showPaginate ? "defaultPaginate" : ""} 
-                ${
-									selectedCampaigns && selectedCampaigns.length > 0
-										? "selected-options"
-										: ""
-								}
+                ${selectedCampaigns && selectedCampaigns.length > 0
+						? "selected-options"
+						: ""
+					}
                 `}
 				style={
 					maxSelect === 0
 						? {
-								height: "inherit",
-								width: "100%",
-						  }
+							height: "inherit",
+							width: "100%",
+						}
 						: tableStyle
 				}
 			>

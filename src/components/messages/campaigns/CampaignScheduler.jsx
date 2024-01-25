@@ -40,7 +40,7 @@ const CampaignScheduler = (props) => {
 		if (Array.isArray(campaignsList)) {
 			const campaignArr = [];
 			campaignsList.forEach((campaign) => {
-				campaign?.schedule?.forEach((campaignSchedule) => {
+				Array.isArray(campaign?.schedule) && campaign?.schedule?.forEach((campaignSchedule) => {
 					campaignArr.push({
 						id: campaign.campaign_id,
 						color: campaign.campaign_label_color,
@@ -132,7 +132,7 @@ const CampaignScheduler = (props) => {
 			localizer.format(date, "dddd", culture), // Format for the day header
 	};
 
-	// console.log(campaignSchedule);
+	console.log("CAMPAIGN SCHEDULE -- ", campaignSchedule);
 
 	return (
 		<Calendar

@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchEditCampaign,
+	fetchCampaignById,
 	updateCampaignsArray,
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
@@ -107,18 +107,13 @@ const Campaigns = () => {
 	const [statusOption, setStatusOption] = useState(statusOptions);
 	const [editViews, setEditViews] = useState(editView);
 	const [isEditingCampaign, setIsEditingCampaign] = useState(null); //{isPaused: true}
+	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	const fetchAll = async () => {
 		try {
 			dispatch(fetchAllCampaigns());
 		} catch (error) {
-			Alertbox(
-				`
-                ${error} `,
-				"error",
-				3000,
-				"bottom-right"
-			);
+			Alertbox(`${error} `, "error", 3000, "bottom-right");
 		}
 	};
 
@@ -127,13 +122,13 @@ const Campaigns = () => {
 		let editCampaign = campaignsCreated?.find((el) => el?._id == editId);
 
 		try {
-			dispatch(fetchEditCampaign(editId))
+			dispatch(fetchCampaignById({ campaignId: editId, fbUserId: current_fb_id }))
 				.unwrap()
 				.then((res) => {
 					if (res) {
 						// console.log('fetching Edit item', res?.data);
-						editCampaign = { ...editCampaign, ...res?.data };
-						console.log("editCampaign >>>>>>>>>>>>", editCampaign);
+						editCampaign = { ...editCampaign, ...res?.data[0] };
+						console.log("editCampaign >>>>>>>>>>>> ", editCampaign);
 						setIsEditingCampaign(editCampaign);
 					}
 				});
@@ -209,8 +204,7 @@ const Campaigns = () => {
 				status: checkedValue,
 			});
 			Alertbox(
-				`The campaign has been successfully turned ${
-					checkedValue ? "ON" : "OFF"
+				`The campaign has been successfully turned ${checkedValue ? "ON" : "OFF"
 				}`,
 				"success",
 				3000,
@@ -235,11 +229,11 @@ const Campaigns = () => {
 		// Check for campaign status
 		switch (statusOption?.find((e) => e.selected)?.value) {
 			case "active":
-				campaignsResult = campaignsResult?.filter((el) => el?.status);
+				campaignsResult = campaignsResult?.filter((el) => el?.campaign_status);
 				break;
 
 			case "inactive":
-				campaignsResult = campaignsResult?.filter((el) => !el?.status);
+				campaignsResult = campaignsResult?.filter((el) => !el?.campaign_status);
 				break;
 
 			default:

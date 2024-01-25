@@ -1,7 +1,7 @@
 import { memo, useContext, useEffect, useState } from "react";
 import { CampaignContext } from "../../index";
 
-import { updateCampaignsArray } from "../../../../actions/CampaignsActions";
+import { updateCampaignsArray, deleteCampaign } from "actions/CampaignsActions";
 import {
 	CampaignNameCellRenderer,
 	CampaignStatusCellRenderer,
@@ -12,10 +12,18 @@ import {
 	CampaignFriendsPendingCellRenderer,
 } from "../../../../components/messages/campaigns/CampaignListingColumns";
 import Listing from "../../../../components/common/Listing";
+import Modal from "components/common/Modal";
+import { DangerIcon } from "assets/icons/Icons";
+import { useDispatch } from 'react-redux';
+import Alertbox from "components/common/Toast";
+
 
 const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
+	const dispatch = useDispatch();
 	const [isReset, setIsReset] = useState(null);
 	const { setCampaignViewMode } = useContext(CampaignContext);
+	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] = useState(false);
+	const [campaignId, setCampaignId] = useState('');
 
 	useEffect(() => {
 		setCampaignViewMode("campaignList");
@@ -76,11 +84,59 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			suppressSorting: true,
 			sortable: false,
 			lockPosition: "right",
+			cellRendererParams: {
+				isCampaignDeleteModalOpen,
+				setCampaignDeleteModalOpen,
+				setCampaignId
+			}
 		},
 	];
 
+	// DELETE CAMPAIGN API REQUEST..
+	const campaignDeleteAPIReq = async(id) => {
+		try {
+			const response = await dispatch(deleteCampaign([{ campaignId: id }])).unwrap();
+
+			if (response?.data) {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(`Campaign(s) has been deleted successfully.`, "success", 1000, "bottom-right");
+
+			} else if (response?.error?.code === "bad_request") {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(`${response?.error?.message}`, "error", 1000, "bottom-right");
+
+			} else {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(`Failed to delete the campaign. Please check your input and try again.`, "error", 1000, "bottom-right");
+			}
+
+		} catch (error) {
+			setCampaignDeleteModalOpen(false);
+			Alertbox(error, "error", 1000, "bottom-right");
+		} finally {
+			setCampaignDeleteModalOpen(false);
+		}
+	};
+
+	useEffect(() => {
+		// console.log('CHANGED IN CAMPAIGN ::::', campaignsCreated);
+	}, [campaignsCreated]);
+
 	return (
 		<div className='campaigns-listing h-100 d-flex d-flex-column'>
+			<Modal
+				modalType='DELETE'
+				headerText={"Delete"}
+				bodyText={"Are you sure you want to delete ?"}
+				open={isCampaignDeleteModalOpen}
+				setOpen={setCampaignDeleteModalOpen}
+				ModalFun={() => {
+					campaignDeleteAPIReq(campaignId);
+				}}
+				btnText={"Yes, Delete"}
+				ModalIconElement={() => <DangerIcon />}
+				additionalClass={`campaign-view-details-delete-modal`}
+			/>
 			{/* <CampaignsListing
                 campaignsData={campaignsCreated}
                 campaignsListingRef={campaignsListingRef}

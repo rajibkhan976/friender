@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
-	fetchClickedCampaign,
+	fetchCampaign,
 	fetchAllCampaign,
 	createOrUpdateCampaignService,
 	updateCampaignStatusService,
+	deleteCampaignService,
 } from "../services/campaigns/CampaignServices";
 
 const initialState = {
@@ -142,11 +143,19 @@ export const updateCampaignStatus = createAsyncThunk(
 	}
 );
 
-export const fetchEditCampaign = createAsyncThunk(
+export const fetchCampaignById = createAsyncThunk(
 	"messages/getCampaign",
 	async (payload) => {
-		const res = await fetchClickedCampaign(payload);
+		const res = await fetchCampaign(payload);
 		return res;
+	}
+);
+
+export const deleteCampaign = createAsyncThunk(
+	"messages/deleteCampaign",
+	async (payload) => {
+		const res = await deleteCampaignService(payload);
+		return {...res, campaignId: payload[0]?.campaignId};
 	}
 );
 
@@ -177,14 +186,94 @@ export const campaignSlice = createSlice({
 			// console.log("action?.payload", action?.payload);
 			state.campaignsArray = action?.payload;
 		},
-		[fetchEditCampaign.pending]: (state) => {
+		[fetchAllCampaigns.rejected]: (state) => {
+			state.isLoading = false;
+		},
+
+		[fetchCampaignById.pending]: (state) => {
 			state.isLoading = true;
 		},
-		[fetchEditCampaign.fulfilled]: (state, action) => {
+		[fetchCampaignById.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.editingCampaign = action?.payload?.data
-				? action?.payload?.data
+			console.log("ACTION PAYLOAD DATA -- ", action?.payload?.data);
+			state.editingCampaign = action?.payload?.data?.length
+				? action?.payload?.data[0]
 				: null;
+
+			console.log("Checking the State -- ", state.editingCampaign);
+		},
+		[fetchCampaignById.rejected]: (state) => {
+			state.isLoading = false;
+		},
+
+		[createCampaign.pending]: (state) => {
+			state.isLoading = false;
+		},
+		[createCampaign.fulfilled]: (state, action) => {
+			// PlaceholderArray id is -> campaign_id..
+			// Action payload id is -> _id..
+			const placeholderArray = current(state.campaignsArray);
+			let newAdd = true;
+
+			placeholderArray.forEach((campaign) => {
+				if (campaign?.campaign_id === action?.payload?.campaign_id) {
+					newAdd = false;
+				}
+			});
+
+			if (newAdd) {
+				state.campaignsArray = [ action?.payload?.data, ...state.campaignsArray];
+			} else {
+				state.campaignsArray = action?.payload?.data ? placeholderArray.map((el) => el.campaign_id === action.payload.data._id) : placeholderArray;
+			}
+
+			state.isLoading = false;
+		},
+		[createCampaign.rejected]: (state) => {
+			state.isLoading = false;
+		},
+
+		[updateCampaign.pending]: (state) => {
+			state.isLoading = false;
+		},
+
+		[updateCampaign.fulfilled]: (state, action) => {
+			// PlaceholderArray id is -> campaign_id..
+			// Action payload id is -> _id..
+			const placeholderArray = current(state.campaignsArray);
+			state.campaignsArray = placeholderArray.map((campaign) => {
+				if (campaign?.campaign_id === action?.payload?.data?._id) {
+					return {
+						...campaign,
+						...action?.payload?.data,
+					};
+				}
+				return campaign;
+			});
+			state.isLoading = false;
+		},
+		[updateCampaign.rejected]: (state) => {
+			state.isLoading = false;
+		},
+
+		[deleteCampaign.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[deleteCampaign.fulfilled]: (state, action) => {
+			const placeholderArray = current(state.campaignsArray);
+			state.campaignsArray = placeholderArray.map((campaign) => {
+				if (campaign?.campaign_id === action?.payload?.campaignId) {
+					return {
+						...campaign,
+						campaign_status: false,
+					};
+				}
+				return campaign;
+			});
+			state.isLoading = false;
+		},
+		[deleteCampaign.rejected]: (state) => {
+			state.isLoading = false;
 		},
 	},
 });
