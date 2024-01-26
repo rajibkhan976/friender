@@ -10,6 +10,11 @@ const CampaignsCalendar = () => {
 	);
 	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
 	const [open, setOpen] = useState(false);
+	const [scheduleTime, setScheduleTime] = useState({
+		date: new Date(),
+		start: "12:00 am",
+		end: "12:30 am",
+	});
 	const { setCampaignViewMode } = useContext(CampaignContext);
 
 	useEffect(() => {
@@ -23,7 +28,9 @@ const CampaignsCalendar = () => {
 					<CalenderModal
 						type={calendarModalType}
 						open={open}
+						scheduleTime={scheduleTime}
 						setOpen={setOpen}
+						setScheduleTime={setScheduleTime}
 					/>
 				)}
 				<CampaignScheduler

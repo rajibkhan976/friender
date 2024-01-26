@@ -837,7 +837,7 @@
 						font-size: 12px;
 						// color: #767485;
 						margin-bottom: 4px;
-						@include theme-aware('color', 'link-text-color');
+						@include theme-aware("color", "link-text-color");
 					}
 
 					label.campaigns-end-dateTime-label {
@@ -853,8 +853,8 @@
 						position: inherit;
 					}
 
-					&.campaign-name-field, 
-					&.campaign-message-field, 
+					&.campaign-name-field,
+					&.campaign-message-field,
 					&.campaign-end-field {
 						flex: 1 0 200px;
 
@@ -865,7 +865,7 @@
 
 					&:not(:first-child) {
 						&:before {
-							content: '';
+							content: "";
 							position: absolute;
 							left: 0;
 							margin-left: -46px;
@@ -873,7 +873,7 @@
 							height: 60px;
 							top: 50%;
 							transform: translateY(-50%);
-							@include theme-aware('background', 'sidebar-border-color');
+							@include theme-aware("background", "sidebar-border-color");
 						}
 					}
 				}
@@ -886,11 +886,12 @@
 				.campaigns-select-panel {
 					margin: 0;
 					height: 40px;
-					@include theme-aware('background', 'sidebar-border-color');
+					@include theme-aware("background", "sidebar-border-color");
 					border: 1px solid;
-					@include theme-aware('border-color', 'sidebar-border-color')
-					// background: #313037;
-					// border: 1px solid #313037;
+					@include theme-aware("border-color", "sidebar-border-color")
+						// background: #313037;
+						// border: 1px solid #313037;
+;
 				}
 
 				.campaigns-select-panel-page {
@@ -934,7 +935,7 @@
 
 				::-webkit-calendar-picker-indicator {
 					// filter: invert(1);
-					background-image: url('../../../assets/images/date-time.svg');
+					background-image: url("../../../assets/images/date-time.svg");
 					background-repeat: no-repeat;
 					background-position: center center;
 				}
@@ -960,8 +961,8 @@
 				.selector_box {
 					color: #d3d3d3;
 					border: 1px solid;
-					@include theme-aware('background', 'sidebar-border-color');
-					@include theme-aware('border-color', 'sidebar-border-color')
+					@include theme-aware("background", "sidebar-border-color");
+					@include theme-aware("border-color", "sidebar-border-color");
 				}
 			}
 		}

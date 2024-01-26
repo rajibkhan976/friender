@@ -421,7 +421,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 							visibility: !showEndDateAndTime ? "hidden" : "visible",
 						}}
 						onChange={handleChangeEndDateAndTime}
-						placeholder="Choose date & time"
+						placeholder='Choose date & time'
 					/>
 				</div>
 			</div>

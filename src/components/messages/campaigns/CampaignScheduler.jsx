@@ -11,6 +11,12 @@ import { utils } from "../../../helpers/utils";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../style/_campaign-scheduler.scss";
 
+moment.locale("en-us", {
+	week: {
+		dow: 1,
+		doy: 1,
+	},
+});
 const localizer = momentLocalizer(moment);
 
 const CustomWeekViewHeader = ({ date }) => {
@@ -38,33 +44,84 @@ const CampaignScheduler = (props) => {
 
 	useEffect(() => {
 		if (Array.isArray(campaignsList)) {
+			console.log(campaignsList);
 			const campaignArr = [];
 			campaignsList.forEach((campaign) => {
-				Array.isArray(campaign?.schedule) && campaign?.schedule?.forEach((campaignSchedule) => {
-					campaignArr.push({
-						id: campaign.campaign_id,
-						color: campaign.campaign_label_color,
-						title: campaign?.campaign_name,
-						start: new Date(campaignSchedule?.from_time),
-						end: new Date(campaignSchedule?.to_time),
+				Array.isArray(campaign?.schedule) &&
+					campaign?.schedule.forEach((campaignSchedule) => {
+						campaignArr.push({
+							id: campaign.campaign_id,
+							color: campaign.campaign_label_color,
+							title: campaign?.campaign_name,
+							start: new Date(campaignSchedule?.from_time),
+							end: new Date(campaignSchedule?.to_time),
+						});
 					});
-				});
+				const updatedCampaignSchedule = [...campaignArr];
+				dispatch(updateCampaignSchedule(updatedCampaignSchedule));
 			});
-			const updatedCampaignSchedule = [...campaignArr];
-			dispatch(updateCampaignSchedule(updatedCampaignSchedule));
 		}
 	}, []);
 
+	const groupedCampaignList = useMemo(() => {
+		const groupedCampaignByDateNTime = [];
+		Array.isArray(campaignSchedule) &&
+			campaignSchedule.forEach((campaign) => {
+				const campaignTitleArr = [];
+				campaignSchedule.forEach((schedule, index) => {
+					if (
+						Date.parse(campaign.start) === Date.parse(schedule.start) &&
+						Date.parse(campaign.end) === Date.parse(schedule.end)
+					) {
+						campaignTitleArr.push(
+							<div
+								key={index}
+								style={{
+									width: "100%",
+									backgroundColor: `${utils.hex2rgb(
+										schedule.color
+									)} !important`,
+									borderLeft: `4px solid ${schedule.color}`,
+									fontSize: "12px",
+									fontWeight: "500",
+									lineHeight: "17px",
+									color: "rgba(240, 239, 255, 1)",
+								}}
+							>
+								{schedule.title}
+							</div>
+						);
+					}
+				});
+				if (campaignTitleArr.length > 0) {
+					groupedCampaignByDateNTime.push({
+						id: campaign.campaign_id,
+						title: campaignTitleArr,
+						start: new Date(campaign.start),
+						end: new Date(campaign.end),
+					});
+				} else {
+					groupedCampaignByDateNTime.push({
+						id: campaign.campaign_id,
+						title: campaign.title,
+						start: new Date(campaign.start),
+						end: new Date(campaign.end),
+					});
+				}
+			});
+		return groupedCampaignByDateNTime;
+	}, [campaignSchedule]);
+
+	console.log(groupedCampaignList);
+
 	const components = useMemo(
 		() => ({
-			// eventWrapper: CustomEventWrapper,
 			week: {
 				header: CustomWeekViewHeader,
 				toolbar: () => null, // Override the toolbar to render nothing,
-				event: CustomEventWrapper,
 			},
 		}),
-		[campaignSchedule, campaignViewMode]
+		[]
 	);
 
 	const eventPropGetter = useCallback((event, start, end, isSelected) => {
@@ -85,17 +142,15 @@ const CampaignScheduler = (props) => {
 	}, []);
 
 	const handleSelectEvent = (event, e) => {
-		// console.log("selected envet", event);
+		console.log("selected envet", event);
 		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
 		dispatch(updateSelectedCampaignSchedule(event));
 		campaignViewMode === "campaignCalendar" && handleSetShowPopup(true);
 	};
 
 	const handleSelectSlot = (slotInfo) => {
-		// console.log("handle slot", slotInfo);
+		console.log("handle slot", slotInfo);
 		const { start, end } = slotInfo;
-		// Update the selected event with the new start and end times
-		// if (selectedEvent) {
 		const selectedSchedules = [];
 		selectedSchedules.push({
 			start: start,
@@ -111,13 +166,10 @@ const CampaignScheduler = (props) => {
 			  });
 		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
 		handleSetShowPopup(true);
-		// console.log(selectedSchedules);
-		// Update the events array with the new start and end times
-		// This is where you would typically make an API call to update the server
+		// console.log(selectedSchedules)
 		const updatedCampaignSchedule = [...campaignSchedule, ...selectedSchedules];
 		dispatch(updateCampaignSchedule(updatedCampaignSchedule));
 		dispatch(updateSelectedCampaignSchedule(null));
-		// }
 	};
 
 	const formats = {

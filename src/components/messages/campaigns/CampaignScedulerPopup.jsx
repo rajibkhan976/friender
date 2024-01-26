@@ -1,18 +1,34 @@
 import { createPortal } from "react-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateCampaignSchedule } from "../../../actions/CampaignsActions";
 import moment from "moment";
 import DropSelector from "../../formComponents/DropSelector";
 
 const CampaignSchedulerPopup = (props) => {
-	const {
-		endTime,
-		setEndTime,
-		handleSetShowPopup,
-		popupCoordPos,
-		startTime,
-		setStartTime,
-	} = props;
-	const weekdaysArr = moment.weekdays();
-	const today = moment().format("dddd");
+	const { handleSetShowPopup, popupCoordPos, scheduleTime, setScheduleTime } =
+		props;
+	const dispatch = useDispatch();
+	const campaignSchedule = useSelector(
+		(state) => state.campaign.campaignSchedule
+	);
+	const weekdaysArr = [
+		{
+			day: moment().startOf("W").format("dddd"),
+			date: moment().startOf("W"),
+		},
+	];
+	let iterator = 1;
+	const buildOnWeekdaysArr = () => {
+		weekdaysArr.push({
+			day: moment().startOf("W").add("d", iterator).format("dddd"),
+			date: moment().startOf("W").add("d", iterator),
+		});
+		iterator++;
+		if (iterator < 7) {
+			buildOnWeekdaysArr();
+		}
+	};
+	buildOnWeekdaysArr();
 
 	const timeOptions = [
 		{
@@ -238,11 +254,54 @@ const CampaignSchedulerPopup = (props) => {
 	];
 
 	const onChangeStartingTime = (event) => {
-		setStartTime(event.target.value);
+		setScheduleTime(() => {
+			return {
+				...scheduleTime,
+				start: event.target.value,
+			};
+		});
 	};
 
 	const onChangeEndingTime = (event) => {
-		setEndTime(event.target.value);
+		if (
+			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
+			timeOptions.findIndex((item) => item.value === event.target.value)
+		) {
+			setScheduleTime(() => {
+				return {
+					...scheduleTime,
+					end: event.target.value,
+				};
+			});
+		}
+	};
+
+	const handleSaveCampaignSchedule = () => {
+		let campaignScheduleArr = Array.isArray(campaignSchedule)
+			? campaignSchedule.map((item) => item)
+			: [];
+		campaignScheduleArr.pop();
+		if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
+			const date = moment(scheduleTime.date).format("MMMM DD, YYYY");
+			campaignScheduleArr = [
+				...campaignScheduleArr,
+				{
+					start: new Date(`${date} ${scheduleTime.start}`),
+					end: new Date(`${date} ${scheduleTime.end}`),
+				},
+			];
+			dispatch(updateCampaignSchedule(campaignScheduleArr));
+			handleSetShowPopup(false);
+		}
+	};
+
+	const handleCancleCampaignCreation = () => {
+		let campaignScheduleArr = Array.isArray(campaignSchedule)
+			? campaignSchedule.map((item) => item)
+			: [];
+		campaignScheduleArr.pop();
+		dispatch(updateCampaignSchedule(campaignScheduleArr));
+		handleSetShowPopup(false);
 	};
 
 	return createPortal(
@@ -256,16 +315,25 @@ const CampaignSchedulerPopup = (props) => {
 			<div className='campaign-scheduler-popup-header'>
 				<div className='scheduler-popup-header-txt'>Choose days</div>
 				<div className='scheduler-popup-header-content'>
-					{weekdaysArr?.map((day, index) => (
+					{weekdaysArr?.map((week, index) => (
 						<div
 							key={index}
 							className={`popup-header-content-item ${
-								today.substring(0, 2) === day.substring(0, 2)
+								moment(scheduleTime.date).format("dddd").substring(0, 2) ===
+								week.day.substring(0, 2)
 									? "today-circle"
 									: ""
 							}`}
+							onClick={() =>
+								setScheduleTime(() => {
+									return {
+										...scheduleTime,
+										date: week.date,
+									};
+								})
+							}
 						>
-							{day.substring(0, 2)}
+							{week.day.substring(0, 2)}
 						</div>
 					))}
 				</div>
@@ -277,7 +345,7 @@ const CampaignSchedulerPopup = (props) => {
 						selects={timeOptions}
 						id='start-time-span'
 						defaultValue={
-							timeOptions?.find((el) => el.value === startTime)?.value
+							timeOptions?.find((el) => el.value === scheduleTime?.start)?.value
 						}
 						extraClass='fr-select-new tinyWrap'
 						height='40px'
@@ -289,7 +357,7 @@ const CampaignSchedulerPopup = (props) => {
 						selects={timeOptions}
 						id='end-time-span'
 						defaultValue={
-							timeOptions?.find((el) => el.value === endTime)?.value
+							timeOptions?.find((el) => el.value === scheduleTime?.end)?.value
 						}
 						extraClass='fr-select-new tinyWrap'
 						height='40px'
@@ -310,6 +378,7 @@ const CampaignSchedulerPopup = (props) => {
 				<button
 					type='button'
 					className='scheduler-popup-save-btn'
+					onClick={handleSaveCampaignSchedule}
 				>
 					Save
 				</button>

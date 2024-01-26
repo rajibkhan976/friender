@@ -1,40 +1,50 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+import moment from "moment";
 
-const DayChooseBalls = ({ customStylesClass = '' }) => {
-    const today = moment().format("dddd");
-    const weekdaysArr = moment.weekdays();
-    const [selectedDays, setSelectedDays] = useState([]);
+const DayChooseBalls = ({ scheduleTime, setScheduleTime }) => {
+	const weekdaysArr = [
+		{
+			day: moment().startOf("W").format("dddd"),
+			date: moment().startOf("W"),
+		},
+	];
+	let iterator = 1;
+	const buildOnWeekdaysArr = () => {
+		weekdaysArr.push({
+			day: moment().startOf("W").add("d", iterator).format("dddd"),
+			date: moment().startOf("W").add("d", iterator),
+		});
+		iterator++;
+		if (iterator < 7) {
+			buildOnWeekdaysArr();
+		}
+	};
+	buildOnWeekdaysArr();
 
-    const toggleDay = (day) => {
-        const newSelectedDays = [...selectedDays];
-        const index = newSelectedDays.indexOf(day);
-        if (index === -1) {
-            // Day is not selected, add it to the selection
-            newSelectedDays.push(day);
-        } else {
-            // Day is selected, remove it from the selection
-            newSelectedDays.splice(index, 1);
-        }
-        setSelectedDays(newSelectedDays);
-    };
-
-    console.log("SELECTED DAYS - ", selectedDays);
-
-    return (
-        <div className='scheduler-popup-header-content'>
-            {weekdaysArr?.map((day, index) => (
-                <div
-                    key={index}
-                    className={`popup-header-content-item ${customStylesClass ? customStylesClass : ''} ${today.substring(0, 2) === day.substring(0, 2) ? "today-circle" : ""
-                        } ${selectedDays.includes(day) ? "selected" : ""}`}
-                    onClick={() => toggleDay(day)}
-                >
-                    {day.substring(0, 2)}
-                </div>
-            ))}
-        </div>
-    );
+	return (
+		<div className='scheduler-popup-header-content'>
+			{weekdaysArr.map((week, index) => (
+				<div
+					key={index}
+					className={`popup-header-content-item ${
+						moment(scheduleTime.date).format("dddd").substring(0, 2) ===
+						week.day.substring(0, 2)
+							? "today-circle"
+							: ""
+					}`}
+					onClick={() =>
+						setScheduleTime(() => {
+							return {
+								...scheduleTime,
+								date: week.date,
+							};
+						})
+					}
+				>
+					{week.day.substring(0, 2)}
+				</div>
+			))}
+		</div>
+	);
 };
 
 export default DayChooseBalls;

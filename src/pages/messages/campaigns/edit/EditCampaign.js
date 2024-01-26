@@ -29,8 +29,11 @@ const EditCampaign = () => {
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
+	const [scheduleTime, setScheduleTime] = useState({
+		date: new Date(),
+		start: "12:00 am",
+		end: "12:30 am",
+	});
 	const [showPopup, setShowPopup] = useState(false);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 	const { setCampaignViewMode } = useContext(CampaignContext);
@@ -97,7 +100,7 @@ const EditCampaign = () => {
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
-				console.log('here');
+				console.log("here");
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -118,18 +121,16 @@ const EditCampaign = () => {
 					</>
 				);
 			} else {
-				console.log('here');
+				console.log("here");
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
 							{showPopup && (
 								<CampaignSchedulerPopup
-									endTime={endTime}
 									handleSetShowPopup={(status) => setShowPopup(status)}
 									popupCoordPos={popupCoordPos}
-									setEndTime={setEndTime}
-									startTime={startTime}
-									setStartTime={setStartTime}
+									scheduleTime={scheduleTime}
+									setScheduleTime={setScheduleTime}
 								/>
 							)}
 							<CampaignScheduler
@@ -202,9 +203,7 @@ const EditCampaign = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{
-				console.log('loading', loading)
-			}
+			{console.log("loading", loading)}
 			{loading ? <ListingLoader /> : renderComponentsView()}
 		</>
 	);

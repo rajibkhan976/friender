@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { XMarkIcon } from "assets/icons/Icons";
 import DropSelectMessage from "components/messages/DropSelectMessage";
 import DropSelector from "components/formComponents/DropSelector";
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	createCampaign,
 	updateCampaign,
+	updateCampaignSchedule,
 	updateCampaignStatus,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +29,13 @@ import Modal from "components/common/Modal";
 import Alertbox from "components/common/Toast";
 import moment from "moment";
 
-const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
+const CalenderModal = ({
+	type = "CREATE_CAMPAIGN",
+	open = false,
+	setOpen,
+	scheduleTime,
+	setScheduleTime,
+}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [calenderModalOpen, setCalenderModalOpen] = useState(open);
@@ -359,10 +366,26 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 
 	// TIME DURATIONS..
 	const onChangeStartingTime = (event) => {
-		setStartTime(event.target.value);
+		setScheduleTime(() => {
+			return {
+				...scheduleTime,
+				start: event.target.value,
+			};
+		});
 	};
+
 	const onChangeEndingTime = (event) => {
-		setEndTime(event.target.value);
+		if (
+			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
+			timeOptions.findIndex((item) => item.value === event.target.value)
+		) {
+			setScheduleTime(() => {
+				return {
+					...scheduleTime,
+					end: event.target.value,
+				};
+			});
+		}
 	};
 
 	// HANDLE MESSAGE LIMIT/24HR INPUT..
@@ -525,6 +548,22 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 			// UNHANDLED VALUES.. TIME DURATIONS,
 			console.log("START - END TIME DURATIONS - ", startTime, endTime);
 
+			let campaignScheduleArr = Array.isArray(campaignSchedule)
+				? campaignSchedule.map((item) => item)
+				: [];
+			campaignScheduleArr.pop();
+			if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
+				const date = moment(scheduleTime.date).format("MMMM DD, YYYY");
+				campaignScheduleArr = [
+					...campaignScheduleArr,
+					{
+						start: new Date(`${date} ${scheduleTime.start}`),
+						end: new Date(`${date} ${scheduleTime.end}`),
+					},
+				];
+				dispatch(updateCampaignSchedule(campaignScheduleArr));
+			}
+
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
 				setLoadingBtn(false);
@@ -565,6 +604,15 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 			);
 	}, []);
 
+	const handleCancleCampaignCreation = () => {
+		let campaignScheduleArr = Array.isArray(campaignSchedule)
+			? campaignSchedule.map((item) => item)
+			: [];
+		campaignScheduleArr.pop();
+		dispatch(updateCampaignSchedule(campaignScheduleArr));
+		setOpen(false);
+	};
+
 	// useEffect(() => {
 	//     if (quickMsgModalOpen === true) {
 	//         setCalenderModalOpen(false);
@@ -580,10 +628,7 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 				<div className='modal-content-wraper'>
 					<span
 						className='close-modal campaign-close-modal'
-						onClick={() => {
-							setOpen(false);
-							setCalenderModalOpen(false);
-						}}
+						onClick={handleCancleCampaignCreation}
 					>
 						<XMarkIcon color='lightgray' />
 					</span>
@@ -684,7 +729,10 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 								<label>Choose day(s)</label>
 
 								<div className='ml'>
-									<DayChooseBalls />
+									<DayChooseBalls
+										scheduleTime={scheduleTime}
+										setScheduleTime={setScheduleTime}
+									/>
 								</div>
 							</div>
 						</div>
@@ -756,7 +804,7 @@ const CalenderModal = ({ type = "CREATE_CAMPAIGN", open = false, setOpen }) => {
 					>
 						<button
 							className='btn btn-grey'
-							onClick={() => setOpen(false)}
+							onClick={handleCancleCampaignCreation}
 						>
 							Cancel
 						</button>
