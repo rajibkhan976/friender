@@ -14,19 +14,41 @@
   background: transparent;
   width: 103px;
   height: 40px;
+  position: relative;
   cursor: pointer;
   padding: 10px 15px 8px 15px;
   width: 120px;
   height: 30px;
   border: 1px solid #999;
+
   font-size: 18px;
   @include theme-aware("background-color", "listing-cell-bg");
   border: 1px solid #767485;
   border-radius: 5px;
   @include theme-aware("color", "link-text-color");
+  display:flex;
+  align-items: center;
   font: {
     weight: 400;
     size: 14px;
+  }
+  .selector_box_options{
+    position: absolute;
+    @include theme-aware("color", "link-text-color");
+    @include theme-aware("background-color", "table-row-hover-bg");
+    width: 100%;
+    top:40px;
+    left:0;
+    z-index: 1;
+    padding-left: 20px;
+    padding: 5px 0 10px 20px;
+    border-radius: 0 0 5px 5px;
+    li{
+      margin: 5px 0 5px 0;
+      &:hover{
+        @include theme-aware("color", "btn-hover-text");
+      }
+    }
   }
 
   &:disabled {

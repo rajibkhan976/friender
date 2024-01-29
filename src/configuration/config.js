@@ -5,7 +5,7 @@ appAuth = env.REACT_APP_AUTH,
 appEnv = env.REACT_APP_ENV,
 profileService = env.REACT_APP_PROFILE_SERVICE,
 messageService = env.REACT_APP_MESSAGE_SERVICE,
-campaignService = env.REACT_APP_CAMPAIGNS_SERVICE
+campaignService = env.REACT_APP_CAMPAIGN_SERVICE
 
 module.exports = {
     appUrl: process.env.REACT_APP_APP_URL,
@@ -62,6 +62,6 @@ module.exports = {
     createCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-campaign",
     deleteCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-campaign",
     updateCampaignStatusUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/update-campaign-status",
-    addFriendsToCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/add-friends-to-campaign",
+    addUsersToCampaignUrlUrl:`https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/add-friends-to-campaign`,
     fetchCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-campaign",
 }

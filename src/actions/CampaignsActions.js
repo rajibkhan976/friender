@@ -4,6 +4,7 @@ import {
 	fetchAllCampaign,
 	createOrUpdateCampaignService,
 	updateCampaignStatusService,
+	addUsersToCampaignService,
 	deleteCampaignService,
 } from "../services/campaigns/CampaignServices";
 
@@ -119,7 +120,7 @@ export const fetchAllCampaigns = createAsyncThunk(
 );
 
 export const createCampaign = createAsyncThunk(
-	"messages/addCampaign",
+	"campaigns/addCampaign",
 	async (payload) => {
 		const res = await createOrUpdateCampaignService(payload);
 		console.log(res);
@@ -128,7 +129,7 @@ export const createCampaign = createAsyncThunk(
 );
 
 export const updateCampaign = createAsyncThunk(
-	"messages/updateCampaign",
+	"campaigns/updateCampaign",
 	async (payload) => {
 		const res = await createOrUpdateCampaignService(payload);
 		return res;
@@ -136,7 +137,7 @@ export const updateCampaign = createAsyncThunk(
 );
 
 export const updateCampaignStatus = createAsyncThunk(
-	"messages/updateCampaignStatus",
+	"campaigns/updateCampaignStatus",
 	async (payload) => {
 		const res = await updateCampaignStatusService(payload);
 		return res;
@@ -144,12 +145,20 @@ export const updateCampaignStatus = createAsyncThunk(
 );
 
 export const fetchCampaignById = createAsyncThunk(
-	"messages/getCampaign",
+	"campaigns/getCampaign",
 	async (payload) => {
 		const res = await fetchCampaign(payload);
 		return res;
 	}
 );
+
+export const addUsersToCampaign=createAsyncThunk(
+		"campaigns/addUsersToCampaign",
+		async(payload)=>{
+			const res=await addUsersToCampaignService(payload);
+			return res;
+		}
+)
 
 export const deleteCampaign = createAsyncThunk(
 	"messages/deleteCampaign",
@@ -160,7 +169,7 @@ export const deleteCampaign = createAsyncThunk(
 );
 
 export const campaignSlice = createSlice({
-	name: "campaign",
+	name: "campaigns",
 	initialState,
 	reducers: {
 		updateCampaignContext: (state, action) => {

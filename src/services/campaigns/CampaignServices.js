@@ -90,6 +90,19 @@ export const updateCampaignStatusService = (campaignData) => {
 	});
 };
 
+export const  addUsersToCampaignService=(payload)=>{
+	return new Promise((resolve,reject)=>{
+		axios.post(config.addUsersToCampaignUrl,payload,{
+			headers: headers,
+		}).then((res)=>{
+			resolve(res.data);
+		}).catch((err)=>{
+			reject(err);
+		})
+
+	});
+}
+
 /**
  * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
  * @param {Object} campaignData 

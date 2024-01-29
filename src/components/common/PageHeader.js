@@ -52,6 +52,7 @@ import useComponentVisible from "../../helpers/useComponentVisible";
 import ToolTipPro from "./ToolTipPro";
 import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
+import { addUsersToCampaign } from "../../actions/CampaignsActions";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -198,10 +199,17 @@ function PageHeader({ headerText = "" }) {
 	const [runningUnfriend, setRunningUnfriend] = useState(false);
 	const [isAddingToCampaign, setIsAddingToCampaign] = useState(false);
 	const [selectedCampaign, setSelectedCampaign] = useState("Select");
-	const campaignsCreated = useSelector((state) => state.message.campaignsArray);
-	// const onChangeHandler = useCallback((e) => {
-	//   //console.log(e);
-	// }, []);
+	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
+	const [campaignListSelector,setCampaignListSelector]=useState(false);
+	const [selectedCampaignName,setSelectedCampaignName]=useState("Select");
+
+	
+	useEffect(()=>{
+		setSelectedCampaign("Select");
+		setCampaignListSelector(false);
+		setSelectedCampaignName("Select");
+
+	},[isAddingToCampaign])
 	useEffect(() => {
 		if (!modalOpen) {
 			setWhiteCountInUnfriend(null);
@@ -684,6 +692,13 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
+	const campaignSelectFun=(item)=>{
+		//console.log("camo sele",item)
+		setSelectedCampaignName(item?.campaign_name)
+		setSelectedCampaign(item.campaign_id)
+	
+	}
+
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		// console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
 		if (!unfriendableList?.length > 0) {
@@ -1123,22 +1138,47 @@ function PageHeader({ headerText = "" }) {
 		const listWithOutBlacklisted = selectedFriends.filter((item) => {
 			return item.blacklist_status !== 1;
 		});
+		console.log("list ou black",listWithOutBlacklisted)
 		AddToCampaign(listWithOutBlacklisted);
 	};
 
 	// Add selected / forwarded friends to campaign
-	const AddToCampaign = (addFriendsToCampaign = selectedFriends) => {
-		console.log("FRIENDS SELECTED :::::::::");
+	const AddToCampaign = (addFriendsToCampaign) => {
+		//dispatch(removeSelectedFriends());
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
+			let payload={
+				"campaignId":selectedCampaign,
+				"facebookUserId":localStorage.getItem("fr_default_fb"),
+				"friend_details":addFriendsToCampaign.map((item)=>{
+						return {
+							"friendFbId": item.friendFbId?item.friendFbId:null,
+							"friendAddedAt": item.created_at?item.created_at:null,
+							"finalSource": item.created_at?item.created_at:null,
+							"friendName": item.friendName?item.friendName:null,
+							"friendProfilePicture": item.friendProfilePicture?item.friendProfilePicture:null,
+							"groupName":item.groupName?item.groupName:null,
+							"status":"pending",
+							"groupUrl": item.groupUrl?item.groupUrl:null,
+							"matchedKeyword": item.matchedKeyword?item.matchedKeyword:null,
+						}
+				}),
+			}
+			dispatch(addUsersToCampaign(payload)).unwrap().then((res)=>{
+				//dispatch(removeSelectedFriends());
+				Alertbox(
+					`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
+					"success",
+					1000,
+					"bottom-right"
+				);
+			}	
+			).catch((err)=>{
+				console.log("Add to campaign:",err);
+			})
 			setIsAddingToCampaign(false);
 			setSelectedCampaign("Select");
-			Alertbox(
-				`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
-				"success",
-				1000,
-				"bottom-right"
-			);
+			
 		} catch (error) {
 			Alertbox(`${error}`, "error", 1000, "bottom-right");
 		}
@@ -1241,7 +1281,7 @@ function PageHeader({ headerText = "" }) {
 						setIsAddingToCampaign(null);
 						setSelectedCampaign("Select");
 					}}
-					ModalFun={AddToCampaign}
+					ModalFun={()=>AddToCampaign(selectedFriends)}
 					btnText={
 						selectedFriends?.filter((el) => el?.blacklist_status)?.length > 0
 							? "Yes, add all"
@@ -1271,26 +1311,29 @@ function PageHeader({ headerText = "" }) {
 					{/* If Campaign created, list else disable and show link for creation */}
 					<>
 						<h6>Choose campaign</h6>
-						<span className='select-wrapers w-100'>
-							<select
-								value={selectedCampaign}
-								onChange={(e) => setSelectedCampaign(e.target.value)}
-								className='selector_box'
-								disabled={campaignsCreated?.length <= 0}
-							>
-								<option value={null}>Select</option>
+						<span className='select-wrapers w-100' onClick={()=>{setCampaignListSelector(!campaignListSelector)}}>
+
+							<div className='selector_box'>
+								{selectedCampaignName}
+								{campaignsCreated?.length>0&&
+								campaignListSelector&&<ul className="selector_box_options">
 								{campaignsCreated?.map((item, index) => {
 									return (
-										<option
-											value={item._id}
+										<li
+											value={item.campaign_id}
 											key={"fr-select" + index}
+											onClick={()=>campaignSelectFun(item)}
 										>
 											{item?.campaign_name}
-										</option>
+										</li>
 									);
 								})}
-							</select>
-							<span className='select-arrow'></span>
+									
+								</ul>}
+							
+							<span className='select-arrow'></span> 
+							</div>
+							
 						</span>
 						{campaignsCreated?.length <= 0 && (
 							<span className='inline-note warning-note-inline'>
