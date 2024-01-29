@@ -21,6 +21,7 @@ import NoDataFound from "components/common/NoDataFound";
 import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
 
+
 const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
 );
@@ -100,6 +101,7 @@ const Campaigns = () => {
 	const campaignsCreated = useSelector(
 		(state) => state.campaign.campaignsArray
 	);
+	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -122,16 +124,20 @@ const Campaigns = () => {
 		let editCampaign = campaignsCreated?.find((el) => el?._id == editId);
 
 		try {
-			dispatch(fetchCampaignById({ campaignId: editId, fbUserId: current_fb_id }))
-				.unwrap()
-				.then((res) => {
-					if (res) {
-						// console.log('fetching Edit item', res?.data);
-						editCampaign = { ...editCampaign, ...res?.data[0] };
-						console.log("editCampaign >>>>>>>>>>>> ", editCampaign);
-						setIsEditingCampaign(editCampaign);
-					}
-				});
+			if (campaignsDetails) {
+				console.log("SPECIFIC CAMPAIGN DETAILS", campaignsDetails);
+			}
+
+			// dispatch(fetchCampaignById({ campaignId: editId, fbUserId: current_fb_id }))
+			// 	.unwrap()
+			// 	.then((res) => {
+			// 		if (res) {
+			// 			// console.log('fetching Edit item', res?.data);
+			// 			editCampaign = { ...editCampaign, ...res?.data[0] };
+			// 			console.log("editCampaign >>>>>>>>>>>> ", editCampaign);
+			// 			setIsEditingCampaign(editCampaign);
+			// 		}
+			// 	});
 		} catch (error) {
 			Alertbox(
 				`

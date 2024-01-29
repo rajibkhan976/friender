@@ -16,6 +16,7 @@ const initialState = {
 	campaignSchedule: [],
 	selectedCampaignSchedule: null,
 	campaignsArray: [],
+	campaignsDetails: {},
 	// campaignsArray: [
 	// 	{
 	// 		_id: 1,
@@ -140,7 +141,7 @@ export const updateCampaignStatus = createAsyncThunk(
 	"campaigns/updateCampaignStatus",
 	async (payload) => {
 		const res = await updateCampaignStatusService(payload);
-		return res;
+		return {...res, ...payload};
 	}
 );
 
@@ -185,6 +186,9 @@ export const campaignSlice = createSlice({
 		updateSelectedCampaignSchedule: (state, action) => {
 			state.selectedCampaignSchedule = action.payload;
 		},
+		updateCampaignDetails: (state, action) => {
+			state.campaignsDetails = action.payload;
+		}
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
@@ -192,28 +196,36 @@ export const campaignSlice = createSlice({
 		},
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			// console.log("action?.payload", action?.payload);
-			state.campaignsArray = action?.payload;
+
+			const modifiedPaylaodData = action?.payload?.length && action?.payload?.map((payload) => {
+				return {
+					...payload,
+					status: payload?.campaign_status,
+					_id: payload?.campaign_id,
+				};
+			});
+
+			state.campaignsArray = modifiedPaylaodData;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
 			state.isLoading = false;
 		},
+
 
 		[fetchCampaignById.pending]: (state) => {
 			state.isLoading = true;
 		},
 		[fetchCampaignById.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			console.log("ACTION PAYLOAD DATA -- ", action?.payload?.data);
+
 			state.editingCampaign = action?.payload?.data?.length
 				? action?.payload?.data[0]
 				: null;
-
-			console.log("Checking the State -- ", state.editingCampaign);
 		},
 		[fetchCampaignById.rejected]: (state) => {
 			state.isLoading = false;
 		},
+
 
 		[createCampaign.pending]: (state) => {
 			state.isLoading = false;
@@ -225,7 +237,7 @@ export const campaignSlice = createSlice({
 			let newAdd = true;
 
 			placeholderArray.forEach((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.campaign_id) {
+				if (campaign?.campaign_id === action?.payload?.data?._id) {
 					newAdd = false;
 				}
 			});
@@ -242,16 +254,17 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 
+
 		[updateCampaign.pending]: (state) => {
 			state.isLoading = false;
 		},
-
 		[updateCampaign.fulfilled]: (state, action) => {
 			// PlaceholderArray id is -> campaign_id..
 			// Action payload id is -> _id..
 			const placeholderArray = current(state.campaignsArray);
+
 			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.data?._id) {
+				if (campaign?.campaign_id === action?.payload?.data?._id || campaign?._id === action?.payload?.data?._id) {
 					return {
 						...campaign,
 						...action?.payload?.data,
@@ -265,6 +278,7 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 
+
 		[deleteCampaign.pending]: (state) => {
 			state.isLoading = true;
 		},
@@ -275,6 +289,7 @@ export const campaignSlice = createSlice({
 					return {
 						...campaign,
 						campaign_status: false,
+						status: false,
 					};
 				}
 				return campaign;
@@ -284,6 +299,28 @@ export const campaignSlice = createSlice({
 		[deleteCampaign.rejected]: (state) => {
 			state.isLoading = false;
 		},
+
+
+		[updateCampaignStatus.pending]: (state) => {
+			state.isLoading = false;
+		},
+		[updateCampaignStatus.fulfilled]: (state, action) => {
+			const placeholderArray = current(state.campaignsArray);
+
+			state.campaignsArray = placeholderArray.map((campaign) => {
+				if (campaign?.campaign_id === action?.payload?.campaignId) {
+					return {
+						...campaign,
+						campaign_status: action?.payload?.campaignStatus,
+					};
+				}
+				return campaign;
+			});
+
+		},
+		[updateCampaignStatus.rejected]: (state) => {
+			state.isLoading = false;
+		},
 	},
 });
 export const {
@@ -291,5 +328,6 @@ export const {
 	updateCampaignsArray,
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
+	updateCampaignDetails,
 } = campaignSlice.actions;
 export default campaignSlice.reducer;

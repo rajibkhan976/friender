@@ -4,10 +4,12 @@ import NumberRangeInput from "components/common/NumberRangeInput";
 import Switch from "components/formComponents/Switch";
 import DropSelector from "components/formComponents/DropSelector";
 import { fetchGroups } from "actions/MessageAction";
+import { getGroupById } from 'actions/MySettingAction';
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCampaign, updateCampaign, fetchCampaignById } from "actions/CampaignsActions";
+import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignDetails } from "actions/CampaignsActions";
+import { fetchCampaign } from 'services/campaigns/CampaignServices';
 import Alertbox from "components/common/Toast";
 
 
@@ -45,6 +47,12 @@ const CampaignCreateEditLayout = ({ children }) => {
 	const [quickMsgModalOpen, setQuickMsgModalOpen] = useState(false);
 	const [usingSelectOption, setUsingSelectOption] = useState(false);
 	const [unselectedError, setUnselectedError] = useState(false);
+
+	useEffect(() => {
+		if (quickMsg) {
+			setUsingSelectOption(false);
+		}
+	}, [quickMsg]);
 
 	// MESSAGE LIMIT/24HR STATE..
 	const [msgLimit, setMsgLimit] = useState(100);
@@ -172,15 +180,15 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
-		const campaignExistsCheck = campaignsArray.findIndex(
-			(campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim()
-		);
+		if (type === "CREATE") {
+			const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
 
-		if (campaignExistsCheck > -1) {
-			Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
-			setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
-			setLoadingBtn(false);
-			return false;
+			if (campaignExistsCheck > -1) {
+				Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+				setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
+				setLoadingBtn(false);
+				return false;
+			}
 		}
 
 		try {
@@ -223,19 +231,17 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
 	const transformCampaignSchedulesPayload = (schedules = []) => {
-		const transformSchedules =
-			schedules?.length &&
-			schedules.map((schedule) => {
-				const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
-				const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
-				const day = moment(schedule.start).format("dddd");
+		const transformSchedules = schedules?.length && schedules.map((schedule) => {
+			const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
+			const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+			const day = moment(schedule.start).format("dddd");
 
-				return {
-					day,
-					from_time: fromTime,
-					end_time: toTime,
-				};
-			});
+			return {
+				day,
+				from_time: fromTime,
+				end_time: toTime,
+			};
+		});
 
 		return transformSchedules;
 	};
@@ -267,9 +273,16 @@ const CampaignCreateEditLayout = ({ children }) => {
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
 				campaignEndTime: endDateAndTime,
+				campaignStatus: true,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
 			};
+
+			if (!usingSelectOption || !groupMsgSelect) {
+				campaignData.messageGroupId = null;
+			} else {
+				campaignData.quickMessage = null;
+			}
 
 			if (type === "EDIT") {
 				campaignData.campaignId = params?.campaignId;
@@ -280,13 +293,85 @@ const CampaignCreateEditLayout = ({ children }) => {
 		}
 	};
 
+	// CAMPAIGN EDIT / UPDATE CANCEL..
+	const handleClickToCancelEditCampaign = (_event) => {
+		navigate('/messages/campaigns');
+	};
+
+	// FETCHING THE GROUP BY ID..
+	const fetchGroupMessage = (groupId) => {
+		dispatch(getGroupById(groupId))
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+
+				if (data.length) {
+					setGroupMsgSelect(data[0]);
+					localStorage.setItem('fr_using_campaigns_message', true);
+				}
+			});
+	};
+
+	// UPDATE THE SCHEDULAR WITH SPECIFIC CAMPAIGNS DATA..
+	const updateSchedularOfCalender = (scheduleData, nameOfCampaign, colorOfCampaign) => {
+		const schedule = scheduleData?.length && scheduleData.map((sched) => {
+			const id = params?.campaignId;
+			const color = colorOfCampaign;
+			const title = nameOfCampaign;
+			const start = new Date(sched.from_time);
+			const end = new Date(sched.end_time);
+
+			return { id, color, title, start, end };
+		});
+
+		dispatch(updateCampaignSchedule(schedule));
+	};
+
+	/**
+	 * SYNC FOR EDIT / UPDATE CAMPAIGN DATA..
+	 */
 	const fetchCampaignDetails = async () => {
 		try {
-			const res = await dispatch(fetchCampaignById({ fbUserId: current_fb_id, campaignId: params?.campaignId })).unwrap();
+			// const res = await dispatch(fetchCampaignById({ fbUserId: current_fb_id, campaignId: params?.campaignId })).unwrap();
+			const res = await fetchCampaign({ fbUserId: current_fb_id, campaignId: params?.campaignId });
 			const data = res?.data;
 
 			if (data && data.length) {
-				console.log("MY CAMAPIGN -- ", data);
+				const campaignData = data[0];
+
+				dispatch(updateCampaignDetails(campaignData));
+
+				setCampaignName({ ...campaignName, value: campaignData?.campaign_name });
+
+				if (campaignData?.message_group_id) {
+					// Fetching the group from the id here..
+					fetchGroupMessage(campaignData?.message_group_id);
+				}
+
+				if (campaignData?.quick_message) {
+					setQuickMsg(campaignData?.quick_message);
+				}
+
+				if (campaignData?.campaign_end_time) {
+					setEndDateAndTime(campaignData.campaign_end_time);
+				}
+
+				if (campaignData?.campaign_end_time_status) {
+					setShowEndDateAndTime(campaignData.campaign_end_time_status);
+				}
+
+				if (campaignData?.time_delay) {
+					setTimeDelay(campaignData.time_delay);
+				}
+
+				if (campaignData?.message_limit) {
+					setMsgLimit(campaignData?.message_limit);
+				}
+
+				// Have to setting the Schedule from here..
+				if (campaignData?.schedule?.length) {
+					updateSchedularOfCalender(campaignData?.schedule, campaignData?.campaign_name, campaignData?.campaign_label_color);
+				}
 			}
 
 		} catch (error) {
@@ -314,6 +399,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	useEffect(() => {
 		if (params?.campaignId) {
 			setType("EDIT");
+			fetchCampaignDetails();
 		}
 	}, [params]);
 
@@ -374,6 +460,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 					<DropSelector
 						selects={timeDelays}
 						// id='start-time-span'
+						value={timeDelay}
 						defaultValue={
 							timeDelays?.find((el) => el.value === timeDelay)?.value
 						}
@@ -431,7 +518,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 			{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
 			<div className='campaigns-save-buttons-container'>
-				<button className='btn btn-grey'>Cancel</button>
+				<button className='btn btn-grey' onClick={handleClickToCancelEditCampaign}>Cancel</button>
+				
 				<button
 					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}

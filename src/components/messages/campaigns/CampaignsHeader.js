@@ -4,11 +4,12 @@ import {
 	AddTransparentIcon,
 	ChevronLeftArrowIcon,
 } from "../../../assets/icons/Icons";
-
+import { useSelector, useDispatch } from 'react-redux';
 import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
+import { updateCampaignStatus } from 'actions/CampaignsActions';
 
 const CampaignsHeader = ({
 	radioOptions,
@@ -28,27 +29,64 @@ const CampaignsHeader = ({
 	const location = useLocation();
 	const navigate = useNavigate();
 	const params = useParams();
+	const dispatch = useDispatch();
 	const [editCampaign, setEditCampaign] = useState(null);
+	const [campaignsStatusActivity, setCampaignsStatusActivity] = useState(false);
+	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
+	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
 
-	const switchPauseCampaign = (e) => {
-		if (
-			editCampaign?.friends_pending === 0 ||
-			new Date(editCampaign?.campaign_end_time) < new Date()
-		) {
+	// CAMPAIGN STATUS UPDATE VIA API.. 
+	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
+		try {
+			const response = await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
+
 			Alertbox(
-				`${
-					editCampaign?.friends_pending === 0
-						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
-				}`,
-				"warning",
+				`${response?.message}`,
+				"success",
 				3000,
 				"bottom-right"
 			);
 			return false;
-		} else {
-			toggleEditCampaign(e.target.checked);
+
+		} catch (error) {
+			// Handle other unexpected errors
+			Alertbox(
+				error?.message,
+				"error",
+				1000,
+				"bottom-right"
+			);
+			return false;
 		}
+	};
+
+	// CAMPAIGN TOGGLE BUTTON SWITCHING..
+	const switchPauseCampaign = async (e) => {
+		if (e.target.checked) {
+			camapignStatusToggleUpdateAPI(campaignsDetails?._id, true);
+			setCampaignsStatusActivity(true);
+		} else {
+			camapignStatusToggleUpdateAPI(campaignsDetails?._id, false);
+			setCampaignsStatusActivity(false);
+		}
+
+		// if (
+		// 	editCampaign?.friends_pending === 0 ||
+		// 	new Date(editCampaign?.campaign_end_time) < new Date()
+		// ) {
+		// 	Alertbox(
+		// 		`${editCampaign?.friends_pending === 0
+		// 			? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+		// 			: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+		// 		}`,
+		// 		"warning",
+		// 		3000,
+		// 		"bottom-right"
+		// 	);
+		// 	return false;
+		// } else {
+		// 	toggleEditCampaign(e.target.checked);
+		// }
 	};
 
 	const resetEditCampaign = () => {
@@ -66,6 +104,18 @@ const CampaignsHeader = ({
 			/>
 		);
 	}, [editOptions]);
+
+
+	// GRAVING THE STATUS OF CAMPAIGNS FOR SHOWING STATUS TOGGLE ON/OFF..
+	useEffect(() => {
+		if (campaignsDetails) {
+			if (campaignsArray && campaignsArray?.length ) {
+				const campaign = campaignsArray.find((camp) => camp?.campaign_id === campaignsDetails?._id || camp?._id === campaignsDetails?._id);
+				setCampaignsStatusActivity(campaign?.campaign_status);
+			}
+		}
+	}, [campaignsDetails, campaignsArray]);
+
 
 	useEffect(() => {
 		// If coming from listing, localstorage will have _id and mode
@@ -152,22 +202,32 @@ const CampaignsHeader = ({
 								<ChevronLeftArrowIcon />
 							</Link>
 							<h3>
-								{editCampaign
+								{/* {editCampaign
 									? editCampaign?.campaign_name
-									: "Loading your campaign"}
+									: "Loading your campaign"} */}
+
+								{
+									campaignsDetails && campaignsDetails?.campaign_name ? campaignsDetails?.campaign_name : "Loading your campaign"
+								}
 							</h3>
 
 							{editOptions && <RenderEditView />}
 
 							<div className='campaign-status h-100 d-flex f-align-center'>
 								<span>Pause this campaign</span>
-								{editCampaign && (
+								{/* {editCampaign && (
 									<Switch
 										// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
 										checked={editCampaign?.status}
 										handleChange={switchPauseCampaign}
 									/>
-								)}
+								)} */}
+
+								<Switch
+									// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
+									checked={campaignsStatusActivity}
+									handleChange={switchPauseCampaign}
+								/>
 							</div>
 						</>
 					) : (

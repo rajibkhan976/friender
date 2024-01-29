@@ -41,7 +41,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
 
     return (
         <div
-            className={`modal-background editor-modal-background ${type === "CAMPAIGNS_MODAL_MESSAGE" ? 'campaign-editor-modal-bg' : ''}`}
+            className={`modal-background editor-modal-background ${type === "CAMPAIGNS_MODAL_MESSAGE" ? 'campaign-editor-modal-bg' : ''} ${type === "CAMPAIGNS_MESSAGE" ? 'campaign-editor-quickMsg-bg' : ''}`}
             style={{ display: open ? "block" : "none" }}
         // onClick={() => {
         //   setOpen(false);

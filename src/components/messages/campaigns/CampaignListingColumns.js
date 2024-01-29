@@ -31,10 +31,12 @@ export const CampaignNameCellRenderer = memo((params) => {
 		);
 	};
 
+	const campaignId = params?.data?.campaign_id || params?.data?._id;
+
 	return (
 		<div className='campaign-name-cell'>
 			<Link
-				to={`https://localhost:3000/messages/campaigns/${params?.data?.campaign_id}`}
+				to={`https://localhost:3000/messages/campaigns/${campaignId}`}
 				onClick={storeEdit}
 			>
 				{params?.value}
@@ -49,7 +51,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const doSomething = (e) => {
 		if (
 			(params?.data?.friends_pending === 0 ||
-			new Date(params?.data?.campaign_end_time) < new Date()) &&
+				new Date(params?.data?.campaign_end_time) < new Date()) &&
 			e.target.checked
 		) {
 			Alertbox(
@@ -117,10 +119,12 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 		);
 	};
 
+	const campaignId = params?.data?.campaign_id || params?.data?._id;
+
 	return (
 		<div className='campaign-schedule-cell'>
 			<Link
-				to={`https://localhost:3000/messages/campaigns/${params?.value}`}
+				to={`https://localhost:3000/messages/campaigns/${campaignId}`}
 				onClick={storeEdit}
 			>
 				View schedule <OpenInNewTab />
@@ -153,10 +157,10 @@ export const CampaignEndTimeCellRenderer = memo((params) => {
 });
 
 // CAMPAIGN LIST'S OPTION MENU TO EDIT / DELETE CAMPAIGN..
-export const CampaignContextMenuCellRenderer = (params) => {
+export const CampaignContextMenuCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const campaignId = params?.data?.campaign_id;
+	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const { setCampaignDeleteModalOpen, setCampaignId } = params;
 
 	const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
@@ -165,20 +169,17 @@ export const CampaignContextMenuCellRenderer = (params) => {
 		dispatch(updateCampaignContext(params?.data?._id));
 	};
 
-	const handleEditCampaignOnClick = () => {
-		try {
-			localStorage.setItem(
-				"fr_editCampaign_view",
-				JSON.stringify({
-					mode: "settings",
-				})
-			);
-			navigate(`/messages/campaigns/${campaignId}`);
-		} catch (error) {
-			Alertbox(error, "error", 1000, "bottom-right");
-		} finally {
-			togggleContext();
-		}
+	const handleEditCampaignOnClick = (event) => {
+		event.preventDefault();
+
+		localStorage.setItem(
+			"fr_editCampaign_view",
+			JSON.stringify({
+				mode: "settings",
+			})
+		);
+
+		navigate(`/messages/campaigns/${campaignId}`);
 	};
 
 	const handleDeleteCampaignOnClick = async () => {
@@ -230,7 +231,7 @@ export const CampaignContextMenuCellRenderer = (params) => {
 			</div>
 		</div>
 	);
-};
+});
 
 export const CampaignFriendStatusRenderer = memo((params) => {
 	return (

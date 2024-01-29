@@ -37,6 +37,12 @@ const DropSelectMessage = ({
     const [editorStateValue, setEditorStateValue] = useState("");
 
     useEffect(() => {
+        if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
+            setSelectOption(groupSelect? groupSelect.group_name : '');
+        }
+    }, [groupSelect]);
+
+    useEffect(() => {
         if (quickMessage && type === "ACCEPT_REQ") {
             // setEditorStateValue(quickMessage?.__raw);
             localStorage.setItem('fr_quickMessage_accept_req', quickMessage?.__raw);

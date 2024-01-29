@@ -58,7 +58,7 @@ module.exports = {
     addNewMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-segment-message",
     deleteMessageSegmentMessageUrl: "https://"+messageService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-segment-message",
     // campaign services
-    fetchAllCampaignsUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-user-campaigns",
+    fetchAllCampaignsUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-user-campaigns?status=all",
     createCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-campaign",
     deleteCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-campaign",
     updateCampaignStatusUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/update-campaign-status",
