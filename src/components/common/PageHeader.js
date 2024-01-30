@@ -36,7 +36,7 @@ import {
 	setProfileSpaces,
 	setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
-import { getSendFriendReqst } from "../../actions/FriendsAction";
+import { getSendFriendReqst, reLoadFrList,unLoadFrList } from "../../actions/FriendsAction";
 import {
 	deleteFriend,
 	getFriendList,
@@ -203,6 +203,12 @@ function PageHeader({ headerText = "" }) {
 	const [campaignListSelector,setCampaignListSelector]=useState(false);
 	const [selectedCampaignName,setSelectedCampaignName]=useState("Select");
 
+	const refreshFrList=()=>{
+		dispatch(unLoadFrList());
+			setTimeout(()=>{
+				dispatch(reLoadFrList());
+			},300)
+	}
 	
 	useEffect(()=>{
 		setSelectedCampaign("Select");
@@ -1165,7 +1171,8 @@ function PageHeader({ headerText = "" }) {
 				}),
 			}
 			dispatch(addUsersToCampaign(payload)).unwrap().then((res)=>{
-				//dispatch(removeSelectedFriends());
+				refreshFrList();
+				dispatch(removeSelectedFriends());
 				Alertbox(
 					`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
 					"success",

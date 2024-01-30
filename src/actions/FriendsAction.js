@@ -16,6 +16,7 @@ const initialState = {
   current_whitelist: {},
   current_blacklist: {},
   current_friend_list: [],
+  refresher_fr_list:[],
 };
 
 export const storeFriendListIndexDb = async (fbId, friendList) => {
@@ -141,7 +142,13 @@ const fbSlice = createSlice({
   name: "facebook",
   initialState,
   reducers: {
-    updateId: () => { },
+    unLoadFrList: (state) => {
+      state.refresher_fr_list=state.current_friend_list;
+      state.current_friend_list=state.current_friend_list.slice(5);
+     },
+     reLoadFrList:(state)=>{
+      state.current_friend_list=state.refresher_fr_list;
+     },
     setFriendListArray: (state, action) => {
       //console.log("update fr list rdx", action);
       state.current_friend_list = action.payload;
@@ -294,5 +301,5 @@ const fbSlice = createSlice({
   },
 });
 
-export const { updateId, setFriendListArray, syncMainFriendList } = fbSlice.actions;
+export const { unLoadFrList,reLoadFrList, setFriendListArray, syncMainFriendList } = fbSlice.actions;
 export default fbSlice.reducer;

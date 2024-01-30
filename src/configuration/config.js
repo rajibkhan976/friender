@@ -62,6 +62,6 @@ module.exports = {
     createCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/create-campaign",
     deleteCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/delete-campaign",
     updateCampaignStatusUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/update-campaign-status",
-    addUsersToCampaignUrlUrl:`https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/add-friends-to-campaign`,
+    addUsersToCampaignUrl:`https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/add-friends-to-campaign`,
     fetchCampaignUrl: "https://"+campaignService+".execute-api.us-east-1.amazonaws.com/"+appEnv+"/fetch-campaign",
 }
