@@ -1,5 +1,4 @@
-import { memo, useContext, useEffect, useState } from "react";
-import { CampaignContext } from "../../index";
+import { memo, useEffect, useState } from "react";
 
 import { updateCampaignsArray, deleteCampaign } from "actions/CampaignsActions";
 import {
@@ -14,20 +13,15 @@ import {
 import Listing from "../../../../components/common/Listing";
 import Modal from "components/common/Modal";
 import { DangerIcon } from "assets/icons/Icons";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import Alertbox from "components/common/Toast";
-
 
 const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	const dispatch = useDispatch();
 	const [isReset, setIsReset] = useState(null);
-	const { setCampaignViewMode } = useContext(CampaignContext);
-	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] = useState(false);
-	const [campaignId, setCampaignId] = useState('');
-
-	useEffect(() => {
-		setCampaignViewMode("campaignList");
-	}, []);
+	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
+		useState(false);
+	const [campaignId, setCampaignId] = useState("");
 
 	// list ref for campaigns list page
 	const campaignsListingRef = () => [
@@ -87,29 +81,38 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			cellRendererParams: {
 				isCampaignDeleteModalOpen,
 				setCampaignDeleteModalOpen,
-				setCampaignId
-			}
+				setCampaignId,
+			},
 		},
 	];
 
 	// DELETE CAMPAIGN API REQUEST..
-	const campaignDeleteAPIReq = async(id) => {
+	const campaignDeleteAPIReq = async (id) => {
 		try {
-			const response = await dispatch(deleteCampaign([{ campaignId: id }])).unwrap();
+			const response = await dispatch(
+				deleteCampaign([{ campaignId: id }])
+			).unwrap();
 
 			if (response?.data) {
 				setCampaignDeleteModalOpen(false);
-				Alertbox(`Campaign(s) has been deleted successfully.`, "success", 1000, "bottom-right");
-
+				Alertbox(
+					`Campaign(s) has been deleted successfully.`,
+					"success",
+					1000,
+					"bottom-right"
+				);
 			} else if (response?.error?.code === "bad_request") {
 				setCampaignDeleteModalOpen(false);
 				Alertbox(`${response?.error?.message}`, "error", 1000, "bottom-right");
-
 			} else {
 				setCampaignDeleteModalOpen(false);
-				Alertbox(`Failed to delete the campaign. Please check your input and try again.`, "error", 1000, "bottom-right");
+				Alertbox(
+					`Failed to delete the campaign. Please check your input and try again.`,
+					"error",
+					1000,
+					"bottom-right"
+				);
 			}
-
 		} catch (error) {
 			setCampaignDeleteModalOpen(false);
 			Alertbox(error, "error", 1000, "bottom-right");

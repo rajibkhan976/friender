@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchSegments } from "../../actions/MessageAction";
@@ -10,7 +10,6 @@ export const CampaignContext = createContext();
 
 const Messages = () => {
 	const dispatch = useDispatch();
-	const [campaignViewMode, setCampaignViewMode] = useState("list");
 
 	useEffect(() => {
 		dispatch(fetchSegments());
@@ -18,11 +17,7 @@ const Messages = () => {
 
 	return (
 		<div className='d-flex justifyContent-start fr-messages w-100'>
-			<CampaignContext.Provider
-				value={{ campaignViewMode, setCampaignViewMode }}
-			>
-				<Outlet />
-			</CampaignContext.Provider>
+			<Outlet />
 		</div>
 	);
 };

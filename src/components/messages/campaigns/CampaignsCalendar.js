@@ -1,6 +1,5 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
-import { CampaignContext } from "../../../pages/messages/index";
 import CampaignScheduler from "./CampaignScheduler";
 import CalenderModal from "../../common/CampaignModal";
 
@@ -15,11 +14,6 @@ const CampaignsCalendar = () => {
 		start: "12:00 am",
 		end: "12:30 am",
 	});
-	const { setCampaignViewMode } = useContext(CampaignContext);
-
-	useEffect(() => {
-		setCampaignViewMode("campaignCalendar");
-	}, []);
 
 	return (
 		<div className='create-campaign-scheduler-container global-campaign-calendar-view'>

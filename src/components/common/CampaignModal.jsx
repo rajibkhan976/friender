@@ -9,9 +9,8 @@ import { fetchGroups } from "actions/MessageAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	createCampaign,
-	updateCampaign,
 	updateCampaignSchedule,
-	updateCampaignStatus,
+	fetchCampaignById,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -41,6 +40,12 @@ const CalenderModal = ({
 	const [calenderModalOpen, setCalenderModalOpen] = useState(open);
 	const campaignSchedule = useSelector(
 		(state) => state.campaign.campaignSchedule
+	);
+	const selectedCampaignSchedule = useSelector(
+		(state) => state.campaign.selectedCampaignSchedule
+	);
+	const editingCampaign = useSelector(
+		(state) => state.campaign.editingCampaign
 	);
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 	const [isLoadingBtn, setLoadingBtn] = useState(false);
@@ -584,6 +589,17 @@ const CalenderModal = ({
 	};
 
 	useEffect(() => {
+		if (selectedCampaignSchedule && selectedCampaignSchedule.campaign_id) {
+			dispatch(
+				fetchCampaignById({
+					fbUserId: current_fb_id,
+					campaignId: selectedCampaignSchedule.campaign_id,
+				})
+			);
+		}
+	}, [selectedCampaignSchedule]);
+
+	useEffect(() => {
 		if (isCampaignToggleOn) {
 			Alertbox("Campaign Toggleed", "success", 3000, "bottom-right");
 		}
@@ -618,6 +634,10 @@ const CalenderModal = ({
 	//         setCalenderModalOpen(false);
 	//     }
 	// }, [quickMsgModalOpen, calenderModalOpen]);
+
+	console.log(selectedCampaignSchedule);
+	console.log(editingCampaign);
+	console.log(open);
 
 	if (type === "CREATE_CAMPAIGN") {
 		return (
@@ -859,7 +879,7 @@ const CalenderModal = ({
 						{/* CAMPAIGN VIEW DETAILS HEADER */}
 						<div className='modal-header d-flex f-align-center campaign-modal-header campaign-view-details-header'>
 							<span style={{ color: "#fff", fontSize: "15px" }}>
-								{"My Events of this campaigns view"}
+								{editingCampaign?.campaign_name}
 							</span>
 
 							<div className='campaign-modal-header-actions'>
@@ -934,7 +954,7 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>Auto (15-20 sec)</p>
+										<p>{editingCampaign?.time_delay}</p>
 										<span>Time delay</span>
 									</div>
 								</div>
@@ -960,7 +980,7 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>23</p>
+										<p>{editingCampaign?.message_limit}</p>
 										<span>Message limit / 24hr</span>
 									</div>
 								</div>
@@ -977,7 +997,11 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>01 Dec, 2023 06:00am</p>
+										<p>
+											{moment(
+												editingCampaign?.campaign_end_time || new Date()
+											).format("DD MMM, YYYY hh:mm:ssa")}
+										</p>
 										<span>Campaign end date & time</span>
 									</div>
 								</div>

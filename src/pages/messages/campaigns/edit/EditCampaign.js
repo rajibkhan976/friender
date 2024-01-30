@@ -1,6 +1,5 @@
-import React, { memo, useContext, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { CampaignContext } from "../../index";
 import {
 	CreationRenderer,
 	KeywordRenderer,
@@ -19,6 +18,7 @@ import CampaignSchedulerPopup from "components/messages/campaigns/CampaignScedul
 import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
+import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
 
 const EditCampaign = () => {
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
@@ -31,16 +31,11 @@ const EditCampaign = () => {
 
 	const [scheduleTime, setScheduleTime] = useState({
 		date: new Date(),
-		start: "12:00 am",
-		end: "12:30 am",
+		start: "",
+		end: "",
 	});
 	const [showPopup, setShowPopup] = useState(false);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
-	const { setCampaignViewMode } = useContext(CampaignContext);
-
-	useEffect(() => {
-		setCampaignViewMode("editCampaign");
-	}, []);
 
 	const campaignFriendsRef = [
 		{
@@ -126,14 +121,17 @@ const EditCampaign = () => {
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
 							{showPopup && (
-								<CampaignSchedulerPopup
-									handleSetShowPopup={(status) => setShowPopup(status)}
-									popupCoordPos={popupCoordPos}
-									scheduleTime={scheduleTime}
-									setScheduleTime={setScheduleTime}
-								/>
+								<CampaignSchedulerPopup>
+									<ScheduleSelector
+										handleSetShowPopup={(status) => setShowPopup(status)}
+										popupCoordPos={popupCoordPos}
+										scheduleTime={scheduleTime}
+										setScheduleTime={setScheduleTime}
+									/>
+								</CampaignSchedulerPopup>
 							)}
 							<CampaignScheduler
+								campaignsList={[]}
 								handleSetShowPopup={(status) => setShowPopup(status)}
 								handleSetPopupPos={(pos) => {
 									setPopupCoordPos({ x: pos.X, y: pos.Y });
@@ -185,13 +183,13 @@ const EditCampaign = () => {
 						<>
 							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
 								? keyWords?.matchedKeyword.map((el, i) => (
-									<span
-										className={`tags positive-tags`}
-										key={`key-${i}`}
-									>
-										{el}
-									</span>
-								))
+										<span
+											className={`tags positive-tags`}
+											key={`key-${i}`}
+										>
+											{el}
+										</span>
+								  ))
 								: "No specific keyword used"}
 						</>
 					}

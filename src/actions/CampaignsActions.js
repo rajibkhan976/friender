@@ -33,18 +33,18 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-29 09:41:15",
+	// 				to_time: "2024-01-29 10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-30 11:41:15",
+	// 				to_time: "2024-01-30 13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-31 15:41:15",
+	// 				to_time: "2024-01-31 18:41:15",
 	// 			},
 	// 		],
 	// 	},
@@ -63,18 +63,18 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-29 09:41:15",
+	// 				to_time: "2024-01-29 10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-30 11:41:15",
+	// 				to_time: "2024-01-30 13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-31 15:41:15",
+	// 				to_time: "2024-01-31 18:41:15",
 	// 			},
 	// 		],
 	// 	},
@@ -93,22 +93,22 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-29 09:41:15",
+	// 				to_time: "2024-01-29 10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-30 11:41:15",
+	// 				to_time: "2024-01-30 13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2023-12-10 09:41:15",
-	// 				to_time: "2023-12-13 09:41:15",
+	// 				from_time: "2024-01-31 15:41:15",
+	// 				to_time: "2024-01-31 18:41:15",
 	// 			},
 	// 		],
 	// 	},
-	// ]
+	// ],
 };
 
 export const fetchAllCampaigns = createAsyncThunk(
@@ -141,7 +141,7 @@ export const updateCampaignStatus = createAsyncThunk(
 	"campaigns/updateCampaignStatus",
 	async (payload) => {
 		const res = await updateCampaignStatusService(payload);
-		return {...res, ...payload};
+		return { ...res, ...payload };
 	}
 );
 
@@ -149,23 +149,24 @@ export const fetchCampaignById = createAsyncThunk(
 	"campaigns/getCampaign",
 	async (payload) => {
 		const res = await fetchCampaign(payload);
+		console.log(res);
 		return res;
 	}
 );
 
-export const addUsersToCampaign=createAsyncThunk(
-		"campaigns/addUsersToCampaign",
-		async(payload)=>{
-			const res=await addUsersToCampaignService(payload);
-			return res;
-		}
-)
+export const addUsersToCampaign = createAsyncThunk(
+	"campaigns/addUsersToCampaign",
+	async (payload) => {
+		const res = await addUsersToCampaignService(payload);
+		return res;
+	}
+);
 
 export const deleteCampaign = createAsyncThunk(
 	"messages/deleteCampaign",
 	async (payload) => {
 		const res = await deleteCampaignService(payload);
-		return {...res, campaignId: payload[0]?.campaignId};
+		return { ...res, campaignId: payload[0]?.campaignId };
 	}
 );
 
@@ -188,7 +189,7 @@ export const campaignSlice = createSlice({
 		},
 		updateCampaignDetails: (state, action) => {
 			state.campaignsDetails = action.payload;
-		}
+		},
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
@@ -197,13 +198,15 @@ export const campaignSlice = createSlice({
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
 			state.isLoading = false;
 
-			const modifiedPaylaodData = action?.payload?.length && action?.payload?.map((payload) => {
-				return {
-					...payload,
-					status: payload?.campaign_status,
-					_id: payload?.campaign_id,
-				};
-			});
+			const modifiedPaylaodData =
+				action?.payload?.length &&
+				action?.payload?.map((payload) => {
+					return {
+						...payload,
+						status: payload?.campaign_status,
+						_id: payload?.campaign_id,
+					};
+				});
 
 			state.campaignsArray = modifiedPaylaodData;
 		},
@@ -211,9 +214,8 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 
-
 		[fetchCampaignById.pending]: (state) => {
-			state.isLoading = true;
+			state.isLoading = false;
 		},
 		[fetchCampaignById.fulfilled]: (state, action) => {
 			state.isLoading = false;
@@ -225,7 +227,6 @@ export const campaignSlice = createSlice({
 		[fetchCampaignById.rejected]: (state) => {
 			state.isLoading = false;
 		},
-
 
 		[createCampaign.pending]: (state) => {
 			state.isLoading = false;
@@ -243,9 +244,13 @@ export const campaignSlice = createSlice({
 			});
 
 			if (newAdd) {
-				state.campaignsArray = [ action?.payload?.data, ...state.campaignsArray];
+				state.campaignsArray = [action?.payload?.data, ...state.campaignsArray];
 			} else {
-				state.campaignsArray = action?.payload?.data ? placeholderArray.map((el) => el.campaign_id === action.payload.data._id) : placeholderArray;
+				state.campaignsArray = action?.payload?.data
+					? placeholderArray.map(
+							(el) => el.campaign_id === action.payload.data._id
+					  )
+					: placeholderArray;
 			}
 
 			state.isLoading = false;
@@ -253,7 +258,6 @@ export const campaignSlice = createSlice({
 		[createCampaign.rejected]: (state) => {
 			state.isLoading = false;
 		},
-
 
 		[updateCampaign.pending]: (state) => {
 			state.isLoading = false;
@@ -264,7 +268,10 @@ export const campaignSlice = createSlice({
 			const placeholderArray = current(state.campaignsArray);
 
 			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.data?._id || campaign?._id === action?.payload?.data?._id) {
+				if (
+					campaign?.campaign_id === action?.payload?.data?._id ||
+					campaign?._id === action?.payload?.data?._id
+				) {
 					return {
 						...campaign,
 						...action?.payload?.data,
@@ -277,7 +284,6 @@ export const campaignSlice = createSlice({
 		[updateCampaign.rejected]: (state) => {
 			state.isLoading = false;
 		},
-
 
 		[deleteCampaign.pending]: (state) => {
 			state.isLoading = true;
@@ -300,7 +306,6 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 
-
 		[updateCampaignStatus.pending]: (state) => {
 			state.isLoading = false;
 		},
@@ -316,7 +321,6 @@ export const campaignSlice = createSlice({
 				}
 				return campaign;
 			});
-
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;

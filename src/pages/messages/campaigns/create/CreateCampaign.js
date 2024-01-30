@@ -1,15 +1,8 @@
-import React, { memo, useContext, useEffect } from "react";
+import React, { memo } from "react";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import CreateCampaignWrapper from "components/messages/campaigns/CreateCampaignWrapper";
-import { CampaignContext } from "pages/messages/index";
 
 const CreateCampaign = () => {
-	const { setCampaignViewMode } = useContext(CampaignContext);
-
-	useEffect(() => {
-		setCampaignViewMode("createCampaign");
-	}, []);
-
 	return (
 		<CampaignCreateEditLayout>
 			<CreateCampaignWrapper />

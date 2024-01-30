@@ -112,6 +112,10 @@
 		justify-content: center;
 	}
 
+	.rbc-event-content .global-campaign-title {
+		visibility: hidden;
+	}
+
 	.rbc-today .rbc-events-container > .rbc-event:not(.global-campaign) {
 		background: $clickedEventDay;
 		color: #ffffff;
@@ -171,5 +175,9 @@
 		font-weight: 500;
 		line-height: 17px;
 		color: rgba(240, 239, 255, 1);
+	}
+
+	.rbc-event-content .global-campaign-title {
+		visibility: hidden;
 	}
 }
