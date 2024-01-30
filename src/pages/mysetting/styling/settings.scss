@@ -149,6 +149,10 @@
           @include theme-aware("background-color", "listing-cell-bg");
         }
       }
+
+      .select-wrapers {
+        margin: 0;
+      }
     }
     .first {
       // height: 59px;
@@ -176,6 +180,20 @@
 // Setting Page temporary css
 .currenctly-active {
   > .setting-child {
+    display: flex;
+    align-items: center;
+
+    .custom-select-drop-area {
+      align-items: center;
+    }
+
+    .select-wrapers {
+      margin: 0;
+    }
+    .inline-confirmation {
+      margin-inline-start: 15px;
+    }
+
     &:first-child {
       font-size: 14px;
       display: flex;
