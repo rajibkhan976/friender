@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 
 import helper from "../../../helpers/helper";
 import { utils } from "../../../helpers/utils";
@@ -15,6 +15,7 @@ import {
 	ThreeDotIcon,
 } from "../../../assets/icons/Icons";
 import {
+	fetchCampaignById,
 	updateCampaignContext,
 	updateCampaignsArray,
 } from "actions/CampaignsActions";
@@ -22,15 +23,32 @@ import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 
 export const CampaignNameCellRenderer = memo((params) => {
+	const dispatch = useDispatch()
+	const navigate = useNavigate();
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
-	
-	const storeEdit = () => {
-		localStorage.setItem(
-			"fr_editCampaign_view",
-			JSON.stringify({
-				mode: "view",
-			})
-		);
+
+	const storeEdit = async () => {
+		try {
+			dispatch(fetchCampaignById({
+					fbUserId: localStorage.getItem("fr_default_fb"),
+					campaignId: params?.data?.campaign_id,
+				}))
+				.unwrap()
+				.then(res => {
+					if (res) {
+						localStorage.setItem(
+							"fr_editCampaign_view",
+							JSON.stringify({
+								mode: "view",
+							})
+						);
+
+						navigate(`/messages/campaigns/${campaignId}`);
+					}
+				})
+		} catch(error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -104,22 +122,40 @@ export const CampaignFriendsPendingCellRenderer = memo((params) => {
 			className={`campaign-pending-cell ${params?.value === 0 ? "nothing-pending" : ""
 				}`}
 		>
-			{params?.value}
+			{params?.value || 0}
 		</div>
 	);
 });
 
 export const CampaignScheduleCellRenderer = memo((params) => {
-	const storeEdit = () => {
-		localStorage.setItem(
-			"fr_editCampaign_view",
-			JSON.stringify({
-				mode: "settings",
-			})
-		);
-	};
+	const dispatch = useDispatch()
+	const navigate = useNavigate();
 
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
+
+	const storeEdit = async () => {
+		try {
+			dispatch(fetchCampaignById({
+					fbUserId: localStorage.getItem("fr_default_fb"),
+					campaignId: params?.data?.campaign_id,
+				}))
+				.unwrap()
+				.then(res => {
+					if (res) {
+						localStorage.setItem(
+							"fr_editCampaign_view",
+							JSON.stringify({
+								mode: "settings",
+							})
+						);
+
+						navigate(`/messages/campaigns/${campaignId}`);
+					}
+				})
+		} catch(error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<div className='campaign-schedule-cell'>
@@ -172,14 +208,27 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const handleEditCampaignOnClick = (event) => {
 		event.preventDefault();
 
-		localStorage.setItem(
-			"fr_editCampaign_view",
-			JSON.stringify({
-				mode: "settings",
-			})
-		);
+		try {
+			dispatch(fetchCampaignById({
+					fbUserId: localStorage.getItem("fr_default_fb"),
+					campaignId: params?.data?.campaign_id,
+				}))
+				.unwrap()
+				.then(res => {
+					if (res) {
+						localStorage.setItem(
+							"fr_editCampaign_view",
+							JSON.stringify({
+								mode: "settings",
+							})
+						);
 
-		navigate(`/messages/campaigns/${campaignId}`);
+						navigate(`/messages/campaigns/${campaignId}`);
+					}
+				})
+		} catch(error) {
+			console.log(error);
+		}
 	};
 
 	const handleDeleteCampaignOnClick = async () => {

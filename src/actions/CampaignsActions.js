@@ -6,6 +6,7 @@ import {
 	updateCampaignStatusService,
 	addUsersToCampaignService,
 	deleteCampaignService,
+	fetchCampaignUsers,
 } from "../services/campaigns/CampaignServices";
 
 const initialState = {
@@ -170,6 +171,15 @@ export const deleteCampaign = createAsyncThunk(
 	}
 );
 
+export const fetchUsers = createAsyncThunk(
+	"messages/fetchUsers",
+	async (payload) => {
+		const res = await fetchCampaignUsers(payload)
+		console.log('res fetchUsers', res);
+		return res;
+	}
+)
+
 export const campaignSlice = createSlice({
 	name: "campaigns",
 	initialState,
@@ -220,8 +230,9 @@ export const campaignSlice = createSlice({
 		[fetchCampaignById.fulfilled]: (state, action) => {
 			state.isLoading = false;
 
+			// console.log('here');
 			state.editingCampaign = action?.payload?.data?.length
-				? action?.payload?.data[0]
+				? {...action?.payload?.data[0], friends: []}
 				: null;
 		},
 		[fetchCampaignById.rejected]: (state) => {
@@ -324,6 +335,17 @@ export const campaignSlice = createSlice({
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;
+		},
+		[fetchUsers.pending]: (state) => {
+			state.isLoading = true
+		},
+		[fetchUsers.fulfilled]: (state, action) => {
+			state.isLoading = false
+			console.log('fetched users successfully :::', action);
+			state.editingCampaign = {...state.editingCampaign, friends: [...action?.payload]}
+		},
+		[fetchUsers.rejected]: (state) => {
+			state.isLoading = false
 		},
 	},
 });

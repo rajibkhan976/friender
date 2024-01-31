@@ -62,4 +62,5 @@ module.exports = {
     updateCampaignStatusUrl: "https://" + campaignService + ".execute-api.us-east-1.amazonaws.com/" + appEnv + "/update-campaign-status",
     addUsersToCampaignUrl: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/add-friends-to-campaign`,
     fetchCampaignUrl: "https://" + campaignService + ".execute-api.us-east-1.amazonaws.com/" + appEnv + "/fetch-campaign",
+		fetchCampaignUsers: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/fetch-campaign-users`
 };

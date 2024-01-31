@@ -32,13 +32,14 @@ export const fetchAllCampaign = () => {
  * @returns 
  */
 export const fetchCampaign = (data) => {
+	// console.log('looking for :::', data);
 	return new Promise((resolve, reject) => {
 		axios
 			.get(`${config.fetchCampaignUrl}?fb_user_id=${data?.fbUserId}&campaign_id=${data?.campaignId}`, {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {
@@ -46,6 +47,21 @@ export const fetchCampaign = (data) => {
 			});
 	});
 };
+
+export const fetchCampaignUsers = async (data) => {
+	return new Promise((resolve, reject) => {
+		axios
+			.get(
+				`${config.fetchCampaignUsers}?fb_user_id=${data?.fbUserId}&campaign_id=${data?.campaignId}`
+			).then((result) => {
+				console.log('users here >>> :::', result?.data);
+				resolve(result?.data)
+			}).error((err) => {
+				console.log(err);
+				reject(err)
+			})
+	})
+}
 
 /**
  * CAMPAIGN CREATE/UPDATE SERVICE..

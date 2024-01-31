@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
 	fetchCampaignById,
+	fetchUsers,
 	updateCampaignsArray,
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
@@ -102,6 +103,7 @@ const Campaigns = () => {
 		(state) => state.campaign.campaignsArray
 	);
 	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
+	const editing = useSelector((state) => state.campaign.editingCampaign)
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -188,6 +190,7 @@ const Campaigns = () => {
 
 	// TOGGLE EDIT CAMPAIGNS PAGE VIEW
 	const changeEditView = (el) => {
+		console.log('el', el);
 		let editViewPlaceholder = [...editViews];
 		editViewPlaceholder = editViewPlaceholder.map((item) =>
 			item.label === el.label ? { ...el } : { ...item, checked: false }
@@ -253,10 +256,10 @@ const Campaigns = () => {
 
 	// UPDATE REDUX CAMPAIGNS ARRAY ON EDITED CAMPAIGN MODIFIED
 	useEffect(() => {
-		console.log("isEditingCampaign", isEditingCampaign);
+		// console.log("isEditingCampaign", isEditingCampaign);
 
 		if (isEditingCampaign) {
-			console.log("isEditingCampaign", isEditingCampaign);
+			// console.log("isEditingCampaign", isEditingCampaign);
 			// console.log('isEditingCampaign CHANGED', isEditingCampaign);
 			let campaignsCreatedPlaceholder = [...campaignsCreated];
 			campaignsCreatedPlaceholder = campaignsCreatedPlaceholder?.map((el) =>
@@ -269,6 +272,17 @@ const Campaigns = () => {
 			// console.log('campaignsCreatedPlaceholder CHANGED', campaignsCreatedPlaceholder);
 		}
 	}, [isEditingCampaign]);
+
+	useEffect(() => {
+		if (editing) {
+			if (editing?.friends?.length > 0) {
+				setIsEditingCampaign(editing)
+			} else {
+				setIsEditingCampaign({...editing, friends: []})
+			}
+			console.log('editing', editing);
+		}
+	} ,[editing])
 
 	// REMOVE
 	useEffect(() => {

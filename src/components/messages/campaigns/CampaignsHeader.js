@@ -24,7 +24,7 @@ const CampaignsHeader = ({
 	campaignsCreated,
 	setIsEditingCampaign,
 	toggleEditCampaign = null,
-	fetchCampaign,
+	// fetchCampaign,
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -202,13 +202,16 @@ const CampaignsHeader = ({
 								<ChevronLeftArrowIcon />
 							</Link>
 							<h3>
-								{/* {editCampaign
-									? editCampaign?.campaign_name
-									: "Loading your campaign"} */}
-
-								{
-									campaignsDetails && campaignsDetails?.campaign_name ? campaignsDetails?.campaign_name : "Loading your campaign"
+								{editCampaign
+									? editCampaign?.campaign_name :
+										campaignsDetails ? 
+											campaignsDetails?.campaign_name :
+											"Loading your campaign"
 								}
+
+								{/* {
+									campaignsDetails && campaignsDetails?.campaign_name ? campaignsDetails?.campaign_name : "Loading your campaign"
+								} */}
 							</h3>
 
 							{editOptions && <RenderEditView />}

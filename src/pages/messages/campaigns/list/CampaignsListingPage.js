@@ -31,6 +31,9 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			headerCheckboxSelection: true,
 			checkboxSelection: true,
 			showDisabledCheckboxes: true,
+			cellRendererParams: {
+				setIsEditingCampaign,
+			},
 			lockPosition: "left",
 			cellRenderer: CampaignNameCellRenderer,
 			headerClass: "campaign-name-header",

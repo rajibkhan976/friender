@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { memo, useCallback, useEffect, useState } from "react";
+import { useOutletContext, useParams } from "react-router-dom";
 import {
 	CreationRenderer,
 	KeywordRenderer,
@@ -19,8 +19,12 @@ import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
+import { fetchUsers } from "../../../../actions/CampaignsActions";
+import { useDispatch } from "react-redux";
 
 const EditCampaign = () => {
+	const dispatch = useDispatch()
+	const params = useParams();
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
 		useOutletContext();
 	const [view, setView] = useState(null);
@@ -95,7 +99,6 @@ const EditCampaign = () => {
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
-				console.log("here");
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -116,7 +119,7 @@ const EditCampaign = () => {
 					</>
 				);
 			} else {
-				console.log("here");
+				console.log("EDIT Scheduler here");
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
@@ -149,7 +152,6 @@ const EditCampaign = () => {
 	}, [editViews]);
 
 	useEffect(() => {
-		console.log(localStorage?.getItem("fr_editCampaign_view"));
 		if (isEditingCampaign) {
 			// console.log('GOT TO EDIT ::::', isEditingCampaign);
 			setLoading(false);
