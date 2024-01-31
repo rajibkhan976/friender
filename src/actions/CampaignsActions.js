@@ -248,8 +248,8 @@ export const campaignSlice = createSlice({
 			} else {
 				state.campaignsArray = action?.payload?.data
 					? placeholderArray.map(
-							(el) => el.campaign_id === action.payload.data._id
-					  )
+						(el) => el.campaign_id === action.payload.data._id
+					)
 					: placeholderArray;
 			}
 

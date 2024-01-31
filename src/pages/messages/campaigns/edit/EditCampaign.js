@@ -201,7 +201,6 @@ const EditCampaign = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{console.log("loading", loading)}
 			{loading ? <ListingLoader /> : renderComponentsView()}
 		</>
 	);

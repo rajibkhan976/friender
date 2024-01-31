@@ -22,6 +22,8 @@ import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 
 export const CampaignNameCellRenderer = memo((params) => {
+	const campaignId = params?.data?.campaign_id || params?.data?._id;
+	
 	const storeEdit = () => {
 		localStorage.setItem(
 			"fr_editCampaign_view",
@@ -30,8 +32,6 @@ export const CampaignNameCellRenderer = memo((params) => {
 			})
 		);
 	};
-
-	const campaignId = params?.data?.campaign_id || params?.data?._id;
 
 	return (
 		<div className='campaign-name-cell'>

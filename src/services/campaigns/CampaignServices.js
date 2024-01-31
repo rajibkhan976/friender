@@ -90,7 +90,7 @@ export const updateCampaignStatusService = (campaignData) => {
 	});
 };
 
-export const  addUsersToCampaignService=(payload)=>{
+export const addUsersToCampaignService=(payload)=>{
 	return new Promise((resolve,reject)=>{
 		axios.post(config.addUsersToCampaignUrl,payload,{
 			headers: headers,

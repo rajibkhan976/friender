@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignDetails } from "actions/CampaignsActions";
 import { fetchCampaign } from 'services/campaigns/CampaignServices';
 import Alertbox from "components/common/Toast";
+import Tooltip from 'components/common/Tooltip';
 
 
 const CampaignCreateEditLayout = ({ children }) => {
@@ -59,7 +60,12 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// END DATE & TIME STATE..
 	const [showEndDateAndTime, setShowEndDateAndTime] = useState(false);
-	const [endDateAndTime, setEndDateAndTime] = useState("");
+	const [endDateAndTime, setEndDateAndTime] = useState({
+		value: '',
+		placeholder: "Choose data & time",
+		isError: false,
+		errorMsg: '',
+	});
 
 	// TIME DELAY..
 	const [timeDelay, setTimeDelay] = useState(3);
@@ -142,11 +148,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 		const value = event.target.value.trim();
 
 		if (value.length < 1) {
-			setCampaignName({
-				...campaignName,
-				isError: true,
-				errorMsg: "Enter campaign name",
-			});
+			setCampaignName({ ...campaignName, isError: true, errorMsg: "Enter campaign name" });
 		} else {
 			setCampaignName({ ...campaignName, isError: false, errorMsg: "" });
 		}
@@ -169,25 +171,49 @@ const CampaignCreateEditLayout = ({ children }) => {
 		}
 	};
 
+	// SWITCH BUTTON OF END DATE AND TIME HANDLE..
+	const handleSwitchBtnEndDateAndTime = () => {
+		setShowEndDateAndTime(!showEndDateAndTime);
+
+		if (!showEndDateAndTime) {
+			setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: '' });
+		}
+	};
+
 	// HANDLE END DATE AND TIME VALUE ON CHANGE..
 	const handleChangeEndDateAndTime = (event) => {
 		const value = event.target.value;
 		const parsedDate = moment(value);
 		const formattedDate = parsedDate.format("YYYY-MM-DD HH:mm:ss");
-		setEndDateAndTime(formattedDate);
+		setEndDateAndTime({ ...endDateAndTime, value: formattedDate });
+	};
+
+	// VALIDATION ON END DATE AND TIME ON BLUR EVENT..
+	const handleBlurEndDateAndTime = (event) => {
+		const value = event.target.value?.trim();
+
+		if (showEndDateAndTime) {
+			if (value?.length === 0) {
+				setEndDateAndTime({ ...endDateAndTime, isError: true, errorMsg: 'Blank not allowed' });
+			} else {
+				setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: '' });
+			}
+		}
 	};
 
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
-		if (type === "CREATE") {
-			const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
+		if (campaignsArray?.length) {
+			if (type === "CREATE") {
+				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
 
-			if (campaignExistsCheck > -1) {
-				Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
-				setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
-				setLoadingBtn(false);
-				return false;
+				if (campaignExistsCheck > -1) {
+					Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+					setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
+					setLoadingBtn(false);
+					return false;
+				}
 			}
 		}
 
@@ -202,12 +228,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 			}
 
 			if (response?.data?.length === 0) {
-				Alertbox(
-					"The campaign name is already in use, please try a different name.",
-					"error",
-					1000,
-					"bottom-right"
-				);
+				Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
 				setLoadingBtn(false);
 			} else {
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
@@ -259,9 +280,16 @@ const CampaignCreateEditLayout = ({ children }) => {
 		if (!isLoadingBtn) {
 			setLoadingBtn(true);
 
-			// VALIDATE THE FORM..
+			// VALIDATE THE FORM, (SELECT GROUP MESSAGE)
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
+				setLoadingBtn(false);
+				return false;
+			}
+
+			// VALIDATION THE FORM, (END DATE AND TIME)
+			if (showEndDateAndTime && endDateAndTime?.value?.trim() === '') {
+				setEndDateAndTime({ ...endDateAndTime, isError: true, errorMsg: 'Blank not allowed' });
 				setLoadingBtn(false);
 				return false;
 			}
@@ -272,17 +300,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
-				campaignEndTime: endDateAndTime,
+				campaignEndTime: endDateAndTime?.value,
 				campaignStatus: true,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
 			};
-
-			if (!usingSelectOption || !groupMsgSelect) {
-				campaignData.messageGroupId = null;
-			} else {
-				campaignData.quickMessage = null;
-			}
 
 			if (type === "EDIT") {
 				campaignData.campaignId = params?.campaignId;
@@ -353,7 +375,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				}
 
 				if (campaignData?.campaign_end_time) {
-					setEndDateAndTime(campaignData.campaign_end_time);
+					setEndDateAndTime({ ...endDateAndTime, value: campaignData.campaign_end_time });
 				}
 
 				if (campaignData?.campaign_end_time_status) {
@@ -380,6 +402,19 @@ const CampaignCreateEditLayout = ({ children }) => {
 			Alertbox("An unexpected error occurred. Please try again later.", "error", 1000, "bottom-right");
 		}
 	};
+
+	// HANDLE THE DIFFERENT SELECT OPTION ON ONE COMPONENT AS KEEP ONLY ONE AT A TIME..
+	useEffect(() => {
+		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+
+		if (quickMsg && !selectMsgUsing) {
+			setGroupMsgSelect(null);
+		}
+		if (selectMsgUsing) {
+			setQuickMsg(null);
+		}
+		
+	}, [groupMsgSelect, quickMsg]);
 
 	useEffect(() => {
 		// Fetching All Group Messages.
@@ -493,23 +528,38 @@ const CampaignCreateEditLayout = ({ children }) => {
 						<Switch
 							// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
 							checked={showEndDateAndTime}
-							handleChange={() => setShowEndDateAndTime(!showEndDateAndTime)}
+							handleChange={handleSwitchBtnEndDateAndTime}
 							smallVariant
 						/>
 
-						<span>End date & time</span>
+						<span className="campaign-end-datetime-span">End date & time</span>
+						
+						<span className="campaigns-input-tooltip">
+							<Tooltip 
+								type="info" 
+								customWidth={200} 
+								iconColor={"#313037"}
+								textContent="The campaign will automatically deactivate at the specified date and time." 
+							/>
+						</span>
+
 					</label>
 
 					<input
 						type='datetime-local'
-						className='campaigns-datetime-select'
-						value={endDateAndTime}
+						className={`campaigns-datetime-select ${endDateAndTime?.isError ? 'campaigns-error-input-field' : ''}`}
+						value={endDateAndTime?.value}
 						style={{
 							visibility: !showEndDateAndTime ? "hidden" : "visible",
 						}}
 						onChange={handleChangeEndDateAndTime}
-						placeholder='Choose date & time'
+						onBlur={handleBlurEndDateAndTime}
+						placeholder={endDateAndTime?.placeholder}
 					/>
+
+					{endDateAndTime?.isError && showEndDateAndTime && (
+						<span className='text-red'>{endDateAndTime?.errorMsg}</span>
+					)}
 				</div>
 			</div>
 
@@ -519,11 +569,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 			{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
 			<div className='campaigns-save-buttons-container'>
 				<button className='btn btn-grey' onClick={handleClickToCancelEditCampaign}>Cancel</button>
-				
+
 				<button
 					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}
-					disabled={campaignName.value.trim() === "" || unselectedError}
+					disabled={campaignName.value?.trim() === "" || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
 				>
 					{isLoadingBtn ? type === "EDIT" ? "Updating..." : "Saving..." : "Save campaign"}
 				</button>

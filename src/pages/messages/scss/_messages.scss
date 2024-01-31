@@ -836,13 +836,13 @@
 					label:not(.switch) {
 						font-size: 12px;
 						// color: #767485;
-						margin-bottom: 4px;
+						margin-bottom: 6px;
 						@include theme-aware("color", "link-text-color");
 					}
 
 					label.campaigns-end-dateTime-label {
 						position: relative;
-						top: 150%;
+						top: 130%;
 
 						.switch {
 							margin-inline-end: 8px;
@@ -860,6 +860,15 @@
 
 						.custom-select-option-wrapper {
 							width: 100%;
+						}
+
+						.campaigns-input-tooltip {
+							padding-left: 3px;
+							margin-top: -3px;
+						}
+
+						.campaign-end-datetime-span {
+							margin-top: 2px;
 						}
 					}
 

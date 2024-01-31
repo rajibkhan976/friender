@@ -34,6 +34,9 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			lockPosition: "left",
 			cellRenderer: CampaignNameCellRenderer,
 			headerClass: "campaign-name-header",
+			cellRendererParams: {
+				setIsEditingCampaign
+			},
 		},
 		{
 			field: "campaign_status",

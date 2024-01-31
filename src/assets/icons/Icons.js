@@ -423,13 +423,13 @@ export const QueryIcon = ({ color, background }) => {
 	);
 };
 
-export const InfoIcon = () => {
+export const InfoIcon = ({ color = null }) => {
 	return (
 		<svg
 			width='14'
 			height='15'
 			viewBox='0 0 14 15'
-			fill='none'
+			fill={color}
 			xmlns='http://www.w3.org/2000/svg'
 		>
 			<g opacity='0.5'>
