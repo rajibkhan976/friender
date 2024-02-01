@@ -336,6 +336,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// UPDATE THE SCHEDULAR WITH SPECIFIC CAMPAIGNS DATA..
 	const updateSchedularOfCalender = (scheduleData, nameOfCampaign, colorOfCampaign) => {
+		console.log(scheduleData);
 		const schedule = scheduleData?.length && scheduleData.map((sched) => {
 			const id = params?.campaignId;
 			const color = colorOfCampaign;

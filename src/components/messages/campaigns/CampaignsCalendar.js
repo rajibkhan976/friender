@@ -11,8 +11,8 @@ const CampaignsCalendar = () => {
 	const [open, setOpen] = useState(false);
 	const [scheduleTime, setScheduleTime] = useState({
 		date: new Date(),
-		start: "12:00 am",
-		end: "12:30 am",
+		start: "",
+		end: "",
 	});
 
 	return (
@@ -24,6 +24,7 @@ const CampaignsCalendar = () => {
 						open={open}
 						scheduleTime={scheduleTime}
 						setOpen={setOpen}
+						setCalenderModalType={(type) => setCalenderModalType(type)}
 						setScheduleTime={setScheduleTime}
 					/>
 				)}

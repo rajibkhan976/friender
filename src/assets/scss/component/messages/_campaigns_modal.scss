@@ -57,7 +57,12 @@
 
 	// HEADER..
 	.campaign-modal-header {
+		width: 90%;
 		height: 40px;
+	}
+
+	.campaign-modal-title {
+		width: 37%;
 	}
 
 	// CONTENT..
@@ -201,7 +206,8 @@
 div.campaign-view-details-modal {
 	.campaign-view-details-header {
 		.campaign-modal-header-actions {
-			display: inline-flex;
+			display: flex;
+			align-items: center;
 			gap: 20px;
 			position: relative;
 			left: 33%;
@@ -209,6 +215,7 @@ div.campaign-view-details-modal {
 			.campaign-view-details-toggle {
 				border-right: 1px solid #313037;
 				height: 25px;
+				margin-top: 1px;
 			}
 
 			.campaign-edit-pen,

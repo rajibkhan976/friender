@@ -85,9 +85,14 @@
 		margin-right: 0;
 	}
 
+	.rbc-event.campaign-saved {
+		background-color: #8998b8 !important;
+		background-image: none !important;
+	}
+
 	.rbc-event,
 	.rbc-day-slot .rbc-background-event {
-		background-color: #8998b8;
+		background: $clickedEventDay;
 		color: #131314;
 		font-size: 12px;
 		font-weight: 500;
@@ -116,10 +121,10 @@
 		visibility: hidden;
 	}
 
-	.rbc-today .rbc-events-container > .rbc-event:not(.global-campaign) {
-		background: $clickedEventDay;
-		color: #ffffff;
-	}
+	// .rbc-today .rbc-events-container > .rbc-event:not(.global-campaign) {
+	// 	background: $clickedEventDay;
+	// 	color: #ffffff;
+	// }
 
 	.rbc-day-slot > .rbc-timeslot-group:hover {
 		background-color: rgba(0, 148, 255, 0.5);

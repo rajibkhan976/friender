@@ -323,7 +323,7 @@ const Campaigns = () => {
 					{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
 						<div className='campaigns-main'>
 							{radioOption?.find((el) => el.checked).label === "listing" ? (
-								(!campaignsCreated || campaignsCreated?.length <= 0) ? (
+								!campaignsCreated || campaignsCreated?.length <= 0 ? (
 									<NoDataFound
 										customText={`No campaign(s) has been created yet`}
 									/>
@@ -335,12 +335,12 @@ const Campaigns = () => {
 										/>
 									</Suspense>
 								)
-							) : (!campaignsCreated || campaignsCreated?.length <= 0) ? (
+							) : !campaignsCreated || campaignsCreated?.length <= 0 ? (
 								<NoDataFound
 									customText={`No campaign(s) has been created yet`}
 								/>
 							) : (
-								<Suspense fallback='Loading Calendar View for your Campaigns'>
+								<Suspense fallback={<ListingLoader />}>
 									<CampaignsCalendar
 										campaignsCreated={filterCampaigns}
 										setIsEditingCampaign={setIsEditingCampaign}

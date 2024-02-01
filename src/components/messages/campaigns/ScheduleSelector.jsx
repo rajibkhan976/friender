@@ -259,7 +259,7 @@ const ScheduleSelector = (props) => {
 		}
 	};
 
-	const handleSaveCampaignSchedule = () => {
+	const handleSaveCampaignSchedule = async (e) => {
 		if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
 			let campaignScheduleArr = Array.isArray(campaignSchedule)
 				? campaignSchedule.map((item) => item)
@@ -356,7 +356,20 @@ const ScheduleSelector = (props) => {
 				<button
 					type='button'
 					className='scheduler-popup-save-btn'
-					onClick={handleSaveCampaignSchedule}
+					onClick={async () => {
+						await handleSaveCampaignSchedule();
+
+						const rbcEventArr = document.getElementsByClassName("rbc-event");
+						if (rbcEventArr && rbcEventArr.length > 0) {
+							for (let i = 0; i < rbcEventArr.length; i++) {
+								if (
+									!rbcEventArr[i].classList?.value.includes("campaign-saved")
+								) {
+									rbcEventArr[i].classList.add("campaign-saved");
+								}
+							}
+						}
+					}}
 				>
 					Save
 				</button>

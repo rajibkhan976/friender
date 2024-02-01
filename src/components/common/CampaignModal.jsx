@@ -33,6 +33,7 @@ const CalenderModal = ({
 	open = false,
 	setOpen,
 	scheduleTime,
+	setCalenderModalType,
 	setScheduleTime,
 }) => {
 	const navigate = useNavigate();
@@ -469,6 +470,12 @@ const CalenderModal = ({
 			const response = await dispatch(createCampaign(payload)).unwrap();
 
 			if (response?.data) {
+				const rbcEventArr = document.getElementsByClassName("rbc-event");
+				for (let i = 0; i < rbcEventArr.length; i++) {
+					if (!rbcEventArr[i].classList?.value.includes("campaign-saved")) {
+						rbcEventArr[i].classList.add("campaign-saved");
+					}
+				}
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
 				navigate("/messages/campaigns");
@@ -553,11 +560,11 @@ const CalenderModal = ({
 			// UNHANDLED VALUES.. TIME DURATIONS,
 			console.log("START - END TIME DURATIONS - ", startTime, endTime);
 
-			let campaignScheduleArr = Array.isArray(campaignSchedule)
-				? campaignSchedule.map((item) => item)
-				: [];
-			campaignScheduleArr.pop();
 			if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
+				let campaignScheduleArr = Array.isArray(campaignSchedule)
+					? campaignSchedule.map((item) => item)
+					: [];
+				campaignScheduleArr.pop();
 				const date = moment(scheduleTime.date).format("MMMM DD, YYYY");
 				campaignScheduleArr = [
 					...campaignScheduleArr,
@@ -568,7 +575,13 @@ const CalenderModal = ({
 				];
 				dispatch(updateCampaignSchedule(campaignScheduleArr));
 			}
-
+			setScheduleTime(() => {
+				return {
+					...scheduleTime,
+					start: "",
+					end: "",
+				};
+			});
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
 				setLoadingBtn(false);
@@ -586,14 +599,17 @@ const CalenderModal = ({
 				campaignLabelColor: campaginColorPick,
 			});
 		}
+		setCalenderModalType("");
+		setCalenderModalOpen(false);
+		setOpen(false);
 	};
 
 	useEffect(() => {
-		if (selectedCampaignSchedule && selectedCampaignSchedule.campaign_id) {
+		if (selectedCampaignSchedule && selectedCampaignSchedule.id) {
 			dispatch(
 				fetchCampaignById({
 					fbUserId: current_fb_id,
-					campaignId: selectedCampaignSchedule.campaign_id,
+					campaignId: selectedCampaignSchedule.id,
 				})
 			);
 		}
@@ -626,6 +642,15 @@ const CalenderModal = ({
 			: [];
 		campaignScheduleArr.pop();
 		dispatch(updateCampaignSchedule(campaignScheduleArr));
+		setScheduleTime(() => {
+			return {
+				...scheduleTime,
+				start: "",
+				end: "",
+			};
+		});
+		setCalenderModalType("");
+		setCalenderModalOpen(false);
 		setOpen(false);
 	};
 
@@ -637,7 +662,6 @@ const CalenderModal = ({
 
 	console.log(selectedCampaignSchedule);
 	console.log(editingCampaign);
-	console.log(open);
 
 	if (type === "CREATE_CAMPAIGN") {
 		return (
@@ -878,9 +902,12 @@ const CalenderModal = ({
 
 						{/* CAMPAIGN VIEW DETAILS HEADER */}
 						<div className='modal-header d-flex f-align-center campaign-modal-header campaign-view-details-header'>
-							<span style={{ color: "#fff", fontSize: "15px" }}>
+							<div
+								className='campaign-modal-title'
+								style={{ color: "#fff", fontSize: "15px" }}
+							>
 								{editingCampaign?.campaign_name}
-							</span>
+							</div>
 
 							<div className='campaign-modal-header-actions'>
 								<div className='campaign-view-details-toggle'>
@@ -941,7 +968,13 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>Tuesday | 04:00am - 06:00am</p>
+										<p>{`${moment(selectedCampaignSchedule?.start).format(
+											"dddd"
+										)} | ${moment(selectedCampaignSchedule?.start).format(
+											"hh:mm:ssa"
+										)} - ${moment(selectedCampaignSchedule?.end).format(
+											"hh:mm:ssa"
+										)}`}</p>
 										<span>Scheduled for</span>
 									</div>
 								</div>
@@ -967,7 +1000,7 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>Group name will be here</p>
+										<p>{editingCampaign?.group_name}</p>
 										<span>Message</span>
 									</div>
 								</div>
