@@ -33,6 +33,7 @@ import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
 import helper from "../../helpers/helper";
 import { utils } from "../../helpers/utils";
+import { fetchAllCampaigns } from "../../actions/CampaignsActions";
 
 const FriendsList = () => {
 	//::::Friend List geting data from Redux::::
@@ -91,7 +92,7 @@ const FriendsList = () => {
 	};
 
 	useEffect(() => {
-		// console.log('mySettings', mySettings?.data[0]?.friends_willbe_inactive_after);
+		dispatch(fetchAllCampaigns());
 		getSettingsData();
 	}, []);
 
