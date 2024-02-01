@@ -167,7 +167,8 @@ export const deleteCampaign = createAsyncThunk(
 	"messages/deleteCampaign",
 	async (payload) => {
 		const res = await deleteCampaignService(payload);
-		return { ...res, campaignId: payload[0]?.campaignId };
+		console.log('res', res, 'payload', payload);
+		return { ...res, campaignIds: [...payload] };
 	}
 );
 
@@ -300,17 +301,13 @@ export const campaignSlice = createSlice({
 			state.isLoading = true;
 		},
 		[deleteCampaign.fulfilled]: (state, action) => {
-			const placeholderArray = current(state.campaignsArray);
-			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.campaignId) {
-					return {
-						...campaign,
-						campaign_status: false,
-						status: false,
-					};
-				}
-				return campaign;
-			});
+			let placeholderArray = current(state.campaignsArray);
+			let idsArr1 = action?.payload?.campaignIds.map(obj => obj.campaignId);
+			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj._id));
+			// return filteredArr2;
+			
+			console.log('filteredArr2', filteredArr2);
+			state.campaignsArray = filteredArr2
 			state.isLoading = false;
 		},
 		[deleteCampaign.rejected]: (state) => {

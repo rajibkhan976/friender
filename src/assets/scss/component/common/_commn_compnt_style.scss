@@ -251,6 +251,10 @@
         .modal-icon {
           margin-right: 4px;
         }
+
+        span {
+          color: $themeRed1 !important;
+        }
       }
       &.normal-type {
         display: flex;

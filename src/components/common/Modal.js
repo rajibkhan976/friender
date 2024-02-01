@@ -15,7 +15,7 @@ const Modal = ({
   ModalIconElement,
   ExtraProps = {},
   modalButtons = true,
-  additionalClass,
+  additionalClass="",
   modalWithChild = false,
   children,
 }) => {

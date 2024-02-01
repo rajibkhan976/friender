@@ -65,6 +65,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 export const CampaignStatusCellRenderer = memo((params) => {
 	const [campaignStatus, setCampaignStatus] = useState(params?.value ? params?.value : false);
+	console.log('params?.value', params?.value);
 
 	const doSomething = (e) => {
 		if (

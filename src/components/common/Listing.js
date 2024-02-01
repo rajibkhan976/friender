@@ -26,6 +26,9 @@ import "ag-grid-community/styles/ag-grid.css";
 import "../../assets/scss/component/common/_listing.scss";
 import DropSelector from "../formComponents/DropSelector";
 import Alertbox from "./Toast";
+import DeleteImgIcon from "../../assets/images/deleteModal.png"
+import { deleteCampaign } from "../../actions/CampaignsActions";
+import Modal from "./Modal";
 // import e from "cors";
 
 const Pagination = lazy(() => import("./Pagination"));
@@ -50,6 +53,7 @@ const Listing = (props) => {
 	const [itemsPerPage, setItemsPerPage] = useState(15);
 	const [showPaginate, setShowPaginate] = useState(false);
 	const [selectedFriends, setSelectedFriends] = useState([]);
+	const [deleteCampaignConfirm, setDeleteCampaignConfirm] = useState(false)
 	const [currentPage, setCurrentPage] = useState(0);
 	// const isFirstColumn = (params) => {
 	//   var displayedColumns = params.columnApi.getAllDisplayedColumns();
@@ -480,14 +484,28 @@ const Listing = (props) => {
 	// DELETE THE SELECTED CAMPAIGNS FROM ROW..
 	const deleteSelectedCampaigns = useCallback(() => {
 		// add Remove selected campaigns code here
+		const deletePayload = []
+		
+		selectedFriends && selectedFriends?.map(el => deletePayload.push(
+			{
+				campaignId: el?.campaign_id ? el?.campaign_id : el?._id
+			}
+		));
 
 		try {
-			Alertbox(
-				`Campaign(s) has been deleted successfully.`,
-				"success",
-				1000,
-				"bottom-right"
-			);
+			console.log('selected campaigns', deletePayload);
+			dispatch(deleteCampaign(deletePayload))
+				.unwrap()
+				.then((res) => {
+					console.log('res', res);
+					Alertbox(
+						`Campaign(s) has been deleted successfully.`,
+						"success",
+						1000,
+						"bottom-right"
+					);
+					setDeleteCampaignConfirm(false)
+				})
 		} catch (error) {
 			Alertbox(error, "error-toast", 1000, "bottom-right");
 		}
@@ -584,6 +602,26 @@ const Listing = (props) => {
 
 	return (
 		<>
+			{
+				deleteCampaignConfirm &&
+				<Modal
+					modalType='delete-type'
+					modalIcon={DeleteImgIcon}
+					headerText={"Delete Alert"}
+					bodyText={
+						<>
+							{selectedFriends?.length} campaign(s) will be deleted permanently. 
+							Are you sure you want to delete?
+						</>
+					}
+					closeBtnTxt='Close'
+					closeBtnFun={setDeleteCampaignConfirm}
+					open={deleteCampaignConfirm}
+					setOpen={setDeleteCampaignConfirm}
+					ModalFun={deleteSelectedCampaigns}
+					btnText={"Yes. Delete"}
+				/>
+			}
 			{selectedFriends &&
 				selectedFriends.length > 0 &&
 				selectedFrnd &&
@@ -635,7 +673,8 @@ const Listing = (props) => {
 						{props?.isListing === "campaign" && (
 							<button
 								className='remove-friends btn-inline red-text'
-								onClick={deleteSelectedCampaigns}
+								// onClick={deleteSelectedCampaigns}
+								onClick={()=>setDeleteCampaignConfirm(true)}
 							>
 								Delete campaign(s)
 							</button>

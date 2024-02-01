@@ -301,7 +301,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
 				campaignEndTime: endDateAndTime?.value,
-				campaignStatus: true,
+				campaignStatus: false,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
 			};
