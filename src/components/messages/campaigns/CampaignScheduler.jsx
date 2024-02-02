@@ -32,6 +32,7 @@ const CampaignScheduler = (props) => {
 		handleSetPopupPos,
 		handleSetShowPopup,
 		setCalenderModalType,
+		setScheduleTime,
 	} = props;
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -208,6 +209,7 @@ const CampaignScheduler = (props) => {
 
 	const handleSelectEvent = (event) => {
 		// console.log("selected envet", event);
+		setShowGlobalCampaignPopup(false);
 		setSelectedEvent(event);
 		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
 		// dispatch(
@@ -225,6 +227,11 @@ const CampaignScheduler = (props) => {
 		selectedSchedules.push({
 			start: start,
 			end: end,
+		});
+		setScheduleTime({
+			date: [new Date(start)],
+			start: moment(start).format("h:mm A"),
+			end: moment(end).format("h:mm A"),
 		});
 		slotInfo?.box
 			? handleSetPopupPos &&
@@ -286,6 +293,7 @@ const CampaignScheduler = (props) => {
 				onSelectEvent={handleSelectEvent}
 				onSelectSlot={handleSelectSlot}
 				selectable
+				tooltipAccessor={null}
 			/>
 		</>
 	);

@@ -1,5 +1,6 @@
 const GlobalCampaignList = (props) => {
 	const { handleSetShowGlobalCampaignPopup, listItems, popupCoordPos } = props;
+
 	return (
 		<div
 			className='global-campaign-list-content'

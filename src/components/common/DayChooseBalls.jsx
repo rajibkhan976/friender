@@ -19,15 +19,18 @@ const DayChooseBalls = ({ scheduleTime, setScheduleTime }) => {
 		}
 	};
 	buildOnWeekdaysArr();
-
+	
 	return (
 		<div className='scheduler-popup-header-content'>
 			{weekdaysArr.map((week, index) => (
 				<div
 					key={index}
 					className={`popup-header-content-item ${
-						moment(scheduleTime.date).format("dddd").substring(0, 2) ===
-						week.day.substring(0, 2)
+						scheduleTime?.date.some(
+							(date) =>
+								moment(date).format("dddd").substring(0, 2) ===
+								week.day.substring(0, 2)
+						)
 							? "today-circle"
 							: ""
 					}`}
@@ -35,7 +38,17 @@ const DayChooseBalls = ({ scheduleTime, setScheduleTime }) => {
 						setScheduleTime(() => {
 							return {
 								...scheduleTime,
-								date: week.date,
+								date: scheduleTime.date.every(
+									(item) =>
+										moment(item).format("DD-MM-YYYY") !==
+										moment(week.date).format("DD-MM-YYYY")
+								)
+									? [...scheduleTime.date, new Date(week.date)]
+									: scheduleTime.date.filter(
+											(item) =>
+												moment(item).format("DD-MM-YYYY") !==
+												moment(week.date).format("DD-MM-YYYY")
+									  ),
 							};
 						})
 					}

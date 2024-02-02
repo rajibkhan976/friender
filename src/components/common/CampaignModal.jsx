@@ -13,6 +13,7 @@ import {
 	fetchCampaignById,
 	updateCampaignStatus,
 	updateCampaign,
+	deleteCampaign,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -30,7 +31,7 @@ import Modal from "components/common/Modal";
 import Alertbox from "components/common/Toast";
 import moment from "moment";
 import { getGroupById } from 'actions/MySettingAction';
-
+import { timeOptions } from "../../helpers/timeOptions";
 
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
@@ -115,229 +116,6 @@ const CalenderModal = ({
 		},
 	];
 
-	const timeOptions = [
-		{
-			value: "12:00  am",
-			label: "12:00  am",
-			selected: false,
-		},
-		{
-			value: "12:30  am",
-			label: "12:30  am",
-			selected: false,
-		},
-		{
-			value: "1:00  am",
-			label: "1:00  am",
-			selected: false,
-		},
-		{
-			value: "1:30  am",
-			label: "1:30  am",
-			selected: false,
-		},
-		{
-			value: "2:00  am",
-			label: "2:00  am",
-			selected: false,
-		},
-		{
-			value: "2:30  am",
-			label: "2:30  am",
-			selected: false,
-		},
-		{
-			value: "3:00  am",
-			label: "3:00  am",
-			selected: false,
-		},
-		{
-			value: "3:30  am",
-			label: "3:30  am",
-			selected: false,
-		},
-		{
-			value: "4:00  am",
-			label: "4:00  am",
-			selected: false,
-		},
-		{
-			value: "4:30  am",
-			label: "4:30  am",
-			selected: false,
-		},
-		{
-			value: "5:00  am",
-			label: "5:00  am",
-			selected: false,
-		},
-		{
-			value: "5:30  am",
-			label: "5:30  am",
-			selected: false,
-		},
-		{
-			value: "6:00  am",
-			label: "6:00  am",
-			selected: false,
-		},
-		{
-			value: "6:30  am",
-			label: "6:30  am",
-			selected: false,
-		},
-		{
-			value: "7:00  am",
-			label: "7:00  am",
-			selected: false,
-		},
-		{
-			value: "8:00  am",
-			label: "8:00  am",
-			selected: false,
-		},
-		{
-			value: "8:30  am",
-			label: "8:30  am",
-			selected: false,
-		},
-		{
-			value: "9:00  am",
-			label: "9:00  am",
-			selected: false,
-		},
-		{
-			value: "9:30  am",
-			label: "9:30  am",
-			selected: false,
-		},
-		{
-			value: "10:00  am",
-			label: "10:00  am",
-			selected: false,
-		},
-		{
-			value: "11:00  am",
-			label: "11:00  am",
-			selected: false,
-		},
-		{
-			value: "11:30  am",
-			label: "11:30  am",
-			selected: false,
-		},
-		{
-			value: "12:00  pm",
-			label: "12:00  pm",
-			selected: false,
-		},
-		{
-			value: "12:30  pm",
-			label: "12:30  pm",
-			selected: false,
-		},
-		{
-			value: "1:00  pm",
-			label: "1:00  pm",
-			selected: false,
-		},
-		{
-			value: "1:30  pm",
-			label: "1:30  pm",
-			selected: false,
-		},
-		{
-			value: "2:00  pm",
-			label: "2:00  pm",
-			selected: false,
-		},
-		{
-			value: "2:30  pm",
-			label: "2:30  pm",
-			selected: false,
-		},
-		{
-			value: "3:00  pm",
-			label: "3:00  pm",
-			selected: false,
-		},
-		{
-			value: "3:30  pm",
-			label: "3:30  pm",
-			selected: false,
-		},
-		{
-			value: "4:00  pm",
-			label: "4:00  pm",
-			selected: false,
-		},
-		{
-			value: "4:30  pm",
-			label: "4:30  pm",
-			selected: false,
-		},
-		{
-			value: "5:00  pm",
-			label: "5:00  pm",
-			selected: false,
-		},
-		{
-			value: "5:30  pm",
-			label: "5:30  pm",
-			selected: false,
-		},
-		{
-			value: "6:00  pm",
-			label: "6:00  pm",
-			selected: false,
-		},
-		{
-			value: "6:30  pm",
-			label: "6:30  pm",
-			selected: false,
-		},
-		{
-			value: "7:00  pm",
-			label: "7:00  pm",
-			selected: false,
-		},
-		{
-			value: "8:00  pm",
-			label: "8:00  pm",
-			selected: false,
-		},
-		{
-			value: "8:30  pm",
-			label: "8:30  pm",
-			selected: false,
-		},
-		{
-			value: "9:00  pm",
-			label: "9:00  pm",
-			selected: false,
-		},
-		{
-			value: "9:30  pm",
-			label: "9:30  pm",
-			selected: false,
-		},
-		{
-			value: "10:00  pm",
-			label: "10:00  pm",
-			selected: false,
-		},
-		{
-			value: "11:00  pm",
-			label: "11:00  pm",
-			selected: false,
-		},
-		{
-			value: "11:30  pm",
-			label: "11:30  pm",
-			selected: false,
-		},
-	];
-
 	// CAMPAIGN HEADER TOGGLE..
 	const [isCampaignToggleOn, setCampaignToggle] = useState(() => editingCampaign ? editingCampaign?.status : false);
 
@@ -350,6 +128,13 @@ const CalenderModal = ({
 	// CAMPAIGN DELETE MODAL OPEN/CLOSE..
 	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
 		useState(false);
+
+	useEffect(() => {
+		if (scheduleTime) {
+			setStartTime(scheduleTime?.start);
+			setEndTime(scheduleTime?.end);
+		}
+	}, [scheduleTime]);
 
 	// HANDLE CAMPAIGNS NAME FUNCTION..
 	const handleCampaignName = (event) => {
@@ -497,13 +282,13 @@ const CalenderModal = ({
 
 			if (response?.data) {
 				const rbcEventArr = document.getElementsByClassName("rbc-event");
-
-				for (let i = 0; i < rbcEventArr.length; i++) {
-					if (!rbcEventArr[i].classList?.value.includes("campaign-saved")) {
-						rbcEventArr[i].classList.add("campaign-saved");
+				if (rbcEventArr && rbcEventArr.length > 0) {
+					for (let i = 0; i < rbcEventArr.length; i++) {
+						if (!rbcEventArr[i].classList?.value.includes("campaign-saved")) {
+							rbcEventArr[i].classList.add("campaign-saved");
+						}
 					}
 				}
-
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
 				navigate("/messages/campaigns");
@@ -596,19 +381,22 @@ const CalenderModal = ({
 					? campaignSchedule.map((item) => item)
 					: [];
 				campaignScheduleArr.pop();
-				const date = moment(scheduleTime.date).format("MMMM DD, YYYY");
-				campaignScheduleArr = [
-					...campaignScheduleArr,
-					{
-						start: new Date(`${date} ${scheduleTime.start}`),
-						end: new Date(`${date} ${scheduleTime.end}`),
-					},
-				];
+				const dateArr = scheduleTime.date.map((item) =>
+					moment(item).format("MMMM DD, YYYY")
+				);
+				const dateTimeArrObj = [];
+				dateArr.forEach((item) => {
+					dateTimeArrObj.push({
+						start: new Date(`${item} ${scheduleTime.start}`),
+						end: new Date(`${item} ${scheduleTime.end}`),
+					});
+				});
+				campaignScheduleArr = [...campaignScheduleArr, ...dateTimeArrObj];
 				dispatch(updateCampaignSchedule(campaignScheduleArr));
 			}
 			setScheduleTime(() => {
 				return {
-					...scheduleTime,
+					date: [new Date()],
 					start: "",
 					end: "",
 				};
@@ -669,7 +457,7 @@ const CalenderModal = ({
 			);
 	}, []);
 
-	const handleCancleCampaignCreation = () => {
+	const handleCancelCampaignCreation = () => {
 		let campaignScheduleArr = Array.isArray(campaignSchedule)
 			? campaignSchedule.map((item) => item)
 			: [];
@@ -677,7 +465,7 @@ const CalenderModal = ({
 		dispatch(updateCampaignSchedule(campaignScheduleArr));
 		setScheduleTime(() => {
 			return {
-				...scheduleTime,
+				date: [new Date()],
 				start: "",
 				end: "",
 			};
@@ -685,6 +473,41 @@ const CalenderModal = ({
 		setCalenderModalType("");
 		setCalenderModalOpen(false);
 		setOpen(false);
+	};
+
+	// DELETE CAMPAIGN API REQUEST..
+	const campaignDeleteAPIReq = async (id) => {
+		try {
+			const response = await dispatch(
+				deleteCampaign([{ campaignId: id }])
+			).unwrap();
+
+			if (response?.data) {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(
+					`Campaign(s) has been deleted successfully.`,
+					"success",
+					1000,
+					"bottom-right"
+				);
+			} else if (response?.error?.code === "bad_request") {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(`${response?.error?.message}`, "error", 1000, "bottom-right");
+			} else {
+				setCampaignDeleteModalOpen(false);
+				Alertbox(
+					`Failed to delete the campaign. Please check your input and try again.`,
+					"error",
+					1000,
+					"bottom-right"
+				);
+			}
+		} catch (error) {
+			setCampaignDeleteModalOpen(false);
+			Alertbox(error, "error", 1000, "bottom-right");
+		} finally {
+			setCampaignDeleteModalOpen(false);
+		}
 	};
 
 	// useEffect(() => {
@@ -793,7 +616,7 @@ const CalenderModal = ({
 				<div className='modal-content-wraper'>
 					<span
 						className='close-modal campaign-close-modal'
-						onClick={handleCancleCampaignCreation}
+						onClick={handleCancelCampaignCreation}
 					>
 						<XMarkIcon color='lightgray' />
 					</span>
@@ -943,10 +766,12 @@ const CalenderModal = ({
 									<DropSelector
 										selects={timeOptions}
 										id='start-time-span'
-										value={startTime}
-										// defaultValue={
-										// 	timeOptions?.find((el) => el.value === startTime)?.value
-										// }
+										defaultValue={
+											timeOptions?.find((el) => el.value === startTime)?.value
+										}
+										value={
+											timeOptions?.find((el) => el.value === startTime)?.value
+										}
 										extraClass='fr-select-new tinyWrap campaign-time-select-half'
 										height='40px'
 										width='120px'
@@ -958,10 +783,10 @@ const CalenderModal = ({
 									<DropSelector
 										selects={timeOptions}
 										id='end-time-span'
-										value={endTime}
 										defaultValue={
 											timeOptions?.find((el) => el.value === endTime)?.value
 										}
+										value={timeOptions?.find((el) => el.value === endTime)?.value}
 										extraClass='fr-select-new tinyWrap campaign-time-select-half'
 										height='40px'
 										width='120px'
@@ -989,7 +814,7 @@ const CalenderModal = ({
 					>
 						<button
 							className='btn btn-grey'
-							onClick={handleCancleCampaignCreation}
+							onClick={handleCancelCampaignCreation}
 						>
 							Cancel
 						</button>
@@ -1009,18 +834,21 @@ const CalenderModal = ({
 	} else if (type === "VIEW_DETAILS") {
 		return (
 			<>
-				<Modal
-					modalType='DELETE'
-					headerText={"Delete"}
-					bodyText={"Are you sure you want to delete ?"}
-					open={isCampaignDeleteModalOpen}
-					setOpen={setCampaignDeleteModalOpen}
-					ModalFun={() => { }}
-					btnText={"Yes, Delete"}
-					ModalIconElement={() => <DangerIcon />}
-					additionalClass={`campaign-view-details-delete-modal`}
-				/>
-
+				{isCampaignDeleteModalOpen && (
+					<Modal
+						modalType='DELETE'
+						headerText={"Delete"}
+						bodyText={"Are you sure you want to delete ?"}
+						open={isCampaignDeleteModalOpen}
+						setOpen={setCampaignDeleteModalOpen}
+						ModalFun={() => {
+							campaignDeleteAPIReq(selectedCampaignSchedule?.id);
+						}}
+						btnText={"Yes, Delete"}
+						ModalIconElement={() => <DangerIcon />}
+						additionalClass={`campaign-view-details-delete-modal`}
+					/>
+				)}
 				<div
 					className='modal campaigns-modal campaign-view-details-modal'
 					style={{ display: calenderModalOpen ? "block" : "none" }}

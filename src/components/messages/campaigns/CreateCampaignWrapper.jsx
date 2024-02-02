@@ -7,7 +7,7 @@ const CreateCampaignWrapper = () => {
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 	const [showPopup, setShowPopup] = useState(false);
 	const [scheduleTime, setScheduleTime] = useState({
-		date: new Date(),
+		date: [new Date()],
 		start: "",
 		end: "",
 	});
@@ -30,6 +30,7 @@ const CreateCampaignWrapper = () => {
 				handleSetPopupPos={(pos) => {
 					setPopupCoordPos({ x: pos.X, y: pos.Y });
 				}}
+				setScheduleTime={setScheduleTime}
 			/>
 		</div>
 	);

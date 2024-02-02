@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
 	CreationRenderer,
 	KeywordRenderer,
@@ -20,7 +21,6 @@ import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
 import { fetchUsers } from "../../../../actions/CampaignsActions";
-import { useDispatch } from "react-redux";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch()
@@ -35,7 +35,7 @@ const EditCampaign = (props) => {
 	const [modalOpen, setModalOpen] = useState(false);
 
 	const [scheduleTime, setScheduleTime] = useState({
-		date: new Date(),
+		date: [new Date()],
 		start: "",
 		end: "",
 	});
@@ -140,6 +140,7 @@ const EditCampaign = (props) => {
 								handleSetPopupPos={(pos) => {
 									setPopupCoordPos({ x: pos.X, y: pos.Y });
 								}}
+								setScheduleTime={setScheduleTime}
 							/>
 						</div>
 					</CampaignCreateEditLayout>

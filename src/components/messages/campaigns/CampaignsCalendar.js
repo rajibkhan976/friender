@@ -10,7 +10,7 @@ const CampaignsCalendar = () => {
 	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
 	const [open, setOpen] = useState(false);
 	const [scheduleTime, setScheduleTime] = useState({
-		date: new Date(),
+		date: [new Date()],
 		start: "",
 		end: "",
 	});
@@ -32,6 +32,7 @@ const CampaignsCalendar = () => {
 					campaignsList={campaignsCreated}
 					handleSetShowPopup={(status) => setOpen(status)}
 					setCalenderModalType={(type) => setCalenderModalType(type)}
+					setScheduleTime={setScheduleTime}
 				/>
 			</div>
 		</div>
