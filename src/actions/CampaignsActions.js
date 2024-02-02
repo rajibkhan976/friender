@@ -208,18 +208,7 @@ export const campaignSlice = createSlice({
 		},
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
 			state.isLoading = false;
-
-			const modifiedPaylaodData =
-				action?.payload?.length &&
-				action?.payload?.map((payload) => {
-					return {
-						...payload,
-						status: payload?.campaign_status,
-						_id: payload?.campaign_id,
-					};
-				});
-
-			state.campaignsArray = modifiedPaylaodData;
+			state.campaignsArray = action?.payload;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
 			state.isLoading = false;
@@ -324,7 +313,7 @@ export const campaignSlice = createSlice({
 				if (campaign?.campaign_id === action?.payload?.campaignId) {
 					return {
 						...campaign,
-						campaign_status: action?.payload?.campaignStatus,
+						status: action?.payload?.campaignStatus,
 					};
 				}
 				return campaign;
@@ -334,12 +323,11 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 		[fetchUsers.pending]: (state) => {
-			state.isLoading = true
+			state.isLoading = false
 		},
 		[fetchUsers.fulfilled]: (state, action) => {
+			state.editingCampaign = {...state.editingCampaign, friends: [...action?.payload?.data]}
 			state.isLoading = false
-			console.log('fetched users successfully :::', action);
-			state.editingCampaign = {...state.editingCampaign, friends: [...action?.payload]}
 		},
 		[fetchUsers.rejected]: (state) => {
 			state.isLoading = false

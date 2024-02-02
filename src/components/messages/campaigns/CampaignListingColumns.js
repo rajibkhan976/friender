@@ -18,9 +18,12 @@ import {
 	fetchCampaignById,
 	updateCampaignContext,
 	updateCampaignsArray,
+	fetchUsers,
+	updateCampaignStatus
 } from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
+
 
 export const CampaignNameCellRenderer = memo((params) => {
 	const dispatch = useDispatch()
@@ -29,24 +32,22 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 	const storeEdit = async () => {
 		try {
-			dispatch(fetchCampaignById({
-					fbUserId: localStorage.getItem("fr_default_fb"),
-					campaignId: params?.data?.campaign_id,
-				}))
-				.unwrap()
-				.then(res => {
-					if (res) {
-						localStorage.setItem(
-							"fr_editCampaign_view",
-							JSON.stringify({
-								mode: "view",
-							})
-						);
+			const response = await dispatch(fetchCampaignById({ fbUserId: localStorage.getItem("fr_default_fb"), campaignId: params?.data?.campaign_id, })).unwrap();
 
-						navigate(`/messages/campaigns/${campaignId}`);
-					}
-				})
-		} catch(error) {
+			if (response) {
+				localStorage.setItem(
+					"fr_editCampaign_view",
+					JSON.stringify({
+						mode: "view",
+					})
+				);
+
+				// const campaignData = response?.data[0];
+				// navigate(`/messages/campaigns/${campaignId}`, { state: { ...campaignData } });
+				navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+			}
+
+		} catch (error) {
 			console.log(error);
 		}
 	};
@@ -64,15 +65,38 @@ export const CampaignNameCellRenderer = memo((params) => {
 });
 
 export const CampaignStatusCellRenderer = memo((params) => {
-	const [campaignStatus, setCampaignStatus] = useState(params?.value ? params?.value : false);
-	console.log('params?.value', params?.value);
+	const dispatch = useDispatch();
+	const [campaignStatus, setCampaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
 
-	const doSomething = (e) => {
-		if (
-			(params?.data?.friends_pending === 0 ||
-				new Date(params?.data?.campaign_end_time) < new Date()) &&
-			e.target.checked
-		) {
+	// CAMPAIGN STATUS UPDATE VIA API.. 
+	// const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
+	// 	try {
+	// 		await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
+
+	// 		Alertbox(
+	// 			`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
+	// 			}`,
+	// 			"success",
+	// 			3000,
+	// 			"bottom-right"
+	// 		);
+
+	// 		return false;
+
+	// 	} catch (error) {
+	// 		// Handle other unexpected errors
+	// 		Alertbox(
+	// 			error?.message,
+	// 			"error",
+	// 			1000,
+	// 			"bottom-right"
+	// 		);
+	// 		return false;
+	// 	}
+	// };
+
+	const handleSwitchToggleStatus = (e) => {
+		if ((params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
 			Alertbox(
 				`${params?.data?.friends_pending === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
@@ -83,30 +107,25 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				"bottom-right"
 			);
 
-			e.preventDefault()
+			e.preventDefault();
 			e.stopPropagation();
-			return false
+			return false;
+
 		} else {
 			params?.setIsEditingCampaign({
 				...params?.data,
 				status: e.target.checked,
 			});
-			setCampaignStatus(e.target.checked);
-
-			Alertbox(
-				`The campaign has been successfully turned ${e.target.checked ? "ON" : "OFF"
-				}`,
-				"success",
-				3000,
-				"bottom-right"
-			);
+			// setCampaignStatus(e.target.checked);
+			// camapignStatusToggleUpdateAPI(params?.data?.campaign_id, e.target.checked);
 		}
 	};
+
 	return (
 		<div className='campaign-status-cell'>
 			<Switch
 				checked={campaignStatus}
-				handleChange={doSomething}
+				handleChange={handleSwitchToggleStatus}
 			// isDisabled={params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()}
 			/>
 		</div>
@@ -137,9 +156,9 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 	const storeEdit = async () => {
 		try {
 			dispatch(fetchCampaignById({
-					fbUserId: localStorage.getItem("fr_default_fb"),
-					campaignId: params?.data?.campaign_id,
-				}))
+				fbUserId: localStorage.getItem("fr_default_fb"),
+				campaignId: params?.data?.campaign_id,
+			}))
 				.unwrap()
 				.then(res => {
 					if (res) {
@@ -153,7 +172,7 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 						navigate(`/messages/campaigns/${campaignId}`);
 					}
 				})
-		} catch(error) {
+		} catch (error) {
 			console.log(error);
 		}
 	};
@@ -211,9 +230,9 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 
 		try {
 			dispatch(fetchCampaignById({
-					fbUserId: localStorage.getItem("fr_default_fb"),
-					campaignId: params?.data?.campaign_id,
-				}))
+				fbUserId: localStorage.getItem("fr_default_fb"),
+				campaignId: params?.data?.campaign_id,
+			}))
 				.unwrap()
 				.then(res => {
 					if (res) {
@@ -227,7 +246,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 						navigate(`/messages/campaigns/${campaignId}`);
 					}
 				})
-		} catch(error) {
+		} catch (error) {
 			console.log(error);
 		}
 	};

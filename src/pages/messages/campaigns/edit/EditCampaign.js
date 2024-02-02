@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import {
 	CreationRenderer,
@@ -22,11 +22,12 @@ import ScheduleSelector from "../../../../components/messages/campaigns/Schedule
 import { fetchUsers } from "../../../../actions/CampaignsActions";
 import { useDispatch } from "react-redux";
 
-const EditCampaign = () => {
+const EditCampaign = (props) => {
 	const dispatch = useDispatch()
 	const params = useParams();
-	const [isEditingCampaign, setIsEditingCampaign, editViews] =
-		useOutletContext();
+	const [isEditingCampaign, setIsEditingCampaign, editViews] = useOutletContext();
+	const current_fb_id = localStorage.getItem("fr_default_fb");
+
 	const [view, setView] = useState(null);
 	const [isReset, setIsReset] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -118,8 +119,8 @@ const EditCampaign = () => {
 						)}
 					</>
 				);
+				
 			} else {
-				console.log("EDIT Scheduler here");
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
@@ -144,6 +145,16 @@ const EditCampaign = () => {
 					</CampaignCreateEditLayout>
 				);
 			}
+		}
+	};
+
+	// FETCHING CAMPAIGN'S USERS..
+	const getCampaignUsersListFromAPI = async (fbUserId = current_fb_id, campaignId = '', status = 'pending') => {
+		try {
+			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap();
+
+		} catch (error) {
+			console.log(`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `, error?.message);
 		}
 	};
 
@@ -173,6 +184,13 @@ const EditCampaign = () => {
 			setIsEditingCampaign(null);
 		};
 	}, []);
+
+	useEffect(() => {
+		if (params?.campaignId) {
+			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
+		}
+	}, []);
+
 
 	return (
 		<>

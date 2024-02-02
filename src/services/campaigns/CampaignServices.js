@@ -48,18 +48,22 @@ export const fetchCampaign = (data) => {
 	});
 };
 
+/**
+ * FETCH USERS OF CAMPAIGN..
+ * @param {*} data 
+ * @returns 
+ */
 export const fetchCampaignUsers = async (data) => {
 	return new Promise((resolve, reject) => {
-		axios
-			.get(
-				`${config.fetchCampaignUsers}?fb_user_id=${data?.fbUserId}&campaign_id=${data?.campaignId}`
-			).then((result) => {
-				console.log('users here >>> :::', result?.data);
+		axios.get(`${config.fetchCampaignUsers}?fb_user_id=${data?.fbUserId}&campaign_id=${data?.campaignId}&status=${data?.status}`, {
+			headers: headers,
+		})
+			.then((result) => {
 				resolve(result?.data)
-			}).error((err) => {
-				console.log(err);
-				reject(err)
 			})
+			.catch((error) => {
+				reject(error);
+			});
 	})
 }
 
@@ -106,13 +110,13 @@ export const updateCampaignStatusService = (campaignData) => {
 	});
 };
 
-export const addUsersToCampaignService=(payload)=>{
-	return new Promise((resolve,reject)=>{
-		axios.post(config.addUsersToCampaignUrl,payload,{
+export const addUsersToCampaignService = (payload) => {
+	return new Promise((resolve, reject) => {
+		axios.post(config.addUsersToCampaignUrl, payload, {
 			headers: headers,
-		}).then((res)=>{
+		}).then((res) => {
 			resolve(res.data);
-		}).catch((err)=>{
+		}).catch((err) => {
 			reject(err);
 		})
 

@@ -11,6 +11,8 @@ import {
 	createCampaign,
 	updateCampaignSchedule,
 	fetchCampaignById,
+	updateCampaignStatus,
+	updateCampaign,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -27,6 +29,8 @@ import Switch from "components/formComponents/Switch";
 import Modal from "components/common/Modal";
 import Alertbox from "components/common/Toast";
 import moment from "moment";
+import { getGroupById } from 'actions/MySettingAction';
+
 
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
@@ -48,8 +52,12 @@ const CalenderModal = ({
 	const editingCampaign = useSelector(
 		(state) => state.campaign.editingCampaign
 	);
+	const campaignsArray = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 	const [isLoadingBtn, setLoadingBtn] = useState(false);
+	const [isEditingModal, setIsEditingModal] = useState(false);
 
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
@@ -331,7 +339,7 @@ const CalenderModal = ({
 	];
 
 	// CAMPAIGN HEADER TOGGLE..
-	const [isCampaignToggleOn, setCampaignToggle] = useState(false);
+	const [isCampaignToggleOn, setCampaignToggle] = useState(() => editingCampaign ? editingCampaign?.status : false);
 
 	// MOUSEOVER EVENTS STATES..
 	const [isMouseOverBtn, setMouseOverBtn] = useState({
@@ -442,10 +450,11 @@ const CalenderModal = ({
 
 	// HANDLE EDIT CAMPAIGN BUTTON..
 	const handleEditCampaignBtn = (_event) => {
-		storeEdit("settings");
+		// storeEdit("settings");
 		// NAVIGATE TO THE EDIT PAGE..
-		navigate(`/messages/campaigns/${1}`);
-		setCalenderModalOpen(false);
+		// navigate(`/messages/campaigns/${1}`);
+		// setCalenderModalOpen(false);
+		setIsEditingModal(true);
 	};
 
 	// HANDLE END DATE AND TIME VALUE ON CHANGE..
@@ -464,22 +473,42 @@ const CalenderModal = ({
 
 	// CREATE/ADD CAMPAIGN FUNCTION..
 	const campaignAddRequestToAPI = async (payload) => {
-		console.log("PAYLOAD OF MODAL CAMPAIGN CREATION - ", payload);
+		if (campaignsArray?.length) {
+			if (!isEditingModal) {
+				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
+
+				if (campaignExistsCheck > -1) {
+					Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+					setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
+					setLoadingBtn(false);
+					return false;
+				}
+			}
+		}
 
 		try {
-			const response = await dispatch(createCampaign(payload)).unwrap();
+			let response;
+
+			if (!isEditingModal) {
+				response = await dispatch(createCampaign(payload)).unwrap();
+			} else {
+				response = await dispatch(updateCampaign(payload)).unwrap();
+			}
 
 			if (response?.data) {
 				const rbcEventArr = document.getElementsByClassName("rbc-event");
+
 				for (let i = 0; i < rbcEventArr.length; i++) {
 					if (!rbcEventArr[i].classList?.value.includes("campaign-saved")) {
 						rbcEventArr[i].classList.add("campaign-saved");
 					}
 				}
+
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
 				navigate("/messages/campaigns");
 				setCalenderModalOpen(false);
+
 			} else {
 				if (response?.error?.code === "resource_conflict") {
 					Alertbox(
@@ -489,6 +518,7 @@ const CalenderModal = ({
 						"bottom-right"
 					);
 					setLoadingBtn(false);
+
 				} else if (response?.error?.code === "bad_request") {
 					Alertbox(
 						`${response?.error?.message}`,
@@ -497,6 +527,7 @@ const CalenderModal = ({
 						"bottom-right"
 					);
 					setLoadingBtn(false);
+
 				} else {
 					Alertbox(
 						"Failed to create the campaign. Please check your input and try again.",
@@ -531,7 +562,7 @@ const CalenderModal = ({
 				return {
 					day,
 					from_time: fromTime,
-					end_time: toTime,
+					to_time: toTime,
 				};
 			});
 
@@ -615,11 +646,13 @@ const CalenderModal = ({
 		}
 	}, [selectedCampaignSchedule]);
 
+
 	useEffect(() => {
-		if (isCampaignToggleOn) {
-			Alertbox("Campaign Toggleed", "success", 3000, "bottom-right");
+		if (editingCampaign) {
+			setCampaignToggle(editingCampaign?.status);
 		}
-	}, [isCampaignToggleOn]);
+	}, [editingCampaign]);
+
 
 	useEffect(() => {
 		// Fetching All Group Messages.
@@ -660,10 +693,98 @@ const CalenderModal = ({
 	//     }
 	// }, [quickMsgModalOpen, calenderModalOpen]);
 
-	console.log(selectedCampaignSchedule);
-	console.log(editingCampaign);
+	// CAMPAIGN STATUS UPDATE VIA API.. 
+	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
+		try {
+			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
+			Alertbox(`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"}`, "success", 3000, "bottom-right");
+			return false;
 
-	if (type === "CREATE_CAMPAIGN") {
+		} catch (error) {
+			// Handle other unexpected errors
+			Alertbox(
+				error?.message,
+				"error",
+				1000,
+				"bottom-right"
+			);
+			return false;
+		}
+	};
+
+	// CAMPAIGN TOGGLE BUTTON SWITCHING..
+	const handleCampaignStatusChange = async (e) => {
+		const placeholderCampaign = campaignsArray?.length && campaignsArray?.find(camp => camp?.campaign_id === editingCampaign?._id);
+
+		if (placeholderCampaign) {
+			if ((placeholderCampaign?.friends_pending === 0 || new Date(placeholderCampaign?.campaign_end_time) < new Date()) && e.target.checked) {
+				Alertbox(
+					`${placeholderCampaign?.friends_pending === 0
+						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+					}`,
+					"warning",
+					3000,
+					"bottom-right"
+				);
+				return false;
+			} else {
+				setCampaignToggle(e.target.checked);
+				camapignStatusToggleUpdateAPI(placeholderCampaign?.campaign_id, e.target.checked);
+			}
+		}
+	};
+
+
+
+
+	// FETCHING THE GROUP BY ID..
+	const fetchGroupMessage = (groupId) => {
+		dispatch(getGroupById(groupId))
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+
+				if (data.length) {
+					setGroupMsgSelect(data[0]);
+					localStorage.setItem('fr_using_campaigns_message', true);
+				}
+			});
+	};
+
+
+	// PREVIEW OF DATA AT FIELD FOR EDITING MODE..
+	useEffect(() => {
+		if (isEditingModal && editingCampaign) {
+			setCampaignName({ ...campaignName, value: editingCampaign?.campaign_name });
+			setTimeDelay(editingCampaign?.time_delay);
+			setMsgLimit(editingCampaign?.message_limit);
+			setCampaignColorPick(editingCampaign?.campaign_label_color);
+			setEndDateAndTime(editingCampaign?.campaign_end_time);
+
+			if (editingCampaign?.message_group_id) {
+				// Fetching the group from the id here..
+				fetchGroupMessage(editingCampaign?.message_group_id);
+			}
+
+			if (selectedCampaignSchedule) {
+				const originalStartDate = moment(selectedCampaignSchedule?.start);
+				const formattedStartTime = originalStartDate.format("hh:mm a");
+
+				const originalEndDate = moment(selectedCampaignSchedule?.end);
+				const formattedEndTime = originalEndDate.format("hh:mm a");
+
+				setStartTime(formattedStartTime);
+				setEndTime(formattedEndTime);
+			}
+		}
+	}, [isEditingModal]);
+	
+
+	console.log("DETAILS -- ", editingCampaign); console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
+
+
+	if (type === "CREATE_CAMPAIGN" || isEditingModal) {
 		return (
 			<div
 				className='modal campaigns-modal'
@@ -678,8 +799,26 @@ const CalenderModal = ({
 					</span>
 
 					<div className='modal-header d-flex f-align-center campaign-modal-header'>
+						{isEditingModal && (
+							<span
+								onClick={() => setIsEditingModal(false)}
+								style={{
+									background: '#0094FF1A',
+									borderRadius: '50px',
+									height: '30px',
+									width: '30px',
+									textAlign: 'center',
+									paddingTop: '2px',
+									cursor: 'pointer'
+								}}>
+								<svg width="15" height="15" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M9.08073 4H0.914062M0.914062 4L4.41406 7.5M0.914062 4L4.41406 0.5" stroke="#0094FF" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</span>
+						)}
+
 						<span style={{ color: "#fff", fontSize: "15px" }}>
-							{"Create new campaign"}
+							{!isEditingModal ? "Create new campaign" : 'Edit Campaign'}
 						</span>
 					</div>
 
@@ -691,9 +830,8 @@ const CalenderModal = ({
 
 								<input
 									type='text'
-									className={`campaigns-name-field ${
-										campaignName?.isError ? "campaigns-error-input-field" : ""
-									}`}
+									className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
+										}`}
 									placeholder={campaignName?.placeholder}
 									value={campaignName?.value}
 									onChange={handleCampaignName}
@@ -743,6 +881,7 @@ const CalenderModal = ({
 								<DropSelector
 									selects={timeDelays}
 									// id='start-time-span'
+									value={timeDelay}
 									defaultValue={
 										timeDelays?.find((el) => el.value === timeDelay)?.value
 									}
@@ -804,9 +943,10 @@ const CalenderModal = ({
 									<DropSelector
 										selects={timeOptions}
 										id='start-time-span'
-										defaultValue={
-											timeOptions?.find((el) => el.value === startTime)?.value
-										}
+										value={startTime}
+										// defaultValue={
+										// 	timeOptions?.find((el) => el.value === startTime)?.value
+										// }
 										extraClass='fr-select-new tinyWrap campaign-time-select-half'
 										height='40px'
 										width='120px'
@@ -818,6 +958,7 @@ const CalenderModal = ({
 									<DropSelector
 										selects={timeOptions}
 										id='end-time-span'
+										value={endTime}
 										defaultValue={
 											timeOptions?.find((el) => el.value === endTime)?.value
 										}
@@ -853,18 +994,18 @@ const CalenderModal = ({
 							Cancel
 						</button>
 						<button
-							className={`btn ${
-								isLoadingBtn ? "campaign-loading-save-btn" : ""
-							}`}
+							className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""
+								}`}
 							disabled={campaignName.value.trim() === "" || unselectedError}
 							onClick={handleSubmitModalCampaign}
 						>
-							{isLoadingBtn ? "Loading.." : "Save"}
+							{isLoadingBtn ? "Saving..." : "Save"}
 						</button>
 					</div>
 				</div>
 			</div>
 		);
+
 	} else if (type === "VIEW_DETAILS") {
 		return (
 			<>
@@ -874,7 +1015,7 @@ const CalenderModal = ({
 					bodyText={"Are you sure you want to delete ?"}
 					open={isCampaignDeleteModalOpen}
 					setOpen={setCampaignDeleteModalOpen}
-					ModalFun={() => {}}
+					ModalFun={() => { }}
 					btnText={"Yes, Delete"}
 					ModalIconElement={() => <DangerIcon />}
 					additionalClass={`campaign-view-details-delete-modal`}
@@ -913,9 +1054,7 @@ const CalenderModal = ({
 								<div className='campaign-view-details-toggle'>
 									<Switch
 										checked={isCampaignToggleOn}
-										handleChange={() => setCampaignToggle(!isCampaignToggleOn)}
-										// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
-										// smallVariant
+										handleChange={handleCampaignStatusChange}
 									/>
 								</div>
 

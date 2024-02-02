@@ -58,7 +58,7 @@ const CampaignScheduler = (props) => {
 							color: campaign.campaign_label_color,
 							title: campaign?.campaign_name,
 							start: new Date(campaignSchedule?.from_time),
-							end: new Date(campaignSchedule?.end_time),
+							end: new Date(campaignSchedule?.to_time),
 						});
 					});
 				}

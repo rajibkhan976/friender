@@ -9,7 +9,7 @@ import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
-import { updateCampaignStatus } from 'actions/CampaignsActions';
+import { updateCampaignStatus, updateCampaignsArray } from 'actions/CampaignsActions';
 
 const CampaignsHeader = ({
 	radioOptions,
@@ -38,14 +38,16 @@ const CampaignsHeader = ({
 	// CAMPAIGN STATUS UPDATE VIA API.. 
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
-			const response = await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
+			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 
 			Alertbox(
-				`${response?.message}`,
+				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
+				}`,
 				"success",
 				3000,
 				"bottom-right"
 			);
+			
 			return false;
 
 		} catch (error) {
@@ -62,31 +64,23 @@ const CampaignsHeader = ({
 
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {
-		if (e.target.checked) {
-			camapignStatusToggleUpdateAPI(campaignsDetails?._id, true);
-			setCampaignsStatusActivity(true);
-		} else {
-			camapignStatusToggleUpdateAPI(campaignsDetails?._id, false);
-			setCampaignsStatusActivity(false);
-		}
+		if ((location?.state?.data?.friends_pending === 0 || new Date(location?.state?.data?.campaign_end_time) < new Date()) && e.target.checked) { 
+			Alertbox(
+				`${location?.state?.data?.friends_pending === 0
+					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+				}`,
+				"warning",
+				3000,
+				"bottom-right"
+			);
+			return false;
 
-		// if (
-		// 	editCampaign?.friends_pending === 0 ||
-		// 	new Date(editCampaign?.campaign_end_time) < new Date()
-		// ) {
-		// 	Alertbox(
-		// 		`${editCampaign?.friends_pending === 0
-		// 			? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-		// 			: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
-		// 		}`,
-		// 		"warning",
-		// 		3000,
-		// 		"bottom-right"
-		// 	);
-		// 	return false;
-		// } else {
-		// 	toggleEditCampaign(e.target.checked);
-		// }
+		} else {
+			camapignStatusToggleUpdateAPI(campaignsDetails?._id, e.target.checked);
+			setCampaignsStatusActivity(e.target.checked);
+			toggleEditCampaign(e.target.checked);
+		}
 	};
 
 	const resetEditCampaign = () => {
@@ -109,12 +103,9 @@ const CampaignsHeader = ({
 	// GRAVING THE STATUS OF CAMPAIGNS FOR SHOWING STATUS TOGGLE ON/OFF..
 	useEffect(() => {
 		if (campaignsDetails) {
-			if (campaignsArray && campaignsArray?.length ) {
-				const campaign = campaignsArray.find((camp) => camp?.campaign_id === campaignsDetails?._id || camp?._id === campaignsDetails?._id);
-				setCampaignsStatusActivity(campaign?.campaign_status);
-			}
+			setCampaignsStatusActivity(campaignsDetails?.status);
 		}
-	}, [campaignsDetails, campaignsArray]);
+	}, [campaignsDetails]);
 
 
 	useEffect(() => {

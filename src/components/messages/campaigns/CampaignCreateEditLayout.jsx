@@ -260,7 +260,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 			return {
 				day,
 				from_time: fromTime,
-				end_time: toTime,
+				to_time: toTime,
 			};
 		});
 
@@ -342,7 +342,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 			const color = colorOfCampaign;
 			const title = nameOfCampaign;
 			const start = new Date(sched.from_time);
-			const end = new Date(sched.end_time);
+			const end = new Date(sched.to_time);
 
 			return { id, color, title, start, end };
 		});

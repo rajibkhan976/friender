@@ -212,13 +212,13 @@ const Campaigns = () => {
 				...isEditingCampaign,
 				status: checkedValue,
 			});
-			Alertbox(
-				`The campaign has been successfully turned ${checkedValue ? "ON" : "OFF"
-				}`,
-				"success",
-				3000,
-				"bottom-right"
-			);
+			// Alertbox(
+			// 	`The campaign has been successfully turned ${checkedValue ? "ON" : "OFF"
+			// 	}`,
+			// 	"success",
+			// 	3000,
+			// 	"bottom-right"
+			// );
 		} catch (error) {
 			console.log(error);
 			Alertbox(
@@ -238,11 +238,11 @@ const Campaigns = () => {
 		// Check for campaign status
 		switch (statusOption?.find((e) => e.selected)?.value) {
 			case "active":
-				campaignsResult = campaignsResult?.filter((el) => el?.campaign_status);
+				campaignsResult = campaignsResult?.filter((el) => el?.status);
 				break;
 
 			case "inactive":
-				campaignsResult = campaignsResult?.filter((el) => !el?.campaign_status);
+				campaignsResult = campaignsResult?.filter((el) => !el?.status);
 				break;
 
 			default:
