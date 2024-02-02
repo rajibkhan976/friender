@@ -41,21 +41,18 @@ const MessageGroups = () => {
                 .unwrap()
                 .then((res) => {
                     if (res) {
-                        if (res === "Request failed with status code 500") {
-                            setGroupsArray([])
-                        }
-                        else {
+                        if (res !== "Request failed with status code 500") {
                             setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
                         }
-                        
+                       
                         setIsEditing({ addNewSub: false, readyToEdit: false });
                         setListLoading(false);
                         setIsPages(true);
                     }
                 }).catch((error) => {
-                    // console.log('error <<<<', error);
+                  //  console.log('error <<<<groupsy', error);
                     setListLoading(false);
-                    if (error.message === "Rejected") {
+                    if (error.message === "Rejected"|| error.message==="Request failed with status code 500") {
                         setIsPages(false);
                     }
                 });

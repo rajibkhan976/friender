@@ -111,11 +111,11 @@ export const fetchAllGroups = (pageRef) => {
 				resolve(res.data);
 			})
 			.catch((error) => {
-				if (error === "Request failed with status code 500") {
-					resolve(error);
-				} else {
-					reject(error?.response?.data ? error.response.data : error.message);
-				}
+				// if (error === "Request failed with status code 500") {
+				// 	resolve(error);
+				// } else {
+					reject(error?.response?.data ? error.response.data : error?.message?error.message:error);
+				//}
 			});
 	});
 };
