@@ -33,6 +33,8 @@
     size: 14px;
   }
   .selector_box_options{
+      max-height: 250px;
+      overflow-y: auto;
     position: absolute;
     @include theme-aware("color", "link-text-color");
     @include theme-aware("background-color", "table-row-hover-bg");
@@ -43,6 +45,8 @@
     padding-left: 20px;
     padding: 5px 0 10px 20px;
     border-radius: 0 0 5px 5px;
+    border-bottom: 15px solid #ffffff;
+    @include theme-aware("border-color", "table-row-hover-bg");
     li{
       margin: 5px 0 5px 0;
       &:hover{

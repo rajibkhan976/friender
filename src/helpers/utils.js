@@ -67,6 +67,9 @@ export const utils = {
 	generateExcerpt: (str) => {
 		return str.length > 12 ? str.substr(0, 12) + "..." : str;
 	},
+	cropParagraph:(str,len) => {
+		return str.length > len ? str.substr(0, len) + "..." : str;
+	},
 	//Capitalize first letter
 	capitalizeFirst: (string) => {
 		return string.charAt(0).toUpperCase() + string.slice(1);

@@ -53,6 +53,7 @@ import ToolTipPro from "./ToolTipPro";
 import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
 import { addUsersToCampaign } from "../../actions/CampaignsActions";
+import { utils } from "../../helpers/utils";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -1322,7 +1323,7 @@ function PageHeader({ headerText = "" }) {
 						<span className='select-wrapers w-100' onClick={()=>{setCampaignListSelector(!campaignListSelector)}}>
 
 							<div className='selector_box'>
-								{selectedCampaignName}
+								{utils.cropParagraph(selectedCampaignName,32) }
 								{campaignsCreated?.length>0&&
 								campaignListSelector&&<ul className="selector_box_options">
 								{campaignsCreated?.map((item, index) => {
