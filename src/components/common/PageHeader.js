@@ -1163,6 +1163,7 @@ function PageHeader({ headerText = "" }) {
 							"finalSource": item.created_at?item.created_at:null,
 							"friendName": item.friendName?item.friendName:null,
 							"friendProfilePicture": item.friendProfilePicture?item.friendProfilePicture:null,
+							"friendProfileUrl": item.friendProfileUrl?item.friendProfileUrl:null,
 							"groupName":item.groupName?item.groupName:null,
 							"status":"pending",
 							"groupUrl": item.groupUrl?item.groupUrl:null,
