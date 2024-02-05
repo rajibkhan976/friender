@@ -698,6 +698,7 @@
   display: flex;
   align-items: center;
   font-size: 14px;
+  text-transform: capitalize;
   .dot {
     background-color: $themeDefaultPrimary3;
     width: 8px;
@@ -1300,5 +1301,12 @@
     .ag-header {
       margin-bottom: 85px;
     }
+  }
+}
+
+.add-campaign-modal {
+  .selector_box_options {
+    max-height: 300%;
+    overflow: auto;
   }
 }

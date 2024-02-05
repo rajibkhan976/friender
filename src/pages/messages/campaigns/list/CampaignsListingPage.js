@@ -39,7 +39,7 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			headerClass: "campaign-name-header",
 		},
 		{
-			field: "campaign_status",
+			field: "status",
 			headerName: "Status ",
 			cellRendererParams: {
 				setIsEditingCampaign,
@@ -125,7 +125,7 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	};
 
 	useEffect(() => {
-		// console.log('CHANGED IN CAMPAIGN ::::', campaignsCreated);
+		console.log('CHANGED IN CAMPAIGN ::::', campaignsCreated);
 	}, [campaignsCreated]);
 
 	return (

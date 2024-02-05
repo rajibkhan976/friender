@@ -66,36 +66,10 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
-	const [campaignStatus, setCampaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
+	const [campaignStatus, setCampaignStatus] = useState(params?.value);
+	const campaignObj = params?.data;
 
-	// CAMPAIGN STATUS UPDATE VIA API.. 
-	// const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
-	// 	try {
-	// 		await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
-
-	// 		Alertbox(
-	// 			`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
-	// 			}`,
-	// 			"success",
-	// 			3000,
-	// 			"bottom-right"
-	// 		);
-
-	// 		return false;
-
-	// 	} catch (error) {
-	// 		// Handle other unexpected errors
-	// 		Alertbox(
-	// 			error?.message,
-	// 			"error",
-	// 			1000,
-	// 			"bottom-right"
-	// 		);
-	// 		return false;
-	// 	}
-	// };
-
-	const handleSwitchToggleStatus = (e) => {
+	const handleSwitchToggleStatus = async (e) => {
 		if ((params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
 			Alertbox(
 				`${params?.data?.friends_pending === 0
@@ -112,10 +86,24 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			return false;
 
 		} else {
-			params?.setIsEditingCampaign({
-				...params?.data,
-				status: e.target.checked,
-			});
+			const statusPayload = {
+				campaignId: campaignObj.campaign_id, 
+				campaignStatus: e.target.checked
+			}
+
+			await dispatch(updateCampaignStatus(statusPayload))
+					.unwrap()
+					.then((res) => {
+						if (res) {
+							Alertbox(
+								`The campaign has been successfully turned ${statusPayload.campaignStatus ? 'ON' : 'OFF'
+								}`,
+								"success",
+								3000,
+								"bottom-right"
+							);
+						}
+					})
 			// setCampaignStatus(e.target.checked);
 			// camapignStatusToggleUpdateAPI(params?.data?.campaign_id, e.target.checked);
 		}

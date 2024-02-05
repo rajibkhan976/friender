@@ -270,7 +270,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// HANDLE SAVED DATA FROM CHILD..
 	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
 		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
-		const payload = { ...data, fbUserId: current_fb_id, schedule: transformCampaignSchedules };
+		const payload = { ...data, fbUserId: current_fb_id, schedule: transformCampaignSchedules || [] };
 		campaignAddOrUpdateRequestToAPI(type, payload, setLoadingBtn);
 	};
 

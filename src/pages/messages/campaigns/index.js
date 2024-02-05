@@ -23,10 +23,8 @@ import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
 
 
-const CampaignsCalendar = lazy(() =>
-	import("components/messages/campaigns/CampaignsCalendar")
-);
-const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
+const CampaignsCalendar = lazy(() => import("components/messages/campaigns/CampaignsCalendar"))
+const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"))
 
 // VIEW OPTIONS FOR BASE CAMPAIGN PAGE
 const radioOptions = [
@@ -246,12 +244,13 @@ const Campaigns = () => {
 				break;
 
 			default:
-				campaignsResult = [...campaignsResult];
+				campaignsResult = campaignsResult;
 				break;
 		}
 
+		console.log('campaignsResult ', campaignsResult);
 		campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
-		return campaignsResult;
+		return campaignsResult && campaignsResult;
 	};
 
 	// UPDATE REDUX CAMPAIGNS ARRAY ON EDITED CAMPAIGN MODIFIED
@@ -262,8 +261,9 @@ const Campaigns = () => {
 			// console.log("isEditingCampaign", isEditingCampaign);
 			// console.log('isEditingCampaign CHANGED', isEditingCampaign);
 			let campaignsCreatedPlaceholder = [...campaignsCreated];
+			// console.log('campaignsCreatedPlaceholder', campaignsCreatedPlaceholder);
 			campaignsCreatedPlaceholder = campaignsCreatedPlaceholder?.map((el) =>
-				el?._id !== isEditingCampaign?._id
+				el?.campaign_id !== isEditingCampaign?.campaign_id
 					? { ...el }
 					: { ...isEditingCampaign }
 			);
@@ -328,9 +328,9 @@ const Campaigns = () => {
 										customText={`No campaign(s) has been created yet`}
 									/>
 								) : (
-									<Suspense fallback='Loading Listing View for your Campaigns'>
+									<Suspense fallback="">
 										<CampaignsListingPage
-											campaignsCreated={filterCampaigns}
+											campaignsCreated={filterCampaigns()}
 											setIsEditingCampaign={setIsEditingCampaign}
 										/>
 									</Suspense>
@@ -340,9 +340,9 @@ const Campaigns = () => {
 									customText={`No campaign(s) has been created yet`}
 								/>
 							) : (
-								<Suspense fallback={<ListingLoader />}>
+								<Suspense fallback="">
 									<CampaignsCalendar
-										campaignsCreated={filterCampaigns}
+										campaignsCreated={filterCampaigns()}
 										setIsEditingCampaign={setIsEditingCampaign}
 									/>
 								</Suspense>

@@ -125,7 +125,7 @@ export const createCampaign = createAsyncThunk(
 	"campaigns/addCampaign",
 	async (payload) => {
 		const res = await createOrUpdateCampaignService(payload);
-		console.log(res);
+		// console.log(res);
 		return res;
 	}
 );
@@ -150,7 +150,7 @@ export const fetchCampaignById = createAsyncThunk(
 	"campaigns/getCampaign",
 	async (payload) => {
 		const res = await fetchCampaign(payload);
-		console.log(res);
+		// console.log(res);
 		return res;
 	}
 );
@@ -167,7 +167,7 @@ export const deleteCampaign = createAsyncThunk(
 	"messages/deleteCampaign",
 	async (payload) => {
 		const res = await deleteCampaignService(payload);
-		console.log('res', res, 'payload', payload);
+		// console.log('res', res, 'payload', payload);
 		return { ...res, campaignIds: [...payload] };
 	}
 );
@@ -176,7 +176,7 @@ export const fetchUsers = createAsyncThunk(
 	"messages/fetchUsers",
 	async (payload) => {
 		const res = await fetchCampaignUsers(payload)
-		console.log('res fetchUsers', res);
+		// console.log('res fetchUsers', res);
 		return res;
 	}
 )
@@ -295,7 +295,7 @@ export const campaignSlice = createSlice({
 			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj._id));
 			// return filteredArr2;
 			
-			console.log('filteredArr2', filteredArr2);
+			// console.log('filteredArr2', filteredArr2);
 			state.campaignsArray = filteredArr2
 			state.isLoading = false;
 		},

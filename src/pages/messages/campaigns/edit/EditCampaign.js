@@ -108,14 +108,16 @@ const EditCampaign = (props) => {
 								additionalText={`We couldn’t find any friends added to this campaign`}
 							/>
 						) : (
-							<Listing
-								friendsData={isEditingCampaign?.friends}
-								friendsListingRef={campaignFriendsRef}
-								getFilterNum={isEditingCampaign?.friends?.length}
-								reset={isReset}
-								setReset={setIsReset}
-								isListing='campaign-friends'
-							/>
+							<div className="campaigns-edit h-100 d-flex d-flex-column">
+								<Listing
+									friendsData={isEditingCampaign?.friends}
+									friendsListingRef={campaignFriendsRef}
+									getFilterNum={isEditingCampaign?.friends?.length}
+									reset={isReset}
+									setReset={setIsReset}
+									isListing='campaign-friends'
+								/>
+							</div>
 						)}
 					</>
 				);
