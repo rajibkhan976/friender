@@ -7,15 +7,17 @@ import DayChooseBalls from "../../common/DayChooseBalls";
 import { timeOptions } from "../../../helpers/timeOptions";
 
 const ScheduleSelector = (props) => {
-	const { handleSetShowPopup, popupCoordPos, scheduleTime, setScheduleTime } =
-		props;
+	const {
+		handleSetShowPopup,
+		popupCoordPos,
+		scheduleTime,
+		selectedSchedule,
+		setScheduleTime,
+	} = props;
 
 	const dispatch = useDispatch();
 	const campaignSchedule = useSelector(
 		(state) => state.campaign.campaignSchedule
-	);
-	const selectedCampaignSchedule = useSelector(
-		(state) => state.campaign.selectedCampaignSchedule
 	);
 
 	const onChangeStartingTime = (event) => {
@@ -54,25 +56,21 @@ const ScheduleSelector = (props) => {
 				timeOptions.findIndex((item) => item.value === scheduleTime.end)
 		) {
 			if (
-				selectedCampaignSchedule &&
+				selectedSchedule &&
 				!campaignScheduleArr.every(
 					(item) =>
 						moment(item.start).format("DD-MM-YYYY h:mm: A") ===
-							moment(selectedCampaignSchedule.start).format(
-								"DD-MM-YYYY h:mm A"
-							) &&
+							moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 						moment(item.end).format("DD-MM-YYYY h:mm A") ===
-							moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+							moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 				)
 			) {
 				campaignScheduleArr = campaignSchedule.filter(
 					(item) =>
 						moment(item.start).format("DD-MM-YYYY h:mm: A") !==
-							moment(selectedCampaignSchedule.start).format(
-								"DD-MM-YYYY h:mm A"
-							) &&
+							moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 						moment(item.end).format("DD-MM-YYYY h:mm A") !==
-							moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+							moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 				);
 			}
 
@@ -151,25 +149,21 @@ const ScheduleSelector = (props) => {
 			? campaignSchedule.map((item) => item)
 			: [];
 		if (
-			selectedCampaignSchedule &&
+			selectedSchedule &&
 			campaignScheduleArr.some(
 				(item) =>
 					moment(item.start).format("DD-MM-YYYY h:mm A") ===
-						moment(selectedCampaignSchedule.start).format(
-							"DD-MM-YYYY h:mm A"
-						) &&
+						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") ===
-						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 			)
 		) {
 			campaignScheduleArr = campaignScheduleArr.filter(
 				(item) =>
 					moment(item.start).format("DD-MM-YYYY h:mm A") !==
-						moment(selectedCampaignSchedule.start).format(
-							"DD-MM-YYYY h:mm A"
-						) &&
+						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") !==
-						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 			);
 		} else {
 			campaignScheduleArr.pop();

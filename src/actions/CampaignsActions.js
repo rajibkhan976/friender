@@ -34,18 +34,18 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2024-01-29 09:41:15",
-	// 				end_time: "2024-01-29 10:41:15",
+	// 				from_time: "09:41:15",
+	// 				to_time: "10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2024-01-30 11:41:15",
-	// 				end_time: "2024-01-30 13:41:15",
+	// 				from_time: "11:41:15",
+	// 				to_time: "13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2024-01-31 15:41:15",
-	// 				end_time: "2024-01-31 18:41:15",
+	// 				from_time: "15:41:15",
+	// 				to_time: "18:41:15",
 	// 			},
 	// 		],
 	// 	},
@@ -56,7 +56,7 @@ const initialState = {
 	// 		status: false,
 	// 		friends_added: 965,
 	// 		friends_pending: 0,
-	// 		// campaign_end_time: '2023-12-31 09:41:15',
+	// 		campaign_end_time: "2023-12-31 09:41:15",
 	// 		campaign_label_color: "#C0A9EB", // #C0A9EB,#9FC999,#95D6D4,#E0A8B8,#92B0EA,#D779D9,#CFC778,#8A78CF,#CF7878,#F2C794
 	// 		message: "I want you to be my friend",
 	// 		message_limit: 20,
@@ -64,18 +64,18 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2024-01-29 09:41:15",
-	// 				end_time: "2024-01-29 10:41:15",
+	// 				from_time: "09:41:15",
+	// 				to_time: "10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2024-01-30 11:41:15",
-	// 				end_time: "2024-01-30 13:41:15",
+	// 				from_time: "11:41:15",
+	// 				to_time: "13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2024-01-31 15:41:15",
-	// 				end_time: "2024-01-31 18:41:15",
+	// 				from_time: "15:41:15",
+	// 				to_time: "18:41:15",
 	// 			},
 	// 		],
 	// 	},
@@ -94,18 +94,18 @@ const initialState = {
 	// 		schedule: [
 	// 			{
 	// 				day: "Monday",
-	// 				from_time: "2024-01-29 09:41:15",
-	// 				end_time: "2024-01-29 10:41:15",
+	// 				from_time: "09:41:15",
+	// 				to_time: "10:41:15",
 	// 			},
 	// 			{
 	// 				day: "Wednesday",
-	// 				from_time: "2024-01-30 11:41:15",
-	// 				end_time: "2024-01-30 13:41:15",
+	// 				from_time: "11:41:15",
+	// 				to_time: "13:41:15",
 	// 			},
 	// 			{
 	// 				day: "Friday",
-	// 				from_time: "2024-01-31 15:41:15",
-	// 				end_time: "2024-01-31 18:41:15",
+	// 				from_time: "15:41:15",
+	// 				to_time: "18:41:15",
 	// 			},
 	// 		],
 	// 	},
@@ -238,8 +238,8 @@ export const campaignSlice = createSlice({
 			const placeholderArray = current(state.campaignsArray);
 			let newAdd = true;
 
-			// console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
-			// console.log("ACTION PAYLOAD -- ", action?.payload?.data);
+			console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
+			console.log("ACTION PAYLOAD -- ", action?.payload?.data);
 
 			placeholderArray.forEach((campaign) => {
 				if (campaign?.campaign_id === action?.payload?.data?._id) {

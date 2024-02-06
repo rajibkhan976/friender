@@ -127,7 +127,10 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			<Switch
 				checked={campaignStatus}
 				handleChange={handleSwitchToggleStatus}
-			// isDisabled={params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()}
+				isDisabled={
+					params?.data?.friends_added === 0 ||
+					new Date(params?.data?.campaign_end_time) < new Date()
+				}
 			/>
 		</div>
 	);

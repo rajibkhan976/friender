@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -7,7 +7,6 @@ import {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
 } from "../../../actions/CampaignsActions";
-import { utils } from "../../../helpers/utils";
 import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 import GlobalCampaignList from "./GlobalCampaignList";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -29,10 +28,15 @@ const CustomWeekViewHeader = ({ date }) => {
 const CampaignScheduler = (props) => {
 	const {
 		campaignsList = [],
-		handleSetPopupPos,
-		handleSetShowPopup,
-		setCalenderModalType,
-		setScheduleTime,
+		selectedSchedule = null,
+		handleSetPopupPos = () => null,
+		handleSetSelectedSchedule = () => null,
+		handleSetShowPopup = () => null,
+		handleSetShowModal = () => null,
+		setCalenderModalType = () => null,
+		setScheduleTime = () => null,
+		setShowGlobalCampaignPopup = () => null,
+		showGlobalCampaignPopup = false,
 	} = props;
 	const dispatch = useDispatch();
 	const location = useLocation();
@@ -40,118 +44,8 @@ const CampaignScheduler = (props) => {
 		(state) => state.campaign.campaignSchedule
 	);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
-	const [selectedEvent, setSelectedEvent] = useState(null);
-	const [showGlobalCampaignPopup, setShowGlobalCampaignPopup] = useState(false);
 
 	console.log("Campaigns List -- ", campaignsList);
-
-	useEffect(() => {
-		if (campaignsList.length < 1) {
-			dispatch(updateCampaignSchedule([]));
-		} else if (Array.isArray(campaignsList)) {
-			const campaignArr = [];
-			const groupedCampaignByDateNTime = [];
-			campaignsList.forEach((campaign) => {
-				if (campaign.schedule && Array.isArray(campaign?.schedule)) {
-					campaign?.schedule.forEach((campaignSchedule) => {
-						campaignArr.push({
-							id: campaign?.campaign_id || campaign?._id,
-							color: campaign.campaign_label_color,
-							title: campaign?.campaign_name,
-							start: new Date(campaignSchedule?.from_time),
-							end: new Date(campaignSchedule?.to_time),
-						});
-					});
-				}
-			});
-			if (campaignArr.length > 0) {
-				for (let i = 0; i < campaignArr.length; i++) {
-					const campaignTitleArr = [];
-					if (
-						campaignArr[i].title &&
-						campaignArr[i].start &&
-						campaignArr[i].end
-					) {
-						for (let c = 0; c < campaignArr.length; c++) {
-							if (
-								moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") ===
-									moment(campaignArr[c].start).format("DD-MM-YYYY h:mm A") &&
-								moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A") ===
-									moment(campaignArr[c].end).format("DD-MM-YYYY h:mm A")
-							) {
-								campaignTitleArr.push(
-									<div
-										className='global-campaign-title'
-										key={c}
-										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[c].color)}`,
-											borderLeft: `4px solid ${campaignArr[c].color}`,
-										}}
-										onClick={() => {
-											if (location?.pathname === "/messages/campaigns") {
-												setShowGlobalCampaignPopup(false);
-												handleSetShowPopup(true);
-											}
-										}}
-									>
-										{campaignArr[c].title}
-									</div>
-								);
-							} else {
-								continue;
-							}
-						}
-					}
-					if (
-						campaignTitleArr.length > 0 &&
-						campaignArr[i].start &&
-						campaignArr[i].end &&
-						groupedCampaignByDateNTime.every(
-							(item) =>
-								moment(item.start).format("DD-MM-YYYY h:mm A") !==
-									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
-								moment(item.end).format("DD-MM-YYYY hh:mm:ssa") !==
-									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
-						)
-					) {
-						groupedCampaignByDateNTime.push({
-							id: campaignArr[i]?.id || "",
-							title: campaignTitleArr,
-							start: new Date(campaignArr[i].start),
-							end: new Date(campaignArr[i].end),
-						});
-					} else if (
-						campaignArr[i].start &&
-						campaignArr[i].end &&
-						groupedCampaignByDateNTime.every(
-							(item) =>
-								moment(item.start).format("DD-MM-YYYY h:mm A") !==
-									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
-								moment(item.end).format("DD-MM-YYYY h:mm A") !==
-									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
-						)
-					) {
-						groupedCampaignByDateNTime.push({
-							id: campaignArr[i]?.id || "",
-							title: campaignArr[i]?.title || "",
-							start: new Date(campaignArr[i].start),
-							end: new Date(campaignArr[i].end),
-						});
-					}
-				}
-				dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
-			}
-		}
-		return () => {
-			setScheduleTime(() => {
-				return {
-					date: [new Date()],
-					start: "",
-					end: "",
-				};
-			});
-		};
-	}, []);
 
 	const CustomEventContainerWrapper = (props) => {
 		const handleClick = (e) => {
@@ -230,14 +124,14 @@ const CampaignScheduler = (props) => {
 			start: moment(event?.start).format("h:mm A"),
 			end: moment(event?.end).format("h:mm A"),
 		});
-		setSelectedEvent(event);
+		handleSetSelectedSchedule(event);
 		// dispatch(
 		// 	updateSelectedCampaignSchedule(
 		// 		campaignsList.find((item) => item?.campaign_id === event?.id)
 		// 	)
 		// );
-		dispatch(updateSelectedCampaignSchedule(event));
-		handleSetPopupPos({ X: 0, Y: 0 });
+		// dispatch(updateSelectedCampaignSchedule(event));
+		handleSetPopupPos && handleSetPopupPos({ X: 0, Y: 0 });
 		handleSetShowPopup(true);
 	};
 
@@ -249,7 +143,7 @@ const CampaignScheduler = (props) => {
 		setShowGlobalCampaignPopup(false);
 		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
 		dispatch(updateSelectedCampaignSchedule(null));
-		setSelectedEvent(null);
+		handleSetSelectedSchedule(null);
 
 		Object.assign(selectedSchedule, {
 			isSaved: false,
@@ -276,6 +170,7 @@ const CampaignScheduler = (props) => {
 		];
 		dispatch(updateCampaignSchedule(updatedCampaignSchedule));
 		handleSetShowPopup(true);
+		handleSetShowModal(true);
 	};
 
 	const formats = {
@@ -300,7 +195,7 @@ const CampaignScheduler = (props) => {
 						handleSetShowGlobalCampaignPopup={(status) =>
 							setShowGlobalCampaignPopup(status)
 						}
-						listItems={selectedEvent}
+						listItems={selectedSchedule}
 						popupCoordPos={popupCoordPos}
 					/>
 				</CampaignSchedulerPopup>

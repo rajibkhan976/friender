@@ -347,18 +347,47 @@ const CampaignCreateEditLayout = ({ children }) => {
 			});
 	};
 
-	// UPDATE THE SCHEDULAR WITH SPECIFIC CAMPAIGNS DATA..
-	const updateSchedularOfCalender = (scheduleData, nameOfCampaign, colorOfCampaign) => {
-		console.log(scheduleData);
-		const schedule = scheduleData?.length && scheduleData.map((sched) => {
-			const id = params?.campaignId;
-			const color = colorOfCampaign;
-			const title = nameOfCampaign;
-			const start = new Date(sched.from_time);
-			const end = new Date(sched.to_time);
-
-			return { id, color, title, start, end };
+	const weekdaysArr = [
+		{
+			day: moment().startOf("W").format("dddd"),
+			date: moment().startOf("W"),
+		},
+	];
+	let iterator = 1;
+	const buildOnWeekdaysArr = () => {
+		weekdaysArr.push({
+			day: moment().startOf("W").add("d", iterator).format("dddd"),
+			date: moment().startOf("W").add("d", iterator),
 		});
+		iterator++;
+		if (iterator < 7) {
+			buildOnWeekdaysArr();
+		}
+	};
+	buildOnWeekdaysArr();
+
+	// UPDATE THE SCHEDULAR WITH SPECIFIC CAMPAIGNS DATA..
+	const updateSchedularOfCalender = (
+		scheduleData,
+		nameOfCampaign,
+		colorOfCampaign
+	) => {
+		console.log(scheduleData);
+		const schedule =
+			scheduleData?.length &&
+			scheduleData.map((sched) => {
+				const date = moment(
+					weekdaysArr.find((item) => item.day === sched.day).date
+				).format("MMMM DD, YYYY");
+				const id = params?.campaignId;
+				const color = colorOfCampaign;
+				const title = nameOfCampaign;
+				const start = new Date(`${date} ${sched?.from_time}`);
+				const end = new Date(`${date} ${sched?.to_time}`);
+				const isSaved = true;
+
+				return { id, color, title, start, end, isSaved };
+			});
 
 		dispatch(updateCampaignSchedule(schedule));
 	};

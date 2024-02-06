@@ -33,6 +33,7 @@ const EditCampaign = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedSchedule, setSelectedSchedule] = useState(null);
 
 	const [scheduleTime, setScheduleTime] = useState({
 		date: [new Date()],
@@ -108,7 +109,7 @@ const EditCampaign = (props) => {
 								additionalText={`We couldn’t find any friends added to this campaign`}
 							/>
 						) : (
-							<div className="campaigns-edit h-100 d-flex d-flex-column">
+							<div className='campaigns-edit h-100 d-flex d-flex-column'>
 								<Listing
 									friendsData={isEditingCampaign?.friends}
 									friendsListingRef={campaignFriendsRef}
@@ -121,7 +122,6 @@ const EditCampaign = (props) => {
 						)}
 					</>
 				);
-				
 			} else {
 				return (
 					<CampaignCreateEditLayout>
@@ -132,6 +132,7 @@ const EditCampaign = (props) => {
 										handleSetShowPopup={(status) => setShowPopup(status)}
 										popupCoordPos={popupCoordPos}
 										scheduleTime={scheduleTime}
+										selectedSchedule={selectedSchedule}
 										setScheduleTime={setScheduleTime}
 									/>
 								</CampaignSchedulerPopup>
@@ -142,6 +143,8 @@ const EditCampaign = (props) => {
 								handleSetPopupPos={(pos) => {
 									setPopupCoordPos({ x: pos.X, y: pos.Y });
 								}}
+								handleSetSelectedSchedule={setSelectedSchedule}
+								selectedSchedule={selectedSchedule}
 								setScheduleTime={setScheduleTime}
 							/>
 						</div>
