@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCampaignSchedule } from "../../../actions/CampaignsActions";
 import moment from "moment";
@@ -12,6 +13,9 @@ const ScheduleSelector = (props) => {
 	const dispatch = useDispatch();
 	const campaignSchedule = useSelector(
 		(state) => state.campaign.campaignSchedule
+	);
+	const selectedCampaignSchedule = useSelector(
+		(state) => state.campaign.selectedCampaignSchedule
 	);
 
 	const onChangeStartingTime = (event) => {
@@ -37,25 +41,87 @@ const ScheduleSelector = (props) => {
 		}
 	};
 
-	const handleSaveCampaignSchedule = async (e) => {
-		if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
-			let campaignScheduleArr = Array.isArray(campaignSchedule)
-				? campaignSchedule.map((item) => item)
-				: [];
-			campaignScheduleArr.pop();
+	const handleSaveCampaignSchedule = () => {
+		let campaignScheduleArr = Array.isArray(campaignSchedule)
+			? campaignSchedule.filter((item) => item.isSaved)
+			: [];
+
+		if (
+			scheduleTime.date &&
+			scheduleTime.start &&
+			scheduleTime.end &&
+			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
+				timeOptions.findIndex((item) => item.value === scheduleTime.end)
+		) {
+			if (
+				selectedCampaignSchedule &&
+				!campaignScheduleArr.every(
+					(item) =>
+						moment(item.start).format("DD-MM-YYYY h:mm: A") ===
+							moment(selectedCampaignSchedule.start).format(
+								"DD-MM-YYYY h:mm A"
+							) &&
+						moment(item.end).format("DD-MM-YYYY h:mm A") ===
+							moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+				)
+			) {
+				campaignScheduleArr = campaignSchedule.filter(
+					(item) =>
+						moment(item.start).format("DD-MM-YYYY h:mm: A") !==
+							moment(selectedCampaignSchedule.start).format(
+								"DD-MM-YYYY h:mm A"
+							) &&
+						moment(item.end).format("DD-MM-YYYY h:mm A") !==
+							moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+				);
+			}
+
 			const dateArr = scheduleTime.date.map((item) =>
 				moment(item).format("MMMM DD, YYYY")
 			);
 			const dateTimeArrObj = [];
 			dateArr.forEach((item) => {
+				const start = new Date(`${item} ${scheduleTime.start}`);
+				const end = new Date(`${item} ${scheduleTime.end}`);
 				dateTimeArrObj.push({
-					start: new Date(`${item} ${scheduleTime.start}`),
-					end: new Date(`${item} ${scheduleTime.end}`),
+					isSaved: true,
+					start: start,
+					end: end,
 				});
 			});
-			campaignScheduleArr = [...campaignScheduleArr, ...dateTimeArrObj];
-			dispatch(updateCampaignSchedule(campaignScheduleArr));
+			dateTimeArrObj.forEach((item) => {
+				if (
+					Array.isArray(campaignScheduleArr) &&
+					campaignScheduleArr.length > 0 &&
+					campaignScheduleArr.every(
+						(schedule) =>
+							moment(item.start).format("DD-MM-YYYY h:mm: A") !==
+								moment(schedule.start).format("DD-MM-YYYY h:mm A") &&
+							moment(item.end).format("DD-MM-YYYY h:mm A") !==
+								moment(schedule.end).format("DD-MM-YYYY h:mm A")
+					)
+				) {
+					campaignScheduleArr.push({
+						isSaved: true,
+						start: item.start,
+						end: item.end,
+					});
+				}
+				if (
+					Array.isArray(campaignScheduleArr) &&
+					campaignScheduleArr.length === 0
+				) {
+					campaignScheduleArr.push({
+						isSaved: true,
+						start: item.start,
+						end: item.end,
+					});
+				}
+			});
+
+			dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 		}
+
 		setScheduleTime(() => {
 			return {
 				date: [new Date()],
@@ -64,13 +130,50 @@ const ScheduleSelector = (props) => {
 			};
 		});
 		handleSetShowPopup(false);
+
+		return new Promise((resolve, reject) => {
+			if (
+				scheduleTime.date &&
+				scheduleTime.start &&
+				scheduleTime.end &&
+				timeOptions.findIndex((item) => item.value === scheduleTime.start) <
+					timeOptions.findIndex((item) => item.value === scheduleTime.end)
+			) {
+				resolve("Campaign schedule updated!");
+			} else {
+				reject("Campaign schedule update rejected!");
+			}
+		});
 	};
 
 	const handleCancelCampaignCreation = () => {
 		let campaignScheduleArr = Array.isArray(campaignSchedule)
 			? campaignSchedule.map((item) => item)
 			: [];
-		campaignScheduleArr.pop();
+		if (
+			selectedCampaignSchedule &&
+			campaignScheduleArr.some(
+				(item) =>
+					moment(item.start).format("DD-MM-YYYY h:mm A") ===
+						moment(selectedCampaignSchedule.start).format(
+							"DD-MM-YYYY h:mm A"
+						) &&
+					moment(item.end).format("DD-MM-YYYY h:mm A") ===
+						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+			)
+		) {
+			campaignScheduleArr = campaignScheduleArr.filter(
+				(item) =>
+					moment(item.start).format("DD-MM-YYYY h:mm A") !==
+						moment(selectedCampaignSchedule.start).format(
+							"DD-MM-YYYY h:mm A"
+						) &&
+					moment(item.end).format("DD-MM-YYYY h:mm A") !==
+						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+			);
+		} else {
+			campaignScheduleArr.pop();
+		}
 		dispatch(updateCampaignSchedule(campaignScheduleArr));
 		setScheduleTime(() => {
 			return {
@@ -82,12 +185,24 @@ const ScheduleSelector = (props) => {
 		handleSetShowPopup(false);
 	};
 
+	useEffect(() => {
+		return () => {
+			setScheduleTime(() => {
+				return {
+					date: [new Date()],
+					start: "",
+					end: "",
+				};
+			});
+		};
+	}, []);
+
 	return (
 		<div
 			className='campaign-scheduler-popup-container'
 			style={{
-				top: `${popupCoordPos.y}px`,
-				left: `${popupCoordPos.x}px`,
+				top: `${popupCoordPos.y ? popupCoordPos.y + "px" : "45%"}`,
+				left: `${popupCoordPos.x ? popupCoordPos.x + "px" : "50%"}`,
 			}}
 		>
 			<div className='campaign-scheduler-popup-header'>
@@ -143,19 +258,26 @@ const ScheduleSelector = (props) => {
 				<button
 					type='button'
 					className='scheduler-popup-save-btn'
-					onClick={async () => {
-						await handleSaveCampaignSchedule();
-
-						const rbcEventArr = document.getElementsByClassName("rbc-event");
-						if (rbcEventArr && rbcEventArr.length > 0) {
-							for (let i = 0; i < rbcEventArr.length; i++) {
-								if (
-									!rbcEventArr[i].classList?.value.includes("campaign-saved")
-								) {
-									rbcEventArr[i].classList.add("campaign-saved");
+					onClick={() => {
+						handleSaveCampaignSchedule()
+							.then((response) => {
+								if (response) {
+									const rbcEventArr =
+										document.getElementsByClassName("rbc-event");
+									if (rbcEventArr && rbcEventArr.length > 0) {
+										for (let i = 0; i < rbcEventArr.length; i++) {
+											if (
+												!rbcEventArr[i].classList?.value.includes(
+													"campaign-saved"
+												)
+											) {
+												rbcEventArr[i].classList.add("campaign-saved");
+											}
+										}
+									}
 								}
-							}
-						}
+							})
+							.catch((error) => error);
 					}}
 				>
 					Save

@@ -340,8 +340,8 @@ const CalenderModal = ({
 		const transformSchedules =
 			schedules?.length &&
 			schedules.map((schedule) => {
-				const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
-				const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+				const fromTime = moment(schedule.start).format("YYYY-MM-DD h:mm A");
+				const toTime = moment(schedule.end).format("YYYY-MM-DD h:mm A");
 				const day = moment(schedule.start).format("dddd");
 
 				return {
@@ -376,24 +376,86 @@ const CalenderModal = ({
 			// UNHANDLED VALUES.. TIME DURATIONS,
 			console.log("START - END TIME DURATIONS - ", startTime, endTime);
 
-			if (scheduleTime.date && scheduleTime.start && scheduleTime.end) {
-				let campaignScheduleArr = Array.isArray(campaignSchedule)
-					? campaignSchedule.map((item) => item)
-					: [];
-				campaignScheduleArr.pop();
+			let campaignScheduleArr = Array.isArray(campaignSchedule)
+				? campaignSchedule.filter((item) => item.isSaved)
+				: [];
+
+			if (
+				scheduleTime.date &&
+				scheduleTime.start &&
+				scheduleTime.end &&
+				timeOptions.findIndex((item) => item.value === scheduleTime.start) <
+					timeOptions.findIndex((item) => item.value === scheduleTime.end)
+			) {
+				if (
+					selectedCampaignSchedule &&
+					!campaignScheduleArr.every(
+						(item) =>
+							moment(item.start).format("DD-MM-YYYY h:mm: A") ===
+								moment(selectedCampaignSchedule.start).format(
+									"DD-MM-YYYY h:mm A"
+								) &&
+							moment(item.end).format("DD-MM-YYYY h:mm A") ===
+								moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+					)
+				) {
+					campaignScheduleArr = campaignSchedule.filter(
+						(item) =>
+							moment(item.start).format("DD-MM-YYYY h:mm: A") !==
+								moment(selectedCampaignSchedule.start).format(
+									"DD-MM-YYYY h:mm A"
+								) &&
+							moment(item.end).format("DD-MM-YYYY h:mm A") !==
+								moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+					);
+				}
+
 				const dateArr = scheduleTime.date.map((item) =>
 					moment(item).format("MMMM DD, YYYY")
 				);
 				const dateTimeArrObj = [];
 				dateArr.forEach((item) => {
+					const start = new Date(`${item} ${scheduleTime.start}`);
+					const end = new Date(`${item} ${scheduleTime.end}`);
 					dateTimeArrObj.push({
-						start: new Date(`${item} ${scheduleTime.start}`),
-						end: new Date(`${item} ${scheduleTime.end}`),
+						isSaved: true,
+						start: start,
+						end: end,
 					});
 				});
-				campaignScheduleArr = [...campaignScheduleArr, ...dateTimeArrObj];
-				dispatch(updateCampaignSchedule(campaignScheduleArr));
+				dateTimeArrObj.forEach((item) => {
+					if (
+						Array.isArray(campaignScheduleArr) &&
+						campaignScheduleArr.length > 0 &&
+						campaignScheduleArr.every(
+							(schedule) =>
+								moment(item.start).format("DD-MM-YYYY h:mm: A") !==
+									moment(schedule.start).format("DD-MM-YYYY h:mm A") &&
+								moment(item.end).format("DD-MM-YYYY h:mm A") !==
+									moment(schedule.end).format("DD-MM-YYYY h:mm A")
+						)
+					) {
+						campaignScheduleArr.push({
+							isSaved: true,
+							start: item.start,
+							end: item.end,
+						});
+					}
+					if (
+						Array.isArray(campaignScheduleArr) &&
+						campaignScheduleArr.length === 0
+					) {
+						campaignScheduleArr.push({
+							isSaved: true,
+							start: item.start,
+							end: item.end,
+						});
+					}
+				});
+
+				dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 			}
+
 			setScheduleTime(() => {
 				return {
 					date: [new Date()],
@@ -401,6 +463,7 @@ const CalenderModal = ({
 					end: "",
 				};
 			});
+
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
 				setLoadingBtn(false);
@@ -434,13 +497,11 @@ const CalenderModal = ({
 		}
 	}, [selectedCampaignSchedule]);
 
-
 	useEffect(() => {
 		if (editingCampaign) {
 			setCampaignToggle(editingCampaign?.status);
 		}
 	}, [editingCampaign]);
-
 
 	useEffect(() => {
 		// Fetching All Group Messages.
@@ -461,7 +522,30 @@ const CalenderModal = ({
 		let campaignScheduleArr = Array.isArray(campaignSchedule)
 			? campaignSchedule.map((item) => item)
 			: [];
-		campaignScheduleArr.pop();
+		if (
+			selectedCampaignSchedule &&
+			campaignScheduleArr.some(
+				(item) =>
+					moment(item.start).format("DD-MM-YYYY h:mm A") ===
+						moment(selectedCampaignSchedule.start).format(
+							"DD-MM-YYYY h:mm A"
+						) &&
+					moment(item.end).format("DD-MM-YYYY h:mm A") ===
+						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+			)
+		) {
+			campaignScheduleArr = campaignScheduleArr.filter(
+				(item) =>
+					moment(item.start).format("DD-MM-YYYY h:mm A") !==
+						moment(selectedCampaignSchedule.start).format(
+							"DD-MM-YYYY h:mm A"
+						) &&
+					moment(item.end).format("DD-MM-YYYY h:mm A") !==
+						moment(selectedCampaignSchedule.end).format("DD-MM-YYYY h:mm A")
+			);
+		} else {
+			campaignScheduleArr.pop();
+		}
 		dispatch(updateCampaignSchedule(campaignScheduleArr));
 		setScheduleTime(() => {
 			return {
@@ -516,35 +600,47 @@ const CalenderModal = ({
 	//     }
 	// }, [quickMsgModalOpen, calenderModalOpen]);
 
-	// CAMPAIGN STATUS UPDATE VIA API.. 
+	// CAMPAIGN STATUS UPDATE VIA API..
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
-			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
-			Alertbox(`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"}`, "success", 3000, "bottom-right");
-			return false;
-
-		} catch (error) {
-			// Handle other unexpected errors
+			await dispatch(
+				updateCampaignStatus({ campaignId, campaignStatus })
+			).unwrap();
 			Alertbox(
-				error?.message,
-				"error",
-				1000,
+				`The campaign has been successfully turned ${
+					campaignStatus ? "ON" : "OFF"
+				}`,
+				"success",
+				3000,
 				"bottom-right"
 			);
+			return false;
+		} catch (error) {
+			// Handle other unexpected errors
+			Alertbox(error?.message, "error", 1000, "bottom-right");
 			return false;
 		}
 	};
 
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const handleCampaignStatusChange = async (e) => {
-		const placeholderCampaign = campaignsArray?.length && campaignsArray?.find(camp => camp?.campaign_id === editingCampaign?._id);
+		const placeholderCampaign =
+			campaignsArray?.length &&
+			campaignsArray?.find(
+				(camp) => camp?.campaign_id === editingCampaign?._id
+			);
 
 		if (placeholderCampaign) {
-			if ((placeholderCampaign?.friends_pending === 0 || new Date(placeholderCampaign?.campaign_end_time) < new Date()) && e.target.checked) {
+			if (
+				(placeholderCampaign?.friends_pending === 0 ||
+					new Date(placeholderCampaign?.campaign_end_time) < new Date()) &&
+				e.target.checked
+			) {
 				Alertbox(
-					`${placeholderCampaign?.friends_pending === 0
-						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+					`${
+						placeholderCampaign?.friends_pending === 0
+							? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+							: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 					}`,
 					"warning",
 					3000,
@@ -553,13 +649,13 @@ const CalenderModal = ({
 				return false;
 			} else {
 				setCampaignToggle(e.target.checked);
-				camapignStatusToggleUpdateAPI(placeholderCampaign?.campaign_id, e.target.checked);
+				camapignStatusToggleUpdateAPI(
+					placeholderCampaign?.campaign_id,
+					e.target.checked
+				);
 			}
 		}
 	};
-
-
-
 
 	// FETCHING THE GROUP BY ID..
 	const fetchGroupMessage = (groupId) => {
@@ -570,16 +666,18 @@ const CalenderModal = ({
 
 				if (data.length) {
 					setGroupMsgSelect(data[0]);
-					localStorage.setItem('fr_using_campaigns_message', true);
+					localStorage.setItem("fr_using_campaigns_message", true);
 				}
 			});
 	};
 
-
 	// PREVIEW OF DATA AT FIELD FOR EDITING MODE..
 	useEffect(() => {
 		if (isEditingModal && editingCampaign) {
-			setCampaignName({ ...campaignName, value: editingCampaign?.campaign_name });
+			setCampaignName({
+				...campaignName,
+				value: editingCampaign?.campaign_name,
+			});
 			setTimeDelay(editingCampaign?.time_delay);
 			setMsgLimit(editingCampaign?.message_limit);
 			setCampaignColorPick(editingCampaign?.campaign_label_color);
@@ -592,19 +690,31 @@ const CalenderModal = ({
 
 			if (selectedCampaignSchedule) {
 				const originalStartDate = moment(selectedCampaignSchedule?.start);
-				const formattedStartTime = originalStartDate.format("hh:mm a");
+				const formattedStartTime = originalStartDate.format("h:mm A");
 
 				const originalEndDate = moment(selectedCampaignSchedule?.end);
-				const formattedEndTime = originalEndDate.format("hh:mm a");
+				const formattedEndTime = originalEndDate.format("h:mm A");
 
 				setStartTime(formattedStartTime);
 				setEndTime(formattedEndTime);
 			}
 		}
 	}, [isEditingModal]);
-	
 
-	console.log("DETAILS -- ", editingCampaign); console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
+	useEffect(() => {
+		return () => {
+			setScheduleTime(() => {
+				return {
+					date: [new Date()],
+					start: "",
+					end: "",
+				};
+			});
+		};
+	}, []);
+
+	console.log("DETAILS -- ", editingCampaign);
+	console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
 
 
 	if (type === "CREATE_CAMPAIGN" || isEditingModal) {

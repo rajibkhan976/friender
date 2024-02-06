@@ -19,7 +19,7 @@ const DayChooseBalls = ({ scheduleTime, setScheduleTime }) => {
 		}
 	};
 	buildOnWeekdaysArr();
-	
+
 	return (
 		<div className='scheduler-popup-header-content'>
 			{weekdaysArr.map((week, index) => (

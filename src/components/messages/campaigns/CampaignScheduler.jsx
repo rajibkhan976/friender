@@ -74,10 +74,10 @@ const CampaignScheduler = (props) => {
 					) {
 						for (let c = 0; c < campaignArr.length; c++) {
 							if (
-								moment(campaignArr[i].start).format("DD-MM-YYYY hh:mm:ssa") ===
-									moment(campaignArr[c].start).format("DD-MM-YYYY hh:mm:ssa") &&
-								moment(campaignArr[i].end).format("DD-MM-YYYY hh:mm:ssa") ===
-									moment(campaignArr[c].end).format("DD-MM-YYYY hh:mm:ssa")
+								moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") ===
+									moment(campaignArr[c].start).format("DD-MM-YYYY h:mm A") &&
+								moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A") ===
+									moment(campaignArr[c].end).format("DD-MM-YYYY h:mm A")
 							) {
 								campaignTitleArr.push(
 									<div
@@ -108,10 +108,10 @@ const CampaignScheduler = (props) => {
 						campaignArr[i].end &&
 						groupedCampaignByDateNTime.every(
 							(item) =>
-								moment(item.start).format("DD-MM-YYYY hh:mm:ssa") !==
-									moment(campaignArr[i].start).format("DD-MM-YYYY hh:mm:ssa") &&
+								moment(item.start).format("DD-MM-YYYY h:mm A") !==
+									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
 								moment(item.end).format("DD-MM-YYYY hh:mm:ssa") !==
-									moment(campaignArr[i].end).format("DD-MM-YYYY hh:mm:ssa")
+									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
 						)
 					) {
 						groupedCampaignByDateNTime.push({
@@ -125,10 +125,10 @@ const CampaignScheduler = (props) => {
 						campaignArr[i].end &&
 						groupedCampaignByDateNTime.every(
 							(item) =>
-								moment(item.start).format("DD-MM-YYYY hh:mm:ssa") !==
-									moment(campaignArr[i].start).format("DD-MM-YYYY hh:mm:ssa") &&
-								moment(item.end).format("DD-MM-YYYY hh:mm:ssa") !==
-									moment(campaignArr[i].end).format("DD-MM-YYYY hh:mm:ssa")
+								moment(item.start).format("DD-MM-YYYY h:mm A") !==
+									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
+								moment(item.end).format("DD-MM-YYYY h:mm A") !==
+									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
 						)
 					) {
 						groupedCampaignByDateNTime.push({
@@ -142,6 +142,15 @@ const CampaignScheduler = (props) => {
 				dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 			}
 		}
+		return () => {
+			setScheduleTime(() => {
+				return {
+					date: [new Date()],
+					start: "",
+					end: "",
+				};
+			});
+		};
 	}, []);
 
 	const CustomEventContainerWrapper = (props) => {
@@ -193,7 +202,7 @@ const CampaignScheduler = (props) => {
 	const eventPropGetter = useCallback((event, start, end, isSelected) => {
 		// console.log(utils.hex2rgb(event.color));
 		return {
-			...(event.title && {
+			...((event?.title || event?.isSaved) && {
 				className: "campaign-saved",
 				// style: {
 				// 	backgroundColor: `${utils.hex2rgb(event.color)}`,
@@ -210,21 +219,40 @@ const CampaignScheduler = (props) => {
 	const handleSelectEvent = (event) => {
 		// console.log("selected envet", event);
 		setShowGlobalCampaignPopup(false);
-		setSelectedEvent(event);
 		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
+		dispatch(
+			updateCampaignSchedule([
+				...campaignSchedule.filter((item) => item.isSaved),
+			])
+		);
+		setScheduleTime({
+			date: [new Date(event?.start)],
+			start: moment(event?.start).format("h:mm A"),
+			end: moment(event?.end).format("h:mm A"),
+		});
+		setSelectedEvent(event);
 		// dispatch(
 		// 	updateSelectedCampaignSchedule(
 		// 		campaignsList.find((item) => item?.campaign_id === event?.id)
 		// 	)
 		// );
 		dispatch(updateSelectedCampaignSchedule(event));
+		handleSetPopupPos({ X: 0, Y: 0 });
+		handleSetShowPopup(true);
 	};
 
 	const handleSelectSlot = (slotInfo) => {
 		// console.log("handle slot", slotInfo);
 		const { start, end } = slotInfo;
-		const selectedSchedules = [];
-		selectedSchedules.push({
+		const selectedSchedule = {};
+
+		setShowGlobalCampaignPopup(false);
+		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
+		dispatch(updateSelectedCampaignSchedule(null));
+		setSelectedEvent(null);
+
+		Object.assign(selectedSchedule, {
+			isSaved: false,
 			start: start,
 			end: end,
 		});
@@ -241,13 +269,13 @@ const CampaignScheduler = (props) => {
 					X: slotInfo?.bounds?.left,
 					Y: slotInfo?.bounds?.top,
 			  });
-		setShowGlobalCampaignPopup(false);
-		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
-		handleSetShowPopup(true);
 		// console.log(selectedSchedules)
-		const updatedCampaignSchedule = [...campaignSchedule, ...selectedSchedules];
+		const updatedCampaignSchedule = [
+			...campaignSchedule.filter((item) => item.isSaved),
+			selectedSchedule,
+		];
 		dispatch(updateCampaignSchedule(updatedCampaignSchedule));
-		dispatch(updateSelectedCampaignSchedule(null));
+		handleSetShowPopup(true);
 	};
 
 	const formats = {
