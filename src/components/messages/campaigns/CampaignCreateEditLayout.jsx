@@ -204,6 +204,12 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
+		if (!campaignSchedule || campaignSchedule?.length === 0) {
+			Alertbox("Please add at least one schedule.", "error", 1000, "bottom-right");
+			setLoadingBtn(false);
+			return false;
+		}
+
 		if (campaignsArray?.length) {
 			if (type === "CREATE") {
 				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
@@ -253,8 +259,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
 	const transformCampaignSchedulesPayload = (schedules = []) => {
 		const transformSchedules = schedules?.length && schedules.map((schedule) => {
-			const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
-			const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+			// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
+			// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+			const fromTime = moment(schedule.start).format("HH:mm:ss");
+			const toTime = moment(schedule.end).format("HH:mm:ss");
 			const day = moment(schedule.start).format("dddd");
 
 			return {
@@ -308,6 +316,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 			if (type === "EDIT") {
 				campaignData.campaignId = params?.campaignId;
+
+				// For Edit Campaign Needs the Status to be as it as..
+				// delete campaignData.campaignStatus;
+				const findTheCampaign = campaignsArray?.length && campaignsArray.find((campaign) => campaign?.campaign_id === params?.campaignId);
+				campaignData.campaignStatus = findTheCampaign?.status;
 			}
 
 			// TRANSFERING DATA..
@@ -355,7 +368,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 	 */
 	const fetchCampaignDetails = async () => {
 		try {
-			// const res = await dispatch(fetchCampaignById({ fbUserId: current_fb_id, campaignId: params?.campaignId })).unwrap();
 			const res = await fetchCampaign({ fbUserId: current_fb_id, campaignId: params?.campaignId });
 			const data = res?.data;
 
@@ -434,6 +446,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	useEffect(() => {
 		if (params?.campaignId) {
+			console.log("FB USER ID -- ", current_fb_id, " - CAMPAIGN ID -- ", params?.campaignId);
 			setType("EDIT");
 			fetchCampaignDetails();
 		}

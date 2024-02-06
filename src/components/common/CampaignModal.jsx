@@ -340,8 +340,10 @@ const CalenderModal = ({
 		const transformSchedules =
 			schedules?.length &&
 			schedules.map((schedule) => {
-				const fromTime = moment(schedule.start).format("YYYY-MM-DD h:mm A");
-				const toTime = moment(schedule.end).format("YYYY-MM-DD h:mm A");
+				// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
+				// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+				const fromTime = moment(schedule.start).format("HH:mm:ss");
+				const toTime = moment(schedule.end).format("HH:mm:ss");
 				const day = moment(schedule.start).format("dddd");
 
 				return {
@@ -470,7 +472,7 @@ const CalenderModal = ({
 				return false;
 			}
 
-			handleClickToSaveCampaign({
+			const campaignToSave = {
 				campaignName: campaignName?.value,
 				messageGroupId: groupMsgSelect?._id,
 				quickMessage: quickMsg,
@@ -479,7 +481,17 @@ const CalenderModal = ({
 				campaignEndTime: endDateAndTime,
 				timeDelay: timeDelay,
 				campaignLabelColor: campaginColorPick,
-			});
+				campaignStatus: false,
+			};
+
+			if (isEditingModal) {
+				const editingCampaignId = editingCampaign?._id || editingCampaign?.campaign_id;
+				campaignToSave.campaignId = editingCampaignId;
+				const findTheCampaign = campaignsArray?.length && campaignsArray.find((campaign) => campaign?.campaign_id === editingCampaignId);
+				campaignToSave.campaignStatus = findTheCampaign?.status;
+			}
+
+			handleClickToSaveCampaign(campaignToSave);
 		}
 		setCalenderModalType("");
 		setCalenderModalOpen(false);
@@ -631,11 +643,7 @@ const CalenderModal = ({
 			);
 
 		if (placeholderCampaign) {
-			if (
-				(placeholderCampaign?.friends_pending === 0 ||
-					new Date(placeholderCampaign?.campaign_end_time) < new Date()) &&
-				e.target.checked
-			) {
+			if ((placeholderCampaign?.friends_pending === 0 || new Date(placeholderCampaign?.campaign_end_time) < new Date()) && e.target.checked) {
 				Alertbox(
 					`${
 						placeholderCampaign?.friends_pending === 0
@@ -952,7 +960,7 @@ const CalenderModal = ({
 						open={isCampaignDeleteModalOpen}
 						setOpen={setCampaignDeleteModalOpen}
 						ModalFun={() => {
-							campaignDeleteAPIReq(selectedCampaignSchedule?.id);
+							campaignDeleteAPIReq(editingCampaign?._id);
 						}}
 						btnText={"Yes, Delete"}
 						ModalIconElement={() => <DangerIcon />}

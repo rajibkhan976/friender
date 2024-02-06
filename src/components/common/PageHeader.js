@@ -346,6 +346,8 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
+		console.log("location array -- ", locationArray);
+
 		setLinks(locationArray);
 
 		validateHeaderOptions(locationPathName[locationPathName.length - 1]);

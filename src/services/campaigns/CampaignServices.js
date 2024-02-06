@@ -79,15 +79,40 @@ export const createOrUpdateCampaignService = (newCampaign) => {
 				headers: headers,
 			})
 			.then((res) => {
-				// console.log('<<<<<<<', res, 'config.createCampaignUrl', config.createCampaignUrl);
 				resolve(res.data);
 			})
 			.catch((error) => {
-				// console.log("Catching the error --- ", error);
-				reject(error);
+				reject(error?.response?.data ? error.response.data : `Server responded with an error: Invalid Request`);
 			});
 	});
 };
+
+// export const createOrUpdateCampaignService = (newCampaign) => {
+// 	return new Promise((resolve, reject) => {
+// 		fetch(config.createCampaignUrl, {
+// 			method: 'POST',
+// 			headers: headers,
+// 			body: JSON.stringify(newCampaign),
+// 		})
+// 			.then((response) => {
+// 				if (!response.ok) {
+// 					console.log("NOT OKAY -- ", response);
+// 					// Check if the response status is not in the range 200-299
+// 					throw new Error(`Server responded with an error ${response.statusText}`);
+// 				}
+// 				return response.json(); // Parse JSON if the response is successful
+// 			})
+// 			.then((data) => {
+// 				console.log("Response data:", data);
+// 				resolve(data);
+// 			})
+// 			.catch((error) => {
+// 				console.error("Error during fetch:", error?.response);
+// 				reject(error?.response?.data ? error.response.data : error?.message);
+// 			});
+// 	});
+// };
+
 
 /**
  * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
@@ -105,7 +130,7 @@ export const updateCampaignStatusService = (campaignData) => {
 				resolve(res.data);
 			})
 			.catch((error) => {
-				reject(error);
+				reject(error?.response?.data ? error.response.data : error.message);
 			});
 	});
 };

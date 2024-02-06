@@ -32,7 +32,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 	const storeEdit = async () => {
 		try {
-			const response = await dispatch(fetchCampaignById({ fbUserId: localStorage.getItem("fr_default_fb"), campaignId: params?.data?.campaign_id, })).unwrap();
+			const response = await dispatch(fetchCampaignById({ fbUserId: localStorage.getItem("fr_default_fb"), campaignId, })).unwrap();
 
 			if (response) {
 				localStorage.setItem(
@@ -66,13 +66,40 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
-	const [campaignStatus, setCampaignStatus] = useState(params?.value);
-	const campaignObj = params?.data;
+	const [campaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
 
-	const handleSwitchToggleStatus = async (e) => {
-		if ((params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
+	// CAMPAIGN STATUS UPDATE VIA API.. 
+	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
+		try {
+			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 			Alertbox(
-				`${params?.data?.friends_pending === 0
+				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
+				}`,
+				"success",
+				3000,
+				"bottom-right"
+			);
+
+			return false;
+
+		} catch (error) {
+			// Handle other unexpected errors
+			Alertbox(
+				error?.message,
+				"error",
+				1000,
+				"bottom-right"
+			);
+			return false;
+		}
+	};
+
+	const handleSwitchToggleStatus = (e) => {
+		const campaignId = params?.data?.campaign_id || params?.data?._id;
+		
+		if (!params?.data?.friends_added || (params?.data?.friends_added === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
+			Alertbox(
+				`${params?.data?.friends_added === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
 					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 				}`,
@@ -86,26 +113,12 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			return false;
 
 		} else {
-			const statusPayload = {
-				campaignId: campaignObj.campaign_id, 
-				campaignStatus: e.target.checked
-			}
-
-			await dispatch(updateCampaignStatus(statusPayload))
-					.unwrap()
-					.then((res) => {
-						if (res) {
-							Alertbox(
-								`The campaign has been successfully turned ${statusPayload.campaignStatus ? 'ON' : 'OFF'
-								}`,
-								"success",
-								3000,
-								"bottom-right"
-							);
-						}
-					})
+			// params?.setIsEditingCampaign({
+			// 	...params?.data,
+			// 	status: e.target.checked,
+			// });
 			// setCampaignStatus(e.target.checked);
-			// camapignStatusToggleUpdateAPI(params?.data?.campaign_id, e.target.checked);
+			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
 		}
 	};
 
@@ -121,7 +134,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 });
 
 export const CampaignFriendsCountCellRenderer = memo((params) => {
-	return <div className='campaign-count-cell'>{params?.value}</div>;
+	// console.log("FRIENDS COUNT CELL RENDERER - ", params?.value);
+	// console.log("FRIENDS ADDED CELL - ", params?.data?.friends_added);
+	return <div className='campaign-count-cell'>{!params?.value ? 0 : params?.value}</div>;
 });
 
 export const CampaignFriendsPendingCellRenderer = memo((params) => {
@@ -210,7 +225,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
 	const togggleContext = () => {
 		setIsComponentVisible((current) => !current);
-		dispatch(updateCampaignContext(params?.data?._id));
+		dispatch(updateCampaignContext(campaignId));
 	};
 
 	const handleEditCampaignOnClick = (event) => {
@@ -219,7 +234,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 		try {
 			dispatch(fetchCampaignById({
 				fbUserId: localStorage.getItem("fr_default_fb"),
-				campaignId: params?.data?.campaign_id,
+				campaignId,
 			}))
 				.unwrap()
 				.then(res => {

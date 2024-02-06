@@ -222,7 +222,7 @@ export const campaignSlice = createSlice({
 
 			// console.log('here');
 			state.editingCampaign = action?.payload?.data?.length
-				? {...action?.payload?.data[0], friends: []}
+				? { ...action?.payload?.data[0], friends: [] }
 				: null;
 		},
 		[fetchCampaignById.rejected]: (state) => {
@@ -238,6 +238,9 @@ export const campaignSlice = createSlice({
 			const placeholderArray = current(state.campaignsArray);
 			let newAdd = true;
 
+			// console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
+			// console.log("ACTION PAYLOAD -- ", action?.payload?.data);
+
 			placeholderArray.forEach((campaign) => {
 				if (campaign?.campaign_id === action?.payload?.data?._id) {
 					newAdd = false;
@@ -245,7 +248,7 @@ export const campaignSlice = createSlice({
 			});
 
 			if (newAdd) {
-				state.campaignsArray = [action?.payload?.data, ...state.campaignsArray];
+				state.campaignsArray = [{ ...action?.payload?.data, friends_added: 0, friends_pending: 0 }, ...state.campaignsArray];
 			} else {
 				state.campaignsArray = action?.payload?.data
 					? placeholderArray.map(
@@ -268,9 +271,15 @@ export const campaignSlice = createSlice({
 			// Action payload id is -> _id..
 			const placeholderArray = current(state.campaignsArray);
 
+			// console.log("PLACEHOLDER ARRAY FOR THIS ONE -- ", placeholderArray);
+			// console.log("ACTION.PAYLOAD.DATA -- ", action?.payload?.data);
+
+			// const findThePickedCampaign = placeholderArray.find((arr) => arr._id === action?.payload?.data?._id || arr.campaign_id === action?.payload?.data?._id);
+			// console.log("FIND THE PICKED CAMPAIGN -- ", findThePickedCampaign);
+
 			state.campaignsArray = placeholderArray.map((campaign) => {
 				if (
-					campaign?.campaign_id === action?.payload?.data?._id ||
+					campaign?.campaign_id === action?.payload?.data?._id || 
 					campaign?._id === action?.payload?.data?._id
 				) {
 					return {
@@ -291,11 +300,26 @@ export const campaignSlice = createSlice({
 		},
 		[deleteCampaign.fulfilled]: (state, action) => {
 			let placeholderArray = current(state.campaignsArray);
+			placeholderArray = placeholderArray.map(array => {
+				if (array?._id) {
+					return {
+						...array,
+						campaign_id: array?._id,
+					};
+				} else {
+					return array;
+				}
+			});
+
 			let idsArr1 = action?.payload?.campaignIds.map(obj => obj.campaignId);
-			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj._id));
+
+			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj.campaign_id));
 			// return filteredArr2;
-			
-			// console.log('filteredArr2', filteredArr2);
+
+			// console.log("idsArr1 -- ", idsArr1);
+			// console.log("THE PLACEHOLDER ARRAY - ", placeholderArray);
+			// console.log('filteredArr2 -- ', filteredArr2);
+
 			state.campaignsArray = filteredArr2
 			state.isLoading = false;
 		},
@@ -326,7 +350,7 @@ export const campaignSlice = createSlice({
 			state.isLoading = false
 		},
 		[fetchUsers.fulfilled]: (state, action) => {
-			state.editingCampaign = {...state.editingCampaign, friends: [...action?.payload?.data]}
+			state.editingCampaign = { ...state.editingCampaign, friends: [...action?.payload?.data] }
 			state.isLoading = false
 		},
 		[fetchUsers.rejected]: (state) => {

@@ -55,7 +55,7 @@ const CampaignScheduler = (props) => {
 				if (campaign.schedule && Array.isArray(campaign?.schedule)) {
 					campaign?.schedule.forEach((campaignSchedule) => {
 						campaignArr.push({
-							id: campaign.campaign_id,
+							id: campaign?.campaign_id || campaign?._id,
 							color: campaign.campaign_label_color,
 							title: campaign?.campaign_name,
 							start: new Date(campaignSchedule?.from_time),
