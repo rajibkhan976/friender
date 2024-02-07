@@ -92,7 +92,7 @@ const CampaignsCalendar = () => {
 										}}
 										onClick={() => {
 											if (location?.pathname === "/messages/campaigns") {
-												// console.log("CMAPAIGN ID", campaignArr[c].id);
+												// console.log("CMAPAIGN ID", campaignArr[c]);
 												dispatch(
 													updateSelectedCampaignSchedule(campaignArr[c])
 												);
@@ -144,11 +144,44 @@ const CampaignsCalendar = () => {
 							end: new Date(campaignArr[i].end),
 							isSaved: true,
 						});
+					} else if (campaignArr[i].start &&
+						campaignArr[i].end &&
+						groupedCampaignByDateNTime.every(
+							(item) =>
+								moment(item.start).format("DD-MM-YYYY h:mm A") ===
+									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
+								moment(item.end).format("DD-MM-YYYY h:mm A") !==
+									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
+						)) {
+							groupedCampaignByDateNTime.push({
+								title: campaignArr[i]?.title || "",
+								start: new Date(campaignArr[i].start),
+								end: new Date(campaignArr[i].end),
+								isSaved: true,
+							});
+					} else if (campaignArr[i].start &&
+						campaignArr[i].end &&
+						groupedCampaignByDateNTime.every(
+							(item) =>
+								moment(item.start).format("DD-MM-YYYY h:mm A") !==
+									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
+								moment(item.end).format("DD-MM-YYYY h:mm A") ===
+									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
+						)) {
+							groupedCampaignByDateNTime.push({
+								title: campaignArr[i]?.title || "",
+								start: new Date(campaignArr[i].start),
+								end: new Date(campaignArr[i].end),
+								isSaved: true,
+							});
 					}
 				}
 				dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 			}
 		}
+	}, [campaignsArray]);
+
+	useEffect(() => {
 		return () => {
 			dispatch(updateCampaignSchedule([]));
 			setScheduleTime(() => {
@@ -159,7 +192,7 @@ const CampaignsCalendar = () => {
 				};
 			});
 		};
-	}, [campaignsArray]);
+	}, []);
 
 	return (
 		<div className='create-campaign-scheduler-container global-campaign-calendar-view'>

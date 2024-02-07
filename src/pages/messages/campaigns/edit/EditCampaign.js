@@ -20,12 +20,16 @@ import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
-import { fetchUsers } from "../../../../actions/CampaignsActions";
+import {
+	fetchUsers,
+	updateCampaignSchedule,
+} from "../../../../actions/CampaignsActions";
 
 const EditCampaign = (props) => {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 	const params = useParams();
-	const [isEditingCampaign, setIsEditingCampaign, editViews] = useOutletContext();
+	const [isEditingCampaign, setIsEditingCampaign, editViews] =
+		useOutletContext();
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	const [view, setView] = useState(null);
@@ -155,12 +159,18 @@ const EditCampaign = (props) => {
 	};
 
 	// FETCHING CAMPAIGN'S USERS..
-	const getCampaignUsersListFromAPI = async (fbUserId = current_fb_id, campaignId = '', status = 'pending') => {
+	const getCampaignUsersListFromAPI = async (
+		fbUserId = current_fb_id,
+		campaignId = "",
+		status = "pending"
+	) => {
 		try {
 			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap();
-
 		} catch (error) {
-			console.log(`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `, error?.message);
+			console.log(
+				`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,
+				error?.message
+			);
 		}
 	};
 
@@ -188,6 +198,7 @@ const EditCampaign = (props) => {
 
 		return () => {
 			setIsEditingCampaign(null);
+			dispatch(updateCampaignSchedule([]));
 		};
 	}, []);
 
@@ -196,7 +207,6 @@ const EditCampaign = (props) => {
 			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
 		}
 	}, []);
-
 
 	return (
 		<>

@@ -21,12 +21,17 @@ const ScheduleSelector = (props) => {
 	);
 
 	const onChangeStartingTime = (event) => {
-		setScheduleTime(() => {
-			return {
-				...scheduleTime,
-				start: event.target.value,
-			};
-		});
+		if (
+			timeOptions.findIndex((item) => item.value === scheduleTime.end) >
+			timeOptions.findIndex((item) => item.value === event.target.value)
+		) {
+			setScheduleTime(() => {
+				return {
+					...scheduleTime,
+					start: event.target.value,
+				};
+			});
+		}
 	};
 
 	const onChangeEndingTime = (event) => {
@@ -116,9 +121,9 @@ const ScheduleSelector = (props) => {
 					});
 				}
 			});
-
-			dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 		}
+
+		dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 
 		setScheduleTime(() => {
 			return {

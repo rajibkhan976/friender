@@ -85,10 +85,6 @@ const CalenderModal = ({
 	// CAMPAIGN COLOR PICK..
 	const [campaginColorPick, setCampaignColorPick] = useState("#92B0EA");
 
-	// TIME DURATIONS..
-	const [startTime, setStartTime] = useState("");
-	const [endTime, setEndTime] = useState("");
-
 	// END DATE AND TIME
 	const [endDateAndTime, setEndDateAndTime] = useState("");
 
@@ -130,13 +126,6 @@ const CalenderModal = ({
 	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
 		useState(false);
 
-	useEffect(() => {
-		if (scheduleTime) {
-			setStartTime(scheduleTime?.start);
-			setEndTime(scheduleTime?.end);
-		}
-	}, [scheduleTime]);
-
 	// HANDLE CAMPAIGNS NAME FUNCTION..
 	const handleCampaignName = (event) => {
 		// event.preventDefault();
@@ -166,12 +155,17 @@ const CalenderModal = ({
 
 	// TIME DURATIONS..
 	const onChangeStartingTime = (event) => {
-		setScheduleTime(() => {
-			return {
-				...scheduleTime,
-				start: event.target.value,
-			};
-		});
+		if (
+			timeOptions.findIndex((item) => item.value === scheduleTime.end) >
+			timeOptions.findIndex((item) => item.value === event.target.value)
+		) {
+			setScheduleTime(() => {
+				return {
+					...scheduleTime,
+					start: event.target.value,
+				};
+			});
+		}
 	};
 
 	const onChangeEndingTime = (event) => {
@@ -286,6 +280,13 @@ const CalenderModal = ({
 			}
 
 			if (response?.data) {
+				setScheduleTime(() => {
+					return {
+						date: [new Date()],
+						start: "",
+						end: "",
+					};
+				});
 				const rbcEventArr = document.getElementsByClassName("rbc-event");
 				if (rbcEventArr && rbcEventArr.length > 0) {
 					for (let i = 0; i < rbcEventArr.length; i++) {
@@ -387,7 +388,7 @@ const CalenderModal = ({
 			setLoadingBtn(true);
 
 			// UNHANDLED VALUES.. TIME DURATIONS,
-			console.log("START - END TIME DURATIONS - ", startTime, endTime);
+			console.log("scheduleTime", scheduleTime);
 
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
@@ -491,17 +492,9 @@ const CalenderModal = ({
 						});
 					}
 				});
-
-				dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 			}
+			dispatch(updateCampaignSchedule([...campaignScheduleArr]));
 
-			setScheduleTime(() => {
-				return {
-					date: [new Date()],
-					start: "",
-					end: "",
-				};
-			});
 			handleClickToSaveCampaign(campaignToSave);
 		}
 		setCalenderModalType("");
@@ -549,6 +542,7 @@ const CalenderModal = ({
 			selectedSchedule &&
 			campaignScheduleArr.some(
 				(item) =>
+					!item.isSaved &&
 					moment(item.start).format("DD-MM-YYYY h:mm A") ===
 						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") ===
@@ -557,13 +551,15 @@ const CalenderModal = ({
 		) {
 			campaignScheduleArr = campaignScheduleArr.filter(
 				(item) =>
+					item.isSaved &&
 					moment(item.start).format("DD-MM-YYYY h:mm A") !==
 						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") !==
 						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 			);
 		} else {
-			campaignScheduleArr.pop();
+			!campaignScheduleArr[campaignScheduleArr.length - 1].isSaved &&
+				campaignScheduleArr.pop();
 		}
 		dispatch(updateCampaignSchedule(campaignScheduleArr));
 		setScheduleTime(() => {
@@ -648,7 +644,7 @@ const CalenderModal = ({
 			campaignsArray?.find(
 				(camp) => camp?.campaign_id === editingCampaign?._id
 			);
-		console.log(placeholderCampaign);
+
 		if (placeholderCampaign) {
 			if (
 				(placeholderCampaign?.friends_pending === 0 ||
@@ -705,17 +701,6 @@ const CalenderModal = ({
 			if (editingCampaign?.message_group_id) {
 				// Fetching the group from the id here..
 				fetchGroupMessage(editingCampaign?.message_group_id);
-			}
-
-			if (selectedCampaignSchedule) {
-				const originalStartDate = moment(selectedCampaignSchedule?.start);
-				const formattedStartTime = originalStartDate.format("h:mm A");
-
-				const originalEndDate = moment(selectedCampaignSchedule?.end);
-				const formattedEndTime = originalEndDate.format("h:mm A");
-
-				setStartTime(formattedStartTime);
-				setEndTime(formattedEndTime);
 			}
 		}
 	}, [isEditingModal]);
@@ -908,10 +893,12 @@ const CalenderModal = ({
 										selects={timeOptions}
 										id='start-time-span'
 										defaultValue={
-											timeOptions?.find((el) => el.value === startTime)?.value
+											timeOptions?.find((el) => el.value === scheduleTime.start)
+												?.value
 										}
 										value={
-											timeOptions?.find((el) => el.value === startTime)?.value
+											timeOptions?.find((el) => el.value === scheduleTime.start)
+												?.value
 										}
 										extraClass='fr-select-new tinyWrap campaign-time-select-half'
 										height='40px'
@@ -925,10 +912,12 @@ const CalenderModal = ({
 										selects={timeOptions}
 										id='end-time-span'
 										defaultValue={
-											timeOptions?.find((el) => el.value === endTime)?.value
+											timeOptions?.find((el) => el.value === scheduleTime.end)
+												?.value
 										}
 										value={
-											timeOptions?.find((el) => el.value === endTime)?.value
+											timeOptions?.find((el) => el.value === scheduleTime.end)
+												?.value
 										}
 										extraClass='fr-select-new tinyWrap campaign-time-select-half'
 										height='40px'
@@ -1110,7 +1099,11 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>{editingCampaign?.group_name}</p>
+										<p>
+											{editingCampaign?.group_name
+												? editingCampaign?.group_name
+												: "Quick message"}
+										</p>
 										<span>Message</span>
 									</div>
 								</div>
