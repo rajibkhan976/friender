@@ -204,15 +204,15 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
-		if (!campaignSchedule || campaignSchedule?.length === 0) {
-			Alertbox("Please add at least one schedule.", "error", 1000, "bottom-right");
-			setLoadingBtn(false);
-			return false;
-		}
+		// if (!campaignSchedule || campaignSchedule?.length === 0) {
+		// 	Alertbox("Please add at least one schedule.", "error", 1000, "bottom-right");
+		// 	setLoadingBtn(false);
+		// 	return false;
+		// }
 
 		if (campaignsArray?.length) {
 			if (type === "CREATE") {
-				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim() === payload?.campaignName?.trim());
+				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim()?.toLowerCase() === payload?.campaignName?.trim()?.toLowerCase());
 
 				if (campaignExistsCheck > -1) {
 					Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");

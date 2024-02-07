@@ -55,7 +55,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 	return (
 		<div className='campaign-name-cell'>
 			<Link
-				to={`https://localhost:3000/messages/campaigns/${campaignId}`}
+				// to={`/messages/campaigns/${campaignId}`}
 				onClick={storeEdit}
 			>
 				{params?.value}
@@ -127,10 +127,10 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			<Switch
 				checked={campaignStatus}
 				handleChange={handleSwitchToggleStatus}
-				isDisabled={
-					params?.data?.friends_added === 0 ||
-					new Date(params?.data?.campaign_end_time) < new Date()
-				}
+				// isDisabled={
+				// 	params?.data?.friends_added === 0 ||
+				// 	new Date(params?.data?.campaign_end_time) < new Date()
+				// }
 			/>
 		</div>
 	);
@@ -175,7 +175,8 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 							})
 						);
 
-						navigate(`/messages/campaigns/${campaignId}`);
+						// navigate(`/messages/campaigns/${campaignId}`);
+						navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
 					}
 				})
 		} catch (error) {
@@ -186,7 +187,7 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 	return (
 		<div className='campaign-schedule-cell'>
 			<Link
-				to={`https://localhost:3000/messages/campaigns/${campaignId}`}
+				// to={`messages/campaigns/${campaignId}`}
 				onClick={storeEdit}
 			>
 				View schedule <OpenInNewTab />
@@ -249,7 +250,9 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 							})
 						);
 
-						navigate(`/messages/campaigns/${campaignId}`);
+						// navigate(`/messages/campaigns/${campaignId}`);
+						console.log("HERE IS CAMPAIGN DATA (PARAMS) - ", params?.data);
+						navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
 					}
 				})
 		} catch (error) {

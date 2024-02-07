@@ -37,6 +37,7 @@ const CampaignsHeader = ({
 
 	// CAMPAIGN STATUS UPDATE VIA API.. 
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
+		console.log("CAMPAIGN --- STATUS UPDATE");
 		try {
 			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 
@@ -62,11 +63,27 @@ const CampaignsHeader = ({
 		}
 	};
 
+	console.log("LOCAL STATE DATA -- ", location?.state?.data);
+
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {
-		// console.log("checking the friends here -- ", location?.state?.data);
+		const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
+
+		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined || location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0)  {
+			setCampaignsStatusActivity(false);
+
+			Alertbox(
+				"This campaign currently has no pending friend(s). To turn on the campaign, please add some friends",
+				"warning",
+				3000,
+				"bottom-right"
+			);
+			return false;	
+		}
 		
 		if ((location?.state?.data?.friends_added === 0 || new Date(location?.state?.data?.campaign_end_time) < new Date()) && e.target.checked) { 
+			setCampaignsStatusActivity(false);
+
 			Alertbox(
 				`${location?.state?.data?.friends_added === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
@@ -79,7 +96,7 @@ const CampaignsHeader = ({
 			return false;
 
 		} else {
-			camapignStatusToggleUpdateAPI(campaignsDetails?._id, e.target.checked);
+			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
 			setCampaignsStatusActivity(e.target.checked);
 			toggleEditCampaign(e.target.checked);
 		}
@@ -141,6 +158,13 @@ const CampaignsHeader = ({
 	useEffect(() => {
 		setEditCampaign(isEditingCampaign);
 	}, [isEditingCampaign]);
+
+	useEffect(() => {
+		if (campaignsArray && campaignsArray?.length) {
+			const placeholderCampaign = campaignsArray?.find((campArr) => (campArr?.campaign_id === params?.campaignId) || (campArr?._id === params?.campaignId));
+			setCampaignsStatusActivity(placeholderCampaign?.status);
+		}
+	}, [campaignsArray]);
 
 	return (
 		<header className='campaigns-header d-flex f-align-center w-100'>

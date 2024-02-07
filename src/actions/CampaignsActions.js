@@ -236,26 +236,34 @@ export const campaignSlice = createSlice({
 			// PlaceholderArray id is -> campaign_id..
 			// Action payload id is -> _id..
 			const placeholderArray = current(state.campaignsArray);
+			const actionResponse = {...action?.payload?.data};
 			let newAdd = true;
 
-			console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
-			console.log("ACTION PAYLOAD -- ", action?.payload?.data);
+			if (actionResponse?._id) {
+				actionResponse.campaign_id = actionResponse._id;
+				delete actionResponse._id;
+			}
+
+			// console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
+			// console.log("ACTION PAYLOAD -- ", actionResponse);
 
 			placeholderArray.forEach((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.data?._id) {
+				if (campaign?.campaign_id === actionResponse?.campaign_id) {
 					newAdd = false;
 				}
 			});
 
 			if (newAdd) {
-				state.campaignsArray = [{ ...action?.payload?.data, friends_added: 0, friends_pending: 0 }, ...state.campaignsArray];
+				state.campaignsArray = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...state.campaignsArray];
 			} else {
 				state.campaignsArray = action?.payload?.data
 					? placeholderArray.map(
-						(el) => el.campaign_id === action.payload.data._id
+						(el) => el.campaign_id === actionResponse?.campaign_id
 					)
 					: placeholderArray;
 			}
+
+			// console.log("FINAL PLACEHOLDER ARRAY -- ", state.campaignsArray);
 
 			state.isLoading = false;
 		},
@@ -333,8 +341,12 @@ export const campaignSlice = createSlice({
 		[updateCampaignStatus.fulfilled]: (state, action) => {
 			const placeholderArray = current(state.campaignsArray);
 
+			console.log("ACTION.PAYLOAD -- ", action?.payload);
+			console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
+
 			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.campaignId) {
+				if (campaign?.campaign_id === action?.payload?.campaignId || 
+					campaign?._id === action?.payload?.campaignId) {
 					return {
 						...campaign,
 						status: action?.payload?.campaignStatus,
@@ -342,6 +354,9 @@ export const campaignSlice = createSlice({
 				}
 				return campaign;
 			});
+			
+			console.log("FINAL -- ", state.campaignsArray);
+
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;
