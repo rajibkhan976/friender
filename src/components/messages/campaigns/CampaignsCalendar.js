@@ -139,7 +139,26 @@ const CampaignsCalendar = () => {
 						)
 					) {
 						groupedCampaignByDateNTime.push({
-							title: campaignArr[i]?.title || "",
+							title: [<div
+								className='global-campaign-title'
+								key={i}
+								style={{
+									backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+									borderLeft: `4px solid ${campaignArr[i].color}`,
+								}}
+								onClick={() => {
+									if (location?.pathname === "/messages/campaigns") {
+										// console.log("CMAPAIGN ID", campaignArr[i]);
+										dispatch(
+											updateSelectedCampaignSchedule(campaignArr[i])
+										);
+										setShowGlobalCampaignPopup(false);
+										setOpen(true);
+									}
+								}}
+							>
+								{campaignArr[i]?.title}
+							</div>] || [],
 							start: new Date(campaignArr[i].start),
 							end: new Date(campaignArr[i].end),
 							isSaved: true,
@@ -154,7 +173,26 @@ const CampaignsCalendar = () => {
 									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
 						)) {
 							groupedCampaignByDateNTime.push({
-								title: campaignArr[i]?.title || "",
+								title: [<div
+									className='global-campaign-title'
+									key={i}
+									style={{
+										backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+										borderLeft: `4px solid ${campaignArr[i].color}`,
+									}}
+									onClick={() => {
+										if (location?.pathname === "/messages/campaigns") {
+											// console.log("CMAPAIGN ID", campaignArr[i]);
+											dispatch(
+												updateSelectedCampaignSchedule(campaignArr[i])
+											);
+											setShowGlobalCampaignPopup(false);
+											setOpen(true);
+										}
+									}}
+								>
+									{campaignArr[i]?.title}
+								</div>] || [],
 								start: new Date(campaignArr[i].start),
 								end: new Date(campaignArr[i].end),
 								isSaved: true,
@@ -169,7 +207,31 @@ const CampaignsCalendar = () => {
 									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
 						)) {
 							groupedCampaignByDateNTime.push({
-								title: campaignArr[i]?.title || "",
+								title:
+									[
+										<div
+											className='global-campaign-title'
+											key={i}
+											style={{
+												backgroundColor: `${utils.hex2rgb(
+													campaignArr[i].color
+												)}`,
+												borderLeft: `4px solid ${campaignArr[i].color}`,
+											}}
+											onClick={() => {
+												if (location?.pathname === "/messages/campaigns") {
+													// console.log("CMAPAIGN ID", campaignArr[i]);
+													dispatch(
+														updateSelectedCampaignSchedule(campaignArr[i])
+													);
+													setShowGlobalCampaignPopup(false);
+													setOpen(true);
+												}
+											}}
+										>
+											{campaignArr[i]?.title}
+										</div>,
+									] || [],
 								start: new Date(campaignArr[i].start),
 								end: new Date(campaignArr[i].end),
 								isSaved: true,

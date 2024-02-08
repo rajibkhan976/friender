@@ -27,7 +27,6 @@ const CreateCampaignWrapper = () => {
 				</CampaignSchedulerPopup>
 			)}
 			<CampaignScheduler
-				campaignsList={[]}
 				handleSetShowPopup={(status) => setShowPopup(status)}
 				handleSetPopupPos={(pos) => {
 					setPopupCoordPos({ x: pos.X, y: pos.Y });

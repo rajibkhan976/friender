@@ -27,7 +27,6 @@ const CustomWeekViewHeader = ({ date }) => {
 
 const CampaignScheduler = (props) => {
 	const {
-		campaignsList = [],
 		selectedSchedule = null,
 		handleSetPopupPos = () => null,
 		handleSetSelectedSchedule = () => null,
@@ -44,8 +43,6 @@ const CampaignScheduler = (props) => {
 		(state) => state.campaign.campaignSchedule
 	);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
-
-	console.log("Campaigns List -- ", campaignsList);
 
 	const CustomEventContainerWrapper = (props) => {
 		const handleClick = (e) => {
@@ -125,12 +122,6 @@ const CampaignScheduler = (props) => {
 			end: moment(event?.end).format("h:mm A"),
 		});
 		handleSetSelectedSchedule(event);
-		// dispatch(
-		// 	updateSelectedCampaignSchedule(
-		// 		campaignsList.find((item) => item?.campaign_id === event?.id)
-		// 	)
-		// );
-		// dispatch(updateSelectedCampaignSchedule(event));
 		handleSetPopupPos && handleSetPopupPos({ X: 0, Y: 0 });
 		handleSetShowPopup(true);
 	};
