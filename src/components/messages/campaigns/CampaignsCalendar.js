@@ -97,6 +97,7 @@ const CampaignsCalendar = () => {
 													updateSelectedCampaignSchedule(campaignArr[c])
 												);
 												setShowGlobalCampaignPopup(false);
+												setCalenderModalType("VIEW_DETAILS");
 												setOpen(true);
 											}
 										}}
@@ -153,6 +154,7 @@ const CampaignsCalendar = () => {
 											updateSelectedCampaignSchedule(campaignArr[i])
 										);
 										setShowGlobalCampaignPopup(false);
+										setCalenderModalType("VIEW_DETAILS");
 										setOpen(true);
 									}
 								}}
@@ -187,6 +189,7 @@ const CampaignsCalendar = () => {
 												updateSelectedCampaignSchedule(campaignArr[i])
 											);
 											setShowGlobalCampaignPopup(false);
+											setCalenderModalType("VIEW_DETAILS");
 											setOpen(true);
 										}
 									}}
@@ -225,6 +228,7 @@ const CampaignsCalendar = () => {
 														updateSelectedCampaignSchedule(campaignArr[i])
 													);
 													setShowGlobalCampaignPopup(false);
+													setCalenderModalType("VIEW_DETAILS");
 													setOpen(true);
 												}
 											}}

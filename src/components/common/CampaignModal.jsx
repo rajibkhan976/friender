@@ -990,6 +990,7 @@ const CalenderModal = ({
 							<span
 								className='close-modal campaign-close-modal'
 								onClick={() => {
+									setCalenderModalType("");
 									setOpen(false);
 									setCalenderModalOpen(false);
 								}}

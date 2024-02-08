@@ -109,8 +109,8 @@ const CampaignScheduler = (props) => {
 
 	const handleSelectEvent = (event) => {
 		// console.log("selected envet", event);
+		handleSetShowModal(false);
 		setShowGlobalCampaignPopup(false);
-		setCalenderModalType && setCalenderModalType("VIEW_DETAILS");
 		dispatch(
 			updateCampaignSchedule([
 				...campaignSchedule.filter((item) => item.isSaved),
@@ -132,7 +132,6 @@ const CampaignScheduler = (props) => {
 		const selectedSchedule = {};
 
 		setShowGlobalCampaignPopup(false);
-		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
 		dispatch(updateSelectedCampaignSchedule(null));
 		handleSetSelectedSchedule(null);
 
@@ -161,7 +160,8 @@ const CampaignScheduler = (props) => {
 		];
 		dispatch(updateCampaignSchedule(updatedCampaignSchedule));
 		handleSetShowPopup(true);
-		handleSetShowModal(true);
+		setCalenderModalType && setCalenderModalType("CREATE_CAMPAIGN");
+		setCalenderModalType && handleSetShowModal(true);
 	};
 
 	const formats = {
