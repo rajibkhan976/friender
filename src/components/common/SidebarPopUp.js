@@ -40,7 +40,7 @@ const SidebarPopUp = (props) => {
         {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
         <img
           src={
-            profiles && profiles.length? profiles[0]?.fb_profile_picture : ProfilePhoto
+            profiles && profiles.length && profiles[0]?.fb_profile_picture ? profiles[0]?.fb_profile_picture : props.facebookAuthInfoStatus?.picture?.data?.url?props.facebookAuthInfoStatus?.picture?.data?.url: ProfilePhoto
             // props.profiles?.filter(
             //   (el) => el.fb_user_id == props.defaultProfileId
             // )[0]?.fb_profile_picture

@@ -681,6 +681,7 @@ const Sidebar = (props) => {
                   closePopupFn={closePopupFn}
                   logoOut={logoOut}
                   defaultProfileId={defaultProfileId}
+                  facebookAuthInfoStatus={facebookAuthInfoStatus}  
                 />
               )}
             </li>
