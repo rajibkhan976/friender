@@ -328,19 +328,15 @@ const Campaigns = () => {
 										customText={`No campaign(s) has been created yet`}
 									/>
 								) : (
-									<Suspense fallback="">
+									<Suspense fallback=''>
 										<CampaignsListingPage
 											campaignsCreated={filterCampaigns()}
 											setIsEditingCampaign={setIsEditingCampaign}
 										/>
 									</Suspense>
 								)
-							) : !campaignsCreated || campaignsCreated?.length <= 0 ? (
-								<NoDataFound
-									customText={`No campaign(s) has been created yet`}
-								/>
 							) : (
-								<Suspense fallback="">
+								<Suspense fallback=''>
 									<CampaignsCalendar
 										campaignsCreated={filterCampaigns()}
 										setIsEditingCampaign={setIsEditingCampaign}
