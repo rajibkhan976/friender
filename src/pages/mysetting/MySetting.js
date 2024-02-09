@@ -647,8 +647,8 @@ const MySetting = () => {
 				message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id || null,
 				quick_message: quickMsgAcptsIncomingFrndReqFrndReq || null,
 			},
-			donot_send_message_if_conservation_occured_when_someone_accept_new_friend_request: !sendMessageIfExists,
-			donot_send_message_if_conservation_occured_when_accept_incoming_friend_request: !sendMessageIfExistsIncoming
+			send_message_if_conservation_occured_when_someone_accept_new_friend_request: !sendMessageIfExists,
+			send_message_if_conservation_occured_when_accept_incoming_friend_request: !sendMessageIfExistsIncoming
 		};
 
 		/**
@@ -1427,14 +1427,14 @@ const MySetting = () => {
 			}
 		}
 
-		if (data?.donot_send_message_if_conservation_occured_when_accept_incoming_friend_request) {
-			// console.log('data :::' , data?.donot_send_message_if_conservation_occured_when_accept_incoming_friend_request );
-			setSendMessageIfExistsIncoming(!data?.donot_send_message_if_conservation_occured_when_accept_incoming_friend_request)
+		if (data?.send_message_if_conservation_occured_when_accept_incoming_friend_request) {
+			// console.log('data :::' , data?.send_message_if_conservation_occured_when_accept_incoming_friend_request );
+			setSendMessageIfExistsIncoming(data?.send_message_if_conservation_occured_when_accept_incoming_friend_request)
 		}
 
-		if (data?.donot_send_message_if_conservation_occured_when_someone_accept_new_friend_request) {
-			// console.log('data :::' , data?.donot_send_message_if_conservation_occured_when_someone_accept_new_friend_request);
-			setSendMessageIfExists(!data?.donot_send_message_if_conservation_occured_when_someone_accept_new_friend_request)
+		if (data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request) {
+			// console.log('data :::' , data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request);
+			setSendMessageIfExists(data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request)
 		}
 		// --- [ END OF SYNC FUNCTION ] ---
 	};

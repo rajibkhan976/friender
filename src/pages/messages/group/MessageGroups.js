@@ -41,9 +41,11 @@ const MessageGroups = () => {
                 .unwrap()
                 .then((res) => {
                     if (res) {
-                        if (res !== "Request failed with status code 500") {
-                            setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
-                        }
+                       // if (res !== "Request failed with status code 500") {
+                            //console.log("final arrayyyyy",res.data);
+                           // setGroupsArray(groupsArray?.length ? [...groupsArray, ...res?.data] : res?.data);
+                           // console.log("groups array::::::",groupsArray)
+                       // }
                        
                         setIsEditing({ addNewSub: false, readyToEdit: false });
                         setListLoading(false);

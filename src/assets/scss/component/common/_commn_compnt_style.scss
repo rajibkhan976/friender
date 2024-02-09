@@ -53,6 +53,22 @@
         @include theme-aware("color", "btn-hover-text");
       }
     }
+
+     /* WebKit (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    width: 6px; 
+    margin-right: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color:#696565a6;
+    border-radius: 5px; 
+  }
+
+  /* Firefox */
+  scrollbar-color: #696565a6;
+
+    
   }
 
   &:disabled {

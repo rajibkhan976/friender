@@ -1196,7 +1196,7 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const skipAddingToCampaign = () => {
-		dispatch(removeSelectedFriends());
+		//dispatch(removeSelectedFriends());
 		setSelectedCampaign("Select");
 		setIsAddingToCampaign(false);
 	};

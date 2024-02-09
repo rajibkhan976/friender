@@ -315,7 +315,9 @@ export const messageSlice = createSlice({
 		},
 		[fetchGroups.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.groupArray = action?.payload?.data ? action?.payload?.data : [];
+			if(action?.payload?.data){
+				state.groupArray=[...state.groupArray,...action?.payload?.data]
+			}
 		},
 		[fetchGroups.rejected]: (state) => {
 			state.isLoading = false;
