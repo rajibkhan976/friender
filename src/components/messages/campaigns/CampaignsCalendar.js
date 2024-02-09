@@ -105,8 +105,6 @@ const CampaignsCalendar = () => {
 										{campaignArr[c].title}
 									</div>
 								);
-							} else {
-								continue;
 							}
 						}
 					}
@@ -240,6 +238,36 @@ const CampaignsCalendar = () => {
 								end: new Date(campaignArr[i].end),
 								isSaved: true,
 							});
+					} else {
+						groupedCampaignByDateNTime.push({
+							title:
+								[
+									<div
+										className='global-campaign-title'
+										key={i}
+										style={{
+											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${campaignArr[i].color}`,
+										}}
+										onClick={() => {
+											if (location?.pathname === "/messages/campaigns") {
+												// console.log("CMAPAIGN ID", campaignArr[i]);
+												dispatch(
+													updateSelectedCampaignSchedule(campaignArr[i])
+												);
+												setShowGlobalCampaignPopup(false);
+												setCalenderModalType("VIEW_DETAILS");
+												setOpen(true);
+											}
+										}}
+									>
+										{campaignArr[i]?.title}
+									</div>,
+								] || [],
+							start: new Date(campaignArr[i].start),
+							end: new Date(campaignArr[i].end),
+							isSaved: true,
+						});
 					}
 				}
 				dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));

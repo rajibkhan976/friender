@@ -44,9 +44,26 @@ const CampaignScheduler = (props) => {
 	);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 
-	const CustomEventContainerWrapper = (props) => {
+	// const CustomEventContainerWrapper = (props) => {
+	// 	const handleClick = (e) => {
+	// 		if (location?.pathname === "/messages/campaigns") {
+	// 			setPopupCoordPos({
+	// 				x: e.clientX,
+	// 				y: e.clientY,
+	// 			});
+	// 			setShowGlobalCampaignPopup(true);
+	// 		}
+	// 	};
+	// 	return <div onClick={handleClick}>{props.children}</div>;
+	// };
+
+	const CustomEventWrapper = (props) => {
+		// console.log(props);
 		const handleClick = (e) => {
-			if (location?.pathname === "/messages/campaigns") {
+			if (
+				location?.pathname === "/messages/campaigns" &&
+				props?.event?.isSaved
+			) {
 				setPopupCoordPos({
 					x: e.clientX,
 					y: e.clientY,
@@ -55,11 +72,6 @@ const CampaignScheduler = (props) => {
 			}
 		};
 		return <div onClick={handleClick}>{props.children}</div>;
-	};
-
-	const CustomEventWrapper = (props) => {
-		// console.log(props);
-		return <>{props.children}</>;
 	};
 
 	const CustomEvent = (props) => {
@@ -79,7 +91,7 @@ const CampaignScheduler = (props) => {
 
 	const components = useMemo(
 		() => ({
-			eventContainerWrapper: CustomEventContainerWrapper,
+			// eventContainerWrapper: CustomEventContainerWrapper,
 			eventWrapper: CustomEventWrapper,
 			week: {
 				header: CustomWeekViewHeader,

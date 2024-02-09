@@ -647,8 +647,10 @@ const MySetting = () => {
 				message_group_id: sndMsgAcptsIncomingFrndReqGroupSelect?._id || null,
 				quick_message: quickMsgAcptsIncomingFrndReqFrndReq || null,
 			},
-			send_message_if_conservation_occured_when_someone_accept_new_friend_request: !sendMessageIfExists,
-			send_message_if_conservation_occured_when_accept_incoming_friend_request: !sendMessageIfExistsIncoming
+			send_message_if_conservation_occured_when_someone_accept_new_friend_request:
+				sendMessageIfExists,
+			send_message_if_conservation_occured_when_accept_incoming_friend_request:
+				sendMessageIfExistsIncoming,
 		};
 
 		/**
@@ -865,7 +867,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -887,7 +889,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -912,7 +914,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -934,7 +936,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -959,7 +961,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -981,7 +983,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgSomeoneSndFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1006,7 +1008,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1028,7 +1030,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgRejtIncomingFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1053,7 +1055,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1075,7 +1077,7 @@ const MySetting = () => {
 					quick_message: null,
 					old_message_group_id:
 						sndMsgAcptsIncomingFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
+						localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
 				};
@@ -1427,15 +1429,18 @@ const MySetting = () => {
 			}
 		}
 
-		if (data?.send_message_if_conservation_occured_when_accept_incoming_friend_request) {
-			// console.log('data :::' , data?.send_message_if_conservation_occured_when_accept_incoming_friend_request );
-			setSendMessageIfExistsIncoming(data?.send_message_if_conservation_occured_when_accept_incoming_friend_request)
-		}
+		setSendMessageIfExistsIncoming(
+			data?.send_message_if_conservation_occured_when_accept_incoming_friend_request
+				? true
+				: false
+		);
 
-		if (data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request) {
-			// console.log('data :::' , data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request);
-			setSendMessageIfExists(data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request)
-		}
+		setSendMessageIfExists(
+			data?.send_message_if_conservation_occured_when_someone_accept_new_friend_request
+				? true
+				: false
+		);
+
 		// --- [ END OF SYNC FUNCTION ] ---
 	};
 
