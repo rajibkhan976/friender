@@ -68,7 +68,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
 	const [campaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
 
-	// CAMPAIGN STATUS UPDATE VIA API.. 
+	// CAMPAIGN STATUS UPDATE VIA API..
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
 			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
@@ -96,7 +96,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 
 	const handleSwitchToggleStatus = (e) => {
 		const campaignId = params?.data?.campaign_id || params?.data?._id;
-		
+
 		if (!params?.data?.friends_added || (params?.data?.friends_added === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
 			Alertbox(
 				`${params?.data?.friends_added === 0
@@ -207,7 +207,7 @@ export const CampaignEndTimeCellRenderer = memo((params) => {
 			className={`campaign-endTime-cell ${new Date() > new Date(params?.value) ? "end-time-exceeded" : ""
 				}`}
 		>
-			{params?.value ? (
+			{params?.data?.campaign_end_time_status && params?.value ? (
 				<>
 					<CalendarIcon />
 					&nbsp;{convertedTimeSplit[0]}, {convertedTimeSplit[1]?.toLowerCase()}

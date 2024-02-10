@@ -7,6 +7,7 @@ import {
 	addUsersToCampaignService,
 	deleteCampaignService,
 	fetchCampaignUsers,
+	deleteCampaignContactsService
 } from "../services/campaigns/CampaignServices";
 
 const initialState = {
@@ -150,7 +151,6 @@ export const fetchCampaignById = createAsyncThunk(
 	"campaigns/getCampaign",
 	async (payload) => {
 		const res = await fetchCampaign(payload);
-		// console.log(res);
 		return res;
 	}
 );
@@ -159,7 +159,7 @@ export const addUsersToCampaign = createAsyncThunk(
 	"campaigns/addUsersToCampaign",
 	async (payload) => {
 		const res = await addUsersToCampaignService(payload);
-		return res;
+		return { ...res, friends: [...payload] };
 	}
 );
 
@@ -167,7 +167,6 @@ export const deleteCampaign = createAsyncThunk(
 	"messages/deleteCampaign",
 	async (payload) => {
 		const res = await deleteCampaignService(payload);
-		// console.log('res', res, 'payload', payload);
 		return { ...res, campaignIds: [...payload] };
 	}
 );
@@ -175,11 +174,19 @@ export const deleteCampaign = createAsyncThunk(
 export const fetchUsers = createAsyncThunk(
 	"messages/fetchUsers",
 	async (payload) => {
-		const res = await fetchCampaignUsers(payload)
-		// console.log('res fetchUsers', res);
+		const res = await fetchCampaignUsers(payload);
 		return res;
 	}
 )
+
+export const deleteCampaignContacts = createAsyncThunk(
+	"messages/deleteCampaignContacts",
+	async (payload) => {
+		const res = await deleteCampaignContactsService(payload);
+		return { ...res, payloadData: [...payload] };
+	}
+);
+
 
 export const campaignSlice = createSlice({
 	name: "campaigns",
@@ -244,9 +251,6 @@ export const campaignSlice = createSlice({
 				delete actionResponse._id;
 			}
 
-			// console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
-			// console.log("ACTION PAYLOAD -- ", actionResponse);
-
 			placeholderArray.forEach((campaign) => {
 				if (campaign?.campaign_id === actionResponse?.campaign_id) {
 					newAdd = false;
@@ -263,8 +267,6 @@ export const campaignSlice = createSlice({
 					: placeholderArray;
 			}
 
-			// console.log("FINAL PLACEHOLDER ARRAY -- ", state.campaignsArray);
-
 			state.isLoading = false;
 		},
 		[createCampaign.rejected]: (state) => {
@@ -279,15 +281,12 @@ export const campaignSlice = createSlice({
 			// Action payload id is -> _id..
 			const placeholderArray = current(state.campaignsArray);
 
-			// console.log("PLACEHOLDER ARRAY FOR THIS ONE -- ", placeholderArray);
-			// console.log("ACTION.PAYLOAD.DATA -- ", action?.payload?.data);
-
 			// const findThePickedCampaign = placeholderArray.find((arr) => arr._id === action?.payload?.data?._id || arr.campaign_id === action?.payload?.data?._id);
 			// console.log("FIND THE PICKED CAMPAIGN -- ", findThePickedCampaign);
 
 			state.campaignsArray = placeholderArray.map((campaign) => {
 				if (
-					campaign?.campaign_id === action?.payload?.data?._id || 
+					campaign?.campaign_id === action?.payload?.data?._id ||
 					campaign?._id === action?.payload?.data?._id
 				) {
 					return {
@@ -308,6 +307,7 @@ export const campaignSlice = createSlice({
 		},
 		[deleteCampaign.fulfilled]: (state, action) => {
 			let placeholderArray = current(state.campaignsArray);
+
 			placeholderArray = placeholderArray.map(array => {
 				if (array?._id) {
 					return {
@@ -320,13 +320,7 @@ export const campaignSlice = createSlice({
 			});
 
 			let idsArr1 = action?.payload?.campaignIds.map(obj => obj.campaignId);
-
 			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj.campaign_id));
-			// return filteredArr2;
-
-			// console.log("idsArr1 -- ", idsArr1);
-			// console.log("THE PLACEHOLDER ARRAY - ", placeholderArray);
-			// console.log('filteredArr2 -- ', filteredArr2);
 
 			state.campaignsArray = filteredArr2
 			state.isLoading = false;
@@ -341,11 +335,8 @@ export const campaignSlice = createSlice({
 		[updateCampaignStatus.fulfilled]: (state, action) => {
 			const placeholderArray = current(state.campaignsArray);
 
-			console.log("ACTION.PAYLOAD -- ", action?.payload);
-			console.log("PLACEHOLDER ARRAY -- ", placeholderArray);
-
 			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.campaignId || 
+				if (campaign?.campaign_id === action?.payload?.campaignId ||
 					campaign?._id === action?.payload?.campaignId) {
 					return {
 						...campaign,
@@ -354,22 +345,37 @@ export const campaignSlice = createSlice({
 				}
 				return campaign;
 			});
-			
-			console.log("FINAL -- ", state.campaignsArray);
-
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;
 		},
 		[fetchUsers.pending]: (state) => {
-			state.isLoading = false
+			state.isLoading = false;
 		},
 		[fetchUsers.fulfilled]: (state, action) => {
-			state.editingCampaign = { ...state.editingCampaign, friends: [...action?.payload?.data] }
-			state.isLoading = false
+			const payloadData = action?.payload?.data;
+			const filteredPayloadData = payloadData?.length && payloadData?.filter(payload => !payload?.deleted_at);
+			state.editingCampaign = { ...state.editingCampaign, friends: [...filteredPayloadData] };
+			state.isLoading = false;
 		},
 		[fetchUsers.rejected]: (state) => {
-			state.isLoading = false
+			state.isLoading = false;
+		},
+		[deleteCampaignContacts.pending]: (state) => {
+			state.isLoading = false;
+		},
+		[deleteCampaignContacts.fulfilled]: (state, action) => {
+			const placeholderArray = current(state.editingCampaign);
+			const actionPayloadData = action?.payload?.payloadData;
+
+			const friendFbIds = actionPayloadData?.length && actionPayloadData?.map(obj => obj?.friendFbId);
+			const filteredFriendsList = placeholderArray?.friends?.length && placeholderArray?.friends?.filter(obj => !friendFbIds.includes(obj.friendFbId));
+
+			state.editingCampaign = { ...state.editingCampaign, friends: [...filteredFriendsList] };
+			state.isLoading = false;
+		},
+		[deleteCampaignContacts.rejected]: (state) => {
+			state.isLoading = false;
 		},
 	},
 });

@@ -210,7 +210,7 @@ function PageHeader({ headerText = "" }) {
 				dispatch(reLoadFrList());
 			},300)
 	}
-	
+
 	useEffect(()=>{
 		setSelectedCampaign("Select");
 		setCampaignListSelector(false);
@@ -703,9 +703,9 @@ function PageHeader({ headerText = "" }) {
 
 	const campaignSelectFun=(item)=>{
 		//console.log("camo sele",item)
-		setSelectedCampaignName(item?.campaign_name)
-		setSelectedCampaign(item.campaign_id)
-	
+		setSelectedCampaignName(item?.campaign_name);
+		setSelectedCampaign(item?.campaign_id);
+
 	}
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
@@ -1183,13 +1183,13 @@ function PageHeader({ headerText = "" }) {
 					1000,
 					"bottom-right"
 				);
-			}	
+			}
 			).catch((err)=>{
 				console.log("Add to campaign:",err);
 			})
 			setIsAddingToCampaign(false);
 			setSelectedCampaign("Select");
-			
+
 		} catch (error) {
 			Alertbox(`${error}`, "error", 1000, "bottom-right");
 		}
@@ -1339,12 +1339,12 @@ function PageHeader({ headerText = "" }) {
 										</li>
 									);
 								})}
-									
+
 								</ul>}
-							
-							<span className='select-arrow'></span> 
+
+							<span className='select-arrow'></span>
 							</div>
-							
+
 						</span>
 						{campaignsCreated?.length <= 0 && (
 							<span className='inline-note warning-note-inline'>
@@ -1446,7 +1446,7 @@ function PageHeader({ headerText = "" }) {
 
 					{accessOptions.filter((e) => e.status).length > 0 ? (
 						<div className='fr-accessibility-buttons d-flex f-align-center'>
-							{/* 
+							{/*
               {headerOptions.dynamicMergeFields && }
               {headerOptions.sendInviteHeader && }
               {headerOptions.listLabelView && }

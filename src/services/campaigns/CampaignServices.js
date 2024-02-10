@@ -9,7 +9,7 @@ let headers = {
 
 /**
  * FETCH ALL CAMPAIGNS
- * @returns 
+ * @returns
  */
 export const fetchAllCampaign = () => {
 	return new Promise((resolve, reject) => {
@@ -27,9 +27,9 @@ export const fetchAllCampaign = () => {
 
 /**
  * FETCH SINGLE CAMPAIGN
- * @param {String} campaignId 
- * @param {String} fbUserId 
- * @returns 
+ * @param {String} campaignId
+ * @param {String} fbUserId
+ * @returns
  */
 export const fetchCampaign = (data) => {
 	// console.log('looking for :::', data);
@@ -50,8 +50,8 @@ export const fetchCampaign = (data) => {
 
 /**
  * FETCH USERS OF CAMPAIGN..
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export const fetchCampaignUsers = async (data) => {
 	return new Promise((resolve, reject) => {
@@ -69,8 +69,8 @@ export const fetchCampaignUsers = async (data) => {
 
 /**
  * CAMPAIGN CREATE/UPDATE SERVICE..
- * @param {Object} newCampaign 
- * @returns 
+ * @param {Object} newCampaign
+ * @returns
  */
 export const createOrUpdateCampaignService = (newCampaign) => {
 	return new Promise((resolve, reject) => {
@@ -116,8 +116,8 @@ export const createOrUpdateCampaignService = (newCampaign) => {
 
 /**
  * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
- * @param {Object} campaignData 
- * @returns 
+ * @param {Object} campaignData
+ * @returns
  */
 export const updateCampaignStatusService = (campaignData) => {
 	return new Promise((resolve, reject) => {
@@ -150,8 +150,8 @@ export const addUsersToCampaignService = (payload) => {
 
 /**
  * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
- * @param {Object} campaignData 
- * @returns 
+ * @param {Object} campaignData
+ * @returns
  */
 export const deleteCampaignService = (campaignData) => {
 	return new Promise((resolve, reject) => {
@@ -161,6 +161,28 @@ export const deleteCampaignService = (campaignData) => {
 			})
 			.then((res) => {
 				console.log("res", res);
+				resolve(res.data);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
+};
+
+
+/**
+ * CAMPAIGN UPDATE SATATUS WITH (campaignId, campaignStatus)..
+ * @param {Object} campaignData
+ * @returns
+ */
+export const deleteCampaignContactsService = (campaignContactsData) => {
+	return new Promise((resolve, reject) => {
+		axios
+			.post(config.deleteCampaignContactsUrl, campaignContactsData, {
+				headers: headers,
+			})
+			.then((res) => {
+				console.log("RESPONSE FROM SERVICE ==>> ", res);
 				resolve(res.data);
 			})
 			.catch((error) => {

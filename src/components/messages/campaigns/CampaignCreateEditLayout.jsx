@@ -204,11 +204,17 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
-		// if (!campaignSchedule || campaignSchedule?.length === 0) {
-		// 	Alertbox("Please add at least one schedule.", "error", 1000, "bottom-right");
-		// 	setLoadingBtn(false);
-		// 	return false;
-		// }
+		if (!campaignSchedule || campaignSchedule?.length === 0) {
+			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
+			"error",
+			1000,
+			"bottom-right",
+			"",
+			"Opps!"
+		);
+			setLoadingBtn(false);
+			return false;
+		}
 
 		if (campaignsArray?.length) {
 			if (type === "CREATE") {
@@ -455,7 +461,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 		if (selectMsgUsing) {
 			setQuickMsg(null);
 		}
-		
+
 	}, [groupMsgSelect, quickMsg]);
 
 	useEffect(() => {
@@ -576,13 +582,13 @@ const CampaignCreateEditLayout = ({ children }) => {
 						/>
 
 						<span className="campaign-end-datetime-span">End date & time</span>
-						
+
 						<span className="campaigns-input-tooltip">
-							<Tooltip 
-								type="info" 
-								customWidth={200} 
+							<Tooltip
+								type="info"
+								customWidth={200}
 								iconColor={"#313037"}
-								textContent="The campaign will automatically deactivate at the specified date and time." 
+								textContent="The campaign will automatically deactivate at the specified date and time."
 							/>
 						</span>
 

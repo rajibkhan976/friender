@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 // minified version is also included
 // import 'react-toastify/dist/ReactToastify.min.css';
 
-const Alertbox = (msg = "success", type = "success", delay,position="top-right", groupLink="") => {
+const Alertbox = (msg = "success", type = "success", delay,position="top-right", groupLink="", title = '') => {
   switch (type) {
     case "success":
       return toast.success(
@@ -33,7 +33,7 @@ const Alertbox = (msg = "success", type = "success", delay,position="top-right",
       return toast.error(
         <div className="alert-inner">
           <div className="alert-inner-sec">
-            <div className="msg-header error-header">Something is wrong!</div>
+            <div className="msg-header error-header">{title ? title : 'Something is wrong!'}</div>
             <div className="msg error-txt">{msg}</div>
           </div>
           <span className="alert-divider"></span>
@@ -50,7 +50,7 @@ const Alertbox = (msg = "success", type = "success", delay,position="top-right",
           theme: "colored",
         }
       );
-      
+
       case "error-toast":
         return toast.error(
           <div className="alert-inner">

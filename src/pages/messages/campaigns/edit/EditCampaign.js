@@ -20,10 +20,8 @@ import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
-import {
-	fetchUsers,
-	updateCampaignSchedule,
-} from "../../../../actions/CampaignsActions";
+import { fetchUsers, deleteCampaignContacts, updateCampaignSchedule } from "../../../../actions/CampaignsActions";
+import Alertbox from 'components/common/Alertbox';
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();
@@ -121,6 +119,7 @@ const EditCampaign = (props) => {
 									reset={isReset}
 									setReset={setIsReset}
 									isListing='campaign-friends'
+									removeCampaignContacts={removeCampaignContacts}
 								/>
 							</div>
 						)}
@@ -157,6 +156,35 @@ const EditCampaign = (props) => {
 		}
 	};
 
+	// REMOVE FRIENDS FROM THIS LIST..
+	const removeCampaignContacts = async (data = {}) => {
+		const fbUserId = current_fb_id;
+		const campaignId = params?.campaignId;
+		const { selectedFrnd, selectedFriends } = data;
+
+		const payloadToDelete = selectedFriends?.length && selectedFriends?.map((friend) => {
+			return {
+				fbUserId,
+				campaignId,
+				friendFbId: friend?.friendFbId || ""
+			};
+		});
+
+		try {
+			const removedContactResponse = await dispatch(deleteCampaignContacts(payloadToDelete)).unwrap();
+			console.log("REMOVE API HAS BEEN CALLED HERE -- ", removedContactResponse);
+			return {
+				success: true,
+			}
+
+		} catch (error) {
+			return {
+				success: false,
+				message: error?.message
+			}
+		}
+	};
+
 	// FETCHING CAMPAIGN'S USERS..
 	const getCampaignUsersListFromAPI = async (
 		fbUserId = current_fb_id,
@@ -177,6 +205,7 @@ const EditCampaign = (props) => {
 		setView(editViews?.find((el) => el.checked).label);
 	}, [editViews]);
 
+	// VIEW CHANGING FOR BETWEEN SCREEN EDIT AND PEOPLES VIEW..
 	useEffect(() => {
 		if (isEditingCampaign) {
 			// console.log('GOT TO EDIT ::::', isEditingCampaign);

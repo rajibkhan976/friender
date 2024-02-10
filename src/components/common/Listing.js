@@ -465,27 +465,27 @@ const Listing = (props) => {
 		[textFilter]
 	);
 
-	const removeFriendFromCampaign = useCallback(() => {
+	const removeFriendFromCampaign = async () => {
 		// add Remove selected friends from campaign code here
+		const removedContacts = await props?.removeCampaignContacts({ selectedFrnd, selectedFriends });
 
-		try {
+		if (removedContacts && removedContacts?.success) {
 			Alertbox(
-				`${selectedFriends.length > 1 ? "Friends" : "Friend"
-				} removed from Campaign successfully!`,
+				`${selectedFriends.length > 1 ? "Friends" : "Friend"} removed from Campaign successfully!`,
 				"success",
 				1000,
 				"bottom-right"
 			);
-		} catch (error) {
-			Alertbox(error, "error-toast", 1000, "bottom-right");
+		} else {
+				Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
 		}
-	}, [selectedFriends, selectedFrnd]);
+	};
 
 	// DELETE THE SELECTED CAMPAIGNS FROM ROW..
 	const deleteSelectedCampaigns = useCallback(() => {
 		// add Remove selected campaigns code here
 		const deletePayload = []
-		
+
 		selectedFriends && selectedFriends?.map(el => deletePayload.push(
 			{
 				campaignId: el?.campaign_id ? el?.campaign_id : el?._id
@@ -610,7 +610,7 @@ const Listing = (props) => {
 					headerText={"Delete Alert"}
 					bodyText={
 						<>
-							{selectedFriends?.length} campaign(s) will be deleted permanently. 
+							{selectedFriends?.length} campaign(s) will be deleted permanently.
 							Are you sure you want to delete?
 						</>
 					}
@@ -686,9 +686,9 @@ const Listing = (props) => {
 			)}
 			<div
 				id='grid-wrapper'
-				className={`ag-theme-fr-table 
-            ag-theme-alpine 
-            ${showPaginate ? "defaultPaginate" : ""} 
+				className={`ag-theme-fr-table
+            ag-theme-alpine
+            ${showPaginate ? "defaultPaginate" : ""}
             ${selectedFriends &&
 						selectedFriends.length > 0 &&
 						selectedFrnd &&

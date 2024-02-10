@@ -119,6 +119,8 @@ const Campaigns = () => {
 		}
 	};
 
+	console.log("CAMPAIGNS CREATED ARRAY HERE -- ", campaignsCreated);
+
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
 		let editCampaign = campaignsCreated?.find((el) => el?._id == editId);
@@ -248,7 +250,6 @@ const Campaigns = () => {
 				break;
 		}
 
-		console.log('campaignsResult ', campaignsResult);
 		campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
 		return campaignsResult && campaignsResult;
 	};
