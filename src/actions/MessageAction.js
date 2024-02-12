@@ -316,7 +316,13 @@ export const messageSlice = createSlice({
 		[fetchGroups.fulfilled]: (state, action) => {
 			state.isLoading = false;
 			if(action?.payload?.data){
-				state.groupArray=[...state.groupArray,...action?.payload?.data]
+				// console.log("metadata_____^^^^^_______",action);
+				if(action.meta.arg===1){
+					state.groupArray=action?.payload?.data;
+				}else{
+					state.groupArray=[...state.groupArray,...action?.payload?.data]
+				}
+				
 			}
 		},
 		[fetchGroups.rejected]: (state) => {

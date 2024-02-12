@@ -1163,7 +1163,7 @@ function PageHeader({ headerText = "" }) {
 						return {
 							"friendFbId": item.friendFbId?item.friendFbId:null,
 							"friendAddedAt": item.created_at?item.created_at:null,
-							"finalSource": item.created_at?item.created_at:null,
+							"finalSource": item.finalSource?item.finalSource:null,
 							"friendName": item.friendName?item.friendName:null,
 							"friendProfilePicture": item.friendProfilePicture?item.friendProfilePicture:null,
 							"friendProfileUrl": item.friendProfileUrl?item.friendProfileUrl:null,
