@@ -456,7 +456,8 @@
 			position: relative;
 			display: flex;
 			flex-direction: column;
-			height: 100%;
+			// height: 100%;
+			flex: 1 1 auto;
 
 			.toolbar {
 				position: sticky;
@@ -1201,6 +1202,11 @@
 			}
 		}
 	}
+}
+
+.message-title-editor {
+  @include theme-aware('color', 'text-para-color');
+  margin-bottom: 8px;
 }
 
 .fr-editor-legend {

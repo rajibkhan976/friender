@@ -1330,3 +1330,9 @@
 //     overflow: auto;
 //   }
 // }
+
+.error-text-inline {
+  @include theme-aware('color', 'deleteRed');
+  font-size: $smallFontSize;
+  font-weight: $fontWeight;
+}
