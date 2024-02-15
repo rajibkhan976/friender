@@ -548,7 +548,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 						defaultValue={
 							timeDelays?.find((el) => el.value === timeDelay)?.value
 						}
-						extraClass='campaigns-time-delay-bar'
+						extraClass='campaigns-time-delay-bar tinyWrap'
 						height='40px'
 						width='inherit'
 						handleChange={onChangeTimeDelay}

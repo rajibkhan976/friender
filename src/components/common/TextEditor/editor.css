@@ -392,6 +392,11 @@
     border-color: rgb(80, 80, 80);
     border-width: 0 0 1px 0;
     border-style: solid;
+    /* ---------------- */
+    height: 49px;
+    flex: 0 0 49px;
+    align-items: center;
+    padding: 7px;
 
   }
 
@@ -403,6 +408,15 @@
     padding: 2px;
     cursor: pointer;
     vertical-align: middle;
+
+    /* --------------------- */
+    width: 34px;
+    aspect-ratio: 1 / 1;
+    /* margin-right: 6px; */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
 
   .toolbar button.toolbar-item:disabled {
@@ -440,6 +454,15 @@
   .toolbar .toolbar-item:hover:not([disabled]) {
     /* background-color: #000000; */
     background: #0094FF33;
+    
+    svg {
+      *[stroke] {
+        stroke: #0094ff;
+      }
+      *[fill] {
+        fill: #0094ff;
+      }
+    }
   }
 
   .toolbar .divider {

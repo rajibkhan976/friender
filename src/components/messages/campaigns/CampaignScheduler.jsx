@@ -159,7 +159,14 @@ const CampaignScheduler = (props) => {
 		});
 		slotInfo?.box
 			? handleSetPopupPos &&
-			  handleSetPopupPos({ X: slotInfo?.box?.x, Y: slotInfo?.box?.y })
+			  handleSetPopupPos({ 
+				X: slotInfo?.box?.x+268 > window?.innerWidth ? 
+					window?.innerWidth - (268 + 30) : 
+					slotInfo?.box?.x, 
+				Y: slotInfo?.box?.y+198 > window?.innerHeight ? 
+					window?.innerHeight - (198 + 81 + 12 + 55) : 
+					slotInfo?.box?.y 
+			})
 			: handleSetPopupPos &&
 			  handleSetPopupPos({
 					X: slotInfo?.bounds?.left,
