@@ -88,6 +88,7 @@ const ScheduleSelector = (props) => {
 				const end = new Date(`${item} ${scheduleTime.end}`);
 				dateTimeArrObj.push({
 					isSaved: true,
+					isEditMode: true,
 					start: start,
 					end: end,
 				});
@@ -106,6 +107,7 @@ const ScheduleSelector = (props) => {
 				) {
 					campaignScheduleArr.push({
 						isSaved: true,
+						isEditMode: true,
 						start: item.start,
 						end: item.end,
 					});
@@ -116,6 +118,7 @@ const ScheduleSelector = (props) => {
 				) {
 					campaignScheduleArr.push({
 						isSaved: true,
+						isEditMode: true,
 						start: item.start,
 						end: item.end,
 					});

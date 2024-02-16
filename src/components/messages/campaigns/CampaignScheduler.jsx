@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -27,7 +27,6 @@ const CustomWeekViewHeader = ({ date }) => {
 
 const CampaignScheduler = (props) => {
 	const {
-		selectedSchedule = null,
 		handleSetPopupPos = () => null,
 		handleSetSelectedSchedule = () => null,
 		handleSetShowPopup = () => null,
@@ -38,10 +37,10 @@ const CampaignScheduler = (props) => {
 		showGlobalCampaignPopup = false,
 	} = props;
 	const dispatch = useDispatch();
-	const location = useLocation();
 	const campaignSchedule = useSelector(
 		(state) => state.campaign.campaignSchedule
 	);
+	const [showMoreEvent, setShowMoreEvent] = useState([]);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 
 	// const CustomEventContainerWrapper = (props) => {
@@ -59,11 +58,21 @@ const CampaignScheduler = (props) => {
 
 	const CustomEventWrapper = (props) => {
 		// console.log(props);
-		const handleClick = (e) => {
+		const dispatch = useDispatch();
+		const location = useLocation();
+		const campaignSchedule = useSelector(
+			(state) => state.campaign.campaignSchedule
+		);
+
+		const handleClick = (e, showMoreEventsArr) => {
+			handleSetSelectedSchedule(props?.event);
 			if (
 				location?.pathname === "/messages/campaigns" &&
 				props?.event?.isSaved
 			) {
+				setCalenderModalType && setCalenderModalType("");
+				setCalenderModalType && handleSetShowModal(false);
+				setShowMoreEvent(showMoreEventsArr);
 				setPopupCoordPos({
 					x: e.clientX,
 					y: e.clientY,
@@ -71,23 +80,120 @@ const CampaignScheduler = (props) => {
 				setShowGlobalCampaignPopup(true);
 			}
 		};
-		return <div onClick={handleClick}>{props.children}</div>;
-	};
 
-	const CustomEvent = (props) => {
 		return (
 			<>
-				{props.title && location?.pathname === "/messages/campaigns" ? (
-					<>
-						{Array.isArray(props.title) ? props.title.length : 1}{" "}
-						{`campaign${
-							Array.isArray(props.title) && props.title.length > 1 ? "s" : ""
-						}`}
-					</>
-				) : null}
+				{props?.event?.isSaved &&
+				props?.event?.title &&
+				!props?.event?.isEditMode ? (
+					<div
+						className='custom-global-campaign-wrapper'
+						style={{
+							width: `${props?.style?.width}%`,
+							// height: `${props?.style?.height}%`,
+							top: `${props?.style?.top}%`,
+							left: `${props?.style?.xOffset}%`,
+							position: "absolute",
+							zIndex: "1002",
+						}}
+					>
+						{props?.event &&
+							Array.isArray(props?.event?.title) &&
+							props?.event?.title.slice(0, 2).map((item) => item)}
+						{props?.event &&
+							Array.isArray(props?.event?.title) &&
+							props?.event?.title.length > 2 && (
+								<div
+									className='show-more-btn'
+									onClick={(e) => {
+										dispatch(
+											updateCampaignSchedule([
+												...campaignSchedule.filter((item) => item.isSaved),
+											])
+										);
+										handleClick(
+											e,
+											props?.event?.title.slice(2, props?.event?.title.length)
+										);
+									}}
+									onMouseDown={(e) => e.stopPropagation()}
+								>
+									{"+ " +
+										props?.event?.title.slice(2, props?.event?.title.length)
+											.length}
+								</div>
+							)}
+					</div>
+				) : props?.event?.isSaved && props?.event?.isEditMode ? (
+					<div
+						className='rbc-event campaign-saved'
+						style={{
+							width: `${props?.style?.width}%`,
+							height: `${props?.style?.height}%`,
+							top: `${props?.style?.top}%`,
+							left: `${props?.style?.xOffset}%`,
+							position: "absolute",
+							zIndex: "1002",
+						}}
+						onClick={() => {
+							handleSetShowModal(false);
+							setShowGlobalCampaignPopup(false);
+							setScheduleTime({
+								date: [new Date(props?.event?.start)],
+								start: moment(props?.event?.start).format("h:mm A"),
+								end: moment(props?.event?.end).format("h:mm A"),
+							});
+							handleSetSelectedSchedule(props?.event);
+							handleSetShowPopup(true);
+						}}
+						onMouseDown={(e) => {
+							dispatch(
+								updateCampaignSchedule([
+									...campaignSchedule.filter((item) => item.isSaved),
+								])
+							);
+							handleSetPopupPos &&
+								handleSetPopupPos({ X: e.clientX, Y: e.clientY });
+							e.stopPropagation();
+						}}
+					>{`${moment(props?.event?.start).format("h:mm A")} - ${moment(
+						props?.event?.end
+					).format("h:mm A")}`}</div>
+				) : (
+					<div
+						className='rbc-event'
+						style={{
+							width: `${props?.style?.width}%`,
+							height: `${props?.style?.height}%`,
+							top: `${props?.style?.top}%`,
+							left: `${props?.style?.xOffset}%`,
+							position: "absolute",
+							zIndex: "1002",
+						}}
+						onClick={() => {}}
+						onMouseDown={(e) => e.stopPropagation()}
+					>{`${moment(props?.event?.start).format("h:mm A")} - ${moment(
+						props?.event?.end
+					).format("h:mm A")}`}</div>
+				)}
 			</>
 		);
 	};
+
+	// const CustomEvent = (props) => {
+	// 	return (
+	// 		<>
+	// 			{props.title && location?.pathname === "/messages/campaigns" ? (
+	// 				<>
+	// 					{Array.isArray(props.title) ? props.title.length : 1}{" "}
+	// 					{`campaign${
+	// 						Array.isArray(props.title) && props.title.length > 1 ? "s" : ""
+	// 					}`}
+	// 				</>
+	// 			) : null}
+	// 		</>
+	// 	);
+	// };
 
 	const components = useMemo(
 		() => ({
@@ -96,51 +202,51 @@ const CampaignScheduler = (props) => {
 			week: {
 				header: CustomWeekViewHeader,
 				toolbar: () => null, // Override the toolbar to render nothing,
-				event: CustomEvent,
+				// event: CustomEvent,
 			},
 		}),
 		[]
 	);
 
-	const eventPropGetter = useCallback((event, start, end, isSelected) => {
-		// console.log(utils.hex2rgb(event.color));
-		return {
-			...((event?.title || event?.isSaved) && {
-				className: "campaign-saved",
-				// style: {
-				// 	backgroundColor: `${utils.hex2rgb(event.color)}`,
-				// 	borderLeft: `4px solid ${event.color}`,
-				// 	fontSize: "12px",
-				// 	fontWeight: "500",
-				// 	lineHeight: "17px",
-				// 	color: "rgba(240, 239, 255, 1)",
-				// },
-			}),
-		};
-	}, []);
+	// const eventPropGetter = useCallback((event, start, end, isSelected) => {
 
-	const handleSelectEvent = (event) => {
-		// console.log("selected envet", event);
-		handleSetShowModal(false);
-		setShowGlobalCampaignPopup(false);
-		dispatch(
-			updateCampaignSchedule([
-				...campaignSchedule.filter((item) => item.isSaved),
-			])
-		);
-		setScheduleTime({
-			date: [new Date(event?.start)],
-			start: moment(event?.start).format("h:mm A"),
-			end: moment(event?.end).format("h:mm A"),
-		});
-		handleSetSelectedSchedule(event);
-		handleSetPopupPos && handleSetPopupPos({ X: 0, Y: 0 });
-		handleSetShowPopup(true);
-	};
+	// 	return {
+	// 		...(event?.isSaved && {
+	// 			className: "campaign-saved",
+	// 			style: {
+	// 				backgroundColor: `${utils.hex2rgb(event.color)}`,
+	// 				borderLeft: `4px solid ${event.color}`,
+	// 				fontSize: "12px",
+	// 				fontWeight: "500",
+	// 				lineHeight: "17px",
+	// 				color: "rgba(240, 239, 255, 1)",
+	// 			},
+	// 		}),
+	// 	};
+	// }, []);
+
+	// const handleSelectEvent = (event) => {
+	// 	console.log("selected event", event);
+	// 	handleSetShowModal(false);
+	// 	setShowGlobalCampaignPopup(false);
+	// 	dispatch(
+	// 		updateCampaignSchedule([
+	// 			...campaignSchedule.filter((item) => item.isSaved),
+	// 		])
+	// 	);
+	// 	setScheduleTime({
+	// 		date: [new Date(event?.start)],
+	// 		start: moment(event?.start).format("h:mm A"),
+	// 		end: moment(event?.end).format("h:mm A"),
+	// 	});
+	// 	handleSetSelectedSchedule(event);
+	// 	handleSetPopupPos && handleSetPopupPos({ X: 0, Y: 0 });
+	// 	handleSetShowPopup(true);
+	// };
 
 	const handleSelectSlot = (slotInfo) => {
 		// console.log("handle slot", slotInfo);
-		const { start, end } = slotInfo;
+		const { end, start } = slotInfo;
 		const selectedSchedule = {};
 
 		setShowGlobalCampaignPopup(false);
@@ -149,6 +255,7 @@ const CampaignScheduler = (props) => {
 
 		Object.assign(selectedSchedule, {
 			isSaved: false,
+			isEditMode: true,
 			start: start,
 			end: end,
 		});
@@ -172,7 +279,7 @@ const CampaignScheduler = (props) => {
 					X: slotInfo?.bounds?.left,
 					Y: slotInfo?.bounds?.top,
 			  });
-		// console.log(selectedSchedules)
+
 		const updatedCampaignSchedule = [
 			...campaignSchedule.filter((item) => item.isSaved),
 			selectedSchedule,
@@ -205,7 +312,7 @@ const CampaignScheduler = (props) => {
 						handleSetShowGlobalCampaignPopup={(status) =>
 							setShowGlobalCampaignPopup(status)
 						}
-						listItems={selectedSchedule}
+						listItems={showMoreEvent}
 						popupCoordPos={popupCoordPos}
 					/>
 				</CampaignSchedulerPopup>
@@ -213,7 +320,7 @@ const CampaignScheduler = (props) => {
 			<Calendar
 				localizer={localizer}
 				events={campaignSchedule}
-				eventPropGetter={eventPropGetter}
+				// eventPropGetter={eventPropGetter}
 				defaultView='week'
 				views={["week"]}
 				step={120} // The step in minutes for the time slots
@@ -223,7 +330,7 @@ const CampaignScheduler = (props) => {
 				max={new Date(0, 0, 0, 23, 59)} // End time for the day (11:59 PM)
 				components={components}
 				formats={formats}
-				onSelectEvent={handleSelectEvent}
+				// onSelectEvent={handleSelectEvent}
 				onSelectSlot={handleSelectSlot}
 				selectable
 				tooltipAccessor={null}

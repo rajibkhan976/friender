@@ -75,6 +75,11 @@ export const timeOptions = [
 		selected: false,
 	},
 	{
+		value: "7:30 AM",
+		label: "7:30 AM",
+		selected: false,
+	},
+	{
 		value: "8:00 AM",
 		label: "8:00 AM",
 		selected: false,
@@ -187,6 +192,11 @@ export const timeOptions = [
 	{
 		value: "7:00 PM",
 		label: "7:00 PM",
+		selected: false,
+	},
+	{
+		value: "7:30 PM",
+		label: "7:30 PM",
 		selected: false,
 	},
 	{

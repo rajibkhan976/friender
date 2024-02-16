@@ -264,27 +264,35 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
 	const transformCampaignSchedulesPayload = (schedules = []) => {
-		const transformSchedules = schedules?.length && schedules.map((schedule) => {
-			// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
-			// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
-			const fromTime = moment(schedule.start).format("HH:mm:ss");
-			const toTime = moment(schedule.end).format("HH:mm:ss");
-			const day = moment(schedule.start).format("dddd");
-
-			return {
-				day,
-				from_time: fromTime,
-				to_time: toTime,
-			};
-		});
+		const transformSchedules = [];
+		schedules?.length &&
+			schedules.forEach((schedule) => {
+				// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
+				// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
+				const fromTime = moment(schedule.start).format("HH:mm:ss");
+				const toTime = moment(schedule.end).format("HH:mm:ss");
+				const day = moment(schedule.start).format("dddd");
+				if (schedule.isSaved) {
+					transformSchedules.push({
+						day,
+						from_time: fromTime,
+						to_time: toTime,
+					});
+				}
+			});
 
 		return transformSchedules;
 	};
 
 	// HANDLE SAVED DATA FROM CHILD..
 	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
-		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
-		const payload = { ...data, fbUserId: current_fb_id, schedule: transformCampaignSchedules || [] };
+		const transformCampaignSchedules =
+			transformCampaignSchedulesPayload(campaignSchedule);
+		const payload = {
+			...data,
+			fbUserId: current_fb_id,
+			schedule: transformCampaignSchedules || [],
+		};
 		campaignAddOrUpdateRequestToAPI(type, payload, setLoadingBtn);
 	};
 
@@ -302,8 +310,12 @@ const CampaignCreateEditLayout = ({ children }) => {
 			}
 
 			// VALIDATION THE FORM, (END DATE AND TIME)
-			if (showEndDateAndTime && endDateAndTime?.value?.trim() === '') {
-				setEndDateAndTime({ ...endDateAndTime, isError: true, errorMsg: 'Blank not allowed' });
+			if (showEndDateAndTime && endDateAndTime?.value?.trim() === "") {
+				setEndDateAndTime({
+					...endDateAndTime,
+					isError: true,
+					errorMsg: "Blank not allowed",
+				});
 				setLoadingBtn(false);
 				return false;
 			}
@@ -325,7 +337,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 				// For Edit Campaign Needs the Status to be as it as..
 				// delete campaignData.campaignStatus;
-				const findTheCampaign = campaignsArray?.length && campaignsArray.find((campaign) => campaign?.campaign_id === params?.campaignId);
+				const findTheCampaign =
+					campaignsArray?.length &&
+					campaignsArray.find(
+						(campaign) => campaign?.campaign_id === params?.campaignId
+					);
 				campaignData.campaignStatus = findTheCampaign?.status;
 			}
 
@@ -336,7 +352,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CAMPAIGN EDIT / UPDATE CANCEL..
 	const handleClickToCancelEditCampaign = (_event) => {
-		navigate('/messages/campaigns');
+		navigate("/messages/campaigns");
 	};
 
 	// FETCHING THE GROUP BY ID..
@@ -348,7 +364,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 				if (data.length) {
 					setGroupMsgSelect(data[0]);
-					localStorage.setItem('fr_using_campaigns_message', true);
+					localStorage.setItem("fr_using_campaigns_message", true);
 				}
 			});
 	};
@@ -378,7 +394,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 		nameOfCampaign,
 		colorOfCampaign
 	) => {
-		console.log(scheduleData);
 		const schedule =
 			scheduleData?.length &&
 			scheduleData.map((sched) => {
@@ -391,8 +406,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 				const start = new Date(`${date} ${sched?.from_time}`);
 				const end = new Date(`${date} ${sched?.to_time}`);
 				const isSaved = true;
+				const isEditMode = true;
 
-				return { id, color, title, start, end, isSaved };
+				return { id, color, title, start, end, isSaved, isEditMode };
 			});
 
 		dispatch(updateCampaignSchedule(schedule));

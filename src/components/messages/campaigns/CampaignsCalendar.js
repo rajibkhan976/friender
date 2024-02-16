@@ -9,6 +9,7 @@ import { utils } from "../../../helpers/utils";
 import moment from "moment";
 import CampaignScheduler from "./CampaignScheduler";
 import CalenderModal from "../../common/CampaignModal";
+import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CampaignsCalendar = () => {
 	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
@@ -17,6 +18,7 @@ const CampaignsCalendar = () => {
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
 	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
 	const [open, setOpen] = useState(false);
+	const [showTooltip, setShowTooltip] = useState({ index: [], x: 0, y: 0 });
 
 	const [showGlobalCampaignPopup, setShowGlobalCampaignPopup] = useState(false);
 	const [scheduleTime, setScheduleTime] = useState({
@@ -85,24 +87,67 @@ const CampaignsCalendar = () => {
 								campaignTitleArr.push(
 									<div
 										className='global-campaign-title'
-										key={c}
+										key={i + c}
 										style={{
 											backgroundColor: `${utils.hex2rgb(campaignArr[c].color)}`,
-											borderLeft: `4px solid ${campaignArr[c].color}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[c].color
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[c].color)}`,
 										}}
+										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
 											if (location?.pathname === "/messages/campaigns") {
 												// console.log("CMAPAIGN ID", campaignArr[c]);
+												setShowTooltip({ index: [], x: 0, y: 0 });
 												dispatch(
 													updateSelectedCampaignSchedule(campaignArr[c])
 												);
+												setScheduleTime({
+													date: [new Date(campaignArr[c].start)],
+													start: moment(campaignArr[c].start).format("h:mm A"),
+													end: moment(campaignArr[c].end).format("h:mm A"),
+												});
 												setShowGlobalCampaignPopup(false);
 												setCalenderModalType("VIEW_DETAILS");
 												setOpen(true);
 											}
 										}}
+										onMouseOver={(e) => {
+											if (e.target.scrollWidth > e.target.clientWidth) {
+												setCalenderModalType("");
+												setOpen(false);
+												setShowTooltip({
+													index: [i + c],
+													x: e.pageX,
+													y: e.pageY,
+												});
+											}
+										}}
+										onMouseLeave={(e) =>
+											e.target.scrollWidth > e.target.clientWidth &&
+											setShowTooltip({ index: [], x: 0, y: 0 })
+										}
 									>
 										{campaignArr[c].title}
+										<span className='global-campaign-time-slot'>{`${moment(
+											campaignArr[c].start
+										).format("hh:mma")} - ${moment(campaignArr[c].end).format(
+											"hh:mma"
+										)}`}</span>
+										{showTooltip && showTooltip?.index?.includes(i + c) && (
+											<CampaignSchedulerPopup>
+												<div
+													className='global-campaign-tooltip'
+													style={{
+														top: `${showTooltip?.y - 80}px`,
+														left: `${showTooltip?.x}px`,
+													}}
+												>
+													{campaignArr[c].title}
+												</div>
+											</CampaignSchedulerPopup>
+										)}
 									</div>
 								);
 							}
@@ -125,6 +170,7 @@ const CampaignsCalendar = () => {
 							start: new Date(campaignArr[i].start),
 							end: new Date(campaignArr[i].end),
 							isSaved: true,
+							isEditMode: false,
 						});
 					} else if (
 						campaignArr[i].start &&
@@ -138,32 +184,71 @@ const CampaignsCalendar = () => {
 						)
 					) {
 						groupedCampaignByDateNTime.push({
-							title: [<div
-								className='global-campaign-title'
-								key={i}
-								style={{
-									backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-									borderLeft: `4px solid ${campaignArr[i].color}`,
-								}}
-								onClick={() => {
-									if (location?.pathname === "/messages/campaigns") {
-										// console.log("CMAPAIGN ID", campaignArr[i]);
-										dispatch(
-											updateSelectedCampaignSchedule(campaignArr[i])
-										);
-										setShowGlobalCampaignPopup(false);
-										setCalenderModalType("VIEW_DETAILS");
-										setOpen(true);
-									}
-								}}
-							>
-								{campaignArr[i]?.title}
-							</div>] || [],
+							title:
+								[
+									<div
+										className='global-campaign-title'
+										key={i}
+										style={{
+											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+										}}
+										onMouseDown={(e) => e.stopPropagation()}
+										onClick={() => {
+											if (location?.pathname === "/messages/campaigns") {
+												// console.log("CMAPAIGN ID", campaignArr[i]);
+												setShowTooltip({ index: [], x: 0, y: 0 });
+												dispatch(
+													updateSelectedCampaignSchedule(campaignArr[i])
+												);
+												setScheduleTime({
+													date: [new Date(campaignArr[i].start)],
+													start: moment(campaignArr[i].start).format("h:mm A"),
+													end: moment(campaignArr[i].end).format("h:mm A"),
+												});
+												setShowGlobalCampaignPopup(false);
+												setCalenderModalType("VIEW_DETAILS");
+												setOpen(true);
+											}
+										}}
+										onMouseOver={(e) => {
+											if (e.target.scrollWidth > e.target.clientWidth) {
+												setCalenderModalType("");
+												setOpen(false);
+												setShowTooltip({ index: [i], x: e.pageX, y: e.pageY });
+											}
+										}}
+										onMouseLeave={(e) =>
+											e.target.scrollWidth > e.target.clientWidth &&
+											setShowTooltip({ index: [], x: 0, y: 0 })
+										}
+									>
+										{campaignArr[i]?.title}
+										{showTooltip && showTooltip?.index?.includes(i) && (
+											<CampaignSchedulerPopup>
+												<div
+													className='global-campaign-tooltip'
+													style={{
+														top: `${showTooltip?.y - 80}px`,
+														left: `${showTooltip?.x}px`,
+													}}
+												>
+													{campaignArr[i].title}
+												</div>
+											</CampaignSchedulerPopup>
+										)}
+									</div>,
+								] || [],
 							start: new Date(campaignArr[i].start),
 							end: new Date(campaignArr[i].end),
 							isSaved: true,
+							isEditMode: false,
 						});
-					} else if (campaignArr[i].start &&
+					} else if (
+						campaignArr[i].start &&
 						campaignArr[i].end &&
 						groupedCampaignByDateNTime.every(
 							(item) =>
@@ -171,34 +256,74 @@ const CampaignsCalendar = () => {
 									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
 								moment(item.end).format("DD-MM-YYYY h:mm A") !==
 									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
-						)) {
-							groupedCampaignByDateNTime.push({
-								title: [<div
-									className='global-campaign-title'
-									key={i}
-									style={{
-										backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-										borderLeft: `4px solid ${campaignArr[i].color}`,
-									}}
-									onClick={() => {
-										if (location?.pathname === "/messages/campaigns") {
-											// console.log("CMAPAIGN ID", campaignArr[i]);
-											dispatch(
-												updateSelectedCampaignSchedule(campaignArr[i])
-											);
-											setShowGlobalCampaignPopup(false);
-											setCalenderModalType("VIEW_DETAILS");
-											setOpen(true);
+						)
+					) {
+						groupedCampaignByDateNTime.push({
+							title:
+								[
+									<div
+										className='global-campaign-title'
+										key={i}
+										style={{
+											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+										}}
+										onMouseDown={(e) => e.stopPropagation()}
+										onClick={() => {
+											if (location?.pathname === "/messages/campaigns") {
+												// console.log("CMAPAIGN ID", campaignArr[i]);
+												setShowTooltip({ index: [], x: 0, y: 0 });
+												dispatch(
+													updateSelectedCampaignSchedule(campaignArr[i])
+												);
+												setScheduleTime({
+													date: [new Date(campaignArr[i].start)],
+													start: moment(campaignArr[i].start).format("h:mm A"),
+													end: moment(campaignArr[i].end).format("h:mm A"),
+												});
+												setShowGlobalCampaignPopup(false);
+												setCalenderModalType("VIEW_DETAILS");
+												setOpen(true);
+											}
+										}}
+										onMouseOver={(e) => {
+											if (e.target.scrollWidth > e.target.clientWidth) {
+												setCalenderModalType("");
+												setOpen(false);
+												setShowTooltip({ index: [i], x: e.pageX, y: e.pageY });
+											}
+										}}
+										onMouseLeave={(e) =>
+											e.target.scrollWidth > e.target.clientWidth &&
+											setShowTooltip({ index: [], x: 0, y: 0 })
 										}
-									}}
-								>
-									{campaignArr[i]?.title}
-								</div>] || [],
-								start: new Date(campaignArr[i].start),
-								end: new Date(campaignArr[i].end),
-								isSaved: true,
-							});
-					} else if (campaignArr[i].start &&
+									>
+										{campaignArr[i]?.title}
+										{showTooltip && showTooltip?.index?.includes(i) && (
+											<CampaignSchedulerPopup>
+												<div
+													className='global-campaign-tooltip'
+													style={{
+														top: `${showTooltip?.y - 80}px`,
+														left: `${showTooltip?.x}px`,
+													}}
+												>
+													{campaignArr[i].title}
+												</div>
+											</CampaignSchedulerPopup>
+										)}
+									</div>,
+								] || [],
+							start: new Date(campaignArr[i].start),
+							end: new Date(campaignArr[i].end),
+							isSaved: true,
+							isEditMode: false,
+						});
+					} else if (
+						campaignArr[i].start &&
 						campaignArr[i].end &&
 						groupedCampaignByDateNTime.every(
 							(item) =>
@@ -206,38 +331,72 @@ const CampaignsCalendar = () => {
 									moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") &&
 								moment(item.end).format("DD-MM-YYYY h:mm A") ===
 									moment(campaignArr[i].end).format("DD-MM-YYYY h:mm A")
-						)) {
-							groupedCampaignByDateNTime.push({
-								title:
-									[
-										<div
-											className='global-campaign-title'
-											key={i}
-											style={{
-												backgroundColor: `${utils.hex2rgb(
-													campaignArr[i].color
-												)}`,
-												borderLeft: `4px solid ${campaignArr[i].color}`,
-											}}
-											onClick={() => {
-												if (location?.pathname === "/messages/campaigns") {
-													// console.log("CMAPAIGN ID", campaignArr[i]);
-													dispatch(
-														updateSelectedCampaignSchedule(campaignArr[i])
-													);
-													setShowGlobalCampaignPopup(false);
-													setCalenderModalType("VIEW_DETAILS");
-													setOpen(true);
-												}
-											}}
-										>
-											{campaignArr[i]?.title}
-										</div>,
-									] || [],
-								start: new Date(campaignArr[i].start),
-								end: new Date(campaignArr[i].end),
-								isSaved: true,
-							});
+						)
+					) {
+						groupedCampaignByDateNTime.push({
+							title:
+								[
+									<div
+										className='global-campaign-title'
+										key={i}
+										style={{
+											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+										}}
+										onMouseDown={(e) => e.stopPropagation()}
+										onClick={() => {
+											if (location?.pathname === "/messages/campaigns") {
+												// console.log("CMAPAIGN ID", campaignArr[i]);
+												setShowTooltip({ index: [], x: 0, y: 0 });
+												dispatch(
+													updateSelectedCampaignSchedule(campaignArr[i])
+												);
+												setScheduleTime({
+													date: [new Date(campaignArr[i].start)],
+													start: moment(campaignArr[i].start).format("h:mm A"),
+													end: moment(campaignArr[i].end).format("h:mm A"),
+												});
+												setShowGlobalCampaignPopup(false);
+												setCalenderModalType("VIEW_DETAILS");
+												setOpen(true);
+											}
+										}}
+										onMouseOver={(e) => {
+											if (e.target.scrollWidth > e.target.clientWidth) {
+												setCalenderModalType("");
+												setOpen(false);
+												setShowTooltip({ index: [i], x: e.pageX, y: e.pageY });
+											}
+										}}
+										onMouseLeave={(e) =>
+											e.target.scrollWidth > e.target.clientWidth &&
+											setShowTooltip({ index: [], x: 0, y: 0 })
+										}
+									>
+										{campaignArr[i]?.title}
+										{showTooltip && showTooltip?.index?.includes(i) && (
+											<CampaignSchedulerPopup>
+												<div
+													className='global-campaign-tooltip'
+													style={{
+														top: `${showTooltip?.y - 80}px`,
+														left: `${showTooltip?.x}px`,
+													}}
+												>
+													{campaignArr[i].title}
+												</div>
+											</CampaignSchedulerPopup>
+										)}
+									</div>,
+								] || [],
+							start: new Date(campaignArr[i].start),
+							end: new Date(campaignArr[i].end),
+							isSaved: true,
+							isEditMode: false,
+						});
 					} else {
 						groupedCampaignByDateNTime.push({
 							title:
@@ -247,37 +406,74 @@ const CampaignsCalendar = () => {
 										key={i}
 										style={{
 											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-											borderLeft: `4px solid ${campaignArr[i].color}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color)}`,
 										}}
+										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
 											if (location?.pathname === "/messages/campaigns") {
 												// console.log("CMAPAIGN ID", campaignArr[i]);
+												setShowTooltip({ index: [], x: 0, y: 0 });
 												dispatch(
 													updateSelectedCampaignSchedule(campaignArr[i])
 												);
+												setScheduleTime({
+													date: [new Date(campaignArr[i].start)],
+													start: moment(campaignArr[i].start).format("h:mm A"),
+													end: moment(campaignArr[i].end).format("h:mm A"),
+												});
 												setShowGlobalCampaignPopup(false);
 												setCalenderModalType("VIEW_DETAILS");
 												setOpen(true);
 											}
 										}}
+										onMouseOver={(e) => {
+											if (e.target.scrollWidth > e.target.clientWidth) {
+												setCalenderModalType("");
+												setOpen(false);
+												setShowTooltip({ index: [i], x: e.pageX, y: e.pageY });
+											}
+										}}
+										onMouseLeave={(e) =>
+											e.target.scrollWidth > e.target.clientWidth &&
+											setShowTooltip({ index: [], x: 0, y: 0 })
+										}
 									>
 										{campaignArr[i]?.title}
+										{showTooltip && showTooltip?.index?.includes(i) && (
+											<CampaignSchedulerPopup>
+												<div
+													className='global-campaign-tooltip'
+													style={{
+														top: `${showTooltip?.y - 80}px`,
+														left: `${showTooltip?.x}px`,
+													}}
+												>
+													{campaignArr[i].title}
+												</div>
+											</CampaignSchedulerPopup>
+										)}
 									</div>,
 								] || [],
 							start: new Date(campaignArr[i].start),
 							end: new Date(campaignArr[i].end),
 							isSaved: true,
+							isEditMode: false,
 						});
 					}
 				}
-				dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 			}
+			dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 		}
-	}, [campaignsArray]);
+	}, [campaignsArray, showTooltip]);
 
 	useEffect(() => {
 		return () => {
+			dispatch(updateSelectedCampaignSchedule(null));
 			dispatch(updateCampaignSchedule([]));
+			setShowTooltip({ index: [], x: 0, y: 0 });
 			setScheduleTime(() => {
 				return {
 					date: [new Date()],
@@ -285,6 +481,8 @@ const CampaignsCalendar = () => {
 					end: "",
 				};
 			});
+			setOpen(false);
+			setShowGlobalCampaignPopup(false);
 		};
 	}, []);
 
@@ -303,7 +501,6 @@ const CampaignsCalendar = () => {
 					/>
 				)}
 				<CampaignScheduler
-					campaignsList={campaignsArray}
 					handleSetShowModal={(status) => setOpen(status)}
 					handleSetSelectedSchedule={setSelectedSchedule}
 					selectedSchedule={selectedSchedule}

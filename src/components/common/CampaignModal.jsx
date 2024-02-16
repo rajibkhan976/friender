@@ -9,11 +9,12 @@ import { fetchGroups } from "actions/MessageAction";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	createCampaign,
-	updateCampaignSchedule,
-	fetchCampaignById,
-	updateCampaignStatus,
-	updateCampaign,
 	deleteCampaign,
+	fetchCampaignById,
+	updateCampaign,
+	updateCampaignSchedule,
+	updateCampaignStatus,
+	updateSelectedCampaignSchedule,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -30,7 +31,7 @@ import Switch from "components/formComponents/Switch";
 import Modal from "components/common/Modal";
 import Alertbox from "components/common/Toast";
 import moment from "moment";
-import { getGroupById } from 'actions/MySettingAction';
+import { getGroupById } from "actions/MySettingAction";
 import { timeOptions } from "../../helpers/timeOptions";
 
 const CalenderModal = ({
@@ -344,9 +345,33 @@ const CalenderModal = ({
 		}
 	};
 
-	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
-	const transformCampaignSchedulesPayload = (schedules = []) => {
-		const transformSchedules = [];
+	// console.log("DETAILS -- ", editingCampaign);
+	// console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
+	// console.log(scheduleTime);
+
+	// UPDATE CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
+	const updateCampaignSchedulesPayload = () => {
+		const editSchedule = selectedCampaignSchedule
+			? {
+					day: moment(selectedCampaignSchedule?.start).format("dddd"),
+					start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
+					end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
+			  }
+			: null;
+		let updatedCampaignSchedules =
+			editSchedule &&
+			editingCampaign &&
+			Array.isArray(editingCampaign?.schedule)
+				? [
+						...editingCampaign?.schedule?.filter(
+							(item) =>
+								editSchedule &&
+								editSchedule.day !== item.day &&
+								editSchedule.start !== item.start &&
+								editSchedule.end !== item.end
+						),
+				  ]
+				: [];
 		if (
 			scheduleTime.date &&
 			scheduleTime.start &&
@@ -357,25 +382,26 @@ const CalenderModal = ({
 			const dateArr = scheduleTime.date.map((item) =>
 				moment(item).format("dddd")
 			);
+			const newSchedules = [];
 			dateArr.forEach((item) => {
-				transformSchedules.push({
+				newSchedules.push({
 					day: item,
 					from_time: scheduleTime.start,
 					to_time: scheduleTime.end,
 				});
 			});
+			updatedCampaignSchedules = [...updatedCampaignSchedules, ...newSchedules];
 		}
-		return transformSchedules;
+		return updatedCampaignSchedules;
 	};
 
 	// SAVE CAMPAIGN..
 	const handleClickToSaveCampaign = (data) => {
-		const transformCampaignSchedules =
-			transformCampaignSchedulesPayload(campaignSchedule);
+		const campaignSchedules = updateCampaignSchedulesPayload();
 		const payload = {
 			...data,
 			fbUserId: current_fb_id,
-			schedule: transformCampaignSchedules,
+			schedule: campaignSchedules,
 		};
 		campaignAddRequestToAPI(payload);
 	};
@@ -388,7 +414,7 @@ const CalenderModal = ({
 			setLoadingBtn(true);
 
 			// UNHANDLED VALUES.. TIME DURATIONS,
-			console.log("scheduleTime", scheduleTime);
+			// console.log("scheduleTime", scheduleTime);
 
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
@@ -477,6 +503,7 @@ const CalenderModal = ({
 					) {
 						campaignScheduleArr.push({
 							isSaved: true,
+							isEditMode: true,
 							start: item.start,
 							end: item.end,
 						});
@@ -487,6 +514,7 @@ const CalenderModal = ({
 					) {
 						campaignScheduleArr.push({
 							isSaved: true,
+							isEditMode: true,
 							start: item.start,
 							end: item.end,
 						});
@@ -707,6 +735,7 @@ const CalenderModal = ({
 
 	useEffect(() => {
 		return () => {
+			dispatch(updateSelectedCampaignSchedule(null));
 			setScheduleTime(() => {
 				return {
 					date: [new Date()],
@@ -716,9 +745,6 @@ const CalenderModal = ({
 			});
 		};
 	}, []);
-
-	console.log("DETAILS -- ", editingCampaign);
-	console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
 
 	if (type === "CREATE_CAMPAIGN" || isEditingModal) {
 		return (

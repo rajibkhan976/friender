@@ -20,8 +20,11 @@ import NoDataFound from "components/common/NoDataFound";
 import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
-import { fetchUsers, deleteCampaignContacts, updateCampaignSchedule } from "../../../../actions/CampaignsActions";
-import Alertbox from 'components/common/Alertbox';
+import {
+	fetchUsers,
+	deleteCampaignContacts,
+	updateCampaignSchedule,
+} from "../../../../actions/CampaignsActions";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();

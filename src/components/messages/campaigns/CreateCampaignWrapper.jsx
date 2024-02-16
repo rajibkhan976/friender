@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateCampaignSchedule } from "actions/CampaignsActions";
 import CampaignScheduler from "./CampaignScheduler";
 import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 import ScheduleSelector from "./ScheduleSelector";
 
 const CreateCampaignWrapper = () => {
+	const dispatch = useDispatch();
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
 	const [showPopup, setShowPopup] = useState(false);
@@ -12,6 +15,10 @@ const CreateCampaignWrapper = () => {
 		start: "",
 		end: "",
 	});
+
+	useEffect(() => {
+		dispatch(updateCampaignSchedule([]));
+	}, []);
 
 	return (
 		<div className='create-campaign-scheduler'>

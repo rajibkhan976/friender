@@ -9,9 +9,7 @@ const GlobalCampaignList = (props) => {
 				left: `${popupCoordPos.x}px`,
 			}}
 		>
-			{listItems &&
-				Array.isArray(listItems?.title) &&
-				listItems?.title.map((item) => item)}
+			{listItems && Array.isArray(listItems) && listItems.map((item) => item)}
 		</div>
 	);
 };
