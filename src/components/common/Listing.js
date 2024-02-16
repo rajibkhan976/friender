@@ -477,7 +477,7 @@ const Listing = (props) => {
 				"bottom-right"
 			);
 		} else {
-				Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
+			Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
 		}
 	};
 
@@ -493,7 +493,6 @@ const Listing = (props) => {
 		));
 
 		try {
-			console.log('selected campaigns', deletePayload);
 			dispatch(deleteCampaign(deletePayload))
 				.unwrap()
 				.then((res) => {
@@ -505,6 +504,8 @@ const Listing = (props) => {
 						"bottom-right"
 					);
 					setDeleteCampaignConfirm(false)
+
+					// campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
 				})
 		} catch (error) {
 			Alertbox(error, "error-toast", 1000, "bottom-right");
@@ -674,7 +675,7 @@ const Listing = (props) => {
 							<button
 								className='remove-friends btn-inline red-text'
 								// onClick={deleteSelectedCampaigns}
-								onClick={()=>setDeleteCampaignConfirm(true)}
+								onClick={() => setDeleteCampaignConfirm(true)}
 							>
 								Delete campaign(s)
 							</button>

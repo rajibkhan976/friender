@@ -126,7 +126,6 @@ export const createCampaign = createAsyncThunk(
 	"campaigns/addCampaign",
 	async (payload) => {
 		const res = await createOrUpdateCampaignService(payload);
-		// console.log(res);
 		return res;
 	}
 );
@@ -159,12 +158,12 @@ export const addUsersToCampaign = createAsyncThunk(
 	"campaigns/addUsersToCampaign",
 	async (payload) => {
 		const res = await addUsersToCampaignService(payload);
-		return { ...res, friends: [...payload] };
+		return res;
 	}
 );
 
 export const deleteCampaign = createAsyncThunk(
-	"messages/deleteCampaign",
+	"campaigns/deleteCampaign",
 	async (payload) => {
 		const res = await deleteCampaignService(payload);
 		return { ...res, campaignIds: [...payload] };
@@ -172,7 +171,7 @@ export const deleteCampaign = createAsyncThunk(
 );
 
 export const fetchUsers = createAsyncThunk(
-	"messages/fetchUsers",
+	"campaigns/fetchUsers",
 	async (payload) => {
 		const res = await fetchCampaignUsers(payload);
 		return res;
@@ -180,7 +179,7 @@ export const fetchUsers = createAsyncThunk(
 )
 
 export const deleteCampaignContacts = createAsyncThunk(
-	"messages/deleteCampaignContacts",
+	"campaigns/deleteCampaignContacts",
 	async (payload) => {
 		const res = await deleteCampaignContactsService(payload);
 		return { ...res, payloadData: [...payload] };

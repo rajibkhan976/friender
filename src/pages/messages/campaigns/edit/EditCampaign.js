@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	CreationRenderer,
 	KeywordRenderer,
@@ -32,6 +32,7 @@ const EditCampaign = (props) => {
 	const [isEditingCampaign, setIsEditingCampaign, editViews] =
 		useOutletContext();
 	const current_fb_id = localStorage.getItem("fr_default_fb");
+	const editingCampaign = useSelector((state) => state.campaign.editingCampaign);
 
 	const [view, setView] = useState(null);
 	const [isReset, setIsReset] = useState(null);
@@ -70,6 +71,9 @@ const EditCampaign = (props) => {
 			headerName: "Message  ",
 			cellRenderer: CampaignFriendMessageRenderer,
 			enableFilter: false,
+			cellRendererParams: {
+				editingCampaign
+			}
 		},
 		{
 			field: "keywords",

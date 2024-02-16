@@ -37,7 +37,6 @@ const CampaignsHeader = ({
 
 	// CAMPAIGN STATUS UPDATE VIA API.. 
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
-		console.log("CAMPAIGN --- STATUS UPDATE");
 		try {
 			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 
@@ -63,7 +62,7 @@ const CampaignsHeader = ({
 		}
 	};
 
-	console.log("LOCAL STATE DATA -- ", location?.state?.data);
+	// console.log("LOCAL STATE DATA -- ", location?.state?.data);
 
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {

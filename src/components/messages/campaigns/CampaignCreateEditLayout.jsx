@@ -206,12 +206,12 @@ const CampaignCreateEditLayout = ({ children }) => {
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
 		if (!campaignSchedule || campaignSchedule?.length === 0) {
 			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
-			"error",
-			1000,
-			"bottom-right",
-			"",
-			"Opps!"
-		);
+				"error",
+				1000,
+				"bottom-right",
+				"",
+				"Opps!"
+			);
 			setLoadingBtn(false);
 			return false;
 		}
@@ -284,6 +284,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 		return transformSchedules;
 	};
 
+	// GETTING OLDER MESSAGE GROUP ID.. (FOR EDIT CAMPAIGN ONLY)
+	const getOldMessageGroupId = () => {
+		return localStorage.getItem("old_message_group_id_campaign") ? localStorage.getItem("old_message_group_id_campaign") : '';
+	};
+
 	// HANDLE SAVED DATA FROM CHILD..
 	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
 		const transformCampaignSchedules =
@@ -326,7 +331,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
-				campaignEndTime: endDateAndTime?.value,
+				campaignEndTime: endDateAndTime?.value ? new Date(endDateAndTime?.value) : '',
 				campaignStatus: false,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
@@ -343,6 +348,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 						(campaign) => campaign?.campaign_id === params?.campaignId
 					);
 				campaignData.campaignStatus = findTheCampaign?.status;
+
+				campaignData.oldMessageGroupId = getOldMessageGroupId();
 			}
 
 			// TRANSFERING DATA..
@@ -355,8 +362,16 @@ const CampaignCreateEditLayout = ({ children }) => {
 		navigate("/messages/campaigns");
 	};
 
+	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
+	const setOldMessageGroupId = (messageGroupId) => {
+		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
+	};
+
 	// FETCHING THE GROUP BY ID..
 	const fetchGroupMessage = (groupId) => {
+		// Store as for Older GroupID..
+		setOldMessageGroupId(groupId);
+
 		dispatch(getGroupById(groupId))
 			.unwrap()
 			.then((res) => {
@@ -439,7 +454,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 				}
 
 				if (campaignData?.campaign_end_time) {
-					setEndDateAndTime({ ...endDateAndTime, value: campaignData.campaign_end_time });
+					const formatEndTime = moment(campaignData.campaign_end_time).format("YYYY-MM-DD HH:mm:ss");
+					setEndDateAndTime({ ...endDateAndTime, value: formatEndTime });
 				}
 
 				if (campaignData?.campaign_end_time_status) {
@@ -598,6 +614,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 						/>
 
 						<span className="campaign-end-datetime-span">End date & time</span>
+
 
 						<span className="campaigns-input-tooltip">
 							<Tooltip

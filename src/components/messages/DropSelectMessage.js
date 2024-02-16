@@ -135,6 +135,11 @@ const DropSelectMessage = ({
 
     // console.log("Check the Select Option group IDDD -- ", selectedOptionId);
 
+    // CHECK MESSAGE GROUP SAVING OLDER GROUP..
+	const setOldMessageGroupId = (messageGroupId) => {
+		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
+	};
+
     /**
      * ===== Select From Option =====
      */
@@ -146,6 +151,11 @@ const DropSelectMessage = ({
         if (selectedOptionId) {
             localStorage.setItem("old_message_group_id", selectedOptionId);
         }
+
+        // SAVE OLD MESSAGE ID FOR CAMPAIGN GROUP MESSAGE..
+        // if (optionObj?._id && type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
+        //     setOldMessageGroupId(optionObj?._id);
+        // }
 
         setSelectOption(group_name);
         setGroupSelect(optionObj);

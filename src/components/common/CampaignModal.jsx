@@ -395,6 +395,11 @@ const CalenderModal = ({
 		return updatedCampaignSchedules;
 	};
 
+	// GETTING OLDER MESSAGE GROUP ID.. (FOR EDIT CAMPAIGN ONLY)
+	const getOldMessageGroupId = () => {
+		return localStorage.getItem("old_message_group_id_campaign") ? localStorage.getItem("old_message_group_id_campaign") : '';
+	};
+
 	// SAVE CAMPAIGN..
 	const handleClickToSaveCampaign = (data) => {
 		const campaignSchedules = updateCampaignSchedulesPayload();
@@ -428,7 +433,7 @@ const CalenderModal = ({
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: true,
-				campaignEndTime: endDateAndTime,
+				campaignEndTime: endDateAndTime ? new Date(endDateAndTime) : '',
 				timeDelay: timeDelay,
 				campaignLabelColor: campaginColorPick,
 				campaignStatus: false,
@@ -444,6 +449,8 @@ const CalenderModal = ({
 						(campaign) => campaign?.campaign_id === editingCampaignId
 					);
 				campaignToSave.campaignStatus = findTheCampaign?.status;
+
+				campaignToSave.oldMessageGroupId = getOldMessageGroupId();
 			}
 
 			let campaignScheduleArr = Array.isArray(campaignSchedule)
@@ -700,8 +707,18 @@ const CalenderModal = ({
 		}
 	};
 
+
+	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
+	const setOldMessageGroupId = (messageGroupId) => {
+		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
+	};
+
+
 	// FETCHING THE GROUP BY ID..
 	const fetchGroupMessage = (groupId) => {
+		// Store as for Older GroupID..
+		setOldMessageGroupId(groupId);
+
 		dispatch(getGroupById(groupId))
 			.unwrap()
 			.then((res) => {
@@ -724,11 +741,17 @@ const CalenderModal = ({
 			setTimeDelay(editingCampaign?.time_delay);
 			setMsgLimit(editingCampaign?.message_limit);
 			setCampaignColorPick(editingCampaign?.campaign_label_color);
-			setEndDateAndTime(editingCampaign?.campaign_end_time);
+
+			const formatEndTime = moment(editingCampaign?.campaign_end_time).format("YYYY-MM-DD HH:mm:ss");
+			setEndDateAndTime(formatEndTime);
 
 			if (editingCampaign?.message_group_id) {
 				// Fetching the group from the id here..
 				fetchGroupMessage(editingCampaign?.message_group_id);
+			}
+
+			if (editingCampaign?.quick_message) {
+				setQuickMsg(editingCampaign?.quick_message);
 			}
 		}
 	}, [isEditingModal]);
@@ -745,6 +768,9 @@ const CalenderModal = ({
 			});
 		};
 	}, []);
+
+	// console.log("DETAILS -- ", editingCampaign);
+	// console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
 
 	if (type === "CREATE_CAMPAIGN" || isEditingModal) {
 		return (

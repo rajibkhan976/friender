@@ -42,20 +42,20 @@ const radioOptions = [
 
 // FILTER OPTIONS FOR BASE CAMPAIGN PAGE TIME SPAN
 const spanOptions = [
+	// {
+	// 	value: "week",
+	// 	label: "Week",
+	// 	selected: true,
+	// },
 	{
 		value: "today",
 		label: "Today",
 		selected: false,
 	},
 	{
-		value: "week",
-		label: "Week",
-		selected: true,
-	},
-	{
 		value: "all",
 		label: "All",
-		selected: false,
+		selected: true,
 	},
 ];
 
@@ -119,7 +119,12 @@ const Campaigns = () => {
 		}
 	};
 
-	console.log("CAMPAIGNS CREATED ARRAY HERE -- ", campaignsCreated);
+	// UPDATING CAMPAIGNS LIST SIZE IN FRIEND LIST..
+	useEffect(() => {
+		if (campaignsCreated && campaignsCreated?.length === 0) {
+			dispatch(countCurrentListsize(campaignsCreated?.length));
+		}
+	}, [campaignsCreated]);
 
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
@@ -175,6 +180,8 @@ const Campaigns = () => {
 				selected: e.value != el?.target?.value ? false : true,
 			}))
 		);
+
+		filterCampaigns();
 	};
 
 	// TOGGLE ACTIVE / INACTIVE CAMPAIGNS FOR CAMPAIGNS LIST
@@ -185,6 +192,7 @@ const Campaigns = () => {
 				selected: e.value != el?.target?.value ? false : true,
 			}))
 		);
+
 		filterCampaigns();
 	};
 
@@ -250,9 +258,36 @@ const Campaigns = () => {
 				break;
 		}
 
+		// Check for campaign time span
+		switch (spanOption?.find(e => e.selected)?.value) {
+			case "today":
+				campaignsResult = campaignsResult?.filter((el) => new Date(el?.created_at).getDate() == new Date().getDate());
+				break;
+
+			default:
+				campaignsResult = campaignsResult;
+		}
+
 		campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
 		return campaignsResult && campaignsResult;
 	};
+
+	// FILTER CAMPAIGNS (TODAY, ALL)..
+	// const filterCampaignsBySpan = () => {
+	// 	let campaignsResult = [...campaignsCreated];
+
+	// 	switch (spanOption?.find(e => e.selected)?.value) {
+	// 		case "today":
+	// 			campaignsResult = campaignsResult?.filter((el) => new Date(el?.created_at).getDate() == new Date().getDate());
+	// 			break;
+
+	// 		default:
+	// 			campaignsResult = campaignsResult;
+	// 	}
+
+	// 	campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
+	// 	return campaignsResult && campaignsResult;
+	// }
 
 	// UPDATE REDUX CAMPAIGNS ARRAY ON EDITED CAMPAIGN MODIFIED
 	useEffect(() => {
@@ -279,11 +314,11 @@ const Campaigns = () => {
 			if (editing?.friends?.length > 0) {
 				setIsEditingCampaign(editing)
 			} else {
-				setIsEditingCampaign({...editing, friends: []})
+				setIsEditingCampaign({ ...editing, friends: [] })
 			}
 			console.log('editing', editing);
 		}
-	} ,[editing])
+	}, [editing])
 
 	// REMOVE
 	useEffect(() => {

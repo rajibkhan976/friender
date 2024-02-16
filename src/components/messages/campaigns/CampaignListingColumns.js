@@ -23,6 +23,7 @@ import {
 } from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
+import moment from 'moment';
 
 
 export const CampaignNameCellRenderer = memo((params) => {
@@ -67,6 +68,20 @@ export const CampaignNameCellRenderer = memo((params) => {
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
 	const [campaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
+	const campaignId = params?.data?.campaign_id || params?.data?._id;
+	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
+
+	useEffect(() => {
+		if (endDateAndTime && endDateAndTime < new Date()) {
+			(async () => {
+				try {
+					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+				} catch (error) {
+					console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
+				}
+			})();
+		}
+	}, [endDateAndTime]);
 
 	// CAMPAIGN STATUS UPDATE VIA API..
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
@@ -197,20 +212,27 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 });
 
 export const CampaignEndTimeCellRenderer = memo((params) => {
+	const endDateAndTime = params?.data?.campaign_end_time;
+	const endDateAndTimeStatus = params?.data?.campaign_end_time_status;
+
 	// Might need to convert time to UTC / Local
-	const convertedTimeSplit = utils
-		.convertUTCtoLocal(params?.value?.replace(" ", "T") + ".000Z", true)
-		.split(",");
+	// const convertedTimeSplit = utils
+	// 	.convertUTCtoLocal(endDateAndTime?.replace(" ", "T") + ".000Z", true)
+	// 	.split(",");
+
+	// CONVERT TO USER PREVIEW..
+	const convertDateNTimeToUserPreview = (date) => moment(date).format('DD MMM YYYY, hh:mm a');
 
 	return (
 		<div
-			className={`campaign-endTime-cell ${new Date() > new Date(params?.value) ? "end-time-exceeded" : ""
-				}`}
+			className={`campaign-endTime-cell ${new Date() > new Date(endDateAndTime) ? "end-time-exceeded" : ""
+			}`}
 		>
-			{params?.data?.campaign_end_time_status && params?.value ? (
+			{endDateAndTimeStatus && endDateAndTime ? (
 				<>
 					<CalendarIcon />
-					&nbsp;{convertedTimeSplit[0]}, {convertedTimeSplit[1]?.toLowerCase()}
+					{/* &nbsp;{convertedTimeSplit[0]}, {convertedTimeSplit[1]?.toLowerCase()} */}
+					&nbsp; {convertDateNTimeToUserPreview(endDateAndTime)}
 				</>
 			) : (
 				<span className='muted-text'>--</span>
@@ -328,9 +350,12 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 });
 
 export const CampaignFriendMessageRenderer = memo((params) => {
+	const messageRender = params?.editingCampaign?.group_name || params?.editingCampaign?.quick_message?.text;
+
 	return (
 		<div className='campaign-friendMessage-cell'>
-			{params?.value ? params?.value : <span className='muted-text'>-</span>}
+			{/* {params?.value ? params?.value : <span className='muted-text'>-</span>} */}
+			{messageRender ? messageRender : <span className='muted-text'>-</span>}
 		</div>
 	);
 });
