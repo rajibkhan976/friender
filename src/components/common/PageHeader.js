@@ -180,6 +180,7 @@ function PageHeader({ headerText = "" }) {
 	const selectedFriends = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
+	const blacklistedFriends=useSelector((state)=>state.friendlist.selected_friends.filter((el) => el?.blacklist_status));
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.friendlist.curr_list_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
@@ -1250,18 +1251,18 @@ function PageHeader({ headerText = "" }) {
 					bodyText={
 						<>
 							You have selected <b>{selectedFriends.length}</b> friend(s)
-							{selectedFriends?.filter((el) => el?.blacklist_status)?.length >
+							{blacklistedFriends?.length >
 							0 ? (
 								<>
 									, and{" "}
 									<b>
 										{
-											selectedFriends?.filter((el) => el?.blacklist_status)
+											blacklistedFriends
 												?.length
 										}
 									</b>{" "}
 									of them
-									{selectedFriends?.filter((el) => el?.blacklist_status)
+									{blacklistedFriends
 										?.length > 1
 										? " are"
 										: " is"}{" "}
@@ -1271,19 +1272,19 @@ function PageHeader({ headerText = "" }) {
 								""
 							)}
 							. Are you sure you want to add{" "}
-							{selectedFriends?.filter((el) => el?.blacklist_status)?.length > 1
+							{blacklistedFriends?.length > 1
 								? "all of these friends"
 								: "this friend"}{" "}
 							to campaign?
 						</>
 					}
 					closeBtnTxt={
-						selectedFriends?.filter((el) => el?.blacklist_status)?.length > 0
+						blacklistedFriends?.length > 0
 							? "Skip blacklisted"
 							: "Cancel"
 					}
 					closeBtnFun={
-						selectedFriends?.filter((el) => el?.blacklist_status)?.length > 0
+						blacklistedFriends?.length > 0
 							? skipBlackList
 							: skipAddingToCampaign
 					}
@@ -1294,7 +1295,7 @@ function PageHeader({ headerText = "" }) {
 					}}
 					ModalFun={()=>AddToCampaign(selectedFriends)}
 					btnText={
-						selectedFriends?.filter((el) => el?.blacklist_status)?.length > 0
+						blacklistedFriends?.length > 0
 							? "Yes, add all"
 							: "Add"
 					}
@@ -1302,20 +1303,13 @@ function PageHeader({ headerText = "" }) {
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
-						cancelBtnDisable: selectedFriends?.filter(
-							(el) => el?.blacklist_status
-						)?.length
-							? selectedFriends?.length ===
-							  selectedFriends?.filter((el) => el?.blacklist_status)?.length
+						cancelBtnDisable: blacklistedFriends.length > 0 ? 
+						selectedFriends?.length === blacklistedFriends?.length
 								? true
 								: selectedCampaign === "Select"
 								? true
 								: false
-							: campaignsCreated?.length <= 0
-							? true
-							: selectedCampaign === "Select"
-							? true
-							: false,
+							: false
 					}}
 					additionalClass='add-campaign-modal'
 				>
