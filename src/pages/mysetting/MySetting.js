@@ -2450,7 +2450,7 @@ const MySetting = () => {
 										}}
 									/>
 
-									Send the messege even if the conversation is already ongoing in Messenger
+									Send the message even if the conversation is already ongoing in Messenger
 								</div>
 							</div>
 						)}
@@ -2774,7 +2774,7 @@ const MySetting = () => {
 										}}
 									/>
 
-									Send the messege even if the conversation is already ongoing in Messenger
+									Send the message even if the conversation is already ongoing in Messenger
 								</div>
 							</div>
 						)}

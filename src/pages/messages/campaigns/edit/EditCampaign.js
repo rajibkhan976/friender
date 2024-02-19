@@ -196,7 +196,7 @@ const EditCampaign = (props) => {
 	const getCampaignUsersListFromAPI = async (
 		fbUserId = current_fb_id,
 		campaignId = "",
-		status = "pending"
+		status = "all"
 	) => {
 		try {
 			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap();
