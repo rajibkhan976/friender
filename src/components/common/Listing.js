@@ -269,7 +269,7 @@ const Listing = (props) => {
 	//   }
 	// }, [selectedFrnd]);
 	//const headerCheckBoxHandler=()=>{}
-	useEffect(() => { }, []);
+	// useEffect(() => { }, []);
 
 	useEffect(() => {
 		gridRef &&

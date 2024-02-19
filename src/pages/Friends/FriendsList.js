@@ -167,8 +167,8 @@ const FriendsList = () => {
 			headerTooltip: "Gender",
 			filter: "agTextColumnFilter",
 			cellRenderer: GenderRenderer,
-			width: 80,
-			// maxWidth: 80,
+			// width: 80,
+			maxWidth: 80,
 			// lockPosition: "right",
 			filterParams: {
 				buttons: ["apply", "reset"],
@@ -185,8 +185,8 @@ const FriendsList = () => {
 			headerTooltip:
 				"Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
 			filter: "agNumberColumnFilter",
-			width: 110,
-			// maxWidth: 110,
+			// width: 110,
+			maxWidth: 110,
 			// filterParams: {
 			//   buttons: ["apply", "reset"],
 			//   debounceMs: 200,
@@ -232,8 +232,8 @@ const FriendsList = () => {
 			headerTooltip: "Country",
 			tooltipComponent: CustomHeaderTooltip,
 			headerClass: "header-query-tooltip",
-			width: 158,
-			// maxWidth: 158,
+			// width: 158,
+			maxWidth: 158,
 			filter: "agTextColumnFilter",
 			filterParams: {
 				buttons: ["apply", "reset"],
@@ -249,8 +249,8 @@ const FriendsList = () => {
 			headerTooltip: "Reactions",
 			headerClass: "header-reaction",
 			cellRenderer: ReactionRenderer,
-			width: 75,
-			// maxWidth: 75,
+			// width: 75,
+			maxWidth: 75,
 			filter: "agNumberColumnFilter",
 			filterParams: {
 				buttons: ["apply", "reset"],
@@ -271,8 +271,8 @@ const FriendsList = () => {
 			headerClass: "header-comments",
 			cellRenderer: CommentRenderer,
 			filter: "agNumberColumnFilter",
-			width: 75,
-			// maxWidth: 75,
+			// width: 75,
+			maxWidth: 75,
 			filterParams: {
 				buttons: ["apply", "reset"],
 				suppressMiniFilter: true,
@@ -291,8 +291,8 @@ const FriendsList = () => {
 			headerTooltip: "Total Engagement",
 			headerClass: "header-engagement",
 			filter: "agNumberColumnFilter",
-			width: 75,
-			// maxWidth: 75,
+			// width: 75,
+			maxWidth: 75,
 			cellRenderer: EngagementRenderer,
 			filterParams: {
 				buttons: ["apply", "reset"],
@@ -316,8 +316,8 @@ const FriendsList = () => {
 			headerTooltip: "Messages",
 			headerClass: "header-messages",
 			cellRenderer: MessageRenderer,
-			width: 100,
-			// maxWidth: 100,
+			// width: 100,
+			maxWidth: 100,
 			filter: "agNumberColumnFilter",
 			filterParams: {
 				buttons: ["apply", "reset"],
@@ -350,8 +350,8 @@ const FriendsList = () => {
 			headerTooltip: "Recent Engagement",
 			headerClass: "header-recent-engagement",
 			cellRenderer: RecentEngagementRenderer,
-			width: 100,
-			// maxWidth: 100,
+			// width: 100,
+			maxWidth: 100,
 			cellRendererParams: {
 				inactiveAfter,
 			},

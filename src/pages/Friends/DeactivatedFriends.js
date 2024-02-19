@@ -80,7 +80,7 @@ const DeactivatedFriends = () => {
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
-      width: 80,
+      // width: 80,
       // maxWidth: 80,
       lockPosition: "right",
       filterParams: {
@@ -194,7 +194,7 @@ const DeactivatedFriends = () => {
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
       width: 75,
-      // maxWidth: 75,
+      maxWidth: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -214,7 +214,7 @@ const DeactivatedFriends = () => {
       headerName: "Total Comment",
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
-      width: 75,
+      // width: 75,
       // maxWidth: 75,
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
@@ -253,7 +253,7 @@ const DeactivatedFriends = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
-      width: 100,
+      // width: 100,
       // maxWidth: 100,
       filter: "agTextColumnFilter",
       filterParams: {
@@ -297,18 +297,14 @@ const DeactivatedFriends = () => {
           additionalClass="modal-keywords"
         />
       )}
-      {friendsList?.length > 0 && (
-        <>
-          {!loading && (
-            <Listing
-              friendsData={friendsList}
-              friendsListingRef={friendsListinRef}
-              getFilterNum={setListFilteredCount}
-              reset={isReset}
-              setReset={setIsReset}
-            />
-          )}
-        </>
+      {friendsList?.length > 0 && !loading && (
+          <Listing
+            friendsData={friendsList}
+            friendsListingRef={friendsListinRef}
+            getFilterNum={setListFilteredCount}
+            reset={isReset}
+            setReset={setIsReset}
+          />      
       )}
 
       {

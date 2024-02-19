@@ -150,7 +150,7 @@ const BlackList = () => {
       headerClass: 'header-gender',
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
-      width: 80,
+      // width: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -170,7 +170,7 @@ const BlackList = () => {
         inactiveAfter
       },
       filter: "agNumberColumnFilter",
-      width: 100,
+      // width: 100,
       // maxWidth: 100,
       filterParams: {
         buttons: ["apply", "reset"],
@@ -209,7 +209,7 @@ const BlackList = () => {
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
-      width: 110,
+      // width: 110,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -248,7 +248,7 @@ const BlackList = () => {
       headerTooltip: 'Country',
       tooltipComponent: CustomHeaderTooltip,
       filter: "agTextColumnFilter",
-      width: 158,
+      // width: 158,
       headerClass: 'header-query-tooltip',
       filterParams: {
         buttons: ["apply", "reset"],
@@ -374,7 +374,7 @@ const BlackList = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
-      width: 75,
+      // width: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -395,7 +395,7 @@ const BlackList = () => {
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
       cellRenderer: CommentRenderer,
-      width: 75,
+      // width: 75,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -432,7 +432,7 @@ const BlackList = () => {
       headerTooltip: 'Messages',
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
-      width: 100,
+      // width: 100,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -446,7 +446,7 @@ const BlackList = () => {
       headerName: "Engagement",
       headerTooltip: 'Total Engagement',
       headerClass: 'header-engagement',
-      width: 75,
+      // width: 75,
       filter: "agNumberColumnFilter",
       cellRenderer: EngagementRenderer,
       filterParams: {

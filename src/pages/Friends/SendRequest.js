@@ -149,8 +149,8 @@ const SendRequest = ({ deleteAllInterval }) => {
       headerName: "Gender ",
       filter: "agTextColumnFilter",
       headerClass: 'header-gender',
-      // maxWidth: 80,
-      width: 80,
+      maxWidth: 80,
+      // width: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -167,8 +167,8 @@ const SendRequest = ({ deleteAllInterval }) => {
       headerClass: 'header-query-tooltip',
       headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       filter: "agTextColumnFilter",
-      width: 110,
-      // maxWidth: 110,
+      // width: 110,
+      maxWidth: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -231,8 +231,8 @@ const SendRequest = ({ deleteAllInterval }) => {
       field: "refriending_attempt",
       headerName: "# Re-friending",
       filter: "agNumberColumnFilter",
-      width: 150,
-      // maxWidth: 150,
+      // width: 150,
+      maxWidth: 150,
       cellRenderer: RefriendCountRenderer,
     },
     {

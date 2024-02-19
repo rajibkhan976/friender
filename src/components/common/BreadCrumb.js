@@ -28,6 +28,9 @@ function BreadCrumb({ links }) {
         if (placeholderCampaign) {
           addBreadLinkName(links, placeholderCampaign);
         }
+      } else {
+        console.log(links, editingCampaign, params, campaignsArray);
+        setBreadLink(links)
       }
     }
   }, [links, editingCampaign, params, campaignsArray]);
