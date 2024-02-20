@@ -67,7 +67,7 @@ export const utils = {
 	generateExcerpt: (str) => {
 		return str.length > 12 ? str.substr(0, 12) + "..." : str;
 	},
-	cropParagraph:(str,len) => {
+	cropParagraph: (str, len) => {
 		return str.length > len ? str.substr(0, len) + "..." : str;
 	},
 	//Capitalize first letter
@@ -132,11 +132,11 @@ export const utils = {
 		};
 		return message;
 	},
-	hex2rgb(hex) {
+	hex2rgb(hex, colorType) {
 		const r = parseInt(hex?.slice(1, 3), 16);
 		const g = parseInt(hex?.slice(3, 5), 16);
 		const b = parseInt(hex?.slice(5, 7), 16);
-		const a = 0.2;
+		let a = colorType === "bg" ? 0.2 : 1;
 
 		return `rgba(${r}, ${g}, ${b}, ${a})`;
 	},

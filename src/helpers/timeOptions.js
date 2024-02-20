@@ -239,4 +239,9 @@ export const timeOptions = [
 		label: "11:30 PM",
 		selected: false,
 	},
+	{
+		value: "11:59 PM",
+		label: "11:59 PM",
+		selected: false,
+	},
 ];

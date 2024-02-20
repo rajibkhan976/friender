@@ -89,11 +89,15 @@ const CampaignsCalendar = () => {
 										className='global-campaign-title'
 										key={i + c}
 										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[c].color)}`,
-											borderLeft: `4px solid ${utils.hex2rgb(
-												campaignArr[c].color
+											backgroundColor: `${utils.hex2rgb(
+												campaignArr[c].color,
+												"bg"
 											)}`,
-											color: `${utils.hex2rgb(campaignArr[c].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[c].color,
+												"border"
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[c].color, "text")}`,
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
@@ -190,11 +194,15 @@ const CampaignsCalendar = () => {
 										className='global-campaign-title'
 										key={i}
 										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-											borderLeft: `4px solid ${utils.hex2rgb(
-												campaignArr[i].color
+											backgroundColor: `${utils.hex2rgb(
+												campaignArr[i].color,
+												"bg"
 											)}`,
-											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color,
+												"border"
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color, "text")}`,
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
@@ -265,11 +273,15 @@ const CampaignsCalendar = () => {
 										className='global-campaign-title'
 										key={i}
 										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-											borderLeft: `4px solid ${utils.hex2rgb(
-												campaignArr[i].color
+											backgroundColor: `${utils.hex2rgb(
+												campaignArr[i].color,
+												"bg"
 											)}`,
-											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color,
+												"border"
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color, "text")}`,
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
@@ -340,11 +352,15 @@ const CampaignsCalendar = () => {
 										className='global-campaign-title'
 										key={i}
 										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-											borderLeft: `4px solid ${utils.hex2rgb(
-												campaignArr[i].color
+											backgroundColor: `${utils.hex2rgb(
+												campaignArr[i].color,
+												"bg"
 											)}`,
-											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color,
+												"border"
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color, "text")}`,
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
@@ -405,11 +421,15 @@ const CampaignsCalendar = () => {
 										className='global-campaign-title'
 										key={i}
 										style={{
-											backgroundColor: `${utils.hex2rgb(campaignArr[i].color)}`,
-											borderLeft: `4px solid ${utils.hex2rgb(
-												campaignArr[i].color
+											backgroundColor: `${utils.hex2rgb(
+												campaignArr[i].color,
+												"bg"
 											)}`,
-											color: `${utils.hex2rgb(campaignArr[i].color)}`,
+											borderLeft: `4px solid ${utils.hex2rgb(
+												campaignArr[i].color,
+												"border"
+											)}`,
+											color: `${utils.hex2rgb(campaignArr[i].color, "text")}`,
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
