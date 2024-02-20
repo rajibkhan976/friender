@@ -71,6 +71,8 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
 
+	console.log("CHECKING THE DATA -- ", params?.data);
+
 	useEffect(() => {
 		if (endDateAndTime && endDateAndTime < new Date()) {
 			(async () => {
@@ -112,9 +114,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const handleSwitchToggleStatus = (e) => {
 		const campaignId = params?.data?.campaign_id || params?.data?._id;
 
-		if (!params?.data?.friends_added || (params?.data?.friends_added === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
+		if (!params?.data?.friends_added || (params?.data?.friends_added === 0 || params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
 			Alertbox(
-				`${params?.data?.friends_added === 0
+				`${params?.data?.friends_added === 0 || params?.data?.friends_pending === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
 					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 				}`,
@@ -338,7 +340,7 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 		<div className='campaign-friendName-cell'>
 			<span
 				className={
-					params?.value?.toLowerCase() === "successful"
+					params?.value?.toLowerCase() === "successful" || params?.value?.toLowerCase() === "send" || params?.value?.toLowerCase() === "sent"
 						? `activeEngaged actUser`
 						: `activeEngaged actPending`
 				}

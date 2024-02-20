@@ -1549,3 +1549,9 @@
 	color: lightgray;
 	cursor: not-allowed !important;
 }
+
+
+.ag-cell:has(.name-image-renderer.frnd-send-status) .ag-selection-checkbox {
+	pointer-events: none;
+	opacity: 0.5;
+}

@@ -173,7 +173,7 @@ export const GeneralNameCellRenderer = memo((params) => {
 
 export const UnlinkedNameCellRenderer = memo((params) => {
   return (
-    <span className="name-image-renderer">
+    <span className={`name-image-renderer ${params?.data?.status === 'sent' || params?.data?.status === 'send' || params?.data?.status === 'successful'? 'frnd-send-status' : ''}`}>
       <span
         className="fb-display-pic"
         style={{

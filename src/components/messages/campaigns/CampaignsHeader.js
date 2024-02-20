@@ -80,11 +80,11 @@ const CampaignsHeader = ({
 			return false;	
 		}
 		
-		if ((location?.state?.data?.friends_added === 0 || new Date(location?.state?.data?.campaign_end_time) < new Date()) && e.target.checked) { 
+		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0 || new Date(location?.state?.data?.campaign_end_time) < new Date()) && e.target.checked) { 
 			setCampaignsStatusActivity(false);
 
 			Alertbox(
-				`${location?.state?.data?.friends_added === 0
+				`${location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
 					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 				}`,
