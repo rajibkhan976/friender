@@ -135,7 +135,6 @@ export const addNewGroup = createAsyncThunk(
 	"messages/addNewMessageGroup",
 	async (payload) => {
 		const res = await addOneGroup(payload);
-		console.log("done n dusted", res);
 		return res;
 	}
 );
@@ -163,6 +162,30 @@ export const deleteGroupItemMessage = createAsyncThunk(
 		return res;
 	}
 );
+
+/**
+ * This function merge two array with out taking duplicate value
+ * @param {*} arr1 
+ * @param {*} arr2 
+ */
+const mergeTwoArrayWithoutDuplicate=(arr1=[],arr2=[])=>{
+	let uniqueName={};
+	let mergedArray=[];
+
+	arr1.forEach((obj)=>{
+		if(!uniqueName[obj.group_name]){
+			uniqueName[obj.group_name]=true;
+			mergedArray.push(obj);
+		}
+	})
+	arr2.forEach((obj)=>{
+		if(!uniqueName[obj.group_name]){
+			uniqueName[obj.group_name]=true;
+			mergedArray.push(obj);
+		}
+	})
+	return mergedArray;
+}
 
 export const messageSlice = createSlice({
 	name: "message",
@@ -320,7 +343,7 @@ export const messageSlice = createSlice({
 				if(action.meta.arg===1){
 					state.groupArray=action?.payload?.data;
 				}else{
-					state.groupArray=[...state.groupArray,...action?.payload?.data]
+					state.groupArray=mergeTwoArrayWithoutDuplicate(state.groupArray,action?.payload?.data);
 				}
 				
 			}

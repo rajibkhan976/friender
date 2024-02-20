@@ -311,7 +311,13 @@ const MessageGroups = () => {
                         is_used: 1
                     } : el))
                 }
-
+                dispatch(fetchGroups(1)).unwrap().then((res)=>{
+                    setIsPages(true)
+                    setPageRef(1)
+                }).catch((error)=>{
+                    setIsPages(false)
+                    console.log("Error in group array fetch after deletion",error);
+                })
                 Alertbox(
                     `Group deleted successfully`,
                     "success",
