@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -39,6 +39,7 @@ const EditCampaign = (props) => {
 
 	const [view, setView] = useState(null);
 	const [isReset, setIsReset] = useState(null);
+	const loadingState = useSelector((state) => state.campaign.isLoading);
 	const [loading, setLoading] = useState(false);
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -113,6 +114,7 @@ const EditCampaign = (props) => {
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
+				console.log('loadingState', loadingState);
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -136,6 +138,7 @@ const EditCampaign = (props) => {
 					</>
 				);
 			} else {
+				console.log('loadingState', loadingState);
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>

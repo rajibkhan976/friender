@@ -9,7 +9,7 @@ import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
-import { updateCampaignStatus, updateCampaignsArray } from 'actions/CampaignsActions';
+import { updateCampaignStatus } from 'actions/CampaignsActions';
 
 const CampaignsHeader = ({
 	radioOptions,

@@ -118,7 +118,7 @@ const LostFriends = () => {
       headerTooltip: 'Gender',
       filter: "agTextColumnFilter",
       // width: 80,
-      // maxWidth: 80,
+      maxWidth: 80,
       cellRenderer: GenderRenderer,
       // lockPosition: "right",
       filterParams: {
@@ -136,7 +136,7 @@ const LostFriends = () => {
       cellRenderer: CountryRenderer,
       headerClass: 'header-query-tooltip',
       // width: 158,
-      // maxWidth: 158,
+      maxWidth: 158,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -166,7 +166,7 @@ const LostFriends = () => {
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
       // width: 100,
-      // maxWidth: 100,
+      maxWidth: 100,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -183,7 +183,7 @@ const LostFriends = () => {
       headerClass: 'header-query-tooltip',
       filter: "agTextColumnFilter",
       // width: 110,
-      // maxWidth: 110,
+      maxWidth: 110,
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,

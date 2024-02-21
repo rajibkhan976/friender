@@ -1,11 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchCampaignById,
-	fetchUsers,
-	updateCampaignsArray,
+	fetchCampaignById, updateCampaignsArray
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
 
@@ -94,6 +92,7 @@ const editView = [
 
 const Campaigns = () => {
 	const location = useLocation();
+	const params = useParams();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.campaign.isLoading);
@@ -112,8 +111,14 @@ const Campaigns = () => {
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	const fetchAll = async () => {
-		try {
+	try {
 			dispatch(fetchAllCampaigns());
+			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' || params?.campaignId) {
+				const response = await dispatch(fetchCampaignById({ 
+											fbUserId: localStorage.getItem("fr_default_fb"), 
+											campaignId: params?.campaignId
+										})).unwrap()
+			}
 		} catch (error) {
 			Alertbox(`${error} `, "error", 3000, "bottom-right");
 		}
@@ -316,7 +321,7 @@ const Campaigns = () => {
 			} else {
 				setIsEditingCampaign({ ...editing, friends: [] })
 			}
-			console.log('editing', editing);
+			// console.log('editing', editing);
 		}
 	}, [editing])
 

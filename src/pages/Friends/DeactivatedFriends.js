@@ -81,7 +81,7 @@ const DeactivatedFriends = () => {
       filter: "agTextColumnFilter",
       cellRenderer: GenderRenderer,
       // width: 80,
-      // maxWidth: 80,
+      maxWidth: 80,
       lockPosition: "right",
       filterParams: {
         buttons: ["apply", "reset"],
@@ -193,7 +193,7 @@ const DeactivatedFriends = () => {
       headerName: "Total Reaction",
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
-      width: 75,
+      // width: 75,
       maxWidth: 75,
       cellRenderer: ReactionRenderer,
       filter: "agNumberColumnFilter",
@@ -215,7 +215,7 @@ const DeactivatedFriends = () => {
       headerTooltip: 'Comments',
       headerClass: 'header-comments',
       // width: 75,
-      // maxWidth: 75,
+      maxWidth: 75,
       cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
@@ -254,7 +254,7 @@ const DeactivatedFriends = () => {
       headerClass: 'header-messages',
       cellRenderer: MessageRenderer,
       // width: 100,
-      // maxWidth: 100,
+      maxWidth: 100,
       filter: "agTextColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

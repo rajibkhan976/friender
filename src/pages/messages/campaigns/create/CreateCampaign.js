@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import CreateCampaignWrapper from "components/messages/campaigns/CreateCampaignWrapper";
 
