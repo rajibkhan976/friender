@@ -33,6 +33,9 @@ const EditCampaign = (props) => {
 		useOutletContext();
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 	const editingCampaign = useSelector((state) => state.campaign.editingCampaign);
+	const campaignSchedule = useSelector(
+		(state) => state.campaign.campaignSchedule
+	);
 
 	const [view, setView] = useState(null);
 	const [isReset, setIsReset] = useState(null);
@@ -72,8 +75,8 @@ const EditCampaign = (props) => {
 			cellRenderer: CampaignFriendMessageRenderer,
 			enableFilter: false,
 			cellRendererParams: {
-				editingCampaign
-			}
+				editingCampaign,
+			},
 		},
 		{
 			field: "keywords",
@@ -169,26 +172,32 @@ const EditCampaign = (props) => {
 		const campaignId = params?.campaignId;
 		const { selectedFrnd, selectedFriends } = data;
 
-		const payloadToDelete = selectedFriends?.length && selectedFriends?.map((friend) => {
-			return {
-				fbUserId,
-				campaignId,
-				friendFbId: friend?.friendFbId || ""
-			};
-		});
+		const payloadToDelete =
+			selectedFriends?.length &&
+			selectedFriends?.map((friend) => {
+				return {
+					fbUserId,
+					campaignId,
+					friendFbId: friend?.friendFbId || "",
+				};
+			});
 
 		try {
-			const removedContactResponse = await dispatch(deleteCampaignContacts(payloadToDelete)).unwrap();
-			console.log("REMOVE API HAS BEEN CALLED HERE -- ", removedContactResponse);
+			const removedContactResponse = await dispatch(
+				deleteCampaignContacts(payloadToDelete)
+			).unwrap();
+			console.log(
+				"REMOVE API HAS BEEN CALLED HERE -- ",
+				removedContactResponse
+			);
 			return {
 				success: true,
-			}
-
+			};
 		} catch (error) {
 			return {
 				success: false,
-				message: error?.message
-			}
+				message: error?.message,
+			};
 		}
 	};
 
@@ -219,7 +228,7 @@ const EditCampaign = (props) => {
 			setLoading(false);
 			if (
 				localStorage?.getItem("fr_editCampaign_view") &&
-				localStorage?.getItem("fr_editCampaign_view") != "undefined"
+				localStorage?.getItem("fr_editCampaign_view") !== "undefined"
 			) {
 				setView(JSON.parse(localStorage.getItem("fr_editCampaign_view"))?.mode);
 			} else {
@@ -229,6 +238,11 @@ const EditCampaign = (props) => {
 					JSON.stringify({ mode: "view" })
 				);
 			}
+			dispatch(
+				updateCampaignSchedule(
+					...campaignSchedule.filter((item) => item.isSaved)
+				)
+			);
 		}
 
 		return () => {
