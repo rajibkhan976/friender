@@ -304,7 +304,7 @@
 .global-campaign-title {
 	/* width: 250px;
 	height: 25px; */
-	margin-bottom: 0.25rem;
+	margin-bottom: 2px;
 	padding: 0.25rem;
 	font-size: 12px;
 	font-weight: 500;
@@ -332,7 +332,6 @@
 }
 
 .global-campaign-time-slot {
-	display: inline-block;
-	margin-left: 6rem;
+	float: right;
 	font-size: 10px;
 }

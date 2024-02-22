@@ -74,8 +74,14 @@ const CampaignScheduler = (props) => {
 				setCalenderModalType && handleSetShowModal(false);
 				setShowMoreEvent(showMoreEventsArr);
 				setPopupCoordPos({
-					x: e.clientX,
-					y: e.clientY,
+					x:
+						e.clientX + 289 > window?.innerWidth
+							? window?.innerWidth - (289 + 30)
+							: e.clientX,
+					y:
+						e.clientY + 277 > window?.innerHeight
+							? window?.innerHeight - (277 + 81 + 12 + 55)
+							: e.clientY,
 				});
 				setShowGlobalCampaignPopup(true);
 			}
@@ -99,10 +105,15 @@ const CampaignScheduler = (props) => {
 					>
 						{props?.event &&
 							Array.isArray(props?.event?.title) &&
-							props?.event?.title.slice(0, 2).map((item) => item)}
+							props?.event?.title
+								.slice(
+									props?.event?.title.length - 1,
+									props?.event?.title.length
+								)
+								.map((item) => item)}
 						{props?.event &&
 							Array.isArray(props?.event?.title) &&
-							props?.event?.title.length > 2 && (
+							props?.event?.title.length > 1 && (
 								<div
 									className='show-more-btn'
 									onClick={(e) => {
@@ -113,13 +124,16 @@ const CampaignScheduler = (props) => {
 										);
 										handleClick(
 											e,
-											props?.event?.title.slice(2, props?.event?.title.length)
+											props?.event?.title.slice(
+												0,
+												props?.event?.title.length - 1
+											)
 										);
 									}}
 									onMouseDown={(e) => e.stopPropagation()}
 								>
 									{"+ " +
-										props?.event?.title.slice(2, props?.event?.title.length)
+										props?.event?.title.slice(0, props?.event?.title.length - 1)
 											.length}
 								</div>
 							)}

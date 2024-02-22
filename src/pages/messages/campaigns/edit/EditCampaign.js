@@ -242,9 +242,7 @@ const EditCampaign = (props) => {
 				);
 			}
 			dispatch(
-				updateCampaignSchedule(
-					...campaignSchedule.filter((item) => item.isSaved)
-				)
+				updateCampaignSchedule(campaignSchedule.filter((item) => item.isSaved))
 			);
 		}
 
