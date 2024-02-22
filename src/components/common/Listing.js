@@ -548,6 +548,7 @@ const Listing = (props) => {
 				// console.log("selected node",node);
 				// console.log("co=urr white list",currentWhiteList);
 				const newObj = { ...node.data };
+
 				if (Object.keys(currentWhiteList).length > 0) {
 					if (newObj.friendFbId in currentWhiteList) {
 						newObj.whitelist_status = currentWhiteList[newObj.friendFbId];
@@ -559,8 +560,15 @@ const Listing = (props) => {
 					}
 				}
 
+				if (newObj?.status && !newObj?.campaign_name && (newObj?.status !== 'pending' || newObj?.status !== 'pending')) {
+					// If the row doesn't meet the criteria, deselect it
+					node.setSelected(false);
+				} else {
+					selectedUsers = [...selectedUsers, { ...newObj, rowId: node.id }];
+				}
+
 				// console.log("new obj",newObj);
-				selectedUsers = [...selectedUsers, { ...newObj, rowId: node.id }];
+				// selectedUsers = [...selectedUsers, { ...newObj, rowId: node.id }];
 			});
 
 			// friendFbId

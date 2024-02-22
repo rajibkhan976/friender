@@ -111,13 +111,13 @@ const Campaigns = () => {
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	const fetchAll = async () => {
-	try {
+		try {
 			dispatch(fetchAllCampaigns());
 			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' || params?.campaignId) {
-				const response = await dispatch(fetchCampaignById({ 
-											fbUserId: localStorage.getItem("fr_default_fb"), 
-											campaignId: params?.campaignId
-										})).unwrap()
+				const response = await dispatch(fetchCampaignById({
+					fbUserId: localStorage.getItem("fr_default_fb"),
+					campaignId: params?.campaignId
+				})).unwrap()
 			}
 		} catch (error) {
 			Alertbox(`${error} `, "error", 3000, "bottom-right");
@@ -321,7 +321,11 @@ const Campaigns = () => {
 			} else {
 				setIsEditingCampaign({ ...editing, friends: [] })
 			}
-			// console.log('editing', editing);
+			// console.log('editing--->>>> ', editing);
+			if (editing && editing?.quick_message) {
+				localStorage.setItem("fr_quickMessage_campaigns_message", editing?.quick_message?.__raw);
+			}
+			localStorage.setItem("fr_edit_mode_quickCampMsg", true);
 		}
 	}, [editing])
 

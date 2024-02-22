@@ -204,7 +204,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
-		if (!campaignSchedule || campaignSchedule?.length === 0) {
+		if (!payload?.schedule || payload?.schedule?.length === 0) {
 			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
 				"error",
 				1000,
@@ -265,7 +265,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
 	const transformCampaignSchedulesPayload = (schedules = []) => {
 		const transformSchedules = [];
-		schedules?.length &&
+		schedules && schedules?.length &&
 			schedules.forEach((schedule) => {
 				// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
 				// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
@@ -291,8 +291,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// HANDLE SAVED DATA FROM CHILD..
 	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
-		const transformCampaignSchedules =
-			transformCampaignSchedulesPayload(campaignSchedule);
+		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
 		const payload = {
 			...data,
 			fbUserId: current_fb_id,
@@ -509,6 +508,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 			.catch((error) =>
 				console.log("Error when try to fetching all groups -- ", error)
 			);
+
+			return () => {
+				localStorage.removeItem("fr_edit_mode_quickCampMsg");
+				localStorage.removeItem("fr_quickMessage_campaigns_message");
+			};
 	}, []);
 
 	useEffect(() => {
@@ -518,6 +522,18 @@ const CampaignCreateEditLayout = ({ children }) => {
 			fetchCampaignDetails();
 		}
 	}, [params]);
+
+	// DISABLE SAVED BUTTON ACCORDING TO FIELDS ARE REQUIRED..
+	const disableSubmit = () => {
+		const name = campaignName?.value?.trim();
+		const groupMsg = groupMsgSelect?._id;
+
+		if (name === '' || (!groupMsg && quickMsg === null) || campaignSchedule?.length === 0) {
+			return true;
+		} else {
+			return false;
+		}
+	};
 
 	return (
 		<div className='campaigns-edit d-flex d-flex-column'>
@@ -554,7 +570,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 						groupList={groupMessages}
 						groupSelect={groupMsgSelect}
 						setGroupSelect={setGroupMsgSelect}
-						quickMessage={quickMsg}
+						quickMessage={quickMsg && quickMsg}
 						setQuickMessage={setQuickMsg}
 						quickMsgModalOpen={quickMsgModalOpen}
 						setQuickMsgOpen={setQuickMsgModalOpen}
@@ -655,7 +671,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				<button
 					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}
-					disabled={campaignName.value?.trim() === "" || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
+					disabled={disableSubmit() || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
 				>
 					{isLoadingBtn ? type === "EDIT" ? "Updating..." : "Saving..." : "Save campaign"}
 				</button>

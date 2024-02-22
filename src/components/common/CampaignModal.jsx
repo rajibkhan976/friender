@@ -1139,7 +1139,7 @@ const CalenderModal = ({
 									</div>
 
 									<div className='text'>
-										<p>{editingCampaign?.time_delay}</p>
+										<p>{editingCampaign?.time_delay} mins</p>
 										<span>Time delay</span>
 									</div>
 								</div>
@@ -1189,7 +1189,7 @@ const CalenderModal = ({
 										<p>
 											{editingCampaign?.campaign_end_time
 												? moment(editingCampaign?.campaign_end_time).format(
-														"DD MMM, YYYY hh:mm:ssa"
+														"DD MMM, YYYY hh:mma"
 												  )
 												: "N/A"}
 										</p>

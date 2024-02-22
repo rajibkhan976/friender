@@ -233,7 +233,7 @@ const CampaignsHeader = ({
 							{editOptions && <RenderEditView />}
 
 							<div className='campaign-status h-100 d-flex f-align-center'>
-								<span>Pause this campaign</span>
+								<span>{campaignsStatusActivity ? 'Pause' : 'Start'} this campaign</span>
 								{/* {editCampaign && (
 									<Switch
 										// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}

@@ -65,7 +65,6 @@ const DropSelectMessage = ({
         }
 
         if (quickMessage && (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")) {
-            localStorage.setItem("fr_quickMessage_campaigns_message", quickMessage?.__raw);
             setUnselectedError(false);
         }
 

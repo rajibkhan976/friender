@@ -104,6 +104,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
                     {/* MODAL BODY */}
                     <div className="modal-content editor-modal-content">
                         {/* <p className={"editor-msg-title"}>Message*</p> */}
+
                         <TextEditor
                             useForModal
                             needSegment={false}
