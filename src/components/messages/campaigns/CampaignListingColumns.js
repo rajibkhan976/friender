@@ -74,7 +74,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	console.log("CHECKING THE DATA -- ", params?.data);
 
 	useEffect(() => {
-		if (endDateAndTime && endDateAndTime < new Date()) {
+		if (params?.data?.campaign_end_time_status && (endDateAndTime && endDateAndTime < new Date())) {
 			(async () => {
 				try {
 					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
@@ -116,7 +116,11 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const handleSwitchToggleStatus = (e) => {
 		const campaignId = params?.data?.campaign_id || params?.data?._id;
 
-		if (!params?.data?.friends_added || (params?.data?.friends_added === 0 || params?.data?.friends_pending === 0 || new Date(params?.data?.campaign_end_time) < new Date()) && e.target.checked) {
+		if (!params?.data?.friends_added ||
+			(params?.data?.friends_added === 0 
+				|| params?.data?.friends_pending === 0 
+				|| params?.data?.campaign_end_time_status && (new Date(params?.data?.campaign_end_time) < new Date()))
+				&& e.target.checked) {
 			Alertbox(
 				`${params?.data?.friends_added === 0 || params?.data?.friends_pending === 0
 					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
@@ -146,10 +150,10 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			<Switch
 				checked={campaignStatus}
 				handleChange={handleSwitchToggleStatus}
-				// isDisabled={
-				// 	params?.data?.friends_added === 0 ||
-				// 	new Date(params?.data?.campaign_end_time) < new Date()
-				// }
+			// isDisabled={
+			// 	params?.data?.friends_added === 0 ||
+			// 	new Date(params?.data?.campaign_end_time) < new Date()
+			// }
 			/>
 		</div>
 	);
@@ -230,7 +234,7 @@ export const CampaignEndTimeCellRenderer = memo((params) => {
 	return (
 		<div
 			className={`campaign-endTime-cell ${new Date() > new Date(endDateAndTime) ? "end-time-exceeded" : ""
-			}`}
+				}`}
 		>
 			{endDateAndTimeStatus && endDateAndTime ? (
 				<>
@@ -354,7 +358,7 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 });
 
 export const CampaignFriendMessageRenderer = memo((params) => {
-	const messageRender = params?.editingCampaign?.group_name || params?.editingCampaign?.quick_message?.text;
+	const messageRender = params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message');
 
 	return (
 		<div className='campaign-friendMessage-cell'>

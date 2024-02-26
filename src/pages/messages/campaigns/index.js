@@ -113,7 +113,7 @@ const Campaigns = () => {
 	const fetchAll = async () => {
 		try {
 			dispatch(fetchAllCampaigns());
-			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' || params?.campaignId) {
+			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' && params?.campaignId) {
 				const response = await dispatch(fetchCampaignById({
 					fbUserId: localStorage.getItem("fr_default_fb"),
 					campaignId: params?.campaignId

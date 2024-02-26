@@ -68,7 +68,8 @@ const CampaignsHeader = ({
 	const switchPauseCampaign = async (e) => {
 		const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
 
-		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined || location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0)  {
+		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined 
+			|| location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0)  {
 			setCampaignsStatusActivity(false);
 
 			Alertbox(
@@ -80,7 +81,10 @@ const CampaignsHeader = ({
 			return false;	
 		}
 		
-		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0 || new Date(location?.state?.data?.campaign_end_time) < new Date()) && e.target.checked) { 
+		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0 
+			|| location?.state?.data?.campaign_end_time_status 
+			&& (new Date(location?.state?.data?.campaign_end_time) < new Date())) 
+			&& e.target.checked) { 
 			setCampaignsStatusActivity(false);
 
 			Alertbox(

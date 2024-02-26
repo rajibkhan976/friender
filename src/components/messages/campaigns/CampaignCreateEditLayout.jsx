@@ -143,6 +143,16 @@ const CampaignCreateEditLayout = ({ children }) => {
 		}
 	};
 
+	// TRANCATE AND ELLIPSIS TEXT..
+	const truncateAndAddEllipsis = (stringText, maxLength) => {
+		if (stringText.length >= maxLength) {
+			return stringText;
+		} else {
+			let truncatedString = stringText.substring(0, maxLength);
+			return truncatedString + '...';
+		}
+	};
+
 	// HANDLE THE BLUR EFFECT'S VALIDATION FOR TEXT FIELDS..
 	const handleBlurValidationOnTextField = (event) => {
 		const value = event.target.value.trim();
@@ -151,6 +161,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 			setCampaignName({ ...campaignName, isError: true, errorMsg: "Enter campaign name" });
 		} else {
 			setCampaignName({ ...campaignName, isError: false, errorMsg: "" });
+		}
+
+		if (value.length > 40) {
+			setCampaignName({ ...campaignName, value: value.slice(0, 40) + '...' });
 		}
 	};
 
@@ -516,7 +530,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		if (params?.campaignId) {
+		if (params && params?.campaignId) {
 			console.log("FB USER ID -- ", current_fb_id, " - CAMPAIGN ID -- ", params?.campaignId);
 			setType("EDIT");
 			fetchCampaignDetails();
