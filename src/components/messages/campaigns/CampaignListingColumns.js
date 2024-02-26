@@ -67,7 +67,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
-	const [campaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
+	 const [campaignStatus,setCampaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
 
@@ -96,6 +96,8 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				3000,
 				"bottom-right"
 			);
+			//setCampaignStatus(!campaignStatus);
+			setCampaignStatus(campaignStatus);
 
 			return false;
 

@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 
-import { updateCampaignsArray, deleteCampaign } from "actions/CampaignsActions";
+import { updateCampaignsArray, deleteCampaign, syncCampaignStatus } from "actions/CampaignsActions";
 import {
 	CampaignNameCellRenderer,
 	CampaignStatusCellRenderer,
@@ -22,6 +22,10 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
 		useState(false);
 	const [campaignId, setCampaignId] = useState("");
+
+	useEffect(()=>{
+		dispatch(syncCampaignStatus());
+	},[])
 
 	// list ref for campaigns list page
 	const campaignsListingRef = () => [

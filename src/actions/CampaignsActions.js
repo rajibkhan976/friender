@@ -18,6 +18,7 @@ const initialState = {
 	campaignSchedule: [],
 	selectedCampaignSchedule: null,
 	campaignsArray: [],
+	campaignStatusChanges:{},
 	campaignsDetails: {},
 	// campaignsArray: [
 	// 	{
@@ -207,6 +208,20 @@ export const campaignSlice = createSlice({
 		updateCampaignDetails: (state, action) => {
 			state.campaignsDetails = action.payload;
 		},
+		syncCampaignStatus:(state)=>{
+			const statusObj=state.campaignStatusChanges;
+			if(Object.keys(statusObj).length > 0){ 
+				const campaignArr=state.campaignsArray;
+				state.campaignsArray = campaignArr.map((item)=>{
+					if(item.campaign_id in statusObj){
+						item.status= statusObj[item.campaign_id];
+					}
+					return item;
+				})
+			}
+			state.campaignStatusChanges={};
+
+		}
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
@@ -332,18 +347,12 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 		[updateCampaignStatus.fulfilled]: (state, action) => {
-			const placeholderArray = current(state.campaignsArray);
-
-			state.campaignsArray = placeholderArray.map((campaign) => {
-				if (campaign?.campaign_id === action?.payload?.campaignId ||
-					campaign?._id === action?.payload?.campaignId) {
-					return {
-						...campaign,
-						status: action?.payload?.campaignStatus,
-					};
-				}
-				return campaign;
-			});
+			let campaignStatusObj = {...state.campaignStatusChanges} 
+			
+			if(action?.payload?.campaignId){
+				campaignStatusObj[action.payload.campaignId]=action.payload.campaignStatus;
+			}
+			state.campaignStatusChanges=campaignStatusObj;
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;
@@ -384,5 +393,6 @@ export const {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
 	updateCampaignDetails,
+	syncCampaignStatus
 } = campaignSlice.actions;
 export default campaignSlice.reducer;
