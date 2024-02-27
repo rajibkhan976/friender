@@ -101,7 +101,9 @@ const CampaignsHeader = ({
 		} else {
 			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
 			setCampaignsStatusActivity(e.target.checked);
-			toggleEditCampaign(e.target.checked);
+
+			// We don't need that if we enables that, then toggle is not working..
+			// toggleEditCampaign(e.target.checked);
 		}
 	};
 

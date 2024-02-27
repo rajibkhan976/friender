@@ -353,31 +353,31 @@ const CalenderModal = ({
 	const updateCampaignSchedulesPayload = () => {
 		const editSchedule = selectedCampaignSchedule
 			? {
-					day: moment(selectedCampaignSchedule?.start).format("dddd"),
-					start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
-					end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
-			  }
+				day: moment(selectedCampaignSchedule?.start).format("dddd"),
+				start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
+				end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
+			}
 			: null;
 		let updatedCampaignSchedules =
 			editSchedule &&
-			editingCampaign &&
-			Array.isArray(editingCampaign?.schedule)
+				editingCampaign &&
+				Array.isArray(editingCampaign?.schedule)
 				? [
-						...editingCampaign?.schedule?.filter(
-							(item) =>
-								editSchedule &&
-								editSchedule.day !== item.day &&
-								editSchedule.start !== item.start &&
-								editSchedule.end !== item.end
-						),
-				  ]
+					...editingCampaign?.schedule?.filter(
+						(item) =>
+							editSchedule &&
+							editSchedule.day !== item.day &&
+							editSchedule.start !== item.start &&
+							editSchedule.end !== item.end
+					),
+				]
 				: [];
 		if (
 			scheduleTime.date &&
 			scheduleTime.start &&
 			scheduleTime.end &&
 			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
-				timeOptions.findIndex((item) => item.value === scheduleTime.end)
+			timeOptions.findIndex((item) => item.value === scheduleTime.end)
 		) {
 			const dateArr = scheduleTime.date.map((item) =>
 				moment(item).format("dddd")
@@ -462,24 +462,24 @@ const CalenderModal = ({
 				scheduleTime.start &&
 				scheduleTime.end &&
 				timeOptions.findIndex((item) => item.value === scheduleTime.start) <
-					timeOptions.findIndex((item) => item.value === scheduleTime.end)
+				timeOptions.findIndex((item) => item.value === scheduleTime.end)
 			) {
 				if (
 					selectedSchedule &&
 					!campaignScheduleArr.every(
 						(item) =>
 							moment(item.start).format("DD-MM-YYYY h:mm: A") ===
-								moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
+							moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 							moment(item.end).format("DD-MM-YYYY h:mm A") ===
-								moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
+							moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 					)
 				) {
 					campaignScheduleArr = campaignSchedule.filter(
 						(item) =>
 							moment(item.start).format("DD-MM-YYYY h:mm: A") !==
-								moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
+							moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 							moment(item.end).format("DD-MM-YYYY h:mm A") !==
-								moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
+							moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 					);
 				}
 
@@ -503,9 +503,9 @@ const CalenderModal = ({
 						campaignScheduleArr.every(
 							(schedule) =>
 								moment(item.start).format("DD-MM-YYYY h:mm: A") !==
-									moment(schedule.start).format("DD-MM-YYYY h:mm A") &&
+								moment(schedule.start).format("DD-MM-YYYY h:mm A") &&
 								moment(item.end).format("DD-MM-YYYY h:mm A") !==
-									moment(schedule.end).format("DD-MM-YYYY h:mm A")
+								moment(schedule.end).format("DD-MM-YYYY h:mm A")
 						)
 					) {
 						campaignScheduleArr.push({
@@ -579,18 +579,18 @@ const CalenderModal = ({
 				(item) =>
 					!item.isSaved &&
 					moment(item.start).format("DD-MM-YYYY h:mm A") ===
-						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
+					moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") ===
-						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
+					moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 			)
 		) {
 			campaignScheduleArr = campaignScheduleArr.filter(
 				(item) =>
 					item.isSaved &&
 					moment(item.start).format("DD-MM-YYYY h:mm A") !==
-						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
+					moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
 					moment(item.end).format("DD-MM-YYYY h:mm A") !==
-						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
+					moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
 			);
 		} else {
 			!campaignScheduleArr[campaignScheduleArr.length - 1].isSaved &&
@@ -657,8 +657,7 @@ const CalenderModal = ({
 				updateCampaignStatus({ campaignId, campaignStatus })
 			).unwrap();
 			Alertbox(
-				`The campaign has been successfully turned ${
-					campaignStatus ? "ON" : "OFF"
+				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
 				}`,
 				"success",
 				3000,
@@ -680,17 +679,32 @@ const CalenderModal = ({
 				(camp) => camp?.campaign_id === editingCampaign?._id
 			);
 
+		if (!placeholderCampaign?.friends_added
+			|| placeholderCampaign?.friends_added === undefined
+			|| placeholderCampaign?.friends_added === null
+			|| placeholderCampaign?.friends_added === 0) {
+			setCampaignToggle(false);
+
+			Alertbox(
+				"This campaign currently has no pending friend(s). To turn on the campaign, please add some friends",
+				"warning",
+				3000,
+				"bottom-right"
+			);
+			return false;
+		}
+
 		if (placeholderCampaign) {
-			if (
-				(placeholderCampaign?.friends_pending === 0 ||
-					new Date(placeholderCampaign?.campaign_end_time) < new Date()) &&
-				e.target.checked
+			if ((placeholderCampaign?.friends_pending === 0 || placeholderCampaign?.friends_added === 0
+				|| placeholderCampaign?.campaign_end_time_status
+				&& (new Date(placeholderCampaign?.campaign_end_time) < new Date()))
+				&& e.target.checked
 			) {
+				setCampaignToggle(false);
 				Alertbox(
-					`${
-						placeholderCampaign?.friends_pending === 0
-							? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-							: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+					`${placeholderCampaign?.friends_pending === 0
+						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
 					}`,
 					"warning",
 					3000,
@@ -707,10 +721,43 @@ const CalenderModal = ({
 		}
 	};
 
+	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
+	useEffect(() => {
+		const campaignId = editingCampaign?._id || editingCampaign?.campaign_id;
+
+		if (editingCampaign?.campaign_end_time_status
+			&& (editingCampaign?.campaign_end_time && editingCampaign?.campaign_end_time < new Date())) {
+			(async () => {
+				try {
+					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+				} catch (error) {
+					console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
+				}
+			})();
+		}
+	}, [editingCampaign?.campaign_end_time]);
+
 
 	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
 	const setOldMessageGroupId = (messageGroupId) => {
 		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
+	};
+
+
+	// DISABLE SAVED BUTTON ACCORDING TO FIELDS ARE REQUIRED..
+	const disableSubmit = () => {
+		const name = campaignName?.value?.trim();
+		const groupMsg = groupMsgSelect?._id;
+
+		if (name === '' || (!groupMsg && quickMsg === null)
+			|| campaignSchedule?.length === 0
+			|| (scheduleTime && scheduleTime?.date?.length === 0)) 
+		{
+			return true;
+			
+		} else {
+			return false;
+		}
 	};
 
 
@@ -830,9 +877,8 @@ const CalenderModal = ({
 
 								<input
 									type='text'
-									className={`campaigns-name-field ${
-										campaignName?.isError ? "campaigns-error-input-field" : ""
-									}`}
+									className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
+										}`}
 									placeholder={campaignName?.placeholder}
 									value={campaignName?.value}
 									onChange={handleCampaignName}
@@ -1003,10 +1049,9 @@ const CalenderModal = ({
 							Cancel
 						</button>
 						<button
-							className={`btn ${
-								isLoadingBtn ? "campaign-loading-save-btn" : ""
-							}`}
-							disabled={campaignName.value.trim() === "" || unselectedError}
+							className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""
+								}`}
+							disabled={disableSubmit() || campaignName.value.trim() === "" || unselectedError}
 							onClick={handleSubmitModalCampaign}
 						>
 							{isLoadingBtn ? "Saving..." : "Save"}
@@ -1189,8 +1234,8 @@ const CalenderModal = ({
 										<p>
 											{editingCampaign?.campaign_end_time
 												? moment(editingCampaign?.campaign_end_time).format(
-														"DD MMM, YYYY hh:mma"
-												  )
+													"DD MMM, YYYY hh:mma"
+												)
 												: "N/A"}
 										</p>
 										<span>Campaign end date & time</span>

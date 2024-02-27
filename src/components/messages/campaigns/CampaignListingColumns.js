@@ -19,7 +19,8 @@ import {
 	updateCampaignContext,
 	updateCampaignsArray,
 	fetchUsers,
-	updateCampaignStatus
+	updateCampaignStatus,
+	syncCampaignStatus
 } from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
@@ -32,6 +33,8 @@ export const CampaignNameCellRenderer = memo((params) => {
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 
 	const storeEdit = async () => {
+		dispatch(syncCampaignStatus());
+
 		try {
 			const response = await dispatch(fetchCampaignById({ fbUserId: localStorage.getItem("fr_default_fb"), campaignId, })).unwrap();
 
@@ -71,8 +74,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
 
-	console.log("CHECKING THE DATA -- ", params?.data);
-
+	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
 		if (params?.data?.campaign_end_time_status && (endDateAndTime && endDateAndTime < new Date())) {
 			(async () => {

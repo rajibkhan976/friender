@@ -18,7 +18,7 @@ const initialState = {
 	campaignSchedule: [],
 	selectedCampaignSchedule: null,
 	campaignsArray: [],
-	campaignStatusChanges:{},
+	campaignStatusChanges: {},
 	campaignsDetails: {},
 	// campaignsArray: [
 	// 	{
@@ -208,18 +208,18 @@ export const campaignSlice = createSlice({
 		updateCampaignDetails: (state, action) => {
 			state.campaignsDetails = action.payload;
 		},
-		syncCampaignStatus:(state)=>{
-			const statusObj=state.campaignStatusChanges;
-			if(Object.keys(statusObj).length > 0){ 
-				const campaignArr=state.campaignsArray;
-				state.campaignsArray = campaignArr.map((item)=>{
-					if(item.campaign_id in statusObj){
-						item.status= statusObj[item.campaign_id];
+		syncCampaignStatus: (state) => {
+			const statusObj = state.campaignStatusChanges;
+			if (Object.keys(statusObj).length > 0) {
+				const campaignArr = state.campaignsArray;
+				state.campaignsArray = campaignArr.map((item) => {
+					if (item.campaign_id in statusObj) {
+						item.status = statusObj[item.campaign_id];
 					}
 					return item;
 				})
 			}
-			state.campaignStatusChanges={};
+			state.campaignStatusChanges = {};
 
 		}
 	},
@@ -257,7 +257,7 @@ export const campaignSlice = createSlice({
 			// PlaceholderArray id is -> campaign_id..
 			// Action payload id is -> _id..
 			const placeholderArray = current(state.campaignsArray);
-			const actionResponse = {...action?.payload?.data};
+			const actionResponse = { ...action?.payload?.data };
 			let newAdd = true;
 
 			if (actionResponse?._id) {
@@ -347,12 +347,12 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 		},
 		[updateCampaignStatus.fulfilled]: (state, action) => {
-			let campaignStatusObj = {...state.campaignStatusChanges} 
-			
-			if(action?.payload?.campaignId){
-				campaignStatusObj[action.payload.campaignId]=action.payload.campaignStatus;
+			let campaignStatusObj = { ...state.campaignStatusChanges }
+
+			if (action?.payload?.campaignId) {
+				campaignStatusObj[action.payload.campaignId] = action.payload.campaignStatus;
 			}
-			state.campaignStatusChanges=campaignStatusObj;
+			state.campaignStatusChanges = campaignStatusObj;
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;

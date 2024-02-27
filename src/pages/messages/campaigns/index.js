@@ -3,7 +3,9 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchCampaignById, updateCampaignsArray
+	fetchCampaignById, 
+	updateCampaignsArray,
+	syncCampaignStatus,
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
 
@@ -191,6 +193,7 @@ const Campaigns = () => {
 
 	// TOGGLE ACTIVE / INACTIVE CAMPAIGNS FOR CAMPAIGNS LIST
 	const changeStatusView = (el) => {
+		dispatch(syncCampaignStatus());
 		setStatusOption((prevStatus) =>
 			prevStatus?.map((e) => ({
 				...e,
