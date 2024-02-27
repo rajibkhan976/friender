@@ -149,7 +149,8 @@ const CampaignScheduler = (props) => {
 							position: "absolute",
 							zIndex: "1002",
 						}}
-						onClick={() => {
+						onMouseDown={(e) => {
+							e.stopPropagation();
 							handleSetShowModal(false);
 							setShowGlobalCampaignPopup(false);
 							setScheduleTime({
@@ -158,17 +159,23 @@ const CampaignScheduler = (props) => {
 								end: moment(props?.event?.end).format("h:mm A"),
 							});
 							handleSetSelectedSchedule(props?.event);
-							handleSetShowPopup(true);
-						}}
-						onMouseDown={(e) => {
 							dispatch(
 								updateCampaignSchedule([
 									...campaignSchedule.filter((item) => item.isSaved),
 								])
 							);
 							handleSetPopupPos &&
-								handleSetPopupPos({ X: e.clientX, Y: e.clientY });
-							e.stopPropagation();
+								handleSetPopupPos({
+									X:
+										e.clientX + 268 > window?.innerWidth
+											? window?.innerWidth - (268 + 30)
+											: e.clientX,
+									Y:
+										e.clientY + 198 > window?.innerHeight
+											? window?.innerHeight - (198 + 81 + 12 + 55)
+											: e.clientY,
+								});
+							handleSetShowPopup(true);
 						}}
 					>{`${moment(props?.event?.start).format("h:mm A")} - ${moment(
 						props?.event?.end
