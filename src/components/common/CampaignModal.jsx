@@ -793,15 +793,25 @@ const CalenderModal = ({
 			setEndDateAndTime(formatEndTime);
 
 			if (editingCampaign?.message_group_id) {
+				localStorage.removeItem("fr_quickMessage_campaigns_message");
 				// Fetching the group from the id here..
 				fetchGroupMessage(editingCampaign?.message_group_id);
 			}
 
 			if (editingCampaign?.quick_message) {
+				localStorage.removeItem("fr_using_campaigns_message");
 				setQuickMsg(editingCampaign?.quick_message);
 			}
 		}
 	}, [isEditingModal]);
+	
+	
+	// MEMORY CLEANUP FUNCTION..
+	useEffect(() => {
+		return () => {
+			localStorage.removeItem("fr_quickMessage_campaigns_message");
+		};
+	}, []);
 
 	useEffect(() => {
 		return () => {
@@ -1131,7 +1141,7 @@ const CalenderModal = ({
 								>
 									<EditPenIcon
 										size={13}
-										color={`${!isMouseOverBtn?.editBtn ? "#767485" : "yellow"}`}
+										color={`${!isMouseOverBtn?.editBtn ? "#767485" : "#0094FF"}`}
 									/>
 								</div>
 

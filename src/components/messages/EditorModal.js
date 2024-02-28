@@ -1,5 +1,5 @@
 // import { XMarkIcon } from "../../assets/icons/Icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextEditor from '../common/TextEditor/TextEditor';
 import { MergeFieldsIcon, QueryIconGrey, SpintaxIcon } from "../../assets/icons/Icons";
 import { ModalExpandIcon } from '../../assets/icons/Icons';
@@ -38,6 +38,8 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
             return localStorage.getItem("fr_quickMessage_campaigns_message") || "";
         }
     });
+
+    console.log("editorrrrrrr ", editorStateValue);
 
     return (
         <div

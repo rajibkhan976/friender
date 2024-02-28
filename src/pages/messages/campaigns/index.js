@@ -330,7 +330,14 @@ const Campaigns = () => {
 			}
 			localStorage.setItem("fr_edit_mode_quickCampMsg", true);
 		}
-	}, [editing])
+	}, [editing]);
+
+	// useEffect(() => {
+	// 	if (location?.pathname?.split("/")?.slice(-1)[0] === "create-campaign") {
+	// 		localStorage.removeItem("fr_quickMessage_campaigns_message");
+	// 		setIsEditingCampaign({ ...editing, quick_message: null });
+	// 	}
+	// }, [location.pathname]);
 
 	// REMOVE
 	useEffect(() => {

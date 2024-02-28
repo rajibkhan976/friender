@@ -463,6 +463,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				}
 
 				if (campaignData?.quick_message) {
+					localStorage.removeItem("fr_using_campaigns_message");
 					setQuickMsg(campaignData?.quick_message);
 				}
 

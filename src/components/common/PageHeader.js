@@ -36,7 +36,7 @@ import {
 	setProfileSpaces,
 	setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
-import { getSendFriendReqst, reLoadFrList,unLoadFrList } from "../../actions/FriendsAction";
+import { getSendFriendReqst, reLoadFrList, unLoadFrList } from "../../actions/FriendsAction";
 import {
 	deleteFriend,
 	getFriendList,
@@ -180,7 +180,7 @@ function PageHeader({ headerText = "" }) {
 	const selectedFriends = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
-	const blacklistedFriends=useSelector((state)=>state.friendlist.selected_friends.filter((el) => el?.blacklist_status));
+	const blacklistedFriends = useSelector((state) => state.friendlist.selected_friends.filter((el) => el?.blacklist_status));
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.friendlist.curr_list_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
@@ -202,22 +202,22 @@ function PageHeader({ headerText = "" }) {
 	const [isAddingToCampaign, setIsAddingToCampaign] = useState(false);
 	const [selectedCampaign, setSelectedCampaign] = useState("Select");
 	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
-	const [campaignListSelector,setCampaignListSelector]=useState(false);
-	const [selectedCampaignName,setSelectedCampaignName]=useState("Select");
+	const [campaignListSelector, setCampaignListSelector] = useState(false);
+	const [selectedCampaignName, setSelectedCampaignName] = useState("Select");
 
-	const refreshFrList=()=>{
+	const refreshFrList = () => {
 		dispatch(unLoadFrList());
-			setTimeout(()=>{
-				dispatch(reLoadFrList());
-			},300)
+		setTimeout(() => {
+			dispatch(reLoadFrList());
+		}, 300)
 	}
 
-	useEffect(()=>{
+	useEffect(() => {
 		setSelectedCampaign("Select");
 		setCampaignListSelector(false);
 		setSelectedCampaignName("Select");
 
-	},[isAddingToCampaign])
+	}, [isAddingToCampaign])
 	useEffect(() => {
 		if (!modalOpen) {
 			setWhiteCountInUnfriend(null);
@@ -412,6 +412,7 @@ function PageHeader({ headerText = "" }) {
 					},
 				});
 				break;
+
 			case "pending-request":
 				setHeaderOptions({
 					...headerOptions,
@@ -422,6 +423,7 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+
 			case "lost-friends":
 				setHeaderOptions({
 					...headerOptions,
@@ -432,6 +434,7 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+
 			case "unfriended-friends":
 				setHeaderOptions({
 					...headerOptions,
@@ -442,6 +445,7 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+
 			case "whitelisted-friends":
 				setHeaderOptions({
 					...headerOptions,
@@ -452,6 +456,7 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+
 			case "blacklisted-friends":
 				setHeaderOptions({
 					...headerOptions,
@@ -462,18 +467,21 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+
 			case "groups":
 				setHeaderOptions({
 					...headerOptions,
 					syncManual: true,
 				});
 				break;
+
 			case "segments":
 				setHeaderOptions({
 					...headerOptions,
 					syncManual: true,
 				});
 				break;
+
 			case "campaigns":
 				setHeaderOptions({
 					...headerOptions,
@@ -481,18 +489,21 @@ function PageHeader({ headerText = "" }) {
 					listingLengthWell: true,
 				});
 				break;
+
 			case "connect-&-win":
 				setHeaderOptions({
 					...headerOptions,
 					syncManual: true,
 				});
 				break;
+
 			case "create-campaign":
 				setHeaderOptions({
 					...headerOptions,
 					syncManual: true,
 				});
 				break;
+
 			case "pending-request":
 				setHeaderOptions({
 					...headerOptions,
@@ -507,6 +518,7 @@ function PageHeader({ headerText = "" }) {
 					infoToolTip: true,
 				});
 				break;
+
 			case "deactivated-friends":
 				setHeaderOptions({
 					...headerOptions,
@@ -523,7 +535,7 @@ function PageHeader({ headerText = "" }) {
 				break;
 
 			default:
-				setHeaderOptions({ ...pageOptoions });
+				setHeaderOptions({ ...pageOptoions, listingLengthWell: true });
 				break;
 		}
 	}, []);
@@ -560,8 +572,7 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${
-								selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} whitelisted successfully!`,
 							"success",
 							1000,
@@ -595,8 +606,7 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${
-								selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} blacklisted successfully!`,
 							"success",
 							3000,
@@ -702,7 +712,7 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	const campaignSelectFun=(item)=>{
+	const campaignSelectFun = (item) => {
 		//console.log("camo sele",item)
 		setSelectedCampaignName(item?.campaign_name);
 		setSelectedCampaign(item?.campaign_id);
@@ -767,16 +777,13 @@ function PageHeader({ headerText = "" }) {
 						cmd: "alert",
 						type: "success",
 						time: 3000,
-						message: `${
-							item.friendName
-						} unfriended successfully!   (Unfriending ${i + 1}/${
-							unfriendableList.length
-						})`,
+						message: `${item.friendName
+							} unfriended successfully!   (Unfriending ${i + 1}/${unfriendableList.length
+							})`,
 						position: "bottom-right",
 					});
 					Alertbox(
-						`${item.friendName} unfriended successfully!   (Unfriending ${
-							i + 1
+						`${item.friendName} unfriended successfully!   (Unfriending ${i + 1
 						}/${unfriendableList.length})`,
 						"success",
 						3000,
@@ -1030,7 +1037,7 @@ function PageHeader({ headerText = "" }) {
 			facebookData?.fb_data == null ||
 			facebookData?.fb_data == "" ||
 			localStorage.getItem("fr_default_fb") !==
-				facebookData?.fb_data?.fb_user_id ||
+			facebookData?.fb_data?.fb_user_id ||
 			localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
 		) {
 			localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id);
@@ -1148,7 +1155,7 @@ function PageHeader({ headerText = "" }) {
 		const listWithOutBlacklisted = selectedFriends.filter((item) => {
 			return item.blacklist_status !== 1;
 		});
-		console.log("list ou black",listWithOutBlacklisted)
+		console.log("list ou black", listWithOutBlacklisted)
 		AddToCampaign(listWithOutBlacklisted);
 	};
 
@@ -1157,25 +1164,25 @@ function PageHeader({ headerText = "" }) {
 		//dispatch(removeSelectedFriends());
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
-			let payload={
-				"campaignId":selectedCampaign,
-				"facebookUserId":localStorage.getItem("fr_default_fb"),
-				"friend_details":addFriendsToCampaign.map((item)=>{
-						return {
-							"friendFbId": item.friendFbId?item.friendFbId:null,
-							"friendAddedAt": item.created_at?item.created_at:null,
-							"finalSource": item.finalSource?item.finalSource:null,
-							"friendName": item.friendName?item.friendName:null,
-							"friendProfilePicture": item.friendProfilePicture?item.friendProfilePicture:null,
-							"friendProfileUrl": item.friendProfileUrl?item.friendProfileUrl:null,
-							"groupName":item.groupName?item.groupName:null,
-							"status":"pending",
-							"groupUrl": item.groupUrl?item.groupUrl:null,
-							"matchedKeyword": item.matchedKeyword?item.matchedKeyword:null,
-						}
+			let payload = {
+				"campaignId": selectedCampaign,
+				"facebookUserId": localStorage.getItem("fr_default_fb"),
+				"friend_details": addFriendsToCampaign.map((item) => {
+					return {
+						"friendFbId": item.friendFbId ? item.friendFbId : null,
+						"friendAddedAt": item.created_at ? item.created_at : null,
+						"finalSource": item.finalSource ? item.finalSource : null,
+						"friendName": item.friendName ? item.friendName : null,
+						"friendProfilePicture": item.friendProfilePicture ? item.friendProfilePicture : null,
+						"friendProfileUrl": item.friendProfileUrl ? item.friendProfileUrl : null,
+						"groupName": item.groupName ? item.groupName : null,
+						"status": "pending",
+						"groupUrl": item.groupUrl ? item.groupUrl : null,
+						"matchedKeyword": item.matchedKeyword ? item.matchedKeyword : null,
+					}
 				}),
 			}
-			dispatch(addUsersToCampaign(payload)).unwrap().then((res)=>{
+			dispatch(addUsersToCampaign(payload)).unwrap().then((res) => {
 				refreshFrList();
 				dispatch(removeSelectedFriends());
 				Alertbox(
@@ -1185,8 +1192,8 @@ function PageHeader({ headerText = "" }) {
 					"bottom-right"
 				);
 			}
-			).catch((err)=>{
-				console.log("Add to campaign:",err);
+			).catch((err) => {
+				console.log("Add to campaign:", err);
 			})
 			setIsAddingToCampaign(false);
 			setSelectedCampaign("Select");
@@ -1220,7 +1227,7 @@ function PageHeader({ headerText = "" }) {
 								{" "}
 								{selectedFriends.length > 0
 									? // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
-									  selectedFriends.filter((el) => el?.whitelist_status)?.length
+									selectedFriends.filter((el) => el?.whitelist_status)?.length
 									: Number(0)}{" "}
 							</b>{" "}
 							of them are currently on your whitelist. Are you sure you want to
@@ -1236,7 +1243,7 @@ function PageHeader({ headerText = "" }) {
 					ExtraProps={{
 						primaryBtnDisable:
 							whiteCountInUnfriend === 0 ||
-							whiteCountInUnfriend === selectedFriends.length
+								whiteCountInUnfriend === selectedFriends.length
 								? true
 								: false,
 					}}
@@ -1252,7 +1259,7 @@ function PageHeader({ headerText = "" }) {
 						<>
 							You have selected <b>{selectedFriends.length}</b> friend(s)
 							{blacklistedFriends?.length >
-							0 ? (
+								0 ? (
 								<>
 									, and{" "}
 									<b>
@@ -1293,7 +1300,7 @@ function PageHeader({ headerText = "" }) {
 						setIsAddingToCampaign(null);
 						setSelectedCampaign("Select");
 					}}
-					ModalFun={()=>AddToCampaign(selectedFriends)}
+					ModalFun={() => AddToCampaign(selectedFriends)}
 					btnText={
 						blacklistedFriends?.length > 0
 							? "Yes, add all"
@@ -1303,12 +1310,12 @@ function PageHeader({ headerText = "" }) {
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
-						cancelBtnDisable: blacklistedFriends.length > 0 ? 
-						selectedFriends?.length === blacklistedFriends?.length
+						cancelBtnDisable: blacklistedFriends.length > 0 ?
+							selectedFriends?.length === blacklistedFriends?.length
 								? true
 								: selectedCampaign === "Select"
-								? true
-								: false
+									? true
+									: false
 							: false
 					}}
 					additionalClass='add-campaign-modal'
@@ -1316,27 +1323,27 @@ function PageHeader({ headerText = "" }) {
 					{/* If Campaign created, list else disable and show link for creation */}
 					<>
 						<h6>Choose campaign</h6>
-						<span className='select-wrapers w-100' onClick={()=>{setCampaignListSelector(!campaignListSelector)}}>
+						<span className='select-wrapers w-100' onClick={() => { setCampaignListSelector(!campaignListSelector) }}>
 
 							<div className='selector_box'>
-								{utils.cropParagraph(selectedCampaignName,32) }
-								{campaignsCreated?.length>0&&
-								campaignListSelector&&<ul className="selector_box_options">
-								{campaignsCreated?.map((item, index) => {
-									return (
-										<li
-											value={item.campaign_id}
-											key={"fr-select" + index}
-											onClick={()=>campaignSelectFun(item)}
-										>
-											{item?.campaign_name}
-										</li>
-									);
-								})}
+								{utils.cropParagraph(selectedCampaignName, 32)}
+								{campaignsCreated?.length > 0 &&
+									campaignListSelector && <ul className="selector_box_options">
+										{campaignsCreated?.map((item, index) => {
+											return (
+												<li
+													value={item.campaign_id}
+													key={"fr-select" + index}
+													onClick={() => campaignSelectFun(item)}
+												>
+													{item?.campaign_name}
+												</li>
+											);
+										})}
 
-								</ul>}
+									</ul>}
 
-							<span className='select-arrow'></span>
+								<span className='select-arrow'></span>
 							</div>
 
 						</span>
@@ -1369,10 +1376,10 @@ function PageHeader({ headerText = "" }) {
 							{headerText != ""
 								? headerText
 								: links.length > 0
-								? links[links.length - 2]?.location !== "campaigns"
-									? links[links.length - 1].location
-									: "Campaigns"
-								: ""}
+									? links[links.length - 2]?.location !== "campaigns"
+										? links[links.length - 1].location
+										: "Campaigns"
+									: ""}
 							{headerOptions.listingLengthWell && (
 								<span className='num-header-count num-well'>{listCount}</span>
 							)}
@@ -1459,11 +1466,10 @@ function PageHeader({ headerText = "" }) {
 										ref={clickedRef}
 									>
 										<button
-											className={`accessibility-btn btn h-100 ${
-												accessItem.active || accessItem.type == "exportHeader"
-													? "active"
-													: ""
-											}`}
+											className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
+												? "active"
+												: ""
+												}`}
 											key={accessItem.type + i}
 											onClick={() => onAccessClick(accessItem)}
 											ref={accessItem.type == "quickAction" ? actionRef : null}
@@ -1477,11 +1483,10 @@ function PageHeader({ headerText = "" }) {
 										</button>
 										{accessItem.type == "quickAction" && isComponentVisible && (
 											<div
-												className={`fr-dropdown fr-dropdownAction ${
-													accessItem.type == "quickAction" && accessItem.active
-														? "active"
-														: ""
-												}`}
+												className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
+													? "active"
+													: ""
+													}`}
 											>
 												<ul>
 													<li

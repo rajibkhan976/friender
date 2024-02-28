@@ -271,6 +271,7 @@ const DropSelectMessage = ({
 
         if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
             const isSelectUsing = localStorage.getItem("fr_using_campaigns_message");
+            // const isQuckMsgUsing = localStorage.getItem("fr_quickMessage_campaigns_message");
 
             if (quickMessage && !isSelectUsing) {
                 return "Quick Message";
