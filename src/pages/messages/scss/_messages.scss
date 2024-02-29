@@ -1556,3 +1556,9 @@
 	pointer-events: none;
 	opacity: 0.5;
 }
+
+.custom-campaign-name-tooltip {
+	&::before {
+		width: 300px;
+	}
+}

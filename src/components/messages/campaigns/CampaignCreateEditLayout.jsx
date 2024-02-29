@@ -34,6 +34,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
 		value: "",
+		tempValue: "",
 		placeholder: "Ex. Word Boost",
 		isError: false,
 		errorMsg: "",
@@ -121,7 +122,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	const handleCampaignName = (event) => {
 		// event.preventDefault();
 		const value = event.target.value;
-		setCampaignName({ ...campaignName, value });
+		setCampaignName({ ...campaignName, value, tempValue: value });
 	};
 
 	// INCREMENTING AND DECREMENTING FOR MESSAGE LIMIT/25HR..
@@ -145,11 +146,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// TRANCATE AND ELLIPSIS TEXT..
 	const truncateAndAddEllipsis = (stringText, maxLength) => {
-		if (stringText.length >= maxLength) {
-			return stringText;
-		} else {
+		if (stringText?.trim()?.length >= maxLength) {
 			let truncatedString = stringText.substring(0, maxLength);
 			return truncatedString + '...';
+		} else {
+			return stringText;
 		}
 	};
 
@@ -164,8 +165,18 @@ const CampaignCreateEditLayout = ({ children }) => {
 		}
 
 		if (value.length > 40) {
-			setCampaignName({ ...campaignName, value: value.slice(0, 40) + '...' });
+			const modifiedText = truncateAndAddEllipsis(value, 40);
+			setCampaignName({ ...campaignName, tempValue: modifiedText });
+		} else {
+			setCampaignName({ ...campaignName, tempValue: value });
 		}
+	};
+
+
+	// HANDLE THE FOCUS EVENT FOR VALIDATION ON TEXT FIELDS..
+	const handleFocusValidationOnTextField = (_event) => {
+		// const value = event.target.value.trim();
+		setCampaignName({ ...campaignName, tempValue: campaignName?.value });
 	};
 
 	// HANDLE MESSAGE LIMIT/24HR INPUT..
@@ -455,7 +466,15 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 				dispatch(updateCampaignDetails(campaignData));
 
-				setCampaignName({ ...campaignName, value: campaignData?.campaign_name });
+				if (campaignData?.campaign_name) {
+					const modifiedTempValue = truncateAndAddEllipsis(campaignData?.campaign_name, 40);
+
+					setCampaignName({
+						...campaignName,
+						value: campaignData?.campaign_name,
+						tempValue: modifiedTempValue,
+					});
+				}
 
 				if (campaignData?.message_group_id) {
 					// Fetching the group from the id here..
@@ -524,10 +543,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 				console.log("Error when try to fetching all groups -- ", error)
 			);
 
-			return () => {
-				localStorage.removeItem("fr_edit_mode_quickCampMsg");
-				localStorage.removeItem("fr_quickMessage_campaigns_message");
-			};
+		return () => {
+			localStorage.removeItem("fr_edit_mode_quickCampMsg");
+			localStorage.removeItem("fr_quickMessage_campaigns_message");
+		};
 	}, []);
 
 	useEffect(() => {
@@ -565,9 +584,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 						className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
 							}`}
 						placeholder={campaignName?.placeholder}
-						value={campaignName?.value}
+						value={campaignName?.tempValue}
 						onChange={handleCampaignName}
 						onBlur={handleBlurValidationOnTextField}
+						onFocus={handleFocusValidationOnTextField}
 					/>
 
 					{campaignName?.isError && (

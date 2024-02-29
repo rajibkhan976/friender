@@ -305,6 +305,10 @@ const DropSelectMessage = ({
             setUnselectedError(false);
         }
 
+        if (quickMessage && (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")) {
+            setUnselectedError(false);
+        }
+
         if (others && others.length) {
             others.forEach((func) => func(false));
         }

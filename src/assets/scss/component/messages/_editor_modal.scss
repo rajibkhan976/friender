@@ -7,6 +7,16 @@
   position: fixed;
   left: -78%;
   top: -30%;
+  height: 170%;
+  width: 110vw;
+}
+@media only screen and (min-width: 1920px) {
+  .campaign-editor-modal-bg {
+    left: -190%;
+    top: -30%;
+    height: 175%;
+    width: 150vw;
+  }
 }
 
 .campaign-editor-quickMsg-bg {

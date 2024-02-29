@@ -47,7 +47,7 @@ const CampaignsHeader = ({
 				3000,
 				"bottom-right"
 			);
-			
+
 			return false;
 
 		} catch (error) {
@@ -68,8 +68,8 @@ const CampaignsHeader = ({
 	const switchPauseCampaign = async (e) => {
 		const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
 
-		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined 
-			|| location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0)  {
+		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined
+			|| location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0) {
 			setCampaignsStatusActivity(false);
 
 			Alertbox(
@@ -78,13 +78,13 @@ const CampaignsHeader = ({
 				3000,
 				"bottom-right"
 			);
-			return false;	
+			return false;
 		}
-		
-		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0 
-			|| location?.state?.data?.campaign_end_time_status 
-			&& (new Date(location?.state?.data?.campaign_end_time) < new Date())) 
-			&& e.target.checked) { 
+
+		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
+			|| location?.state?.data?.campaign_end_time_status
+			&& (new Date(location?.state?.data?.campaign_end_time) < new Date()))
+			&& e.target.checked) {
 			setCampaignsStatusActivity(false);
 
 			Alertbox(
@@ -123,6 +123,15 @@ const CampaignsHeader = ({
 		);
 	}, [editOptions]);
 
+	// TRANCATE AND ELLIPSIS TEXT..
+	// const truncateAndAddEllipsis = (stringText, maxLength) => {
+	// 	if (stringText?.trim()?.length >= maxLength) {
+	// 		let truncatedString = stringText.substring(0, maxLength);
+	// 		return truncatedString + '...';
+	// 	} else {
+	// 		return stringText;
+	// 	}
+	// };
 
 	// GRAVING THE STATUS OF CAMPAIGNS FOR SHOWING STATUS TOGGLE ON/OFF..
 	useEffect(() => {
@@ -223,12 +232,12 @@ const CampaignsHeader = ({
 							>
 								<ChevronLeftArrowIcon />
 							</Link>
-							<h3>
+							<h3 style={{ maxWidth: '900px' }}>
 								{editCampaign
 									? editCampaign?.campaign_name :
-										campaignsDetails ? 
-											campaignsDetails?.campaign_name :
-											"Loading your campaign"
+									campaignsDetails ?
+										campaignsDetails?.campaign_name :
+										"Loading your campaign"
 								}
 
 								{/* {

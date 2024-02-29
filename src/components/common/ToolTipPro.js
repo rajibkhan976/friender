@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import { InfoIcon, InfoIcon2, QueryIcon, QueryIconGrey } from "../../assets/icons/Icons";
 import '../../assets/scss/component/common/_tooltip.scss'
 import useComponentVisible from "../../helpers/useComponentVisible";

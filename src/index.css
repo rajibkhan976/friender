@@ -318,7 +318,8 @@
 
 .global-campaign-tooltip {
 	width: 177px;
-	height: 68px;
+	/* height: 68px; */
+	height: auto;
 	background-color: #313037;
 	color: rgba(255, 255, 255, 1);
 	font-size: 12px;

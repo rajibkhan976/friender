@@ -851,7 +851,7 @@ const GettingStartedPage = (props) => {
           ) : (
             <span className="step-action">
               <a
-                href="https://chrome.google.com/webstore/detail/friender/gjlalklkjpjnglmnbhgioefkfgaigjkp/"
+                href={`${process.env.REACT_APP_EXTENSION_DOWNLOAD_LINK}`}
                 target="_blank"
               >
                 Install now

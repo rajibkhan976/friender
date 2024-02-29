@@ -54,7 +54,6 @@ function BreadCrumb({ links }) {
           :
           (
             <li key={index}>
-              {console.log("item.location - ", item.location)}
               {item.location === 'campaigns' ? (
                   <NavLink to={`/messages/${item.location}`}>{item.location?.replace('-', ' ')}</NavLink>
                 )

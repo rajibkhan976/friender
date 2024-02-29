@@ -33,6 +33,7 @@ import Alertbox from "components/common/Toast";
 import moment from "moment";
 import { getGroupById } from "actions/MySettingAction";
 import { timeOptions } from "../../helpers/timeOptions";
+import ToolTipPro from "./ToolTipPro";
 
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
@@ -63,6 +64,7 @@ const CalenderModal = ({
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
 		value: "",
+		tempValue: "",
 		placeholder: "Ex. Word Boost",
 		isError: false,
 		errorMsg: "",
@@ -127,11 +129,21 @@ const CalenderModal = ({
 	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
 		useState(false);
 
+	// TRANCATE AND ELLIPSIS TEXT..
+	const truncateAndAddEllipsis = (stringText, maxLength) => {
+		if (stringText?.trim()?.length >= maxLength) {
+			let truncatedString = stringText.substring(0, maxLength);
+			return truncatedString + '...';
+		} else {
+			return stringText;
+		}
+	};
+
 	// HANDLE CAMPAIGNS NAME FUNCTION..
 	const handleCampaignName = (event) => {
 		// event.preventDefault();
 		const value = event.target.value;
-		setCampaignName({ ...campaignName, value });
+		setCampaignName({ ...campaignName, value, tempValue: value });
 	};
 
 	// HANDLE THE BLUR EFFECT'S VALIDATION FOR TEXT FIELDS..
@@ -144,9 +156,24 @@ const CalenderModal = ({
 				isError: true,
 				errorMsg: "Enter campaign name",
 			});
+
 		} else {
 			setCampaignName({ ...campaignName, isError: false, errorMsg: "" });
 		}
+
+		if (value.length > 40) {
+			const modifiedText = truncateAndAddEllipsis(value, 40);
+			setCampaignName({ ...campaignName, tempValue: modifiedText });
+
+		} else {
+			setCampaignName({ ...campaignName, tempValue: value });
+		}
+	};
+
+	// HANDLE THE FOCUS EVENT FOR VALIDATION ON TEXT FIELDS..
+	const handleFocusValidationOnTextField = (_event) => {
+		// const value = event.target.value.trim();
+		setCampaignName({ ...campaignName, tempValue: campaignName?.value });
 	};
 
 	// TIME DELAY..
@@ -751,10 +778,9 @@ const CalenderModal = ({
 
 		if (name === '' || (!groupMsg && quickMsg === null)
 			|| campaignSchedule?.length === 0
-			|| (scheduleTime && scheduleTime?.date?.length === 0)) 
-		{
+			|| (scheduleTime && scheduleTime?.date?.length === 0)) {
 			return true;
-			
+
 		} else {
 			return false;
 		}
@@ -781,10 +807,16 @@ const CalenderModal = ({
 	// PREVIEW OF DATA AT FIELD FOR EDITING MODE..
 	useEffect(() => {
 		if (isEditingModal && editingCampaign) {
-			setCampaignName({
-				...campaignName,
-				value: editingCampaign?.campaign_name,
-			});
+			if (editingCampaign?.campaign_name) {
+				const modifiedTempValue = truncateAndAddEllipsis(editingCampaign?.campaign_name, 40);
+
+				setCampaignName({
+					...campaignName,
+					value: editingCampaign?.campaign_name,
+					tempValue: modifiedTempValue,
+				});
+			}
+
 			setTimeDelay(editingCampaign?.time_delay);
 			setMsgLimit(editingCampaign?.message_limit);
 			setCampaignColorPick(editingCampaign?.campaign_label_color);
@@ -804,8 +836,8 @@ const CalenderModal = ({
 			}
 		}
 	}, [isEditingModal]);
-	
-	
+
+
 	// MEMORY CLEANUP FUNCTION..
 	useEffect(() => {
 		return () => {
@@ -890,9 +922,10 @@ const CalenderModal = ({
 									className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
 										}`}
 									placeholder={campaignName?.placeholder}
-									value={campaignName?.value}
+									value={campaignName?.tempValue}
 									onChange={handleCampaignName}
 									onBlur={handleBlurValidationOnTextField}
+									onFocus={handleFocusValidationOnTextField}
 								/>
 
 								{campaignName?.isError && (
@@ -1115,7 +1148,12 @@ const CalenderModal = ({
 								className='campaign-modal-title'
 								style={{ color: "#fff", fontSize: "15px" }}
 							>
-								{editingCampaign?.campaign_name}
+								<p
+									className={editingCampaign?.campaign_name?.trim()?.length > 40 ? `tooltipFullName custom-campaign-name-tooltip` : ''}
+									data-text={`${editingCampaign?.campaign_name}`}
+								>
+									{truncateAndAddEllipsis(editingCampaign?.campaign_name, 25)}
+								</p>
 							</div>
 
 							<div className='campaign-modal-header-actions'>
