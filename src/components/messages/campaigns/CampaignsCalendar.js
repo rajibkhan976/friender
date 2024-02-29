@@ -13,6 +13,8 @@ import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CampaignsCalendar = () => {
 	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
+	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter)
+	const campaignDuration = useSelector((state) => state.campaign.campaignDuration)
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -47,13 +49,29 @@ const CampaignsCalendar = () => {
 	buildOnWeekdaysArr();
 
 	useEffect(() => {
-		if (Array.isArray(campaignsArray) && campaignsArray.length < 1) {
+		let campaignsArrayPlaceholder = campaignsArray;
+		
+		switch (campaignsFilter) {
+			case 'active':
+				campaignsArrayPlaceholder = campaignsArray?.filter(el => el?.status)
+				break;
+			
+			case 'inactive':
+				campaignsArrayPlaceholder = campaignsArray?.filter(el => !el?.status)
+				break;
+		
+			default:
+				campaignsArrayPlaceholder = [...campaignsArray]
+				break;
+		}
+
+		if (Array.isArray(campaignsArrayPlaceholder) && campaignsArrayPlaceholder.length < 1) {
 			dispatch(updateCampaignSchedule([]));
-		} else if (Array.isArray(campaignsArray) && campaignsArray.length > 0) {
+		} else if (Array.isArray(campaignsArrayPlaceholder) && campaignsArrayPlaceholder.length > 0) {
 			const campaignArr = [];
 			const groupedCampaignByDateNTime = [];
 
-			campaignsArray.forEach((campaign) => {
+			campaignsArrayPlaceholder.forEach((campaign) => {
 				if (campaign.schedule && Array.isArray(campaign?.schedule)) {
 					campaign?.schedule.forEach((campaignSchedule) => {
 						const date = moment(
@@ -186,7 +204,7 @@ const CampaignsCalendar = () => {
 			}
 			dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 		}
-	}, [campaignsArray, showTooltip]);
+	}, [campaignsArray, showTooltip, campaignsFilter, campaignDuration]);
 
 	useEffect(() => {
 		return () => {

@@ -6,6 +6,7 @@ import {
 	fetchCampaignById, 
 	updateCampaignsArray,
 	syncCampaignStatus,
+	updateCampaignFilter,
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
 
@@ -103,6 +104,7 @@ const Campaigns = () => {
 	);
 	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
 	const editing = useSelector((state) => state.campaign.editingCampaign)
+	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter)
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -201,6 +203,7 @@ const Campaigns = () => {
 			}))
 		);
 
+		dispatch(updateCampaignFilter(el?.target?.value))
 		filterCampaigns();
 	};
 
@@ -250,9 +253,10 @@ const Campaigns = () => {
 	// FILTER CAMPAIGNS / FRIENDS FROM HEADER
 	const filterCampaigns = () => {
 		let campaignsResult = [...campaignsCreated];
+		console.log('campaignsFilter CHANGED', campaignsFilter);
 
 		// Check for campaign status
-		switch (statusOption?.find((e) => e.selected)?.value) {
+		switch (campaignsFilter) {
 			case "active":
 				campaignsResult = campaignsResult?.filter((el) => el?.status);
 				break;

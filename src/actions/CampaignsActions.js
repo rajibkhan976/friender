@@ -20,6 +20,8 @@ const initialState = {
 	campaignsArray: [],
 	campaignStatusChanges: {},
 	campaignsDetails: {},
+	campaignFilter: null,
+	campaignDuration: null
 	// campaignsArray: [
 	// 	{
 	// 		_id: 1,
@@ -221,6 +223,12 @@ export const campaignSlice = createSlice({
 			}
 			state.campaignStatusChanges = {};
 
+		},
+		updateCampaignFilter: (state, action) => {
+			state.campaignFilter = action?.payload
+		},
+		updateCampaignDuration: (state, action) => {
+			state.campaignDuration = action?.payload
 		}
 	},
 	extraReducers: {
@@ -393,6 +401,8 @@ export const {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
 	updateCampaignDetails,
-	syncCampaignStatus
+	syncCampaignStatus,
+	updateCampaignFilter,
+	updateCampaignDuration
 } = campaignSlice.actions;
 export default campaignSlice.reducer;
