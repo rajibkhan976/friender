@@ -542,7 +542,7 @@ const MessageSegments = () => {
                     headerText={"Delete Alert"}
                     bodyText={
                         <>
-                            The current segment is already in use by certain segment(s). To delete this segment, you must first remove it from the segment(s) where it is being used.
+                            The current segment is already in use by certain group(s). To delete this segment, you must first remove it from the group(s) where it is being used.
                         </>
                     }
                     closeBtnTxt={"Close"}

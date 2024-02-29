@@ -2125,7 +2125,7 @@ const MySetting = () => {
 							</div>
 						</div>
 						{reFrndng && (
-							<div className='setting-child'>
+							<div className='setting-child f-wrap'>
 								<span className='smallTxt'>
 									Automatically cancel friend request(s) that have been pending
 									for more than
@@ -2189,7 +2189,7 @@ const MySetting = () => {
 									/>
 								</TurnOnSettingsWarn>{" "}
 								<span className='smallTxt'> attempt(s)</span>
-								<div className='keywordBlock'>
+								<div className='keywordBlock w-100'>
 									<div className='saveBlock'>
 										<TurnOnSettingsWarn enabledFeature={reFrndng}>
 											<Switch
