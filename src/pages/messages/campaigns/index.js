@@ -7,6 +7,7 @@ import {
 	updateCampaignsArray,
 	syncCampaignStatus,
 	updateCampaignFilter,
+	updateCampaignDuration,
 } from "actions/CampaignsActions";
 import { countCurrentListsize } from "actions/FriendListAction";
 
@@ -189,6 +190,8 @@ const Campaigns = () => {
 				selected: e.value != el?.target?.value ? false : true,
 			}))
 		);
+
+		dispatch(updateCampaignDuration(el?.target?.value))
 
 		filterCampaigns();
 	};

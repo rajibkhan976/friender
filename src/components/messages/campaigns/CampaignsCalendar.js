@@ -50,18 +50,29 @@ const CampaignsCalendar = () => {
 
 	useEffect(() => {
 		let campaignsArrayPlaceholder = campaignsArray;
+		const week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 		
 		switch (campaignsFilter) {
 			case 'active':
-				campaignsArrayPlaceholder = campaignsArray?.filter(el => el?.status)
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => el?.status)]
 				break;
 			
 			case 'inactive':
-				campaignsArrayPlaceholder = campaignsArray?.filter(el => !el?.status)
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => !el?.status)]
 				break;
 		
 			default:
-				campaignsArrayPlaceholder = [...campaignsArray]
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder]
+				break;
+		}
+
+		switch (campaignDuration) {
+			case 'today':
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => el?.schedule?.filter(ex => ex?.day == week[new Date().getDay()])?.length && el)]
+				break;
+		
+			default:
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder]
 				break;
 		}
 
