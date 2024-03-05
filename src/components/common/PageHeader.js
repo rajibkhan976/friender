@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, memo } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
 import { io } from "socket.io-client";
@@ -170,6 +170,7 @@ socket.on("connect_error", (e) => {
 function PageHeader({ headerText = "" }) {
 	const dispatch = useDispatch();
 	const searchRef = useRef(null);
+	const params = useParams();
 	const searchValue = useSelector((state) => state.friendlist.searched_filter);
 	const { clickedRef, isComponentVisible, setIsComponentVisible } =
 		useComponentVisible(false);
@@ -535,7 +536,15 @@ function PageHeader({ headerText = "" }) {
 				break;
 
 			default:
-				setHeaderOptions({ ...pageOptoions, listingLengthWell: true });
+				if (params?.campaignId) {
+					setHeaderOptions({
+						...headerOptions,
+						syncManual: true,
+						listingLengthWell: true,
+					});
+				} else {
+					setHeaderOptions({ ...pageOptoions, listingLengthWell: true });
+				}
 				break;
 		}
 	}, []);

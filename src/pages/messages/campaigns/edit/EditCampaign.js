@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	CreationRenderer,
+	CampaignCreationRenderer,
 	KeywordRenderer,
 	SourceRendererPending,
 	UnlinkedNameCellRenderer,
@@ -105,7 +105,7 @@ const EditCampaign = (props) => {
 			field: "created_at",
 			headerName: "Friend added date &  time",
 			headerTooltip: "Friend added to Campaign Date & Time",
-			cellRenderer: CreationRenderer,
+			cellRenderer: CampaignCreationRenderer,
 			filter: "agDateColumnFilter",
 		},
 	];

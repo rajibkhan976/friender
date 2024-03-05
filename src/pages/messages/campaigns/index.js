@@ -117,7 +117,12 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaigns());
+			dispatch(fetchAllCampaigns())
+				.unwrap()
+				.then((res) => {
+					console.log('res', res);
+					dispatch(countCurrentListsize(res?.length ? res?.length : 0))
+				});
 			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' && params?.campaignId) {
 				const response = await dispatch(fetchCampaignById({
 					fbUserId: localStorage.getItem("fr_default_fb"),
@@ -358,6 +363,11 @@ const Campaigns = () => {
 
 	useEffect(() => {
 		fetchAll();
+
+		return () => {
+			dispatch(updateCampaignDuration(null))
+			dispatch(updateCampaignFilter(null))
+		}
 	}, []);
 
 	return (

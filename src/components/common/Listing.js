@@ -29,6 +29,7 @@ import Alertbox from "./Toast";
 import DeleteImgIcon from "../../assets/images/deleteModal.png"
 import { deleteCampaign } from "../../actions/CampaignsActions";
 import Modal from "./Modal";
+import { useOutletContext } from "react-router-dom";
 // import e from "cors";
 
 const Pagination = lazy(() => import("./Pagination"));
@@ -40,8 +41,12 @@ const Listing = (props) => {
 	const selectedFrnd = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
+	const campaignsArray = useSelector((state) => state.campaign.campaignsArray)
+	const listCount = useSelector((state) => state.friendlist.curr_list_count)
 	let selectedPageSet = new Set();
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
+	const campaignDuration = useSelector((state) => state.campaign.campaignDuration)
+	const campaignFilter = useSelector((state) => state.campaign.campaignFilter)
 	const [rowData, setRowData] = useState();
 	const [maxSelect, setMaxSelect] = useState(0);
 	const [tableStyle, setTableStyle] = useState({
@@ -449,6 +454,7 @@ const Listing = (props) => {
 			let filteredCount = 0;
 			gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
 			props.getFilterNum(filteredCount);
+			console.log('filteredCount >>>>>', filteredCount);
 
 			if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
 				setMaxSelect(filteredCount);
@@ -464,6 +470,10 @@ const Listing = (props) => {
 		},
 		[textFilter]
 	);
+
+	useEffect(() => {
+		setMaxSelect(listCount)
+	}, [listCount])
 
 	const removeFriendFromCampaign = async () => {
 		// add Remove selected friends from campaign code here

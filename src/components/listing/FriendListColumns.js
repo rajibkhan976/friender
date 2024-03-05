@@ -298,6 +298,24 @@ export const CreationRenderer = memo((params) => {
   );
 });
 
+export const CampaignCreationRenderer = memo((params) => {
+  // 01 Dec, 2020 06:30
+  const statusSync = params.value.toLowerCase();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const parsedDate = moment(statusSync);
+  const formattedHours = parsedDate.format("HH:mm:ss");
+
+  return (
+    <span className={`sync-date d-flex f-align-center`}>
+      <figure className={`sync-ico text-center`}>
+        <CalendarIcon />
+      </figure>
+      <span className={`sync-dt`}>{new Date(statusSync).getDate()+" "+months[new Date(statusSync).getMonth()]+", "+new Date(statusSync).getFullYear()}</span>
+      <span className={`sync-tm`}>{formattedHours}</span>
+    </span>
+  );
+})
+
 export const AgeRenderer = memo((params) => {
   let statusSync = null;
 
