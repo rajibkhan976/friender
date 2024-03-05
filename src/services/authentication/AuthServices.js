@@ -35,13 +35,19 @@ export const userLogin = (email, password) => {
         { email: email, password: password },
         { headers: headers }
       )
-      .then((result) => {
+      .then(async(result) => {
         localStorage.setItem("fr_token", result.data.token);
-        extensionAccesories.isExtensionInstalled({
+        const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
           action: "extensionInstallation",
           frLoginToken: result.data.token,
           frDebugMode: result.data.debug_mode,
         });
+        if(isExtensionInstalled){
+          extensionAccesories.sendMessageToExt({
+            action: "frienderLogin",
+            frLoginToken: result.data.token
+          });
+        }
         localStorage.setItem(
           "fr_pass_changed",
           result.data.password_reset_status
