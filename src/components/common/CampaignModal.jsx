@@ -15,6 +15,7 @@ import {
 	updateCampaignSchedule,
 	updateCampaignStatus,
 	updateSelectedCampaignSchedule,
+	syncCampaignStatus,
 } from "actions/CampaignsActions";
 import { useNavigate } from "react-router-dom";
 import {
@@ -33,7 +34,6 @@ import Alertbox from "components/common/Toast";
 import moment from "moment";
 import { getGroupById } from "actions/MySettingAction";
 import { timeOptions } from "../../helpers/timeOptions";
-import ToolTipPro from "./ToolTipPro";
 
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
@@ -271,6 +271,8 @@ const CalenderModal = ({
 
 	// CREATE/ADD CAMPAIGN FUNCTION..
 	const campaignAddRequestToAPI = async (payload) => {
+		dispatch(syncCampaignStatus());
+		
 		if (campaignsArray?.length) {
 			if (!isEditingModal) {
 				const campaignExistsCheck = campaignsArray.findIndex(
@@ -459,7 +461,7 @@ const CalenderModal = ({
 				messageGroupId: groupMsgSelect?._id,
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
-				campaignEndTimeStatus: true,
+				campaignEndTimeStatus: endDateAndTime ? true : false,
 				campaignEndTime: endDateAndTime ? new Date(endDateAndTime) : '',
 				timeDelay: timeDelay,
 				campaignLabelColor: campaginColorPick,

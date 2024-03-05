@@ -19,13 +19,12 @@ import Alertbox from "components/common/Toast";
 const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	const dispatch = useDispatch();
 	const [isReset, setIsReset] = useState(null);
-	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] =
-		useState(false);
+	const [isCampaignDeleteModalOpen, setCampaignDeleteModalOpen] = useState(false);
 	const [campaignId, setCampaignId] = useState("");
 
-	useEffect(()=>{
+	useEffect(() => {
 		dispatch(syncCampaignStatus());
-	},[])
+	}, [])
 
 	// list ref for campaigns list page
 	const campaignsListingRef = () => [
@@ -44,8 +43,9 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			sortable: true,
 			comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
 				if (valueA?.toLowerCase() == valueB?.toLowerCase()) return 0;
-            	return (valueA?.toLowerCase() > valueB?.toLowerCase()) ? 1 : -1;
-			}		},
+				return (valueA?.toLowerCase() > valueB?.toLowerCase()) ? 1 : -1;
+			}
+		},
 		{
 			field: "status",
 			headerName: "Status ",

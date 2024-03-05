@@ -8,7 +8,7 @@ import { getGroupById } from 'actions/MySettingAction';
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignDetails } from "actions/CampaignsActions";
+import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignDetails, syncCampaignStatus } from "actions/CampaignsActions";
 import { fetchCampaign } from 'services/campaigns/CampaignServices';
 import Alertbox from "components/common/Toast";
 import Tooltip from 'components/common/Tooltip';
@@ -229,6 +229,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
+		dispatch(syncCampaignStatus());
+		
 		if (!payload?.schedule || payload?.schedule?.length === 0) {
 			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
 				"error",
