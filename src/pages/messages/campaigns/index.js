@@ -106,6 +106,7 @@ const Campaigns = () => {
 	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
 	const editing = useSelector((state) => state.campaign.editingCampaign)
 	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter)
+	const campaignDuration = useSelector((state) => state.campaign.campaignDuration)
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -260,32 +261,34 @@ const Campaigns = () => {
 
 	// FILTER CAMPAIGNS / FRIENDS FROM HEADER
 	const filterCampaigns = () => {
-		let campaignsResult = [...campaignsCreated];
-		console.log('campaignsFilter CHANGED', campaignsFilter);
+		let campaignsResult = campaignsCreated
+		const week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+		// console.log('campaignsFilter CHANGED', campaignsFilter);
 
 		// Check for campaign status
 		switch (campaignsFilter) {
 			case "active":
-				campaignsResult = campaignsResult?.filter((el) => el?.status);
+				campaignsResult = [...campaignsResult?.filter((el) => el?.status)]
 				break;
 
 			case "inactive":
-				campaignsResult = campaignsResult?.filter((el) => !el?.status);
+				campaignsResult = [...campaignsResult?.filter((el) => !el?.status)]
 				break;
 
 			default:
-				campaignsResult = campaignsResult;
+				campaignsResult = [...campaignsResult];
 				break;
 		}
 
 		// Check for campaign time span
-		switch (spanOption?.find(e => e.selected)?.value) {
+		switch (campaignDuration) {
 			case "today":
-				campaignsResult = campaignsResult?.filter((el) => new Date(el?.created_at).getDate() == new Date().getDate());
+				campaignsResult = [...campaignsResult?.filter(el => el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])?.length && ({...el, schedule: [...el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])]}))]
+				console.log('campaignsResult >>>>>', campaignsResult);
 				break;
 
 			default:
-				campaignsResult = campaignsResult;
+				campaignsResult = [...campaignsResult];
 		}
 
 		campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));

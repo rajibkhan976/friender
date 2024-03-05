@@ -68,7 +68,7 @@ const CampaignsCalendar = () => {
 
 		switch (campaignDuration) {
 			case 'today':
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => el?.schedule?.filter(ex => ex?.day == week[new Date().getDay()])?.length && el)]
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.map(el => el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])?.length && ({...el, schedule: [...el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])]}))]
 				break;
 		
 			default:

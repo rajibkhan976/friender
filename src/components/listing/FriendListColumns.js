@@ -303,7 +303,7 @@ export const CampaignCreationRenderer = memo((params) => {
   const statusSync = params.value.toLowerCase();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
   const parsedDate = moment(statusSync);
-  const formattedHours = parsedDate.format("HH:mm:ss");
+  const formattedHours = parsedDate.format("HH:mm");
 
   return (
     <span className={`sync-date d-flex f-align-center`}>
