@@ -48,20 +48,22 @@ function BreadCrumb({ links }) {
   return (
     <ul className="breadcrumb">
       {breadLink.map((item, index) => {
-        return links.length - 1 === index ? (
-          <li key={index}>{item.location?.replace('-', ' ')}</li>
-        )
-          :
-          (
-            <li key={index}>
-              {item.location === 'campaigns' ? (
-                  <NavLink to={`/messages/${item.location}`}>{item.location?.replace('-', ' ')}</NavLink>
-                )
-              : (
-                  <NavLink to={`${item.location}`}>{item.location?.replace('-', ' ')}</NavLink>
-                )}
-            </li>
-          )
+        return  (<li key={index}>{item.location?.replace('-','')}</li>)
+        //we may need this code for future changes that why i kept this
+        // return links.length - 1 === index ? (
+        //   <li key={index}>{item.location?.replace('-', ' ')}</li>
+        // )
+        //   :
+        //   (
+        //     <li key={index}>
+        //       {item.location === 'campaigns' ? (
+        //           <NavLink to={`/messages/${item.location}`}>{item.location?.replace('-', ' ')}</NavLink>
+        //         )
+        //       : (
+        //           <NavLink to={`${item.location}`}>{item.location?.replace('-', ' ')}</NavLink>
+        //         )}
+        //     </li>
+        //   )
       })}
     </ul>
   );
