@@ -23,8 +23,9 @@ import ScheduleSelector from "../../../../components/messages/campaigns/Schedule
 import {
 	fetchUsers,
 	deleteCampaignContacts,
-	updateCampaignSchedule,
+	updateCampaignSchedule
 } from "../../../../actions/CampaignsActions";
+import { countCurrentListsize } from "../../../../actions/FriendListAction";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();
@@ -211,7 +212,11 @@ const EditCampaign = (props) => {
 		status = "all"
 	) => {
 		try {
-			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap();
+			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap().then((res) => {
+				console.log('USERS COUNT', res);
+				dispatch(countCurrentListsize(res?.data?.length))
+			});
+
 		} catch (error) {
 			console.log(
 				`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,

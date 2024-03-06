@@ -18,6 +18,7 @@ import NoDataFound from "./NoDataFound";
 import {
 	updateFilter,
 	updateSelectedFriends,
+	removeSelectedFriends
 } from "../../actions/FriendListAction";
 import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
@@ -486,6 +487,8 @@ const Listing = (props) => {
 				1000,
 				"bottom-right"
 			);
+
+			dispatch(removeSelectedFriends([]));
 		} else {
 			Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
 		}
