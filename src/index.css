@@ -304,15 +304,14 @@
 .global-campaign-title {
 	/* width: 250px;
 	height: 25px; */
+	display: flex;
+	justify-content: space-between;
 	margin-bottom: 2px;
 	padding: 0.25rem;
 	font-size: 12px;
 	font-weight: 500;
 	line-height: 17px;
 	/* color: rgba(240, 239, 255, 1); */
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	cursor: pointer;
 }
 
@@ -332,7 +331,16 @@
 	z-index: 1005;
 }
 
+.global-campaign-title-slot {
+	width: 60%;
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .global-campaign-time-slot {
-	float: right;
+	width: 40%;
+	display: inline-block;
 	font-size: 10px;
 }

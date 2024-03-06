@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
@@ -42,6 +42,7 @@ const CampaignScheduler = (props) => {
 	);
 	const [showMoreEvent, setShowMoreEvent] = useState([]);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
+	const showMoreBtnRef = useRef(null);
 
 	// const CustomEventContainerWrapper = (props) => {
 	// 	const handleClick = (e) => {
@@ -65,6 +66,7 @@ const CampaignScheduler = (props) => {
 		);
 
 		const handleClick = (e, showMoreEventsArr) => {
+			e.stopPropagation();
 			handleSetSelectedSchedule(props?.event);
 			if (
 				location?.pathname === "/messages/campaigns" &&
@@ -115,8 +117,10 @@ const CampaignScheduler = (props) => {
 							Array.isArray(props?.event?.title) &&
 							props?.event?.title.length > 1 && (
 								<div
+									ref={showMoreBtnRef}
 									className='show-more-btn'
 									onClick={(e) => {
+										e.stopPropagation();
 										dispatch(
 											updateCampaignSchedule([
 												...campaignSchedule.filter((item) => item.isSaved),
@@ -287,14 +291,16 @@ const CampaignScheduler = (props) => {
 		});
 		slotInfo?.box
 			? handleSetPopupPos &&
-			  handleSetPopupPos({ 
-				X: slotInfo?.box?.x+268 > window?.innerWidth ? 
-					window?.innerWidth - (268 + 30) : 
-					slotInfo?.box?.x, 
-				Y: slotInfo?.box?.y+198 > window?.innerHeight ? 
-					window?.innerHeight - (198 + 81 + 12 + 55) : 
-					slotInfo?.box?.y 
-			})
+			  handleSetPopupPos({
+					X:
+						slotInfo?.box?.x + 268 > window?.innerWidth
+							? window?.innerWidth - (268 + 30)
+							: slotInfo?.box?.x,
+					Y:
+						slotInfo?.box?.y + 198 > window?.innerHeight
+							? window?.innerHeight - (198 + 81 + 12 + 55)
+							: slotInfo?.box?.y,
+			  })
 			: handleSetPopupPos &&
 			  handleSetPopupPos({
 					X: slotInfo?.bounds?.left,
@@ -322,6 +328,19 @@ const CampaignScheduler = (props) => {
 		dayFormat: (date, culture, localizer) =>
 			localizer.format(date, "dddd", culture), // Format for the day header
 	};
+
+	const handleCloseGlobalCampaignPopup = () => {
+		setShowGlobalCampaignPopup(false);
+	};
+
+	useEffect(() => {
+		if (showMoreBtnRef && showMoreBtnRef?.current) {
+			document.addEventListener("click", handleCloseGlobalCampaignPopup);
+		}
+
+		return () =>
+			document.removeEventListener("click", handleCloseGlobalCampaignPopup);
+	}, [showGlobalCampaignPopup]);
 
 	console.log("CAMPAIGN SCHEDULE -- ", campaignSchedule);
 

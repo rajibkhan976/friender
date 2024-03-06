@@ -167,12 +167,13 @@ const CampaignsCalendar = () => {
 												});
 											}
 										}}
-										onMouseLeave={(e) =>
-											e.target.scrollWidth > e.target.clientWidth &&
+										onMouseLeave={() =>
 											setShowTooltip({ index: [], x: 0, y: 0 })
 										}
 									>
-										{matchedSchedule.title}
+										<span className='global-campaign-title-slot'>
+											{matchedSchedule.title}
+										</span>
 										<span className='global-campaign-time-slot'>{`${moment(
 											matchedSchedule.start
 										).format("hh:mma")} - ${moment(matchedSchedule.end).format(
@@ -183,7 +184,7 @@ const CampaignsCalendar = () => {
 												<div
 													className='global-campaign-tooltip'
 													style={{
-														top: `${showTooltip?.y - 80}px`,
+														top: `${showTooltip?.y - 40}px`,
 														left: `${showTooltip?.x}px`,
 													}}
 												>
