@@ -133,6 +133,7 @@ const EditCampaign = (props) => {
 									setReset={setIsReset}
 									isListing='campaign-friends'
 									removeCampaignContacts={removeCampaignContacts}
+									getCurrentCampaignFriends={getCampaignUsersListFromAPI}
 								/>
 							</div>
 						)}

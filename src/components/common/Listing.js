@@ -18,7 +18,8 @@ import NoDataFound from "./NoDataFound";
 import {
 	updateFilter,
 	updateSelectedFriends,
-	removeSelectedFriends
+	removeSelectedFriends,
+	countCurrentListsize
 } from "../../actions/FriendListAction";
 import { useDispatch, useSelector } from "react-redux";
 //import { RowNode } from "ag-grid-community";
@@ -30,7 +31,7 @@ import Alertbox from "./Toast";
 import DeleteImgIcon from "../../assets/images/deleteModal.png"
 import { deleteCampaign } from "../../actions/CampaignsActions";
 import Modal from "./Modal";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 // import e from "cors";
 
 const Pagination = lazy(() => import("./Pagination"));
@@ -39,6 +40,7 @@ const Listing = (props) => {
 	const dispatch = useDispatch();
 	//  const selectRef = useRef(null);
 	const gridRef = useRef(null);
+	const params = useParams();
 	const selectedFrnd = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
@@ -293,6 +295,7 @@ const Listing = (props) => {
 	}, [textFilter]);
 
 	useEffect(() => {
+		// console.log('props.friendsData', props.friendsData);
 		onGridReady();
 		setColumnDefs(props.friendsListingRef);
 		//setMaxSelect(props.friendsData.length);
@@ -488,7 +491,9 @@ const Listing = (props) => {
 				"bottom-right"
 			);
 
-			dispatch(removeSelectedFriends([]));
+			dispatch(removeSelectedFriends([]))
+			console.log('localStorage.getItem("fr_default_fb")', localStorage.getItem("fr_default_fb"), 'params?.campaignId', params?.campaignId);
+			props?.getCurrentCampaignFriends(localStorage.getItem("fr_default_fb"), params?.campaignId, 'all')
 		} else {
 			Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
 		}
