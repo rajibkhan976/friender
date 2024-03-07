@@ -64,6 +64,8 @@ const EditCampaign = (props) => {
 			lockPosition: "left",
 			cellRenderer: UnlinkedNameCellRenderer,
 			headerClass: "campaign-name-header",
+			suppressRowClickSelection: false,
+			// showDisabledCheckboxes: false,
 		},
 		{
 			field: "status",

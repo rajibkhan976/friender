@@ -52,6 +52,7 @@ const Listing = (props) => {
 	const campaignFilter = useSelector((state) => state.campaign.campaignFilter)
 	const [rowData, setRowData] = useState();
 	const [maxSelect, setMaxSelect] = useState(0);
+	const [filteredSelects, setFilteredSelects] = useState(0);
 	const [tableStyle, setTableStyle] = useState({
 		height: "100%",
 		width: "100%",
@@ -545,6 +546,9 @@ const Listing = (props) => {
 		// gridRef.current.api.deselectAll();
 		setSelectAllChecked(isChecked);
 		if (isChecked) {
+			// console.log('gridRef?.current >>>>>', gridRef?.current);
+			// We can do something over there with ..
+			// the grid.Ref.Current.API > data with the status of users
 			gridRef.current.api.selectAllFiltered();
 		} else {
 			gridRef.current.api.deselectAll();
@@ -581,13 +585,20 @@ const Listing = (props) => {
 				if (newObj?.status && !newObj?.campaign_name && (newObj?.status !== 'pending' || newObj?.status !== 'pending')) {
 					// If the row doesn't meet the criteria, deselect it
 					node.setSelected(false);
+					// selectedUsers = [...selectedUsers, {...newObj, rowId: node.id, selected: false, selectable: false}];
 				} else {
+					node.setSelected(true);
 					selectedUsers = [...selectedUsers, { ...newObj, rowId: node.id }];
 				}
 
 				// console.log("new obj",newObj);
 				// selectedUsers = [...selectedUsers, { ...newObj, rowId: node.id }];
 			});
+
+			// Setting the max select here..
+			if (selectedUsers?.length) {
+				setFilteredSelects(selectedUsers?.length);
+			}
 
 			// friendFbId
 			setSelectedFriends(
@@ -602,6 +613,115 @@ const Listing = (props) => {
 		},
 		[currentWhiteList, currentBlackList]
 	);
+
+	/**
+	 * RENDERS THE CHECKBOX TITLE AFTER SELECTS THE FRIENDS
+	 * @param {*} maxLength 
+	 * @param {*} selectedFriends 
+	 * @returns 
+	 */
+	const renderCheckboxTitle = (maxLength, selectedFriends) => {
+		let currentListingLength = gridRef?.current?.props?.rowData?.length;
+
+		// console.log("CURRENT LISTING LENGTH -- ", currentListingLength);
+		// console.log("MAX LENGTH -- ", maxLength);
+		// console.log("SELECTED FRIEDNS -- ", selectedFriends?.length);
+
+		if (props?.isListing === "campaign-friends") {
+			currentListingLength = gridRef?.current?.api?.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length;
+
+			if (currentListingLength !== selectedFriends?.length && (maxLength - Number(selectedFriends?.length) == 0)) {
+				return (
+					<span>
+						Do you want to select other all{" "}
+						{currentListingLength - Number(selectedFriends.length)}{" "}
+						{props?.isListing === "campaign" ? "Campaigns" : "Friends"}{" "}
+					</span>
+				);
+			} else {
+				return (
+					<span>Uncheck All </span>
+				);
+			}
+		} else {
+			if (currentListingLength !== selectedFriends?.length && maxLength - Number(selectedFriends?.length) > 0) {
+				return (
+					<span>
+						Do you want to select other all{" "}
+						{maxSelect - Number(selectedFriends.length)}{" "}
+						{props?.isListing === "campaign" ? "Campaigns" : "Friends"}{" "}
+					</span>
+				);
+			} else {
+				return (
+					<span>Uncheck All </span>
+				);
+			}
+		}
+	};
+
+	/**
+	 * RENDER THE CHECKBOX ACCORDING TO DIFFERENT LOGICS
+	 * @param {*} maxLength 
+	 * @param {*} selectedFriends 
+	 */
+	const renderCheckbox = (maxLength, selectedFriends) => {
+		let currentListingLength = gridRef?.current?.props?.rowData?.length;
+
+		if (props?.isListing === "campaign-friends") {
+			currentListingLength = gridRef?.current?.api?.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length;
+
+			// console.log("currentListingLength -- ", currentListingLength); // 21
+			// console.log("selectedFriends -- ", selectedFriends); // 7
+			// console.log("MAXXX -- ", maxLength); // 7
+
+			if (currentListingLength > selectedFriends && currentListingLength > maxLength) {
+				return (
+					<Checkbox
+						onChangeCheck={onChangeCheck}
+						checkValue={maxLength === Number(selectedFriends.length)}
+					/>
+				);
+			} else {
+				return (
+					<Checkbox
+						onChangeCheck={onChangeCheck}
+						checkValue={currentListingLength === selectedFriends.length}
+					/>
+				);
+			}
+
+		} else {
+			if (maxLength - Number(selectedFriends?.length) === 0) {
+				return (
+					<Checkbox
+						onChangeCheck={onChangeCheck}
+						checkValue={maxLength === Number(selectedFriends.length)}
+					/>
+				);
+			} else {
+				return (
+					<Checkbox
+						onChangeCheck={onChangeCheck}
+						checkValue={currentListingLength === selectedFriends.length}
+					/>
+				);
+			}
+		}
+	};
+
+	// IS ROW SELECTABLE IS THERE..
+	// const isRowSelectable = (node) => {
+	// 	console.log("NOde -- ", node);
+
+	// 	if (node.data) {
+	// 		return node.data.status === "pending";
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
+
+
 
 	//Below comment is needed for backup funcnality
 	// useEffect(()=>{
@@ -649,12 +769,23 @@ const Listing = (props) => {
 					btnText={"Yes. Delete"}
 				/>
 			}
+
+			{/* {props?.isListing === "campaign-friends" 
+				? gridRef.current.api.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length - Number(selectedFriends.length) 
+				: maxSelect - Number(selectedFriends.length)
+			} */}
+			{/* gridRef.current.api.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length */}
+
 			{selectedFriends &&
 				selectedFriends.length > 0 &&
 				selectedFrnd &&
 				selectedFrnd.length > 0 ? (
 				<div className='selection-popup d-flex f-justify-center f-align-center'>
 					<p>
+						{/* {props?.isListing === "campaign-friends"
+							? gridRef.current.api.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length - Number(selectedFriends.length)
+							: maxSelect - Number(selectedFriends.length)
+						} */}
 						{selectedFriends.length === gridRef.current.props.rowData.length &&
 							"All"}{" "}
 						{selectedFriends.length ? (
@@ -665,6 +796,23 @@ const Listing = (props) => {
 						{props?.isListing === "campaign" ? "Campaign" : "Friend"}
 						{selectedFriends.length > 1 && "s"}{" "}
 						{selectedFriends.length > 1 ? "are" : "is"} selected.
+
+						{renderCheckboxTitle(props?.isListing === "campaign-friends" ? filteredSelects : maxSelect, selectedFriends)}
+
+						{/* {props?.isListing == "campaign-friends"
+							&& gridRef.current.api.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length !== selectedFriends.length
+							&& gridRef.current.api.clientSideRowModel?.rowsToDisplay?.filter(el => el?.data?.status !== "send").length - Number(selectedFriends.length) > 0
+							? (
+								<span>
+									Do you want to select other all{" "}
+									{maxSelect - Number(selectedFriends.length)}{" "}
+									{props?.isListing === "campaign" ? "Campaigns" : "Friends"}{" "}
+								</span>
+							) : (
+								<span>Uncheck All </span>
+							)}{" "} */}
+
+						{/* 
 						{gridRef.current.props.rowData.length !== selectedFriends.length &&
 							maxSelect - Number(selectedFriends.length) > 0 ? (
 							<span>
@@ -674,8 +822,11 @@ const Listing = (props) => {
 							</span>
 						) : (
 							<span>Uncheck All </span>
-						)}{" "}
-						{maxSelect - Number(selectedFriends.length) === 0 ? (
+						)}{" "} */}
+
+						{renderCheckbox(props?.isListing === "campaign-friends" ? filteredSelects : maxSelect, selectedFriends)}
+
+						{/* {maxSelect - Number(selectedFriends.length) === 0 ? (
 							<Checkbox
 								onChangeCheck={onChangeCheck}
 								checkValue={maxSelect === Number(selectedFriends.length)}
@@ -688,7 +839,8 @@ const Listing = (props) => {
 									selectedFriends.length
 								}
 							/>
-						)}
+						)} */}
+
 						{props?.isListing === "campaign-friends" && (
 							<button
 								className='remove-friends btn-inline red-text'
@@ -766,6 +918,7 @@ const Listing = (props) => {
 					tooltipHideDelay={1000000}
 					alwaysShowHorizontalScroll={true}
 					suppressMenuHide={true}
+				// isRowSelectable={isRowSelectable}
 				//onHeaderCheckboxSelectionChanged={onHeaderCheckboxSelectionChanged}
 				/>
 			</div>
