@@ -368,7 +368,7 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 						: `activeEngaged actPending`
 				}
 			>
-				<span className='dot'></span> {params?.value}
+				<span className='dot'></span> {params?.value.trim().toLowerCase()==='send'?'Successful': params.value}
 			</span>
 		</div>
 	);
