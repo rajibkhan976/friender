@@ -415,8 +415,8 @@ const CalenderModal = ({
 			dateArr.forEach((item) => {
 				newSchedules.push({
 					day: item,
-					from_time: scheduleTime.start,
-					to_time: scheduleTime.end,
+					from_time: scheduleTime?.start?.split(" ")[0] + ":00",
+					to_time: scheduleTime?.end?.split(" ")[0] + ":00",
 				});
 			});
 			updatedCampaignSchedules = [...updatedCampaignSchedules, ...newSchedules];
