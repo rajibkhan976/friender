@@ -689,6 +689,16 @@
       letter-spacing: -0.3px;
     }
   }
+  &.campaign-tooltip {
+    &:before {
+      line-height: 18px;
+      width: 141px;
+      padding-inline: 4px;
+      content: "Message sent on \A"attr(data-text);
+      text-align: center;
+      letter-spacing: -0.3px;
+    }
+  }
 }
 
 .ag-cell-value {
