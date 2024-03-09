@@ -374,6 +374,30 @@ const CalenderModal = ({
 		}
 	};
 
+	const convertTo24 = (timeStr) => {
+		let timeIn24 = "";
+		if (timeStr) {
+			const timePart = timeStr?.split(" ")[0];
+			const timeFormPart = timeStr?.split(" ")[1];
+			if (timeFormPart?.toLowerCase() === "pm") {
+				const hourPart =
+					Number(timePart?.split(":")[0]) < 12
+						? Number(timePart?.split(":")[0]) + 12
+						: Number(timePart?.split(":")[0]);
+				const minutePart = timePart?.split(":")[1];
+				timeIn24 = hourPart.toString() + ":" + minutePart + ":00";
+			} else {
+				const hourPart =
+					Number(timePart?.split(":")[0]) === 12
+						? "00"
+						: Number(timePart?.split(":")[0]);
+				const minutePart = timePart?.split(":")[1];
+				timeIn24 = hourPart.toString() + ":" + minutePart + ":00";
+			}
+		}
+		return timeIn24;
+	};
+
 	// console.log("DETAILS -- ", editingCampaign);
 	// console.log("SELECTED SCHEDULE -- ", selectedCampaignSchedule);
 	// console.log(scheduleTime);
@@ -382,31 +406,31 @@ const CalenderModal = ({
 	const updateCampaignSchedulesPayload = () => {
 		const editSchedule = selectedCampaignSchedule
 			? {
-				day: moment(selectedCampaignSchedule?.start).format("dddd"),
-				start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
-				end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
-			}
+					day: moment(selectedCampaignSchedule?.start).format("dddd"),
+					start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
+					end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
+			  }
 			: null;
 		let updatedCampaignSchedules =
 			editSchedule &&
-				editingCampaign &&
-				Array.isArray(editingCampaign?.schedule)
+			editingCampaign &&
+			Array.isArray(editingCampaign?.schedule)
 				? [
-					...editingCampaign?.schedule?.filter(
-						(item) =>
-							editSchedule &&
-							editSchedule.day !== item.day &&
-							editSchedule.start !== item.start &&
-							editSchedule.end !== item.end
-					),
-				]
+						...editingCampaign?.schedule?.filter(
+							(item) =>
+								editSchedule &&
+								editSchedule.day !== item.day &&
+								editSchedule.start !== item.start &&
+								editSchedule.end !== item.end
+						),
+				  ]
 				: [];
 		if (
 			scheduleTime.date &&
 			scheduleTime.start &&
 			scheduleTime.end &&
 			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
-			timeOptions.findIndex((item) => item.value === scheduleTime.end)
+				timeOptions.findIndex((item) => item.value === scheduleTime.end)
 		) {
 			const dateArr = scheduleTime.date.map((item) =>
 				moment(item).format("dddd")
@@ -415,8 +439,8 @@ const CalenderModal = ({
 			dateArr.forEach((item) => {
 				newSchedules.push({
 					day: item,
-					from_time: scheduleTime?.start?.split(" ")[0] + ":00",
-					to_time: scheduleTime?.end?.split(" ")[0] + ":00",
+					from_time: convertTo24(scheduleTime?.start),
+					to_time: convertTo24(scheduleTime?.end),
 				});
 			});
 			updatedCampaignSchedules = [...updatedCampaignSchedules, ...newSchedules];
