@@ -979,29 +979,10 @@
 
    /* you can find all styling where https://github.com/nolanlawson/emoji-picker-element */
    em-emoji-picker {
-    --background: rgb(0, 0, 0);
-    /* --background-rgb: 85, 80, 80; */
-    /* --border-color:red; */
-    /* --emoji-font-family:"Apple Color Emoji"; */
+    --background: rgba(180, 170, 170, 0.05);
     --border-radius: 5px;
-    --category-icon-size: 24px;
     --color-border-over: rgba(126, 124, 124, 0.1);
     --color-border: rgba(180, 170, 170, 0.05);
-    /* --font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; */
-    --font-size: 20px;
-    --rgb-accent: 80,80,80;
-    --rgb-background: 0,0,0;
-    --rgb-color: 255, 255, 255;
-    --rgb-input: 255, 235, 235;
-    --shadow: 5px 5px 15px -5px rgb(80, 80, 80);
-
-    height: 40vh;
-    width: 17vw;
-    min-height: 300px;
-    max-height: 800px;
+    height: 47vh;
   }
-
-  /* em-emoji-picker #root{
-    font-size: 5px;
-  } */
   /* em-emoji-picker  */

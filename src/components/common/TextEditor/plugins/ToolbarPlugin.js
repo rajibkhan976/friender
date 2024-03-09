@@ -425,22 +425,23 @@ function EmojiPickerDropdownList({
   editor,
   blockType,
   toolbarRef,
+  emojiListRef,
   setShowEmojiPicker,
 }) {
-  const dropDownRef = useRef(null);
+ // const dropDownRef = useRef(null);
   useEffect(() => {
     const toolbar = toolbarRef.current;
-    const dropDown = dropDownRef.current;
+    const dropDown = emojiListRef.current;
 
     if (toolbar !== null && dropDown !== null) {
       const { top, left } = toolbar.getBoundingClientRect();
       dropDown.style.top = `${top + 40}px`;
       dropDown.style.left = `${left}px`;
     }
-  }, [dropDownRef, toolbarRef]);
+  }, [emojiListRef, toolbarRef]);
 
   const handleEmojiSelect = (emoji) => {
-    console.log("my emoji", emoji);
+
 
     editor.update(() => {
       // Get the RootNode from the EditorState
@@ -468,7 +469,7 @@ function EmojiPickerDropdownList({
   };
 
   return (
-    <div className="dropdown" ref={dropDownRef}>
+    <div className="dropdown" ref={emojiListRef}>
       <Picker data={data} onEmojiSelect={handleEmojiSelect}  theme={"dark"}/>
     </div>
   );
@@ -476,13 +477,13 @@ function EmojiPickerDropdownList({
 
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
+
   const toolbarRef = useRef(null);
+  const emojiListRef = useRef(null);
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [blockType, setBlockType] = useState("paragraph");
   const [selectedElementKey, setSelectedElementKey] = useState(null);
-  const [showBlockOptionsDropDown, setShowBlockOptionsDropDown] =
-    useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [codeLanguage, setCodeLanguage] = useState("");
   const [isRTL, setIsRTL] = useState(false);
@@ -492,6 +493,26 @@ export default function ToolbarPlugin() {
   const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
   const [isCode, setIsCode] = useState(false);
+
+  const closeEmojiPicker = (event)=>{
+    if(toolbarRef.current && !toolbarRef.current.contains(event.target)&& !event?.target?.querySelector("em-emoji-picker")){
+      if(emojiListRef.current && emojiListRef.current.contains(event.target)) return;
+      showEmojiPicker && setShowEmojiPicker(false);
+    }
+  }
+
+  useEffect(() => {
+    
+    document.addEventListener("click",closeEmojiPicker, !showEmojiPicker);
+
+    return () => {
+      document.removeEventListener(
+        "click",
+        closeEmojiPicker,
+        !showEmojiPicker
+      );
+    };
+  });
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -602,7 +623,7 @@ export default function ToolbarPlugin() {
         className="toolbar-item"
         onClick={() => {
           setShowEmojiPicker(!showEmojiPicker);
-          console.log("clicking emoji picker");
+          //console.log("clicking emoji picker");
         }}
       >
         <EmojiPickerIcon />
@@ -614,6 +635,7 @@ export default function ToolbarPlugin() {
               editor={editor}
               blockType={blockType}
               toolbarRef={toolbarRef}
+              emojiListRef ={emojiListRef}
               setShowEmojiPicker={setShowEmojiPicker}
             />,
             document.body
