@@ -31,6 +31,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 
+	const [isSaveDisabled, setSaveDisabled] = useState(false);
+
+	// STATE OF CAMPAIGN STATUS..
+	const [status, setStatus] = useState(false);
+
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
 		value: "",
@@ -159,16 +164,18 @@ const CampaignCreateEditLayout = ({ children }) => {
 		const value = event.target.value.trim();
 
 		if (value.length < 1) {
-			setCampaignName({ ...campaignName, isError: true, errorMsg: "Enter campaign name" });
-		} else {
-			setCampaignName({ ...campaignName, isError: false, errorMsg: "" });
-		}
+			setCampaignName({
+				...campaignName,
+				isError: true,
+				errorMsg: "Enter campaign name",
+			});
 
-		if (value.length > 40) {
+		} else if (value.length > 40) {
 			const modifiedText = truncateAndAddEllipsis(value, 40);
 			setCampaignName({ ...campaignName, tempValue: modifiedText });
+
 		} else {
-			setCampaignName({ ...campaignName, tempValue: value });
+			setCampaignName({ ...campaignName, isError: false, errorMsg: "", tempValue: value });
 		}
 	};
 
@@ -230,7 +237,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
 	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
 		dispatch(syncCampaignStatus());
-		
+
 		if (!payload?.schedule || payload?.schedule?.length === 0) {
 			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
 				"error",
@@ -240,6 +247,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				"Opps!"
 			);
 			setLoadingBtn(false);
+			setSaveDisabled(true);
 			return false;
 		}
 
@@ -333,6 +341,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 		if (!isLoadingBtn) {
 			setLoadingBtn(true);
 
+			if (campaignName?.value?.trim() === '') {
+				setLoadingBtn(false);
+				setCampaignName({ ...campaignName, isError: true, errorMsg: 'Enter campaign name' });
+			}
+
 			// VALIDATE THE FORM, (SELECT GROUP MESSAGE)
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
@@ -351,6 +364,19 @@ const CampaignCreateEditLayout = ({ children }) => {
 				return false;
 			}
 
+			// if (campaignSchedule?.length === 0 || (scheduleTime && scheduleTime?.date?.length === 0)) {
+			// 	setSaveDisabled(true);
+			// 	setLoadingBtn(false);
+			// 	Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
+			// 		"error",
+			// 		1000,
+			// 		"bottom-right",
+			// 		"",
+			// 		"Opps!"
+			// 	);
+			// 	return false;
+			// }
+
 			const campaignData = {
 				campaignName: campaignName?.value,
 				messageGroupId: groupMsgSelect?._id,
@@ -358,7 +384,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
 				campaignEndTime: endDateAndTime?.value ? new Date(endDateAndTime?.value) : '',
-				campaignStatus: false,
+				campaignStatus: status,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
 			};
@@ -386,6 +412,21 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// CAMPAIGN EDIT / UPDATE CANCEL..
 	const handleClickToCancelEditCampaign = (_event) => {
 		navigate("/messages/campaigns");
+	};
+
+	// HANDLE MESSAGE LIMIT CHANGE..
+	const handleMsgLimitChange = (event) => {
+		let msgLimitValue = event.target.value;
+
+		// Remove any non-digit characters, including 'e'
+		msgLimitValue = msgLimitValue.replace(/\D/g, '');
+
+		if (!msgLimitValue) {
+			msgLimitValue = '';
+		}
+
+		const parsedValue = parseInt(msgLimitValue);
+		setMsgLimit(parsedValue);
 	};
 
 	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
@@ -468,6 +509,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 				const campaignData = data[0];
 
 				dispatch(updateCampaignDetails(campaignData));
+
+				if (campaignData?.status) {
+					setStatus(campaignData?.status);
+				}
 
 				if (campaignData?.campaign_name) {
 					const modifiedTempValue = truncateAndAddEllipsis(campaignData?.campaign_name, 40);
@@ -561,16 +606,23 @@ const CampaignCreateEditLayout = ({ children }) => {
 	}, [params]);
 
 	// DISABLE SAVED BUTTON ACCORDING TO FIELDS ARE REQUIRED..
-	const disableSubmit = () => {
-		const name = campaignName?.value?.trim();
-		const groupMsg = groupMsgSelect?._id;
+	// const disableSubmit = () => {
+	// 	const name = campaignName?.value?.trim();
+	// 	const groupMsg = groupMsgSelect?._id;
 
-		if (name === '' || (!groupMsg && quickMsg === null) || campaignSchedule?.length === 0) {
-			return true;
-		} else {
-			return false;
+	// 	if (name === '' || (!groupMsg && quickMsg === null) || campaignSchedule?.length === 0) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
+
+	useEffect(() => {
+		if (campaignSchedule?.length > 0) {
+			setSaveDisabled(false);
 		}
-	};
+	}, [campaignSchedule]);
+
 
 	return (
 		<div className='campaigns-edit d-flex d-flex-column'>
@@ -646,7 +698,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 					<NumberRangeInput
 						value={msgLimit}
-						handleChange={(event) => setMsgLimit(event.target.value)}
+						handleChange={handleMsgLimitChange}
 						handleBlur={handleMessageLimitOnBlur}
 						setIncrementDecrementVal={incrementDecrementVal}
 						customStyleClass='campaigns-num-input'
@@ -709,7 +761,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 				<button
 					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}
-					disabled={disableSubmit() || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
+					// disabled={disableSubmit() || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
+					disabled={isSaveDisabled || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
 				>
 					{isLoadingBtn ? type === "EDIT" ? "Updating..." : "Saving..." : "Save campaign"}
 				</button>

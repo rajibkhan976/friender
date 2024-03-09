@@ -71,10 +71,15 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
-	const [campaignStatus, setCampaignStatus] = useState(params?.data?.status ? params?.data?.status : false);
+	const [campaignStatus, setCampaignStatus] = useState(params?.data?.status);
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
 	const pendingFriends = params?.data?.friends_pending ? params?.data?.friends_pending : 0;
+
+	useEffect(() => {
+		dispatch(syncCampaignStatus());
+	}, [campaignStatus]);
+
 
 	// CHECK THE PENDING FRIENDS AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
@@ -89,9 +94,10 @@ export const CampaignStatusCellRenderer = memo((params) => {
 		}
 	}, [pendingFriends]);
 
+
 	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
-		if (params?.data?.campaign_end_time_status && (endDateAndTime && endDateAndTime < new Date())) {			
+		if (params?.data?.campaign_end_time_status && (endDateAndTime && endDateAndTime < new Date())) {
 			(async () => {
 				try {
 					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
@@ -102,6 +108,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 		}
 	}, [endDateAndTime]);
 
+	
 	// CAMPAIGN STATUS UPDATE VIA API..
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
@@ -383,7 +390,7 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 						: `activeEngaged actPending`
 				}
 			>
-				<span className='dot'></span> {params?.value.trim().toLowerCase()==='send'?'Successful': params.value}
+				<span className='dot'></span> {params?.value.trim().toLowerCase() === 'send' ? 'Successful' : params.value}
 			</span>
 			}
 		</div>
@@ -392,11 +399,11 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 
 export const CampaignFriendMessageRenderer = memo((params) => {
 	// const messageRender = params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message');
-	const messageRender = (params?.data?.status === "send" || params?.data?.status === "failed" || params?.data?.status === "fail") ? 
-							params?.data?.message_group_name ?
-								params?.data?.message_group_name : 
-								params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message') :
-							params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message')
+	const messageRender = (params?.data?.status === "send" || params?.data?.status === "failed" || params?.data?.status === "fail") ?
+		params?.data?.message_group_name ?
+			params?.data?.message_group_name :
+			params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message') :
+		params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message')
 
 	console.log('params');
 

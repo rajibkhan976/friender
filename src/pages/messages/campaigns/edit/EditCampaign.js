@@ -107,7 +107,7 @@ const EditCampaign = (props) => {
 		},
 		{
 			field: "created_at",
-			headerName: "Friend added date &  time",
+			headerName: "Friend added date & time",
 			headerTooltip: "Friend added to Campaign Date & Time",
 			cellRenderer: CampaignCreationRenderer,
 			filter: "agDateColumnFilter",

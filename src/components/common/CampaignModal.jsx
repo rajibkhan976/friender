@@ -61,6 +61,8 @@ const CalenderModal = ({
 	const [isLoadingBtn, setLoadingBtn] = useState(false);
 	const [isEditingModal, setIsEditingModal] = useState(false);
 
+	const [isSaveDisabled, setSaveDisabled] = useState(false);
+
 	// CAMPAIGN NAME STATE..
 	const [campaignName, setCampaignName] = useState({
 		value: "",
@@ -157,16 +159,12 @@ const CalenderModal = ({
 				errorMsg: "Enter campaign name",
 			});
 
-		} else {
-			setCampaignName({ ...campaignName, isError: false, errorMsg: "" });
-		}
-
-		if (value.length > 40) {
+		} else if (value.length > 40) {
 			const modifiedText = truncateAndAddEllipsis(value, 40);
 			setCampaignName({ ...campaignName, tempValue: modifiedText });
 
 		} else {
-			setCampaignName({ ...campaignName, tempValue: value });
+			setCampaignName({ ...campaignName, isError: false, errorMsg: "", tempValue: value });
 		}
 	};
 
@@ -272,7 +270,7 @@ const CalenderModal = ({
 	// CREATE/ADD CAMPAIGN FUNCTION..
 	const campaignAddRequestToAPI = async (payload) => {
 		dispatch(syncCampaignStatus());
-		
+
 		if (campaignsArray?.length) {
 			if (!isEditingModal) {
 				const campaignExistsCheck = campaignsArray.findIndex(
@@ -474,10 +472,56 @@ const CalenderModal = ({
 			// UNHANDLED VALUES.. TIME DURATIONS,
 			// console.log("scheduleTime", scheduleTime);
 
+			if (campaignName?.value?.trim() === '') {
+				setLoadingBtn(false);
+				setCampaignName({ ...campaignName, isError: true, errorMsg: 'Enter campaign name' });
+			}
+
 			if (!groupMsgSelect?._id && quickMsg === null) {
 				setUnselectedError(true);
 				setLoadingBtn(false);
 				return false;
+			}
+
+			if (campaignSchedule?.length === 0 || (scheduleTime && scheduleTime?.date?.length === 0)) {
+				setSaveDisabled(true);
+				setLoadingBtn(false);
+				Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
+					"error",
+					1000,
+					"bottom-right",
+					"",
+					"Opps!"
+				);
+				return false;
+			}
+
+			if (campaignsArray?.length) {
+				if (!isEditingModal) {
+					const campaignExistsCheck = campaignsArray.findIndex(
+						(campaign) =>
+							campaign?.campaign_name?.trim() === campaignName?.value?.trim()
+					);
+
+					if (campaignExistsCheck > -1) {
+						Array.isArray(campaignSchedule) &&
+							dispatch(
+								updateCampaignSchedule(
+									campaignSchedule.filter((item) => item.isSaved)
+								)
+							);
+						Alertbox(
+							"The campaign name is already in use, please try a different name.",
+							"error",
+							1000,
+							"bottom-right"
+						);
+						setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
+						setLoadingBtn(false);
+						setSaveDisabled(true);
+						return false;
+					}
+				}
 			}
 
 			const campaignToSave = {
@@ -774,6 +818,22 @@ const CalenderModal = ({
 		}
 	};
 
+
+	// HANDLE MESAGE LIMIT WITH THE CHANGE EVENT.. 
+	const handleMsgLimitChange = (event) => {
+		let msgLimitValue = event.target.value;
+
+		// Remove any non-digit characters, including 'e'
+		msgLimitValue = msgLimitValue.replace(/\D/g, '');
+
+		if (!msgLimitValue) {
+			msgLimitValue = '';
+		}
+
+		const parsedValue = parseInt(msgLimitValue);
+		setMsgLimit(parsedValue);
+	};
+
 	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
 		const campaignId = editingCampaign?._id || editingCampaign?.campaign_id;
@@ -798,19 +858,25 @@ const CalenderModal = ({
 
 
 	// DISABLE SAVED BUTTON ACCORDING TO FIELDS ARE REQUIRED..
-	const disableSubmit = () => {
-		const name = campaignName?.value?.trim();
-		const groupMsg = groupMsgSelect?._id;
+	// const disableSubmit = () => {
+	// 	const name = campaignName?.value?.trim();
+	// 	const groupMsg = groupMsgSelect?._id;
 
-		if (name === '' || (!groupMsg && quickMsg === null)
-			|| campaignSchedule?.length === 0
-			|| (scheduleTime && scheduleTime?.date?.length === 0)) {
-			return true;
+	// 	if (name === '' || (!groupMsg && quickMsg === null)
+	// 		|| campaignSchedule?.length === 0
+	// 		|| (scheduleTime && scheduleTime?.date?.length === 0)) {
+	// 		return true;
 
-		} else {
-			return false;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
+
+	useEffect(() => {
+		if (scheduleTime?.date?.length > 0) {
+			setSaveDisabled(false);
 		}
-	};
+	}, [scheduleTime]);
 
 
 	// FETCHING THE GROUP BY ID..
@@ -1013,7 +1079,7 @@ const CalenderModal = ({
 
 								<NumberRangeInput
 									value={msgLimit}
-									handleChange={(event) => setMsgLimit(event.target.value)}
+									handleChange={handleMsgLimitChange}
 									handleBlur={handleMessageLimitOnBlur}
 									setIncrementDecrementVal={incrementDecrementVal}
 									customStyleClass='campaign-modal-num-input'
@@ -1120,7 +1186,7 @@ const CalenderModal = ({
 						<button
 							className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""
 								}`}
-							disabled={disableSubmit() || campaignName.value.trim() === "" || unselectedError}
+							disabled={isSaveDisabled || unselectedError}
 							onClick={handleSubmitModalCampaign}
 						>
 							{isLoadingBtn ? "Saving..." : "Save"}
