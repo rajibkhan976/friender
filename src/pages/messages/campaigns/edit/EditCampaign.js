@@ -78,6 +78,7 @@ const EditCampaign = (props) => {
 			headerName: "Message  ",
 			cellRenderer: CampaignFriendMessageRenderer,
 			enableFilter: false,
+			sortable: false,
 			cellRendererParams: {
 				editingCampaign,
 			},
