@@ -168,10 +168,11 @@ const ScheduleSelector = (props) => {
 		) {
 			campaignScheduleArr = campaignScheduleArr.filter(
 				(item) =>
-					moment(item.start).format("DD-MM-YYYY h:mm A") !==
+					item.isFreezed ||
+					(moment(item.start).format("DD-MM-YYYY h:mm A") !==
 						moment(selectedSchedule.start).format("DD-MM-YYYY h:mm A") &&
-					moment(item.end).format("DD-MM-YYYY h:mm A") !==
-						moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A")
+						moment(item.end).format("DD-MM-YYYY h:mm A") !==
+							moment(selectedSchedule.end).format("DD-MM-YYYY h:mm A"))
 			);
 		} else {
 			campaignScheduleArr.pop();

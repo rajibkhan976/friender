@@ -448,8 +448,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 				const end = new Date(`${date} ${sched?.to_time}`);
 				const isSaved = true;
 				const isEditMode = true;
+				const isFreezed = true;
 
-				return { id, color, title, start, end, isSaved, isEditMode };
+				return { id, color, title, start, end, isSaved, isEditMode, isFreezed };
 			});
 
 		dispatch(updateCampaignSchedule(schedule));
