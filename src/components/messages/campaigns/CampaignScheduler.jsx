@@ -99,7 +99,7 @@ const CampaignScheduler = (props) => {
 						className='custom-global-campaign-wrapper'
 						style={{
 							width: `${props?.style?.width}%`,
-							// height: `${props?.style?.height}%`,
+							height: `${props?.style?.height}%`,
 							top: `${props?.style?.top}%`,
 							left: `${props?.style?.xOffset}%`,
 							position: "absolute",
@@ -109,12 +109,12 @@ const CampaignScheduler = (props) => {
 						{props?.event &&
 							Array.isArray(props?.event?.title) &&
 							props?.event?.title
-								.slice(
-									props?.event?.title.length - 1,
-									props?.event?.title.length
-								)
+								// .slice(
+								// 	props?.event?.title.length - 1,
+								// 	props?.event?.title.length
+								// )
 								.map((item) => item)}
-						{props?.event &&
+						{/* {props?.event &&
 							Array.isArray(props?.event?.title) &&
 							props?.event?.title.length > 1 && (
 								<div
@@ -141,7 +141,7 @@ const CampaignScheduler = (props) => {
 										props?.event?.title.slice(0, props?.event?.title.length - 1)
 											.length}
 								</div>
-							)}
+							)} */}
 					</div>
 				) : props?.event?.isSaved && props?.event?.isEditMode ? (
 					<div

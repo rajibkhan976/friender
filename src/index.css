@@ -302,8 +302,8 @@
 }
 
 .global-campaign-title {
-	/* width: 250px;
-	height: 25px; */
+	/* width: 250px; */
+	height: 100%;
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 2px;
