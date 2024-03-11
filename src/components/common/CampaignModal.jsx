@@ -93,6 +93,9 @@ const CalenderModal = ({
 	// END DATE AND TIME
 	const [endDateAndTime, setEndDateAndTime] = useState("");
 
+	// STATE OF CAMPAIGN STATUS..
+	// const [campaignEndTimeStatus, setCampaignEndTimeStatus] = useState(false);
+
 	const timeDelays = [
 		{
 			value: 3,
@@ -404,31 +407,31 @@ const CalenderModal = ({
 	const updateCampaignSchedulesPayload = () => {
 		const editSchedule = selectedCampaignSchedule
 			? {
-					day: moment(selectedCampaignSchedule?.start).format("dddd"),
-					start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
-					end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
-			  }
+				day: moment(selectedCampaignSchedule?.start).format("dddd"),
+				start: moment(selectedCampaignSchedule?.start).format("h:mm A"),
+				end: moment(selectedCampaignSchedule?.end).format("h:mm A"),
+			}
 			: null;
 		let updatedCampaignSchedules =
 			editSchedule &&
-			editingCampaign &&
-			Array.isArray(editingCampaign?.schedule)
+				editingCampaign &&
+				Array.isArray(editingCampaign?.schedule)
 				? [
-						...editingCampaign?.schedule?.filter(
-							(item) =>
-								editSchedule &&
-								editSchedule.day !== item.day &&
-								editSchedule.start !== item.start &&
-								editSchedule.end !== item.end
-						),
-				  ]
+					...editingCampaign?.schedule?.filter(
+						(item) =>
+							editSchedule &&
+							editSchedule.day !== item.day &&
+							editSchedule.start !== item.start &&
+							editSchedule.end !== item.end
+					),
+				]
 				: [];
 		if (
 			scheduleTime.date &&
 			scheduleTime.start &&
 			scheduleTime.end &&
 			timeOptions.findIndex((item) => item.value === scheduleTime.start) <
-				timeOptions.findIndex((item) => item.value === scheduleTime.end)
+			timeOptions.findIndex((item) => item.value === scheduleTime.end)
 		) {
 			const dateArr = scheduleTime.date.map((item) =>
 				moment(item).format("dddd")
@@ -529,7 +532,7 @@ const CalenderModal = ({
 				messageGroupId: groupMsgSelect?._id,
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
-				campaignEndTimeStatus: endDateAndTime ? true : false,
+				campaignEndTimeStatus: endDateAndTime !== 'Invalid date' && endDateAndTime && endDateAndTime !== '' ? true : false,
 				campaignEndTime: endDateAndTime ? new Date(endDateAndTime) : '',
 				timeDelay: timeDelay,
 				campaignLabelColor: campaginColorPick,
@@ -913,8 +916,12 @@ const CalenderModal = ({
 			setMsgLimit(editingCampaign?.message_limit);
 			setCampaignColorPick(editingCampaign?.campaign_label_color);
 
-			const formatEndTime = moment(editingCampaign?.campaign_end_time).format("YYYY-MM-DD HH:mm:ss");
-			setEndDateAndTime(formatEndTime);
+			if (editingCampaign?.campaign_end_time_status) {
+				const formatEndTime = moment(editingCampaign?.campaign_end_time).format("YYYY-MM-DD HH:mm:ss");
+				setEndDateAndTime(formatEndTime);
+			} else {
+				setEndDateAndTime("");
+			}
 
 			if (editingCampaign?.message_group_id) {
 				localStorage.removeItem("fr_quickMessage_campaigns_message");
