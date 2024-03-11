@@ -185,31 +185,31 @@ const Routeing = () => {
 									</Suspense>
 								}
 							/>
+						</Route>
+						<Route
+							path='campaigns'
+							element={
+								<Suspense fallback={""}>
+									<MessageCampaigns />
+								</Suspense>
+							}
+						>
 							<Route
-								path='campaigns'
+								path='create-campaign'
 								element={
 									<Suspense fallback={""}>
-										<MessageCampaigns />
+										<CreateCampaign />
 									</Suspense>
 								}
-							>
-								<Route
-									path='create-campaign'
-									element={
-										<Suspense fallback={""}>
-											<CreateCampaign />
-										</Suspense>
-									}
-								/>
-								<Route
-									path='/messages/campaigns/:campaignId'
-									element={
-										<Suspense fallback={""}>
-											<EditCampaign />
-										</Suspense>
-									}
-								/>
-							</Route>
+							/>
+							<Route
+								path='/campaigns/:campaignId'
+								element={
+									<Suspense fallback={""}>
+										<EditCampaign />
+									</Suspense>
+								}
+							/>
 						</Route>
 
 						{/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}

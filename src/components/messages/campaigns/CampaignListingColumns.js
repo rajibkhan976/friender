@@ -48,7 +48,8 @@ export const CampaignNameCellRenderer = memo((params) => {
 
 				// const campaignData = response?.data[0];
 				// navigate(`/messages/campaigns/${campaignId}`, { state: { ...campaignData } });
-				navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+				// navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+				navigate(`/campaigns/${campaignId}`, { state: { data: params?.data } });
 			}
 
 		} catch (error) {
@@ -223,7 +224,8 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 						);
 
 						// navigate(`/messages/campaigns/${campaignId}`);
-						navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+						// navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+						navigate(`/campaigns/${campaignId}`, { state: { data: params?.data } });
 					}
 				})
 		} catch (error) {
@@ -306,7 +308,8 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 
 						// navigate(`/messages/campaigns/${campaignId}`);
 						console.log("HERE IS CAMPAIGN DATA (PARAMS) - ", params?.data);
-						navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+						// navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
+						navigate(`/campaigns/${campaignId}`, { state: { data: params?.data } });
 					}
 				})
 		} catch (error) {

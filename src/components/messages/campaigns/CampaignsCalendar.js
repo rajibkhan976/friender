@@ -140,7 +140,8 @@ const CampaignsCalendar = () => {
 										}}
 										onMouseDown={(e) => e.stopPropagation()}
 										onClick={() => {
-											if (location?.pathname === "/messages/campaigns") {
+											// if (location?.pathname === "/messages/campaigns") {
+											if (location?.pathname === "/campaigns") {
 												// console.log("CMAPAIGN ID", campaignArr[i]);
 												setShowTooltip({ index: [], x: 0, y: 0 });
 												dispatch(

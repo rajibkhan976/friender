@@ -610,419 +610,6 @@
 			}
 		}
 	}
-
-	.messages-campaign {
-		.campaigns-header {
-			padding: 16px 30px;
-			border-bottom: 1px solid $themeDefaultSecondary2;
-			height: 72px;
-
-			h3 {
-				font-weight: $smallFontWeight;
-				font-size: 18px;
-			}
-
-			.fr-select-new {
-				.select-arrow {
-					top: 50%;
-					bottom: auto;
-					right: 16px;
-					transform: translateY(-50%);
-				}
-				.selector_box {
-					padding-right: 42px;
-					padding-left: 16px;
-					min-width: 108px;
-					color: $themeDefaultPrimary3;
-				}
-			}
-
-			.btn-create-campaign {
-				margin: 0;
-			}
-
-			.btn-go-back {
-				flex: 0 0 34px;
-				width: 34px;
-			}
-
-			.campaign-status {
-				padding-inline: 12px;
-				@include border-radius(4px);
-				@include theme-aware("background-color", "menu-bg");
-
-				> span {
-					font-size: $smallFontSize;
-					@include theme-aware("color", "text-para-color");
-					margin-right: 8px;
-				}
-			}
-
-			> *:not(:last-child) {
-				margin-right: 12px;
-			}
-		}
-		.campaigns-main {
-			flex-grow: 1;
-			// overflow-y: auto;
-			overflow: hidden;
-
-			.campaigns-listing {
-				margin: 30px;
-				margin-bottom: 20px;
-				margin-top: 0;
-				position: relative;
-
-				.ag-header-container {
-					.ag-header-cell-label {
-						font-size: $footerFontSize;
-						font-weight: $smallFontWeight;
-						@include theme-aware("color", "text-color");
-					}
-				}
-
-				.ag-body-viewport {
-					.ag-cell {
-						font-size: $smallFontSize;
-						font-weight: $fontWeight;
-
-						.campaign-count-cell,
-						.campaign-pending-cell {
-							@include theme-aware("color", "secondary-cell-text-color");
-						}
-
-						.campaign-schedule-cell {
-							a {
-								@include theme-aware("color", "secondary-link-color");
-								font-size: $footerFontSize;
-								display: inline-flex;
-								align-items: center;
-
-								svg {
-									margin-left: 4px;
-									vertical-align: middle;
-
-									*[fill] {
-										@include theme-aware("fill", "link-text-color");
-									}
-									*[stroke] {
-										@include theme-aware("stroke", "link-text-color");
-									}
-								}
-							}
-						}
-
-						.campaign-endTime-cell {
-							display: flex;
-							align-items: baseline;
-
-							&.end-time-exceeded {
-								color: $themeYellow9;
-
-								svg {
-									path {
-										fill: $themeYellow9;
-									}
-								}
-							}
-						}
-
-						.campaign-pending-cell {
-							border: 1px solid;
-							@include theme-aware("border-color", "sidebar-border-color");
-							padding-inline: 2px;
-							width: 60px;
-							border-radius: 30px;
-							@include theme-aware("color", "checkbox-border");
-							@include theme-aware("background-color", "listing-popup-bg");
-							text-align: center;
-							font-size: $smallFontSize;
-							font-weight: $fontWeight;
-							height: 27px;
-
-							&.nothing-pending {
-								background-color: $themeYellow9;
-								border-color: $themeYellow9;
-								@include theme-aware("color", "listing-cell-bg");
-							}
-						}
-					}
-				}
-
-				> .selection-popup {
-					margin-inline: 0;
-				}
-			}
-
-			.no-data-found {
-				p,
-				> span {
-					max-width: 180px;
-				}
-			}
-		}
-
-		.campaigns-create,
-		.campaigns-edit {
-			flex: 1 1 auto;
-			overflow-y: auto;
-			padding-inline: 30px;
-			position: relative;
-
-			.table-footer {
-				margin-block: 10px;
-			}
-
-			.sync-ico {
-				*[fill] {
-					@include theme-aware("fill", "secondary-link-color");
-				}
-				*[stroke] {
-					@include theme-aware("stroke", "secondary-link-color");
-				}
-			}
-
-			.no-data-found {
-				p,
-				> span {
-					max-width: 250px;
-					line-height: 24px;
-				}
-			}
-
-			// CAMPAIGNS EDIT PAGE ELEMENTS AND STRUCTURES..
-			.w-250 {
-				width: 240px;
-			}
-			.w-220 {
-				width: 220px;
-			}
-			.w-200 {
-				width: 200px;
-			}
-			.text-red {
-				color: #ff6a77 !important;
-				font-size: 12px;
-				margin-top: 5px;
-				font-weight: 400;
-			}
-
-			.campaigns-edit-inputs {
-				// display: inline-flex;
-				display: flex;
-				// flex-direction: row;
-				gap: 92px;
-				justify-content: flex-start;
-				// margin-top: 1rem;
-				// padding-bottom: 1rem;
-				// margin-bottom: 1rem;
-				border-bottom: 1px solid #313037;
-				flex: 0 0 93px;
-				align-items: center;
-				max-width: 1920px;
-
-				.campaigns-input {
-					display: grid;
-					// border-left: 1px solid #313037;
-					// padding-left: 40px;
-					position: relative;
-
-					&:first-child {
-						border-left: none;
-					}
-
-					&:last-child {
-						// margin-right: 30px;
-					}
-
-					label:not(.switch) {
-						font-size: 12px;
-						// color: #767485;
-						margin-bottom: 6px;
-						@include theme-aware("color", "link-text-color");
-					}
-
-					label.campaigns-end-dateTime-label {
-						position: relative;
-						top: 130%;
-
-						.switch {
-							margin-inline-end: 8px;
-						}
-					}
-
-					label.campaigns-end-dateTime-label-enabled {
-						position: inherit;
-					}
-
-					&.campaign-name-field,
-					&.campaign-message-field,
-					&.campaign-end-field {
-						flex: 1 0 200px;
-
-						.custom-select-option-wrapper {
-							width: 100%;
-						}
-
-						.campaigns-input-tooltip {
-							padding-left: 3px;
-							margin-top: -3px;
-						}
-
-						.campaign-end-datetime-span {
-							margin-top: 2px;
-						}
-					}
-
-					&:not(:first-child) {
-						&:before {
-							content: "";
-							position: absolute;
-							left: 0;
-							margin-left: -46px;
-							width: 1px;
-							height: 60px;
-							top: 50%;
-							transform: translateY(-50%);
-							@include theme-aware("background", "sidebar-border-color");
-						}
-					}
-				}
-
-				// .campaigns-select-msg-wrapper {
-				// 	width: 240px;
-				// 	margin-top: 5px;
-				// }
-
-				.campaigns-select-panel {
-					margin: 0;
-					height: 40px;
-					@include theme-aware("background", "sidebar-border-color");
-					border: 1px solid;
-					@include theme-aware("border-color", "sidebar-border-color")
-						// background: #313037;
-						// border: 1px solid #313037;
-;
-				}
-
-				.campaigns-select-panel-page {
-					// width: 240px;
-					width: 100%;
-					height: 215px;
-					transform: translate(-49.5%, 10%);
-				}
-
-				.campaigns-select,
-				.campaigns-name-field,
-				.campaigns-datetime-select,
-				.campaigns-num-input {
-					// background: black;
-					background: #313037;
-					color: white;
-					border-radius: 5px;
-					padding-left: 13px;
-					padding-right: 5px;
-					border: 1px solid #313037;
-					height: 40px;
-					font-size: 12px;
-					// margin-top: 10px;
-
-					&:focus {
-						border-color: rgb(0, 148, 255);
-						background: none;
-					}
-				}
-
-				.campaigns-error-input-field {
-					border-color: #ff6a77;
-					background: none;
-				}
-
-				.campaigns-num-input,
-				.campaigns-select {
-					width: 100%;
-					margin: 0;
-					// margin-top: 5px;
-				}
-
-				.campaigns-datetime-select {
-					position: relative;
-
-					&::-webkit-calendar-picker-indicator {
-						position: absolute;
-						inset: 0;
-						padding: 0;
-						background-position: right 10px center;
-						background-size: auto;
-						width: 100%;
-						height: 100%;
-						cursor: pointer;
-					}
-				}
-
-				::-webkit-calendar-picker-indicator {
-					// filter: invert(1);
-					background-image: url("../../../assets/images/date-time.svg");
-					background-repeat: no-repeat;
-					background-position: center center;
-				}
-
-				.campaigns-endDateTime-toggle {
-					margin-top: 5px;
-				}
-
-				.campaigns-quick-msg-tooltip {
-					&::before {
-						bottom: -103%;
-					}
-				}
-			}
-
-			.campaigns-time-delay-bar {
-				width: 100%;
-
-				.select-arrow {
-					// top: 15px;
-					top: 50%;
-					transform: translateY(-50%);
-					right: 10px;
-				}
-				.selector_box {
-					color: #d3d3d3;
-					border: 1px solid;
-					@include theme-aware("background", "sidebar-border-color");
-					@include theme-aware("border-color", "sidebar-border-color");
-				}
-			}
-		}
-
-		.campaigns-save-buttons-container {
-			position: relative;
-			bottom: 0;
-			width: 100%;
-			display: flex;
-			justify-content: flex-end;
-			gap: 10px;
-			padding: 20px;
-			border-top: 1px solid #313037;
-			background-color: #000;
-
-			button {
-				padding: 10px;
-				border-radius: 5px;
-				height: 40px;
-				font-size: 14px;
-				cursor: pointer;
-			}
-		}
-
-		.remove-friends {
-			background-color: transparent;
-			font-weight: $fontWeight;
-			margin-inline-start: 16px;
-			padding-inline: 0;
-		}
-	}
 }
 
 .message-context-menu {
@@ -1560,5 +1147,421 @@
 .custom-campaign-name-tooltip {
 	&::before {
 		width: 300px;
+	}
+}
+
+.messages-campaign {
+    flex: 1 1 auto;
+    overflow: hidden;
+	
+	.campaigns-header {
+		padding: 16px 30px;
+		border-bottom: 1px solid $themeDefaultSecondary2;
+		height: 72px;
+
+		h3 {
+			font-weight: $smallFontWeight;
+			font-size: 18px;
+		}
+
+		.fr-select-new {
+			.select-arrow {
+				top: 50%;
+				bottom: auto;
+				right: 16px;
+				transform: translateY(-50%);
+			}
+			.selector_box {
+				padding-right: 42px;
+				padding-left: 16px;
+				min-width: 108px;
+				color: $themeDefaultPrimary3;
+			}
+		}
+
+		.btn-create-campaign {
+			margin: 0;
+		}
+
+		.btn-go-back {
+			flex: 0 0 34px;
+			width: 34px;
+		}
+
+		.campaign-status {
+			padding-inline: 12px;
+			@include border-radius(4px);
+			@include theme-aware("background-color", "menu-bg");
+
+			> span {
+				font-size: $smallFontSize;
+				@include theme-aware("color", "text-para-color");
+				margin-right: 8px;
+			}
+		}
+
+		> *:not(:last-child) {
+			margin-right: 12px;
+		}
+	}
+	.campaigns-main {
+		flex-grow: 1;
+		// overflow-y: auto;
+		overflow: hidden;
+
+		.campaigns-listing {
+			margin: 30px;
+			margin-bottom: 20px;
+			margin-top: 0;
+			position: relative;
+
+			.ag-header-container {
+				.ag-header-cell-label {
+					font-size: $footerFontSize;
+					font-weight: $smallFontWeight;
+					@include theme-aware("color", "text-color");
+				}
+			}
+
+			.ag-body-viewport {
+				.ag-cell {
+					font-size: $smallFontSize;
+					font-weight: $fontWeight;
+
+					.campaign-count-cell,
+					.campaign-pending-cell {
+						@include theme-aware("color", "secondary-cell-text-color");
+					}
+
+					.campaign-schedule-cell {
+						a {
+							@include theme-aware("color", "secondary-link-color");
+							font-size: $footerFontSize;
+							display: inline-flex;
+							align-items: center;
+
+							svg {
+								margin-left: 4px;
+								vertical-align: middle;
+
+								*[fill] {
+									@include theme-aware("fill", "link-text-color");
+								}
+								*[stroke] {
+									@include theme-aware("stroke", "link-text-color");
+								}
+							}
+						}
+					}
+
+					.campaign-endTime-cell {
+						display: flex;
+						align-items: baseline;
+
+						&.end-time-exceeded {
+							color: $themeYellow9;
+
+							svg {
+								path {
+									fill: $themeYellow9;
+								}
+							}
+						}
+					}
+
+					.campaign-pending-cell {
+						border: 1px solid;
+						@include theme-aware("border-color", "sidebar-border-color");
+						padding-inline: 2px;
+						width: 60px;
+						border-radius: 30px;
+						@include theme-aware("color", "checkbox-border");
+						@include theme-aware("background-color", "listing-popup-bg");
+						text-align: center;
+						font-size: $smallFontSize;
+						font-weight: $fontWeight;
+						height: 27px;
+
+						&.nothing-pending {
+							background-color: $themeYellow9;
+							border-color: $themeYellow9;
+							@include theme-aware("color", "listing-cell-bg");
+						}
+					}
+				}
+			}
+
+			> .selection-popup {
+				margin-inline: 0;
+			}
+		}
+
+		.no-data-found {
+			p,
+			> span {
+				max-width: 180px;
+			}
+		}
+	}
+
+	.campaigns-create,
+	.campaigns-edit {
+		flex: 1 1 auto;
+		overflow-y: auto;
+		padding-inline: 30px;
+		position: relative;
+
+		.table-footer {
+			margin-block: 10px;
+		}
+
+		.sync-ico {
+			*[fill] {
+				@include theme-aware("fill", "secondary-link-color");
+			}
+			*[stroke] {
+				@include theme-aware("stroke", "secondary-link-color");
+			}
+		}
+
+		.no-data-found {
+			p,
+			> span {
+				max-width: 250px;
+				line-height: 24px;
+			}
+		}
+
+		// CAMPAIGNS EDIT PAGE ELEMENTS AND STRUCTURES..
+		.w-250 {
+			width: 240px;
+		}
+		.w-220 {
+			width: 220px;
+		}
+		.w-200 {
+			width: 200px;
+		}
+		.text-red {
+			color: #ff6a77 !important;
+			font-size: 12px;
+			margin-top: 5px;
+			font-weight: 400;
+		}
+
+		.campaigns-edit-inputs {
+			// display: inline-flex;
+			display: flex;
+			// flex-direction: row;
+			gap: 92px;
+			justify-content: flex-start;
+			// margin-top: 1rem;
+			// padding-bottom: 1rem;
+			// margin-bottom: 1rem;
+			border-bottom: 1px solid #313037;
+			flex: 0 0 93px;
+			align-items: center;
+			max-width: 1920px;
+
+			.campaigns-input {
+				display: grid;
+				// border-left: 1px solid #313037;
+				// padding-left: 40px;
+				position: relative;
+
+				&:first-child {
+					border-left: none;
+				}
+
+				&:last-child {
+					// margin-right: 30px;
+				}
+
+				label:not(.switch) {
+					font-size: 12px;
+					// color: #767485;
+					margin-bottom: 6px;
+					@include theme-aware("color", "link-text-color");
+				}
+
+				label.campaigns-end-dateTime-label {
+					position: relative;
+					top: 130%;
+
+					.switch {
+						margin-inline-end: 8px;
+					}
+				}
+
+				label.campaigns-end-dateTime-label-enabled {
+					position: inherit;
+				}
+
+				&.campaign-name-field,
+				&.campaign-message-field,
+				&.campaign-end-field {
+					flex: 1 0 200px;
+
+					.custom-select-option-wrapper {
+						width: 100%;
+					}
+
+					.campaigns-input-tooltip {
+						padding-left: 3px;
+						margin-top: -3px;
+					}
+
+					.campaign-end-datetime-span {
+						margin-top: 2px;
+					}
+				}
+
+				&:not(:first-child) {
+					&:before {
+						content: "";
+						position: absolute;
+						left: 0;
+						margin-left: -46px;
+						width: 1px;
+						height: 60px;
+						top: 50%;
+						transform: translateY(-50%);
+						@include theme-aware("background", "sidebar-border-color");
+					}
+				}
+			}
+
+			// .campaigns-select-msg-wrapper {
+			// 	width: 240px;
+			// 	margin-top: 5px;
+			// }
+
+			.campaigns-select-panel {
+				margin: 0;
+				height: 40px;
+				@include theme-aware("background", "sidebar-border-color");
+				border: 1px solid;
+				@include theme-aware("border-color", "sidebar-border-color")
+					// background: #313037;
+					// border: 1px solid #313037;
+;
+			}
+
+			.campaigns-select-panel-page {
+				// width: 240px;
+				width: 100%;
+				height: 215px;
+				transform: translate(-49.5%, 10%);
+			}
+
+			.campaigns-select,
+			.campaigns-name-field,
+			.campaigns-datetime-select,
+			.campaigns-num-input {
+				// background: black;
+				background: #313037;
+				color: white;
+				border-radius: 5px;
+				padding-left: 13px;
+				padding-right: 5px;
+				border: 1px solid #313037;
+				height: 40px;
+				font-size: 12px;
+				// margin-top: 10px;
+
+				&:focus {
+					border-color: rgb(0, 148, 255);
+					background: none;
+				}
+			}
+
+			.campaigns-error-input-field {
+				border-color: #ff6a77;
+				background: none;
+			}
+
+			.campaigns-num-input,
+			.campaigns-select {
+				width: 100%;
+				margin: 0;
+				// margin-top: 5px;
+			}
+
+			.campaigns-datetime-select {
+				position: relative;
+
+				&::-webkit-calendar-picker-indicator {
+					position: absolute;
+					inset: 0;
+					padding: 0;
+					background-position: right 10px center;
+					background-size: auto;
+					width: 100%;
+					height: 100%;
+					cursor: pointer;
+				}
+			}
+
+			::-webkit-calendar-picker-indicator {
+				// filter: invert(1);
+				background-image: url("../../../assets/images/date-time.svg");
+				background-repeat: no-repeat;
+				background-position: center center;
+			}
+
+			.campaigns-endDateTime-toggle {
+				margin-top: 5px;
+			}
+
+			.campaigns-quick-msg-tooltip {
+				&::before {
+					bottom: -103%;
+				}
+			}
+		}
+
+		.campaigns-time-delay-bar {
+			width: 100%;
+
+			.select-arrow {
+				// top: 15px;
+				top: 50%;
+				transform: translateY(-50%);
+				right: 10px;
+			}
+			.selector_box {
+				color: #d3d3d3;
+				border: 1px solid;
+				@include theme-aware("background", "sidebar-border-color");
+				@include theme-aware("border-color", "sidebar-border-color");
+			}
+		}
+	}
+
+	.campaigns-save-buttons-container {
+		position: relative;
+		bottom: 0;
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+		padding: 20px;
+		border-top: 1px solid #313037;
+		background-color: #000;
+
+		button {
+			padding: 10px;
+			border-radius: 5px;
+			height: 40px;
+			font-size: 14px;
+			cursor: pointer;
+		}
+	}
+
+	.remove-friends {
+		background-color: transparent;
+		font-weight: $fontWeight;
+		margin-inline-start: 16px;
+		padding-inline: 0;
 	}
 }

@@ -1361,7 +1361,8 @@ function PageHeader({ headerText = "" }) {
 								<InfoIcon />
 								You haven’t created any campaign(s) yet.{" "}
 								<Link
-									to='/messages/campaigns/create-campaign'
+									// to='/messages/campaigns/create-campaign'
+									to='/campaigns/create-campaign'
 									className='inline-icon'
 									// target="_blank"
 									onClick={() => setIsAddingToCampaign(false)}

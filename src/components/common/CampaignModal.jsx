@@ -328,7 +328,8 @@ const CalenderModal = ({
 				}
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
-				navigate("/messages/campaigns");
+				// navigate("/messages/campaigns");
+				navigate("/campaigns");
 				setCalenderModalOpen(false);
 			} else {
 				Array.isArray(campaignSchedule) &&

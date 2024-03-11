@@ -479,6 +479,29 @@
           @include border-radius(5px);
         }
 
+        &.campaigns-menu {
+          svg {
+            *[fill] {
+              fill: #fff;
+            }
+            *[stroke] {
+              stroke: #fff;
+            }
+          }
+
+          &:hover,
+          .active {
+            svg {
+              *[fill] {
+                @include theme-aware('fill', 'svg-icon-hover-color');
+              }
+              *[stroke] {
+                @include theme-aware('stroke', 'svg-icon-hover-color');
+              }
+            }
+          }
+        }
+
         a {
           display: flex;
           padding: 8px 28px;

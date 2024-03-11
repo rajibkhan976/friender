@@ -280,7 +280,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 			} else {
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
-				navigate("/messages/campaigns");
+				// navigate("/messages/campaigns");
+				navigate("/campaigns");
 			}
 
 		} catch (error) {
@@ -411,7 +412,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// CAMPAIGN EDIT / UPDATE CANCEL..
 	const handleClickToCancelEditCampaign = (_event) => {
-		navigate("/messages/campaigns");
+		// navigate("/messages/campaigns");
+		navigate("/campaigns");
 	};
 
 	// HANDLE MESSAGE LIMIT CHANGE..

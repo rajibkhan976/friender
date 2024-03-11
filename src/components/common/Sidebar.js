@@ -13,7 +13,7 @@ import { userLogout } from "../../actions/AuthAction";
 import { asyncLocalStorage } from "../../helpers/AsyncLocalStorage";
 import useComponentVisible from "../../helpers/useComponentVisible";
 import { crealFilter, removeSelectedFriends } from "../../actions/FriendListAction";
-import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon, WorldIcon } from "../../assets/icons/Icons";
+import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon, WorldIcon, CampaignQuicActionIcon } from "../../assets/icons/Icons";
 import {
   setProfileSpaces,
   setDefaultProfileId,
@@ -513,7 +513,7 @@ const Sidebar = (props) => {
                     '/messages/groups', 
                     '/messages/segments', 
                     '/messages/dmf',
-                    '/messages/campaigns'
+                    // '/messages/campaigns'
                   ].includes(location.pathname) ? "active" : ''}
                   aria-label="Messages"
                 >
@@ -558,13 +558,26 @@ const Sidebar = (props) => {
                       <span className="nav-menu-name">- DMF <span className="warn-badget">Coming soon</span></span>
                     </NavLink>
                   </li>
-                  <li className="nav-menu">
+                  {/* <li className="nav-menu">
                     <NavLink to="/messages/campaigns" aria-label="Friends">
                       <span className="nav-menu-name">- Campaigns</span>
                     </NavLink>
-                  </li>
+                  </li> */}
                 </ul>}
               </li>
+
+                <li
+                  className={"nav-menu campaigns-menu link-seperator"}
+                >
+                  <NavLink 
+                    to="/campaigns" 
+                    aria-label="Campaigns"
+                    className={'text-left'}
+                  >
+                    <CampaignQuicActionIcon />
+                    <span className="nav-menu-name">Campaigns</span>
+                  </NavLink>
+                </li>
             </ul>
           )}
         </nav>

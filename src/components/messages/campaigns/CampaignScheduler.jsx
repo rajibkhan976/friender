@@ -69,7 +69,8 @@ const CampaignScheduler = (props) => {
 			e.stopPropagation();
 			handleSetSelectedSchedule(props?.event);
 			if (
-				location?.pathname === "/messages/campaigns" &&
+				// location?.pathname === "/messages/campaigns" &&
+				location?.pathname === "/campaigns" &&
 				props?.event?.isSaved
 			) {
 				setCalenderModalType && setCalenderModalType("");

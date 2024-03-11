@@ -186,7 +186,8 @@ const CampaignsHeader = ({
 			{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
 				<>
 					<Link
-						to='/messages/campaigns/create-campaign'
+						// to='/messages/campaigns/create-campaign'
+						to='/campaigns/create-campaign'
 						className='btn btn-light-bg btn-primary btn-create-campaign'
 						onClick={() => setIsEditingCampaign(null)}
 					>
@@ -226,7 +227,8 @@ const CampaignsHeader = ({
 						<>
 							{/* EDIT UI */}
 							<Link
-								to='/messages/campaigns'
+								// to='/messages/campaigns'
+								to='/campaigns'
 								className='btn btn-inline btn-circular btn-go-back'
 								onClick={resetEditCampaign}
 							>
@@ -268,7 +270,8 @@ const CampaignsHeader = ({
 						<>
 							{/* CREATE UI */}
 							<Link
-								to='/messages/campaigns'
+								// to='/messages/campaigns'
+								to='/campaigns'
 								className='btn btn-inline btn-circular btn-go-back'
 							>
 								<ChevronLeftArrowIcon />
