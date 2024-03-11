@@ -325,9 +325,9 @@ export const messageSlice = createSlice({
 			state.isLoading = true;
 		},
 		[addNewGroup.fulfilled]: (state, action) => {
-			state.groupArray = action?.payload?.data
-				? [action?.payload?.data, ...state.groupArray]
-				: [...state.groupArray];
+			// state.groupArray = action?.payload?.data
+			// 	? [action?.payload?.data, ...state.groupArray]
+			// 	: [...state.groupArray];
 			state.isLoading = false;
 		},
 		[addNewGroup.rejected]: (state) => {
@@ -364,7 +364,7 @@ export const messageSlice = createSlice({
 			state.isLoading = true;
 		},
 		[addNewGroupMessageItem.fulfilled]: (state, action) => {
-			console.log("action", state, action?.payload?.data);
+			//console.log("action", state, action?.payload?.data);
 			// state.groupArray = [action.payload.data, ...state.groupArray]
 			state.isLoading = false;
 		},

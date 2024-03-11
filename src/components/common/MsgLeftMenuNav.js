@@ -194,7 +194,6 @@ function MsgLeftMenuNav({
 
   const addNewMessageParent = () => {
     if (MsgNavtype === "group" || MsgNavtype === "segment") {
-      console.log('yo');
       setIsLoading(true)
       setIsEditingName(true);
     }

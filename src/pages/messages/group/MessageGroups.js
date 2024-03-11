@@ -171,10 +171,11 @@ const MessageGroups = () => {
                         );
                     } else {
                         const resObj = { ...res.data, group_messages: res?.data?.group_messages?.length > 0 ? res.data.group_messages : [] }
-                        setGroupsArray([
+                        setGroupsArray((prevArray)=>{
+                            return[
                             resObj,
-                            ...groupsArray
-                        ])
+                            ...prevArray]
+                        })
 
                         Alertbox(
                             `Group created Successfully`,
