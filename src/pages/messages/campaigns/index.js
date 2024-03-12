@@ -193,11 +193,11 @@ const Campaigns = () => {
 		setSpanOption((prevStatus) =>
 			prevStatus?.map((e) => ({
 				...e,
-				selected: e.value != el?.target?.value ? false : true,
+				selected: e.value != el ? false : true,
 			}))
 		);
 
-		dispatch(updateCampaignDuration(el?.target?.value))
+		dispatch(updateCampaignDuration(el))
 
 		filterCampaigns();
 	};
@@ -208,11 +208,11 @@ const Campaigns = () => {
 		setStatusOption((prevStatus) =>
 			prevStatus?.map((e) => ({
 				...e,
-				selected: e.value != el?.target?.value ? false : true,
+				selected: e.value != el ? false : true,
 			}))
 		);
 
-		dispatch(updateCampaignFilter(el?.target?.value))
+		dispatch(updateCampaignFilter(el))
 		filterCampaigns();
 	};
 

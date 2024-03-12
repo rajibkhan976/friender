@@ -482,10 +482,10 @@
         &.campaigns-menu {
           svg {
             *[fill] {
-              fill: #fff;
+              @include theme-aware('fill', 'text-para-color')
             }
             *[stroke] {
-              stroke: #fff;
+              @include theme-aware('stroke', 'text-para-color')
             }
           }
 
@@ -504,7 +504,8 @@
 
         a {
           display: flex;
-          padding: 8px 28px;
+          // padding: 8px 28px;
+          padding: 6.5px 28px;
           align-items: center;
           border-left: 2px solid transparent;
           pointer-events: all;
@@ -565,6 +566,10 @@
             fill: $themeDefaultPrimary1;
           }
         }
+      }
+
+      .nav-menu+.nav-menu:not(.link-seperator) {
+        margin-top: 5px;
       }
 
       .nav-menu {

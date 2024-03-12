@@ -180,6 +180,16 @@ const CampaignsHeader = ({
 		}
 	}, [campaignsArray]);
 
+	const createCampaign = () => {
+		// console.log('spanOptions >>>>', spanOptions);
+		changeStatusView('all')
+
+
+		// console.log('statusOptions >>>>', statusOptions);
+		changeSpanView('all')
+		setIsEditingCampaign(null)
+	}
+
 	return (
 		<header className='campaigns-header d-flex f-align-center w-100'>
 			{/* If on base campaign page */}
@@ -189,7 +199,7 @@ const CampaignsHeader = ({
 						// to='/messages/campaigns/create-campaign'
 						to='/campaigns/create-campaign'
 						className='btn btn-light-bg btn-primary btn-create-campaign'
-						onClick={() => setIsEditingCampaign(null)}
+						onClick={() => createCampaign()}
 					>
 						<AddTransparentIcon />
 						Create campaign
@@ -209,7 +219,7 @@ const CampaignsHeader = ({
 						extraClass='fr-select-new tinyWrap'
 						height='40px'
 						width='inherit'
-						handleChange={changeSpanView}
+						handleChange={(e)=>changeSpanView(e.target.value)}
 					/>
 					<DropSelector
 						selects={statusOptions}
@@ -218,7 +228,7 @@ const CampaignsHeader = ({
 						extraClass='fr-select-new tinyWrap'
 						height='40px'
 						width='inherit'
-						handleChange={changeStatusView}
+						handleChange={(e)=>changeStatusView(e.target.value)}
 					/>
 				</>
 			) : (

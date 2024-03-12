@@ -567,7 +567,7 @@ const Sidebar = (props) => {
               </li>
 
                 <li
-                  className={"nav-menu campaigns-menu link-seperator"}
+                  className={"nav-menu campaigns-menu"}
                 >
                   <NavLink 
                     to="/campaigns" 
