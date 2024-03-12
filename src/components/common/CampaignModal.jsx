@@ -397,6 +397,7 @@ const CalenderModal = ({
 				timeIn24 = hourPart.toString() + ":" + minutePart + ":00";
 			}
 		}
+		timeIn24 = timeIn24?.split(":")[0]?.toString()?.length === 1 ? `0${timeIn24?.split(":")[0]}:${timeIn24?.split(":")[1]}:${timeIn24?.split(":")[2]}` : timeIn24;
 		return timeIn24;
 	};
 
