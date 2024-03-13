@@ -398,7 +398,7 @@ const Campaigns = () => {
 					{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
 						<div className='campaigns-main'>
 							{radioOption?.find((el) => el.checked).label === "listing" ? (
-								!campaignsCreated || campaignsCreated?.length <= 0 ? (
+								!campaignsCreated || filterCampaigns()?.length <= 0 ? (
 									<NoDataFound
 										customText={`No campaign(s) has been created yet`}
 									/>

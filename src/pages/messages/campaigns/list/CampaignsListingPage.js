@@ -88,6 +88,7 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			headerClass: "campaign-contextMenu-header",
 			suppressSorting: true,
 			sortable: false,
+			resizable: false,
 			lockPosition: "right",
 			cellRendererParams: {
 				isCampaignDeleteModalOpen,
