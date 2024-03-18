@@ -9,7 +9,8 @@ import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
-import { updateCampaignStatus } from 'actions/CampaignsActions';
+import { updateCampaignStatus, syncCampaignStatus } from 'actions/CampaignsActions';
+
 
 const CampaignsHeader = ({
 	radioOptions,
@@ -35,6 +36,11 @@ const CampaignsHeader = ({
 	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
 	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
 
+	useEffect(() => {
+		dispatch(syncCampaignStatus());
+	}, [campaignsStatusActivity]);
+
+
 	// CAMPAIGN STATUS UPDATE VIA API.. 
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
@@ -47,6 +53,8 @@ const CampaignsHeader = ({
 				3000,
 				"bottom-right"
 			);
+
+			setCampaignsStatusActivity(campaignStatus);
 
 			return false;
 
@@ -100,7 +108,6 @@ const CampaignsHeader = ({
 
 		} else {
 			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
-			setCampaignsStatusActivity(e.target.checked);
 
 			// We don't need that if we enables that, then toggle is not working..
 			// toggleEditCampaign(e.target.checked);
@@ -183,7 +190,6 @@ const CampaignsHeader = ({
 	const createCampaign = () => {
 		// console.log('spanOptions >>>>', spanOptions);
 		changeStatusView('all')
-
 
 		// console.log('statusOptions >>>>', statusOptions);
 		changeSpanView('all')

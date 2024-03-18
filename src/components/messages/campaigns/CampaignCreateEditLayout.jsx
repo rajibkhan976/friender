@@ -400,8 +400,8 @@ const CampaignCreateEditLayout = ({ children }) => {
 					campaignsArray.find(
 						(campaign) => campaign?.campaign_id === params?.campaignId
 					);
+					
 				campaignData.campaignStatus = findTheCampaign?.status;
-
 				campaignData.oldMessageGroupId = getOldMessageGroupId();
 			}
 
