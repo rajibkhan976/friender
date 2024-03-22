@@ -75,10 +75,16 @@ const CampaignsCalendar = () => {
 				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder]
 				break;
 		}
-
-		if (Array.isArray(campaignsArrayPlaceholder) && campaignsArrayPlaceholder.length < 1) {
+		console.log(campaignsArrayPlaceholder);
+		if (
+			Array.isArray(campaignsArrayPlaceholder) &&
+			campaignsArrayPlaceholder.length < 1
+		) {
 			dispatch(updateCampaignSchedule([]));
-		} else if (Array.isArray(campaignsArrayPlaceholder) && campaignsArrayPlaceholder.length > 0) {
+		} else if (
+			Array.isArray(campaignsArrayPlaceholder) &&
+			campaignsArrayPlaceholder.length > 0
+		) {
 			const campaignArr = [];
 			const groupedCampaignByDateNTime = [];
 
@@ -95,14 +101,13 @@ const CampaignsCalendar = () => {
 							title: campaign?.campaign_name,
 							start: new Date(`${date} ${campaignSchedule?.from_time}`),
 							end: new Date(`${date} ${campaignSchedule?.to_time}`),
+							status: campaign?.status,
 						});
 					});
 				}
 			});
 
 			if (campaignArr.length > 0) {
-				let deepCopyOfCampaignArr = [...campaignArr];
-
 				for (let i = 0; i < campaignArr.length; i++) {
 					const campaignTitleArr = [];
 					if (
@@ -117,15 +122,21 @@ const CampaignsCalendar = () => {
 								className='global-campaign-title'
 								key={i}
 								style={{
-									backgroundColor: `${utils.hex2rgb(
-										matchedSchedule.color,
-										"bg"
-									)}`,
-									borderLeft: `4px solid ${utils.hex2rgb(
-										matchedSchedule.color,
-										"border"
-									)}`,
-									color: `${utils.hex2rgb(matchedSchedule.color, "text")}`,
+									backgroundColor: `${
+										campaignArr[i].status
+											? utils.hex2rgb(matchedSchedule.color, "bg")
+											: "rgba(93, 97, 102, 0.2)"
+									}`,
+									borderLeft: `4px solid ${
+										campaignArr[i].status
+											? utils.hex2rgb(matchedSchedule.color, "border")
+											: "rgba(93, 97, 102, 1)"
+									}`,
+									color: `${
+										campaignArr[i].status
+											? utils.hex2rgb(matchedSchedule.color, "text")
+											: "rgba(93, 97, 102, 1)"
+									}`,
 								}}
 								onMouseDown={(e) => e.stopPropagation()}
 								onClick={() => {
@@ -159,11 +170,6 @@ const CampaignsCalendar = () => {
 								<span className='global-campaign-title-slot'>
 									{matchedSchedule.title}
 								</span>
-								<span className='global-campaign-time-slot'>{`${moment(
-									matchedSchedule.start
-								).format("hh:mma")} - ${moment(matchedSchedule.end).format(
-									"hh:mma"
-								)}`}</span>
 								{showTooltip && showTooltip?.index?.includes(i) && (
 									<CampaignSchedulerPopup>
 										<div
@@ -179,6 +185,8 @@ const CampaignsCalendar = () => {
 								)}
 							</div>
 						);
+
+						// let deepCopyOfCampaignArr = [...campaignArr];
 						// for (let c = 0; c < deepCopyOfCampaignArr.length; c++) {
 						// 	if (
 						// 		moment(campaignArr[i].start).format("DD-MM-YYYY h:mm A") ===

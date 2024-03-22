@@ -387,7 +387,10 @@ const CalenderModal = ({
 						? Number(timePart?.split(":")[0]) + 12
 						: Number(timePart?.split(":")[0]);
 				const minutePart = timePart?.split(":")[1];
-				timeIn24 = hourPart.toString() + ":" + minutePart + ":00";
+				timeIn24 =
+					hourPart.toString() === "23" && minutePart === "59"
+						? hourPart.toString() + ":" + minutePart + ":59"
+						: hourPart.toString() + ":" + minutePart + ":00";
 			} else {
 				const hourPart =
 					Number(timePart?.split(":")[0]) === 12

@@ -302,11 +302,12 @@
 }
 
 .global-campaign-title {
-	/* width: 250px; */
+	width: 100%;
 	height: 100%;
 	display: flex;
-	justify-content: space-between;
-	margin-bottom: 2px;
+	flex-wrap: wrap;
+	/* justify-content: space-between; */
+	/* margin-bottom: 2px; */
 	padding: 0.25rem;
 	font-size: 12px;
 	font-weight: 500;
@@ -316,7 +317,7 @@
 }
 
 .global-campaign-tooltip {
-	width: 177px;
+	width: fit-content;
 	/* height: 68px; */
 	height: auto;
 	background-color: #313037;
@@ -325,6 +326,7 @@
 	line-height: 18px;
 	font-weight: 400;
 	display: flex;
+	flex-wrap: wrap;
 	padding: 8px;
 	border-radius: 3px;
 	position: absolute;

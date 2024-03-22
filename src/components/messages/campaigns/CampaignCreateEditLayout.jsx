@@ -312,7 +312,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 					transformSchedules.push({
 						day,
 						from_time: fromTime,
-						to_time: toTime,
+						to_time: toTime === "23:59:00" ? "23:59:59" : toTime,
 					});
 				}
 			});
