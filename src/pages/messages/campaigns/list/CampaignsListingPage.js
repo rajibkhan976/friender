@@ -15,7 +15,7 @@ import Modal from "components/common/Modal";
 import { DangerIcon } from "assets/icons/Icons";
 import { useDispatch } from "react-redux";
 import Alertbox from "components/common/Toast";
-
+import extensionAccesories from "../../../../configuration/extensionAccesories"
 const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 	const dispatch = useDispatch();
 	const [isReset, setIsReset] = useState(null);
@@ -107,6 +107,9 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 
 			if (response?.data) {
 				setCampaignDeleteModalOpen(false);
+				extensionAccesories.sendMessageToExt({
+					action: "campaignUpdate"
+				  });
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,
 					"success",

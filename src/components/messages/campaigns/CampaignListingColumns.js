@@ -25,6 +25,7 @@ import {
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 import moment from 'moment';
+import extensionAccesories from "../../../configuration/extensionAccesories";
 
 
 export const CampaignNameCellRenderer = memo((params) => {
@@ -79,6 +80,10 @@ export const CampaignStatusCellRenderer = memo((params) => {
 
 	useEffect(() => {
 		dispatch(syncCampaignStatus());
+		
+		extensionAccesories.sendMessageToExt({
+			action: "campaignUpdate"
+		});
 	}, [campaignStatus]);
 
 
@@ -320,6 +325,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const handleDeleteCampaignOnClick = async () => {
 		setCampaignDeleteModalOpen(true);
 		setCampaignId(campaignId);
+		
 	};
 
 	return (

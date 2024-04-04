@@ -34,7 +34,7 @@ import Alertbox from "components/common/Toast";
 import moment from "moment";
 import { getGroupById } from "actions/MySettingAction";
 import { timeOptions } from "../../helpers/timeOptions";
-
+import extensionAccesories from "../../configuration/extensionAccesories"
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
 	open = false,
@@ -723,6 +723,10 @@ const CalenderModal = ({
 
 			if (response?.data) {
 				setCampaignDeleteModalOpen(false);
+				
+				extensionAccesories.sendMessageToExt({
+				  action: "campaignUpdate"
+				});
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,
 					"success",

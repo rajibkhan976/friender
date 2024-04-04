@@ -12,6 +12,7 @@ import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignD
 import { fetchCampaign } from 'services/campaigns/CampaignServices';
 import Alertbox from "components/common/Toast";
 import Tooltip from 'components/common/Tooltip';
+import extensionAccesories from "../../../configuration/extensionAccesories";
 
 
 const CampaignCreateEditLayout = ({ children }) => {
@@ -403,6 +404,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 					
 				campaignData.campaignStatus = findTheCampaign?.status;
 				campaignData.oldMessageGroupId = getOldMessageGroupId();
+				extensionAccesories.sendMessageToExt({
+					action: "campaignUpdate"
+				});
 			}
 
 			// TRANSFERING DATA..
