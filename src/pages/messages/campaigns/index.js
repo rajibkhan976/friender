@@ -368,10 +368,10 @@ const Campaigns = () => {
 		fetchAll();
 
 		return () => {
-			dispatch(updateCampaignDuration(null))
-			dispatch(updateCampaignFilter(null))
-		}
-	}, []);
+			dispatch(updateCampaignDuration(null));
+			dispatch(updateCampaignFilter(null));
+		};
+	}, [location.pathname, radioOption]);
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>
