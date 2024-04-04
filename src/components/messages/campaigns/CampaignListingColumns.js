@@ -82,7 +82,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 		dispatch(syncCampaignStatus());
 		
 		extensionAccesories.sendMessageToExt({
-			action: "campaignUpdate"
+			action: "update_schedules"
 		});
 	}, [campaignStatus]);
 

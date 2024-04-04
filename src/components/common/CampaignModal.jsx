@@ -725,7 +725,7 @@ const CalenderModal = ({
 				setCampaignDeleteModalOpen(false);
 				
 				extensionAccesories.sendMessageToExt({
-				  action: "campaignUpdate"
+				  action: "update_schedules"
 				});
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,

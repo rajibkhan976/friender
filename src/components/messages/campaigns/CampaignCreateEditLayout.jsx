@@ -405,7 +405,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 				campaignData.campaignStatus = findTheCampaign?.status;
 				campaignData.oldMessageGroupId = getOldMessageGroupId();
 				extensionAccesories.sendMessageToExt({
-					action: "campaignUpdate"
+					action: "update_schedules"
 				});
 			}
 
