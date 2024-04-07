@@ -80,23 +80,21 @@ export const CampaignStatusCellRenderer = memo((params) => {
 
 	useEffect(() => {
 		dispatch(syncCampaignStatus());
-		
-		extensionAccesories.sendMessageToExt({
-			action: "update_schedules"
-		});
 	}, [campaignStatus]);
 
 
 	// CHECK THE PENDING FRIENDS AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
 		if (pendingFriends <= 0) {
-			(async () => {
-				try {
-					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
-				} catch (error) {
-					console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
-				}
-			})();
+			if(campaignStatus){
+				(async () => {
+					try {
+						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+					} catch (error) {
+						console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
+					}
+				})();
+			}
 		}
 	}, [pendingFriends]);
 
@@ -104,13 +102,15 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
 	useEffect(() => {
 		if (params?.data?.campaign_end_time_status && (endDateAndTime && endDateAndTime < new Date())) {
-			(async () => {
-				try {
-					await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
-				} catch (error) {
-					console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
-				}
-			})();
+			if(campaignStatus){
+				(async () => {
+					try {
+						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+					} catch (error) {
+						console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
+					}
+				})();
+			}
 		}
 	}, [endDateAndTime]);
 
@@ -127,6 +127,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				"bottom-right"
 			);
 			//setCampaignStatus(!campaignStatus);
+			extensionAccesories.sendMessageToExt({
+				action: "update_schedules"
+			});
 			setCampaignStatus(campaignStatus);
 
 			return false;
