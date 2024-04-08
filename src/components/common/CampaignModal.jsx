@@ -826,6 +826,9 @@ const CalenderModal = ({
 					placeholderCampaign?.campaign_id,
 					e.target.checked
 				);
+				extensionAccesories.sendMessageToExt({
+					action: "update_schedules"
+				});
 			}
 		}
 	};

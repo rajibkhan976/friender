@@ -10,7 +10,7 @@ import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
 import { updateCampaignStatus, syncCampaignStatus } from 'actions/CampaignsActions';
-
+import extensionAccesories from "../../../configuration/extensionAccesories";
 
 const CampaignsHeader = ({
 	radioOptions,
@@ -108,7 +108,9 @@ const CampaignsHeader = ({
 
 		} else {
 			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
-
+			extensionAccesories.sendMessageToExt({
+				action: "update_schedules"
+			  });
 			// We don't need that if we enables that, then toggle is not working..
 			// toggleEditCampaign(e.target.checked);
 		}
