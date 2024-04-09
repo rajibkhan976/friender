@@ -4,6 +4,7 @@ import {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
 } from "actions/CampaignsActions";
+import { countCurrentListsize } from "actions/FriendListAction";
 import { useLocation } from "react-router-dom";
 import { utils } from "../../../helpers/utils";
 import moment from "moment";
@@ -13,8 +14,10 @@ import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CampaignsCalendar = () => {
 	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
-	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter)
-	const campaignDuration = useSelector((state) => state.campaign.campaignDuration)
+	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter);
+	const campaignDuration = useSelector(
+		(state) => state.campaign.campaignDuration
+	);
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -50,32 +53,61 @@ const CampaignsCalendar = () => {
 
 	useEffect(() => {
 		let campaignsArrayPlaceholder = campaignsArray;
-		const week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-		
+		const week = [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday",
+		];
+
 		switch (campaignsFilter) {
-			case 'active':
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => el?.status)]
+			case "active":
+				campaignsArrayPlaceholder = [
+					...campaignsArrayPlaceholder?.filter((el) => el?.status),
+				];
 				break;
-			
-			case 'inactive':
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.filter(el => !el?.status)]
+
+			case "inactive":
+				campaignsArrayPlaceholder = [
+					...campaignsArrayPlaceholder?.filter((el) => !el?.status),
+				];
 				break;
-		
+
 			default:
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder]
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
 				break;
 		}
 
 		switch (campaignDuration) {
-			case 'today':
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder?.map(el => el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])?.length && ({...el, schedule: [...el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])]}))]
+			case "today":
+				campaignsArrayPlaceholder = [
+					...campaignsArrayPlaceholder?.map(
+						(el) =>
+							el?.schedule?.filter(
+								(ex) => ex?.day === week[new Date().getDay()]
+							)?.length && {
+								...el,
+								schedule: [
+									...el?.schedule?.filter(
+										(ex) => ex?.day === week[new Date().getDay()]
+									),
+								],
+							}
+					),
+				];
 				break;
-		
+
 			default:
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder]
+				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
 				break;
 		}
+
 		console.log(campaignsArrayPlaceholder);
+		dispatch(countCurrentListsize(campaignsArrayPlaceholder?.length));
+
 		if (
 			Array.isArray(campaignsArrayPlaceholder) &&
 			campaignsArrayPlaceholder.length < 1

@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchCampaignById, 
+	fetchCampaignById,
 	updateCampaignsArray,
 	syncCampaignStatus,
 	updateCampaignFilter,
@@ -24,9 +24,10 @@ import NoDataFound from "components/common/NoDataFound";
 import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
 
-
-const CampaignsCalendar = lazy(() => import("components/messages/campaigns/CampaignsCalendar"))
-const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"))
+const CampaignsCalendar = lazy(() =>
+	import("components/messages/campaigns/CampaignsCalendar")
+);
+const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
 
 // VIEW OPTIONS FOR BASE CAMPAIGN PAGE
 const radioOptions = [
@@ -97,16 +98,19 @@ const editView = [
 const Campaigns = () => {
 	const location = useLocation();
 	const params = useParams();
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.campaign.isLoading);
 	const campaignsCreated = useSelector(
 		(state) => state.campaign.campaignsArray
 	);
-	const campaignsDetails = useSelector((state) => state.campaign.campaignsDetails);
-	const editing = useSelector((state) => state.campaign.editingCampaign)
-	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter)
-	const campaignDuration = useSelector((state) => state.campaign.campaignDuration)
+	const campaignsDetails = useSelector(
+		(state) => state.campaign.campaignsDetails
+	);
+	const editing = useSelector((state) => state.campaign.editingCampaign);
+	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter);
+	const campaignDuration = useSelector(
+		(state) => state.campaign.campaignDuration
+	);
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -114,21 +118,25 @@ const Campaigns = () => {
 	const [statusOption, setStatusOption] = useState(statusOptions);
 	const [editViews, setEditViews] = useState(editView);
 	const [isEditingCampaign, setIsEditingCampaign] = useState(null); //{isPaused: true}
-	const current_fb_id = localStorage.getItem("fr_default_fb");
 
 	const fetchAll = async () => {
 		try {
 			dispatch(fetchAllCampaigns())
 				.unwrap()
 				.then((res) => {
-					console.log('res', res);
-					dispatch(countCurrentListsize(res?.length ? res?.length : 0))
+					console.log("res", res);
+					// dispatch(countCurrentListsize(res?.length ? res?.length : 0));
 				});
-			if (location?.pathname?.split("/")?.slice(-2)[0] === 'campaigns' && params?.campaignId) {
-				const response = await dispatch(fetchCampaignById({
-					fbUserId: localStorage.getItem("fr_default_fb"),
-					campaignId: params?.campaignId
-				})).unwrap()
+			if (
+				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
+				params?.campaignId
+			) {
+				const response = await dispatch(
+					fetchCampaignById({
+						fbUserId: localStorage.getItem("fr_default_fb"),
+						campaignId: params?.campaignId,
+					})
+				).unwrap();
 			}
 		} catch (error) {
 			Alertbox(`${error} `, "error", 3000, "bottom-right");
@@ -136,11 +144,11 @@ const Campaigns = () => {
 	};
 
 	// UPDATING CAMPAIGNS LIST SIZE IN FRIEND LIST..
-	useEffect(() => {
-		if (campaignsCreated && campaignsCreated?.length === 0) {
-			dispatch(countCurrentListsize(campaignsCreated?.length));
-		}
-	}, [campaignsCreated]);
+	// useEffect(() => {
+	// 	if (campaignsCreated && campaignsCreated?.length === 0) {
+	// 		dispatch(countCurrentListsize(campaignsCreated?.length));
+	// 	}
+	// }, [campaignsCreated]);
 
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
@@ -197,7 +205,7 @@ const Campaigns = () => {
 			}))
 		);
 
-		dispatch(updateCampaignDuration(el))
+		dispatch(updateCampaignDuration(el));
 
 		filterCampaigns();
 	};
@@ -212,13 +220,13 @@ const Campaigns = () => {
 			}))
 		);
 
-		dispatch(updateCampaignFilter(el))
+		dispatch(updateCampaignFilter(el));
 		filterCampaigns();
 	};
 
 	// TOGGLE EDIT CAMPAIGNS PAGE VIEW
 	const changeEditView = (el) => {
-		console.log('el', el);
+		console.log("el", el);
 		let editViewPlaceholder = [...editViews];
 		editViewPlaceholder = editViewPlaceholder.map((item) =>
 			item.label === el.label ? { ...el } : { ...item, checked: false }
@@ -261,18 +269,25 @@ const Campaigns = () => {
 
 	// FILTER CAMPAIGNS / FRIENDS FROM HEADER
 	const filterCampaigns = () => {
-		let campaignsResult = campaignsCreated
-		const week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-		// console.log('campaignsFilter CHANGED', campaignsFilter);
+		let campaignsResult = campaignsCreated;
+		const week = [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday",
+		];
 
 		// Check for campaign status
 		switch (campaignsFilter) {
 			case "active":
-				campaignsResult = [...campaignsResult?.filter((el) => el?.status)]
+				campaignsResult = [...campaignsResult?.filter((el) => el?.status)];
 				break;
 
 			case "inactive":
-				campaignsResult = [...campaignsResult?.filter((el) => !el?.status)]
+				campaignsResult = [...campaignsResult?.filter((el) => !el?.status)];
 				break;
 
 			default:
@@ -283,8 +298,22 @@ const Campaigns = () => {
 		// Check for campaign time span
 		switch (campaignDuration) {
 			case "today":
-				campaignsResult = [...campaignsResult?.filter(el => el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])?.length && ({...el, schedule: [...el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])]}))]
-				console.log('campaignsResult >>>>>', campaignsResult);
+				campaignsResult = [
+					...campaignsResult?.filter(
+						(el) =>
+							el?.schedule?.filter(
+								(ex) => ex?.day === week[new Date().getDay()]
+							)?.length && {
+								...el,
+								schedule: [
+									...el?.schedule?.filter(
+										(ex) => ex?.day === week[new Date().getDay()]
+									),
+								],
+							}
+					),
+				];
+				console.log("campaignsResult >>>>>", campaignsResult);
 				break;
 
 			default:
@@ -313,6 +342,7 @@ const Campaigns = () => {
 	// }
 
 	// UPDATE REDUX CAMPAIGNS ARRAY ON EDITED CAMPAIGN MODIFIED
+
 	useEffect(() => {
 		// console.log("isEditingCampaign", isEditingCampaign);
 
@@ -335,13 +365,16 @@ const Campaigns = () => {
 	useEffect(() => {
 		if (editing) {
 			if (editing?.friends?.length > 0) {
-				setIsEditingCampaign(editing)
+				setIsEditingCampaign(editing);
 			} else {
-				setIsEditingCampaign({ ...editing, friends: [] })
+				setIsEditingCampaign({ ...editing, friends: [] });
 			}
 			// console.log('editing--->>>> ', editing);
 			if (editing && editing?.quick_message) {
-				localStorage.setItem("fr_quickMessage_campaigns_message", editing?.quick_message?.__raw);
+				localStorage.setItem(
+					"fr_quickMessage_campaigns_message",
+					editing?.quick_message?.__raw
+				);
 			}
 			localStorage.setItem("fr_edit_mode_quickCampMsg", true);
 		}
@@ -366,12 +399,14 @@ const Campaigns = () => {
 
 	useEffect(() => {
 		fetchAll();
+	}, [location.pathname, radioOption]);
 
+	useEffect(() => {
 		return () => {
 			dispatch(updateCampaignDuration(null));
 			dispatch(updateCampaignFilter(null));
 		};
-	}, [location.pathname, radioOption]);
+	}, []);
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>
