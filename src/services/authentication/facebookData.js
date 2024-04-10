@@ -13,7 +13,7 @@ export const saveUserProfile = (profilebody)=>{
         profilebody,
         {headers: headers}
       ).then((result)=>{
-        console.log("result",result)
+        // console.log("result",result)
           resolve(result);
       })
       .catch((error)=>{ 

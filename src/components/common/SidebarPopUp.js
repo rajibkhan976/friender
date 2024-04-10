@@ -9,22 +9,22 @@ const SidebarPopUp = (props) => {
   const profiles = useSelector((state) => state.profilespace.profiles);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log('props facebookAuthInfoStatus', props?.facebookAuthInfoStatus);
+    // console.log('props facebookAuthInfoStatus', props?.facebookAuthInfoStatus);
   }, [])
-  console.log("******** PROPS",props,profiles)
+  // console.log("******** PROPS",props,profiles)
   
   // open profile on fb
   const openProfileonFb = (e) => {
     e.preventDefault();
     
     if (props?.facebookAuthInfoStatus) {
-      console.log('here');
+      // console.log('here');
       navigate(props?.facebookAuthInfoStatus?.link)
     } else if (props?.profiles) {
-      console.log('here', props?.profiles[0]?.fb_profile_url);
+      // console.log('here', props?.profiles[0]?.fb_profile_url);
       navigate(props?.profiles[0]?.fb_profile_url)
     } else {
-      console.log('here');
+      // console.log('here');
       navigate('/')
     }
   }

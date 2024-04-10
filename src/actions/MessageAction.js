@@ -196,7 +196,7 @@ export const messageSlice = createSlice({
 			state.messageType = action.payload;
 		},
 		updatelocalDmf: (state, action) => {
-			console.log("update local", action.payload);
+			// console.log("update local", action.payload);
 			state.dmfArray = action.payload;
 			state.isLoading = false;
 		},
@@ -272,7 +272,7 @@ export const messageSlice = createSlice({
 				}
 			});
 			// state.segmentsArray = action?.payload?.data ? [action?.payload?.data, ...state.segmentsArray] : [...state.segmentsArray];
-			console.log(placeholderArray, action);
+			// console.log(placeholderArray, action);
 			// state.segmentsArray = action?.payload?.data ? placeholderArray.map(el => el._id === action.payload.data._id ? action.payload.data : [el, ...placeholderArray]) : placeholderArray;
 			if (newAdd) {
 				state.segmentsArray = [action?.payload?.data, ...state.segmentsArray];

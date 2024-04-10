@@ -51,7 +51,7 @@ export const getAllGroupMessages = createAsyncThunk(
           // console.log(fbUserId, deleteDelayDay);
 
           if (fbUserId && !deleteDelayDay) {
-            console.log('here');
+            // console.log('here');
             res = await fetchAllPendingFrndRequest({
               fbUserId,
             });
@@ -74,7 +74,7 @@ export const getAllGroupMessages = createAsyncThunk(
             sendFriendRequestLogId: pendingFrndIds,
           });
 
-          console.log("Delete Resposnse -- ", deleteRes.data);
+          // console.log("Delete Resposnse -- ", deleteRes.data);
 
           return res.data[0];
         }catch(err){

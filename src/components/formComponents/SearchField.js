@@ -25,7 +25,7 @@ const SearchField = ({extraClass,placeholderText="Search...", onSearch,ArrayToSe
     const filteredData = ArrayToSearch.sub_dmfs.filter((item) => 
           item.subdmf_name.toLowerCase().includes(searchText.toLowerCase())
     )
-    console.log("filter dat from search",filteredData);
+    // console.log("filter dat from search",filteredData);
     onSearch({
         ...ArrayToSearch,
         sub_dmfs:filteredData}
@@ -40,7 +40,7 @@ const SearchField = ({extraClass,placeholderText="Search...", onSearch,ArrayToSe
   }, [isSearch])
 
   useEffect(() => {
-    console.log('this');
+    // console.log('this');
     searchRef.current.value = "";
     setSearchText('')
   }, [ArrayToSearch])

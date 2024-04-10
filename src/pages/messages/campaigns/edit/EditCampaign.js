@@ -118,7 +118,7 @@ const EditCampaign = (props) => {
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
-				console.log('loadingState', loadingState);
+				// console.log('loadingState', loadingState);
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -143,7 +143,7 @@ const EditCampaign = (props) => {
 					</>
 				);
 			} else {
-				console.log('loadingState', loadingState);
+				// console.log('loadingState', loadingState);
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
@@ -194,10 +194,10 @@ const EditCampaign = (props) => {
 			const removedContactResponse = await dispatch(
 				deleteCampaignContacts(payloadToDelete)
 			).unwrap();
-			console.log(
-				"REMOVE API HAS BEEN CALLED HERE -- ",
-				removedContactResponse
-			);
+			// console.log(
+			// 	"REMOVE API HAS BEEN CALLED HERE -- ",
+			// 	removedContactResponse
+			// );
 			return {
 				success: true,
 			};
@@ -217,15 +217,15 @@ const EditCampaign = (props) => {
 	) => {
 		try {
 			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap().then((res) => {
-				console.log('USERS COUNT', res);
+				// console.log('USERS COUNT', res);
 				dispatch(countCurrentListsize(res?.data?.length))
 			});
 
 		} catch (error) {
-			console.log(
-				`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,
-				error?.message
-			);
+			// console.log(
+			// 	`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,
+			// 	error?.message
+			// );
 		}
 	};
 

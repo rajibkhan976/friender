@@ -72,7 +72,7 @@ const Sidebar = (props) => {
       socket.emit("join", { token: localStorage.getItem("fr_token") });
     });
     socket.on("disconnect", (reason) => {
-      console.log("disconnect due to " + reason);
+      // console.log("disconnect due to " + reason);
       socket.connect();
     });
     socket.on("connect_error", (e) => {
@@ -111,7 +111,7 @@ const Sidebar = (props) => {
   //   }
   // });
   socket.on("facebookLoggedOut", (logoutUpdate) => {
-    console.log("updates :::  ", logoutUpdate);
+    // console.log("updates :::  ", logoutUpdate);
     localStorage.removeItem("fr_update");
     localStorage.removeItem("fr_isSyncing");
     localStorage.removeItem("friendLength");
@@ -263,10 +263,10 @@ const Sidebar = (props) => {
         // setProfiles(res);
         dispatch(setProfileSpaces(res));
         if (!userFbProfile || userFbProfile == null) {
-          console.log(
-            "set default from sidebar frnd----->>>",
-            res[0].fb_user_id
-          );
+          // console.log(
+          //   "set default from sidebar frnd----->>>",
+          //   res[0].fb_user_id
+          // );
 
           localStorage.setItem("fr_default_fb", res[0].fb_user_id);
           dispatch(setDefaultProfileId(res[0].fb_user_id));

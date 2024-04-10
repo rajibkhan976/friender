@@ -35,7 +35,7 @@ function BreadCrumb({ links }) {
         }
 
       } else {
-        console.log(links, editingCampaign, params, campaignsArray);
+        // console.log(links, editingCampaign, params, campaignsArray);
         setBreadLink(links)
       }
     }

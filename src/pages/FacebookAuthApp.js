@@ -16,7 +16,7 @@ const FacebookAuthApp = () => {
   const [showConnect, setShowConnect] = useState(false)
 
   const connectProfile = async (facebookAuthInfo) => {
-    console.log("facebookAuthInfo", facebookAuthInfo)
+    // console.log("facebookAuthInfo", facebookAuthInfo)
     if(facebookAuthInfo){
         const profilebody = {
         name: facebookAuthInfo?.name,
@@ -27,7 +27,7 @@ const FacebookAuthApp = () => {
         action: "syncprofile",
         frLoginToken: localStorage.getItem("fr_token"),
       });
-      console.log("facebookProfile",facebookProfile)
+      // console.log("facebookProfile",facebookProfile)
       // if(facebookProfile?.error == "No response"){
       //   alert("Facebook authentication failed, either you are not logged in or facebook has changed its response structure. Please try again or contact friender support")
       //   return false
@@ -53,7 +53,7 @@ const FacebookAuthApp = () => {
           // Alternate method, we wil fetch fb user id linked with facebook auth account in GS page with the help of profile link
           // Save the  profile data into to database
           const userProfileRes = await saveUserProfile(profilebody);
-          console.log("saving data without user id as ext is not installed",userProfileRes)
+          // console.log("saving data without user id as ext is not installed",userProfileRes)
       
           // If the response to save profile is true then save the fb details in localstorage else dont move forward
             if(userProfileRes?.status == 200){
@@ -64,9 +64,9 @@ const FacebookAuthApp = () => {
       }  
 
       if(facebookProfile?.error){
-        console.log("I should be here if there is any unfortunate error")
+        // console.log("I should be here if there is any unfortunate error")
         const userProfileRes = await saveUserProfile(profilebody);
-        console.log("saving data without user id as ext is not installed",userProfileRes)
+        // console.log("saving data without user id as ext is not installed",userProfileRes)
     
         // If the response to save profile is true then save the fb details in localstorage else dont move forward
           if(userProfileRes?.status == 200){
@@ -76,7 +76,7 @@ const FacebookAuthApp = () => {
         return false
       }
       
-      console.log("facebookprofile info",facebookProfile)
+      // console.log("facebookprofile info",facebookProfile)
       localStorage.setItem("fr_current_fbId", facebookProfile.uid.toString());
    
         // userId: facebookProfile?.uid.toString(),
@@ -87,10 +87,10 @@ const FacebookAuthApp = () => {
 
       profilebody["userId"] = facebookProfile?.uid.toString()
       profilebody["profileUrl"] = "https://wwww.facebook.com" + facebookProfile.path
-      console.log("******* Ext installed and userId fetched",profilebody)
+      // console.log("******* Ext installed and userId fetched",profilebody)
       // Save the  profile data into to database
        const userProfileRes = await saveUserProfile(profilebody);
-       console.log("888888 userProfiles response",userProfileRes)
+      //  console.log("888888 userProfiles response",userProfileRes)
   
        // If the response to save profile is true then save the fb details in localstorage else dont move forward
         if(userProfileRes?.status == 200){
@@ -164,7 +164,7 @@ const FacebookAuthApp = () => {
      */
 
     // If and only if user is authenticated from facebook auth app then do the following : 
-    console.log("facebook auth response",response)
+    // console.log("facebook auth response",response)
     if (response.status != "unknown" && response?.accessToken != undefined) {
       /**
        * Save the facbook auth response object after stringifying.
@@ -187,7 +187,7 @@ const FacebookAuthApp = () => {
       
       
       if(checkAuth == true){
-        console.log("after auth")
+        // console.log("after auth")
         proceedFurther()
       }
     }

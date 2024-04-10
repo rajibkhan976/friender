@@ -93,7 +93,7 @@ export const prioritySubDMF = (updatePrioritySubDmf) => {
 				resolve(result.data);
 			})
 			.catch((error) => {
-				console.log("error", error);
+				// console.log("error", error);
 				reject(error?.response?.data ? error.response.data : error.message);
 			});
 	});
@@ -171,7 +171,7 @@ export const addNewSegmentMessage = (newSegmentMessage) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {
@@ -200,7 +200,7 @@ export const deleteSegmentMessage = (messageId) => {
 };
 
 export const addOneGroup = (newGroup) => {
-	console.log("got new message group", newGroup);
+	// console.log("got new message group", newGroup);
 	return new Promise((resolve, reject) => {
 		axios
 			.post(config.createMessageGroupUrl, newGroup, { headers: headers })
@@ -233,7 +233,7 @@ export const addNewGroupMessage = (newGroupMessage) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {

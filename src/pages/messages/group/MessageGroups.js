@@ -329,7 +329,7 @@ const MessageGroups = () => {
                 setLoading(false)
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             Alertbox(
                 error,
                 "error",

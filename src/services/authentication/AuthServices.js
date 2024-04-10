@@ -65,10 +65,10 @@ export const userLogin = (email, password) => {
         resolve(result.data);
       })
       .catch((error) => {
-        console.log(
-          "ERROR LOGIN:::",
-          error?.response?.data ? error.response.data : error.message
-        );
+        // console.log(
+        //   "ERROR LOGIN:::",
+        //   error?.response?.data ? error.response.data : error.message
+        // );
         reject(error?.response?.data ? error.response.data : error.message);
       });
   });
@@ -161,13 +161,13 @@ export const onboarding = (
   question_four
 ) => {
   return new Promise((resolve, reject) => {
-    console.log({
-      question_one: question_one,
-      question_two: question_two,
-      question_three: question_three,
-      question_four: question_four,
-      token: token,
-    });
+    // console.log({
+    //   question_one: question_one,
+    //   question_two: question_two,
+    //   question_three: question_three,
+    //   question_four: question_four,
+    //   token: token,
+    // });
     axios
       .post(
         config.onboardingUrl,

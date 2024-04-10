@@ -274,7 +274,7 @@ const TextEditor = ({
             const range = selection.getRangeAt(0);
             const { top, left, height } = range.getBoundingClientRect();
 
-            console.log("SELECTING 2 -- ", selection);
+            // console.log("SELECTING 2 -- ", selection);
 
             // Calculate the position of the popup
             const caretPosition = {
@@ -331,7 +331,7 @@ const TextEditor = ({
 
         if (contentToSave?.blocks?.length && contentToSave?.blocks[0]?.text.trim() !== "" && useForModal) {
             const contentMessage = JSON.stringify(contentToSave);
-            console.log("Content Message - ", contentMessage);
+            // console.log("Content Message - ", contentMessage);
             setMessage(contentMessage);
             handleCloseModal();
         }
@@ -349,7 +349,7 @@ const TextEditor = ({
         activeMessage?.message &&
         setEditorState(() => EditorState.createWithContent(convertFromRaw(savedMessage)));
 
-        console.log('isEditing::::::::', isEditing);
+        // console.log('isEditing::::::::', isEditing);
     }, [isEditing]);
 
     /**

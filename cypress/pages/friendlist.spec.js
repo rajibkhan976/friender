@@ -32,7 +32,7 @@ class friendlist {
     cy.get(this.getall).scrollTo(0, 500)
     cy.get(this.getall + '> div.ag-center-cols-clipper > div.ag-center-cols-viewport > div.ag-center-cols-container> div[row-id]').then((i) => {
       let a = [i]
-      console.log(a);
+      // console.log(a);
       cy.log(i.length)
     })
   }

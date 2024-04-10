@@ -137,6 +137,7 @@ export const updateCampaign = createAsyncThunk(
 	"campaigns/updateCampaign",
 	async (payload) => {
 		const res = await createOrUpdateCampaignService(payload);
+		// console.log('res >>>', res);
 		return res;
 	}
 );

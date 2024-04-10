@@ -11,7 +11,7 @@ const NumberInput = ({
   extraClass = "extraClass"
 }) => {
   useEffect(() => {
-    console.log('numberValue', numberValue);
+    // console.log('numberValue', numberValue);
   }, [])
   return (
     <>

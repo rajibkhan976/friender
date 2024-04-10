@@ -109,7 +109,7 @@ const  CustomHeaderTooltip = (props) => {
         className="fr-custom-header-tooltip"
       >
         <div className='tooltip-content'>
-          {console.log('header name:::::', props)}
+          {/* {console.log('header name:::::', props)} */}
           <TooltipLocal
             passedData={props}
           />

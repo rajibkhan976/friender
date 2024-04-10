@@ -226,7 +226,7 @@ const OnboardingPage = () => {
           </div>
           <div className="selectbox-wraper element-wraper">
             <p>How much do you value 1 hour of your time in dollars?</p>
-            {console.log('valuationValue in onboarding', valuationValue)}
+            {/* {console.log('valuationValue in onboarding', valuationValue)} */}
             <div className={(valuationValue === "" || valuationValue <= 0) ? "input-wrapper error-wrapper form-field" : "input-wrapper form-field"}>
               <NumberInput
                 numberName="valuation"

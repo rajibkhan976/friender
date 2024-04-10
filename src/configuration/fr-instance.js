@@ -58,7 +58,7 @@ export const frInstance = {
        return req;
      },
      (err) => {
-      console.log('token error',err.message)
+      // console.log('token error',err.message)
         return Promise.reject(err);
      }
    ),

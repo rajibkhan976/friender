@@ -34,7 +34,7 @@ const InactiveFriends = () => {
   );
   useEffect(() => {
     friendsList && dispatch(countCurrentListsize(friendsList.length));
-    console.log("friendsList", friendsList);
+    // console.log("friendsList", friendsList);
   }, [dispatch, friendsList]);
 
 

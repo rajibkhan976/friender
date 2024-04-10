@@ -605,7 +605,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	useEffect(() => {
 		if (params && params?.campaignId) {
-			console.log("FB USER ID -- ", current_fb_id, " - CAMPAIGN ID -- ", params?.campaignId);
+			// console.log("FB USER ID -- ", current_fb_id, " - CAMPAIGN ID -- ", params?.campaignId);
 			setType("EDIT");
 			fetchCampaignDetails();
 		}

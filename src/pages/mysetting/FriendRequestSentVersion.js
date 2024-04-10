@@ -43,13 +43,13 @@ const FriendRequestSentVersion = () => {
       let startDate = new Date(item.created_at);
       let endDate = new Date(item?.settings_end_date != undefined && item?.settings_end_date ? item?.settings_end_date : item?.created_at)
       const differenceInSeconds = Math.abs((endDate.getTime() - startDate.getTime()) / 1000);
-      console.log("sn:", item.settings_name);
-      console.log("diff:", differenceInSeconds);
-      console.log("time:", startDate.getTime(), endDate.getTime());
-      console.log("profile view", item.profile_viewed, item.profile_viewed != undefined && item.profile_viewed ? item.profile_viewed * 30 : item.friend_request_send != undefined && item.friend_request_send ? item.friend_request_send * 30 : 0 * 30)
-      console.log("type of profile viewed", (typeof item?.profile_viewed, item?.profile_viewed != undefined && item?.profile_viewed && typeof item?.profile == 'number' ? item.profile_viewed * 30 : 0 * 30))
+      // console.log("sn:", item.settings_name);
+      // console.log("diff:", differenceInSeconds);
+      // console.log("time:", startDate.getTime(), endDate.getTime());
+      // console.log("profile view", item.profile_viewed, item.profile_viewed != undefined && item.profile_viewed ? item.profile_viewed * 30 : item.friend_request_send != undefined && item.friend_request_send ? item.friend_request_send * 30 : 0 * 30)
+      // console.log("type of profile viewed", (typeof item?.profile_viewed, item?.profile_viewed != undefined && item?.profile_viewed && typeof item?.profile == 'number' ? item.profile_viewed * 30 : 0 * 30))
       item.time_saved = differenceInSeconds + (item?.profile_viewed != undefined && item?.profile_viewed && typeof item?.profile_viewed == 'number' ? item.profile_viewed * 30 : item?.friend_request_send != undefined && item?.friend_request_send && typeof item?.friend_request_send == 'number' ? item.friend_request_send * 30 : 0 * 30)
-      console.log("item_saved", item.time_saved)
+      // console.log("item_saved", item.time_saved)
       return item;
     })
     return newArr;
@@ -81,7 +81,7 @@ const FriendRequestSentVersion = () => {
 
       if (fetchedSets) {
         if (Array.isArray(fetchedSets)) {
-          console.log("timesaved records", newTimeSavedFun(fetchedSets))
+          // console.log("timesaved records", newTimeSavedFun(fetchedSets))
           setFriendRequestHistory(newTimeSavedFun(fetchedSets));
         }
         // const totalTime = secToHeaderTotaltime(
@@ -89,11 +89,11 @@ const FriendRequestSentVersion = () => {
         // );
 
         const totalTime = newTimeSavedFun(fetchedSets)?.reduce((acc, curr) => {
-          console.log("reducer", curr, curr.time_saved)
+          // console.log("reducer", curr, curr.time_saved)
           return parseInt(acc) + parseInt(curr.time_saved)
         }, 0) / (60 * 60);
 
-        console.log("total time ***", totalTime)
+        // console.log("total time ***", totalTime)
         // console.log('profileViewedP::::', fetchedSets.map(el => console.log(el.time_saved, totalTime)));
 
         let headerOptions = {
@@ -117,7 +117,7 @@ const FriendRequestSentVersion = () => {
       setLoading(false);
       // setNoDataFound(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setLoading(false);
       // setNoDataFound(true);
     }
@@ -136,7 +136,7 @@ const FriendRequestSentVersion = () => {
           );
 
           if (updatedData) {
-            console.log("updatedData", updatedData);
+            // console.log("updatedData", updatedData);
             setFriendRequestHistory(updatedData);
 
             const updateDefault = await updateDefaultFriendRequestSettings({
@@ -155,7 +155,7 @@ const FriendRequestSentVersion = () => {
           }
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -648,7 +648,7 @@ const FriendRequestSentVersion = () => {
    * @returns 
    */
   const secToReadableFormat = (seconds) => {
-    console.log('time saved>>>>>>', seconds)
+    // console.log('time saved>>>>>>', seconds)
     let y = Math.floor(seconds / 31536000);
     let mo = Math.floor((seconds % 31536000) / 2628000);
     let d = Math.floor(((seconds % 31536000) % 2628000) / 86400);

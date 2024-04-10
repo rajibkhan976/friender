@@ -104,8 +104,7 @@ const CampaignsCalendar = () => {
 				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
 				break;
 		}
-
-		console.log(campaignsArrayPlaceholder);
+		// console.log(campaignsArrayPlaceholder);
 		dispatch(countCurrentListsize(campaignsArrayPlaceholder?.length));
 
 		if (

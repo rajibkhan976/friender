@@ -29,7 +29,7 @@ export const storeFriendListIndexDb = async (fbId, friendList) => {
     });
     // console.log("index dvb id", id);
   } catch (error) {
-    console.log(`Failed to add : ${error}`);
+    // console.log(`Failed to add : ${error}`);
   }
 };
 
@@ -97,7 +97,7 @@ export const deleteFriend = createAsyncThunk(
   "facebook/deleteFriend",
   async ({ payload }) => {
     const res = await deleteFriends(payload);
-    console.log("unfriend");
+    // console.log("unfriend");
     return res;
   }
 );

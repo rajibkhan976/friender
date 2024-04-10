@@ -268,7 +268,7 @@ const LostFriends = () => {
             displayKey: 'contains',
             displayName: 'Contains',
             predicate: ([filterValue], cellValue) => {
-              console.log([filterValue][0], cellValue);
+              // console.log([filterValue][0], cellValue);
               if ([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
                 return cellValue === undefined || cellValue === "undefined" || !cellValue || cellValue === null || cellValue === "NA" || cellValue === "N/A"
               }
@@ -387,7 +387,7 @@ const LostFriends = () => {
           headerText={"Keyword(s)"}
           bodyText={
             <>
-              {console.log('in modal:::', keyWords, keyWords.matchedKeyword)}
+              {/* {console.log('in modal:::', keyWords, keyWords.matchedKeyword)} */}
               {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword ?
                 keyWords?.matchedKeyword.map((el, i) =>
                 (<span className={`tags positive-tags`} key={`key-${i}`}>

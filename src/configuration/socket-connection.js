@@ -2,8 +2,8 @@ import { io } from "socket.io-client";
 
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 const TOKEN = localStorage.getItem("fr_token");
-console.log("SOCKET_URL", SOCKET_URL)
-console.log("Socket token", localStorage.getItem("fr_token"))
+// console.log("SOCKET_URL", SOCKET_URL)
+// console.log("Socket token", localStorage.getItem("fr_token"))
 
 const connectionOption = {
     transports: ["websocket"], // use WebSocket first, if available

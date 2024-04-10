@@ -49,7 +49,7 @@ export const whiteListFriends = async (payload)=>{
         resolve({data:JSON.parse(res.config.data),message:res.data});
       })
       .catch((error)=>{
-        console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })
@@ -67,7 +67,7 @@ export const BlockListFriends = async (payload)=>{
         resolve({data:JSON.parse(res.config.data),message:res.data})
       })
       .catch((error)=>{
-        console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })
@@ -84,7 +84,7 @@ export const deleteFriends = (payload)=>{
           resolve(result.data);
       })
       .catch((error)=>{
-        console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR WHITELIST::::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })
@@ -101,7 +101,7 @@ export const fetchFriendLost = (payload)=>{
           resolve(result.data);
       })
       .catch((error)=>{
-        console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })
@@ -120,7 +120,7 @@ export const fetchSenFriendReqList= (payload)=>{
           resolve(result.data);
       })
       .catch((error)=>{
-        console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR LOST FRIEND:::", error?.response?.data ? error.response.data : error.message);
         reject(error?.response?.data ? error.response.data : error.message);
       })
   })

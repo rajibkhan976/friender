@@ -90,7 +90,7 @@ const ResetPasswordPage = () => {
     fetchUserProfile().then((res) => {
       if (res && res.length) {
 
-        console.log("RESET PASSWORD STATUS",res)
+        // console.log("RESET PASSWORD STATUS",res)
         // setProfiles(res);
         dispatch(setProfileSpaces(res));
       }

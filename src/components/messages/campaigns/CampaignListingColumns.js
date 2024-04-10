@@ -54,7 +54,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 			}
 
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 
@@ -237,7 +237,7 @@ export const CampaignScheduleCellRenderer = memo((params) => {
 					}
 				})
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 
@@ -321,7 +321,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 					}
 				})
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 
@@ -417,7 +417,7 @@ export const CampaignFriendMessageRenderer = memo((params) => {
 			params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message') :
 		params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message')
 
-	console.log('params');
+	// console.log('params');
 
 	return (
 		<div className='campaign-friendMessage-cell'>

@@ -126,7 +126,7 @@ export const updateCampaignStatusService = (campaignData) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {
@@ -160,7 +160,7 @@ export const deleteCampaignService = (campaignData) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("res", res);
+				// console.log("res", res);
 				resolve(res.data);
 			})
 			.catch((error) => {
@@ -182,7 +182,7 @@ export const deleteCampaignContactsService = (campaignContactsData) => {
 				headers: headers,
 			})
 			.then((res) => {
-				console.log("RESPONSE FROM SERVICE ==>> ", res);
+				// console.log("RESPONSE FROM SERVICE ==>> ", res);
 				resolve(res.data);
 			})
 			.catch((error) => {

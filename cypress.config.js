@@ -26,7 +26,7 @@ module.exports = defineConfig({
       });
       on("file:preprocessor", bundler);
       await addCucumberPreprocessorPlugin(on, config);
-      console.log("Config", config)
+      // console.log("Config", config)
       return config;
     },
     videoUploadOnPasses:false,

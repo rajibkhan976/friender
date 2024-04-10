@@ -308,6 +308,9 @@ const CalenderModal = ({
 				response = await dispatch(createCampaign(payload)).unwrap();
 			} else {
 				response = await dispatch(updateCampaign(payload)).unwrap();
+				extensionAccesories.sendMessageToExt({
+					action: "update_schedules"
+				  });
 			}
 
 			if (response?.data) {
@@ -765,6 +768,10 @@ const CalenderModal = ({
 			await dispatch(
 				updateCampaignStatus({ campaignId, campaignStatus })
 			).unwrap();
+			
+			extensionAccesories.sendMessageToExt({
+				action: "update_schedules"
+			});
 			Alertbox(
 				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
 				}`,
@@ -826,9 +833,6 @@ const CalenderModal = ({
 					placeholderCampaign?.campaign_id,
 					e.target.checked
 				);
-				extensionAccesories.sendMessageToExt({
-					action: "update_schedules"
-				});
 			}
 		}
 	};

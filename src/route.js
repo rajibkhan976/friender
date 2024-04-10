@@ -86,7 +86,7 @@ const Routeing = () => {
 			let cookie = helper.getCookie("deleteAllPendingFR");
 			if (cookie !== "Active") {
 				callback(); //callback function calling the pending list action
-				console.log("send req api got hitted>>>>");
+				// console.log("send req api got hitted>>>>");
 				clearInterval(timeInterVal);
 			}
 		}, 500);
@@ -108,7 +108,7 @@ const Routeing = () => {
 					})
 				);
 			});
-			console.log('New "DPFR" cookie added!');
+			// console.log('New "DPFR" cookie added!');
 		}
 		// Update the previous cookies for the next check
 		checkCookieChange.previousCookies = currentCookies;

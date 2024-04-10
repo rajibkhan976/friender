@@ -8,9 +8,9 @@ Cypress.Commands.add('signupvalid', () => {
     register.get_signuppage();
     cy.writeFile("cypress/fixtures/signupdata.json",{"email":email,"name":name})
     cy.fixture("signupdata.json").then((testdata) => {
-        console.log(testdata)
+        // console.log(testdata)
         email=testdata.email
-        console.log(email)
+        // console.log(email)
         register.get_emailfield().clear().type(email)
         cy.writeFile("cypress/fixtures/signeddata.json",{email,defaultPass})
     })

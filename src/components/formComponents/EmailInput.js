@@ -19,7 +19,7 @@ const EmailInput = ({
         //console.log('here');
         setEmailValidation(null);
       } else {
-        console.log("here");
+        // console.log("here");
         setEmailValidation("Email cannot have space");
       }
     } else {

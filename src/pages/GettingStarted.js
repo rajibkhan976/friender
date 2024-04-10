@@ -355,7 +355,7 @@ const GettingStartedPage = (props) => {
       frLoginToken: localStorage.getItem("fr_token"),
     });
 
-    console.log("is extension Installed",isInstalled)
+    // console.log("is extension Installed",isInstalled)
     // console.log("extension token",localStorage.getItem("fr_token"))
 
     if (isInstalled) {
@@ -399,7 +399,7 @@ const GettingStartedPage = (props) => {
       setFacebookConnectLoader(true);
     }
     const profileData = await fetchUserProfile()
-    console.log("userinfo getting started",profileData)
+    // console.log("userinfo getting started",profileData)
 
     // if user id is present already with the facebook auth information then : 
     if(profileData?.length){
@@ -410,8 +410,8 @@ const GettingStartedPage = (props) => {
           action: "syncprofile",
           frLoginToken: localStorage.getItem("fr_token"),
         });
-        console.log("facewbook data",facebookProfile)
-        console.log("profile datattat",profileData)
+        // console.log("facewbook data",facebookProfile)
+        // console.log("profile datattat",profileData)
           //If auth profile and current logged in profile is not matching then :
           setFbAuthProfileId(profileData[0]?.fb_user_id)
           if(facebookProfile?.error == "No response"){
@@ -451,7 +451,7 @@ const GettingStartedPage = (props) => {
           }
       }else{
         const fetchUserIdViaFacebookAuthProfileUrl = await extensionAccesories.sendMessageToExt({ "action" : "getUidForThisUrl", "url" : profileData[0].fb_auth_info?.link});
-        console.log("hello ******************** this is the response for facebook profile link  ", fetchUserIdViaFacebookAuthProfileUrl)
+        // console.log("hello ******************** this is the response for facebook profile link  ", fetchUserIdViaFacebookAuthProfileUrl)
         // save fb id and then call this function again for checking the fb accounts and proceed further
        
        if(fetchUserIdViaFacebookAuthProfileUrl.status){
@@ -467,7 +467,7 @@ const GettingStartedPage = (props) => {
          const userProfileRes = await saveUserProfile(profilebody);
  
          if(userProfileRes?.status == 200){
-           console.log("called connect profile reccrusively")
+          //  console.log("called connect profile reccrusively")
            connectProfile(false)
          }
        }else{
@@ -533,7 +533,7 @@ const GettingStartedPage = (props) => {
   const refreshProfile = async (e) => {
     e.preventDefault();
     await extInstallationStatus()
-    console.log("Refreshing fb connection");
+    // console.log("Refreshing fb connection");
     const friendCountPayload = {
       action: "syncprofile",
       frLoginToken: localStorage.getItem("fr_token"),
@@ -554,7 +554,7 @@ const GettingStartedPage = (props) => {
   // Check syncing progress if failed to listen socket
   const checkSyncProgress = async () => {
     let checkingIntv = setInterval(() => {
-      console.log("checking GS sync status");
+      // console.log("checking GS sync status");
       let isSyncing = helper.getCookie("fr_isSyncing");
       let syncState = localStorage.getItem("fr_update");
       if (isSyncing && syncState != "Syncing Friends...") {
@@ -571,12 +571,12 @@ const GettingStartedPage = (props) => {
     let totalFrndLenth = localStorage.getItem("friendLength");
     let checkingIntv = setInterval(() => {
       let progressCount = localStorage.getItem("fr_countBadge");
-      console.log("checking progress...")
+      // console.log("checking progress...")
       if(progressCount!=null && progressCount){
         setSyncedFrieneds(progressCount);
-        console.log("Check badge count", progressCount, totalFrndLenth,Number(totalFrndLenth) == Number(progressCount));
+        // console.log("Check badge count", progressCount, totalFrndLenth,Number(totalFrndLenth) == Number(progressCount));
         if (Number(totalFrndLenth) == Number(progressCount)) {
-          console.log("clear intreval")
+          // console.log("clear intreval")
           clearInterval(checkingIntv);
           localStorage.removeItem("fr_countBadge");
           setIsSynced(true);
@@ -598,7 +598,7 @@ const GettingStartedPage = (props) => {
 
 
     if(localStorage.getItem("fr_gs_synced") == "true"){
-      console.log("checked from loacal")
+      // console.log("checked from loacal")
       setIsSynced(true);
       setFacebookConnect(true);
       setFacebookConnect(true);
@@ -658,13 +658,13 @@ const GettingStartedPage = (props) => {
     const facebookFriendLength = await extensionAccesories.sendMessageToExt(
       friendCountPayload
     );
-    console.log("Total no of friends count", facebookFriendLength);
+    // console.log("Total no of friends count", facebookFriendLength);
     
     
     if (facebookFriendLength!= undefined && facebookFriendLength?.friendLength) {
       setSyncFriendsLoader(false);
 
-      console.log("FR len dom", facebookFriendLength.friendLength);
+      // console.log("FR len dom", facebookFriendLength.friendLength);
       setTotalFriends(facebookFriendLength.friendLength);
       localStorage.setItem("friendLength", facebookFriendLength?.friendLength);
 
@@ -683,8 +683,8 @@ const GettingStartedPage = (props) => {
       let syncResp = await extensionAccesories.sendMessageToExt(
         friendListPayload
         );
-        console.log("*********friendListPayload")
-      console.log("syncResp", syncResp);
+      //   console.log("*********friendListPayload")
+      // console.log("syncResp", syncResp);
     }
 
 

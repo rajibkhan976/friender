@@ -6,7 +6,7 @@ function Themewitch({extraClass}) {
     const {darkMode, toggleDarkMode} = useContext(ModeContext);
     const handleClick = () => {
         toggleDarkMode();
-        console.log('done');
+        // console.log('done');
     }
     return (
         <div className={`lightswitch ${extraClass ? extraClass : ''}`}>

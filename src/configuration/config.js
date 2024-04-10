@@ -6,7 +6,7 @@ const env = process.env,
     campaignService = env.REACT_APP_CAMPAIGN_SERVICE;
 
 
-console.log("process.env.REACT_APP_AUTH -- ", process.env.REACT_APP_AUTH);  
+// console.log("process.env.REACT_APP_AUTH -- ", process.env.REACT_APP_AUTH);  
 module.exports = {
     appUrl: process.env.REACT_APP_APP_URL,
     registerUrl: "https://" + process.env.REACT_APP_AUTH + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/register",

@@ -343,7 +343,7 @@ const CampaignScheduler = (props) => {
 			document.removeEventListener("click", handleCloseGlobalCampaignPopup);
 	}, [showGlobalCampaignPopup]);
 
-	console.log("CAMPAIGN SCHEDULE -- ", campaignSchedule);
+	// console.log("CAMPAIGN SCHEDULE -- ", campaignSchedule);
 
 	return (
 		<>

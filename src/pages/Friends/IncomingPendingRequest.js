@@ -242,17 +242,17 @@ const IncomingPendingRequest = () => {
           fbUserId: savedFbUId,
         })
       ).then((response) => {
-        console.log(
-          localStorage.getItem("fr_token"),
-          savedFbUId,
-          "response",
-          response
-        );
+        // console.log(
+        //   localStorage.getItem("fr_token"),
+        //   savedFbUId,
+        //   "response",
+        //   response
+        // );
         if (response.data[0].friend_details.length > 0) {
-          console.log(
-            "helo e   pending lst datta:::::",
-            response.data[0].friend_details
-          );
+          // console.log(
+          //   "helo e   pending lst datta:::::",
+          //   response.data[0].friend_details
+          // );
           setFriendsList(response.data[0].friend_details);
           setLoading(false);
           setNoDataFound(false);

@@ -124,8 +124,8 @@ const Campaigns = () => {
 			dispatch(fetchAllCampaigns())
 				.unwrap()
 				.then((res) => {
-					console.log("res", res);
-					// dispatch(countCurrentListsize(res?.length ? res?.length : 0));
+					// console.log('res', res);
+					dispatch(countCurrentListsize(res?.length ? res?.length : 0))
 				});
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
@@ -156,7 +156,7 @@ const Campaigns = () => {
 
 		try {
 			if (campaignsDetails) {
-				console.log("SPECIFIC CAMPAIGN DETAILS", campaignsDetails);
+				// console.log("SPECIFIC CAMPAIGN DETAILS", campaignsDetails);
 			}
 
 			// dispatch(fetchCampaignById({ campaignId: editId, fbUserId: current_fb_id }))
@@ -192,7 +192,7 @@ const Campaigns = () => {
 
 			setRadioOption(radioOptionPlaceholder);
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 		}
 	};
 
@@ -226,7 +226,7 @@ const Campaigns = () => {
 
 	// TOGGLE EDIT CAMPAIGNS PAGE VIEW
 	const changeEditView = (el) => {
-		console.log("el", el);
+		// console.log('el', el);
 		let editViewPlaceholder = [...editViews];
 		editViewPlaceholder = editViewPlaceholder.map((item) =>
 			item.label === el.label ? { ...el } : { ...item, checked: false }
@@ -256,7 +256,7 @@ const Campaigns = () => {
 			// 	"bottom-right"
 			// );
 		} catch (error) {
-			console.log(error);
+			// console.log(error);
 			Alertbox(
 				`
                 ${error} `,
@@ -298,22 +298,8 @@ const Campaigns = () => {
 		// Check for campaign time span
 		switch (campaignDuration) {
 			case "today":
-				campaignsResult = [
-					...campaignsResult?.filter(
-						(el) =>
-							el?.schedule?.filter(
-								(ex) => ex?.day === week[new Date().getDay()]
-							)?.length && {
-								...el,
-								schedule: [
-									...el?.schedule?.filter(
-										(ex) => ex?.day === week[new Date().getDay()]
-									),
-								],
-							}
-					),
-				];
-				console.log("campaignsResult >>>>>", campaignsResult);
+				campaignsResult = [...campaignsResult?.filter(el => el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])?.length && ({...el, schedule: [...el?.schedule?.filter(ex => ex?.day === week[new Date().getDay()])]}))]
+				// console.log('campaignsResult >>>>>', campaignsResult);
 				break;
 
 			default:

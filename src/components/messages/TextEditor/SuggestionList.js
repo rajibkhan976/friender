@@ -52,9 +52,9 @@ const SuggestionList = ({ positions, suggestions, editorRef, setEditorState, set
                         newText
                     );
 
-                    console.log("New Text -- ", newText);
-                    console.log("making starting {{ : ", currentText.substring(openingDoubleBraceIndex + 1, closingDoubleBraceIndex - 1));
-                    console.log("ending with }} : ", currentText.substring(closingDoubleBraceIndex));
+                    // console.log("New Text -- ", newText);
+                    // console.log("making starting {{ : ", currentText.substring(openingDoubleBraceIndex + 1, closingDoubleBraceIndex - 1));
+                    // console.log("ending with }} : ", currentText.substring(closingDoubleBraceIndex));
 
                     // Update the editor state with the new content state
                     const newEditorState = EditorState.push(currentEditorState, newContentState, 'insert-characters');
@@ -96,8 +96,8 @@ const SuggestionList = ({ positions, suggestions, editorRef, setEditorState, set
                     // When you needs make separated '|' with many Sugestion..
                     if (stickIndex !== -1 && currentChar === '|') {
                         newText = currentText.substring(openingBraceIndex, closingBraceIndex - 1) + '|' + suggestion + currentText.substring(closingBraceIndex);
-                        console.log("With Stick Next Text -- ", newText);
-                        console.log("Suggestion -- ", suggestion);
+                        // console.log("With Stick Next Text -- ", newText);
+                        // console.log("Suggestion -- ", suggestion);
                     }
 
                     // Create a new content state with the updated text

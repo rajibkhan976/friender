@@ -48,7 +48,7 @@ const SendRequest = ({ deleteAllInterval }) => {
     )
       .unwrap()
       .then((res) => {
-        console.log("the friend request send list", res);
+        // console.log("the friend request send list", res);
       });
     let currentCookies = document.cookie;
     if (currentCookies.includes("deleteAllPendingFR")) {
@@ -257,7 +257,7 @@ const SendRequest = ({ deleteAllInterval }) => {
             displayKey: 'contains',
             displayName: 'Contains',
             predicate: ([filterValue], cellValue) => {
-              console.log([filterValue][0], cellValue);
+              // console.log([filterValue][0], cellValue);
               if ([filterValue][0] == 'NA' || [filterValue][0] == 'N/A') {
                 return cellValue === undefined || cellValue === "undefined" || !cellValue || cellValue === null || cellValue === "NA" || cellValue === "N/A"
               }

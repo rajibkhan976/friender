@@ -160,7 +160,7 @@ socket.on("connect", function () {
 	socket.emit("join", { token: localStorage.getItem("fr_token") });
 });
 socket.on("disconnect", (reason) => {
-	console.log("disconnect due to " + reason);
+	// console.log("disconnect due to " + reason);
 });
 socket.on("connect_error", (e) => {
 	//console.log("There Is a connection Error in header", e);
@@ -348,7 +348,7 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
-		console.log("location array -- ", locationArray);
+		// console.log("location array -- ", locationArray);
 
 		setLinks(locationArray);
 
@@ -663,8 +663,8 @@ function PageHeader({ headerText = "" }) {
 					action: "syncprofile",
 					frLoginToken: localStorage.getItem("fr_token"),
 				});
-				console.log("facewbook data", facebookProfile);
-				console.log("profile datattat", profileData);
+				// console.log("facewbook data", facebookProfile);
+				// console.log("profile datattat", profileData);
 				//If auth profile and current logged in profile is not matching then :
 				if (facebookProfile?.error == "No response") {
 					// Alertbox(
@@ -745,7 +745,7 @@ function PageHeader({ headerText = "" }) {
 		let loggedInFb = localStorage.getItem("fr_current_fbId");
 
 		let proceedFurther = await checkFBConnection();
-		console.log("proceed further ", proceedFurther);
+		// console.log("proceed further ", proceedFurther);
 		if (!proceedFurther) {
 			return;
 		}
@@ -891,7 +891,7 @@ function PageHeader({ headerText = "" }) {
 		dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
 			.unwrap()
 			.then((response) => {
-				console.log("response", response);
+				// console.log("response", response);
 				if (response?.data?.length > 0 && response?.data[0]?.last_sync_at) {
 					setTooltip(response?.data[0]?.last_sync_at);
 					localStorage.setItem("fr_tooltip", response?.data[0]?.last_sync_at);
@@ -908,7 +908,7 @@ function PageHeader({ headerText = "" }) {
 		)
 			.unwrap()
 			.then((res) => {
-				console.log("Pending Request List", res);
+				// console.log("Pending Request List", res);
 			});
 	};
 
@@ -953,7 +953,7 @@ function PageHeader({ headerText = "" }) {
 			await helper.sleep(refethingDelayAfterSync);
 			await completeSync();
 			setIsSyncing(false);
-			console.log("now ending:::::::");
+			// console.log("now ending:::::::");
 		}
 	};
 
@@ -1160,11 +1160,11 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const skipBlackList = () => {
-		console.log("SKIP BLACKLISTED");
+		// console.log("SKIP BLACKLISTED");
 		const listWithOutBlacklisted = selectedFriends.filter((item) => {
 			return item.blacklist_status !== 1;
 		});
-		console.log("list ou black", listWithOutBlacklisted)
+		// console.log("list ou black", listWithOutBlacklisted)
 		AddToCampaign(listWithOutBlacklisted);
 	};
 

@@ -5,7 +5,7 @@ let headers = {
   "Content-Type": "application/json",
 };
 
-console.log("AUTH TOKEN -- ", localStorage.getItem('fr_token'));
+// console.log("AUTH TOKEN -- ", localStorage.getItem('fr_token'));
 
 
 /**
@@ -54,7 +54,7 @@ export const deletePendingFrndRequest = (data) => {
   return new Promise((res, rej) => {
     axios.post(config.deletePendingFrndsRequest, data, { headers: headers })
       .then((result) => {
-        console.log("Delete Pending Frnd Request -- ", result.data);
+        // console.log("Delete Pending Frnd Request -- ", result.data);
         res(result.data);
       })
       .catch((error) => {
@@ -70,7 +70,7 @@ export const deletePendingFrndRequest = (data) => {
  * @returns
  */
 export const fetchAllPendingFrndRequest = (data) => {
-  console.log("Sending to -- ", data);
+  // console.log("Sending to -- ", data);
   return new Promise((res, rej) => {
     axios.post(config.fetchAllPendingFrnds, data, { headers: headers })
       .then((result) => {

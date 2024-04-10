@@ -39,7 +39,7 @@ const EditorModal = ({ open, setOpen, setMessage, setEditorStateValue, type, set
         }
     });
 
-    console.log("editorrrrrrr ", editorStateValue);
+    // console.log("editorrrrrrr ", editorStateValue);
 
     return (
         <div
