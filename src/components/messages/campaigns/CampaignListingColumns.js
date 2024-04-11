@@ -90,6 +90,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				(async () => {
 					try {
 						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+						extensionAccesories.sendMessageToExt({
+							action: "update_schedules"
+						});
 					} catch (error) {
 						console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
 					}
@@ -106,6 +109,9 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				(async () => {
 					try {
 						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
+						extensionAccesories.sendMessageToExt({
+							action: "update_schedules"
+						});
 					} catch (error) {
 						console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
 					}
