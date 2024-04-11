@@ -45,7 +45,9 @@ const CampaignsHeader = ({
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
 			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
-
+			extensionAccesories.sendMessageToExt({
+				action: "update_schedules"
+			});
 			Alertbox(
 				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
 				}`,
@@ -108,9 +110,9 @@ const CampaignsHeader = ({
 
 		} else {
 			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
-			extensionAccesories.sendMessageToExt({
-				action: "update_schedules"
-			  });
+			// extensionAccesories.sendMessageToExt({
+			// 	action: "update_schedules"
+			//   });
 			// We don't need that if we enables that, then toggle is not working..
 			// toggleEditCampaign(e.target.checked);
 		}
