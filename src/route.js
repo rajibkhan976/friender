@@ -48,6 +48,7 @@ const CreatePasswordComponent = AuthLayout(CreatePasswordPage);
 
 const Settings = lazy(() => import("./pages/mysetting"));
 const FriendsList = lazy(() => import("./pages/Friends/FriendsList"));
+const FriendsQueue = lazy(() => import("./pages/Friends/FriendsQueue"));
 const WhiteList = lazy(() => import("./pages/Friends/WhiteList"));
 const IncomingPendingRequest = lazy(() =>
 	import("./pages/Friends/IncomingPendingRequest")
@@ -222,6 +223,14 @@ const Routeing = () => {
 								element={
 									<Suspense fallback={""}>
 										<FriendsList />
+									</Suspense>
+								}
+							></Route>
+							<Route
+								path='friends-queue'
+								element={
+									<Suspense fallback={""}>
+										<FriendsQueue />
 									</Suspense>
 								}
 							></Route>

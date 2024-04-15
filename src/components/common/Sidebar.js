@@ -318,171 +318,242 @@ const Sidebar = (props) => {
   }, [location])
 
   return (
-    <aside
-      className={
-        sidebarToogle
-          ? "sidebar closed d-flex d-flex-column f-justify-start"
-          : "sidebar d-flex d-flex-column f-justify-start"
-      }
-    >
-      {/* {console.log("authenticated",authenticated)} */}
-      {props.resetPass ? (
-        <></>
-      ) : (
-        <>
-          {authenticated && facebookAuthInfoStatus?.accessToken &&(
-            <span
-              className={sidebarToogle ? "menu-toogle closed" : "menu-toogle"}
-              onClick={setSidebarToogleFn}
-            // aria-label="Menu Toggle"
-            >
-              <SidebarIcon />
-            </span>
-          )}
-        </>
-      )}
+		<aside
+			className={
+				sidebarToogle
+					? "sidebar closed d-flex d-flex-column f-justify-start"
+					: "sidebar d-flex d-flex-column f-justify-start"
+			}
+		>
+			{/* {console.log("authenticated",authenticated)} */}
+			{props.resetPass ? (
+				<></>
+			) : (
+				<>
+					{authenticated && facebookAuthInfoStatus?.accessToken && (
+						<span
+							className={sidebarToogle ? "menu-toogle closed" : "menu-toogle"}
+							onClick={setSidebarToogleFn}
+							// aria-label="Menu Toggle"
+						>
+							<SidebarIcon />
+						</span>
+					)}
+				</>
+			)}
 
-      <div className="sidebar-opened-wraper d-flex d-flex-column f-justify-start">
-        <div className="sidebar-top-wraper d-flex">
-          <figure className="sidebar-logo logo-closed opened-sidebar">
-            <img
-              src={darkMode ? logoDefault : logoLight}
-              alt=""
-              loading="lazy"
-            />
-            <span className="logoText">Your organic marketing best friend</span>
-          </figure>
-          <figure
-            className={
-              authenticated && facebookAuthInfoStatus?.accessToken 
-                ? "sidebar-logo logo-closed"
-                : "sidebar-logo logo-closed no-click"
-            }
-          >
-            <img src={logoClosed} alt="" loading="lazy" />
-          </figure>
-          {authenticated && facebookAuthInfoStatus?.accessToken && (
-            <span className="settings-menu" onClick={setSidebarHomeOpenFn}>
-              <NavLink
-                to="/settings/settings"
-                aria-label="Settings"
-                className={() => [
-                  '/settings/settings',
-                  '/settings/request-history',
-                  '/settings/browser-manager'].includes(location.pathname) ? "active" : ''}
+			<div className='sidebar-opened-wraper d-flex d-flex-column f-justify-start'>
+				<div className='sidebar-top-wraper d-flex'>
+					<figure className='sidebar-logo logo-closed opened-sidebar'>
+						<img
+							src={darkMode ? logoDefault : logoLight}
+							alt=''
+							loading='lazy'
+						/>
+						<span className='logoText'>Your organic marketing best friend</span>
+					</figure>
+					<figure
+						className={
+							authenticated && facebookAuthInfoStatus?.accessToken
+								? "sidebar-logo logo-closed"
+								: "sidebar-logo logo-closed no-click"
+						}
+					>
+						<img
+							src={logoClosed}
+							alt=''
+							loading='lazy'
+						/>
+					</figure>
+					{authenticated && facebookAuthInfoStatus?.accessToken && (
+						<span
+							className='settings-menu'
+							onClick={setSidebarHomeOpenFn}
+						>
+							<NavLink
+								to='/settings/settings'
+								aria-label='Settings'
+								className={() =>
+									[
+										"/settings/settings",
+										"/settings/request-history",
+										"/settings/browser-manager",
+									].includes(location.pathname)
+										? "active"
+										: ""
+								}
+							>
+								<SettingIcon />
+							</NavLink>
+						</span>
+					)}
+				</div>
+				<nav className={props.resetPass ? "nav-bar no-click" : "nav-bar"}>
+					{authenticated && facebookAuthInfoStatus?.accessToken && (
+						<ul>
+							{/* <span className="seperator"></span> */}
+							<li
+								className='nav-menu link-seperator'
+								onClick={setSidebarHomeOpenFn}
+							>
+								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+								<NavLink
+									to='/'
+									aria-label='Home'
+								>
+									<HomeIcon />
+									<span className='nav-menu-name'>Home</span>
+								</NavLink>
+							</li>
+							{/* <span className="seperator"></span> */}
 
-              >
-                <SettingIcon />
-              </NavLink>
-            </span>
-          )}
-        </div>
-        <nav className={props.resetPass ? "nav-bar no-click" : "nav-bar"}>
-          {authenticated && facebookAuthInfoStatus?.accessToken && (
-            <ul>
-              {/* <span className="seperator"></span> */}
-              <li
-                className="nav-menu link-seperator"
-                onClick={setSidebarHomeOpenFn}
-              >
-                {/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
-                <NavLink to="/" aria-label="Home">
+							<li
+								className={
+									sidebarOpenFriends
+										? "nav-menu has-child activated link-seperator"
+										: "nav-menu has-child link-seperator"
+								}
+								onClick={setSidebarOpenFn}
+							>
+								<NavLink
+									onClick={() => setSubMenuFriends(true)}
+									to='/friends/friend-list'
+									className={() =>
+										[
+											"/friends/friend-list",
+											"/friends/pending-request",
+											"/friends/unfriended-friends",
+											"/friends/whitelisted-friends",
+											"/friends/deactivated-friends",
+											"/friends/lost-friends",
+											"/friends/blacklisted-friends",
+										].includes(location.pathname)
+											? "active"
+											: ""
+									}
+									aria-label='Friends'
+								>
+									<FriendIcon />
+									<span
+										onClick={(e) => setSubMenuFriendsFn(e)}
+										className='nav-menu-name'
+									>
+										Friends{" "}
+										<span
+											onClick={(e) => setSubMenuFriendsFn(e)}
+											className={
+												subMenuFriends
+													? "sub-menu-toogle"
+													: "sub-menu-toogle sub-closed"
+											}
+										>
+											<svg
+												width='18'
+												height='18'
+												viewBox='0 0 18 18'
+												fill='none'
+												xmlns='http://www.w3.org/2000/svg'
+											>
+												<path
+													d='M13.5 6.75L9 11.25L4.5 6.75'
+													stroke='white'
+												/>
+											</svg>
+										</span>
+									</span>
+								</NavLink>
+								{subMenuFriends && (
+									<ul className='sub-menus'>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/friend-list'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- Friends list</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/friends-queue'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- Friends queue</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/pending-request'
+												aria-label='Pending Friends'
+											>
+												<span className='nav-menu-name'>- Pending request</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/unfriended-friends'
+												aria-label='Unfriended Friends'
+											>
+												<span className='nav-menu-name'>- Unfriended</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/whitelisted-friends'
+												aria-label='Whitelisted Friends'
+											>
+												<span className='nav-menu-name'>- Whitelisted</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/deactivated-friends'
+												aria-label='Deactivated Friends'
+											>
+												<span className='nav-menu-name'>- Deactivated</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/lost-friends'
+												aria-label='Lost Friends'
+											>
+												<span className='nav-menu-name'>- Lost friends</span>
+											</NavLink>
+										</li>
 
-
-                  <HomeIcon />
-                  <span className="nav-menu-name">Home</span>
-                </NavLink>
-              </li>
-              {/* <span className="seperator"></span> */}
-
-              <li
-                className={
-                  sidebarOpenFriends
-                    ? "nav-menu has-child activated link-seperator"
-                    : "nav-menu has-child link-seperator"
-                }
-                onClick={setSidebarOpenFn}
-              >
-                <NavLink
-                  onClick={() => setSubMenuFriends(true)}
-                  to="/friends/friend-list"
-                  className={() => [
-                    '/friends/friend-list',
-                    '/friends/pending-request',
-                    '/friends/unfriended-friends',
-                    '/friends/whitelisted-friends',
-                    '/friends/deactivated-friends',
-                    '/friends/lost-friends',
-                    '/friends/blacklisted-friends'].includes(location.pathname) ? "active" : ''}
-                  aria-label="Friends"
-                >
-                  <FriendIcon />
-                  <span
-                    onClick={(e) => setSubMenuFriendsFn(e)}
-                    className="nav-menu-name"
-                  >
-                    Friends{" "}
-                    <span
-                      onClick={(e) => setSubMenuFriendsFn(e)}
-                      className={
-                        subMenuFriends
-                          ? "sub-menu-toogle"
-                          : "sub-menu-toogle sub-closed"
-                      }
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M13.5 6.75L9 11.25L4.5 6.75" stroke="white" />
-                      </svg>
-                    </span>
-                  </span>
-                </NavLink>
-                {subMenuFriends && (
-                  <ul className="sub-menus">
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/friend-list" aria-label="Friends">
-                        <span className="nav-menu-name">- Friend List</span>
-                      </NavLink>
-                    </li>
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/pending-request" aria-label="Pending Friends">
-                        <span className="nav-menu-name">- Pending request</span>
-                      </NavLink>
-                    </li>
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/unfriended-friends" aria-label="Unfriended Friends">
-                        <span className="nav-menu-name">- Unfriended</span>
-                      </NavLink>
-                    </li>
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/whitelisted-friends" aria-label="Whitelisted Friends">
-                        <span className="nav-menu-name">- Whitelisted</span>
-                      </NavLink>
-                    </li>
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/deactivated-friends" aria-label="Deactivated Friends">
-                        <span className="nav-menu-name">- Deactivated</span>
-                      </NavLink>
-                    </li>
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/lost-friends" aria-label="Lost Friends">
-                        <span className="nav-menu-name">- Lost Friends</span>
-                      </NavLink>
-                    </li>
-
-                    <li className="nav-menu" onClick={listClick}>
-                      <NavLink to="/friends/blacklisted-friends" aria-label="Blacklisted Friends">
-                        <span className="nav-menu-name">
-                          - Blacklisted
-                        </span>
-                      </NavLink>
-                    </li>
-                    {/* <li className="nav-menu" onClick={setSidebarOpenFn}>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/blacklisted-friends'
+												aria-label='Blacklisted Friends'
+											>
+												<span className='nav-menu-name'>- Blacklisted</span>
+											</NavLink>
+										</li>
+										{/* <li className="nav-menu" onClick={setSidebarOpenFn}>
                   <NavLink to="/friends/incoming-pending-request">
                       <span className="nav-menu-name">- Incoming Pending Request</span>
                   </NavLink>
@@ -492,135 +563,160 @@ const Sidebar = (props) => {
                       <span className="nav-menu-name">- Incoming Rejected Request</span>
                   </NavLink>
                 </li> */}
-                  </ul>
-                )}
-              </li>
-              {/* <span className="seperator"></span> */}
-              {/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+									</ul>
+								)}
+							</li>
+							{/* <span className="seperator"></span> */}
+							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 
-              <li
-                className={
-                  sidebarOpenFriends
-                    ? "nav-menu has-child activated link-seperator"
-                    : "nav-menu has-child link-seperator"
-                }
-                onClick={setSidebarOpenFn}
-              >
-                <NavLink 
-                  to="/messages/groups"
-                  onClick={() => { setSubMenuMessage(true) }} 
-                  className={() => [
-                    '/messages/groups', 
-                    '/messages/segments', 
-                    '/messages/dmf',
-                    // '/messages/campaigns'
-                  ].includes(location.pathname) ? "active" : ''}
-                  aria-label="Messages"
-                >
-                  <NavMessageIcon color={'#0094FF'} />
-                  <span className="nav-menu-name">Message
+							<li
+								className={
+									sidebarOpenFriends
+										? "nav-menu has-child activated link-seperator"
+										: "nav-menu has-child link-seperator"
+								}
+								onClick={setSidebarOpenFn}
+							>
+								<NavLink
+									to='/messages/groups'
+									onClick={() => {
+										setSubMenuMessage(true);
+									}}
+									className={() =>
+										[
+											"/messages/groups",
+											"/messages/segments",
+											"/messages/dmf",
+											// '/messages/campaigns'
+										].includes(location.pathname)
+											? "active"
+											: ""
+									}
+									aria-label='Messages'
+								>
+									<NavMessageIcon color={"#0094FF"} />
+									<span className='nav-menu-name'>
+										Message
+										<span
+											onClick={(e) => setSubMenuMessageFn(e)}
+											className={
+												subMenuMessage
+													? "sub-menu-toogle"
+													: "sub-menu-toogle sub-closed"
+											}
+										>
+											<svg
+												width='18'
+												height='18'
+												viewBox='0 0 18 18'
+												fill='none'
+												xmlns='http://www.w3.org/2000/svg'
+											>
+												<path
+													d='M13.5 6.75L9 11.25L4.5 6.75'
+													stroke='white'
+												/>
+											</svg>
+										</span>
+									</span>
+								</NavLink>
 
-                    <span
-                      onClick={(e) => setSubMenuMessageFn(e)}
-                      className={
-                        subMenuMessage
-                          ? "sub-menu-toogle"
-                          : "sub-menu-toogle sub-closed"
-                      }
-                    >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M13.5 6.75L9 11.25L4.5 6.75" stroke="white" />
-                      </svg>
-                    </span>
-                  </span>
-
-                </NavLink>
-
-                {subMenuMessage && <ul className="sub-menus">
-                  <li className="nav-menu" >
-                    <NavLink to="/messages/groups" aria-label="Friends">
-                      <span className="nav-menu-name">- Groups</span>
-                    </NavLink>
-                  </li>
-                  <li className="nav-menu" >
-                    <NavLink to="/messages/segments" aria-label="Friends">
-                      <span className="nav-menu-name">- Segment</span>
-                    </NavLink>
-                  </li>
-                  <li className="nav-menu no-click">
-                    <NavLink to="/messages/dmf" aria-label="Friends" className="no-click">
-                      <span className="nav-menu-name">- DMF <span className="warn-badget">Coming soon</span></span>
-                    </NavLink>
-                  </li>
-                  {/* <li className="nav-menu">
+								{subMenuMessage && (
+									<ul className='sub-menus'>
+										<li className='nav-menu'>
+											<NavLink
+												to='/messages/groups'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- Groups</span>
+											</NavLink>
+										</li>
+										<li className='nav-menu'>
+											<NavLink
+												to='/messages/segments'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- Segment</span>
+											</NavLink>
+										</li>
+										<li className='nav-menu no-click'>
+											<NavLink
+												to='/messages/dmf'
+												aria-label='Friends'
+												className='no-click'
+											>
+												<span className='nav-menu-name'>
+													- DMF <span className='warn-badget'>Coming soon</span>
+												</span>
+											</NavLink>
+										</li>
+										{/* <li className="nav-menu">
                     <NavLink to="/messages/campaigns" aria-label="Friends">
                       <span className="nav-menu-name">- Campaigns</span>
                     </NavLink>
                   </li> */}
-                </ul>}
-              </li>
+									</ul>
+								)}
+							</li>
 
-                <li
-                  className={"nav-menu campaigns-menu"}
-                >
-                  <NavLink 
-                    to="/campaigns" 
-                    aria-label="Campaigns"
-                    className={'text-left'}
-                  >
-                    <CampaignQuicActionIcon />
-                    <span className="nav-menu-name">Campaigns</span>
-                  </NavLink>
-                </li>
-            </ul>
-          )}
-        </nav>
+							<li className={"nav-menu campaigns-menu"}>
+								<NavLink
+									to='/campaigns'
+									aria-label='Campaigns'
+									className={"text-left"}
+								>
+									<CampaignQuicActionIcon />
+									<span className='nav-menu-name'>Campaigns</span>
+								</NavLink>
+							</li>
+						</ul>
+					)}
+				</nav>
 
-        {authenticated && facebookAuthInfoStatus?.accessToken && (
-          sidebarToogle ? 
-          <nav
-            className="nav-bar bottom-nav-only m-top-a closed-only"
-            onClick={setSidebarHomeOpenFn}
-          >
-            <ul>
-              <li className="nav-menu bottom-settings closed-only">
-                {/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
-                <NavLink 
-                  to="/settings/settings"
-                  className={() =>   [
-                    '/settings/settings', 
-                    '/settings/request-history',
-                    '/settings/browser-manager'].includes(location.pathname) ? "active" : ''}
-                >
-                  <SettingIcon />
-                </NavLink>
-              </li>
-            </ul>
-          </nav> : ''
-        )}
+				{authenticated &&
+					facebookAuthInfoStatus?.accessToken &&
+					(sidebarToogle ? (
+						<nav
+							className='nav-bar bottom-nav-only m-top-a closed-only'
+							onClick={setSidebarHomeOpenFn}
+						>
+							<ul>
+								<li className='nav-menu bottom-settings closed-only'>
+									{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+									<NavLink
+										to='/settings/settings'
+										className={() =>
+											[
+												"/settings/settings",
+												"/settings/request-history",
+												"/settings/browser-manager",
+											].includes(location.pathname)
+												? "active"
+												: ""
+										}
+									>
+										<SettingIcon />
+									</NavLink>
+								</li>
+							</ul>
+						</nav>
+					) : (
+						""
+					))}
 
-        <ul className="bottom-nav-bar m-top-a">
-          <li
-            className="nav-menu nav-wiki"
-          >
-            <Link 
-              to="https://wiki.friender.io/"
-              target="_blank"
-            >
-              <WorldIcon />
-
-              Friender wiki <OpenInNewTab />
-            </Link>
-          </li>
-          {/* {sidebarToogle && ( */}
-          <>
-            {/* <li
+				<ul className='bottom-nav-bar m-top-a'>
+					<li className='nav-menu nav-wiki'>
+						<Link
+							to='https://wiki.friender.io/'
+							target='_blank'
+						>
+							<WorldIcon />
+							Friender wiki <OpenInNewTab />
+						</Link>
+					</li>
+					{/* {sidebarToogle && ( */}
+					<>
+						{/* <li
                 className={
                   authenticated
                     ? "nav-menu closed-only no-click"
@@ -658,68 +754,67 @@ const Sidebar = (props) => {
                 </NavLink>
               </li> */}
 
-            <li
-              ref={clickedRef}
-              className={
-                isComponentVisible
-                  ? "nav-menu user-profile-image profile-opened"
-                  : "nav-menu user-profile-image"
-              }
-            >
-              <span
-                className="profile-photo"
-                onClick={setShowProfileFn}
-                style={{
-                  backgroundImage: `url(${profiles?.filter(
-                    (el) => el.fb_user_id == defaultProfileId
-                  )[0]?.fb_profile_picture
-                    ? profiles?.filter(
-                      (el) => el.fb_user_id == defaultProfileId
-                    )[0]?.fb_profile_picture
-                    : ProfilePhoto
-                    })`,
-                }}
-              >
-                {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
-              </span>
+						<li
+							ref={clickedRef}
+							className={
+								isComponentVisible
+									? "nav-menu user-profile-image profile-opened"
+									: "nav-menu user-profile-image"
+							}
+						>
+							<span
+								className='profile-photo'
+								onClick={setShowProfileFn}
+								style={{
+									backgroundImage: `url(${
+										profiles?.filter(
+											(el) => el.fb_user_id == defaultProfileId
+										)[0]?.fb_profile_picture
+											? profiles?.filter(
+													(el) => el.fb_user_id == defaultProfileId
+											  )[0]?.fb_profile_picture
+											: ProfilePhoto
+									})`,
+								}}
+							>
+								{/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
+							</span>
 
-              {isComponentVisible && (
-
-                <SidebarPopUp
-                  authenticated={authenticated}
-                  profiles={profiles}
-                  switchProfile={switchProfile}
-                  setShowProfileFn={setShowProfileFn}
-                  userEmail={userEmail}
-                  closePopupFn={closePopupFn}
-                  logoOut={logoOut}
-                  defaultProfileId={defaultProfileId}
-                  facebookAuthInfoStatus={facebookAuthInfoStatus}  
-                />
-              )}
-            </li>
-            {!sidebarToogle &&
-              <li
-                className="nav-menu feedback-nav"
-              >
-                {/* {
+							{isComponentVisible && (
+								<SidebarPopUp
+									authenticated={authenticated}
+									profiles={profiles}
+									switchProfile={switchProfile}
+									setShowProfileFn={setShowProfileFn}
+									userEmail={userEmail}
+									closePopupFn={closePopupFn}
+									logoOut={logoOut}
+									defaultProfileId={defaultProfileId}
+									facebookAuthInfoStatus={facebookAuthInfoStatus}
+								/>
+							)}
+						</li>
+						{!sidebarToogle && (
+							<li className='nav-menu feedback-nav'>
+								{/* {
                   console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
                 } */}
-                <span
-                  className="profile-photo"
-                  onClick={setShowProfileFn}
-                  style={{
-                    backgroundImage: `url(${
-                      // facebookAuthInfoStatus?.picture?.data?.url ? facebookAuthInfoStatus?.picture?.data?.url : 
-                      profiles && profiles.length? profiles[0]?.fb_profile_picture : ProfilePhoto
-                    })`,
-                  }}
-                >
-                  {/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
-                </span>
+								<span
+									className='profile-photo'
+									onClick={setShowProfileFn}
+									style={{
+										backgroundImage: `url(${
+											// facebookAuthInfoStatus?.picture?.data?.url ? facebookAuthInfoStatus?.picture?.data?.url :
+											profiles && profiles.length
+												? profiles[0]?.fb_profile_picture
+												: ProfilePhoto
+										})`,
+									}}
+								>
+									{/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
+								</span>
 
-
-                {/* {
+								{/* {
 
                   console.log(
                     'authenticated', authenticated, 
@@ -731,7 +826,7 @@ const Sidebar = (props) => {
                   )
                 } */}
 
-                {/* {isComponentVisible && (
+								{/* {isComponentVisible && (
 
                   <SidebarPopUp 
                     authenticated={authenticated}
@@ -745,23 +840,30 @@ const Sidebar = (props) => {
                     facebookAuthInfoStatus={facebookAuthInfoStatus}            
                   />
                 )} */}
-                <Link to="https://lnkw.co/friender-feedback" target="_blank" className="btn">
-                  Feedback <OpenInNewTab />
-                </Link>
-              </li>
-            }
-            {sidebarToogle ? <li className="nav-menu closed-only">
-              <button
-                className="btn-transparent logout-btn"
-                aria-label="button"
-                onClick={logoOut}
-              >
-                <LogoutIcon />
-              </button>
-            </li> : ''}
+								<Link
+									to='https://lnkw.co/friender-feedback'
+									target='_blank'
+									className='btn'
+								>
+									Feedback <OpenInNewTab />
+								</Link>
+							</li>
+						)}
+						{sidebarToogle ? (
+							<li className='nav-menu closed-only'>
+								<button
+									className='btn-transparent logout-btn'
+									aria-label='button'
+									onClick={logoOut}
+								>
+									<LogoutIcon />
+								</button>
+							</li>
+						) : (
+							""
+						)}
 
-
-            {/* <li className="nav-menu opened-only no-click">
+						{/* <li className="nav-menu opened-only no-click">
                 <button
                   className="btn-transparent menu-detail"
                   aria-label="Invite" 
@@ -803,10 +905,10 @@ const Sidebar = (props) => {
                   </svg>
                 </button>
               </li>  */}
-            {/* <li className="nav-menu opened-only no-click">
+						{/* <li className="nav-menu opened-only no-click">
                 <button className="btn-primary upgrade-btn">Upgrade</button>
               </li>  */}
-            {/* <li className="nav-menu opened-only no-click">
+						{/* <li className="nav-menu opened-only no-click">
                 <NavLink to="/" aria-label="FAQ">
                   <svg
                     width="24"
@@ -837,11 +939,10 @@ const Sidebar = (props) => {
                   </svg>
                 </NavLink>
               </li> */}
-          </>
-
-        </ul>
-      </div>
-    </aside>
-  );
+					</>
+				</ul>
+			</div>
+		</aside>
+	);
 };
 export default Sidebar;

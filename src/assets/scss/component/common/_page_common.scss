@@ -665,3 +665,306 @@
 // Message || DMF page end
 //Message page end
 
+// Friends queue page start
+
+.friends-queue-action-bar {
+  width: 100%;
+  height: 93px;
+  border-bottom: 1px solid rgba(49, 48, 55, 1);
+  display: flex;
+  padding-bottom: 8px;
+
+  .friends-queue-action-bar-item:nth-child(-n+2) {
+    height: 90%;
+    margin-top: 6px;
+    border-right: 1px solid rgba(49, 48, 55, 1);
+  }
+
+  .friends-queue-action-bar-item {
+    width: 25%;
+    height: 100%;
+    padding: 8px 8px 8px 0;
+    display: flex;
+    align-items: center;
+
+    .friend-req-sent-filter {
+      width: 95%;
+      height: 61px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      background-color: rgba(19, 19, 20, 1);
+      border-radius: 3px;
+
+      .friend-req-sent-count {
+        display: flex;
+        flex-direction: column;
+
+        .count {
+          font-size: 20px;
+        }
+
+        .count-descriptor {
+          padding-top: 4px;
+          font-size: 10px;
+        }
+      }
+  
+      .select-friend-req-sent-period {
+        cursor: pointer;
+        padding: 8px 1.5rem;
+        border-radius: 3px;
+        border-color: rgba(49, 48, 55, 1);
+        color: rgb(211, 211, 211);
+        background-color: rgba(49, 48, 55, 1);
+        font-size: 14px;
+        line-height: 19px;
+      }
+    }
+
+    .friend-req-send-limit {
+      width: 100%;
+      height: 100%;
+      font-size: 12px;
+      color: rgba(189, 189, 189, 1);
+      line-height: 17px;
+      font-weight: 400;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px 0 28px;
+
+      .select-limit {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+
+        .select-limit-item {
+          display: flex;
+          margin-top: 6px;
+
+          .is-active {
+            color: rgba(0, 148, 255, 1) !important;
+            border: 1px solid rgba(0, 148, 255, 1) !important;
+          }
+
+          .infinite, .limited {
+            background-color: rgba(19, 19, 20, 1);
+            border: 1px solid rgba(19, 19, 20, 1);
+            border-radius: 16px;
+            padding: 3px 8px;
+            cursor: pointer;
+          }
+
+          .limited {
+            margin-left: 12px;
+          }
+        }
+      }
+
+      .friend-req-limit-num-input {
+        width: 40%;
+        background: #313037;
+        color: white;
+        border-radius: 5px;
+        padding-left: 13px;
+        padding-right: 5px;
+        border: 1px solid #313037;
+        height: 40px;
+        font-size: 12px;
+      }
+    }
+
+    .friend-req-time-delay {
+      width: 95%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 12px 0 28px;
+
+      .time-delay {  
+        font-size: 12px;
+        color: rgba(189, 189, 189, 1);
+        line-height: 17px;
+        font-weight: 400;
+      }
+
+      .friend-req-time-delay-bar {
+        width: 95%;
+        margin-top: 4px;
+
+        .selector_box {
+          background-color: rgba(49, 48, 55, 1);
+        }
+
+        .select-arrow {
+          right: 2rem !important;
+        }
+      }
+    }
+
+    .friend-req-run-queue {
+      width: 95%;
+      height: 100%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0 12px 0 28px;
+
+      .run-friend-queue {
+        width: 196px;
+        display: flex;
+        justify-content: space-between;
+        background-color: rgba(49, 48, 55, 1);
+        padding: 1rem;
+        border: 1px solid rgba(118, 116, 133, 1);
+        border-radius: 4px;
+
+        .run {
+          font-size: 14px;
+          color: rgba(189, 189, 189, 1);
+          line-height: 19px;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}
+
+.import-csv-modal {
+
+  .modal-content-wraper {
+    .modal-header {
+      padding-top: 0;
+    }
+  }
+
+  .modal {
+    width: 670px;
+    height: 532px;
+  }
+
+  .import-data-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  
+    .task-name-label {
+      font-size: 12px;
+      color: rgba(189, 189, 189, 1);
+      line-height: 19px;
+      font-weight: 400;
+    }
+  
+    .task-name-field {
+      width: 100%;
+      background: #313037;
+      color: white;
+      border-radius: 5px;
+      padding-left: 13px;
+      padding-right: 5px;
+      border: 1px solid #313037;
+      height: 40px;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  
+    .import-csv {
+      margin-bottom: 0.5rem;
+  
+      .import-csv-icon {
+        margin-bottom: 12px;
+      }
+  
+      .sub-txt {
+        font-size: 16px;
+        line-height: 22px;
+        font-weight: 400;
+        color: rgba(0, 148, 255, 1);
+      }
+
+      .import-condition-one {
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: 400;
+        color: rgba(118, 116, 133, 1);
+      }
+
+      .import-condition-two {
+        font-size: 10px;
+        line-height: 20px;
+        font-weight: 400;
+        color: rgba(118, 116, 133, 1);
+      }
+    }
+  }
+
+  .import-csv-note {
+    font-size: 12px;
+    line-height: 17px;
+    font-weight: 700;
+    color: rgba(118, 116, 133, 1);
+    margin-bottom: 0.75rem;
+
+    .danger-note {
+      color: rgba(255, 106, 119, 1);
+    }
+  }
+
+  .custom-modal-footer {
+    display: flex;
+    justify-content: space-between;
+
+    .download-sample-csv {
+      display: flex;
+
+      .csv-download-icon {
+        margin-right: 8px;
+      }
+
+      .download-sample-csv-txt1 {
+        font-size: 14px;
+        line-height: 19px;
+        font-weight: 400;
+        color: rgba(0, 148, 255, 1);
+      }
+
+      .download-sample-csv-txt2 {
+        font-size: 12px;
+        line-height: 19px;
+        font-weight: 400;
+        color: rgba(118, 116, 133, 1);
+      }
+    }
+
+    .disabled {
+      background-color: rgba(49, 48, 55, 1);
+      color: rgba(118, 116, 133, 1);
+    }
+
+    .active {
+      background-color: rgba(96, 91, 255, 1);
+      color: rgba(255, 255, 255, 1);
+    }
+
+    .import-csv-nxt-btn {
+      width: 89px;
+      height: 40px;
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 400;
+      border-radius: 4px;
+      cursor: pointer;
+  
+      .next-icon {
+        margin-left: 8px;
+      }
+    }
+
+  }
+}
+
+
+

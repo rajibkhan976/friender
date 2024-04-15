@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, memo } from "react";
+import { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
@@ -20,6 +20,12 @@ import {
 	OpenInNewTab,
 	InfoIcon,
 } from "../../assets/icons/Icons";
+import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
+import { ReactComponent as ExportCSVIcon } from "../../assets/images/ExportCSVIcon.svg";
+import { ReactComponent as MoveTopIcon } from "../../assets/images/MoveTopIcon.svg";
+import { ReactComponent as NextIcon } from "../../assets/images/NextIcon.svg";
+import { ReactComponent as SheetIcon } from "../../assets/images/SheetIcon.svg";
+import { ReactComponent as UploadIcon } from "../../assets/images/UploadIcon.svg";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
@@ -36,7 +42,11 @@ import {
 	setProfileSpaces,
 	setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
-import { getSendFriendReqst, reLoadFrList, unLoadFrList } from "../../actions/FriendsAction";
+import {
+	getSendFriendReqst,
+	reLoadFrList,
+	unLoadFrList,
+} from "../../actions/FriendsAction";
 import {
 	deleteFriend,
 	getFriendList,
@@ -54,6 +64,7 @@ import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
 import { addUsersToCampaign } from "../../actions/CampaignsActions";
 import { utils } from "../../helpers/utils";
+import { useDropzone } from "react-dropzone";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -140,6 +151,13 @@ const accessibilityOptions = [
 		icon: <ActionIcon />,
 		active: false,
 	},
+	{
+		type: "queueListAction",
+		status: false,
+		text: "Actions",
+		icon: <ActionIcon />,
+		active: false,
+	},
 	// {
 	//   type: "exportHeader",
 	//   status: false,
@@ -167,6 +185,35 @@ socket.on("connect_error", (e) => {
 	socket.io.opts.transports = ["websocket", "polling"];
 });
 
+const baseStyle = {
+	flex: 1,
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	padding: "80px",
+	borderWidth: 2,
+	borderRadius: 2,
+	borderColor: "rgba(49, 48, 55, 1)",
+	borderStyle: "dashed",
+	backgroundColor: "rgba(28, 28, 30, 1)",
+	color: "#bdbdbd",
+	outline: "none",
+	transition: "border .24s ease-in-out",
+	marginTop: "16px",
+};
+
+const focusedStyle = {
+	borderColor: "#2196f3",
+};
+
+const acceptStyle = {
+	borderColor: "#00e676",
+};
+
+const rejectStyle = {
+	borderColor: "#ff1744",
+};
+
 function PageHeader({ headerText = "" }) {
 	const dispatch = useDispatch();
 	const searchRef = useRef(null);
@@ -181,7 +228,9 @@ function PageHeader({ headerText = "" }) {
 	const selectedFriends = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
-	const blacklistedFriends = useSelector((state) => state.friendlist.selected_friends.filter((el) => el?.blacklist_status));
+	const blacklistedFriends = useSelector((state) =>
+		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
+	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.friendlist.curr_list_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
@@ -202,7 +251,9 @@ function PageHeader({ headerText = "" }) {
 	const [runningUnfriend, setRunningUnfriend] = useState(false);
 	const [isAddingToCampaign, setIsAddingToCampaign] = useState(false);
 	const [selectedCampaign, setSelectedCampaign] = useState("Select");
-	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
+	const campaignsCreated = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
 	const [campaignListSelector, setCampaignListSelector] = useState(false);
 	const [selectedCampaignName, setSelectedCampaignName] = useState("Select");
 
@@ -210,15 +261,14 @@ function PageHeader({ headerText = "" }) {
 		dispatch(unLoadFrList());
 		setTimeout(() => {
 			dispatch(reLoadFrList());
-		}, 300)
-	}
+		}, 300);
+	};
 
 	useEffect(() => {
 		setSelectedCampaign("Select");
 		setCampaignListSelector(false);
 		setSelectedCampaignName("Select");
-
-	}, [isAddingToCampaign])
+	}, [isAddingToCampaign]);
 	useEffect(() => {
 		if (!modalOpen) {
 			setWhiteCountInUnfriend(null);
@@ -319,6 +369,12 @@ function PageHeader({ headerText = "" }) {
 						status: headerOptions.quickAction,
 					};
 
+				case "queueListAction":
+					return {
+						...accessObj,
+						status: headerOptions.queueListAction,
+					};
+
 				case "exportHeader":
 					return {
 						...accessObj,
@@ -405,6 +461,23 @@ function PageHeader({ headerText = "" }) {
 					filterHeader: true,
 					quickAction: true,
 					exportHeader: true,
+					listingLengthWell: true,
+					queryTopHeader: {
+						active: true,
+						content:
+							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+					},
+				});
+				break;
+
+			case "friends-queue":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: true,
+					queueListAction: true,
+					exportCSV: true,
 					listingLengthWell: true,
 					queryTopHeader: {
 						active: true,
@@ -581,7 +654,8 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${
+								selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} whitelisted successfully!`,
 							"success",
 							1000,
@@ -615,7 +689,8 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${
+								selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} blacklisted successfully!`,
 							"success",
 							3000,
@@ -725,8 +800,7 @@ function PageHeader({ headerText = "" }) {
 		//console.log("camo sele",item)
 		setSelectedCampaignName(item?.campaign_name);
 		setSelectedCampaign(item?.campaign_id);
-
-	}
+	};
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		// console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
@@ -786,13 +860,16 @@ function PageHeader({ headerText = "" }) {
 						cmd: "alert",
 						type: "success",
 						time: 3000,
-						message: `${item.friendName
-							} unfriended successfully!   (Unfriending ${i + 1}/${unfriendableList.length
-							})`,
+						message: `${
+							item.friendName
+						} unfriended successfully!   (Unfriending ${i + 1}/${
+							unfriendableList.length
+						})`,
 						position: "bottom-right",
 					});
 					Alertbox(
-						`${item.friendName} unfriended successfully!   (Unfriending ${i + 1
+						`${item.friendName} unfriended successfully!   (Unfriending ${
+							i + 1
 						}/${unfriendableList.length})`,
 						"success",
 						3000,
@@ -1000,6 +1077,12 @@ function PageHeader({ headerText = "" }) {
 					};
 					break;
 
+				case "queueListAction":
+					return {
+						...accessObj,
+						status: headerOptions.queueListAction,
+					};
+
 				case "exportHeader":
 					return {
 						...accessObj,
@@ -1046,7 +1129,7 @@ function PageHeader({ headerText = "" }) {
 			facebookData?.fb_data == null ||
 			facebookData?.fb_data == "" ||
 			localStorage.getItem("fr_default_fb") !==
-			facebookData?.fb_data?.fb_user_id ||
+				facebookData?.fb_data?.fb_user_id ||
 			localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
 		) {
 			localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id);
@@ -1174,39 +1257,44 @@ function PageHeader({ headerText = "" }) {
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
 			let payload = {
-				"campaignId": selectedCampaign,
-				"facebookUserId": localStorage.getItem("fr_default_fb"),
-				"friend_details": addFriendsToCampaign.map((item) => {
+				campaignId: selectedCampaign,
+				facebookUserId: localStorage.getItem("fr_default_fb"),
+				friend_details: addFriendsToCampaign.map((item) => {
 					return {
-						"friendFbId": item.friendFbId ? item.friendFbId : null,
-						"friendAddedAt": item.created_at ? item.created_at : null,
-						"finalSource": item.finalSource ? item.finalSource : null,
-						"friendName": item.friendName ? item.friendName : null,
-						"friendProfilePicture": item.friendProfilePicture ? item.friendProfilePicture : null,
-						"friendProfileUrl": item.friendProfileUrl ? item.friendProfileUrl : null,
-						"groupName": item.groupName ? item.groupName : null,
-						"status": "pending",
-						"groupUrl": item.groupUrl ? item.groupUrl : null,
-						"matchedKeyword": item.matchedKeyword ? item.matchedKeyword : null,
-					}
+						friendFbId: item.friendFbId ? item.friendFbId : null,
+						friendAddedAt: item.created_at ? item.created_at : null,
+						finalSource: item.finalSource ? item.finalSource : null,
+						friendName: item.friendName ? item.friendName : null,
+						friendProfilePicture: item.friendProfilePicture
+							? item.friendProfilePicture
+							: null,
+						friendProfileUrl: item.friendProfileUrl
+							? item.friendProfileUrl
+							: null,
+						groupName: item.groupName ? item.groupName : null,
+						status: "pending",
+						groupUrl: item.groupUrl ? item.groupUrl : null,
+						matchedKeyword: item.matchedKeyword ? item.matchedKeyword : null,
+					};
 				}),
-			}
-			dispatch(addUsersToCampaign(payload)).unwrap().then((res) => {
-				refreshFrList();
-				dispatch(removeSelectedFriends());
-				Alertbox(
-					`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
-					"success",
-					1000,
-					"bottom-right"
-				);
-			}
-			).catch((err) => {
-				console.log("Add to campaign:", err);
-			})
+			};
+			dispatch(addUsersToCampaign(payload))
+				.unwrap()
+				.then((res) => {
+					refreshFrList();
+					dispatch(removeSelectedFriends());
+					Alertbox(
+						`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
+						"success",
+						1000,
+						"bottom-right"
+					);
+				})
+				.catch((err) => {
+					console.log("Add to campaign:", err);
+				});
 			setIsAddingToCampaign(false);
 			setSelectedCampaign("Select");
-
 		} catch (error) {
 			Alertbox(`${error}`, "error", 1000, "bottom-right");
 		}
@@ -1217,6 +1305,51 @@ function PageHeader({ headerText = "" }) {
 		setSelectedCampaign("Select");
 		setIsAddingToCampaign(false);
 	};
+
+	console.log(accessOptions);
+
+	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
+	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
+	const [taskName, setTaskName] = useState(`CSV Upload ${Date.now()}`);
+
+	const handleShowCsvUploadModal = () => {
+		setTaskName(`CSV Upload ${Date.now()}`);
+		setSelectedCsvFile(null);
+		setShowUploadCsvModal(true);
+	};
+
+	const onDrop = useCallback((acceptedFiles) => {
+		setSelectedCsvFile(acceptedFiles);
+	}, []);
+
+	const onError = useCallback((Error) => {
+		console.log(Error);
+	}, []);
+
+	const handleCsvUpload = () => {
+		if (selectedCsvFile && taskName) {
+			console.log(selectedCsvFile);
+		}
+	};
+
+	const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
+		useDropzone({
+			onDrop,
+			onError,
+			accept: { "text/csv": [".csv", ".xlsx"] },
+			multiple: false,
+			maxSize: 1000000,
+		});
+
+	const style = useMemo(
+		() => ({
+			...baseStyle,
+			...(isFocused ? focusedStyle : {}),
+			...(isDragAccept ? acceptStyle : {}),
+			...(isDragReject ? rejectStyle : {}),
+		}),
+		[isFocused, isDragAccept, isDragReject]
+	);
 
 	return (
 		<>
@@ -1236,7 +1369,7 @@ function PageHeader({ headerText = "" }) {
 								{" "}
 								{selectedFriends.length > 0
 									? // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
-									selectedFriends.filter((el) => el?.whitelist_status)?.length
+									  selectedFriends.filter((el) => el?.whitelist_status)?.length
 									: Number(0)}{" "}
 							</b>{" "}
 							of them are currently on your whitelist. Are you sure you want to
@@ -1252,7 +1385,7 @@ function PageHeader({ headerText = "" }) {
 					ExtraProps={{
 						primaryBtnDisable:
 							whiteCountInUnfriend === 0 ||
-								whiteCountInUnfriend === selectedFriends.length
+							whiteCountInUnfriend === selectedFriends.length
 								? true
 								: false,
 					}}
@@ -1267,22 +1400,11 @@ function PageHeader({ headerText = "" }) {
 					bodyText={
 						<>
 							You have selected <b>{selectedFriends.length}</b> friend(s)
-							{blacklistedFriends?.length >
-								0 ? (
+							{blacklistedFriends?.length > 0 ? (
 								<>
-									, and{" "}
-									<b>
-										{
-											blacklistedFriends
-												?.length
-										}
-									</b>{" "}
-									of them
-									{blacklistedFriends
-										?.length > 1
-										? " are"
-										: " is"}{" "}
-									currently on your blacklist
+									, and <b>{blacklistedFriends?.length}</b> of them
+									{blacklistedFriends?.length > 1 ? " are" : " is"} currently on
+									your blacklist
 								</>
 							) : (
 								""
@@ -1295,9 +1417,7 @@ function PageHeader({ headerText = "" }) {
 						</>
 					}
 					closeBtnTxt={
-						blacklistedFriends?.length > 0
-							? "Skip blacklisted"
-							: "Cancel"
+						blacklistedFriends?.length > 0 ? "Skip blacklisted" : "Cancel"
 					}
 					closeBtnFun={
 						blacklistedFriends?.length > 0
@@ -1310,34 +1430,35 @@ function PageHeader({ headerText = "" }) {
 						setSelectedCampaign("Select");
 					}}
 					ModalFun={() => AddToCampaign(selectedFriends)}
-					btnText={
-						blacklistedFriends?.length > 0
-							? "Yes, add all"
-							: "Add"
-					}
+					btnText={blacklistedFriends?.length > 0 ? "Yes, add all" : "Add"}
 					modalWithChild={true}
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
-						cancelBtnDisable: blacklistedFriends.length > 0 ?
-							selectedFriends?.length === blacklistedFriends?.length
-								? true
-								: selectedCampaign === "Select"
+						cancelBtnDisable:
+							blacklistedFriends.length > 0
+								? selectedFriends?.length === blacklistedFriends?.length
+									? true
+									: selectedCampaign === "Select"
 									? true
 									: false
-							: false
+								: false,
 					}}
 					additionalClass='add-campaign-modal'
 				>
 					{/* If Campaign created, list else disable and show link for creation */}
 					<>
 						<h6>Choose campaign</h6>
-						<span className='select-wrapers w-100' onClick={() => { setCampaignListSelector(!campaignListSelector) }}>
-
+						<span
+							className='select-wrapers w-100'
+							onClick={() => {
+								setCampaignListSelector(!campaignListSelector);
+							}}
+						>
 							<div className='selector_box'>
 								{utils.cropParagraph(selectedCampaignName, 32)}
-								{campaignsCreated?.length > 0 &&
-									campaignListSelector && <ul className="selector_box_options">
+								{campaignsCreated?.length > 0 && campaignListSelector && (
+									<ul className='selector_box_options'>
 										{campaignsCreated?.map((item, index) => {
 											return (
 												<li
@@ -1349,12 +1470,11 @@ function PageHeader({ headerText = "" }) {
 												</li>
 											);
 										})}
-
-									</ul>}
+									</ul>
+								)}
 
 								<span className='select-arrow'></span>
 							</div>
-
 						</span>
 						{campaignsCreated?.length <= 0 && (
 							<span className='inline-note warning-note-inline'>
@@ -1375,6 +1495,91 @@ function PageHeader({ headerText = "" }) {
 				</Modal>
 			)}
 
+			{headerOptions.exportCSV && showUploadCsvModal && (
+				<Modal
+					modalType='normal-type'
+					modalIcon={null}
+					headerText={"Import data"}
+					bodyText={
+						<>
+							<div className='import-data-input'>
+								<label className='task-name-label'>Task name</label>
+
+								<input
+									type='text'
+									className={`task-name-field `}
+									value={taskName}
+									onChange={(e) => setTaskName(e.target.value)}
+								/>
+
+								<div
+									className='import-csv'
+									{...getRootProps({ style })}
+								>
+									<input {...getInputProps()} />
+									{selectedCsvFile ? (
+										<>
+											<SheetIcon className='import-csv-icon' />
+											<p>CSV file is ready for upload...</p>
+											<span className='import-condition-one'>
+												{selectedCsvFile[0]?.name}
+											</span>
+										</>
+									) : (
+										<>
+											<UploadIcon className='import-csv-icon' />
+											<p>
+												Drag & drop or{" "}
+												<span className='sub-txt'>Choose file</span> to upload
+											</p>
+											<span className='import-condition-one'>
+												Supported formats: csv & xlsx
+											</span>
+											<span className='import-condition-two'>
+												(Maximum upload size is 1 MB)
+											</span>
+										</>
+									)}
+								</div>
+								<p className='import-csv-note'>
+									<span className='danger-note'>* Note: </span>Ensure your data
+									sheet includes links to Facebook profiles or the user IDs of
+									Facebook users.
+								</p>
+								<div className='custom-modal-footer'>
+									<div className='download-sample-csv'>
+										<CsvDownloadIcon className='csv-download-icon' />
+										<div className='download-sample-csv-txt1'>
+											Download&nbsp;
+										</div>
+										<div className='download-sample-csv-txt2'>
+											sample template
+										</div>
+									</div>
+									<button
+										type='button'
+										className={
+											selectedCsvFile && taskName
+												? "import-csv-nxt-btn active"
+												: "import-csv-nxt-btn disabled"
+										}
+										onClick={handleCsvUpload}
+									>
+										Next
+										<NextIcon className='next-icon' />
+									</button>
+								</div>
+							</div>
+						</>
+					}
+					open={showUploadCsvModal}
+					setOpen={setShowUploadCsvModal}
+					ModalFun={() => {}}
+					additionalClass={`import-csv-modal`}
+					modalButtons={false}
+				/>
+			)}
+
 			<div className='common-header d-flex f-align-center f-justify-between'>
 				<div className='left-div d-flex d-flex-column'>
 					<div className='header-breadcrumb'>
@@ -1386,10 +1591,10 @@ function PageHeader({ headerText = "" }) {
 							{headerText != ""
 								? headerText
 								: links.length > 0
-									? links[links.length - 2]?.location !== "campaigns"
-										? links[links.length - 1].location
-										: "Campaigns"
-									: ""}
+								? links[links.length - 2]?.location !== "campaigns"
+									? links[links.length - 1].location
+									: "Campaigns"
+								: ""}
 							{headerOptions.listingLengthWell && (
 								<span className='num-header-count num-well'>{listCount}</span>
 							)}
@@ -1426,6 +1631,13 @@ function PageHeader({ headerText = "" }) {
               /> */}
 						</div>
 					)}
+					{headerOptions.exportCSV && (
+						<ExportCSVIcon
+							className='export-csv-icon'
+							onClick={handleShowCsvUploadModal}
+						/>
+					)}
+
 					{headerOptions.searchHeader && (
 						<Search
 							extraClass='fr-search-header'
@@ -1476,13 +1688,19 @@ function PageHeader({ headerText = "" }) {
 										ref={clickedRef}
 									>
 										<button
-											className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
-												? "active"
-												: ""
-												}`}
+											className={`accessibility-btn btn h-100 ${
+												accessItem.active || accessItem.type == "exportHeader"
+													? "active"
+													: ""
+											}`}
 											key={accessItem.type + i}
 											onClick={() => onAccessClick(accessItem)}
-											ref={accessItem.type == "quickAction" ? actionRef : null}
+											ref={
+												accessItem.type == "quickAction" ||
+												accessItem.type === "queueListAction"
+													? actionRef
+													: null
+											}
 										>
 											<figure className='accessibility-icon'>
 												{accessItem.icon}
@@ -1491,12 +1709,55 @@ function PageHeader({ headerText = "" }) {
 												{accessItem.text}
 											</span>
 										</button>
+										{accessItem.type === "queueListAction" &&
+											isComponentVisible && (
+												<div
+													className={`fr-dropdown fr-dropdownAction ${
+														accessItem.type === "queueListAction" &&
+														accessItem.active
+															? "active"
+															: ""
+													}`}
+												>
+													<ul>
+														<li
+															className='del-fr-action'
+															onClick={() => checkBeforeUnfriend(accessItem)}
+															data-disabled={
+																!selectedFriends || selectedFriends.length === 0
+																	? true
+																	: false
+															}
+														>
+															<figure>
+																<UnfriendIcon />
+															</figure>
+															<span>Remove</span>
+														</li>
+														<li
+															className='del-fr-action'
+															onClick={() => checkBeforeUnfriend(accessItem)}
+															data-disabled={
+																!selectedFriends || selectedFriends.length === 0
+																	? true
+																	: false
+															}
+														>
+															<figure>
+																<MoveTopIcon />
+															</figure>
+															<span>Move to top</span>
+														</li>
+													</ul>
+												</div>
+											)}
 										{accessItem.type == "quickAction" && isComponentVisible && (
 											<div
-												className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
-													? "active"
-													: ""
-													}`}
+												className={`fr-dropdown fr-dropdownAction ${
+													accessItem.type == "quickAction" && accessItem.active
+														? "active"
+														: ""
+												}`}
 											>
 												<ul>
 													<li
