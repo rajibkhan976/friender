@@ -839,23 +839,200 @@
     .modal-header {
       padding-top: 0;
     }
+
+    .editor-modal-header {
+      padding-top: 2rem;
+    }
+
+    .modal-content {
+
+      .friend-request-queue-message-field {
+
+        .friend-request-sent-message-label {
+          width: 100%;
+          display: inline-block;
+        }
+
+        .friend-request-accepted-message-label {
+          width: 100%;
+          display: inline-block;
+          margin-top: 8px;
+        }
+
+        .modal-background {
+
+          .editor-modal {
+            top: 0;
+            transform: translate(0%, 0%);
+            left: 0;
+          }
+        }
+
+        .friend-request-queue-select-msg-wrapper {
+          width: 100%;
+          margin-top: 8px;
+
+          .friend-request-queue-select-panel {
+            margin: 0;
+            background-color: rgba(49, 48, 55, 1);
+            border: none;
+            display: flex;
+            justify-content: space-between;
+          }
+
+          .friend-request-queue-select-panel-page {
+            width: 100%;
+            left: 44.5%;
+            background-color: rgba(49, 48, 55, 1);
+          }
+        }
+      }
+
+      .uploaded-csv-report {
+        width: 570px;
+        height: 88px;
+        display: flex;
+
+        .report-block {
+          width: 280px;
+          height: 84px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: 2px;
+          background-color: rgba(28, 28, 30, 1);
+          border: 1px solid rgba(49, 48, 55, 1);
+          border-radius: 4px;
+
+          .total {
+            color: rgba(231, 230, 255, 1);
+          }
+
+          .added {
+            color: rgba(63, 229, 131, 1);
+          }
+
+          .skipped {
+            color: rgba(250, 199, 17, 1);
+          }
+
+          .errors {
+            color: rgba(255, 112, 112, 1);
+          }
+        }
+      }
+    }
   }
 
   .modal {
     width: 670px;
-    height: 532px;
+    min-height: 532px;
+  }
+
+  .keyword-input {
+
+    .task-name-field {
+      border: none !important;
+    }
+
+    .keyword-suggestion-bar {
+      width: 570px;
+      height: 81px;
+      background-color: rgba(49, 48, 55, 1);
+      margin-bottom: 8px;
+      border-radius: 4px;
+      padding: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      overflow-y: auto;
+
+      .saved {
+        background-color: rgba(58, 151, 76, 1) !important;
+      }
+
+      .should-modify {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+
+        .cross-icon {
+          display: none;
+        }
+      }
+
+      .should-modify:hover {
+        background-color: rgba(217, 90, 101, 1) !important;
+      }
+
+      .should-modify:hover .cross-icon {
+        display: inline-block;
+      }
+
+      .keyword-item {
+        display: inline-block;
+        height: 26px;
+        padding: 3px 8px;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 19px;
+        background-color: rgba(28, 28, 30, 1);
+        border-radius: 16px;
+        margin-right: 4px;
+        cursor: pointer;
+      }
+
+      .keyword-item:focus {
+        background-color: rgba(58, 151, 76, 1);
+      }
+    }
   }
 
   .import-data-input {
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    .keywords-label {
+      position: relative;
+      margin-top: 8px;
+
+      .icon-arrow-down {
+        position: absolute;
+        right: 0.5rem;
+        top: 2.15rem;
+        cursor: pointer;
+      }
+
+      .keyword-clear-action {
+        position: absolute;
+        right: 2.5rem;
+        top: 2.15rem;
+        cursor: pointer;
+      }
+
+      .keyword-save-action {
+        position: absolute;
+        right: 0.5rem;
+        top: 2.15rem;
+        cursor: pointer;
+        color: rgba(0, 148, 255, 1);
+      }
+    }
+
+    .keyword-field {
+      margin-bottom: 1px;
+    }
   
     .task-name-label {
       font-size: 12px;
       color: rgba(189, 189, 189, 1);
       line-height: 19px;
       font-weight: 400;
+
+      .danger-note {
+        color: rgb(255, 100, 113);
+      }
     }
   
     .task-name-field {
@@ -873,12 +1050,27 @@
   
     .import-csv {
       margin-bottom: 0.5rem;
+
+      .import-csv-txt {
+        width: 60%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .progress {
+        position: absolute;
+        bottom: 50%;
+        color: rgba(255, 255, 255, 1);
+      }
   
       .import-csv-icon {
         margin-bottom: 12px;
       }
   
       .sub-txt {
+        margin-left: 4px;
+        margin-right: 4px;
         font-size: 16px;
         line-height: 22px;
         font-weight: 400;
@@ -911,6 +1103,10 @@
     .danger-note {
       color: rgba(255, 106, 119, 1);
     }
+  }
+
+  .report-footer {
+    margin-top: 16px;
   }
 
   .custom-modal-footer {

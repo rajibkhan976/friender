@@ -11,7 +11,6 @@ import {
 	// FilterIcon,
 	ActionIcon,
 	// ExportIcon,
-	DeleteIcon,
 	WhitelabelIcon,
 	BlockIcon,
 	UnfriendIcon,
@@ -24,8 +23,12 @@ import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownlo
 import { ReactComponent as ExportCSVIcon } from "../../assets/images/ExportCSVIcon.svg";
 import { ReactComponent as MoveTopIcon } from "../../assets/images/MoveTopIcon.svg";
 import { ReactComponent as NextIcon } from "../../assets/images/NextIcon.svg";
+import { ReactComponent as ProgressIconOne } from "../../assets/images/ProgressIconOne.svg";
+import { ReactComponent as ProgressIconTwo } from "../../assets/images/ProgressIconTwo.svg";
 import { ReactComponent as SheetIcon } from "../../assets/images/SheetIcon.svg";
 import { ReactComponent as UploadIcon } from "../../assets/images/UploadIcon.svg";
+import { ReactComponent as WhiteCrossIcon } from "../../assets/images/WhiteCrossIcon.svg";
+import { ChevronDownArrowIcon } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
@@ -38,10 +41,7 @@ import {
 	saveUserProfile,
 	fetchUserProfile,
 } from "../../services/authentication/facebookData";
-import {
-	setProfileSpaces,
-	setDefaultProfileId,
-} from "../../actions/ProfilespaceActions";
+import { setProfileSpaces } from "../../actions/ProfilespaceActions";
 import {
 	getSendFriendReqst,
 	reLoadFrList,
@@ -53,6 +53,9 @@ import {
 	whiteListFriend,
 	BlockListFriend,
 } from "../../actions/FriendsAction";
+import { getGroupById } from "../../actions/MySettingAction";
+import { fetchGroups } from "../../actions/MessageAction";
+import { uploadFriendsQueueRecordsForAssessment } from "../../actions/FriendsQueueActions";
 import Modal from "./Modal";
 import DeleteImgIcon from "../../assets/images/deleteModal.png";
 import extensionAccesories from "../../configuration/extensionAccesories";
@@ -64,6 +67,7 @@ import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
 import { addUsersToCampaign } from "../../actions/CampaignsActions";
 import { utils } from "../../helpers/utils";
+import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 
 const syncBtnDefaultState = "Sync Now";
@@ -193,9 +197,9 @@ const baseStyle = {
 	padding: "80px",
 	borderWidth: 2,
 	borderRadius: 2,
-	borderColor: "rgba(49, 48, 55, 1)",
+	borderColor: "rgba(0, 148, 255, 1)",
 	borderStyle: "dashed",
-	backgroundColor: "rgba(28, 28, 30, 1)",
+	backgroundColor: "rgba(0, 148, 255, 0.1)",
 	color: "#bdbdbd",
 	outline: "none",
 	transition: "border .24s ease-in-out",
@@ -1311,6 +1315,110 @@ function PageHeader({ headerText = "" }) {
 	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
 	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
 	const [taskName, setTaskName] = useState(`CSV Upload ${Date.now()}`);
+	const [friendsQueueCsvUploadStep, setFriendsQueueCsvUploadStep] = useState(0);
+
+	const [selectMessageOptionOpen1, setSelectMessageOptionOpen1] =
+		useState(false);
+	const [groupMessages1, setGroupMessages1] = useState([]);
+	const [groupMsgSelect1, setGroupMsgSelect1] = useState(null);
+	const [quickMsg1, setQuickMsg1] = useState(null);
+	const [quickMsgModalOpen1, setQuickMsgModalOpen1] = useState(false);
+	const [usingSelectOption1, setUsingSelectOption1] = useState(false);
+	const [unselectedError1, setUnselectedError1] = useState(false);
+
+	const [selectMessageOptionOpen2, setSelectMessageOptionOpen2] =
+		useState(false);
+	const [groupMessages2, setGroupMessages2] = useState([]);
+	const [groupMsgSelect2, setGroupMsgSelect2] = useState(null);
+	const [quickMsg2, setQuickMsg2] = useState(null);
+	const [quickMsgModalOpen2, setQuickMsgModalOpen2] = useState(false);
+	const [usingSelectOption2, setUsingSelectOption2] = useState(false);
+	const [unselectedError2, setUnselectedError2] = useState(false);
+
+	useEffect(() => {
+		if (quickMsg1) {
+			setUsingSelectOption1(false);
+		}
+	}, [quickMsg1]);
+
+	useEffect(() => {
+		if (quickMsg2) {
+			setUsingSelectOption2(false);
+		}
+	}, [quickMsg2]);
+
+	const getOldMessageGroupId = () => {
+		return localStorage.getItem("old_message_group_id_campaign")
+			? localStorage.getItem("old_message_group_id_campaign")
+			: "";
+	};
+
+	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
+	const setOldMessageGroupId = (messageGroupId) => {
+		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
+	};
+
+	// FETCHING THE GROUP BY ID..
+	const fetchGroupMessage = (groupId) => {
+		// Store as for Older GroupID..
+		setOldMessageGroupId(groupId);
+
+		dispatch(getGroupById(groupId))
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+
+				if (data.length) {
+					setGroupMsgSelect1(data[0]);
+					setGroupMsgSelect2(data[0]);
+					localStorage.setItem("fr_using_campaigns_message", true);
+				}
+			});
+	};
+
+	// HANDLE THE DIFFERENT SELECT OPTION ON ONE COMPONENT AS KEEP ONLY ONE AT A TIME..
+	useEffect(() => {
+		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+
+		if (quickMsg1 && !selectMsgUsing) {
+			setGroupMsgSelect1(null);
+		}
+		if (selectMsgUsing) {
+			setQuickMsg1(null);
+		}
+	}, [groupMsgSelect1, quickMsg1]);
+
+	useEffect(() => {
+		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+
+		if (quickMsg2 && !selectMsgUsing) {
+			setGroupMsgSelect2(null);
+		}
+		if (selectMsgUsing) {
+			setQuickMsg2(null);
+		}
+	}, [groupMsgSelect2, quickMsg2]);
+
+	useEffect(() => {
+		// Fetching All Group Messages.
+		dispatch(fetchGroups())
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+				if (data && data.length) {
+					setGroupMessages1(data);
+					setGroupMessages2(data);
+				}
+			})
+			.catch((error) =>
+				console.log("Error when try to fetching all groups -- ", error)
+			);
+
+		return () => {
+			localStorage.removeItem("fr_edit_mode_quickCampMsg");
+			localStorage.removeItem("fr_quickMessage_campaigns_message");
+		};
+	}, []);
 
 	const handleShowCsvUploadModal = () => {
 		setTaskName(`CSV Upload ${Date.now()}`);
@@ -1320,15 +1428,24 @@ function PageHeader({ headerText = "" }) {
 
 	const onDrop = useCallback((acceptedFiles) => {
 		setSelectedCsvFile(acceptedFiles);
+		setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 	}, []);
 
 	const onError = useCallback((Error) => {
 		console.log(Error);
 	}, []);
 
+	console.log(selectedCsvFile);
+
 	const handleCsvUpload = () => {
 		if (selectedCsvFile && taskName) {
-			console.log(selectedCsvFile);
+			const data = {
+				csvFile: selectedCsvFile[0],
+				taskName: taskName,
+				fb_user_id: defaultFbId,
+			};
+			dispatch(uploadFriendsQueueRecordsForAssessment(data));
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 		}
 	};
 
@@ -1336,7 +1453,7 @@ function PageHeader({ headerText = "" }) {
 		useDropzone({
 			onDrop,
 			onError,
-			accept: { "text/csv": [".csv", ".xlsx"] },
+			accept: { "text/csv": [".csv"] },
 			multiple: false,
 			maxSize: 1000000,
 		});
@@ -1350,6 +1467,60 @@ function PageHeader({ headerText = "" }) {
 		}),
 		[isFocused, isDragAccept, isDragReject]
 	);
+
+	const [keywordSuggestions, setKeywordSuggestions] = useState([
+		"Front-end Developer",
+		"Marketer",
+		"AI & UX",
+		"Founder",
+		"CEO",
+		"CTO",
+		"Digital",
+		"Co-Founder",
+		"Business",
+		"Design",
+		"Manager",
+		"Startup",
+	]);
+
+	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
+		useState(false);
+	const [keyword, setKeyword] = useState("");
+	const [selectedKeyword, setSelectedKeyword] = useState([]);
+	const [savedKeyword, setSavedKeyword] = useState([]);
+	const [shouldModify, setShouldModify] = useState(false);
+
+	const handleSaveKeywords = () => {
+		if (keyword && !savedKeyword.includes(keyword.trim())) {
+			setSavedKeyword([...savedKeyword, keyword]);
+			setSelectedKeyword([]);
+			setShowKeywordSuggestionBar(false);
+			setShouldModify(true);
+		}
+		if (selectedKeyword.length) {
+			const copyOfSavedKeyword = [...savedKeyword];
+			selectedKeyword.forEach((item) => {
+				if (!copyOfSavedKeyword.includes(item)) {
+					copyOfSavedKeyword.push(item);
+				}
+			});
+			setSavedKeyword(copyOfSavedKeyword);
+			setSelectedKeyword([]);
+			setShowKeywordSuggestionBar(false);
+			setShouldModify(true);
+		}
+	};
+
+	const handleClearKeywords = () => {
+		setSavedKeyword([]);
+		setSelectedKeyword([]);
+	};
+
+	const handleKeywordOnClick = (keywordItem) => {
+		if (keywordItem && !selectedKeyword.includes(keywordItem.trim())) {
+			setSelectedKeyword([...selectedKeyword, keywordItem]);
+		}
+	};
 
 	return (
 		<>
@@ -1502,74 +1673,291 @@ function PageHeader({ headerText = "" }) {
 					headerText={"Import data"}
 					bodyText={
 						<>
-							<div className='import-data-input'>
-								<label className='task-name-label'>Task name</label>
+							{friendsQueueCsvUploadStep === 4 ? (
+								<>
+									<div className='friend-request-queue-message-field'>
+										<label className='friend-request-sent-message-label'>
+											Send message when friend request is sent (optional)
+										</label>
 
-								<input
-									type='text'
-									className={`task-name-field `}
-									value={taskName}
-									onChange={(e) => setTaskName(e.target.value)}
-								/>
+										<DropSelectMessage
+											type='CAMPAIGNS_MESSAGE'
+											openSelectOption={selectMessageOptionOpen1}
+											handleIsOpenSelectOption={setSelectMessageOptionOpen1}
+											groupList={groupMessages1}
+											groupSelect={groupMsgSelect1}
+											setGroupSelect={setGroupMsgSelect1}
+											quickMessage={quickMsg1 && quickMsg1}
+											setQuickMessage={setQuickMsg1}
+											quickMsgModalOpen={quickMsgModalOpen1}
+											setQuickMsgOpen={setQuickMsgModalOpen1}
+											isDisabled={false}
+											usingSelectOptions={usingSelectOption1}
+											setUsingSelectOptions={setUsingSelectOption1}
+											unselectedError={unselectedError1}
+											setUnselectedError={setUnselectedError1}
+											customWrapperClass='friend-request-queue-select-msg-wrapper'
+											customSelectPanelClass='friend-request-queue-select-panel'
+											customSelectPanelPageClass='friend-request-queue-select-panel-page'
+											customQuickMsgTooltipStyleClass='campaigns-quick-msg-tooltip'
+										/>
+									</div>
 
-								<div
-									className='import-csv'
-									{...getRootProps({ style })}
-								>
-									<input {...getInputProps()} />
-									{selectedCsvFile ? (
-										<>
-											<SheetIcon className='import-csv-icon' />
-											<p>CSV file is ready for upload...</p>
-											<span className='import-condition-one'>
-												{selectedCsvFile[0]?.name}
-											</span>
-										</>
-									) : (
-										<>
-											<UploadIcon className='import-csv-icon' />
-											<p>
-												Drag & drop or{" "}
-												<span className='sub-txt'>Choose file</span> to upload
-											</p>
-											<span className='import-condition-one'>
-												Supported formats: csv & xlsx
-											</span>
-											<span className='import-condition-two'>
-												(Maximum upload size is 1 MB)
-											</span>
-										</>
-									)}
-								</div>
-								<p className='import-csv-note'>
-									<span className='danger-note'>* Note: </span>Ensure your data
-									sheet includes links to Facebook profiles or the user IDs of
-									Facebook users.
-								</p>
-								<div className='custom-modal-footer'>
-									<div className='download-sample-csv'>
-										<CsvDownloadIcon className='csv-download-icon' />
-										<div className='download-sample-csv-txt1'>
-											Download&nbsp;
+									<div className='friend-request-queue-message-field'>
+										<label className='friend-request-accepted-message-label'>
+											Send message when friend request is accepted (optional)
+										</label>
+
+										<DropSelectMessage
+											type='CAMPAIGNS_MESSAGE'
+											openSelectOption={selectMessageOptionOpen2}
+											handleIsOpenSelectOption={setSelectMessageOptionOpen2}
+											groupList={groupMessages2}
+											groupSelect={groupMsgSelect2}
+											setGroupSelect={setGroupMsgSelect2}
+											quickMessage={quickMsg2 && quickMsg2}
+											setQuickMessage={setQuickMsg2}
+											quickMsgModalOpen={quickMsgModalOpen2}
+											setQuickMsgOpen={setQuickMsgModalOpen2}
+											isDisabled={false}
+											usingSelectOptions={usingSelectOption2}
+											setUsingSelectOptions={setUsingSelectOption2}
+											unselectedError={unselectedError2}
+											setUnselectedError={setUnselectedError2}
+											customWrapperClass='friend-request-queue-select-msg-wrapper'
+											customSelectPanelClass='friend-request-queue-select-panel'
+											customSelectPanelPageClass='friend-request-queue-select-panel-page'
+											customQuickMsgTooltipStyleClass='campaigns-quick-msg-tooltip'
+										/>
+									</div>
+
+									<div className='import-data-input keyword-input'>
+										<label className='task-name-label keywords-label'>
+											Keywords (optional)
+											{!keyword && !selectedKeyword.length && !shouldModify && (
+												<figure
+													className='icon-arrow-down'
+													onClick={() =>
+														setShowKeywordSuggestionBar(
+															!showKeywordSuggestionBar
+														)
+													}
+												>
+													<ChevronDownArrowIcon size={18} />
+												</figure>
+											)}
+											{(keyword || selectedKeyword.length) && !shouldModify && (
+												<>
+													<div
+														className='keyword-clear-action'
+														onClick={handleClearKeywords}
+													>
+														Clear selection
+													</div>
+													<div
+														className='keyword-save-action'
+														onClick={handleSaveKeywords}
+													>
+														Save
+													</div>
+												</>
+											)}
+											{shouldModify && (
+												<div
+													className='keyword-save-action'
+													onClick={() => setShouldModify(false)}
+												>
+													Modify
+												</div>
+											)}
+										</label>
+										<input
+											type='text'
+											className={`task-name-field keyword-field`}
+											value={keyword}
+											onChange={(e) => setKeyword(e.target.value)}
+											placeholder='Type your keywords here'
+											style={
+												showKeywordSuggestionBar || keyword || shouldModify
+													? {}
+													: { marginBottom: "8px" }
+											}
+										/>
+										{(showKeywordSuggestionBar || keyword || shouldModify) && (
+											<div className='keyword-suggestion-bar'>
+												{!shouldModify &&
+													keywordSuggestions.map((item, index) => (
+														<button
+															className={
+																selectedKeyword.includes(item) ||
+																savedKeyword.includes(item)
+																	? "keyword-item saved"
+																	: "keyword-item"
+															}
+															key={index}
+															onClick={() => handleKeywordOnClick(item)}
+														>
+															{item}
+														</button>
+													))}
+												{shouldModify &&
+													savedKeyword.map((item, index) => (
+														<button
+															className={"keyword-item saved should-modify"}
+															key={index}
+														>
+															{item}
+															<WhiteCrossIcon
+																className='cross-icon'
+																onClick={() =>
+																	setSavedKeyword(
+																		savedKeyword.filter(
+																			(keyword) => keyword !== item
+																		)
+																	)
+																}
+															/>
+														</button>
+													))}
+											</div>
+										)}
+									</div>
+
+									<div className='uploaded-csv-report'>
+										<div className='report-block'>
+											<div className='block-title'>Total records</div>
+											<div className='block-stat total'>1245942</div>
 										</div>
-										<div className='download-sample-csv-txt2'>
-											sample template
+										<div className='report-block'>
+											<div className='block-title'>Records added</div>
+											<div className='block-stat added'>1245615</div>
 										</div>
 									</div>
-									<button
-										type='button'
-										className={
-											selectedCsvFile && taskName
-												? "import-csv-nxt-btn active"
-												: "import-csv-nxt-btn disabled"
-										}
-										onClick={handleCsvUpload}
+									<div className='uploaded-csv-report'>
+										<div className='report-block'>
+											<div className='block-title'>Records skipped</div>
+											<div className='block-stat skipped'>259</div>
+										</div>
+										<div className='report-block'>
+											<div className='block-title'>Number of errors</div>
+											<div className='block-stat errors'>125</div>
+										</div>
+									</div>
+									<div className='custom-modal-footer report-footer'>
+										<div className='download-sample-csv'>
+											<CsvDownloadIcon className='csv-download-icon' />
+											<div className='download-sample-csv-txt1'>
+												Download&nbsp;
+											</div>
+											<div className='download-sample-csv-txt2'>error list</div>
+										</div>
+										<button
+											type='button'
+											className={
+												selectedCsvFile && taskName
+													? "import-csv-nxt-btn active"
+													: "import-csv-nxt-btn disabled"
+											}
+											onClick={() => console.log("clicked")}
+										>
+											Import
+											<NextIcon className='next-icon' />
+										</button>
+									</div>
+								</>
+							) : (
+								<div className='import-data-input'>
+									<label className='task-name-label'>
+										Task name <span className='danger-note'>*</span>
+									</label>
+
+									<input
+										type='text'
+										className={`task-name-field `}
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
+
+									<div
+										className='import-csv'
+										{...getRootProps({ style })}
 									>
-										Next
-										<NextIcon className='next-icon' />
-									</button>
+										<input {...getInputProps()} />
+										{selectedCsvFile && friendsQueueCsvUploadStep === 1 ? (
+											<>
+												<SheetIcon className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													CSV file is ready for upload...
+												</p>
+												<span className='import-condition-one'>
+													{selectedCsvFile[0]?.name}
+												</span>
+											</>
+										) : selectedCsvFile && friendsQueueCsvUploadStep === 2 ? (
+											<>
+												<ProgressIconOne className='import-csv-icon' />
+												<span className='progress'>98%</span>
+												<p className='import-csv-txt'>
+													The CSV file is currently in the process of being
+													uploaded and reviewed
+												</p>
+												<span className='import-condition-one'>
+													{selectedCsvFile[0]?.name}
+												</span>
+											</>
+										) : friendsQueueCsvUploadStep === 3 ? (
+											<>
+												<ProgressIconTwo className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													CSV file successfully uploaded and reviewed
+												</p>
+											</>
+										) : (
+											<>
+												<UploadIcon className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													Drag & drop or{" "}
+													<span className='sub-txt'>Choose file</span> to upload
+												</p>
+												<span className='import-condition-one'>
+													Supported formats: csv & xlsx
+												</span>
+												<span className='import-condition-two'>
+													(Maximum upload size is 1 MB)
+												</span>
+											</>
+										)}
+									</div>
+									<p className='import-csv-note'>
+										<span className='danger-note'>* Note: </span>Ensure your
+										data sheet includes links to Facebook profiles or the user
+										IDs of Facebook users.
+									</p>
+									<div className='custom-modal-footer'>
+										<div className='download-sample-csv'>
+											<CsvDownloadIcon className='csv-download-icon' />
+											<div className='download-sample-csv-txt1'>
+												Download&nbsp;
+											</div>
+											<div className='download-sample-csv-txt2'>
+												sample template
+											</div>
+										</div>
+										<button
+											type='button'
+											className={
+												selectedCsvFile && taskName
+													? "import-csv-nxt-btn active"
+													: "import-csv-nxt-btn disabled"
+											}
+											onClick={handleCsvUpload}
+										>
+											Next
+											<NextIcon className='next-icon' />
+										</button>
+									</div>
 								</div>
-							</div>
+							)}
 						</>
 					}
 					open={showUploadCsvModal}

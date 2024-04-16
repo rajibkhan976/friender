@@ -27,6 +27,7 @@ import { utils } from "../../helpers/utils";
 import { fetchAllCampaigns } from "../../actions/CampaignsActions";
 import {
 	getFriendsQueueSettings,
+	getFriendsQueueRecords,
 	saveFriendsQueueSettings,
 } from "../../actions/FriendsQueueActions";
 import NumberRangeInput from "../../components/common/NumberRangeInput";
@@ -76,6 +77,9 @@ const FriendsQueue = () => {
 	const friendsQueueSettings = useSelector(
 		(state) => state.friendsQueue.friendsQueueSettings
 	);
+	const savedFriendsQueueSettingsResponse = useSelector(
+		(state) => state.friendsQueue.savedFriendsQueueSettingsResponse
+	);
 
 	const [friendRequestQueueSettings, setFriendRequestQueueSettings] = useState(
 		{}
@@ -119,6 +123,7 @@ const FriendsQueue = () => {
 	useEffect(() => {
 		dispatch(fetchAllCampaigns());
 		dispatch(getFriendsQueueSettings(fbUserId));
+		dispatch(getFriendsQueueRecords(fbUserId));
 		getSettingsData();
 	}, []);
 
@@ -641,9 +646,30 @@ const FriendsQueue = () => {
 		}
 	};
 
+	const useDebounce = (value, delay) => {
+		const [debouncedValue, setDebouncedValue] = useState(value);
+
+		useEffect(() => {
+			const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+
+			return () => {
+				clearTimeout(timer);
+			};
+		}, [value, delay]);
+
+		return debouncedValue;
+	};
+
+	const debouncedFriendsQueueSettings = useDebounce(
+		friendRequestQueueSettings,
+		1000
+	);
+
 	useEffect(() => {
-		dispatch(saveFriendsQueueSettings(friendRequestQueueSettings));
-	}, [friendRequestQueueSettings]);
+		dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
+	}, [debouncedFriendsQueueSettings]);
+
+	console.log(frndReqSentPeriod);
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
