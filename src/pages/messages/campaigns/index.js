@@ -121,12 +121,12 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaigns())
-				.unwrap()
-				.then((res) => {
-					// console.log('res', res);
-					dispatch(countCurrentListsize(res?.length ? res?.length : 0))
-				});
+			dispatch(fetchAllCampaigns());
+			// .unwrap()
+			// .then((res) => {
+			// 	// console.log('res', res);
+			// 	dispatch(countCurrentListsize(res?.length ? res?.length : 0))
+			// });
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
 				params?.campaignId

@@ -47,7 +47,7 @@ export const CampaignNameCellRenderer = memo((params) => {
 						mode: "view",
 					})
 				);
-
+				console.log("Rajib", response);
 				// const campaignData = response?.data[0];
 				// navigate(`/messages/campaigns/${campaignId}`, { state: { ...campaignData } });
 				// navigate(`/messages/campaigns/${campaignId}`, { state: { data: params?.data } });
