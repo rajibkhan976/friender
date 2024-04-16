@@ -5,15 +5,89 @@ import {
 	uploadFriendsQueueRecordsStepOne,
 	uploadFriendsQueueRecordsStepTwo,
 } from "../services/friends/FriendsQueueService";
-import * as actionTypes from "./types";
 import extensionMethods from "../configuration/extensionAccesories";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
+	isLoading: false,
 	friendsQueueSettings: null,
 	savedFriendsQueueSettingsResponse: null,
 	uploadedFriendsQueueCsvReport: null,
 	uploadedFriendsQueueRecord: null,
-	friendsQueueRecords: [],
+	friendsQueueRecords: [
+		// {
+		// 	friendName: "Chenno Styles",
+		// 	friendProfilePicture:
+		// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
+		// 	friendProfileUrl:
+		// 		"https://www.facebook.com/profile.php?id=100000024782683",
+		// 	keywords: [
+		// 		"Front-end Developer",
+		// 		"Marketer",
+		// 		"AI & UX",
+		// 		"Founder",
+		// 		"CEO",
+		// 		"CTO",
+		// 		"Digital",
+		// 		"Co-Founder",
+		// 		"Business",
+		// 		"Design",
+		// 		"Manager",
+		// 		"Startup",
+		// 	],
+		// 	friend_request_sent_message_group: "My group",
+		// 	friend_request_accept_message_group: "My group",
+		// 	finalSource: "CSV Upload 1",
+		// },
+		// {
+		// 	friendName: "Chenno Styles",
+		// 	friendProfilePicture:
+		// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
+		// 	friendProfileUrl:
+		// 		"https://www.facebook.com/profile.php?id=100000024782683",
+		// 	keywords: [
+		// 		"Front-end Developer",
+		// 		"Marketer",
+		// 		"AI & UX",
+		// 		"Founder",
+		// 		"CEO",
+		// 		"CTO",
+		// 		"Digital",
+		// 		"Co-Founder",
+		// 		"Business",
+		// 		"Design",
+		// 		"Manager",
+		// 		"Startup",
+		// 	],
+		// 	friend_request_sent_message_group: "My group",
+		// 	friend_request_accept_message_group: "My group",
+		// 	finalSource: "CSV Upload 1",
+		// },
+		// {
+		// 	friendName: "Chenno Styles",
+		// 	friendProfilePicture:
+		// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
+		// 	friendProfileUrl:
+		// 		"https://www.facebook.com/profile.php?id=100000024782683",
+		// 	keywords: [
+		// 		"Front-end Developer",
+		// 		"Marketer",
+		// 		"AI & UX",
+		// 		"Founder",
+		// 		"CEO",
+		// 		"CTO",
+		// 		"Digital",
+		// 		"Co-Founder",
+		// 		"Business",
+		// 		"Design",
+		// 		"Manager",
+		// 		"Startup",
+		// 	],
+		// 	friend_request_sent_message_group: "My group",
+		// 	friend_request_accept_message_group: "My group",
+		// 	finalSource: "CSV Upload 1",
+		// },
+	],
 };
 
 const fRQueueExtMsgSendHandler = async (data) => {
@@ -32,101 +106,113 @@ const fRQueueExtMsgSendHandler = async (data) => {
 	console.log("message res", extRes);
 };
 
-export const getFriendsQueueRecords = (fbUserId) => {
-	return async (dispatch) => {
-		return fetchFriendsQueueRecords(fbUserId)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.FETCH_FRIENDS_QUEUE_RECORDS,
-						data: response.data,
-					});
-				}
-			})
-			.catch((error) => error);
-	};
-};
-
-export const getFriendsQueueSettings = (fbUserId) => {
-	return async (dispatch) => {
-		return fetchFriendsQueueSettings(fbUserId)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.FETCH_FRIENDS_QUEUE_SETTINGS,
-						data: response.data,
-					});
-				}
-			})
-			.catch((error) => error);
-	};
-};
-
-export const saveFriendsQueueSettings = (friendsQueueSettings) => {
-	return async (dispatch) => {
-		return storeFriendsQueueSettings(friendsQueueSettings)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.SAVED_FRIENDS_QUEUE_SETTINGS_RESPONSE,
-						data: response.data,
-					});
-					fRQueueExtMsgSendHandler(friendsQueueSettings);
-				}
-			})
-			.catch((error) => error);
-	};
-};
-
-export const uploadFriendsQueueRecordsForAssessment = (friendsQueueRecord) => {
-	return async (dispatch) => {
-		return uploadFriendsQueueRecordsStepOne(friendsQueueRecord)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.UPLOAD_FRIENDS_QUEUE_RECORDS_STEP_ONE,
-						data: response.data,
-					});
-				}
-			})
-			.catch((error) => error);
-	};
-};
-
-export const uploadFriendsQueueRecordsForSaving = (friendsQueueSettings) => {
-	return async (dispatch) => {
-		return uploadFriendsQueueRecordsStepTwo(friendsQueueSettings)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.UPLOAD_FRIENDS_QUEUE_RECORDS_STEP_TWO,
-						data: response.data,
-					});
-				}
-			})
-			.catch((error) => error);
-	};
-};
-
-export const friendsQueueReducer = (state = initialState, action) => {
-	switch (action.type) {
-		case actionTypes.FETCH_FRIENDS_QUEUE_SETTINGS:
-			state.friendsQueueSettings = action.data;
-			break;
-		case actionTypes.SAVED_FRIENDS_QUEUE_SETTINGS_RESPONSE:
-			state.savedFriendsQueueSettingsResponse = action.data;
-			break;
-		case actionTypes.FETCH_FRIENDS_QUEUE_RECORDS:
-			state.friendsQueueRecords = action.data;
-			break;
-		case actionTypes.UPLOAD_FRIENDS_QUEUE_RECORDS_STEP_ONE:
-			state.uploadedFriendsQueueCsvReport = action.data;
-			break;
-		case actionTypes.UPLOAD_FRIENDS_QUEUE_RECORDS_STEP_TWO:
-			state.uploadedFriendsQueueRecord = action.data;
-			break;
-		default:
-			return state;
+export const getFriendsQueueRecords = createAsyncThunk(
+	"friendsQueue/getFriendsQueueRecords", 
+	async (fbUserId) => {
+		const response = await fetchFriendsQueueRecords(fbUserId);
+		return response;
 	}
-	return state;
-};
+);
+
+export const getFriendsQueueSettings = createAsyncThunk(
+	"friendsQueue/getFriendsQueueSettings",
+	async (fbUserId) => {
+		const response = await fetchFriendsQueueSettings(fbUserId);
+		return response;
+	}
+);
+
+export const saveFriendsQueueSettings = createAsyncThunk(
+	"friendsQueue/saveFriendsQueueSettings",
+	async (friendsQueueSettings) => {
+		const response = await storeFriendsQueueSettings(friendsQueueSettings);
+		fRQueueExtMsgSendHandler(friendsQueueSettings);
+		return response;
+	}
+);
+
+export const uploadFriendsQueueRecordsForReview = createAsyncThunk(
+	"friendsQueue/uploadFriendsQueueRecordsForReview",
+	async (friendsQueueRecord) => {
+		const response = await uploadFriendsQueueRecordsStepOne(
+			friendsQueueRecord.csvFile,
+			friendsQueueRecord.taskName,
+			friendsQueueRecord.fb_user_id
+		);
+		return response;
+	}
+);
+
+export const uploadFriendsQueueRecordsForSaving = createAsyncThunk(
+	"friendsQueue/uploadFriendsQueueRecordsForSaving",
+	async (friendsQueueRecord) => {
+		const response = await uploadFriendsQueueRecordsStepTwo(friendsQueueRecord);
+		return response;
+	}
+);
+
+export const friendsQueueSlice = createSlice({
+	name: "friendsQueue",
+	initialState,
+	reducers: {
+		resetUploadedFriendsQueueCsvReport: (state, action) => {
+			state.uploadedFriendsQueueCsvReport = action.payload;
+		},
+	},
+	extraReducers: {
+		[getFriendsQueueRecords.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[getFriendsQueueRecords.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.friendsQueueRecords = action.payload.data;
+		},
+		[getFriendsQueueRecords.rejected]: (state) => {
+			state.isLoading = false;
+		},
+		[getFriendsQueueSettings.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[getFriendsQueueSettings.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.friendsQueueSettings = action.payload;
+		},
+		[getFriendsQueueSettings.rejected]: (state) => {
+			state.isLoading = false;
+		},
+		[saveFriendsQueueSettings.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[saveFriendsQueueSettings.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.savedFriendsQueueSettingsResponse = action.payload;
+		},
+		[saveFriendsQueueSettings.rejected]: (state) => {
+			state.isLoading = false;
+		},
+		[uploadFriendsQueueRecordsForReview.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[uploadFriendsQueueRecordsForReview.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.uploadedFriendsQueueCsvReport = action.payload;
+		},
+		[uploadFriendsQueueRecordsForReview.rejected]: (state) => {
+			state.isLoading = false;
+		},
+		[uploadFriendsQueueRecordsForSaving.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[uploadFriendsQueueRecordsForSaving.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.uploadedFriendsQueueRecord = action.payload;
+		},
+		[uploadFriendsQueueRecordsForSaving.rejected]: (state) => {
+			state.isLoading = false;
+		},
+	},
+});
+
+export const { resetUploadedFriendsQueueCsvReport } = friendsQueueSlice.actions;
+
+export default friendsQueueSlice.reducer;

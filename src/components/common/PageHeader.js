@@ -55,7 +55,11 @@ import {
 } from "../../actions/FriendsAction";
 import { getGroupById } from "../../actions/MySettingAction";
 import { fetchGroups } from "../../actions/MessageAction";
-import { uploadFriendsQueueRecordsForAssessment } from "../../actions/FriendsQueueActions";
+import {
+	resetUploadedFriendsQueueCsvReport,
+	uploadFriendsQueueRecordsForReview,
+	uploadFriendsQueueRecordsForSaving,
+} from "../../actions/FriendsQueueActions";
 import Modal from "./Modal";
 import DeleteImgIcon from "../../assets/images/deleteModal.png";
 import extensionAccesories from "../../configuration/extensionAccesories";
@@ -1335,6 +1339,10 @@ function PageHeader({ headerText = "" }) {
 	const [usingSelectOption2, setUsingSelectOption2] = useState(false);
 	const [unselectedError2, setUnselectedError2] = useState(false);
 
+	const uploadedFriendsQueueCsvReport = useSelector(
+		(state) => state.friendsQueue.uploadedFriendsQueueCsvReport
+	);
+
 	useEffect(() => {
 		if (quickMsg1) {
 			setUsingSelectOption1(false);
@@ -1444,16 +1452,19 @@ function PageHeader({ headerText = "" }) {
 				taskName: taskName,
 				fb_user_id: defaultFbId,
 			};
-			dispatch(uploadFriendsQueueRecordsForAssessment(data));
+			dispatch(resetUploadedFriendsQueueCsvReport(null));
+			dispatch(uploadFriendsQueueRecordsForReview(data));
 			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 		}
 	};
+
+	console.log(friendsQueueCsvUploadStep);
 
 	const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
 		useDropzone({
 			onDrop,
 			onError,
-			accept: { "text/csv": [".csv"] },
+			accept: { "text/csv": [".csv", ".xlsx"] },
 			multiple: false,
 			maxSize: 1000000,
 		});
@@ -1521,6 +1532,29 @@ function PageHeader({ headerText = "" }) {
 			setSelectedKeyword([...selectedKeyword, keywordItem]);
 		}
 	};
+
+	const handleImportFriendsQueueCsv = () => {
+		if (uploadedFriendsQueueCsvReport) {
+			const data = {
+				taskName: uploadedFriendsQueueCsvReport?.result?.taskName,
+				fb_user_id: defaultFbId,
+				keywords: savedKeyword,
+				friendRequestSent: {
+					groupId: "",
+					quickMessage: "quickMessage",
+				},
+				friendRequestAccepted: {
+					groupId: "",
+					quickMessage: "quickMessage",
+				},
+			};
+			dispatch(uploadFriendsQueueRecordsForSaving(data)).then(() =>
+				setShowUploadCsvModal(false)
+			);
+		}
+	};
+
+	console.log(uploadedFriendsQueueCsvReport);
 
 	return (
 		<>
@@ -1673,7 +1707,7 @@ function PageHeader({ headerText = "" }) {
 					headerText={"Import data"}
 					bodyText={
 						<>
-							{friendsQueueCsvUploadStep === 4 ? (
+							{friendsQueueCsvUploadStep === 3 ? (
 								<>
 									<div className='friend-request-queue-message-field'>
 										<label className='friend-request-sent-message-label'>
@@ -1826,21 +1860,38 @@ function PageHeader({ headerText = "" }) {
 									<div className='uploaded-csv-report'>
 										<div className='report-block'>
 											<div className='block-title'>Total records</div>
-											<div className='block-stat total'>1245942</div>
+											<div className='block-stat total'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.totalNumberOfRecords
+												}
+											</div>
 										</div>
 										<div className='report-block'>
 											<div className='block-title'>Records added</div>
-											<div className='block-stat added'>1245615</div>
+											<div className='block-stat added'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.numberOfRecordsWillBeAdded
+												}
+											</div>
 										</div>
 									</div>
 									<div className='uploaded-csv-report'>
 										<div className='report-block'>
 											<div className='block-title'>Records skipped</div>
-											<div className='block-stat skipped'>259</div>
+											<div className='block-stat skipped'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.numberOfSkippedRecords
+												}
+											</div>
 										</div>
 										<div className='report-block'>
 											<div className='block-title'>Number of errors</div>
-											<div className='block-stat errors'>125</div>
+											<div className='block-stat errors'>
+												{uploadedFriendsQueueCsvReport?.result?.numberOfErrors}
+											</div>
 										</div>
 									</div>
 									<div className='custom-modal-footer report-footer'>
@@ -1858,7 +1909,7 @@ function PageHeader({ headerText = "" }) {
 													? "import-csv-nxt-btn active"
 													: "import-csv-nxt-btn disabled"
 											}
-											onClick={() => console.log("clicked")}
+											onClick={handleImportFriendsQueueCsv}
 										>
 											Import
 											<NextIcon className='next-icon' />
@@ -1893,7 +1944,9 @@ function PageHeader({ headerText = "" }) {
 													{selectedCsvFile[0]?.name}
 												</span>
 											</>
-										) : selectedCsvFile && friendsQueueCsvUploadStep === 2 ? (
+										) : selectedCsvFile &&
+										  friendsQueueCsvUploadStep === 2 &&
+										  !uploadedFriendsQueueCsvReport ? (
 											<>
 												<ProgressIconOne className='import-csv-icon' />
 												<span className='progress'>98%</span>
@@ -1905,7 +1958,7 @@ function PageHeader({ headerText = "" }) {
 													{selectedCsvFile[0]?.name}
 												</span>
 											</>
-										) : friendsQueueCsvUploadStep === 3 ? (
+										) : uploadedFriendsQueueCsvReport ? (
 											<>
 												<ProgressIconTwo className='import-csv-icon' />
 												<p className='import-csv-txt'>

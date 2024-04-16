@@ -77,9 +77,6 @@ const FriendsQueue = () => {
 	const friendsQueueSettings = useSelector(
 		(state) => state.friendsQueue.friendsQueueSettings
 	);
-	const savedFriendsQueueSettingsResponse = useSelector(
-		(state) => state.friendsQueue.savedFriendsQueueSettingsResponse
-	);
 
 	const [friendRequestQueueSettings, setFriendRequestQueueSettings] = useState(
 		{}
@@ -91,7 +88,7 @@ const FriendsQueue = () => {
 			(item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
 		);
 		setFilterFrndList(filteredData);
-		friendsList && dispatch(countCurrentListsize(filteredData.length));
+		// friendsList && dispatch(countCurrentListsize(filteredData.length));
 		dispatch(syncMainFriendList());
 	}, [dispatch, friendsList]);
 
@@ -181,7 +178,7 @@ const FriendsQueue = () => {
 
 	const friendsListinRef = [
 		{
-			field: "friendName",
+			field: "fb_profile_url",
 			headerName: "Name",
 			headerCheckboxSelection: true,
 			checkboxSelection: true,
@@ -190,268 +187,61 @@ const FriendsQueue = () => {
 			cellRenderer: UnlinkedNameCellWithOptionsRenderer,
 			minWidth: 280,
 		},
-		// {
-		//   field: "friendStatus",
-		//   headerName: "Status",
-		//   cellRenderer: StatusRenderer,
-		//   filter: "agTextColumnFilter",
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     suppressMiniFilter: true,Comments
-		// },
-		{
-			field: "friendGender",
-			headerName: "Gender ",
-			headerClass: "header-gender",
-			headerTooltip: "Gender",
-			filter: "agTextColumnFilter",
-			cellRenderer: GenderRenderer,
-			// width: 80,
-			maxWidth: 80,
-			// lockPosition: "right",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-			},
-		},
-		{
-			field: "created_at",
-			headerName: "Age",
-			cellRenderer: AgeRenderer,
-			headerClass: "header-query-tooltip",
-			headerTooltip:
-				"Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
-			filter: "agNumberColumnFilter",
-			// width: 110,
-			maxWidth: 110,
-			// filterParams: {
-			//   buttons: ["apply", "reset"],
-			//   debounceMs: 200,
-			//   suppressMiniFilter: true,
-			//   closeOnApply: true,
-			//   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-			// },
-			filterParams: {
-				buttons: ["apply", "reset"],
-				debounceMs: 200,
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					{
-						displayKey: "lessThan",
-						displayName: "Less than",
-						predicate: ([filterValue], cellValue) => {
-							return ageComparator(cellValue) < filterValue;
-						},
-					},
-					{
-						displayKey: "greaterThan",
-						displayName: "Greater than",
-						predicate: ([filterValue], cellValue) => {
-							return ageComparator(cellValue) > filterValue;
-						},
-					},
-					{
-						displayKey: "equals",
-						displayName: "Equals",
-						predicate: ([filterValue], cellValue) => {
-							return ageComparator(cellValue) == filterValue;
-						},
-					},
-				],
-			},
-			comparator: dateComparator,
-		},
-		{
-			field: "country",
-			headerName: "Country",
-			cellRenderer: CountryRenderer,
-			headerTooltip: "Country",
-			tooltipComponent: CustomHeaderTooltip,
-			headerClass: "header-query-tooltip",
-			// width: 158,
-			maxWidth: 158,
-			filter: "agTextColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				debounceMs: 200,
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-			},
-		},
-		{
-			field: "reactionThread",
-			headerName: "Total Reaction",
-			headerTooltip: "Reactions",
-			headerClass: "header-reaction",
-			cellRenderer: ReactionRenderer,
-			// width: 75,
-			maxWidth: 75,
-			filter: "agNumberColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					"lessThan",
-					"greaterThan",
-					"lessThanOrEqual",
-					"greaterThanOrEqual",
-				],
-			},
-		},
-		{
-			field: "commentThread",
-			headerName: "Total Comment",
-			headerTooltip: "Comments",
-			headerClass: "header-comments",
-			cellRenderer: CommentRenderer,
-			filter: "agNumberColumnFilter",
-			// width: 75,
-			maxWidth: 75,
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					"lessThan",
-					"greaterThan",
-					"lessThanOrEqual",
-					"greaterThanOrEqual",
-				],
-			},
-		},
-		{
-			field: "engagement",
-			headerName: "Engagement",
-			headerTooltip: "Total Engagement",
-			headerClass: "header-engagement",
-			filter: "agNumberColumnFilter",
-			// width: 75,
-			maxWidth: 75,
-			cellRenderer: EngagementRenderer,
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					"lessThan",
-					"greaterThan",
-					"lessThanOrEqual",
-					"greaterThanOrEqual",
-				],
-			},
-			valueGetter: EngagementGetter,
-			// minWidth: 0,
-			// // maxWidth: 0,
-			cellClass: "engagementCell",
-		},
-		{
-			field: "message_thread",
-			headerName: "Message Count",
-			headerTooltip: "Messages",
-			headerClass: "header-messages",
-			cellRenderer: MessageRenderer,
-			// width: 100,
-			maxWidth: 100,
-			filter: "agNumberColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					"lessThan",
-					"greaterThan",
-					"lessThanOrEqual",
-					"greaterThanOrEqual",
-				],
-			},
-		},
-		// {
-		//   field: "tier",
-		//   headerName: "Country Tier",
-		//   filter: "agTextColumnFilter",
-		//   cellRenderer: CountryTierRenderer,
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     debounceMs: 200,
-		//     suppressMiniFilter: true,
-		//     closeOnApply: true,
-		//     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-		//   }
-		// },
-		{
-			field: "last_engagement_date",
-			headerName: "Recent engagement",
-			headerTooltip: "Recent Engagement",
-			headerClass: "header-recent-engagement",
-			cellRenderer: RecentEngagementRenderer,
-			// width: 100,
-			maxWidth: 100,
-			cellRendererParams: {
-				inactiveAfter,
-			},
-			filter: "agNumberColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				debounceMs: 200,
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					{
-						displayKey: "lessThan",
-						displayName: "Less than",
-						predicate: ([filterValue], cellValue) => {
-							return (
-								cellValue != null &&
-								Math.floor(
-									Math.abs(
-										helper.curretUTCTime() - new Date(cellValue).valueOf()
-									) /
-										(24 * 60 * 60 * 1000)
-								) < filterValue
-							);
-						},
-					},
-					{
-						displayKey: "greaterThan",
-						displayName: "Greater than",
-						predicate: ([filterValue], cellValue) => {
-							return (
-								cellValue != null &&
-								Math.floor(
-									Math.abs(
-										helper.curretUTCTime() - new Date(cellValue).valueOf()
-									) /
-										(24 * 60 * 60 * 1000)
-								) > filterValue
-							);
-						},
-					},
-					{
-						displayKey: "equals",
-						displayName: "Equals",
-						predicate: ([filterValue], cellValue) => {
-							return (
-								cellValue != null &&
-								Math.floor(
-									Math.abs(
-										helper.curretUTCTime() - new Date(cellValue).valueOf()
-									) /
-										(24 * 60 * 60 * 1000)
-								) == filterValue
-							);
-						},
-					},
-				],
-			},
-		},
 		{
 			field: "keywords",
 			headerName: "Keyword(s)",
+			cellRendererParams: {
+				setKeyWords,
+				setModalOpen,
+			},
+			sortable: true,
+			comparator: someComparator,
+			cellRenderer: KeywordRenderer,
+			filter: "agTextColumnFilter",
+			filterParams: {
+				buttons: ["apply", "reset"],
+				filterOptions: [
+					{
+						displayKey: "contains",
+						displayName: "Contains",
+						predicate: ([filterValue], cellValue) => {
+							console.log([filterValue][0], cellValue);
+							if ([filterValue][0] == "NA" || [filterValue][0] == "N/A") {
+								return (
+									cellValue === undefined ||
+									cellValue === "undefined" ||
+									!cellValue ||
+									cellValue === null ||
+									cellValue === "NA" ||
+									cellValue === "N/A"
+								);
+							} else {
+								return cellValue != null && cellValue?.includes(filterValue);
+							}
+						},
+					},
+				],
+				valueGetter: (params) => {
+					return params?.data?.matchedKeyword;
+				},
+				textCustomComparator: function (filter, value, filterText) {
+					const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+					if (filter === "equals") {
+						// Exact match
+						return matchedKeywords.includes(filterText);
+					} else {
+						// Partial match
+						return matchedKeywords.some((keyword) =>
+							keyword.includes(filterText)
+						);
+					}
+				},
+			},
+		},
+		{
+			field: "message_group_request_sent",
+			headerName: "Message group: when friend request is sent",
 			// filter: "agTextColumnFilter",
 			cellRendererParams: {
 				setKeyWords,
@@ -501,49 +291,62 @@ const FriendsQueue = () => {
 					}
 				},
 			},
-			// lockPosition: "right",
-			// filterParams: {
-			//   buttons: ["apply", "reset"],
-			//   suppressMiniFilter: true,
-			//   closeOnApply: true,
-			//   filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-			// },
 		},
-		// {
-		//   field: "created_at",
-		//   headerName: "Sync & Added Date &  Time",
-		//   cellRenderer: CreationRenderer,
-		//   minWidth: 240,
-		//   maxWidth: 250,
-		//   filter: "agDateColumnFilter",
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     debounceMs: 200,
-		//     suppressMiniFilter: true,
-		//     closeOnApply: true,
-		//     filterOptions: [
-		//       "lessThan",
-		//       "greaterThan",
-		//       "lessThanOrEqual",
-		//       "greaterThanOrEqual",
-		//       "inRange",
-		//     ],
-		//   },
-		// },
-		// {
-		//   field: "finalSource",
-		//   headerName: "Friends Source",
-		//   cellRenderer: SourceRenderer,
-		//   filter: "agTextColumnFilter",
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     suppressMiniFilter: true,
-		//     closeOnApply: true,
-		//     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-		//   },
-		// },
 		{
-			field: "groupName" ? "groupName" : "finalSource",
+			field: "message_group_request_accepted",
+			headerName: "Message group: when friend request is accepted",
+			// filter: "agTextColumnFilter",
+			cellRendererParams: {
+				setKeyWords,
+				setModalOpen,
+			},
+			sortable: true,
+			comparator: someComparator,
+			cellRenderer: KeywordRenderer,
+			filter: "agTextColumnFilter",
+			filterParams: {
+				buttons: ["apply", "reset"],
+				filterOptions: [
+					{
+						displayKey: "contains",
+						displayName: "Contains",
+						predicate: ([filterValue], cellValue) => {
+							console.log([filterValue][0], cellValue);
+							if ([filterValue][0] == "NA" || [filterValue][0] == "N/A") {
+								return (
+									cellValue === undefined ||
+									cellValue === "undefined" ||
+									!cellValue ||
+									cellValue === null ||
+									cellValue === "NA" ||
+									cellValue === "N/A"
+								);
+							} else {
+								return cellValue != null && cellValue?.includes(filterValue);
+							}
+						},
+					},
+				],
+				valueGetter: (params) => {
+					return params?.data?.matchedKeyword;
+				},
+				textCustomComparator: function (filter, value, filterText) {
+					const matchedKeywords = value.split(", "); // Split matched keywords by comma
+
+					if (filter === "equals") {
+						// Exact match
+						return matchedKeywords.includes(filterText);
+					} else {
+						// Partial match
+						return matchedKeywords.some((keyword) =>
+							keyword.includes(filterText)
+						);
+					}
+				},
+			},
+		},
+		{
+			field: "task_name",
 			headerName: "Source",
 			filter: "agTextColumnFilter",
 			headerTooltip: "Friends source",
@@ -559,33 +362,14 @@ const FriendsQueue = () => {
 				filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
 			},
 		},
-		// {
-		//   field: "friendStatus",
-		//   headerName: "Status",
-		//   cellRenderer: StatusRenderer,
-		//   filter: "agTextColumnFilter",
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     suppressMiniFilter: true,
-		//     closeOnApply: true,
-		//     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-		//   },
-		// },
-		// {
-		//   field: "message_thread",
-		//   headerName: "Has Conversation",
-		//   cellRenderer: HasConversationRenderer,
-		//   filter: "agTextColumnFilter",
-		//   filterParams: {
-		//     buttons: ["apply", "reset"],
-		//     suppressMiniFilter: true,
-		//     closeOnApply: true,
-		//     filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-		//   },
-		// },
 	];
 
 	console.log(frndReqSentPeriod);
+	console.log(filterFrndList);
+
+	const friendsQueueRecords = useSelector(
+		(state) => state.friendsQueue.friendsQueueRecords
+	);
 
 	const onChangeFrndReqLimit = (event) => {
 		let frndReqLimitValue = event.target.value;
@@ -668,6 +452,15 @@ const FriendsQueue = () => {
 	useEffect(() => {
 		dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
 	}, [debouncedFriendsQueueSettings]);
+
+	useEffect(() => {
+		if (Array.isArray(friendsQueueRecords)) {
+			dispatch(countCurrentListsize(friendsQueueRecords.length));
+		}
+	}, [friendsQueueRecords]);
+
+	console.log(frndReqSentPeriod);
+	console.log(friendsQueueRecords);
 
 	console.log(frndReqSentPeriod);
 
@@ -822,7 +615,7 @@ const FriendsQueue = () => {
 						</div>
 					</div>
 					<Listing
-						friendsData={filterFrndList}
+						friendsData={friendsQueueRecords}
 						friendsListingRef={friendsListinRef}
 						getFilterNum={setListFilteredCount}
 						reset={isReset}

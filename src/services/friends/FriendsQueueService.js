@@ -59,7 +59,7 @@ export const storeFriendsQueueSettings = async (friendsQueueSettings) => {
 export const fetchFriendsQueueRecords = async (fbUserId) => {
 	try {
 		const response = await axios.get(
-			`${config.fetchFriendsQueueRecord}?fb_user_id=${fbUserId}`,
+			`${config.fetchFriendsQueueRecord}?fbUserId=${fbUserId}`,
 			{
 				headers: headers,
 			}
@@ -82,12 +82,19 @@ export const fetchFriendsQueueRecords = async (fbUserId) => {
 	}
 };
 
-export const uploadFriendsQueueRecordsStepOne = async (friendsQueueRecord) => {
+export const uploadFriendsQueueRecordsStepOne = async (
+	friendsQueueRecord,
+	taskName,
+	fb_user_id
+) => {
 	try {
+		const data = new FormData();
+		data.append("csvFile", friendsQueueRecord);
+
 		const response = await axios.post(
-			config.uploadFriendsQueueRecordStepOne,
-			friendsQueueRecord,
-			{ headers: headers }
+			`${config.uploadFriendsQueueRecordStepOne}?taskName=${taskName}&fb_user_id=${fb_user_id}`,
+			data,
+			{ headers: { "Content-Type": "text/csv" } }
 		);
 		if (response.status === 200) {
 			return response.data;

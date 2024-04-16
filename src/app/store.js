@@ -6,7 +6,7 @@ import friendListReducer from "../actions/FriendListAction";
 import profilespace from "../actions/ProfilespaceActions"
 import messageReducer from "../actions/MessageAction";
 import campaignReducer from "../actions/CampaignsActions";
-import { friendsQueueReducer } from "../actions/FriendsQueueActions";
+import friendsQueueReducer from "../actions/FriendsQueueActions";
 // import productReducer from "../features/product/productSlice";
 // import searchReducer from "../features/Search/searchSlice";
 

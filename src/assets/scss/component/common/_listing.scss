@@ -153,6 +153,29 @@
           }
         }
       }
+      .friend-queue-keywords-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .friend-queue-keywords {
+          background-color: rgba(41, 117, 49, 1);
+          padding: 2px 8px;
+          border-radius: 16px;
+        }
+
+        .friend-queue-keywords-more {
+          margin-left: 4px;
+          padding: 6px 4px;
+          border-radius: 50%;
+          border: 1px solid rgba(58, 151, 76, 1);
+          background-color: rgba(41, 117, 49, 0.2);
+          color: rgba(58, 151, 76, 1);
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 19px;
+        }
+      }
     }
 
     &:hover {
@@ -856,6 +879,10 @@
         @include theme-aware("stroke", "link-text-color");
       }
     }
+  }
+
+  .placeholder-name {
+    margin-left: 8px;
   }
 }
 .ico-open-link {
