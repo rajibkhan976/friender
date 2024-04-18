@@ -9,7 +9,7 @@ import {
 } from "../services/friends/FriendsQueueService";
 import extensionMethods from "../configuration/extensionAccesories";
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import { friendsQueueRecords } from "../object";
+//import { friendsQueueRecords } from "../object";
 
 const initialState = {
 	isListLoading: false,
