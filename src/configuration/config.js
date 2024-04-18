@@ -192,6 +192,18 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-friend-request-queue-setting",
+	moveFriendsQueueRecordsToTop:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/" +
+		appEnv +
+		"/move-to-top",
+	removeFriendsQueueRecordsFromQueue:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/" +
+		appEnv +
+		"/remove-friends-queue",
 	// Messages Service
 	fetchDmfUrl:
 		"https://" +

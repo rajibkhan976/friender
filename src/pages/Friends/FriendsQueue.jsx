@@ -1,18 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import Listing from "../../components/common/Listing";
 import {
-	MessageRenderer,
-	ReactionRenderer,
-	CommentRenderer,
-	GenderRenderer,
-	AgeRenderer,
-	EngagementGetter,
-	UnlinkedNameCellWithOptionsRenderer,
-	SourceRendererPending,
-	CountryRenderer,
-	RecentEngagementRenderer,
 	KeywordRenderer,
-	EngagementRenderer,
+	MessageGroupRenderer,
+	SourceRendererPending,
+	UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -22,13 +14,12 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
-import helper from "../../helpers/helper";
-import { utils } from "../../helpers/utils";
 import { fetchAllCampaigns } from "../../actions/CampaignsActions";
 import {
 	getFriendsQueueSettings,
 	getFriendsQueueRecords,
 	saveFriendsQueueSettings,
+	resetFriendsQueueSettings,
 } from "../../actions/FriendsQueueActions";
 import NumberRangeInput from "../../components/common/NumberRangeInput";
 import DropSelector from "../../components/formComponents/DropSelector";
@@ -39,16 +30,12 @@ const FriendsQueue = () => {
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
-	const [filterFrndList, setFilterFrndList] = useState([]);
 	const [listFilteredCount, setListFilteredCount] = useState(null);
 	const [isReset, setIsReset] = useState(null);
 
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [inactiveAfter, setInactiveAfter] = useState(null);
-	const friendsList = useSelector(
-		(state) => state.facebook_data.current_friend_list
-	);
 
 	const fbUserId = localStorage.getItem("fr_default_fb");
 	const timeDelays = [
@@ -77,32 +64,17 @@ const FriendsQueue = () => {
 	const friendsQueueSettings = useSelector(
 		(state) => state.friendsQueue.friendsQueueSettings
 	);
-
-	const [friendRequestQueueSettings, setFriendRequestQueueSettings] = useState(
-		{}
+	const friendsQueueRecords = useSelector(
+		(state) => state.friendsQueue.friendsQueueRecords
 	);
+	const isListLoading = useSelector(
+		(state) => state.friendsQueue.isListLoading
+	);
+
+	const [friendRequestQueueSettings, setFriendRequestQueueSettings] =
+		useState(null);
 	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState("Today");
 
-	useEffect(() => {
-		const filteredData = friendsList.filter(
-			(item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
-		);
-		setFilterFrndList(filteredData);
-		// friendsList && dispatch(countCurrentListsize(filteredData.length));
-		dispatch(syncMainFriendList());
-	}, [dispatch, friendsList]);
-
-	/**
-	 * Custom comparator for columns with dates
-	 *
-	 * @returns updated array which is descending / ascending / default
-	 */
-	const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
-		let valA = new Date(nodeA.data.created_at);
-		let valB = new Date(nodeB.data.created_at);
-
-		return valB - valA;
-	};
 	// get Settings data
 	const getSettingsData = async () => {
 		if (mySettings?.data[0]?.friends_willbe_inactive_after) {
@@ -118,8 +90,9 @@ const FriendsQueue = () => {
 	};
 
 	useEffect(() => {
+		dispatch(resetFriendsQueueSettings());
 		dispatch(fetchAllCampaigns());
-		dispatch(getFriendsQueueSettings(fbUserId));
+		dispatch(getFriendsQueueSettings());
 		dispatch(getFriendsQueueRecords(fbUserId));
 		getSettingsData();
 	}, []);
@@ -138,7 +111,7 @@ const FriendsQueue = () => {
 
 	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
 		// console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);
-		if (nodeA.data.matchedKeyword == nodeB.data.matchedKeyword) return 0;
+		if (nodeA.data.matchedKeyword === nodeB.data.matchedKeyword) return 0;
 		return nodeA.data.matchedKeyword === undefined ||
 			nodeA.data.matchedKeyword === null
 			? -1
@@ -150,32 +123,6 @@ const FriendsQueue = () => {
 			: -1;
 	};
 
-	const ageComparator = (targetDate) => {
-		let statusSync = targetDate?.toLowerCase();
-		let currentUTC = helper.curretUTCTime();
-		let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
-		let days = diffTime / (24 * 60 * 60 * 1000);
-		let hours = (days % 1) * 24;
-		let minutes = (hours % 1) * 60;
-		let secs = (minutes % 1) * 60;
-		[days, hours, minutes, secs] = [
-			Math.floor(days),
-			Math.floor(hours),
-			Math.floor(minutes),
-			Math.floor(secs),
-		];
-
-		let age = 0;
-
-		if (days) age = days;
-		else if (hours) age = 1;
-		else if (minutes) age = 1;
-		else age = 1;
-
-		// console.log(filterValue, age);
-		return age;
-	};
-
 	const friendsListinRef = [
 		{
 			field: "fb_profile_url",
@@ -185,7 +132,7 @@ const FriendsQueue = () => {
 			showDisabledCheckboxes: true,
 			lockPosition: "left",
 			cellRenderer: UnlinkedNameCellWithOptionsRenderer,
-			minWidth: 280,
+			// minWidth: 280,
 		},
 		{
 			field: "keywords",
@@ -242,108 +189,14 @@ const FriendsQueue = () => {
 		{
 			field: "message_group_request_sent",
 			headerName: "Message group: when friend request is sent",
-			// filter: "agTextColumnFilter",
-			cellRendererParams: {
-				setKeyWords,
-				setModalOpen,
-			},
 			sortable: true,
-			comparator: someComparator,
-			cellRenderer: KeywordRenderer,
-			filter: "agTextColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				filterOptions: [
-					{
-						displayKey: "contains",
-						displayName: "Contains",
-						predicate: ([filterValue], cellValue) => {
-							console.log([filterValue][0], cellValue);
-							if ([filterValue][0] == "NA" || [filterValue][0] == "N/A") {
-								return (
-									cellValue === undefined ||
-									cellValue === "undefined" ||
-									!cellValue ||
-									cellValue === null ||
-									cellValue === "NA" ||
-									cellValue === "N/A"
-								);
-							} else {
-								return cellValue != null && cellValue?.includes(filterValue);
-							}
-						},
-					},
-				],
-				valueGetter: (params) => {
-					return params?.data?.matchedKeyword;
-				},
-				textCustomComparator: function (filter, value, filterText) {
-					const matchedKeywords = value.split(", "); // Split matched keywords by comma
-
-					if (filter === "equals") {
-						// Exact match
-						return matchedKeywords.includes(filterText);
-					} else {
-						// Partial match
-						return matchedKeywords.some((keyword) =>
-							keyword.includes(filterText)
-						);
-					}
-				},
-			},
+			cellRenderer: MessageGroupRenderer,
 		},
 		{
 			field: "message_group_request_accepted",
 			headerName: "Message group: when friend request is accepted",
-			// filter: "agTextColumnFilter",
-			cellRendererParams: {
-				setKeyWords,
-				setModalOpen,
-			},
 			sortable: true,
-			comparator: someComparator,
-			cellRenderer: KeywordRenderer,
-			filter: "agTextColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				filterOptions: [
-					{
-						displayKey: "contains",
-						displayName: "Contains",
-						predicate: ([filterValue], cellValue) => {
-							console.log([filterValue][0], cellValue);
-							if ([filterValue][0] == "NA" || [filterValue][0] == "N/A") {
-								return (
-									cellValue === undefined ||
-									cellValue === "undefined" ||
-									!cellValue ||
-									cellValue === null ||
-									cellValue === "NA" ||
-									cellValue === "N/A"
-								);
-							} else {
-								return cellValue != null && cellValue?.includes(filterValue);
-							}
-						},
-					},
-				],
-				valueGetter: (params) => {
-					return params?.data?.matchedKeyword;
-				},
-				textCustomComparator: function (filter, value, filterText) {
-					const matchedKeywords = value.split(", "); // Split matched keywords by comma
-
-					if (filter === "equals") {
-						// Exact match
-						return matchedKeywords.includes(filterText);
-					} else {
-						// Partial match
-						return matchedKeywords.some((keyword) =>
-							keyword.includes(filterText)
-						);
-					}
-				},
-			},
+			cellRenderer: MessageGroupRenderer,
 		},
 		{
 			field: "task_name",
@@ -363,13 +216,6 @@ const FriendsQueue = () => {
 			},
 		},
 	];
-
-	console.log(frndReqSentPeriod);
-	console.log(filterFrndList);
-
-	const friendsQueueRecords = useSelector(
-		(state) => state.friendsQueue.friendsQueueRecords
-	);
 
 	const onChangeFrndReqLimit = (event) => {
 		let frndReqLimitValue = event.target.value;
@@ -450,7 +296,13 @@ const FriendsQueue = () => {
 	);
 
 	useEffect(() => {
-		dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
+		if (
+			debouncedFriendsQueueSettings &&
+			Object.keys(debouncedFriendsQueueSettings).length > 0
+		) {
+			dispatch(resetFriendsQueueSettings(null));
+			dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
+		}
 	}, [debouncedFriendsQueueSettings]);
 
 	useEffect(() => {
@@ -461,8 +313,6 @@ const FriendsQueue = () => {
 
 	console.log(frndReqSentPeriod);
 	console.log(friendsQueueRecords);
-
-	console.log(frndReqSentPeriod);
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -494,7 +344,7 @@ const FriendsQueue = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
+			{friendsQueueRecords.length > 0 && !loading && !isListLoading ? (
 				<>
 					<div className='friends-queue-action-bar'>
 						<div className='friends-queue-action-bar-item'>
@@ -622,19 +472,15 @@ const FriendsQueue = () => {
 						setReset={setIsReset}
 					/>
 				</>
-			)}
-
-			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
-
-			{loading && <ListingLoader />}
-
-			{filterFrndList?.length > 0 && listFilteredCount === 0 && (
+			) : loading || isListLoading ? (
+				<ListingLoader />
+			) : (
 				<NoDataFound
 					customText='Whoops!'
 					additionalText={
 						<>
-							We couldn’t find the data
-							<br /> that you filtered for.
+							Your friend queue is <br />
+							currently empty
 						</>
 					}
 					interactionText='Clear filter'

@@ -83,13 +83,13 @@ export const fetchFriendsQueueRecords = async (fbUserId) => {
 };
 
 export const uploadFriendsQueueRecordsStepOne = async (
-	friendsQueueRecord,
+	friendsQueueRecords,
 	taskName,
 	fb_user_id
 ) => {
 	try {
 		const data = new FormData();
-		data.append("csvFile", friendsQueueRecord);
+		data.append("csvFile", friendsQueueRecords);
 
 		const response = await axios.post(
 			`${config.uploadFriendsQueueRecordStepOne}?taskName=${taskName}&fb_user_id=${fb_user_id}`,
@@ -114,11 +114,11 @@ export const uploadFriendsQueueRecordsStepOne = async (
 	}
 };
 
-export const uploadFriendsQueueRecordsStepTwo = async (friendsQueueRecord) => {
+export const uploadFriendsQueueRecordsStepTwo = async (friendsQueueRecords) => {
 	try {
 		const response = await axios.post(
 			config.uploadFriendsQueueRecordStepTwo,
-			friendsQueueRecord,
+			friendsQueueRecords,
 			{ headers: headers }
 		);
 		if (response.status === 200) {
@@ -126,6 +126,58 @@ export const uploadFriendsQueueRecordsStepTwo = async (friendsQueueRecord) => {
 		} else {
 			throw new Error(
 				"There is an issue while uploading friends queue record. Please contact support."
+			);
+		}
+	} catch (e) {
+		if (!typeof e.data === "undefined") {
+			throw new Error(e.response.data.message);
+		} else if (e.response && e.response.data) {
+			throw new Error(e.response.data);
+		} else {
+			throw new Error(e.message + ". Please contact support.");
+		}
+	}
+};
+
+export const moveFriendsQueueRecordsToTop = async (friendsQueueRecords) => {
+	try {
+		const response = await axios.post(
+			config.moveFriendsQueueRecordsToTop,
+			friendsQueueRecords,
+			{ headers: headers }
+		);
+		if (response.status === 200) {
+			return response.data;
+		} else {
+			throw new Error(
+				"There is an issue while moving friends queue records to top. Please contact support."
+			);
+		}
+	} catch (e) {
+		if (!typeof e.data === "undefined") {
+			throw new Error(e.response.data.message);
+		} else if (e.response && e.response.data) {
+			throw new Error(e.response.data);
+		} else {
+			throw new Error(e.message + ". Please contact support.");
+		}
+	}
+};
+
+export const removeFriendsQueueRecordsFromQueue = async (
+	friendsQueueRecords
+) => {
+	try {
+		const response = await axios.post(
+			config.removeFriendsQueueRecordsFromQueue,
+			friendsQueueRecords,
+			{ headers: headers }
+		);
+		if (response.status === 200) {
+			return response.data;
+		} else {
+			throw new Error(
+				"There is an issue while removing records from friends queue. Please contact support."
 			);
 		}
 	} catch (e) {

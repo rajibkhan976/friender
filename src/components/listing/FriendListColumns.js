@@ -215,7 +215,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 	const [white, setWhite] = useState(params.data.whitelist_status);
 	const [black, setBlack] = useState(params.data.blacklist_status);
 	const dispatch = useDispatch();
-	console.log(params.data);
+	// console.log(params.data);
 	return (
 		<span className='name-image-renderer'>
 			{params.data.fb_profile_url ? (
@@ -749,6 +749,7 @@ export const RequestRenderer = memo((params) => {
 		</span>
 	);
 });
+
 export const KeywordRenderer = memo((params) => {
 	// console.log(params.data);
 	// const keywords =
@@ -822,6 +823,23 @@ export const KeywordRenderer = memo((params) => {
 				<span className='no-keywords muted-text'>N/A</span>
 			)}
 		</>
+	);
+});
+
+
+
+export const MessageGroupRenderer = memo((params) => {
+	// console.log('params?.value', params?.value);
+	return params.data &&
+		params.data.message_group_request_sent &&
+		params.data.message_group_request_sent.groupId ? (
+		params.data.message_group_request_sent.groupId
+	) : params.data &&
+	  params.data.message_group_request_accepted &&
+	  params.data.message_group_request_accepted.groupId ? (
+		params.data.message_group_request_accepted.groupId
+	) : (
+		<span className='muted-text'>N/A</span>
 	);
 });
 

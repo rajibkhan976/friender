@@ -56,6 +56,9 @@ import {
 import { getGroupById } from "../../actions/MySettingAction";
 import { fetchGroups } from "../../actions/MessageAction";
 import {
+	getFriendsQueueRecords,
+	popFriendsQueueRecordsFromQueue,
+	reorderFriendsQueueRecordsToTop,
 	resetUploadedFriendsQueueCsvReport,
 	uploadFriendsQueueRecordsForReview,
 	uploadFriendsQueueRecordsForSaving,
@@ -174,6 +177,7 @@ const accessibilityOptions = [
 	//   active: false,
 	// },
 ];
+
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
 // If the socket connection failed then reconnect
@@ -185,9 +189,11 @@ const socket = io(SOCKET_URL, {
 socket.on("connect", function () {
 	socket.emit("join", { token: localStorage.getItem("fr_token") });
 });
+
 socket.on("disconnect", (reason) => {
 	// console.log("disconnect due to " + reason);
 });
+
 socket.on("connect_error", (e) => {
 	//console.log("There Is a connection Error in header", e);
 	socket.io.opts.transports = ["websocket", "polling"];
@@ -277,14 +283,17 @@ function PageHeader({ headerText = "" }) {
 		setCampaignListSelector(false);
 		setSelectedCampaignName("Select");
 	}, [isAddingToCampaign]);
+
 	useEffect(() => {
 		if (!modalOpen) {
 			setWhiteCountInUnfriend(null);
 		}
 	}, [modalOpen]);
+
 	const closeAccessItem = (e) => {
 		setIsComponentVisible(false);
 	};
+
 	useEffect(() => {
 		if (!isComponentVisible) {
 			const updatedAccess = accessOptions.map((accessObj) => {
@@ -297,12 +306,16 @@ function PageHeader({ headerText = "" }) {
 			setAccessOptions(updatedAccess);
 		}
 	}, [isComponentVisible]);
+
 	// const [isStopingSync, setIsStopingSync] = useState(false);
 	alertBrodcater();
+
 	const onSearchModified = useCallback((e) => {
 		dispatch(updateFilter(e));
 	}, []);
+
 	const [update, setUpdate] = useState(syncBtnDefaultState);
+
 	useEffect(() => {
 		if (update === syncBtnDefaultState) {
 			setIsSyncing(false);
@@ -392,7 +405,6 @@ function PageHeader({ headerText = "" }) {
 				default:
 					break;
 			}
-
 			return accessObj;
 		});
 
@@ -638,7 +650,9 @@ function PageHeader({ headerText = "" }) {
 		//onsole.log(item.type == "quickAction" && item.active, accessOptions);
 		const accessPlaceholder = [...accessOptions];
 		accessPlaceholder.filter(
-			(arrayOpt) => item.type == "quickAction" && item.active,
+			(arrayOpt) =>
+				(item.type === "quickAction" || item.type === "queueListAction") &&
+				item.active,
 			accessOptions
 		)[0].active = false;
 		setAccessOptions(accessPlaceholder);
@@ -712,6 +726,7 @@ function PageHeader({ headerText = "" }) {
 				});
 		}
 	};
+
 	const checkBeforeUnfriend = async (item) => {
 		if (item) {
 			closeFilterDropdown(item);
@@ -727,16 +742,61 @@ function PageHeader({ headerText = "" }) {
 			setModalOpen(true);
 		}
 	};
+
+	const alterFriendsQueueRecordsOrder = (item) => {
+		if (item) {
+			closeFilterDropdown(item);
+		}
+		if (selectedFriends && selectedFriends.length > 0) {
+			const fbIdList = [];
+			selectedFriends?.forEach((item) => {
+				if (item._id) {
+					fbIdList.push(item?._id);
+				}
+			});
+			dispatch(
+				reorderFriendsQueueRecordsToTop({
+					topRecords: fbIdList,
+					fb_user_id: defaultFbId,
+				})
+			).then(() => dispatch(getFriendsQueueRecords(defaultFbId)));
+			console.log(selectedFriends);
+		}
+	};
+
+	const deleteRecordsFromFriendsQueue = (item) => {
+		if (item) {
+			closeFilterDropdown(item);
+		}
+		if (selectedFriends && selectedFriends.length > 0) {
+			const fbIdList = [];
+			selectedFriends?.forEach((item) => {
+				if (item._id) {
+					fbIdList.push(item?._id);
+				}
+			});
+			dispatch(
+				popFriendsQueueRecordsFromQueue({
+					removeRecords: fbIdList,
+					fb_user_id: defaultFbId,
+				})
+			).then(() => dispatch(getFriendsQueueRecords(defaultFbId)));
+			console.log(selectedFriends);
+		}
+	};
+
 	const skipWhitList = () => {
 		const listWithOutWhites = selectedFriends.filter((item) => {
 			return item.whitelist_status !== 1;
 		});
 		unfriend(listWithOutWhites);
 	};
+
 	const handleBeforeUnload = (e) => {
 		e.preventDefault();
 		e.returnValue = "";
 	};
+
 	const checkFBConnection = async () => {
 		const profileData = await fetchUserProfile();
 		// if user id is present already with the facebook auth information then :
@@ -899,6 +959,7 @@ function PageHeader({ headerText = "" }) {
 		setRunningUnfriend(false);
 		window.removeEventListener("beforeunload", handleBeforeUnload);
 	};
+
 	const syncFriend = async () => {
 		setInlineLoader(true);
 		try {
@@ -1548,9 +1609,10 @@ function PageHeader({ headerText = "" }) {
 					quickMessage: "quickMessage",
 				},
 			};
-			dispatch(uploadFriendsQueueRecordsForSaving(data)).then(() =>
-				setShowUploadCsvModal(false)
-			);
+			dispatch(uploadFriendsQueueRecordsForSaving(data)).then(() => {
+				dispatch(getFriendsQueueRecords(defaultFbId));
+				setShowUploadCsvModal(false);
+			});
 		}
 	};
 
@@ -2163,7 +2225,9 @@ function PageHeader({ headerText = "" }) {
 													<ul>
 														<li
 															className='del-fr-action'
-															onClick={() => checkBeforeUnfriend(accessItem)}
+															onClick={() =>
+																deleteRecordsFromFriendsQueue(accessItem)
+															}
 															data-disabled={
 																!selectedFriends || selectedFriends.length === 0
 																	? true
@@ -2177,7 +2241,9 @@ function PageHeader({ headerText = "" }) {
 														</li>
 														<li
 															className='del-fr-action'
-															onClick={() => checkBeforeUnfriend(accessItem)}
+															onClick={() =>
+																alterFriendsQueueRecordsOrder(accessItem)
+															}
 															data-disabled={
 																!selectedFriends || selectedFriends.length === 0
 																	? true

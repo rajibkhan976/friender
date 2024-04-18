@@ -674,6 +674,10 @@
   display: flex;
   padding-bottom: 8px;
 
+  + .selection-popup {
+    margin-top: 6rem;
+  }
+
   .friends-queue-action-bar-item:nth-child(-n+2) {
     height: 90%;
     margin-top: 6px;
@@ -1115,6 +1119,7 @@
 
     .download-sample-csv {
       display: flex;
+      cursor: pointer;
 
       .csv-download-icon {
         margin-right: 8px;
