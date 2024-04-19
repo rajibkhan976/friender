@@ -58,8 +58,11 @@ import { fetchGroups } from "../../actions/MessageAction";
 import {
 	getFriendsQueueRecords,
 	popFriendsQueueRecordsFromQueue,
+	removeFriendsQueueRecordsFromIndexDB,
+	reorderFriendsQueueRecordsInIndexDB,
 	reorderFriendsQueueRecordsToTop,
 	resetUploadedFriendsQueueCsvReport,
+	resetUploadedFriendsQueueRecordResponse,
 	uploadFriendsQueueRecordsForReview,
 	uploadFriendsQueueRecordsForSaving,
 } from "../../actions/FriendsQueueActions";
@@ -759,8 +762,12 @@ function PageHeader({ headerText = "" }) {
 					topRecords: fbIdList,
 					fb_user_id: defaultFbId,
 				})
-			).then(() => dispatch(getFriendsQueueRecords(defaultFbId)));
-			console.log(selectedFriends);
+			)
+				.unwrap()
+				.then((response) =>
+					dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList))
+				);
+			// console.log(selectedFriends);
 		}
 	};
 
@@ -780,8 +787,12 @@ function PageHeader({ headerText = "" }) {
 					removeRecords: fbIdList,
 					fb_user_id: defaultFbId,
 				})
-			).then(() => dispatch(getFriendsQueueRecords(defaultFbId)));
-			console.log(selectedFriends);
+			)
+				.unwrap()
+				.then((payload) => {
+					dispatch(removeFriendsQueueRecordsFromIndexDB(fbIdList));
+				});
+			// console.log(selectedFriends);
 		}
 	};
 
@@ -1375,7 +1386,7 @@ function PageHeader({ headerText = "" }) {
 		setIsAddingToCampaign(false);
 	};
 
-	console.log(accessOptions);
+	// console.log(accessOptions);
 
 	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
 	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
@@ -1384,7 +1395,7 @@ function PageHeader({ headerText = "" }) {
 
 	const [selectMessageOptionOpen1, setSelectMessageOptionOpen1] =
 		useState(false);
-	const [groupMessages1, setGroupMessages1] = useState([]);
+	const [groupMessages, setGroupMessages] = useState([]);
 	const [groupMsgSelect1, setGroupMsgSelect1] = useState(null);
 	const [quickMsg1, setQuickMsg1] = useState(null);
 	const [quickMsgModalOpen1, setQuickMsgModalOpen1] = useState(false);
@@ -1393,7 +1404,6 @@ function PageHeader({ headerText = "" }) {
 
 	const [selectMessageOptionOpen2, setSelectMessageOptionOpen2] =
 		useState(false);
-	const [groupMessages2, setGroupMessages2] = useState([]);
 	const [groupMsgSelect2, setGroupMsgSelect2] = useState(null);
 	const [quickMsg2, setQuickMsg2] = useState(null);
 	const [quickMsgModalOpen2, setQuickMsgModalOpen2] = useState(false);
@@ -1402,6 +1412,9 @@ function PageHeader({ headerText = "" }) {
 
 	const uploadedFriendsQueueCsvReport = useSelector(
 		(state) => state.friendsQueue.uploadedFriendsQueueCsvReport
+	);
+	const uploadedFriendsQueueRecordResponse = useSelector(
+		(state) => state.friendsQueue.uploadedFriendsQueueRecordResponse
 	);
 
 	useEffect(() => {
@@ -1470,13 +1483,14 @@ function PageHeader({ headerText = "" }) {
 
 	useEffect(() => {
 		// Fetching All Group Messages.
+		dispatch(getFriendsQueueRecords());
 		dispatch(fetchGroups())
 			.unwrap()
 			.then((res) => {
 				const data = res?.data;
+				console.log(data);
 				if (data && data.length) {
-					setGroupMessages1(data);
-					setGroupMessages2(data);
+					setGroupMessages(data);
 				}
 			})
 			.catch((error) =>
@@ -1493,6 +1507,15 @@ function PageHeader({ headerText = "" }) {
 		setTaskName(`CSV Upload ${Date.now()}`);
 		setSelectedCsvFile(null);
 		setShowUploadCsvModal(true);
+		setFriendsQueueCsvUploadStep(0);
+		setSelectedCsvFile(null);
+		setSavedKeyword([]);
+		setGroupMsgSelect1(null);
+		setGroupMsgSelect2(null);
+		setQuickMsg1(null);
+		setQuickMsg2(null);
+		dispatch(resetUploadedFriendsQueueCsvReport(null));
+		dispatch(resetUploadedFriendsQueueRecordResponse(null));
 	};
 
 	const onDrop = useCallback((acceptedFiles) => {
@@ -1504,22 +1527,21 @@ function PageHeader({ headerText = "" }) {
 		console.log(Error);
 	}, []);
 
-	console.log(selectedCsvFile);
+	// console.log(selectedCsvFile);
 
 	const handleCsvUpload = () => {
-		if (selectedCsvFile && taskName) {
+		if (selectedCsvFile && taskName && !uploadedFriendsQueueCsvReport) {
 			const data = {
 				csvFile: selectedCsvFile[0],
 				taskName: taskName,
 				fb_user_id: defaultFbId,
 			};
-			dispatch(resetUploadedFriendsQueueCsvReport(null));
 			dispatch(uploadFriendsQueueRecordsForReview(data));
-			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 		}
+		setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 	};
 
-	console.log(friendsQueueCsvUploadStep);
+	// console.log(friendsQueueCsvUploadStep);
 
 	const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
 		useDropzone({
@@ -1601,22 +1623,59 @@ function PageHeader({ headerText = "" }) {
 				fb_user_id: defaultFbId,
 				keywords: savedKeyword,
 				friendRequestSent: {
-					groupId: "",
-					quickMessage: "quickMessage",
+					groupId:
+						groupMsgSelect1 && groupMsgSelect1._id ? groupMsgSelect1._id : "",
+					quickMessage: quickMsg1 && quickMsg1.text ? quickMsg1.text : "",
 				},
 				friendRequestAccepted: {
-					groupId: "",
-					quickMessage: "quickMessage",
+					groupId:
+						groupMsgSelect2 && groupMsgSelect2._id ? groupMsgSelect2._id : "",
+					quickMessage: quickMsg2 && quickMsg2.text ? quickMsg2.text : "",
 				},
 			};
-			dispatch(uploadFriendsQueueRecordsForSaving(data)).then(() => {
-				dispatch(getFriendsQueueRecords(defaultFbId));
-				setShowUploadCsvModal(false);
-			});
+
+			dispatch(resetUploadedFriendsQueueRecordResponse(null));
+
+			dispatch(uploadFriendsQueueRecordsForSaving(data));
 		}
 	};
 
-	console.log(uploadedFriendsQueueCsvReport);
+	const timeout = useRef(null);
+
+	useEffect(() => {
+		if (uploadedFriendsQueueRecordResponse) {
+			timeout.current = setTimeout(() => {
+				setShowUploadCsvModal(false);
+				setFriendsQueueCsvUploadStep(0);
+				dispatch(resetUploadedFriendsQueueCsvReport(null));
+				dispatch(resetUploadedFriendsQueueRecordResponse(null));
+				dispatch(getFriendsQueueRecords());
+			}, 4500);
+		}
+
+		return () => clearTimeout(timeout);
+	}, [uploadedFriendsQueueRecordResponse]);
+
+	const handleClickDownloadSampleCsv = () => {
+		const sampleCsvHeader = "Facebook id,Facebook profile URL,Keywords";
+		const sampleCsvBlob = new Blob([sampleCsvHeader], {
+			type: "text/csv;charset=utf-8,",
+		});
+		const sampleCsvUrl = URL.createObjectURL(sampleCsvBlob);
+		const sampleCsvLink = document.createElement("a");
+		sampleCsvLink.setAttribute("href", sampleCsvUrl);
+		sampleCsvLink.setAttribute("download", "sample_csv.csv");
+		sampleCsvLink.click();
+	};
+
+	const handleClickDownloadErrorList = (url) => {
+		if (url) {
+			const errorListLink = document.createElement("a");
+			errorListLink.setAttribute("href", url);
+			// errorListLink.setAttribute("download", "sample_csv.csv");
+			errorListLink.click();
+		}
+	};
 
 	return (
 		<>
@@ -1780,7 +1839,7 @@ function PageHeader({ headerText = "" }) {
 											type='CAMPAIGNS_MESSAGE'
 											openSelectOption={selectMessageOptionOpen1}
 											handleIsOpenSelectOption={setSelectMessageOptionOpen1}
-											groupList={groupMessages1}
+											groupList={groupMessages}
 											groupSelect={groupMsgSelect1}
 											setGroupSelect={setGroupMsgSelect1}
 											quickMessage={quickMsg1 && quickMsg1}
@@ -1808,7 +1867,7 @@ function PageHeader({ headerText = "" }) {
 											type='CAMPAIGNS_MESSAGE'
 											openSelectOption={selectMessageOptionOpen2}
 											handleIsOpenSelectOption={setSelectMessageOptionOpen2}
-											groupList={groupMessages2}
+											groupList={groupMessages}
 											groupSelect={groupMsgSelect2}
 											setGroupSelect={setGroupMsgSelect2}
 											quickMessage={quickMsg2 && quickMsg2}
@@ -1957,7 +2016,14 @@ function PageHeader({ headerText = "" }) {
 										</div>
 									</div>
 									<div className='custom-modal-footer report-footer'>
-										<div className='download-sample-csv'>
+										<div
+											className='download-sample-csv'
+											onClick={() =>
+												handleClickDownloadErrorList(
+													uploadedFriendsQueueCsvReport?.fileUrl
+												)
+											}
+										>
 											<CsvDownloadIcon className='csv-download-icon' />
 											<div className='download-sample-csv-txt1'>
 												Download&nbsp;
@@ -2049,7 +2115,10 @@ function PageHeader({ headerText = "" }) {
 										IDs of Facebook users.
 									</p>
 									<div className='custom-modal-footer'>
-										<div className='download-sample-csv'>
+										<div
+											className='download-sample-csv'
+											onClick={handleClickDownloadSampleCsv}
+										>
 											<CsvDownloadIcon className='csv-download-icon' />
 											<div className='download-sample-csv-txt1'>
 												Download&nbsp;
@@ -2091,7 +2160,7 @@ function PageHeader({ headerText = "" }) {
 								"links[links.length - 1]",
 								links[links.length - 2]?.location
 							)} */}
-							{headerText != ""
+							{headerText !== ""
 								? headerText
 								: links.length > 0
 								? links[links.length - 2]?.location !== "campaigns"

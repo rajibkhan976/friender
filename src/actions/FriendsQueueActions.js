@@ -1,4 +1,5 @@
 import {
+	fetchFriendsRequestSentInsight,
 	fetchFriendsQueueSettings,
 	fetchFriendsQueueRecords,
 	moveFriendsQueueRecordsToTop,
@@ -9,92 +10,24 @@ import {
 } from "../services/friends/FriendsQueueService";
 import extensionMethods from "../configuration/extensionAccesories";
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-//import { friendsQueueRecords } from "../object";
+import { clientDB } from "../app/db";
+import { friendsQueueRecords } from "../object";
 
 const initialState = {
+	friendRequestSentInsight: null,
+	friendsQueueSettings: null,
+	friendsQueueRecords: [],
+	friendsQueueRecordsCount: 0,
+	isCsvSubmittedForReview: false,
+	isChunkedDataFetchedFromApi: false,
+	isDataFetchedFromApi: false,
 	isListLoading: false,
 	isLoading: false,
-	friendsQueueSettings: null,
-	savedFriendsQueueSettingsResponse: null,
-	uploadedFriendsQueueCsvReport: null,
-	uploadedFriendsQueueRecord: null,
-	friendsQueueRecords: [],
-	//[
-	// {
-	// 	friendName: "Chenno Styles",
-	// 	friendProfilePicture:
-	// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
-	// 	friendProfileUrl:
-	// 		"https://www.facebook.com/profile.php?id=100000024782683",
-	// 	keywords: [
-	// 		"Front-end Developer",
-	// 		"Marketer",
-	// 		"AI & UX",
-	// 		"Founder",
-	// 		"CEO",
-	// 		"CTO",
-	// 		"Digital",
-	// 		"Co-Founder",
-	// 		"Business",
-	// 		"Design",
-	// 		"Manager",
-	// 		"Startup",
-	// 	],
-	// 	friend_request_sent_message_group: "My group",
-	// 	friend_request_accept_message_group: "My group",
-	// 	finalSource: "CSV Upload 1",
-	// },
-	// {
-	// 	friendName: "Chenno Styles",
-	// 	friendProfilePicture:
-	// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
-	// 	friendProfileUrl:
-	// 		"https://www.facebook.com/profile.php?id=100000024782683",
-	// 	keywords: [
-	// 		"Front-end Developer",
-	// 		"Marketer",
-	// 		"AI & UX",
-	// 		"Founder",
-	// 		"CEO",
-	// 		"CTO",
-	// 		"Digital",
-	// 		"Co-Founder",
-	// 		"Business",
-	// 		"Design",
-	// 		"Manager",
-	// 		"Startup",
-	// 	],
-	// 	friend_request_sent_message_group: "My group",
-	// 	friend_request_accept_message_group: "My group",
-	// 	finalSource: "CSV Upload 1",
-	// },
-	// {
-	// 	friendName: "Chenno Styles",
-	// 	friendProfilePicture:
-	// 		"https://s3.amazonaws.com/dev.friender.io/profile/fbprofilepicture/100000024782683.jpeg",
-	// 	friendProfileUrl:
-	// 		"https://www.facebook.com/profile.php?id=100000024782683",
-	// 	keywords: [
-	// 		"Front-end Developer",
-	// 		"Marketer",
-	// 		"AI & UX",
-	// 		"Founder",
-	// 		"CEO",
-	// 		"CTO",
-	// 		"Digital",
-	// 		"Co-Founder",
-	// 		"Business",
-	// 		"Design",
-	// 		"Manager",
-	// 		"Startup",
-	// 	],
-	// 	friend_request_sent_message_group: "My group",
-	// 	friend_request_accept_message_group: "My group",
-	// 	finalSource: "CSV Upload 1",
-	// },
-	//],
 	movedFriendsQueueRecordsToTopResponse: null,
+	savedFriendsQueueSettingsResponse: null,
 	removedRecordsFromFriendsQueueResponse: null,
+	uploadedFriendsQueueCsvReport: null,
+	uploadedFriendsQueueRecordResponse: null,
 };
 
 const fRQueueExtMsgSendHandler = async (data) => {
@@ -113,10 +46,189 @@ const fRQueueExtMsgSendHandler = async (data) => {
 	console.log("message res", extRes);
 };
 
+export const saveFriendsQueueRecordsInIndexDb = async (
+	fbUserId,
+	friendsQueueRecords,
+	recordCount
+) => {
+	try {
+		await clientDB.friendsQueueRecords.put({
+			fbId: fbUserId,
+			friendsQueueData: friendsQueueRecords,
+			recordCount: recordCount,
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+};
+
+export const getFriendsQueueRecordsInChunk = createAsyncThunk(
+	"friendsQueue/getFriendsQueueRecordsInChunk",
+	async (totalRecordCount) => {
+		const fbUserId = localStorage.getItem("fr_default_fb");
+		const compiledChunkData = [];
+		let incrementBy = 1000;
+		let response = null;
+
+		for (let i = 0; i < totalRecordCount; i += incrementBy) {
+			response = await fetchFriendsQueueRecords(fbUserId, i);
+			if (response && Array.isArray(response.data)) {
+				incrementBy = response.data.length;
+				response.data.forEach((item) => {
+					compiledChunkData.push(item);
+				});
+			}
+		}
+
+		saveFriendsQueueRecordsInIndexDb(
+			fbUserId,
+			compiledChunkData,
+			compiledChunkData.length
+		);
+
+		return response;
+	}
+);
+
 export const getFriendsQueueRecords = createAsyncThunk(
 	"friendsQueue/getFriendsQueueRecords",
+	async () => {
+		const fbUserId = localStorage.getItem("fr_default_fb");
+		let skip = 0;
+
+		const response = await fetchFriendsQueueRecords(fbUserId, skip);
+
+		if (response && response.data) {
+			saveFriendsQueueRecordsInIndexDb(
+				fbUserId,
+				response.data,
+				response.totalNumberOfRecords
+			);
+		}
+
+		return response;
+	}
+);
+
+export const getFriendsQueueRecordsFromIndexDB = createAsyncThunk(
+	"friendsQueue/getFriendsQueueRecordsFromIndexDB",
 	async (fbUserId) => {
-		const response = await fetchFriendsQueueRecords(fbUserId);
+		const response = await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first();
+
+		return response;
+	}
+);
+
+export const reorderFriendsQueueRecordsInIndexDB = createAsyncThunk(
+	"friendsQueue/reorderFriendsQueueRecordsInIndexDB",
+	async (recordIds) => {
+		const fbUserId = localStorage.getItem("fr_default_fb");
+		let oldData = [];
+
+		const response = await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first();
+
+		if (
+			response &&
+			Array.isArray(response.friendsQueueData) &&
+			response.friendsQueueData.length
+		) {
+			oldData = [...response.friendsQueueData];
+		}
+
+		if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
+			const sortedOldData = [
+				...oldData.sort((a, b) => b.order_id - a.order_id),
+			];
+
+			const selectedData = oldData.filter((item) =>
+				recordIds.includes(item._id)
+			);
+
+			const filteredData = oldData.filter(
+				(item) => !recordIds.includes(item._id)
+			);
+
+			selectedData.forEach((item) => {
+				Object.assign(item, {
+					order_id: sortedOldData[0].order_id + 1,
+				});
+			});
+
+			selectedData.forEach((item) => {
+				filteredData.unshift(item);
+			});
+
+			clientDB.friendsQueueRecords.clear();
+
+			await clientDB.friendsQueueRecords.put({
+				fbId: fbUserId,
+				friendsQueueData: filteredData,
+				recordCount: filteredData.length,
+			});
+		}
+
+		const newResponse = await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first();
+
+		return newResponse;
+	}
+);
+
+export const removeFriendsQueueRecordsFromIndexDB = createAsyncThunk(
+	"friendsQueue/removeFriendsQueueRecordsFromIndexDB",
+	async (recordIds) => {
+		const fbUserId = localStorage.getItem("fr_default_fb");
+		let oldData = [];
+
+		const response = await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first();
+
+		if (
+			response &&
+			Array.isArray(response.friendsQueueData) &&
+			response.friendsQueueData.length
+		) {
+			oldData = [...response.friendsQueueData];
+		}
+
+		if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
+			oldData = oldData.filter((item) => !recordIds.includes(item._id));
+
+			clientDB.friendsQueueRecords.clear();
+
+			await clientDB.friendsQueueRecords.put({
+				fbId: fbUserId,
+				friendsQueueData: oldData,
+				recordCount: oldData.length,
+			});
+		}
+
+		const newResponse = await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first();
+
+		return newResponse;
+	}
+);
+
+export const getFriendsRequestSentInsight = createAsyncThunk(
+	"friendsQueue/getFriendsRequestSentInsight",
+	async (rangeType) => {
+		const response = await fetchFriendsRequestSentInsight(
+			localStorage.getItem("fr_default_fb"),
+			rangeType
+		);
 		return response;
 	}
 );
@@ -186,26 +298,91 @@ export const friendsQueueSlice = createSlice({
 	name: "friendsQueue",
 	initialState,
 	reducers: {
-		resetSavedFriendsQueueSettingsResponse: (state, action) => {
-			state.savedFriendsQueueSettingsResponse = action.payload;
+		resetIsCsvSubmittedForReview: (state, action) => {
+			state.isCsvSubmittedForReview = action.payload;
+		},
+		resetIsChunkedDataFetchedFromApi: (state, action) => {
+			state.isChunkedDataFetchedFromApi = action.payload;
+		},
+		resetIsDataFetchedFromApi: (state, action) => {
+			state.isDataFetchedFromApi = action.payload;
 		},
 		resetFriendsQueueSettings: (state, action) => {
 			state.friendsQueueSettings = action.payload;
 		},
+		resetSavedFriendsQueueSettingsResponse: (state, action) => {
+			state.savedFriendsQueueSettingsResponse = action.payload;
+		},
 		resetUploadedFriendsQueueCsvReport: (state, action) => {
 			state.uploadedFriendsQueueCsvReport = action.payload;
 		},
+		resetUploadedFriendsQueueRecordResponse: (state, action) => {
+			state.uploadedFriendsQueueRecordResponse = action.payload;
+		},
 	},
 	extraReducers: {
+		[getFriendsQueueRecordsInChunk.pending]: (state) => {
+			state.isChunkedDataFetchedFromApi = false;
+		},
+		[getFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
+			state.isChunkedDataFetchedFromApi = true;
+		},
+		[getFriendsQueueRecordsInChunk.rejected]: (state) => {
+			state.isChunkedDataFetchedFromApi = false;
+		},
 		[getFriendsQueueRecords.pending]: (state) => {
-			state.isListLoading = true;
+			state.isDataFetchedFromApi = false;
 		},
 		[getFriendsQueueRecords.fulfilled]: (state, action) => {
-			state.isListLoading = false;
-			state.friendsQueueRecords = action.payload.data;
+			state.isDataFetchedFromApi = true;
 		},
 		[getFriendsQueueRecords.rejected]: (state) => {
+			state.isDataFetchedFromApi = false;
+		},
+		[getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
+			state.isListLoading = true;
+		},
+		[getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
+			const { friendsQueueData, recordCount } = action.payload;
 			state.isListLoading = false;
+			state.friendsQueueRecords = friendsQueueData;
+			state.friendsQueueRecordsCount = recordCount;
+		},
+		[getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
+			state.isListLoading = false;
+		},
+		[removeFriendsQueueRecordsFromIndexDB.pending]: (state) => {
+			state.isListLoading = true;
+		},
+		[removeFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
+			const { friendsQueueData, recordCount } = action.payload;
+			state.isListLoading = false;
+			state.friendsQueueRecords = friendsQueueData;
+			state.friendsQueueRecordsCount = recordCount;
+		},
+		[removeFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
+			state.isListLoading = false;
+		},
+		[reorderFriendsQueueRecordsInIndexDB.pending]: (state) => {
+			state.isListLoading = true;
+		},
+		[reorderFriendsQueueRecordsInIndexDB.fulfilled]: (state, action) => {
+			const { friendsQueueData } = action.payload;
+			state.isListLoading = false;
+			state.friendsQueueRecords = friendsQueueData;
+		},
+		[reorderFriendsQueueRecordsInIndexDB.rejected]: (state) => {
+			state.isListLoading = false;
+		},
+		[getFriendsRequestSentInsight.pending]: (state) => {
+			state.isLoading = true;
+		},
+		[getFriendsRequestSentInsight.fulfilled]: (state, action) => {
+			state.isLoading = false;
+			state.friendRequestSentInsight = action.payload.count;
+		},
+		[getFriendsRequestSentInsight.rejected]: (state) => {
+			state.isLoading = false;
 		},
 		[getFriendsQueueSettings.pending]: (state) => {
 			state.isLoading = true;
@@ -249,21 +426,21 @@ export const friendsQueueSlice = createSlice({
 			state.isLoading = false;
 		},
 		[uploadFriendsQueueRecordsForReview.pending]: (state) => {
-			state.isLoading = true;
+			state.isCsvSubmittedForReview = true;
 		},
 		[uploadFriendsQueueRecordsForReview.fulfilled]: (state, action) => {
-			state.isLoading = false;
+			state.isCsvSubmittedForReview = false;
 			state.uploadedFriendsQueueCsvReport = action.payload;
 		},
 		[uploadFriendsQueueRecordsForReview.rejected]: (state) => {
-			state.isLoading = false;
+			state.isCsvSubmittedForReview = false;
 		},
 		[uploadFriendsQueueRecordsForSaving.pending]: (state) => {
 			state.isLoading = true;
 		},
 		[uploadFriendsQueueRecordsForSaving.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.uploadedFriendsQueueRecord = action.payload;
+			state.uploadedFriendsQueueRecordResponse = action.payload;
 		},
 		[uploadFriendsQueueRecordsForSaving.rejected]: (state) => {
 			state.isLoading = false;
@@ -272,9 +449,13 @@ export const friendsQueueSlice = createSlice({
 });
 
 export const {
+	resetIsCsvSubmittedForReview,
+	resetIsChunkedDataFetchedFromApi,
+	resetIsDataFetchedFromApi,
 	resetFriendsQueueSettings,
 	resetSavedFriendsQueueSettingsResponse,
 	resetUploadedFriendsQueueCsvReport,
+	resetUploadedFriendsQueueRecordResponse,
 } = friendsQueueSlice.actions;
 
 export default friendsQueueSlice.reducer;

@@ -192,6 +192,12 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-friend-request-queue-setting",
+	fetchFriendsRequestSentInsight:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/" +
+		appEnv +
+		"/queue-friend-request-sent-insights",
 	moveFriendsQueueRecordsToTop:
 		"https://" +
 		profileService +

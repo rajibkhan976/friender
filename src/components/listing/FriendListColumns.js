@@ -23,7 +23,7 @@ import {
 //   BlockListFriends,
 //   whiteListFriends,
 // } from "../../services/friends/FriendListServices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Alertbox from "../common/Toast";
 import { BlockListFriend, whiteListFriend } from "../../actions/FriendsAction";
 import helper from "../../helpers/helper";
@@ -32,6 +32,7 @@ import { Link } from "react-router-dom";
 import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
 import { utils } from "../../helpers/utils";
 import { ReactComponent as UserIcon } from "../../assets/images/UserIcon.svg";
+import { ReactComponent as SourceCsvIcon } from "../../assets/images/SourceCsvIcon.svg";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
 import moment from "moment";
 
@@ -62,6 +63,7 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
 			//dispatch(removeSelectedFriends());
 		});
 };
+
 export const handleBlockingUser = (dispatch, friendId, status) => {
 	const payload = [
 		{
@@ -152,15 +154,18 @@ export const NameCellRenderer = memo((params) => {
 		</span>
 	);
 });
+
 export const EngagementGetter = (params) => {
 	// Reacts + Comments
 	let engCount =
 		Number(params.data.reactionThread) + Number(params.data.commentThread);
 	return engCount;
 };
+
 export const EmptyRenderer = memo((params) => {
 	return "";
 });
+
 export const GeneralNameCellRenderer = memo((params) => {
 	return (
 		<span className='name-image-renderer'>
@@ -826,20 +831,45 @@ export const KeywordRenderer = memo((params) => {
 	);
 });
 
-
-
 export const MessageGroupRenderer = memo((params) => {
+	const groupArray = useSelector((state) => state.message.groupArray);
+	const { message_group_request_sent, message_group_request_accepted } =
+		params.data;
+	console.log(groupArray);
 	// console.log('params?.value', params?.value);
-	return params.data &&
-		params.data.message_group_request_sent &&
-		params.data.message_group_request_sent.groupId ? (
-		params.data.message_group_request_sent.groupId
-	) : params.data &&
-	  params.data.message_group_request_accepted &&
-	  params.data.message_group_request_accepted.groupId ? (
-		params.data.message_group_request_accepted.groupId
-	) : (
-		<span className='muted-text'>N/A</span>
+	return (
+		<>
+			{params.data &&
+			message_group_request_sent &&
+			message_group_request_sent.groupId ? (
+				<>
+					{
+						groupArray?.find(
+							(item) => item._id === message_group_request_sent.groupId
+						)?.group_name
+					}
+				</>
+			) : message_group_request_sent?.quickMessage ? (
+				<>{message_group_request_sent?.quickMessage}</>
+			) : (
+				<span className='muted-text'>N/A</span>
+			)}
+			{params.data &&
+			message_group_request_accepted &&
+			message_group_request_accepted.groupId ? (
+				<>
+					{
+						groupArray?.find(
+							(item) => item._id === message_group_request_accepted.groupId
+						)?.group_name
+					}
+				</>
+			) : message_group_request_accepted?.quickMessage ? (
+				<>{message_group_request_accepted?.quickMessage}</>
+			) : (
+				<span className='muted-text'>N/A</span>
+			)}
+		</>
 	);
 });
 
@@ -1007,6 +1037,7 @@ export const SourceRendererPending = memo((params) => {
 	if (params?.data?.task_name?.toLowerCase()) {
 		return (
 			<div className='friend-sync-source d-flex f-align-center'>
+				<SourceCsvIcon className='friend-sync-source-icon' />
 				{params?.data?.task_name}
 			</div>
 		);

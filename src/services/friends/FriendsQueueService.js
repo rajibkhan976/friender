@@ -31,6 +31,32 @@ export const fetchFriendsQueueSettings = async (fbUserId) => {
 	}
 };
 
+export const fetchFriendsRequestSentInsight = async (fbUserId, rangeType) => {
+	try {
+		const response = await axios.get(
+			`${config.fetchFriendsRequestSentInsight}?fbUserId=${fbUserId}&rangeType=${rangeType}`,
+			{
+				headers: headers,
+			}
+		);
+		if (response.status === 200) {
+			return response.data;
+		} else {
+			throw new Error(
+				"There is an issue while fetching friend request sent insights. Please contact support."
+			);
+		}
+	} catch (e) {
+		if (!typeof e.data === "undefined") {
+			throw new Error(e.response.data.message);
+		} else if (e.response && e.response.data) {
+			throw new Error(e.response.data);
+		} else {
+			throw new Error(e.message + ". Please contact support.");
+		}
+	}
+};
+
 export const storeFriendsQueueSettings = async (friendsQueueSettings) => {
 	try {
 		const response = await axios.post(
@@ -56,10 +82,10 @@ export const storeFriendsQueueSettings = async (friendsQueueSettings) => {
 	}
 };
 
-export const fetchFriendsQueueRecords = async (fbUserId) => {
+export const fetchFriendsQueueRecords = async (fbUserId, skip) => {
 	try {
 		const response = await axios.get(
-			`${config.fetchFriendsQueueRecord}?fbUserId=${fbUserId}`,
+			`${config.fetchFriendsQueueRecord}?fbUserId=${fbUserId}&skip=${skip}`,
 			{
 				headers: headers,
 			}

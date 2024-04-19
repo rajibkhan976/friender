@@ -8,18 +8,19 @@ import {
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { countCurrentListsize } from "../../actions/FriendListAction";
 import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
-import { syncMainFriendList } from "../../actions/FriendsAction";
 import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
-import { fetchAllCampaigns } from "../../actions/CampaignsActions";
 import {
+	getFriendsRequestSentInsight,
+	getFriendsQueueRecordsInChunk,
+	getFriendsQueueRecordsFromIndexDB,
 	getFriendsQueueSettings,
-	getFriendsQueueRecords,
 	saveFriendsQueueSettings,
 	resetFriendsQueueSettings,
+	resetIsChunkedDataFetchedFromApi,
 } from "../../actions/FriendsQueueActions";
 import NumberRangeInput from "../../components/common/NumberRangeInput";
 import DropSelector from "../../components/formComponents/DropSelector";
@@ -61,19 +62,31 @@ const FriendsQueue = () => {
 		},
 	];
 
+	const friendRequestSentInsight = useSelector(
+		(state) => state.friendsQueue.friendRequestSentInsight
+	);
 	const friendsQueueSettings = useSelector(
 		(state) => state.friendsQueue.friendsQueueSettings
 	);
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
 	);
+	const friendsQueueRecordsCount = useSelector(
+		(state) => state.friendsQueue.friendsQueueRecordsCount
+	);
 	const isListLoading = useSelector(
 		(state) => state.friendsQueue.isListLoading
+	);
+	const isDataFetchedFromApi = useSelector(
+		(state) => state.friendsQueue.isDataFetchedFromApi
+	);
+	const isChunkedDataFetchedFromApi = useSelector(
+		(state) => state.friendsQueue.isChunkedDataFetchedFromApi
 	);
 
 	const [friendRequestQueueSettings, setFriendRequestQueueSettings] =
 		useState(null);
-	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState("Today");
+	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(0);
 
 	// get Settings data
 	const getSettingsData = async () => {
@@ -88,26 +101,6 @@ const FriendsQueue = () => {
 			}
 		}
 	};
-
-	useEffect(() => {
-		dispatch(resetFriendsQueueSettings());
-		dispatch(fetchAllCampaigns());
-		dispatch(getFriendsQueueSettings());
-		dispatch(getFriendsQueueRecords(fbUserId));
-		getSettingsData();
-	}, []);
-
-	useEffect(() => {
-		if (friendsQueueSettings && friendsQueueSettings.length > 0) {
-			setFriendRequestQueueSettings({
-				fb_user_id: friendsQueueSettings[0]?.fb_user_id,
-				request_limit_value: friendsQueueSettings[0]?.request_limit_value,
-				request_limited: friendsQueueSettings[0]?.request_limited,
-				run_friend_queue: friendsQueueSettings[0]?.run_friend_queue,
-				time_delay: Number(friendsQueueSettings[0]?.time_delay),
-			});
-		}
-	}, [friendsQueueSettings]);
 
 	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
 		// console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);
@@ -152,8 +145,8 @@ const FriendsQueue = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							console.log([filterValue][0], cellValue);
-							if ([filterValue][0] == "NA" || [filterValue][0] == "N/A") {
+							// console.log([filterValue][0], cellValue);
+							if ([filterValue][0] === "NA" || [filterValue][0] === "N/A") {
 								return (
 									cellValue === undefined ||
 									cellValue === "undefined" ||
@@ -296,6 +289,53 @@ const FriendsQueue = () => {
 	);
 
 	useEffect(() => {
+		dispatch(resetFriendsQueueSettings());
+		dispatch(getFriendsQueueSettings());
+		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
+		getSettingsData();
+	}, []);
+
+	const timeout = useRef(null);
+
+	useEffect(() => {
+		if (isDataFetchedFromApi) {
+			timeout.current = setTimeout(
+				() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
+				5000
+			);
+		}
+		return () => clearTimeout(timeout);
+	}, [isDataFetchedFromApi]);
+
+	useEffect(() => {
+		if (
+			Array.isArray(friendsQueueRecords) &&
+			friendsQueueRecords.length < friendsQueueRecordsCount
+		) {
+			dispatch(resetIsChunkedDataFetchedFromApi(false));
+			dispatch(getFriendsQueueRecordsInChunk(friendsQueueRecordsCount));
+		}
+	}, [friendsQueueRecords, friendsQueueRecordsCount]);
+
+	useEffect(() => {
+		if (isChunkedDataFetchedFromApi) {
+			dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
+		}
+	}, [isChunkedDataFetchedFromApi]);
+
+	useEffect(() => {
+		if (friendsQueueSettings && friendsQueueSettings.length > 0) {
+			setFriendRequestQueueSettings({
+				fb_user_id: friendsQueueSettings[0]?.fb_user_id,
+				request_limit_value: friendsQueueSettings[0]?.request_limit_value,
+				request_limited: friendsQueueSettings[0]?.request_limited,
+				run_friend_queue: friendsQueueSettings[0]?.run_friend_queue,
+				time_delay: Number(friendsQueueSettings[0]?.time_delay),
+			});
+		}
+	}, [friendsQueueSettings]);
+
+	useEffect(() => {
 		if (
 			debouncedFriendsQueueSettings &&
 			Object.keys(debouncedFriendsQueueSettings).length > 0
@@ -306,13 +346,17 @@ const FriendsQueue = () => {
 	}, [debouncedFriendsQueueSettings]);
 
 	useEffect(() => {
-		if (Array.isArray(friendsQueueRecords)) {
-			dispatch(countCurrentListsize(friendsQueueRecords.length));
-		}
-	}, [friendsQueueRecords]);
+		dispatch(countCurrentListsize(friendsQueueRecordsCount));
+	}, [friendsQueueRecordsCount]);
 
-	console.log(frndReqSentPeriod);
+	useEffect(() => {
+		dispatch(getFriendsRequestSentInsight(frndReqSentPeriod));
+	}, [frndReqSentPeriod]);
+
+	// console.log(frndReqSentPeriod);
 	console.log(friendsQueueRecords);
+	// console.log(friendsQueueRecordsCount);
+	console.log(friendRequestSentInsight);
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -323,7 +367,7 @@ const FriendsQueue = () => {
 					headerText={"Keyword(s)"}
 					bodyText={
 						<>
-							{console.log("in modal:::", keyWords, keyWords.matchedKeyword)}
+							{/* {console.log("in modal:::", keyWords, keyWords.matchedKeyword)} */}
 							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
 								? keyWords?.matchedKeyword.map((el, i) => (
 										<span
@@ -344,134 +388,130 @@ const FriendsQueue = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{friendsQueueRecords.length > 0 && !loading && !isListLoading ? (
-				<>
-					<div className='friends-queue-action-bar'>
-						<div className='friends-queue-action-bar-item'>
-							<div className='friend-req-sent-filter'>
-								<div className='friend-req-sent-count'>
-									<div className='count'>160</div>
-									<div className='count-descriptor'>Friend request(s) sent</div>
-								</div>
-								<select
-									className='select-friend-req-sent-period'
-									name='pets'
-									id='pet-select'
-									value={frndReqSentPeriod}
-									onChange={(e) => setFrndReqSentPeriod(e.target.value)}
-								>
-									<option value='Today'>Today</option>
-									<option value='This week'>This week</option>
-									<option value='All times'>All times</option>
-								</select>
-							</div>
+			<div className='friends-queue-action-bar'>
+				<div className='friends-queue-action-bar-item'>
+					<div className='friend-req-sent-filter'>
+						<div className='friend-req-sent-count'>
+							<div className='count'>{friendRequestSentInsight}</div>
+							<div className='count-descriptor'>Friend request(s) sent</div>
 						</div>
-						<div className='friends-queue-action-bar-item'>
-							<div className='friend-req-send-limit'>
-								<div className='select-limit'>
-									<div className='req-limit'>Request limit</div>
-									<div className='select-limit-item'>
-										<div
-											className={
-												!friendRequestQueueSettings?.request_limited
-													? "infinite is-active"
-													: "infinite"
-											}
-											onClick={() => {
-												setFriendRequestQueueSettings(
-													(friendRequestQueueSettings) => {
-														return {
-															...friendRequestQueueSettings,
-															request_limited: false,
-														};
-													}
-												);
-											}}
-										>
-											Infinite
-										</div>
-										<div
-											className={
-												friendRequestQueueSettings?.request_limited
-													? "limited is-active"
-													: "limited"
-											}
-											onClick={() => {
-												setFriendRequestQueueSettings(
-													(friendRequestQueueSettings) => {
-														return {
-															...friendRequestQueueSettings,
-															request_limited: true,
-														};
-													}
-												);
-											}}
-										>
-											Limited
-										</div>
-									</div>
-								</div>
-								<NumberRangeInput
-									value={friendRequestQueueSettings?.request_limit_value}
-									handleChange={onChangeFrndReqLimit}
-									setIncrementDecrementVal={handleIncrementDecrementVal}
-									customStyleClass='friend-req-limit-num-input'
-								/>
-							</div>
-						</div>
-						<div className='friends-queue-action-bar-item'>
-							<div className='friend-req-time-delay'>
-								<div className='time-delay'>Time delay</div>
-								<DropSelector
-									selects={timeDelays}
-									value={friendRequestQueueSettings?.time_delay}
-									extraClass='friend-req-time-delay-bar tinyWrap'
-									height='40px'
-									width='inherit'
-									handleChange={(e) => {
+						<select
+							className='select-friend-req-sent-period'
+							name='pets'
+							id='pet-select'
+							value={frndReqSentPeriod}
+							onChange={(e) => setFrndReqSentPeriod(e.target.value)}
+						>
+							<option value='0'>Today</option>
+							<option value='1'>This week</option>
+							<option value='2'>All times</option>
+						</select>
+					</div>
+				</div>
+				<div className='friends-queue-action-bar-item'>
+					<div className='friend-req-send-limit'>
+						<div className='select-limit'>
+							<div className='req-limit'>Request limit</div>
+							<div className='select-limit-item'>
+								<div
+									className={
+										!friendRequestQueueSettings?.request_limited
+											? "infinite is-active"
+											: "infinite"
+									}
+									onClick={() => {
 										setFriendRequestQueueSettings(
 											(friendRequestQueueSettings) => {
 												return {
 													...friendRequestQueueSettings,
-													time_delay: e.target.value,
+													request_limited: false,
 												};
 											}
 										);
 									}}
-								/>
-							</div>
-						</div>
-						<div className='friends-queue-action-bar-item'>
-							<div className='friend-req-run-queue'>
-								<div className='run-friend-queue'>
-									<div className='run'>Run friend queue</div>
-									<Switch
-										checked={friendRequestQueueSettings?.run_friend_queue}
-										handleChange={() => {
-											setFriendRequestQueueSettings(
-												(friendRequestQueueSettings) => {
-													return {
-														...friendRequestQueueSettings,
-														run_friend_queue:
-															!friendRequestQueueSettings.run_friend_queue,
-													};
-												}
-											);
-										}}
-										smallVariant
-									/>
+								>
+									Infinite
+								</div>
+								<div
+									className={
+										friendRequestQueueSettings?.request_limited
+											? "limited is-active"
+											: "limited"
+									}
+									onClick={() => {
+										setFriendRequestQueueSettings(
+											(friendRequestQueueSettings) => {
+												return {
+													...friendRequestQueueSettings,
+													request_limited: true,
+												};
+											}
+										);
+									}}
+								>
+									Limited
 								</div>
 							</div>
 						</div>
+						<NumberRangeInput
+							value={friendRequestQueueSettings?.request_limit_value ?? 1}
+							handleChange={onChangeFrndReqLimit}
+							setIncrementDecrementVal={handleIncrementDecrementVal}
+							customStyleClass='friend-req-limit-num-input'
+						/>
 					</div>
-					<Listing
-						friendsData={friendsQueueRecords}
-						friendsListingRef={friendsListinRef}
-						getFilterNum={setListFilteredCount}
-						reset={isReset}
-						setReset={setIsReset}
-					/>
-				</>
+				</div>
+				<div className='friends-queue-action-bar-item'>
+					<div className='friend-req-time-delay'>
+						<div className='time-delay'>Time delay</div>
+						<DropSelector
+							selects={timeDelays}
+							value={friendRequestQueueSettings?.time_delay}
+							extraClass='friend-req-time-delay-bar tinyWrap'
+							height='40px'
+							width='inherit'
+							handleChange={(e) => {
+								setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+									return {
+										...friendRequestQueueSettings,
+										time_delay: e.target.value,
+									};
+								});
+							}}
+						/>
+					</div>
+				</div>
+				<div className='friends-queue-action-bar-item'>
+					<div className='friend-req-run-queue'>
+						<div className='run-friend-queue'>
+							<div className='run'>Run friend queue</div>
+							<Switch
+								checked={friendRequestQueueSettings?.run_friend_queue}
+								handleChange={() => {
+									setFriendRequestQueueSettings(
+										(friendRequestQueueSettings) => {
+											return {
+												...friendRequestQueueSettings,
+												run_friend_queue:
+													!friendRequestQueueSettings.run_friend_queue,
+											};
+										}
+									);
+								}}
+								smallVariant
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+			{friendsQueueRecords.length > 0 && !loading && !isListLoading ? (
+				<Listing
+					friendsData={friendsQueueRecords}
+					friendsListingRef={friendsListinRef}
+					getFilterNum={setListFilteredCount}
+					reset={isReset}
+					setReset={setIsReset}
+				/>
 			) : loading || isListLoading ? (
 				<ListingLoader />
 			) : (
