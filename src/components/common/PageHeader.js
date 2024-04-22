@@ -1387,6 +1387,14 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	// console.log(accessOptions);
+	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
+		useState(false);
+	const [keyword, setKeyword] = useState("");
+	const [selectedKeyword, setSelectedKeyword] = useState([]);
+	const [savedKeyword, setSavedKeyword] = useState([]);
+	const [shouldModify, setShouldModify] = useState(false);
+
+	const timeout = useRef(null);
 
 	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
 	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
@@ -1428,35 +1436,6 @@ function PageHeader({ headerText = "" }) {
 			setUsingSelectOption2(false);
 		}
 	}, [quickMsg2]);
-
-	const getOldMessageGroupId = () => {
-		return localStorage.getItem("old_message_group_id_campaign")
-			? localStorage.getItem("old_message_group_id_campaign")
-			: "";
-	};
-
-	// CHECK MESSAGE GROUP SAVING OLDER GROUP..
-	const setOldMessageGroupId = (messageGroupId) => {
-		localStorage.setItem("old_message_group_id_campaign", messageGroupId);
-	};
-
-	// FETCHING THE GROUP BY ID..
-	const fetchGroupMessage = (groupId) => {
-		// Store as for Older GroupID..
-		setOldMessageGroupId(groupId);
-
-		dispatch(getGroupById(groupId))
-			.unwrap()
-			.then((res) => {
-				const data = res?.data;
-
-				if (data.length) {
-					setGroupMsgSelect1(data[0]);
-					setGroupMsgSelect2(data[0]);
-					localStorage.setItem("fr_using_campaigns_message", true);
-				}
-			});
-	};
 
 	// HANDLE THE DIFFERENT SELECT OPTION ON ONE COMPONENT AS KEEP ONLY ONE AT A TIME..
 	useEffect(() => {
@@ -1519,8 +1498,19 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const onDrop = useCallback((acceptedFiles) => {
-		setSelectedCsvFile(acceptedFiles);
-		setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		if (acceptedFiles && acceptedFiles[0].size <= 1000000) {
+			setSelectedCsvFile(acceptedFiles);
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		}
+
+		if (acceptedFiles && acceptedFiles[0].size > 1000000) {
+			Alertbox(
+				`The file you are attempting to upload exceeds 1MB in size.`,
+				"error",
+				1000,
+				"bottom-right"
+			);
+		}
 	}, []);
 
 	const onError = useCallback((Error) => {
@@ -1536,7 +1526,21 @@ function PageHeader({ headerText = "" }) {
 				taskName: taskName,
 				fb_user_id: defaultFbId,
 			};
-			dispatch(uploadFriendsQueueRecordsForReview(data));
+			dispatch(resetUploadedFriendsQueueCsvReport(null));
+			dispatch(uploadFriendsQueueRecordsForReview(data))
+				.unwrap()
+				.then((response) => response)
+				.catch((error) => {
+					if (error) {
+						console.log(error);
+						Alertbox(
+							`Failed to initiate the review of the CSV file.`,
+							"error",
+							1000,
+							"bottom-right"
+						);
+					}
+				});
 		}
 		setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 	};
@@ -1547,9 +1551,9 @@ function PageHeader({ headerText = "" }) {
 		useDropzone({
 			onDrop,
 			onError,
-			accept: { "text/csv": [".csv", ".xlsx"] },
+			accept: { "text/csv": [".csv"] },
 			multiple: false,
-			maxSize: 1000000,
+			// maxSize: 1000000,
 		});
 
 	const style = useMemo(
@@ -1562,7 +1566,7 @@ function PageHeader({ headerText = "" }) {
 		[isFocused, isDragAccept, isDragReject]
 	);
 
-	const [keywordSuggestions, setKeywordSuggestions] = useState([
+	const keywordSuggestions = [
 		"Front-end Developer",
 		"Marketer",
 		"AI & UX",
@@ -1575,14 +1579,7 @@ function PageHeader({ headerText = "" }) {
 		"Design",
 		"Manager",
 		"Startup",
-	]);
-
-	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
-		useState(false);
-	const [keyword, setKeyword] = useState("");
-	const [selectedKeyword, setSelectedKeyword] = useState([]);
-	const [savedKeyword, setSavedKeyword] = useState([]);
-	const [shouldModify, setShouldModify] = useState(false);
+	];
 
 	const handleSaveKeywords = () => {
 		if (keyword && !savedKeyword.includes(keyword.trim())) {
@@ -1619,7 +1616,7 @@ function PageHeader({ headerText = "" }) {
 	const handleImportFriendsQueueCsv = () => {
 		if (uploadedFriendsQueueCsvReport) {
 			const data = {
-				taskName: uploadedFriendsQueueCsvReport?.result?.taskName,
+				taskId: uploadedFriendsQueueCsvReport?.result?.taskId,
 				fb_user_id: defaultFbId,
 				keywords: savedKeyword,
 				friendRequestSent: {
@@ -1636,11 +1633,32 @@ function PageHeader({ headerText = "" }) {
 
 			dispatch(resetUploadedFriendsQueueRecordResponse(null));
 
-			dispatch(uploadFriendsQueueRecordsForSaving(data));
+			dispatch(uploadFriendsQueueRecordsForSaving(data))
+				.unwrap()
+				.then((response) => {
+					if (response) {
+						console.log(response);
+						Alertbox(
+							`Initiating the upload of the CSV file.`,
+							"success",
+							1000,
+							"bottom-right"
+						);
+					}
+				})
+				.catch((error) => {
+					if (error) {
+						console.log(error);
+						Alertbox(
+							`Failed to initiate the upload of the CSV file.`,
+							"error",
+							1000,
+							"bottom-right"
+						);
+					}
+				});
 		}
 	};
-
-	const timeout = useRef(null);
 
 	useEffect(() => {
 		if (uploadedFriendsQueueRecordResponse) {
@@ -1650,7 +1668,7 @@ function PageHeader({ headerText = "" }) {
 				dispatch(resetUploadedFriendsQueueCsvReport(null));
 				dispatch(resetUploadedFriendsQueueRecordResponse(null));
 				dispatch(getFriendsQueueRecords());
-			}, 4500);
+			}, 4000);
 		}
 
 		return () => clearTimeout(timeout);
@@ -1672,7 +1690,6 @@ function PageHeader({ headerText = "" }) {
 		if (url) {
 			const errorListLink = document.createElement("a");
 			errorListLink.setAttribute("href", url);
-			// errorListLink.setAttribute("download", "sample_csv.csv");
 			errorListLink.click();
 		}
 	};

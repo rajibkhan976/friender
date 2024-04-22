@@ -831,12 +831,37 @@ export const KeywordRenderer = memo((params) => {
 	);
 });
 
-export const MessageGroupRenderer = memo((params) => {
+export const MessageGroupRequestAcceptedRenderer = memo((params) => {
 	const groupArray = useSelector((state) => state.message.groupArray);
-	const { message_group_request_sent, message_group_request_accepted } =
-		params.data;
-	console.log(groupArray);
-	// console.log('params?.value', params?.value);
+	const { message_group_request_accepted } = params.data;
+	// console.log(groupArray);
+	// console.log("params?.value", message_group_request_accepted);
+	return (
+		<>
+			{params.data &&
+			message_group_request_accepted &&
+			message_group_request_accepted.groupId ? (
+				<>
+					{
+						groupArray?.find(
+							(item) => item._id === message_group_request_accepted.groupId
+						)?.group_name
+					}
+				</>
+			) : message_group_request_accepted.quickMessage ? (
+				<>{message_group_request_accepted.quickMessage}</>
+			) : (
+				<span className='muted-text'>N/A</span>
+			)}
+		</>
+	);
+});
+
+export const MessageGroupRequestSentRenderer = memo((params) => {
+	const groupArray = useSelector((state) => state.message.groupArray);
+	const { message_group_request_sent } = params.data;
+	// console.log(groupArray);
+	// console.log("params?.value", message_group_request_sent);
 	return (
 		<>
 			{params.data &&
@@ -849,23 +874,8 @@ export const MessageGroupRenderer = memo((params) => {
 						)?.group_name
 					}
 				</>
-			) : message_group_request_sent?.quickMessage ? (
-				<>{message_group_request_sent?.quickMessage}</>
-			) : (
-				<span className='muted-text'>N/A</span>
-			)}
-			{params.data &&
-			message_group_request_accepted &&
-			message_group_request_accepted.groupId ? (
-				<>
-					{
-						groupArray?.find(
-							(item) => item._id === message_group_request_accepted.groupId
-						)?.group_name
-					}
-				</>
-			) : message_group_request_accepted?.quickMessage ? (
-				<>{message_group_request_accepted?.quickMessage}</>
+			) : message_group_request_sent.quickMessage ? (
+				<>{message_group_request_sent.quickMessage}</>
 			) : (
 				<span className='muted-text'>N/A</span>
 			)}

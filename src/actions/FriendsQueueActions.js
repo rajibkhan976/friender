@@ -11,12 +11,12 @@ import {
 import extensionMethods from "../configuration/extensionAccesories";
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import { clientDB } from "../app/db";
-import { friendsQueueRecords } from "../object";
 
 const initialState = {
 	friendRequestSentInsight: null,
 	friendsQueueSettings: null,
 	friendsQueueRecords: [],
+	friendsQueueRecordsLimit: 0,
 	friendsQueueRecordsCount: 0,
 	isCsvSubmittedForReview: false,
 	isChunkedDataFetchedFromApi: false,
@@ -64,10 +64,10 @@ export const saveFriendsQueueRecordsInIndexDb = async (
 
 export const getFriendsQueueRecordsInChunk = createAsyncThunk(
 	"friendsQueue/getFriendsQueueRecordsInChunk",
-	async (totalRecordCount) => {
+	async (totalRecordCount, friendsQueueRecordsLimit) => {
 		const fbUserId = localStorage.getItem("fr_default_fb");
 		const compiledChunkData = [];
-		let incrementBy = 1000;
+		let incrementBy = friendsQueueRecordsLimit;
 		let response = null;
 
 		for (let i = 0; i < totalRecordCount; i += incrementBy) {
@@ -330,11 +330,13 @@ export const friendsQueueSlice = createSlice({
 		[getFriendsQueueRecordsInChunk.rejected]: (state) => {
 			state.isChunkedDataFetchedFromApi = false;
 		},
-		[getFriendsQueueRecords.pending]: (state) => {
+		[getFriendsQueueRecords.pending]: (state, action) => {
 			state.isDataFetchedFromApi = false;
 		},
 		[getFriendsQueueRecords.fulfilled]: (state, action) => {
+			const { limit_used } = action.payload;
 			state.isDataFetchedFromApi = true;
+			state.friendsQueueRecordsLimit = limit_used;
 		},
 		[getFriendsQueueRecords.rejected]: (state) => {
 			state.isDataFetchedFromApi = false;
@@ -436,14 +438,14 @@ export const friendsQueueSlice = createSlice({
 			state.isCsvSubmittedForReview = false;
 		},
 		[uploadFriendsQueueRecordsForSaving.pending]: (state) => {
-			state.isLoading = true;
+			state.isListLoading = true;
 		},
 		[uploadFriendsQueueRecordsForSaving.fulfilled]: (state, action) => {
-			state.isLoading = false;
+			state.isListLoading = true;
 			state.uploadedFriendsQueueRecordResponse = action.payload;
 		},
 		[uploadFriendsQueueRecordsForSaving.rejected]: (state) => {
-			state.isLoading = false;
+			state.isListLoading = false;
 		},
 	},
 });

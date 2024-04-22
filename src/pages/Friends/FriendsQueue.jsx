@@ -2,7 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Listing from "../../components/common/Listing";
 import {
 	KeywordRenderer,
-	MessageGroupRenderer,
+	MessageGroupRequestAcceptedRenderer,
+	MessageGroupRequestSentRenderer,
 	SourceRendererPending,
 	UnlinkedNameCellWithOptionsRenderer,
 } from "../../components/listing/FriendListColumns";
@@ -74,6 +75,9 @@ const FriendsQueue = () => {
 	const friendsQueueRecordsCount = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsCount
 	);
+	const friendsQueueRecordsLimit = useSelector(
+		(state) => state.friendsQueue.friendsQueueRecordsLimit
+	);
 	const isListLoading = useSelector(
 		(state) => state.friendsQueue.isListLoading
 	);
@@ -130,83 +134,76 @@ const FriendsQueue = () => {
 		{
 			field: "keywords",
 			headerName: "Keyword(s)",
-			cellRendererParams: {
-				setKeyWords,
-				setModalOpen,
-			},
+			// cellRendererParams: {
+			// 	setKeyWords,
+			// 	setModalOpen,
+			// },
 			sortable: true,
-			comparator: someComparator,
+			// comparator: someComparator,
 			cellRenderer: KeywordRenderer,
-			filter: "agTextColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				filterOptions: [
-					{
-						displayKey: "contains",
-						displayName: "Contains",
-						predicate: ([filterValue], cellValue) => {
-							// console.log([filterValue][0], cellValue);
-							if ([filterValue][0] === "NA" || [filterValue][0] === "N/A") {
-								return (
-									cellValue === undefined ||
-									cellValue === "undefined" ||
-									!cellValue ||
-									cellValue === null ||
-									cellValue === "NA" ||
-									cellValue === "N/A"
-								);
-							} else {
-								return cellValue != null && cellValue?.includes(filterValue);
-							}
-						},
-					},
-				],
-				valueGetter: (params) => {
-					return params?.data?.matchedKeyword;
-				},
-				textCustomComparator: function (filter, value, filterText) {
-					const matchedKeywords = value.split(", "); // Split matched keywords by comma
+			// filter: "agTextColumnFilter",
+			// filterParams: {
+			// 	buttons: ["apply", "reset"],
+			// 	filterOptions: [
+			// 		{
+			// 			displayKey: "contains",
+			// 			displayName: "Contains",
+			// 			predicate: ([filterValue], cellValue) => {
+			// 				// console.log([filterValue][0], cellValue);
+			// 				if ([filterValue][0] === "NA" || [filterValue][0] === "N/A") {
+			// 					return (
+			// 						cellValue === undefined ||
+			// 						cellValue === "undefined" ||
+			// 						!cellValue ||
+			// 						cellValue === null ||
+			// 						cellValue === "NA" ||
+			// 						cellValue === "N/A"
+			// 					);
+			// 				} else {
+			// 					return cellValue != null && cellValue?.includes(filterValue);
+			// 				}
+			// 			},
+			// 		},
+			// 	],
+			// 	valueGetter: (params) => {
+			// 		return params?.data?.matchedKeyword;
+			// 	},
+			// 	textCustomComparator: function (filter, value, filterText) {
+			// 		const matchedKeywords = value.split(", "); // Split matched keywords by comma
 
-					if (filter === "equals") {
-						// Exact match
-						return matchedKeywords.includes(filterText);
-					} else {
-						// Partial match
-						return matchedKeywords.some((keyword) =>
-							keyword.includes(filterText)
-						);
-					}
-				},
-			},
+			// 		if (filter === "equals") {
+			// 			// Exact match
+			// 			return matchedKeywords.includes(filterText);
+			// 		} else {
+			// 			// Partial match
+			// 			return matchedKeywords.some((keyword) =>
+			// 				keyword.includes(filterText)
+			// 			);
+			// 		}
+			// 	},
+			// },
 		},
 		{
 			field: "message_group_request_sent",
 			headerName: "Message group: when friend request is sent",
 			sortable: true,
-			cellRenderer: MessageGroupRenderer,
+			cellRenderer: MessageGroupRequestSentRenderer,
 		},
 		{
 			field: "message_group_request_accepted",
 			headerName: "Message group: when friend request is accepted",
 			sortable: true,
-			cellRenderer: MessageGroupRenderer,
+			cellRenderer: MessageGroupRequestAcceptedRenderer,
 		},
 		{
 			field: "task_name",
 			headerName: "Source",
-			filter: "agTextColumnFilter",
 			headerTooltip: "Friends source",
 			tooltipComponent: CustomHeaderTooltip,
 			headerClass: "header-query-tooltip",
 			cellRenderer: SourceRendererPending,
 			// lockPosition: "right",
 			minWidth: 185,
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-			},
 		},
 	];
 
@@ -301,7 +298,7 @@ const FriendsQueue = () => {
 		if (isDataFetchedFromApi) {
 			timeout.current = setTimeout(
 				() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
-				5000
+				4500
 			);
 		}
 		return () => clearTimeout(timeout);
@@ -313,9 +310,14 @@ const FriendsQueue = () => {
 			friendsQueueRecords.length < friendsQueueRecordsCount
 		) {
 			dispatch(resetIsChunkedDataFetchedFromApi(false));
-			dispatch(getFriendsQueueRecordsInChunk(friendsQueueRecordsCount));
+			dispatch(
+				getFriendsQueueRecordsInChunk(
+					friendsQueueRecordsCount,
+					friendsQueueRecordsLimit
+				)
+			);
 		}
-	}, [friendsQueueRecords, friendsQueueRecordsCount]);
+	}, [friendsQueueRecords, friendsQueueRecordsCount, friendsQueueRecordsLimit]);
 
 	useEffect(() => {
 		if (isChunkedDataFetchedFromApi) {
@@ -516,17 +518,17 @@ const FriendsQueue = () => {
 				<ListingLoader />
 			) : (
 				<NoDataFound
-					customText='Whoops!'
+					customText=''
 					additionalText={
 						<>
 							Your friend queue is <br />
 							currently empty
 						</>
 					}
-					interactionText='Clear filter'
-					isInteraction={() => {
-						setIsReset(!isReset);
-					}}
+					// interactionText='Clear filter'
+					// isInteraction={() => {
+					// 	setIsReset(!isReset);
+					// }}
 				/>
 			)}
 		</div>
