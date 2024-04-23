@@ -10,20 +10,35 @@ const Tooltip = ({direction='bottom', textContent='Hello World', type="query",po
         //console.log("textContent");
     }, [textContent])
     return (
-        <span className={'fr-tooltip fr-tooltip-'+direction+` fr-tooltip-${type}`}>
-            <figure
-                className="fr-tooltip-icon"
-            >
-                {type === 'query'? 
-                  <QueryIcon  color={iconColor} background={iconbackground}/>
-                : <InfoIcon color={iconColor} />
-                }
-            </figure>
-            <span className="fr-tooltip-content" style={position ? {top:position.y-85,left:position.x-109} : customWidth ? {width: `${customWidth}px`} : {}}>
-                {textContent}
-            </span>
-        </span>
-    );
+			<span
+				className={"fr-tooltip fr-tooltip-" + direction + ` fr-tooltip-${type}`}
+			>
+				<figure className='fr-tooltip-icon'>
+					{type === "query" ? (
+						<QueryIcon
+							color={iconColor}
+							background={iconbackground}
+						/>
+					) : typeof type === "object" ? (
+						type
+					) : (
+						<InfoIcon color={iconColor} />
+					)}
+				</figure>
+				<span
+					className='fr-tooltip-content'
+					style={
+						position
+							? { top: position.y - 85, left: position.x - 109 }
+							: customWidth
+							? { width: `${customWidth}px` }
+							: {}
+					}
+				>
+					{textContent}
+				</span>
+			</span>
+		);
 };
 
 export default memo(Tooltip);

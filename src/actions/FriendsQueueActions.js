@@ -17,6 +17,7 @@ const initialState = {
 	friendsQueueSettings: null,
 	friendsQueueRecords: [],
 	friendsQueueRecordsLimit: 0,
+	friendsQueueRecordsFirstChunkLength: 0,
 	friendsQueueRecordsCount: 0,
 	isCsvSubmittedForReview: false,
 	isChunkedDataFetchedFromApi: false,
@@ -310,6 +311,12 @@ export const friendsQueueSlice = createSlice({
 		resetFriendsQueueSettings: (state, action) => {
 			state.friendsQueueSettings = action.payload;
 		},
+		resetFriendsQueueRecordsMetadata: (state, action) => {
+			const { firstChunkLength, limitUsed, totalCount } = action.payload;
+			state.friendsQueueRecordsFirstChunkLength = firstChunkLength;
+			state.friendsQueueRecordsLimit = limitUsed;
+			state.friendsQueueRecordsCount = totalCount;
+		},
 		resetSavedFriendsQueueSettingsResponse: (state, action) => {
 			state.savedFriendsQueueSettingsResponse = action.payload;
 		},
@@ -321,6 +328,19 @@ export const friendsQueueSlice = createSlice({
 		},
 	},
 	extraReducers: {
+		[getFriendsQueueRecords.pending]: (state, action) => {
+			state.isDataFetchedFromApi = false;
+		},
+		[getFriendsQueueRecords.fulfilled]: (state, action) => {
+			const { data, limit_used, totalNumberOfRecords } = action.payload;
+			state.isDataFetchedFromApi = true;
+			state.friendsQueueRecordsFirstChunkLength = data.length;
+			state.friendsQueueRecordsLimit = limit_used;
+			state.friendsQueueRecordsCount = totalNumberOfRecords;
+		},
+		[getFriendsQueueRecords.rejected]: (state) => {
+			state.isDataFetchedFromApi = false;
+		},
 		[getFriendsQueueRecordsInChunk.pending]: (state) => {
 			state.isChunkedDataFetchedFromApi = false;
 		},
@@ -330,25 +350,13 @@ export const friendsQueueSlice = createSlice({
 		[getFriendsQueueRecordsInChunk.rejected]: (state) => {
 			state.isChunkedDataFetchedFromApi = false;
 		},
-		[getFriendsQueueRecords.pending]: (state, action) => {
-			state.isDataFetchedFromApi = false;
-		},
-		[getFriendsQueueRecords.fulfilled]: (state, action) => {
-			const { limit_used } = action.payload;
-			state.isDataFetchedFromApi = true;
-			state.friendsQueueRecordsLimit = limit_used;
-		},
-		[getFriendsQueueRecords.rejected]: (state) => {
-			state.isDataFetchedFromApi = false;
-		},
 		[getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
 			state.isListLoading = true;
 		},
 		[getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData, recordCount } = action.payload;
+			const { friendsQueueData } = action.payload;
 			state.isListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
-			state.friendsQueueRecordsCount = recordCount;
 		},
 		[getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
 			state.isListLoading = false;
@@ -455,6 +463,7 @@ export const {
 	resetIsChunkedDataFetchedFromApi,
 	resetIsDataFetchedFromApi,
 	resetFriendsQueueSettings,
+	resetFriendsQueueRecordsMetadata,
 	resetSavedFriendsQueueSettingsResponse,
 	resetUploadedFriendsQueueCsvReport,
 	resetUploadedFriendsQueueRecordResponse,

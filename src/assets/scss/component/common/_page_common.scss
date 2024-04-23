@@ -909,6 +909,16 @@
           border: 1px solid rgba(49, 48, 55, 1);
           border-radius: 4px;
 
+          .block-title {
+            display: flex;
+            justify-content: space-between;
+
+            .block-txt {
+              display: inline-block;
+              margin-right: 8px;
+            }
+          }
+
           .total {
             color: rgba(231, 230, 255, 1);
           }

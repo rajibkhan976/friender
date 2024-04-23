@@ -848,7 +848,9 @@ export const MessageGroupRequestAcceptedRenderer = memo((params) => {
 						)?.group_name
 					}
 				</>
-			) : message_group_request_accepted.quickMessage ? (
+			) : params.data &&
+			  message_group_request_accepted &&
+			  message_group_request_accepted.quickMessage ? (
 				<>{message_group_request_accepted.quickMessage}</>
 			) : (
 				<span className='muted-text'>N/A</span>
@@ -874,7 +876,9 @@ export const MessageGroupRequestSentRenderer = memo((params) => {
 						)?.group_name
 					}
 				</>
-			) : message_group_request_sent.quickMessage ? (
+			) : params.data &&
+			  message_group_request_sent &&
+			  message_group_request_sent.quickMessage ? (
 				<>{message_group_request_sent.quickMessage}</>
 			) : (
 				<span className='muted-text'>N/A</span>

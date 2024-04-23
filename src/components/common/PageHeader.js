@@ -62,6 +62,7 @@ import {
 	reorderFriendsQueueRecordsInIndexDB,
 	reorderFriendsQueueRecordsToTop,
 	resetUploadedFriendsQueueCsvReport,
+	resetFriendsQueueRecordsMetadata,
 	resetUploadedFriendsQueueRecordResponse,
 	uploadFriendsQueueRecordsForReview,
 	uploadFriendsQueueRecordsForSaving,
@@ -1462,6 +1463,13 @@ function PageHeader({ headerText = "" }) {
 
 	useEffect(() => {
 		// Fetching All Group Messages.
+		dispatch(
+			resetFriendsQueueRecordsMetadata({
+				firstChunkLength: 0,
+				limitUsed: 0,
+				totalCount: 0,
+			})
+		);
 		dispatch(getFriendsQueueRecords());
 		dispatch(fetchGroups())
 			.unwrap()
@@ -1615,20 +1623,43 @@ function PageHeader({ headerText = "" }) {
 
 	const handleImportFriendsQueueCsv = () => {
 		if (uploadedFriendsQueueCsvReport) {
+			let friendRequestSent = null;
+			let friendRequestAccepted = null;
+
+			if (groupMsgSelect1 && groupMsgSelect1._id) {
+				friendRequestSent = {
+					groupId: groupMsgSelect1._id,
+					quickMessage: "",
+				};
+			}
+
+			if (quickMsg1 && quickMsg1.text) {
+				friendRequestSent = {
+					groupId: "",
+					quickMessage: quickMsg1.text,
+				};
+			}
+
+			if (groupMsgSelect2 && groupMsgSelect2._id) {
+				friendRequestAccepted = {
+					groupId: groupMsgSelect2._id,
+					quickMessage: "",
+				};
+			}
+
+			if (quickMsg2 && quickMsg2.text) {
+				friendRequestAccepted = {
+					groupId: "",
+					quickMessage: quickMsg2.text,
+				};
+			}
+
 			const data = {
 				taskId: uploadedFriendsQueueCsvReport?.result?.taskId,
 				fb_user_id: defaultFbId,
 				keywords: savedKeyword,
-				friendRequestSent: {
-					groupId:
-						groupMsgSelect1 && groupMsgSelect1._id ? groupMsgSelect1._id : "",
-					quickMessage: quickMsg1 && quickMsg1.text ? quickMsg1.text : "",
-				},
-				friendRequestAccepted: {
-					groupId:
-						groupMsgSelect2 && groupMsgSelect2._id ? groupMsgSelect2._id : "",
-					quickMessage: quickMsg2 && quickMsg2.text ? quickMsg2.text : "",
-				},
+				friendRequestSent: friendRequestSent,
+				friendRequestAccepted: friendRequestAccepted,
 			};
 
 			dispatch(resetUploadedFriendsQueueRecordResponse(null));
@@ -1667,8 +1698,15 @@ function PageHeader({ headerText = "" }) {
 				setFriendsQueueCsvUploadStep(0);
 				dispatch(resetUploadedFriendsQueueCsvReport(null));
 				dispatch(resetUploadedFriendsQueueRecordResponse(null));
+				dispatch(
+					resetFriendsQueueRecordsMetadata({
+						firstChunkLength: 0,
+						limitUsed: 0,
+						totalCount: 0,
+					})
+				);
 				dispatch(getFriendsQueueRecords());
-			}, 4000);
+			}, 3000);
 		}
 
 		return () => clearTimeout(timeout);
@@ -1997,7 +2035,15 @@ function PageHeader({ headerText = "" }) {
 
 									<div className='uploaded-csv-report'>
 										<div className='report-block'>
-											<div className='block-title'>Total records</div>
+											<div className='block-title'>
+												<span className='block-txt'>Total records</span>
+												<Tooltip
+													type='query'
+													customWidth={200}
+													iconColor={"#313037"}
+													textContent='Total no. of records found in the uploaded sheet'
+												/>
+											</div>
 											<div className='block-stat total'>
 												{
 													uploadedFriendsQueueCsvReport?.result
@@ -2006,7 +2052,15 @@ function PageHeader({ headerText = "" }) {
 											</div>
 										</div>
 										<div className='report-block'>
-											<div className='block-title'>Records added</div>
+											<div className='block-title'>
+												<span className='block-txt'>Records added</span>
+												<Tooltip
+													type='query'
+													customWidth={200}
+													iconColor={"#313037"}
+													textContent='Total no. of records added from the uploaded sheet'
+												/>
+											</div>
 											<div className='block-stat added'>
 												{
 													uploadedFriendsQueueCsvReport?.result
@@ -2017,7 +2071,15 @@ function PageHeader({ headerText = "" }) {
 									</div>
 									<div className='uploaded-csv-report'>
 										<div className='report-block'>
-											<div className='block-title'>Records skipped</div>
+											<div className='block-title'>
+												<span className='block-txt'>Records skipped</span>
+												<Tooltip
+													type='query'
+													customWidth={200}
+													iconColor={"#313037"}
+													textContent='Users skipped as they are already present in the friend queue.'
+												/>
+											</div>
 											<div className='block-stat skipped'>
 												{
 													uploadedFriendsQueueCsvReport?.result
@@ -2026,7 +2088,15 @@ function PageHeader({ headerText = "" }) {
 											</div>
 										</div>
 										<div className='report-block'>
-											<div className='block-title'>Number of errors</div>
+											<div className='block-title'>
+												<span className='block-txt'>Number of errors</span>
+												<Tooltip
+													type='query'
+													customWidth={200}
+													iconColor={"#313037"}
+													textContent='Total number of errors found. Download the error list file to review and address the issues.'
+												/>
+											</div>
 											<div className='block-stat errors'>
 												{uploadedFriendsQueueCsvReport?.result?.numberOfErrors}
 											</div>
@@ -2118,7 +2188,7 @@ function PageHeader({ headerText = "" }) {
 													<span className='sub-txt'>Choose file</span> to upload
 												</p>
 												<span className='import-condition-one'>
-													Supported formats: csv & xlsx
+													Supported formats: csv
 												</span>
 												<span className='import-condition-two'>
 													(Maximum upload size is 1 MB)
@@ -2221,10 +2291,13 @@ function PageHeader({ headerText = "" }) {
 						</div>
 					)}
 					{headerOptions.exportCSV && (
-						<ExportCSVIcon
-							className='export-csv-icon'
+						<div
+							className='export-csv-action'
 							onClick={handleShowCsvUploadModal}
-						/>
+						>
+							<ExportCSVIcon className='export-csv-icon' />
+							<div className='export-csv-tooltip'>CSV upload</div>
+						</div>
 					)}
 
 					{headerOptions.searchHeader && (

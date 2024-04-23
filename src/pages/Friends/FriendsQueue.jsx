@@ -42,6 +42,11 @@ const FriendsQueue = () => {
 	const fbUserId = localStorage.getItem("fr_default_fb");
 	const timeDelays = [
 		{
+			value: 30,
+			label: "30 sec",
+			selected: true,
+		},
+		{
 			value: 3,
 			label: "3 min",
 			selected: true,
@@ -77,6 +82,9 @@ const FriendsQueue = () => {
 	);
 	const friendsQueueRecordsLimit = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsLimit
+	);
+	const friendsQueueRecordsFirstChunkLength = useSelector(
+		(state) => state.friendsQueue.friendsQueueRecordsFirstChunkLength
 	);
 	const isListLoading = useSelector(
 		(state) => state.friendsQueue.isListLoading
@@ -298,17 +306,14 @@ const FriendsQueue = () => {
 		if (isDataFetchedFromApi) {
 			timeout.current = setTimeout(
 				() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
-				4500
+				3500
 			);
 		}
 		return () => clearTimeout(timeout);
 	}, [isDataFetchedFromApi]);
 
 	useEffect(() => {
-		if (
-			Array.isArray(friendsQueueRecords) &&
-			friendsQueueRecords.length < friendsQueueRecordsCount
-		) {
+		if (friendsQueueRecordsFirstChunkLength < friendsQueueRecordsCount) {
 			dispatch(resetIsChunkedDataFetchedFromApi(false));
 			dispatch(
 				getFriendsQueueRecordsInChunk(
@@ -317,7 +322,11 @@ const FriendsQueue = () => {
 				)
 			);
 		}
-	}, [friendsQueueRecords, friendsQueueRecordsCount, friendsQueueRecordsLimit]);
+	}, [
+		friendsQueueRecordsFirstChunkLength,
+		friendsQueueRecordsCount,
+		friendsQueueRecordsLimit,
+	]);
 
 	useEffect(() => {
 		if (isChunkedDataFetchedFromApi) {
@@ -460,6 +469,7 @@ const FriendsQueue = () => {
 							handleChange={onChangeFrndReqLimit}
 							setIncrementDecrementVal={handleIncrementDecrementVal}
 							customStyleClass='friend-req-limit-num-input'
+							disabled={!friendRequestQueueSettings?.request_limited}
 						/>
 					</div>
 				</div>
