@@ -12,7 +12,7 @@ const NumberRangeInput = ({
 	return (
 		<div className={`input-num ${customStyleClass ? customStyleClass : ""}`}>
 			<input
-				type='number'
+				type={value === "∞" ? "text" : "number"}
 				className='setting-input'
 				value={value}
 				onChange={handleChange}

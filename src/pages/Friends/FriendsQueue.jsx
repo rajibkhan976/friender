@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import Listing from "../../components/common/Listing";
 import {
-	KeywordRenderer,
+	FriendsQueueRecordsKeywordRenderer,
 	MessageGroupRequestAcceptedRenderer,
 	MessageGroupRequestSentRenderer,
 	SourceRendererPending,
-	UnlinkedNameCellWithOptionsRenderer,
+	FriendQueueRecordsNameRenderer,
 } from "../../components/listing/FriendListColumns";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
@@ -16,9 +16,9 @@ import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
 import {
 	getFriendsRequestSentInsight,
+	getFriendsQueueSettings,
 	getFriendsQueueRecordsInChunk,
 	getFriendsQueueRecordsFromIndexDB,
-	getFriendsQueueSettings,
 	saveFriendsQueueSettings,
 	resetFriendsQueueSettings,
 	resetIsChunkedDataFetchedFromApi,
@@ -41,11 +41,6 @@ const FriendsQueue = () => {
 
 	const fbUserId = localStorage.getItem("fr_default_fb");
 	const timeDelays = [
-		{
-			value: 30,
-			label: "30 sec",
-			selected: true,
-		},
 		{
 			value: 3,
 			label: "3 min",
@@ -99,6 +94,7 @@ const FriendsQueue = () => {
 	const [friendRequestQueueSettings, setFriendRequestQueueSettings] =
 		useState(null);
 	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(0);
+	const [keywordList, setKeyWordList] = useState(0);
 
 	// get Settings data
 	const getSettingsData = async () => {
@@ -130,25 +126,25 @@ const FriendsQueue = () => {
 
 	const friendsListinRef = [
 		{
-			field: "fb_profile_url",
+			field: "friendProfileUrl",
 			headerName: "Name",
 			headerCheckboxSelection: true,
 			checkboxSelection: true,
 			showDisabledCheckboxes: true,
 			lockPosition: "left",
-			cellRenderer: UnlinkedNameCellWithOptionsRenderer,
-			// minWidth: 280,
+			cellRenderer: FriendQueueRecordsNameRenderer,
+			minWidth: 220,
 		},
 		{
-			field: "keywords",
+			field: "matchedKeyword",
 			headerName: "Keyword(s)",
-			// cellRendererParams: {
-			// 	setKeyWords,
-			// 	setModalOpen,
-			// },
+			cellRendererParams: {
+				setKeyWordList,
+				setModalOpen,
+			},
 			sortable: true,
 			// comparator: someComparator,
-			cellRenderer: KeywordRenderer,
+			cellRenderer: FriendsQueueRecordsKeywordRenderer,
 			// filter: "agTextColumnFilter",
 			// filterParams: {
 			// 	buttons: ["apply", "reset"],
@@ -294,7 +290,17 @@ const FriendsQueue = () => {
 	);
 
 	useEffect(() => {
-		dispatch(resetFriendsQueueSettings());
+		if (!friendsQueueSettings) {
+			dispatch(
+				saveFriendsQueueSettings({
+					fb_user_id: fbUserId,
+					request_limit_value: 50,
+					request_limited: true,
+					run_friend_queue: false,
+					time_delay: 3,
+				})
+			);
+		}
 		dispatch(getFriendsQueueSettings());
 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
@@ -378,9 +384,8 @@ const FriendsQueue = () => {
 					headerText={"Keyword(s)"}
 					bodyText={
 						<>
-							{/* {console.log("in modal:::", keyWords, keyWords.matchedKeyword)} */}
-							{keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
-								? keyWords?.matchedKeyword.map((el, i) => (
+							{keywordList?.length > 0
+								? keywordList.map((el, i) => (
 										<span
 											className={`tags positive-tags`}
 											key={`key-${i}`}
@@ -465,7 +470,11 @@ const FriendsQueue = () => {
 							</div>
 						</div>
 						<NumberRangeInput
-							value={friendRequestQueueSettings?.request_limit_value ?? 1}
+							value={
+								!friendRequestQueueSettings?.request_limited
+									? "∞"
+									: friendRequestQueueSettings?.request_limit_value
+							}
 							handleChange={onChangeFrndReqLimit}
 							setIncrementDecrementVal={handleIncrementDecrementVal}
 							customStyleClass='friend-req-limit-num-input'

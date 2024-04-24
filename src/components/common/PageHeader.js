@@ -21,12 +21,14 @@ import {
 } from "../../assets/icons/Icons";
 import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
 import { ReactComponent as ExportCSVIcon } from "../../assets/images/ExportCSVIcon.svg";
+import { ReactComponent as GrayWarningCircleIcon } from "../../assets/images/GrayWarningCircleIcon.svg";
 import { ReactComponent as MoveTopIcon } from "../../assets/images/MoveTopIcon.svg";
 import { ReactComponent as NextIcon } from "../../assets/images/NextIcon.svg";
 import { ReactComponent as ProgressIconOne } from "../../assets/images/ProgressIconOne.svg";
 import { ReactComponent as ProgressIconTwo } from "../../assets/images/ProgressIconTwo.svg";
 import { ReactComponent as SheetIcon } from "../../assets/images/SheetIcon.svg";
 import { ReactComponent as UploadIcon } from "../../assets/images/UploadIcon.svg";
+import { ReactComponent as WhiteArrowLeftIcon } from "../../assets/images/WhiteArrowLeftIcon.svg";
 import { ReactComponent as WhiteCrossIcon } from "../../assets/images/WhiteCrossIcon.svg";
 import { ChevronDownArrowIcon } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
@@ -56,6 +58,8 @@ import {
 import { getGroupById } from "../../actions/MySettingAction";
 import { fetchGroups } from "../../actions/MessageAction";
 import {
+	fRQueueExtMsgSendHandler,
+	getFriendsQueueSettings,
 	getFriendsQueueRecords,
 	popFriendsQueueRecordsFromQueue,
 	removeFriendsQueueRecordsFromIndexDB,
@@ -80,6 +84,7 @@ import { addUsersToCampaign } from "../../actions/CampaignsActions";
 import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
+import moment from "moment";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -1194,6 +1199,19 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
+		dispatch(fetchGroups())
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+				console.log(data);
+				if (data && data.length) {
+					setGroupMessages(data);
+				}
+			})
+			.catch((error) =>
+				console.log("Error when try to fetching all groups -- ", error)
+			);
+
 		setLinks(locationArray);
 
 		validateHeaderOptions(locationPathName[locationPathName.length - 1]);
@@ -1425,6 +1443,9 @@ function PageHeader({ headerText = "" }) {
 	const uploadedFriendsQueueRecordResponse = useSelector(
 		(state) => state.friendsQueue.uploadedFriendsQueueRecordResponse
 	);
+	const friendsQueueSettings = useSelector(
+		(state) => state.friendsQueue.friendsQueueSettings
+	);
 
 	useEffect(() => {
 		if (quickMsg1) {
@@ -1462,7 +1483,6 @@ function PageHeader({ headerText = "" }) {
 	}, [groupMsgSelect2, quickMsg2]);
 
 	useEffect(() => {
-		// Fetching All Group Messages.
 		dispatch(
 			resetFriendsQueueRecordsMetadata({
 				firstChunkLength: 0,
@@ -1470,19 +1490,8 @@ function PageHeader({ headerText = "" }) {
 				totalCount: 0,
 			})
 		);
+		dispatch(getFriendsQueueSettings());
 		dispatch(getFriendsQueueRecords());
-		dispatch(fetchGroups())
-			.unwrap()
-			.then((res) => {
-				const data = res?.data;
-				console.log(data);
-				if (data && data.length) {
-					setGroupMessages(data);
-				}
-			})
-			.catch((error) =>
-				console.log("Error when try to fetching all groups -- ", error)
-			);
 
 		return () => {
 			localStorage.removeItem("fr_edit_mode_quickCampMsg");
@@ -1491,7 +1500,7 @@ function PageHeader({ headerText = "" }) {
 	}, []);
 
 	const handleShowCsvUploadModal = () => {
-		setTaskName(`CSV Upload ${Date.now()}`);
+		setTaskName(`CSV Upload ${moment().format("YYYYMMDDHHmmss")}`);
 		setSelectedCsvFile(null);
 		setShowUploadCsvModal(true);
 		setFriendsQueueCsvUploadStep(0);
@@ -1506,12 +1515,12 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const onDrop = useCallback((acceptedFiles) => {
-		if (acceptedFiles && acceptedFiles[0].size <= 1000000) {
+		if (acceptedFiles && acceptedFiles[0].size <= 1048576) {
 			setSelectedCsvFile(acceptedFiles);
 			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 		}
 
-		if (acceptedFiles && acceptedFiles[0].size > 1000000) {
+		if (acceptedFiles && acceptedFiles[0].size > 1048576) {
 			Alertbox(
 				`The file you are attempting to upload exceeds 1MB in size.`,
 				"error",
@@ -1549,8 +1558,11 @@ function PageHeader({ headerText = "" }) {
 						);
 					}
 				});
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
 		}
-		setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		if (uploadedFriendsQueueCsvReport) {
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		}
 	};
 
 	// console.log(friendsQueueCsvUploadStep);
@@ -1574,7 +1586,7 @@ function PageHeader({ headerText = "" }) {
 		[isFocused, isDragAccept, isDragReject]
 	);
 
-	const keywordSuggestions = [
+	const [keywordSuggestions, setKeywordSuggestions] = useState([
 		"Front-end Developer",
 		"Marketer",
 		"AI & UX",
@@ -1587,15 +1599,15 @@ function PageHeader({ headerText = "" }) {
 		"Design",
 		"Manager",
 		"Startup",
-	];
+	]);
 
 	const handleSaveKeywords = () => {
-		if (keyword && !savedKeyword.includes(keyword.trim())) {
-			setSavedKeyword([...savedKeyword, keyword]);
-			setSelectedKeyword([]);
-			setShowKeywordSuggestionBar(false);
-			setShouldModify(true);
-		}
+		// if (keyword && !savedKeyword.includes(keyword.trim())) {
+		// 	setSavedKeyword([...savedKeyword, keyword]);
+		// 	setSelectedKeyword([]);
+		// 	setShowKeywordSuggestionBar(false);
+		// 	setShouldModify(true);
+		// }
 		if (selectedKeyword.length) {
 			const copyOfSavedKeyword = [...savedKeyword];
 			selectedKeyword.forEach((item) => {
@@ -1605,13 +1617,13 @@ function PageHeader({ headerText = "" }) {
 			});
 			setSavedKeyword(copyOfSavedKeyword);
 			setSelectedKeyword([]);
-			setShowKeywordSuggestionBar(false);
+			// setShowKeywordSuggestionBar(false);
 			setShouldModify(true);
 		}
 	};
 
 	const handleClearKeywords = () => {
-		setSavedKeyword([]);
+		setKeyword("");
 		setSelectedKeyword([]);
 	};
 
@@ -1675,6 +1687,9 @@ function PageHeader({ headerText = "" }) {
 							1000,
 							"bottom-right"
 						);
+						if (friendsQueueSettings) {
+							fRQueueExtMsgSendHandler(friendsQueueSettings);
+						}
 					}
 				})
 				.catch((error) => {
@@ -1892,6 +1907,7 @@ function PageHeader({ headerText = "" }) {
 
 										<DropSelectMessage
 											type='CAMPAIGNS_MESSAGE'
+											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen1}
 											handleIsOpenSelectOption={setSelectMessageOptionOpen1}
 											groupList={groupMessages}
@@ -1920,6 +1936,7 @@ function PageHeader({ headerText = "" }) {
 
 										<DropSelectMessage
 											type='CAMPAIGNS_MESSAGE'
+											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen2}
 											handleIsOpenSelectOption={setSelectMessageOptionOpen2}
 											groupList={groupMessages}
@@ -1985,7 +2002,24 @@ function PageHeader({ headerText = "" }) {
 											type='text'
 											className={`task-name-field keyword-field`}
 											value={keyword}
-											onChange={(e) => setKeyword(e.target.value)}
+											onChange={(e) => {
+												setKeyword(e.target.value);
+												setShowKeywordSuggestionBar(true);
+											}}
+											onKeyDown={(e) => {
+												if (
+													e.key === "Enter" &&
+													keyword &&
+													e.target.value &&
+													!keywordSuggestions.includes(e.target.value.trim())
+												) {
+													setKeywordSuggestions([
+														...keywordSuggestions,
+														e.target.value.trim(),
+													]);
+													setKeyword("");
+												}
+											}}
 											placeholder='Type your keywords here'
 											style={
 												showKeywordSuggestionBar || keyword || shouldModify
@@ -1993,7 +2027,7 @@ function PageHeader({ headerText = "" }) {
 													: { marginBottom: "8px" }
 											}
 										/>
-										{(showKeywordSuggestionBar || keyword || shouldModify) && (
+										{showKeywordSuggestionBar && (
 											<div className='keyword-suggestion-bar'>
 												{!shouldModify &&
 													keywordSuggestions.map((item, index) => (
@@ -2037,12 +2071,10 @@ function PageHeader({ headerText = "" }) {
 										<div className='report-block'>
 											<div className='block-title'>
 												<span className='block-txt'>Total records</span>
-												<Tooltip
-													type='query'
-													customWidth={200}
-													iconColor={"#313037"}
-													textContent='Total no. of records found in the uploaded sheet'
-												/>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total no. of records found in the uploaded sheet
+												</div>
 											</div>
 											<div className='block-stat total'>
 												{
@@ -2054,12 +2086,10 @@ function PageHeader({ headerText = "" }) {
 										<div className='report-block'>
 											<div className='block-title'>
 												<span className='block-txt'>Records added</span>
-												<Tooltip
-													type='query'
-													customWidth={200}
-													iconColor={"#313037"}
-													textContent='Total no. of records added from the uploaded sheet'
-												/>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total no. of records added from the uploaded sheet
+												</div>
 											</div>
 											<div className='block-stat added'>
 												{
@@ -2073,12 +2103,11 @@ function PageHeader({ headerText = "" }) {
 										<div className='report-block'>
 											<div className='block-title'>
 												<span className='block-txt'>Records skipped</span>
-												<Tooltip
-													type='query'
-													customWidth={200}
-													iconColor={"#313037"}
-													textContent='Users skipped as they are already present in the friend queue.'
-												/>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Users skipped as they are already present in the
+													friend queue.
+												</div>
 											</div>
 											<div className='block-stat skipped'>
 												{
@@ -2090,12 +2119,11 @@ function PageHeader({ headerText = "" }) {
 										<div className='report-block'>
 											<div className='block-title'>
 												<span className='block-txt'>Number of errors</span>
-												<Tooltip
-													type='query'
-													customWidth={200}
-													iconColor={"#313037"}
-													textContent='Total number of errors found. Download the error list file to review and address the issues.'
-												/>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total number of errors found. Download the error list
+													file to review and address the issues.
+												</div>
 											</div>
 											<div className='block-stat errors'>
 												{uploadedFriendsQueueCsvReport?.result?.numberOfErrors}
@@ -2127,7 +2155,7 @@ function PageHeader({ headerText = "" }) {
 											onClick={handleImportFriendsQueueCsv}
 										>
 											Import
-											<NextIcon className='next-icon' />
+											<WhiteArrowLeftIcon className='next-icon' />
 										</button>
 									</div>
 								</>
@@ -2224,7 +2252,11 @@ function PageHeader({ headerText = "" }) {
 											onClick={handleCsvUpload}
 										>
 											Next
-											<NextIcon className='next-icon' />
+											{selectedCsvFile && taskName ? (
+												<WhiteArrowLeftIcon className='next-icon' />
+											) : (
+												<NextIcon className='next-icon' />
+											)}
 										</button>
 									</div>
 								</div>
@@ -2358,7 +2390,7 @@ function PageHeader({ headerText = "" }) {
 											key={accessItem.type + i}
 											onClick={() => onAccessClick(accessItem)}
 											ref={
-												accessItem.type == "quickAction" ||
+												accessItem.type === "quickAction" ||
 												accessItem.type === "queueListAction"
 													? actionRef
 													: null

@@ -31,7 +31,7 @@ const initialState = {
 	uploadedFriendsQueueRecordResponse: null,
 };
 
-const fRQueueExtMsgSendHandler = async (data) => {
+export const fRQueueExtMsgSendHandler = async (data) => {
 	console.log("sent fRQueueExtMsgSendHandler", data);
 
 	let payload = {

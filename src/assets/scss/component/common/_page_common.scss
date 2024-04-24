@@ -737,7 +737,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 12px 0 28px;
+      padding: 0 12px 0 0.75rem;
 
       .select-limit {
         width: 50%;
@@ -912,10 +912,34 @@
           .block-title {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            position: relative;
+
+            .import-csv-report-tooltip-icon {
+              cursor: pointer;
+            }
+
+            .import-csv-report-tooltip-icon:hover + .import-csv-report-tooltip {
+              display: flex;
+              background-color: rgba(49, 48, 55, 1);
+              padding: 8px;
+              border-radius: 4px;
+              width: 186px;
+              bottom: 20px;
+              font-size: 12px;
+              line-height: 18px;
+              font-weight: 400;
+              color: rgba(255, 255, 255, 1) !important;
+            }
 
             .block-txt {
               display: inline-block;
               margin-right: 8px;
+            }
+
+            .import-csv-report-tooltip {
+              position: absolute;
+              display: none;
             }
           }
 
@@ -960,6 +984,7 @@
       display: flex;
       flex-wrap: wrap;
       overflow-y: auto;
+      color: rgba(255, 255, 255, 1) !important;
 
       .saved {
         background-color: rgba(58, 151, 76, 1) !important;
@@ -994,6 +1019,7 @@
         border-radius: 16px;
         margin-right: 4px;
         cursor: pointer;
+        color: rgba(255, 255, 255, 1) !important;
       }
 
       .keyword-item:focus {
@@ -1163,6 +1189,9 @@
     .import-csv-nxt-btn {
       width: 89px;
       height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 14px;
       line-height: 22px;
       font-weight: 400;

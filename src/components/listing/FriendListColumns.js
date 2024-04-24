@@ -1,23 +1,24 @@
 import { memo, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import {
-  CommentIcon,
-  CalendarIcon,
-  FeMaleIcon,
-  MaleIcon,
-  MessageIcon,
-  WhitelabelIcon,
-  ReactionIcon,
-  FacebookSyncIcon,
-  EnvelopeIcon,
-  BlockIcon,
-  OpenInNewTab,
-  SourceGroupIcon,
-  SyncSourceIcon,
-  NeuterIcon,
-  Tier3Icon,
-  Tier2Icon,
-  Tier1Icon,
-  IncomingRequestIcon,
+	CommentIcon,
+	CalendarIcon,
+	FeMaleIcon,
+	MaleIcon,
+	MessageIcon,
+	WhitelabelIcon,
+	ReactionIcon,
+	FacebookSyncIcon,
+	EnvelopeIcon,
+	BlockIcon,
+	OpenInNewTab,
+	SourceGroupIcon,
+	SyncSourceIcon,
+	NeuterIcon,
+	Tier3Icon,
+	Tier2Icon,
+	Tier1Icon,
+	IncomingRequestIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -33,6 +34,7 @@ import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAct
 import { utils } from "../../helpers/utils";
 import { ReactComponent as UserIcon } from "../../assets/images/UserIcon.svg";
 import { ReactComponent as SourceCsvIcon } from "../../assets/images/SourceCsvIcon.svg";
+import { ReactComponent as RedWarningSquareIcon } from "../../assets/images/RedWarningSquareIcon.svg";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
 import moment from "moment";
 
@@ -216,19 +218,73 @@ export const UnlinkedNameCellRenderer = memo((params) => {
 	);
 });
 
+export const FriendQueueRecordsNameRenderer = memo((params) => {
+	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+	const [showTooltip, setShowTooltip] = useState(false);
+
+	return (
+		<span className='name-image-renderer'>
+			{params.data.friendProfileUrl && (
+				<>
+					<UserIcon className='placeholder-img' />
+					<div className='placeholder-name'>Facebook user</div>
+				</>
+			)}
+			{params.data.friendProfileUrl && (
+				<>
+					<a
+						href={params.data.friendProfileUrl}
+						target='_blank'
+						rel='noreferrer'
+						className='ico-open-link'
+					>
+						<OpenInNewTab />
+					</a>
+					{params.data?.status !== null && params.data?.status === 0 && (
+						<RedWarningSquareIcon
+							className='fb-friend-request-warning'
+							onMouseEnter={(e) => {
+								setShowTooltip(true);
+								setMousePos({
+									x: e.clientX,
+									y: e.clientY,
+								});
+							}}
+							onMouseLeave={(e) => {
+								setShowTooltip(false);
+								setMousePos({
+									x: 0,
+									y: 0,
+								});
+							}}
+						/>
+					)}
+					{showTooltip &&
+						createPortal(
+							<span
+								className='fb-friend-request-warning-tooitip'
+								style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
+							>
+								Sending friend request was unsuccessful due to an unknown error
+								from Facebook.
+							</span>,
+							document.getElementById("root")
+						)}
+				</>
+			)}
+		</span>
+	);
+});
+
 export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 	const [white, setWhite] = useState(params.data.whitelist_status);
 	const [black, setBlack] = useState(params.data.blacklist_status);
 	const dispatch = useDispatch();
 	// console.log(params.data);
+
 	return (
 		<span className='name-image-renderer'>
-			{params.data.fb_profile_url ? (
-				<>
-					<UserIcon className='placeholder-img' />
-					<div className='placeholder-name'>Facebook user</div>
-				</>
-			) : (
+			{params.data.friendProfilePicture && (
 				<>
 					<span
 						className='fb-display-pic'
@@ -245,16 +301,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				</>
 			)}
 
-			{params.data.fb_profile_url ? (
-				<a
-					href={params.data.fb_profile_url}
-					target='_blank'
-					rel='noreferrer'
-					className='ico-open-link'
-				>
-					<OpenInNewTab />
-				</a>
-			) : (
+			{params.data.friendProfileUrl && (
 				<a
 					href={params.data.friendProfileUrl}
 					target='_blank'
@@ -276,7 +323,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				>
 					{<WhitelabelIcon color={"#FEC600"} />}
 				</span>
-			) : params.data.fb_profile_url ? null : (
+			) : (
 				//whiting
 				<span
 					className='profile-whitelabeled'
@@ -299,7 +346,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				>
 					{<BlockIcon color={"#FF6A77"} />}
 				</span>
-			) : params.data.fb_profile_url ? null : (
+			) : (
 				//black listing
 				<span
 					className='profile-whitelabeled'
@@ -755,6 +802,42 @@ export const RequestRenderer = memo((params) => {
 	);
 });
 
+export const FriendsQueueRecordsKeywordRenderer = memo((params) => {
+	console.log(params.data.matchedKeyword.split(","));
+	return (
+		<>
+			{Array.isArray(params.data.matchedKeyword.split(",")) &&
+				params.data.matchedKeyword.split(",").length > 0 &&
+				params.data.matchedKeyword
+					.split(",")
+					.slice(0, 1)
+					.map((item, index) => (
+						<div
+							className='friend-queue-keywords-container'
+							key={index}
+						>
+							<div className='friend-queue-keywords'>{item}</div>
+							{params.data.matchedKeyword.split(",").length > 1 && (
+								<div
+									className='friend-queue-keywords-more'
+									onClick={() => {
+										params.setKeyWordList(
+											params.data.matchedKeyword
+												.split(",")
+												.slice(1, params.data.matchedKeyword.split(",").length)
+										);
+										params.setModalOpen(true);
+									}}
+								>
+									{`+${params.data.matchedKeyword.split(",").length - 1}`}
+								</div>
+							)}
+						</div>
+					))}
+		</>
+	);
+});
+
 export const KeywordRenderer = memo((params) => {
 	// console.log(params.data);
 	// const keywords =
@@ -809,21 +892,6 @@ export const KeywordRenderer = memo((params) => {
 						""
 					)}
 				</span>
-			) : Array.isArray(params.data.keywords) &&
-			  params.data.keywords.length > 0 ? (
-				params.data.keywords.slice(0, 1).map((item, index) => (
-					<div
-						className='friend-queue-keywords-container'
-						key={index}
-					>
-						<div className='friend-queue-keywords'>{item}</div>
-						{params.data.keywords.length > 1 && (
-							<div className='friend-queue-keywords-more'>
-								{`+${params.data.keywords.length - 1}`}
-							</div>
-						)}
-					</div>
-				))
 			) : (
 				<span className='no-keywords muted-text'>N/A</span>
 			)}
