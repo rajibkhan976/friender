@@ -112,148 +112,171 @@ function OnChangePlugin({ onChange }) {
 }
 
 export default function TextEditor({
-  editorStateValue,
-  setEditorStateValue,
-  useForModal = false,
-  isEditing = { readyToEdit: true, addNewSub: false },
-  cancleFun,
-  saveMessage,
-  needSegment = true,
-  setModalOpen = null,
-  modalType = "",
-  isExtanded = false,
-  setTextContent = null,
-  autoFocus = true,
-  oldGroupId = null,
+	editorStateValue,
+	setEditorStateValue,
+	useForModal = false,
+	isEditing = { readyToEdit: true, addNewSub: false },
+	cancleFun,
+	saveMessage,
+	needSegment = true,
+	setModalOpen = null,
+	modalType = "",
+	isExtanded = false,
+	setTextContent = null,
+	autoFocus = true,
+	oldGroupId = null,
+	isEditorModalOpen,
 }) {
-  const [editorState, setEditorState] = useState();
-  function onChange(editorState) {
-    // Call toJSON on the EditorState object, which produces a serialization safe string
-    const editorStateJSON = editorState.toJSON();
-    // However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
-    setEditorState(JSON.stringify(editorStateJSON));
-    // setEditorState(transfromState);
-  }
-  // const [editor] = useLexicalComposerContext();
+	const [editorState, setEditorState] = useState();
+	function onChange(editorState) {
+		// Call toJSON on the EditorState object, which produces a serialization safe string
+		const editorStateJSON = editorState.toJSON();
+		// However, we still have a JavaScript object, so we need to convert it to an actual string with JSON.stringify
+		setEditorState(JSON.stringify(editorStateJSON));
+		// setEditorState(transfromState);
+	}
+	// const [editor] = useLexicalComposerContext();
 
-  useEffect(() => {
-    // const editorStateJSON = editorState.toJSON();
-    // console.log("hellooeee", editorState);
-    setEditorStateValue(editorState);
-    setTextContent && setTextContent(editorState)
-  }, [editorState]);
+	useEffect(() => {
+		// const editorStateJSON = editorState.toJSON();
+		// console.log("hellooeee", editorState);
+		setEditorStateValue(editorState);
+		setTextContent && setTextContent(editorState);
+	}, [editorState]);
 
-  const handleSavebtnClick = () => {
+	const handleSavebtnClick = () => {
+		const tempMsgObj = JSON.parse(editorState);
+		// console.log("at saveeeeeeee",tempMsgObj)
+		const msgObj = {
+			__raw: editorState,
+			html: tools.$generateHtmlFromNodeState(tempMsgObj),
+			text: tools.$convertPureString(tempMsgObj).join(" "),
+			messengerText: tools.$generateMessengerText(tempMsgObj),
+		};
 
-    const tempMsgObj = JSON.parse(editorState);
-    // console.log("at saveeeeeeee",tempMsgObj)
-    const msgObj = {
-      __raw: editorState,
-      html: tools.$generateHtmlFromNodeState(tempMsgObj),
-      text: tools.$convertPureString(tempMsgObj).join(" "),
-      messengerText: tools.$generateMessengerText(tempMsgObj)
-    }
+		if (msgObj?.text.trim() !== "") {
+			saveMessage(msgObj);
+		}
 
-    if (msgObj?.text.trim() !== '') {
-      saveMessage(msgObj)
-    }
+		if (oldGroupId) {
+			localStorage.setItem("old_message_group_id", oldGroupId);
+		}
 
-    if (oldGroupId) {
-      localStorage.setItem("old_message_group_id", oldGroupId);
-    }
+		if (useForModal) {
+			if (modalType === "ACCEPT_REQ") {
+				localStorage.removeItem("fr_using_select_accept");
 
-    if (useForModal) {
-      if (modalType === "ACCEPT_REQ") {
-        localStorage.removeItem("fr_using_select_accept");
+				// When Turn Of Setting then setting the Current UTC Time..
+				// payload.send_message_when_someone_accept_new_friend_request_settings.settings_added_time = getCurrentUTCTime();
+				localStorage.setItem(
+					"currentUTC_someone_accept_new_frnd_req",
+					getCurrentUTCTime()
+				);
+			}
 
-        // When Turn Of Setting then setting the Current UTC Time.. 
-        // payload.send_message_when_someone_accept_new_friend_request_settings.settings_added_time = getCurrentUTCTime();
-        localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
-      }
+			if (modalType === "REJECT_REQ") {
+				localStorage.removeItem("fr_using_select_rejt");
+			}
 
-      if (modalType === "REJECT_REQ") {
-        localStorage.removeItem("fr_using_select_rejt");
-      }
+			if (modalType === "SOMEONE_SEND_REQ") {
+				localStorage.removeItem("fr_using_someone_send");
+			}
 
-      if (modalType === "SOMEONE_SEND_REQ") {
-        localStorage.removeItem("fr_using_someone_send");
-      }
+			if (modalType === "REJT_INCOMING_REQ") {
+				localStorage.removeItem("fr_using_rejt_incoming");
+			}
 
-      if (modalType === "REJT_INCOMING_REQ") {
-        localStorage.removeItem("fr_using_rejt_incoming");
-      }
+			if (modalType === "ACCEPT_INCOMING_REQ") {
+				localStorage.removeItem("fr_using_accept_incoming");
+			}
 
-      if (modalType === "ACCEPT_INCOMING_REQ") {
-        localStorage.removeItem("fr_using_accept_incoming");
-      }
+			if (
+				modalType === "CAMPAIGNS_MESSAGE" ||
+				modalType === "CAMPAIGNS_MODAL_MESSAGE"
+			) {
+				localStorage.removeItem("fr_using_campaigns_message");
+			}
 
-      if (modalType === "CAMPAIGNS_MESSAGE" || modalType === "CAMPAIGNS_MODAL_MESSAGE") {
-        localStorage.removeItem("fr_using_campaigns_message");
-      }
+			setModalOpen(false);
+		}
+	};
 
-      setModalOpen(false);
-    }
-  }
+	useEffect(() => {
+		return () => {
+			setEditorState();
+		};
+	}, []);
 
-  useEffect(() => {
-    return () => {
-      setEditorState()
-    }
-  }, [])
-
-  return (
-    <div className="fr-text-editor">
-      {/* <p className="editor-title-announce">Message <span className="important-asterisk">*</span></p> */}
-      <h4 className="message-title-editor">Message <span className="error-text-inline">*</span></h4>
-      <LexicalComposer initialConfig={editorConfig}>
-        <div className="text-editor-container">
-          <ToolbarPlugin />
-          <div className="editor-inner">
-            <RichTextPlugin
-              contentEditable={<ContentEditable className={`editor-input ${isExtanded && 'expanded-editor-input'}`} />}
-              placeholder={<Placeholder />}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <HistoryPlugin />
-            {/* <LexicalEditorRefPlugin ref={editorRef} /> */}
-            {/* <TreeViewPlugin /> */}
-            <UpdateEditorPlugin editorValueData={isEditing.addNewSub ? "" : editorStateValue} />
-            {needSegment && <SegmentPlugin />}
-            <MergeFieldPlugin />
-            <OnChangePlugin onChange={onChange} />
-            {autoFocus && <AutoFocusPlugin />}
-            {/* <CodeHighlightPlugin /> */}
-            <ListPlugin />
-            <LinkPlugin />
-            {/* <AutoLinkPlugin />
-          <ListMaxIndentLevelPlugin maxDepth={7} /> */}
-            <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-          </div>
-        </div>
-      </LexicalComposer>
-      <footer className="editor-edit-controls d-flex f-align-center f-justify-end">
-        <Button
-          disable={(!useForModal && !isEditing.readyToEdit) || false}
-          extraClass="editor-cancel btn-grey editor-btn"
-          clickEv={(e) => {
-            cancleFun()
-          }}
-          btnText={useForModal ? "Close" : "Cancel"}
-        />
-        {/* {// console.log('isEditingisEditingisEditingisEditing', isEditing)} */}
-        <Button
-          // disable={
-          //   editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
-          // }
-          disable={
-            editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0 ||
-            (isEditing.addNewSub && !isEditing.readyToEdit)
-          }
-          extraClass="editor-cancel editor-btn"
-          btnText="Save"
-          clickEv={(e) => { handleSavebtnClick(e) }}
-        />
-      </footer>
-    </div>
-  );
+	return (
+		<div className='fr-text-editor'>
+			{/* <p className="editor-title-announce">Message <span className="important-asterisk">*</span></p> */}
+			<h4 className='message-title-editor'>
+				Message <span className='error-text-inline'>*</span>
+			</h4>
+			<LexicalComposer initialConfig={editorConfig}>
+				<div className='text-editor-container'>
+					<ToolbarPlugin />
+					<div className='editor-inner'>
+						<RichTextPlugin
+							contentEditable={
+								<ContentEditable
+									className={`editor-input ${
+										isExtanded && "expanded-editor-input"
+									}`}
+								/>
+							}
+							placeholder={<Placeholder />}
+							ErrorBoundary={LexicalErrorBoundary}
+						/>
+						{isEditorModalOpen && (
+							<>
+								<HistoryPlugin />
+								{/* <LexicalEditorRefPlugin ref={editorRef} /> */}
+								{/* <TreeViewPlugin /> */}
+								<UpdateEditorPlugin
+									editorValueData={isEditing.addNewSub ? "" : editorStateValue}
+								/>
+								{needSegment && <SegmentPlugin />}
+								<MergeFieldPlugin />
+								<OnChangePlugin onChange={onChange} />
+								{autoFocus && <AutoFocusPlugin />}
+								{/* <CodeHighlightPlugin /> */}
+								<ListPlugin />
+								<LinkPlugin />
+								{/* <AutoLinkPlugin />
+                <ListMaxIndentLevelPlugin maxDepth={7} /> */}
+								<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
+							</>
+						)}
+					</div>
+				</div>
+			</LexicalComposer>
+			<footer className='editor-edit-controls d-flex f-align-center f-justify-end'>
+				<Button
+					disable={(!useForModal && !isEditing.readyToEdit) || false}
+					extraClass='editor-cancel btn-grey editor-btn'
+					clickEv={(e) => {
+						cancleFun();
+					}}
+					btnText={useForModal ? "Close" : "Cancel"}
+				/>
+				{/* {// console.log('isEditingisEditingisEditingisEditing', isEditing)} */}
+				<Button
+					// disable={
+					//   editorState && tools.$convertPureString(JSON.parse(editorState)).length <= 0
+					// }
+					disable={
+						(editorState &&
+							tools.$convertPureString(JSON.parse(editorState)).length <= 0) ||
+						(isEditing.addNewSub && !isEditing.readyToEdit)
+					}
+					extraClass='editor-cancel editor-btn'
+					btnText='Save'
+					clickEv={(e) => {
+						handleSavebtnClick(e);
+					}}
+				/>
+			</footer>
+		</div>
+	);
 }

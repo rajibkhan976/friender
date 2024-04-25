@@ -59,7 +59,6 @@ import { getGroupById } from "../../actions/MySettingAction";
 import { fetchGroups } from "../../actions/MessageAction";
 import {
 	fRQueueExtMsgSendHandler,
-	getFriendsQueueSettings,
 	getFriendsQueueRecords,
 	popFriendsQueueRecordsFromQueue,
 	removeFriendsQueueRecordsFromIndexDB,
@@ -1203,7 +1202,7 @@ function PageHeader({ headerText = "" }) {
 			.unwrap()
 			.then((res) => {
 				const data = res?.data;
-				console.log(data);
+				// console.log(data);
 				if (data && data.length) {
 					setGroupMessages(data);
 				}
@@ -1490,7 +1489,6 @@ function PageHeader({ headerText = "" }) {
 				totalCount: 0,
 			})
 		);
-		dispatch(getFriendsQueueSettings());
 		dispatch(getFriendsQueueRecords());
 
 		return () => {
@@ -1680,7 +1678,7 @@ function PageHeader({ headerText = "" }) {
 				.unwrap()
 				.then((response) => {
 					if (response) {
-						console.log(response);
+						// console.log(response);
 						Alertbox(
 							`Initiating the upload of the CSV file.`,
 							"success",
@@ -1688,6 +1686,7 @@ function PageHeader({ headerText = "" }) {
 							"bottom-right"
 						);
 						if (friendsQueueSettings) {
+							// console.log(friendsQueueSettings)
 							fRQueueExtMsgSendHandler(friendsQueueSettings);
 						}
 					}
@@ -1898,7 +1897,8 @@ function PageHeader({ headerText = "" }) {
 					headerText={"Import data"}
 					bodyText={
 						<>
-							{friendsQueueCsvUploadStep === 3 ? (
+							{friendsQueueCsvUploadStep === 3 &&
+							uploadedFriendsQueueCsvReport ? (
 								<>
 									<div className='friend-request-queue-message-field'>
 										<label className='friend-request-sent-message-label'>
@@ -1961,7 +1961,7 @@ function PageHeader({ headerText = "" }) {
 									<div className='import-data-input keyword-input'>
 										<label className='task-name-label keywords-label'>
 											Keywords (optional)
-											{!keyword && !selectedKeyword.length && !shouldModify && (
+											{!keyword && !selectedKeyword.length && !shouldModify ? (
 												<figure
 													className='icon-arrow-down'
 													onClick={() =>
@@ -1972,8 +1972,8 @@ function PageHeader({ headerText = "" }) {
 												>
 													<ChevronDownArrowIcon size={18} />
 												</figure>
-											)}
-											{(keyword || selectedKeyword.length) && !shouldModify && (
+											) : null}
+											{(keyword || selectedKeyword.length) && !shouldModify ? (
 												<>
 													<div
 														className='keyword-clear-action'
@@ -1988,15 +1988,15 @@ function PageHeader({ headerText = "" }) {
 														Save
 													</div>
 												</>
-											)}
-											{shouldModify && (
+											) : null}
+											{shouldModify ? (
 												<div
 													className='keyword-save-action'
 													onClick={() => setShouldModify(false)}
 												>
 													Modify
 												</div>
-											)}
+											) : null}
 										</label>
 										<input
 											type='text'

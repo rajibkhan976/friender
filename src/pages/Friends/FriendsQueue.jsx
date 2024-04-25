@@ -290,18 +290,32 @@ const FriendsQueue = () => {
 	);
 
 	useEffect(() => {
-		if (!friendsQueueSettings) {
-			dispatch(
-				saveFriendsQueueSettings({
-					fb_user_id: fbUserId,
-					request_limit_value: 50,
-					request_limited: true,
-					run_friend_queue: false,
-					time_delay: 3,
-				})
+		dispatch(getFriendsQueueSettings())
+			.unwrap()
+			.then((response) => {
+				if (!response || !response.data) {
+					dispatch(
+						saveFriendsQueueSettings({
+							fb_user_id: fbUserId,
+							request_limit_value: 50,
+							request_limited: true,
+							run_friend_queue: false,
+							time_delay: 3,
+						})
+					);
+				}
+			})
+			.catch((error) =>
+				dispatch(
+					saveFriendsQueueSettings({
+						fb_user_id: fbUserId,
+						request_limit_value: 50,
+						request_limited: true,
+						run_friend_queue: false,
+						time_delay: 3,
+					})
+				)
 			);
-		}
-		dispatch(getFriendsQueueSettings());
 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
 	}, []);
@@ -341,7 +355,7 @@ const FriendsQueue = () => {
 	}, [isChunkedDataFetchedFromApi]);
 
 	useEffect(() => {
-		if (friendsQueueSettings && friendsQueueSettings.length > 0) {
+		if (friendsQueueSettings && friendsQueueSettings?.length > 0) {
 			setFriendRequestQueueSettings({
 				fb_user_id: friendsQueueSettings[0]?.fb_user_id,
 				request_limit_value: friendsQueueSettings[0]?.request_limit_value,
@@ -355,7 +369,7 @@ const FriendsQueue = () => {
 	useEffect(() => {
 		if (
 			debouncedFriendsQueueSettings &&
-			Object.keys(debouncedFriendsQueueSettings).length > 0
+			Object.keys(debouncedFriendsQueueSettings)?.length > 0
 		) {
 			dispatch(resetFriendsQueueSettings(null));
 			dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
@@ -371,9 +385,9 @@ const FriendsQueue = () => {
 	}, [frndReqSentPeriod]);
 
 	// console.log(frndReqSentPeriod);
-	console.log(friendsQueueRecords);
+	// console.log(friendsQueueRecords);
 	// console.log(friendsQueueRecordsCount);
-	console.log(friendRequestSentInsight);
+	// console.log(friendRequestSentInsight);
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -495,7 +509,7 @@ const FriendsQueue = () => {
 								setFriendRequestQueueSettings((friendRequestQueueSettings) => {
 									return {
 										...friendRequestQueueSettings,
-										time_delay: e.target.value,
+										time_delay: Number(e.target.value),
 									};
 								});
 							}}
@@ -525,7 +539,7 @@ const FriendsQueue = () => {
 					</div>
 				</div>
 			</div>
-			{friendsQueueRecords.length > 0 && !loading && !isListLoading ? (
+			{friendsQueueRecords?.length > 0 && !loading && !isListLoading ? (
 				<Listing
 					friendsData={friendsQueueRecords}
 					friendsListingRef={friendsListinRef}

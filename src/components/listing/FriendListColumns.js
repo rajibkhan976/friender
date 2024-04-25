@@ -224,11 +224,13 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 
 	return (
 		<span className='name-image-renderer'>
-			{params.data.friendProfileUrl && (
+			{params.data.friendProfileUrl ? (
 				<>
 					<UserIcon className='placeholder-img' />
 					<div className='placeholder-name'>Facebook user</div>
 				</>
+			) : (
+				<span className='muted-text'>N/A</span>
 			)}
 			{params.data.friendProfileUrl && (
 				<>
@@ -803,11 +805,13 @@ export const RequestRenderer = memo((params) => {
 });
 
 export const FriendsQueueRecordsKeywordRenderer = memo((params) => {
-	console.log(params.data.matchedKeyword.split(","));
+	// console.log(params.data.matchedKeyword);
+	// console.log(params.data.matchedKeyword.split(","));
 	return (
 		<>
-			{Array.isArray(params.data.matchedKeyword.split(",")) &&
-				params.data.matchedKeyword.split(",").length > 0 &&
+			{params.data.matchedKeyword &&
+			Array.isArray(params.data.matchedKeyword.split(",")) &&
+			params.data.matchedKeyword.split(",").length > 0 ? (
 				params.data.matchedKeyword
 					.split(",")
 					.slice(0, 1)
@@ -833,7 +837,10 @@ export const FriendsQueueRecordsKeywordRenderer = memo((params) => {
 								</div>
 							)}
 						</div>
-					))}
+					))
+			) : (
+				<span className='muted-text'>N/A</span>
+			)}
 		</>
 	);
 });
@@ -919,7 +926,7 @@ export const MessageGroupRequestAcceptedRenderer = memo((params) => {
 			) : params.data &&
 			  message_group_request_accepted &&
 			  message_group_request_accepted.quickMessage ? (
-				<>{message_group_request_accepted.quickMessage}</>
+				<>{"Quick Message"}</>
 			) : (
 				<span className='muted-text'>N/A</span>
 			)}
@@ -947,7 +954,7 @@ export const MessageGroupRequestSentRenderer = memo((params) => {
 			) : params.data &&
 			  message_group_request_sent &&
 			  message_group_request_sent.quickMessage ? (
-				<>{message_group_request_sent.quickMessage}</>
+				<>{"Quick Message"}</>
 			) : (
 				<span className='muted-text'>N/A</span>
 			)}

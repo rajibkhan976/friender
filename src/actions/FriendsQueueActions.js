@@ -263,7 +263,7 @@ export const saveFriendsQueueSettings = createAsyncThunk(
 			})
 		);
 		fRQueueExtMsgSendHandler(friendsQueueSettings);
-		return response;
+		return {response: response, friendsQueueSettings: friendsQueueSettings};
 	}
 );
 
@@ -332,7 +332,7 @@ export const friendsQueueSlice = createSlice({
 			state.isDataFetchedFromApi = false;
 		},
 		[getFriendsQueueRecords.fulfilled]: (state, action) => {
-			const { data, limit_used, totalNumberOfRecords } = action.payload;
+			const { data, limit_used, totalNumberOfRecords } = action?.payload ?? {};
 			state.isDataFetchedFromApi = true;
 			state.friendsQueueRecordsFirstChunkLength = data.length;
 			state.friendsQueueRecordsLimit = limit_used;
@@ -354,7 +354,7 @@ export const friendsQueueSlice = createSlice({
 			state.isListLoading = true;
 		},
 		[getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData } = action.payload;
+			const { friendsQueueData } = action?.payload ?? {};
 			state.isListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
 		},
@@ -365,7 +365,7 @@ export const friendsQueueSlice = createSlice({
 			state.isListLoading = true;
 		},
 		[removeFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData, recordCount } = action.payload;
+			const { friendsQueueData, recordCount } = action?.payload ?? {};
 			state.isListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
 			state.friendsQueueRecordsCount = recordCount;
@@ -377,7 +377,7 @@ export const friendsQueueSlice = createSlice({
 			state.isListLoading = true;
 		},
 		[reorderFriendsQueueRecordsInIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData } = action.payload;
+			const { friendsQueueData } = action?.payload ?? {};
 			state.isListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
 		},
@@ -389,7 +389,7 @@ export const friendsQueueSlice = createSlice({
 		},
 		[getFriendsRequestSentInsight.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.friendRequestSentInsight = action.payload.count;
+			state.friendRequestSentInsight = action?.payload?.count;
 		},
 		[getFriendsRequestSentInsight.rejected]: (state) => {
 			state.isLoading = false;
@@ -399,7 +399,7 @@ export const friendsQueueSlice = createSlice({
 		},
 		[getFriendsQueueSettings.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.friendsQueueSettings = action.payload.data;
+			state.friendsQueueSettings = action?.payload?.data;
 		},
 		[getFriendsQueueSettings.rejected]: (state) => {
 			state.isLoading = false;
@@ -409,7 +409,7 @@ export const friendsQueueSlice = createSlice({
 		},
 		[popFriendsQueueRecordsFromQueue.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.removedRecordsFromFriendsQueueResponse = action.payload.data;
+			state.removedRecordsFromFriendsQueueResponse = action?.payload?.data;
 		},
 		[popFriendsQueueRecordsFromQueue.rejected]: (state) => {
 			state.isLoading = false;
@@ -419,8 +419,9 @@ export const friendsQueueSlice = createSlice({
 		},
 		[saveFriendsQueueSettings.fulfilled]: (state, action) => {
 			state.isLoading = false;
-			state.friendsQueueSettings = action.payload;
-			state.savedFriendsQueueSettingsResponse = action.payload;
+			const { friendsQueueSettings, response } = action?.payload ?? {};
+			state.friendsQueueSettings = friendsQueueSettings;
+			state.savedFriendsQueueSettingsResponse = response;
 		},
 		[saveFriendsQueueSettings.rejected]: (state) => {
 			state.isLoading = false;
