@@ -308,6 +308,7 @@ const CalenderModal = ({
 				response = await dispatch(createCampaign(payload)).unwrap();
 			} else {
 				response = await dispatch(updateCampaign(payload)).unwrap();
+				// console.log("response ::: ", response)
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules"
 				  });
