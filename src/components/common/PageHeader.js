@@ -1508,6 +1508,8 @@ function PageHeader({ headerText = "" }) {
 		setGroupMsgSelect2(null);
 		setQuickMsg1(null);
 		setQuickMsg2(null);
+		setKeyword("");
+		setShowKeywordSuggestionBar(false);
 		dispatch(resetUploadedFriendsQueueCsvReport(null));
 		dispatch(resetUploadedFriendsQueueRecordResponse(null));
 	};
@@ -1547,7 +1549,8 @@ function PageHeader({ headerText = "" }) {
 				.then((response) => response)
 				.catch((error) => {
 					if (error) {
-						console.log(error);
+						// console.log(error);
+						setSelectedCsvFile(null);
 						Alertbox(
 							`Failed to initiate the review of the CSV file.`,
 							"error",
@@ -2011,6 +2014,7 @@ function PageHeader({ headerText = "" }) {
 													e.key === "Enter" &&
 													keyword &&
 													e.target.value &&
+													e.target.value.trim() &&
 													!keywordSuggestions.includes(e.target.value.trim())
 												) {
 													setKeywordSuggestions([
@@ -2022,9 +2026,7 @@ function PageHeader({ headerText = "" }) {
 											}}
 											placeholder='Type your keywords here'
 											style={
-												showKeywordSuggestionBar || keyword || shouldModify
-													? {}
-													: { marginBottom: "8px" }
+												showKeywordSuggestionBar ? {} : { marginBottom: "8px" }
 											}
 										/>
 										{showKeywordSuggestionBar && (
