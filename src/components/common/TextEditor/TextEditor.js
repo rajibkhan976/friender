@@ -125,7 +125,7 @@ export default function TextEditor({
 	setTextContent = null,
 	autoFocus = true,
 	oldGroupId = null,
-	isEditorModalOpen,
+	isEditorModalOpen=null,
 }) {
 	const [editorState, setEditorState] = useState();
 	function onChange(editorState) {
@@ -228,7 +228,7 @@ export default function TextEditor({
 							placeholder={<Placeholder />}
 							ErrorBoundary={LexicalErrorBoundary}
 						/>
-						{isEditorModalOpen && (
+						{(isEditorModalOpen === null || isEditorModalOpen) && (
 							<>
 								<HistoryPlugin />
 								{/* <LexicalEditorRefPlugin ref={editorRef} /> */}
