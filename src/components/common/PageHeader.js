@@ -1405,6 +1405,20 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	// console.log(accessOptions);
+	const [keywordSuggestions, setKeywordSuggestions] = useState([
+		"Front-end Developer",
+		"Marketer",
+		"AI & UX",
+		"Founder",
+		"CEO",
+		"CTO",
+		"Digital",
+		"Co-Founder",
+		"Business",
+		"Design",
+		"Manager",
+		"Startup",
+	]);
 	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
 		useState(false);
 	const [keyword, setKeyword] = useState("");
@@ -1503,13 +1517,28 @@ function PageHeader({ headerText = "" }) {
 		setShowUploadCsvModal(true);
 		setFriendsQueueCsvUploadStep(0);
 		setSelectedCsvFile(null);
-		setSavedKeyword([]);
 		setGroupMsgSelect1(null);
 		setGroupMsgSelect2(null);
 		setQuickMsg1(null);
 		setQuickMsg2(null);
-		setKeyword("");
+		setKeywordSuggestions([
+			"Front-end Developer",
+			"Marketer",
+			"AI & UX",
+			"Founder",
+			"CEO",
+			"CTO",
+			"Digital",
+			"Co-Founder",
+			"Business",
+			"Design",
+			"Manager",
+			"Startup",
+		]);
 		setShowKeywordSuggestionBar(false);
+		setKeyword("");
+		setSelectedKeyword([]);
+		setSavedKeyword([]);
 		dispatch(resetUploadedFriendsQueueCsvReport(null));
 		dispatch(resetUploadedFriendsQueueRecordResponse(null));
 	};
@@ -1586,21 +1615,6 @@ function PageHeader({ headerText = "" }) {
 		}),
 		[isFocused, isDragAccept, isDragReject]
 	);
-
-	const [keywordSuggestions, setKeywordSuggestions] = useState([
-		"Front-end Developer",
-		"Marketer",
-		"AI & UX",
-		"Founder",
-		"CEO",
-		"CTO",
-		"Digital",
-		"Co-Founder",
-		"Business",
-		"Design",
-		"Manager",
-		"Startup",
-	]);
 
 	const handleSaveKeywords = () => {
 		// if (keyword && !savedKeyword.includes(keyword.trim())) {

@@ -62,6 +62,7 @@ const FriendsQueue = () => {
 			selected: false,
 		},
 	];
+	const timeout = useRef(null);
 
 	const friendRequestSentInsight = useSelector(
 		(state) => state.friendsQueue.friendRequestSentInsight
@@ -293,7 +294,7 @@ const FriendsQueue = () => {
 		dispatch(getFriendsQueueSettings())
 			.unwrap()
 			.then((response) => {
-				if (!response || !response.data) {
+				if (response && !response?.data?.length) {
 					dispatch(
 						saveFriendsQueueSettings({
 							fb_user_id: fbUserId,
@@ -319,8 +320,6 @@ const FriendsQueue = () => {
 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
 	}, []);
-
-	const timeout = useRef(null);
 
 	useEffect(() => {
 		if (isDataFetchedFromApi) {
@@ -369,7 +368,7 @@ const FriendsQueue = () => {
 	useEffect(() => {
 		if (
 			debouncedFriendsQueueSettings &&
-			Object.keys(debouncedFriendsQueueSettings)?.length > 0
+			Object.keys(debouncedFriendsQueueSettings)?.length > 1
 		) {
 			dispatch(resetFriendsQueueSettings(null));
 			dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));

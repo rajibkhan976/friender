@@ -224,7 +224,7 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 
 	return (
 		<span className='name-image-renderer'>
-			{params.data.friendProfileUrl ? (
+			{params?.data?.friendProfileUrl || params?.data?.friendFbId ? (
 				<>
 					<UserIcon className='placeholder-img' />
 					<div className='placeholder-name'>Facebook user</div>
@@ -232,17 +232,17 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 			) : (
 				<span className='muted-text'>N/A</span>
 			)}
-			{params.data.friendProfileUrl && (
+			{params?.data?.friendProfileUrl && (
 				<>
 					<a
-						href={params.data.friendProfileUrl}
+						href={params?.data?.friendProfileUrl}
 						target='_blank'
 						rel='noreferrer'
 						className='ico-open-link'
 					>
 						<OpenInNewTab />
 					</a>
-					{params.data?.status !== null && params.data?.status === 0 && (
+					{params?.data?.status !== null && params?.data?.status === 0 && (
 						<RedWarningSquareIcon
 							className='fb-friend-request-warning'
 							onMouseEnter={(e) => {
@@ -1123,7 +1123,16 @@ export const SourceRendererPending = memo((params) => {
 		);
 	}
 
-	if (params?.data?.task_name?.toLowerCase()) {
+	if (params?.data?.finalSource === "friendsQueue") {
+		return (
+			<div className='friend-sync-source d-flex f-align-center'>
+				<SourceCsvIcon className='friend-sync-source-icon' />
+				CSV Upload
+			</div>
+		);
+	}
+
+	if (params?.data?.task_name) {
 		return (
 			<div className='friend-sync-source d-flex f-align-center'>
 				<SourceCsvIcon className='friend-sync-source-icon' />
