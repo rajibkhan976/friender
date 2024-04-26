@@ -87,6 +87,24 @@
         content: none;
       }
     }
+
+    &:has(.fb-friend-request-warning) {
+      .ag-cell {
+        background-color: transparentize($themeRed1, 0.83) !important;
+
+        &:first-child {
+          &:before {
+            position: absolute;
+            content: '';
+            left: 0;
+            height: 100%;
+            height: 100%;
+            width: 4px;
+            background: $themeRed1;
+          }
+        }
+      }
+    }
   }
 
   .ag-row:not(.ag-header-row) {
@@ -841,8 +859,9 @@
 
 
   .fb-friend-request-warning {
-    margin-left: 8px;
+    margin-inline-start: 8px;
     cursor: pointer;
+    display: inline-flex;
   }
 
   @include theme-aware("color", "text-color");
