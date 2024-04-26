@@ -571,7 +571,9 @@ const FriendsQueue = () => {
 					<div className='friends-queue-action-bar-item'>
 						<div className='friend-req-run-queue'>
 							<div className='run-friend-queue'>
-								<div className='run'>Run friend queue</div>
+								<div className='run'>{`${
+									friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
+								} friend queue`}</div>
 								<Switch
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={() => {

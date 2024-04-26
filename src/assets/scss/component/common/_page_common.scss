@@ -876,12 +876,20 @@
           width: 100%;
           margin-top: 8px;
 
+          .select-panel-error {
+            border-color: transparent !important;
+          }
+
           .friend-request-queue-select-panel {
             margin: 0;
-            background-color: rgba(49, 48, 55, 1);
+            background-color: rgba(49, 48, 55, 1) !important;
             border: none;
             display: flex;
             justify-content: space-between;
+          }
+
+          .text-red {
+            display: none;
           }
 
           .friend-request-queue-select-panel-page {

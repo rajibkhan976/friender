@@ -1976,7 +1976,13 @@ function PageHeader({ headerText = "" }) {
 											type='CAMPAIGNS_MESSAGE'
 											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen1}
-											handleIsOpenSelectOption={setSelectMessageOptionOpen1}
+											handleIsOpenSelectOption={(status) => {
+												if (status) {
+													setSelectMessageOptionOpen2(false);
+													setShowKeywordSuggestionBar(false);
+												}
+												setSelectMessageOptionOpen1(status);
+											}}
 											groupList={groupMessages}
 											groupSelect={groupMsgSelect1}
 											setGroupSelect={setGroupMsgSelect1}
@@ -2005,7 +2011,13 @@ function PageHeader({ headerText = "" }) {
 											type='CAMPAIGNS_MESSAGE'
 											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen2}
-											handleIsOpenSelectOption={setSelectMessageOptionOpen2}
+											handleIsOpenSelectOption={(status) => {
+												if (status) {
+													setSelectMessageOptionOpen1(false);
+													setShowKeywordSuggestionBar(false);
+												}
+												setSelectMessageOptionOpen2(status);
+											}}
 											groupList={groupMessages}
 											groupSelect={groupMsgSelect2}
 											setGroupSelect={setGroupMsgSelect2}
@@ -2031,11 +2043,15 @@ function PageHeader({ headerText = "" }) {
 											{!keyword && !selectedKeyword.length && !shouldModify ? (
 												<figure
 													className='icon-arrow-down'
-													onClick={() =>
+													onClick={() => {
+														if (!showKeywordSuggestionBar) {
+															setSelectMessageOptionOpen1(false);
+															setSelectMessageOptionOpen2(false);
+														}
 														setShowKeywordSuggestionBar(
 															!showKeywordSuggestionBar
-														)
-													}
+														);
+													}}
 												>
 													<ChevronDownArrowIcon size={18} />
 												</figure>
@@ -2070,6 +2086,7 @@ function PageHeader({ headerText = "" }) {
 											className={`task-name-field keyword-field`}
 											value={keyword}
 											onChange={(e) => {
+												e.stopPropagation();
 												setKeyword(e.target.value);
 												setShowKeywordSuggestionBar(true);
 											}}
