@@ -399,6 +399,10 @@ export const friendsQueueSlice = createSlice({
 		},
 		[getFriendsQueueSettings.fulfilled]: (state, action) => {
 			state.isLoading = false;
+			localStorage.setItem(
+				"fr_queue_settings",
+				JSON.stringify(action?.payload?.data)
+			);
 			state.friendsQueueSettings = action?.payload?.data;
 		},
 		[getFriendsQueueSettings.rejected]: (state) => {
@@ -420,6 +424,8 @@ export const friendsQueueSlice = createSlice({
 		[saveFriendsQueueSettings.fulfilled]: (state, action) => {
 			state.isLoading = false;
 			const { friendsQueueSettings, response } = action?.payload ?? {};
+			console.log(friendsQueueSettings)
+			localStorage.setItem("fr_queue_settings", JSON.stringify([friendsQueueSettings]));
 			state.friendsQueueSettings = friendsQueueSettings;
 			state.savedFriendsQueueSettingsResponse = response;
 		},

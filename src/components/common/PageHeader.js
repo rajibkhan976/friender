@@ -655,7 +655,7 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const closeFilterDropdown = (item) => {
-		//onsole.log(item.type == "quickAction" && item.active, accessOptions);
+		//console.log(item.type == "quickAction" && item.active, accessOptions);
 		const accessPlaceholder = [...accessOptions];
 		accessPlaceholder.filter(
 			(arrayOpt) =>
@@ -769,9 +769,20 @@ function PageHeader({ headerText = "" }) {
 				})
 			)
 				.unwrap()
-				.then((response) =>
-					dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList))
-				);
+				.then((response) => {
+					dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
+					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+						? JSON.parse(localStorage.getItem("fr_queue_settings"))
+						: null;
+					if (
+						fr_queue_settings?.length &&
+						typeof fr_queue_settings[0] === "object" &&
+						Object.keys(fr_queue_settings[0]).length >= 5
+					) {
+						// console.log(fr_queue_settings[0])
+						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+					}
+				});
 			// console.log(selectedFriends);
 		}
 	};
@@ -794,8 +805,19 @@ function PageHeader({ headerText = "" }) {
 				})
 			)
 				.unwrap()
-				.then((payload) => {
+				.then((response) => {
 					dispatch(removeFriendsQueueRecordsFromIndexDB(fbIdList));
+					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+						? JSON.parse(localStorage.getItem("fr_queue_settings"))
+						: null;
+					if (
+						fr_queue_settings?.length &&
+						typeof fr_queue_settings[0] === "object" &&
+						Object.keys(fr_queue_settings[0]).length >= 5
+					) {
+						// console.log(fr_queue_settings[0])
+						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+					}
 				});
 			// console.log(selectedFriends);
 		}
@@ -1198,6 +1220,14 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
+		dispatch(
+			resetFriendsQueueRecordsMetadata({
+				firstChunkLength: 0,
+				limitUsed: 0,
+				totalCount: 0,
+			})
+		);
+		dispatch(getFriendsQueueRecords());
 		dispatch(fetchGroups())
 			.unwrap()
 			.then((res) => {
@@ -1456,9 +1486,6 @@ function PageHeader({ headerText = "" }) {
 	const uploadedFriendsQueueRecordResponse = useSelector(
 		(state) => state.friendsQueue.uploadedFriendsQueueRecordResponse
 	);
-	const friendsQueueSettings = useSelector(
-		(state) => state.friendsQueue.friendsQueueSettings
-	);
 
 	useEffect(() => {
 		if (quickMsg1) {
@@ -1496,14 +1523,14 @@ function PageHeader({ headerText = "" }) {
 	}, [groupMsgSelect2, quickMsg2]);
 
 	useEffect(() => {
-		dispatch(
-			resetFriendsQueueRecordsMetadata({
-				firstChunkLength: 0,
-				limitUsed: 0,
-				totalCount: 0,
-			})
-		);
-		dispatch(getFriendsQueueRecords());
+		// dispatch(
+		// 	resetFriendsQueueRecordsMetadata({
+		// 		firstChunkLength: 0,
+		// 		limitUsed: 0,
+		// 		totalCount: 0,
+		// 	})
+		// );
+		// dispatch(getFriendsQueueRecords());
 
 		return () => {
 			localStorage.removeItem("fr_edit_mode_quickCampMsg");
@@ -1702,10 +1729,6 @@ function PageHeader({ headerText = "" }) {
 							1000,
 							"bottom-right"
 						);
-						if (friendsQueueSettings) {
-							// console.log(friendsQueueSettings)
-							fRQueueExtMsgSendHandler(friendsQueueSettings);
-						}
 					}
 				})
 				.catch((error) => {
@@ -1736,7 +1759,34 @@ function PageHeader({ headerText = "" }) {
 						totalCount: 0,
 					})
 				);
-				dispatch(getFriendsQueueRecords());
+				dispatch(getFriendsQueueRecords())
+					.unwrap()
+					.then((response) => {
+						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+							? JSON.parse(localStorage.getItem("fr_queue_settings"))
+							: null;
+						if (
+							fr_queue_settings?.length &&
+							typeof fr_queue_settings[0] === "object" &&
+							Object.keys(fr_queue_settings[0]).length >= 5
+						) {
+							// console.log(fr_queue_settings[0])
+							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+						}
+					})
+					.catch((error) => {
+						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+							? JSON.parse(localStorage.getItem("fr_queue_settings"))
+							: null;
+						if (
+							fr_queue_settings?.length &&
+							typeof fr_queue_settings[0] === "object" &&
+							Object.keys(fr_queue_settings[0]).length >= 5
+						) {
+							// console.log(fr_queue_settings[0])
+							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+						}
+					});
 			}, 3000);
 		}
 

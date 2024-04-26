@@ -20,7 +20,6 @@ import {
 	getFriendsQueueRecordsInChunk,
 	getFriendsQueueRecordsFromIndexDB,
 	saveFriendsQueueSettings,
-	resetFriendsQueueSettings,
 	resetIsChunkedDataFetchedFromApi,
 } from "../../actions/FriendsQueueActions";
 import NumberRangeInput from "../../components/common/NumberRangeInput";
@@ -32,12 +31,11 @@ const FriendsQueue = () => {
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
-	const [listFilteredCount, setListFilteredCount] = useState(null);
 	const [isReset, setIsReset] = useState(null);
 
-	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [inactiveAfter, setInactiveAfter] = useState(null);
+	const [listFilteredCount, setListFilteredCount] = useState(null);
 
 	const fbUserId = localStorage.getItem("fr_default_fb");
 	const timeDelays = [
@@ -62,13 +60,11 @@ const FriendsQueue = () => {
 			selected: false,
 		},
 	];
-	const timeout = useRef(null);
+	const timeoutToFetchFriendsQueueData = useRef(null);
+	const timeoutToSaveFriendsQueueSettings = useRef(null);
 
 	const friendRequestSentInsight = useSelector(
 		(state) => state.friendsQueue.friendRequestSentInsight
-	);
-	const friendsQueueSettings = useSelector(
-		(state) => state.friendsQueue.friendsQueueSettings
 	);
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
@@ -92,8 +88,23 @@ const FriendsQueue = () => {
 		(state) => state.friendsQueue.isChunkedDataFetchedFromApi
 	);
 
-	const [friendRequestQueueSettings, setFriendRequestQueueSettings] =
-		useState(null);
+	const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+		? JSON.parse(localStorage.getItem("fr_queue_settings"))
+		: null;
+
+	const [friendRequestQueueSettings, setFriendRequestQueueSettings] = useState(
+		fr_queue_settings?.length &&
+			typeof fr_queue_settings[0] === "object" &&
+			Object.keys(fr_queue_settings[0]).length >= 5
+			? fr_queue_settings[0]
+			: null
+	);
+
+	// localStorage.clear();
+	// console.log(localStorage.getItem("fr_queue_settings"));
+	// console.log(fr_queue_settings);
+	// console.log(friendRequestQueueSettings);
+
 	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(0);
 	const [keywordList, setKeyWordList] = useState(0);
 
@@ -111,21 +122,7 @@ const FriendsQueue = () => {
 		}
 	};
 
-	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
-		// console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);
-		if (nodeA.data.matchedKeyword === nodeB.data.matchedKeyword) return 0;
-		return nodeA.data.matchedKeyword === undefined ||
-			nodeA.data.matchedKeyword === null
-			? -1
-			: nodeB.data.matchedKeyword === undefined ||
-			  nodeB.data.matchedKeyword === null
-			? 1
-			: nodeA.data.matchedKeyword > nodeB.data.matchedKeyword
-			? 1
-			: -1;
-	};
-
-	const friendsListinRef = [
+	const friendsQueueRef = [
 		{
 			field: "friendProfileUrl",
 			headerName: "Name",
@@ -144,49 +141,7 @@ const FriendsQueue = () => {
 				setModalOpen,
 			},
 			sortable: true,
-			// comparator: someComparator,
 			cellRenderer: FriendsQueueRecordsKeywordRenderer,
-			// filter: "agTextColumnFilter",
-			// filterParams: {
-			// 	buttons: ["apply", "reset"],
-			// 	filterOptions: [
-			// 		{
-			// 			displayKey: "contains",
-			// 			displayName: "Contains",
-			// 			predicate: ([filterValue], cellValue) => {
-			// 				// console.log([filterValue][0], cellValue);
-			// 				if ([filterValue][0] === "NA" || [filterValue][0] === "N/A") {
-			// 					return (
-			// 						cellValue === undefined ||
-			// 						cellValue === "undefined" ||
-			// 						!cellValue ||
-			// 						cellValue === null ||
-			// 						cellValue === "NA" ||
-			// 						cellValue === "N/A"
-			// 					);
-			// 				} else {
-			// 					return cellValue != null && cellValue?.includes(filterValue);
-			// 				}
-			// 			},
-			// 		},
-			// 	],
-			// 	valueGetter: (params) => {
-			// 		return params?.data?.matchedKeyword;
-			// 	},
-			// 	textCustomComparator: function (filter, value, filterText) {
-			// 		const matchedKeywords = value.split(", "); // Split matched keywords by comma
-
-			// 		if (filter === "equals") {
-			// 			// Exact match
-			// 			return matchedKeywords.includes(filterText);
-			// 		} else {
-			// 			// Partial match
-			// 			return matchedKeywords.some((keyword) =>
-			// 				keyword.includes(filterText)
-			// 			);
-			// 		}
-			// 	},
-			// },
 		},
 		{
 			field: "message_group_request_sent",
@@ -223,16 +178,36 @@ const FriendsQueue = () => {
 		}
 
 		const parsedValue = parseInt(frndReqLimitValue);
-		setFriendRequestQueueSettings((friendRequestQueueSettings) => {
-			return {
-				...friendRequestQueueSettings,
-				request_limit_value: parsedValue,
-			};
-		});
+
+		if (friendRequestQueueSettings) {
+			const payload = { ...friendRequestQueueSettings };
+			Object.assign(payload, {
+				request_limit_value: parsedValue ? parsedValue : 50,
+			});
+			timeoutToSaveFriendsQueueSettings.current = setTimeout(
+				() => dispatch(saveFriendsQueueSettings(payload)),
+				1000
+			);
+			setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+				return {
+					...friendRequestQueueSettings,
+					request_limit_value: parsedValue ? parsedValue : 50,
+				};
+			});
+			clearTimeout(timeoutToSaveFriendsQueueSettings);
+		}
 	};
 
 	const handleIncrementDecrementVal = (type) => {
-		if (type === "INCREMENT") {
+		if (type === "INCREMENT" && friendRequestQueueSettings) {
+			const payload = { ...friendRequestQueueSettings };
+			Object.assign(payload, {
+				request_limit_value: friendRequestQueueSettings.request_limit_value + 1,
+			});
+			timeoutToSaveFriendsQueueSettings.current = setTimeout(
+				() => dispatch(saveFriendsQueueSettings(payload)),
+				1000
+			);
 			setFriendRequestQueueSettings((friendRequestQueueSettings) => {
 				return {
 					...friendRequestQueueSettings,
@@ -240,61 +215,109 @@ const FriendsQueue = () => {
 						friendRequestQueueSettings.request_limit_value + 1,
 				};
 			});
-
-			if (friendRequestQueueSettings.request_limit_value >= 999) {
-				setFriendRequestQueueSettings((friendRequestQueueSettings) => {
-					return {
-						...friendRequestQueueSettings,
-						request_limit_value: 999,
-					};
-				});
-			}
+			clearTimeout(timeoutToSaveFriendsQueueSettings);
+			// if (friendRequestQueueSettings.request_limit_value >= 999) {
+			// 	setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+			// 		return {
+			// 			...friendRequestQueueSettings,
+			// 			request_limit_value: 999,
+			// 		};
+			// 	});
+			// }
 		}
 
-		if (type === "DECREMENT") {
-			setFriendRequestQueueSettings((friendRequestQueueSettings) => {
-				return {
-					...friendRequestQueueSettings,
-					request_limit_value:
-						friendRequestQueueSettings.request_limit_value - 1,
-				};
-			});
-
+		if (type === "DECREMENT" && friendRequestQueueSettings) {
 			if (friendRequestQueueSettings.request_limit_value <= 1) {
+				const payload = { ...friendRequestQueueSettings };
+				Object.assign(payload, {
+					request_limit_value: 1,
+				});
+				timeoutToSaveFriendsQueueSettings.current = setTimeout(
+					() => dispatch(saveFriendsQueueSettings(payload)),
+					1000
+				);
 				setFriendRequestQueueSettings((friendRequestQueueSettings) => {
 					return {
 						...friendRequestQueueSettings,
 						request_limit_value: 1,
 					};
 				});
+				clearTimeout(timeoutToSaveFriendsQueueSettings);
+			} else {
+				const payload = { ...friendRequestQueueSettings };
+				Object.assign(payload, {
+					request_limit_value:
+						friendRequestQueueSettings.request_limit_value - 1,
+				});
+				timeoutToSaveFriendsQueueSettings.current = setTimeout(
+					() => dispatch(saveFriendsQueueSettings(payload)),
+					1000
+				);
+				setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+					return {
+						...friendRequestQueueSettings,
+						request_limit_value:
+							friendRequestQueueSettings.request_limit_value - 1,
+					};
+				});
+				clearTimeout(timeoutToSaveFriendsQueueSettings);
 			}
 		}
 	};
 
-	const useDebounce = (value, delay) => {
-		const [debouncedValue, setDebouncedValue] = useState(value);
+	// const useDebounce = (value, delay) => {
+	// 	const [debouncedValue, setDebouncedValue] = useState(value);
 
-		useEffect(() => {
-			const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+	// 	useEffect(() => {
+	// 		const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
 
-			return () => {
-				clearTimeout(timer);
-			};
-		}, [value, delay]);
+	// 		return () => {
+	// 			clearTimeout(timer);
+	// 		};
+	// 	}, [value, delay]);
 
-		return debouncedValue;
-	};
+	// 	return debouncedValue;
+	// };
 
-	const debouncedFriendsQueueSettings = useDebounce(
-		friendRequestQueueSettings,
-		1000
-	);
+	// const debouncedFriendsQueueSettings = useDebounce(
+	// 	friendRequestQueueSettings,
+	// 	1000
+	// );
 
 	useEffect(() => {
-		dispatch(getFriendsQueueSettings())
-			.unwrap()
-			.then((response) => {
-				if (response && !response?.data?.length) {
+		if (!friendRequestQueueSettings) {
+			dispatch(getFriendsQueueSettings())
+				.unwrap()
+				.then((response) => {
+					if (response && !response?.data?.length) {
+						dispatch(
+							saveFriendsQueueSettings({
+								fb_user_id: fbUserId,
+								request_limit_value: 50,
+								request_limited: true,
+								run_friend_queue: false,
+								time_delay: 3,
+							})
+						);
+						setFriendRequestQueueSettings({
+							fb_user_id: fbUserId,
+							request_limit_value: 50,
+							request_limited: true,
+							run_friend_queue: false,
+							time_delay: 3,
+						});
+					}
+					if (
+						response &&
+						response.data &&
+						response.data.length &&
+						typeof response.data[0] === "object" &&
+						Object.keys(response.data[0]).length >= 5
+					) {
+						setFriendRequestQueueSettings(response.data[0]);
+					}
+				})
+				.catch((error) => {
 					dispatch(
 						saveFriendsQueueSettings({
 							fb_user_id: fbUserId,
@@ -304,31 +327,29 @@ const FriendsQueue = () => {
 							time_delay: 3,
 						})
 					);
-				}
-			})
-			.catch((error) =>
-				dispatch(
-					saveFriendsQueueSettings({
+					setFriendRequestQueueSettings({
 						fb_user_id: fbUserId,
 						request_limit_value: 50,
 						request_limited: true,
 						run_friend_queue: false,
 						time_delay: 3,
-					})
-				)
-			);
+					});
+				});
+		}
 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
+
+		return () => clearTimeout(timeoutToSaveFriendsQueueSettings);
 	}, []);
 
 	useEffect(() => {
 		if (isDataFetchedFromApi) {
-			timeout.current = setTimeout(
+			timeoutToFetchFriendsQueueData.current = setTimeout(
 				() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
 				3500
 			);
 		}
-		return () => clearTimeout(timeout);
+		return () => clearTimeout(timeoutToFetchFriendsQueueData);
 	}, [isDataFetchedFromApi]);
 
 	useEffect(() => {
@@ -353,27 +374,27 @@ const FriendsQueue = () => {
 		}
 	}, [isChunkedDataFetchedFromApi]);
 
-	useEffect(() => {
-		if (friendsQueueSettings && friendsQueueSettings?.length > 0) {
-			setFriendRequestQueueSettings({
-				fb_user_id: friendsQueueSettings[0]?.fb_user_id,
-				request_limit_value: friendsQueueSettings[0]?.request_limit_value,
-				request_limited: friendsQueueSettings[0]?.request_limited,
-				run_friend_queue: friendsQueueSettings[0]?.run_friend_queue,
-				time_delay: Number(friendsQueueSettings[0]?.time_delay),
-			});
-		}
-	}, [friendsQueueSettings]);
+	// useEffect(() => {
+	// 	if (friendsQueueSettings && friendsQueueSettings?.length > 0) {
+	// 		setFriendRequestQueueSettings({
+	// 			fb_user_id: friendsQueueSettings[0]?.fb_user_id,
+	// 			request_limit_value: friendsQueueSettings[0]?.request_limit_value,
+	// 			request_limited: friendsQueueSettings[0]?.request_limited,
+	// 			run_friend_queue: friendsQueueSettings[0]?.run_friend_queue,
+	// 			time_delay: Number(friendsQueueSettings[0]?.time_delay),
+	// 		});
+	// 	}
+	// }, [friendsQueueSettings]);
 
-	useEffect(() => {
-		if (
-			debouncedFriendsQueueSettings &&
-			Object.keys(debouncedFriendsQueueSettings)?.length > 1
-		) {
-			dispatch(resetFriendsQueueSettings(null));
-			dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
-		}
-	}, [debouncedFriendsQueueSettings]);
+	// useEffect(() => {
+	// 	if (
+	// 		debouncedFriendsQueueSettings &&
+	// 		Object.keys(debouncedFriendsQueueSettings)?.length > 1
+	// 	) {
+	// 		dispatch(resetFriendsQueueSettings(null));
+	// 		dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
+	// 	}
+	// }, [debouncedFriendsQueueSettings]);
 
 	useEffect(() => {
 		dispatch(countCurrentListsize(friendsQueueRecordsCount));
@@ -417,131 +438,180 @@ const FriendsQueue = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			<div className='friends-queue-action-bar'>
-				<div className='friends-queue-action-bar-item'>
-					<div className='friend-req-sent-filter'>
-						<div className='friend-req-sent-count'>
-							<div className='count'>{friendRequestSentInsight}</div>
-							<div className='count-descriptor'>Friend request(s) sent</div>
+			{!loading && (
+				<div className='friends-queue-action-bar'>
+					<div className='friends-queue-action-bar-item'>
+						<div className='friend-req-sent-filter'>
+							<div className='friend-req-sent-count'>
+								<div className='count'>{friendRequestSentInsight}</div>
+								<div className='count-descriptor'>Friend request(s) sent</div>
+							</div>
+							<select
+								className='select-friend-req-sent-period'
+								name='pets'
+								id='pet-select'
+								value={frndReqSentPeriod}
+								onChange={(e) => setFrndReqSentPeriod(e.target.value)}
+							>
+								<option value='0'>Today</option>
+								<option value='1'>This week</option>
+								<option value='2'>All times</option>
+							</select>
 						</div>
-						<select
-							className='select-friend-req-sent-period'
-							name='pets'
-							id='pet-select'
-							value={frndReqSentPeriod}
-							onChange={(e) => setFrndReqSentPeriod(e.target.value)}
-						>
-							<option value='0'>Today</option>
-							<option value='1'>This week</option>
-							<option value='2'>All times</option>
-						</select>
 					</div>
-				</div>
-				<div className='friends-queue-action-bar-item'>
-					<div className='friend-req-send-limit'>
-						<div className='select-limit'>
-							<div className='req-limit'>Request limit</div>
-							<div className='select-limit-item'>
-								<div
-									className={
-										!friendRequestQueueSettings?.request_limited
-											? "infinite is-active"
-											: "infinite"
-									}
-									onClick={() => {
-										setFriendRequestQueueSettings(
-											(friendRequestQueueSettings) => {
-												return {
-													...friendRequestQueueSettings,
-													request_limited: false,
-												};
+					<div className='friends-queue-action-bar-item'>
+						<div className='friend-req-send-limit'>
+							<div className='select-limit'>
+								<div className='req-limit'>Request limit</div>
+								<div className='select-limit-item'>
+									<div
+										className={
+											!friendRequestQueueSettings?.request_limited
+												? "infinite is-active"
+												: "infinite"
+										}
+										onClick={() => {
+											if (friendRequestQueueSettings) {
+												const payload = { ...friendRequestQueueSettings };
+												Object.assign(payload, { request_limited: false });
+												timeoutToSaveFriendsQueueSettings.current = setTimeout(
+													() => dispatch(saveFriendsQueueSettings(payload)),
+													1000
+												);
+												setFriendRequestQueueSettings(
+													(friendRequestQueueSettings) => {
+														return {
+															...friendRequestQueueSettings,
+															request_limited: false,
+														};
+													}
+												);
+												clearTimeout(timeoutToSaveFriendsQueueSettings);
 											}
-										);
-									}}
-								>
-									Infinite
-								</div>
-								<div
-									className={
-										friendRequestQueueSettings?.request_limited
-											? "limited is-active"
-											: "limited"
-									}
-									onClick={() => {
-										setFriendRequestQueueSettings(
-											(friendRequestQueueSettings) => {
-												return {
-													...friendRequestQueueSettings,
-													request_limited: true,
-												};
+										}}
+									>
+										Infinite
+									</div>
+									<div
+										className={
+											friendRequestQueueSettings?.request_limited
+												? "limited is-active"
+												: "limited"
+										}
+										onClick={() => {
+											if (friendRequestQueueSettings) {
+												const payload = { ...friendRequestQueueSettings };
+												Object.assign(payload, { request_limited: true });
+												timeoutToSaveFriendsQueueSettings.current = setTimeout(
+													() => dispatch(saveFriendsQueueSettings(payload)),
+													1000
+												);
+												setFriendRequestQueueSettings(
+													(friendRequestQueueSettings) => {
+														return {
+															...friendRequestQueueSettings,
+															request_limited: true,
+														};
+													}
+												);
+												clearTimeout(timeoutToSaveFriendsQueueSettings);
 											}
-										);
-									}}
-								>
-									Limited
+										}}
+									>
+										Limited
+									</div>
 								</div>
 							</div>
-						</div>
-						<NumberRangeInput
-							value={
-								!friendRequestQueueSettings?.request_limited
-									? "∞"
-									: friendRequestQueueSettings?.request_limit_value
-							}
-							handleChange={onChangeFrndReqLimit}
-							setIncrementDecrementVal={handleIncrementDecrementVal}
-							customStyleClass='friend-req-limit-num-input'
-							disabled={!friendRequestQueueSettings?.request_limited}
-						/>
-					</div>
-				</div>
-				<div className='friends-queue-action-bar-item'>
-					<div className='friend-req-time-delay'>
-						<div className='time-delay'>Time delay</div>
-						<DropSelector
-							selects={timeDelays}
-							value={friendRequestQueueSettings?.time_delay}
-							extraClass='friend-req-time-delay-bar tinyWrap'
-							height='40px'
-							width='inherit'
-							handleChange={(e) => {
-								setFriendRequestQueueSettings((friendRequestQueueSettings) => {
-									return {
-										...friendRequestQueueSettings,
-										time_delay: Number(e.target.value),
-									};
-								});
-							}}
-						/>
-					</div>
-				</div>
-				<div className='friends-queue-action-bar-item'>
-					<div className='friend-req-run-queue'>
-						<div className='run-friend-queue'>
-							<div className='run'>Run friend queue</div>
-							<Switch
-								checked={friendRequestQueueSettings?.run_friend_queue}
-								handleChange={() => {
-									setFriendRequestQueueSettings(
-										(friendRequestQueueSettings) => {
-											return {
-												...friendRequestQueueSettings,
-												run_friend_queue:
-													!friendRequestQueueSettings.run_friend_queue,
-											};
-										}
-									);
-								}}
-								smallVariant
+							<NumberRangeInput
+								value={
+									!friendRequestQueueSettings?.request_limited
+										? "∞"
+										: friendRequestQueueSettings?.request_limit_value
+								}
+								handleChange={onChangeFrndReqLimit}
+								setIncrementDecrementVal={handleIncrementDecrementVal}
+								customStyleClass='friend-req-limit-num-input'
+								disabled={!friendRequestQueueSettings?.request_limited}
 							/>
 						</div>
 					</div>
+					<div className='friends-queue-action-bar-item'>
+						<div className='friend-req-time-delay'>
+							<div className='time-delay'>Time delay</div>
+							<DropSelector
+								selects={timeDelays}
+								value={friendRequestQueueSettings?.time_delay}
+								extraClass='friend-req-time-delay-bar tinyWrap'
+								height='40px'
+								width='inherit'
+								handleChange={(e) => {
+									if (friendRequestQueueSettings) {
+										const payload = { ...friendRequestQueueSettings };
+										Object.assign(payload, {
+											time_delay: Number(e.target.value),
+										});
+										timeoutToSaveFriendsQueueSettings.current = setTimeout(
+											() => dispatch(saveFriendsQueueSettings(payload)),
+											1000
+										);
+										setFriendRequestQueueSettings(
+											(friendRequestQueueSettings) => {
+												return {
+													...friendRequestQueueSettings,
+													time_delay: Number(e.target.value),
+												};
+											}
+										);
+										clearTimeout(timeoutToSaveFriendsQueueSettings);
+									}
+								}}
+							/>
+						</div>
+					</div>
+					<div className='friends-queue-action-bar-item'>
+						<div className='friend-req-run-queue'>
+							<div className='run-friend-queue'>
+								<div className='run'>Run friend queue</div>
+								<Switch
+									checked={friendRequestQueueSettings?.run_friend_queue}
+									handleChange={() => {
+										if (friendRequestQueueSettings) {
+											console.log(friendRequestQueueSettings);
+											const payload = { ...friendRequestQueueSettings };
+											Object.assign(payload, {
+												run_friend_queue:
+													!friendRequestQueueSettings.run_friend_queue,
+											});
+											timeoutToSaveFriendsQueueSettings.current = setTimeout(
+												() => dispatch(saveFriendsQueueSettings(payload)),
+												1000
+											);
+											setFriendRequestQueueSettings(
+												(friendRequestQueueSettings) => {
+													return {
+														...friendRequestQueueSettings,
+														run_friend_queue:
+															!friendRequestQueueSettings.run_friend_queue,
+													};
+												}
+											);
+											clearTimeout(timeoutToSaveFriendsQueueSettings);
+										}
+									}}
+									smallVariant
+								/>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			{friendsQueueRecords?.length > 0 && !loading && !isListLoading ? (
+			)}
+			{friendsQueueRecords?.length > 0 &&
+			!loading &&
+			!isListLoading &&
+			inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
-					friendsListingRef={friendsListinRef}
+					friendsListingRef={friendsQueueRef}
 					getFilterNum={setListFilteredCount}
 					reset={isReset}
 					setReset={setIsReset}

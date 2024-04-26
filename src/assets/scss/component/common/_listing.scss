@@ -162,6 +162,10 @@
           background-color: rgba(41, 117, 49, 1);
           padding: 3px 12px;
           border-radius: 16px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          max-width: 160px;
         }
 
         .friend-queue-keywords-more {
