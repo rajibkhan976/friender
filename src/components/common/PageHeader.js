@@ -1687,10 +1687,10 @@ function PageHeader({ headerText = "" }) {
 				};
 			}
 
-			if (quickMsg1 && quickMsg1.text) {
+			if (quickMsg1 && quickMsg1.messengerText) {
 				friendRequestSent = {
 					groupId: "",
-					quickMessage: quickMsg1.text,
+					quickMessage: quickMsg1.messengerText,
 				};
 			}
 
@@ -1701,10 +1701,10 @@ function PageHeader({ headerText = "" }) {
 				};
 			}
 
-			if (quickMsg2 && quickMsg2.text) {
+			if (quickMsg2 && quickMsg2.messengerText) {
 				friendRequestAccepted = {
 					groupId: "",
-					quickMessage: quickMsg2.text,
+					quickMessage: quickMsg2.messengerText,
 				};
 			}
 
