@@ -27,7 +27,6 @@ import DropSelector from "../../components/formComponents/DropSelector";
 import Switch from "../../components/formComponents/Switch";
 
 const FriendsQueue = () => {
-	//::::Friend List geting data from Redux::::
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
@@ -285,39 +284,10 @@ const FriendsQueue = () => {
 	// );
 
 	useEffect(() => {
-		if (!friendRequestQueueSettings) {
-			dispatch(getFriendsQueueSettings())
-				.unwrap()
-				.then((response) => {
-					if (response && !response?.data?.length) {
-						dispatch(
-							saveFriendsQueueSettings({
-								fb_user_id: fbUserId,
-								request_limit_value: 50,
-								request_limited: true,
-								run_friend_queue: false,
-								time_delay: 3,
-							})
-						);
-						setFriendRequestQueueSettings({
-							fb_user_id: fbUserId,
-							request_limit_value: 50,
-							request_limited: true,
-							run_friend_queue: false,
-							time_delay: 3,
-						});
-					}
-					if (
-						response &&
-						response.data &&
-						response.data.length &&
-						typeof response.data[0] === "object" &&
-						Object.keys(response.data[0]).length >= 5
-					) {
-						setFriendRequestQueueSettings(response.data[0]);
-					}
-				})
-				.catch((error) => {
+		dispatch(getFriendsQueueSettings())
+			.unwrap()
+			.then((response) => {
+				if (response && !response?.data?.length) {
 					dispatch(
 						saveFriendsQueueSettings({
 							fb_user_id: fbUserId,
@@ -334,8 +304,35 @@ const FriendsQueue = () => {
 						run_friend_queue: false,
 						time_delay: 3,
 					});
+				}
+				if (
+					response &&
+					response.data &&
+					response.data.length &&
+					typeof response.data[0] === "object" &&
+					Object.keys(response.data[0]).length >= 5
+				) {
+					setFriendRequestQueueSettings(response.data[0]);
+				}
+			})
+			.catch((error) => {
+				dispatch(
+					saveFriendsQueueSettings({
+						fb_user_id: fbUserId,
+						request_limit_value: 50,
+						request_limited: true,
+						run_friend_queue: false,
+						time_delay: 3,
+					})
+				);
+				setFriendRequestQueueSettings({
+					fb_user_id: fbUserId,
+					request_limit_value: 50,
+					request_limited: true,
+					run_friend_queue: false,
+					time_delay: 3,
 				});
-		}
+			});
 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
 

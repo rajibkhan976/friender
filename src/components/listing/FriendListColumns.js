@@ -233,47 +233,45 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 				<span className='muted-text'>N/A</span>
 			)}
 			{params?.data?.friendProfileUrl && (
-				<>
-					<a
-						href={params?.data?.friendProfileUrl}
-						target='_blank'
-						rel='noreferrer'
-						className='ico-open-link'
-					>
-						<OpenInNewTab />
-					</a>
-					{params?.data?.status !== null && params?.data?.status === 0 && (
-						<RedWarningSquareIcon
-							className='fb-friend-request-warning'
-							onMouseEnter={(e) => {
-								setShowTooltip(true);
-								setMousePos({
-									x: e.clientX,
-									y: e.clientY,
-								});
-							}}
-							onMouseLeave={(e) => {
-								setShowTooltip(false);
-								setMousePos({
-									x: 0,
-									y: 0,
-								});
-							}}
-						/>
-					)}
-					{showTooltip &&
-						createPortal(
-							<span
-								className='fb-friend-request-warning-tooitip'
-								style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
-							>
-								Sending friend request was unsuccessful due to an unknown error
-								from Facebook.
-							</span>,
-							document.getElementById("root")
-						)}
-				</>
+				<a
+					href={params?.data?.friendProfileUrl}
+					target='_blank'
+					rel='noreferrer'
+					className='ico-open-link'
+				>
+					<OpenInNewTab />
+				</a>
 			)}
+			{params?.data?.status !== null && params?.data?.status === 0 && (
+				<RedWarningSquareIcon
+					className='fb-friend-request-warning'
+					onMouseEnter={(e) => {
+						setShowTooltip(true);
+						setMousePos({
+							x: e.clientX,
+							y: e.clientY,
+						});
+					}}
+					onMouseLeave={(e) => {
+						setShowTooltip(false);
+						setMousePos({
+							x: 0,
+							y: 0,
+						});
+					}}
+				/>
+			)}
+			{showTooltip &&
+				createPortal(
+					<span
+						className='fb-friend-request-warning-tooitip'
+						style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
+					>
+						Sending friend request was unsuccessful due to an unknown error from
+						Facebook.
+					</span>,
+					document.getElementById("root")
+				)}
 		</span>
 	);
 });
