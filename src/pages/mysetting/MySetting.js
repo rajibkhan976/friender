@@ -26,6 +26,7 @@ import ToolTipPro from "../../components/common/ToolTipPro";
 import Keyword from "../../components/common/Keyword";
 import DropSelectMessage from "../../components/messages/DropSelectMessage";
 import moment from "moment";
+import { showModal } from "../../actions/PlanAction";
 
 
 
@@ -1925,6 +1926,18 @@ const MySetting = () => {
 		}
 	};
 
+	// const planCheck = e => {
+	// 	if (
+	// 		e.target.checked &&
+	// 		(localStorage?.getItem('fr_plan') && localStorage?.getItem('fr_plan')?.toLowerCase() === "free")
+	// 	) {
+	// 		console.log('here');
+	// 		e.preventDefault();
+	// 		e.stopPropagation();
+	// 		return false
+	// 	}
+	// }
+
 	return (
 		<div className='setting-content setting-global'>
 			{settingFetched && (
@@ -2077,8 +2090,21 @@ const MySetting = () => {
 							<div className='setting-child'>
 								<Switch
 									checked={dontSendFrindReqFrnd}
-									handleChange={() => {
-										setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+													e.preventDefault()
+													setDontSendFrindReqFrnd(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
+											}
+										}
+										else {
+											setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
+										}
 									}}
 								/>
 								Don’t send friend request(s) to people I’ve been friends with
@@ -2093,8 +2119,21 @@ const MySetting = () => {
 								<Switch
 									// upComing
 									checked={dontSendFrindReqIRejct}
-									handleChange={() => {
-										setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+													e.preventDefault()
+													setDontSendFrindReqIRejct(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
+											}
+										}
+										else {
+											setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
+										}
 									}}
 								/>{" "}
 								Don’t send friend request(s) to people who sent me friend
@@ -2108,8 +2147,21 @@ const MySetting = () => {
 							<div className='setting-child'>
 								<Switch
 									checked={dontSendFrindReqThyRejct}
-									handleChange={() => {
-										setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+													e.preventDefault()
+													setDontSendFrindReqThyRejct(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
+											}
+										}
+										else {
+											setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
+										}
 									}}
 								/>
 								Don’t send friend request(s) to people I sent friend request(s)
@@ -2121,8 +2173,21 @@ const MySetting = () => {
 							<div className='setting-child'>
 								<Switch
 									checked={dontSendFrindReqFbRejct}
-									handleChange={() => {
-										setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+													e.preventDefault()
+													setDontSendFrindReqFbRejct(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
+											}
+										}
+										else {
+											setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
+										}
 									}}
 								/>
 								Avoid sending friend request(s) repeatedly to people if facebook
@@ -2135,9 +2200,24 @@ const MySetting = () => {
 							<div className='setting-child '>
 								<Switch
 									checked={reFrndng}
-									handleChange={() => {
-										setReFrndng(!reFrndng);
-										setRefrienderingOpen(!refrienderingOpen);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+													e.preventDefault()
+													setReFrndng(false);
+													setRefrienderingOpen(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setReFrndng(!reFrndng);
+												setRefrienderingOpen(!refrienderingOpen);
+											}
+										}
+										else {
+											setReFrndng(!reFrndng);
+											setRefrienderingOpen(!refrienderingOpen);
+										}
 									}}
 								/>
 								Automated re-friending
@@ -2224,9 +2304,26 @@ const MySetting = () => {
 												upComing={!reFrndng}
 												isDisabled={!reFrndng}
 												checked={reFriendOpenKeywords}
-												handleChange={() => {
-													if (reFrndng) {
-														setReFriendOpenKeywords(!reFriendOpenKeywords);
+												handleChange={(e) => {
+													if (e.target.checked) {
+														if (localStorage?.getItem('fr_plan')) {
+															if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+																e.preventDefault()
+																if (reFrndng) {
+																	setReFriendOpenKeywords(!reFriendOpenKeywords);
+																}
+																dispatch(showModal(true))
+															}
+														} else {
+															if (reFrndng) {
+																setReFriendOpenKeywords(!reFriendOpenKeywords);
+															}
+														}
+													}
+													else {
+														if (reFrndng) {
+															setReFriendOpenKeywords(!reFriendOpenKeywords);
+														}
 													}
 												}}
 											/>
@@ -2294,9 +2391,24 @@ const MySetting = () => {
 							<Switch
 								checked={autoCnclFrndRque}
 								// handleOnBlur={e => setAutoCnclFrndRque(!autoCnclFrndRque)}
-								handleChange={() => {
-									setAutoCnclFrndRque(!autoCnclFrndRque);
-									setDeletePendingFrndOpen(!deletePendingFrndOpen);
+								handleChange={(e) => {
+									if (e.target.checked) {
+										if (localStorage?.getItem('fr_plan')) {
+											if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												e.preventDefault()
+												setAutoCnclFrndRque(false);
+												setDeletePendingFrndOpen(false);
+												dispatch(showModal(true))
+											}
+										} else {
+											setAutoCnclFrndRque(!autoCnclFrndRque);
+											setDeletePendingFrndOpen(!deletePendingFrndOpen);
+										}
+									}
+									else {
+										setAutoCnclFrndRque(!autoCnclFrndRque);
+										setDeletePendingFrndOpen(!deletePendingFrndOpen);
+									}
 								}}
 							/>
 							Delete pending friend request(s) automatically
@@ -2411,17 +2523,41 @@ const MySetting = () => {
 							<div className='setting-child first'>
 								<Switch
 									checked={sndMsgAcptsFrndReqToggle}
-									handleChange={() => {
-										setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
-
-										if (!sndMsgAcptsFrndReqToggle) {
-											localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+													) {
+													e.preventDefault()
+													setSndMsgAcptsFrndReqToggle(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
+	
+												if (!sndMsgAcptsFrndReqToggle) {
+													localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+												}
+	
+												TurnOffMsgPanelDependsOnToggle(
+													sndMsgAcptsFrndReqToggle,
+													setSelectMsgTempAcceptsFrndReq
+												);
+											}
 										}
+										else {
+											setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
 
-										TurnOffMsgPanelDependsOnToggle(
-											sndMsgAcptsFrndReqToggle,
-											setSelectMsgTempAcceptsFrndReq
-										);
+											if (!sndMsgAcptsFrndReqToggle) {
+												localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+											}
+
+											TurnOffMsgPanelDependsOnToggle(
+												sndMsgAcptsFrndReqToggle,
+												setSelectMsgTempAcceptsFrndReq
+											);
+										}
 									}}
 								/>
 								Send message when someone accepts my friend request
@@ -2478,7 +2614,7 @@ const MySetting = () => {
 								<div className='custom-select-drop-area inline-confirmation'>
 									<Switch
 										checked={sendMessageIfExists}
-										handleChange={() => {
+										handleChange={(e) => {
 											setSendMessageIfExists(!sendMessageIfExists);
 										}}
 									/>
@@ -2497,13 +2633,35 @@ const MySetting = () => {
 							<div className='setting-child first'>
 								<Switch
 									checked={sndMsgRejtFrndReqToggle}
-									handleChange={() => {
-										setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
-										setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
-										TurnOffMsgPanelDependsOnToggle(
-											sndMsgRejtFrndReqToggle,
-											setSelectMsgTempRejectFrndReq
-										);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+												) {
+													e.preventDefault()
+													setSndMsgRejtFrndReqToggle(false);
+													setSndMsgRejtFrndReqOpen(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
+												setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
+												TurnOffMsgPanelDependsOnToggle(
+													sndMsgRejtFrndReqToggle,
+													setSelectMsgTempRejectFrndReq
+												);
+											}
+										}
+										else {
+											setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
+											setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
+											TurnOffMsgPanelDependsOnToggle(
+												sndMsgRejtFrndReqToggle,
+												setSelectMsgTempRejectFrndReq
+											);
+										}
 									}}
 								/>
 								Send message when someone reject my friend request
@@ -2569,14 +2727,36 @@ const MySetting = () => {
 								<Switch
 									// upComing
 									checked={sndMsgSomeoneSndFrndReqToggle}
-									handleChange={() => {
-										sertSndMsgSomeoneSndFrndReqToggle(
-											!sndMsgSomeoneSndFrndReqToggle
-										);
-										TurnOffMsgPanelDependsOnToggle(
-											sndMsgSomeoneSndFrndReqToggle,
-											setSelectMsgSomeoneSndFrndReq
-										);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+												) {
+													e.preventDefault()
+													sertSndMsgSomeoneSndFrndReqToggle(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												sertSndMsgSomeoneSndFrndReqToggle(
+													!sndMsgSomeoneSndFrndReqToggle
+												);
+												TurnOffMsgPanelDependsOnToggle(
+													sndMsgSomeoneSndFrndReqToggle,
+													setSelectMsgSomeoneSndFrndReq
+												);
+											}
+										}
+										else {
+											sertSndMsgSomeoneSndFrndReqToggle(
+												!sndMsgSomeoneSndFrndReqToggle
+											);
+											TurnOffMsgPanelDependsOnToggle(
+												sndMsgSomeoneSndFrndReqToggle,
+												setSelectMsgSomeoneSndFrndReq
+											);
+										}
 									}}
 								/>
 								Send message when someone sends me a friend request
@@ -2649,14 +2829,36 @@ const MySetting = () => {
 								{" "}
 								<Switch
 									checked={sndMsgRejtIncomingFrndReqToggle}
-									handleChange={() => {
-										setSndMsgRejtIncomingFrndReqToggle(
-											!sndMsgRejtIncomingFrndReqToggle
-										);
-										TurnOffMsgPanelDependsOnToggle(
-											sndMsgRejtIncomingFrndReqToggle,
-											setSelectMsgRejtIncomingFrndReq
-										);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+												) {
+													e.preventDefault()
+													setSndMsgRejtIncomingFrndReqToggle(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setSndMsgRejtIncomingFrndReqToggle(
+													!sndMsgRejtIncomingFrndReqToggle
+												);
+												TurnOffMsgPanelDependsOnToggle(
+													sndMsgRejtIncomingFrndReqToggle,
+													setSelectMsgRejtIncomingFrndReq
+												);
+											}
+										}
+										else {
+											setSndMsgRejtIncomingFrndReqToggle(
+												!sndMsgRejtIncomingFrndReqToggle
+											);
+											TurnOffMsgPanelDependsOnToggle(
+												sndMsgRejtIncomingFrndReqToggle,
+												setSelectMsgRejtIncomingFrndReq
+											);
+										}
 									}}
 								/>
 								Send message when I reject an incoming friend request
@@ -2729,14 +2931,36 @@ const MySetting = () => {
 							<div className='setting-child first'>
 								<Switch
 									checked={sndMsgAcptsIncomingFrndReqToggle}
-									handleChange={() => {
-										setSndMsgAcptsIncomingFrndReqToggle(
-											!sndMsgAcptsIncomingFrndReqToggle
-										);
-										TurnOffMsgPanelDependsOnToggle(
-											sndMsgAcptsIncomingFrndReqToggle,
-											setSelectMsgAcptsIncomingFrndReq
-										);
+									handleChange={(e) => {
+										if (e.target.checked) {
+											if (localStorage?.getItem('fr_plan')) {
+												if (
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+												) {
+													e.preventDefault()
+													setSndMsgAcptsIncomingFrndReqToggle(false);
+													dispatch(showModal(true))
+												}
+											} else {
+												setSndMsgAcptsIncomingFrndReqToggle(
+													!sndMsgAcptsIncomingFrndReqToggle
+												);
+												TurnOffMsgPanelDependsOnToggle(
+													sndMsgAcptsIncomingFrndReqToggle,
+													setSelectMsgAcptsIncomingFrndReq
+												);
+											}
+										}
+										else {
+											setSndMsgAcptsIncomingFrndReqToggle(
+												!sndMsgAcptsIncomingFrndReqToggle
+											);
+											TurnOffMsgPanelDependsOnToggle(
+												sndMsgAcptsIncomingFrndReqToggle,
+												setSelectMsgAcptsIncomingFrndReq
+											);
+										}
 									}}
 								/>
 								Send message when I accept an incoming friend request
@@ -2802,8 +3026,24 @@ const MySetting = () => {
 								<div className='custom-select-drop-area inline-confirmation'>
 									<Switch
 										checked={sendMessageIfExistsIncoming}
-										handleChange={() => {
-											setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
+										handleChange={(e) => {
+											if (e.target.checked) {
+												if (localStorage?.getItem('fr_plan')) {
+													if (
+															localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+															localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+													) {
+														e.preventDefault()
+														setSendMessageIfExistsIncoming(false);
+														dispatch(showModal(true))
+													}
+												}  else {
+													setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
+												}
+											}
+											else {
+												setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
+											}
 										}}
 									/>
 

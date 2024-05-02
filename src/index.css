@@ -87,6 +87,20 @@
 		rgba(27, 27, 29, 0.6)
 	);
 }
+.Toastify__toast--info {
+	&:has(.alert-inner-plan) {
+		/* &:after { */
+			background: linear-gradient(
+				90deg, 
+				rgba(0, 148, 255, 0.2), 
+				rgba(27, 27, 29, 0.6));
+		/* } */
+
+		svg[fill] {
+			fill: #0094FF;
+		}
+	}
+}
 /** colored notifications share the same progress bar color **/
 
 /** Classes for the close button. Better use your own closeButton **/

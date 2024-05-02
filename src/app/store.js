@@ -9,6 +9,7 @@ import campaignReducer from "../actions/CampaignsActions";
 import friendsQueueReducer from "../actions/FriendsQueueActions";
 // import productReducer from "../features/product/productSlice";
 // import searchReducer from "../features/Search/searchSlice";
+import planReducer from "../actions/PlanAction"
 
 export const store = configureStore({
 	reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
 		message: messageReducer,
 		campaign: campaignReducer,
 		friendsQueue: friendsQueueReducer,
+		plan: planReducer
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

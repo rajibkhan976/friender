@@ -1,0 +1,113 @@
+@use "../abstract/color-themes" as *;
+@use "../abstract/mixins" as *;
+
+.info-box {
+    width: 565px;
+    padding: 30px;
+    @include theme-aware('background-color', 'menu-bg');
+    border: 1px solid;
+    @include theme-aware('border-color', 'sidebar-border-color');
+    border-radius: 10px;
+
+    header {
+        margin-block-end: 30px;
+        padding-block-end: 20px;
+        border-bottom: 1px solid;
+        @include theme-aware('border-bottom-color', 'sidebar-border-color');
+
+        h5 {
+            @include theme-aware('color', 'link-text-color');
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            margin-block: 0;
+        }
+    }
+
+    .info-box-content {
+        .user-image-name {
+            margin-block-end: 30px;
+
+            figure {
+                height: 48px;
+                flex: 0 0 48px;
+                margin-inline-end: 8px;
+                background-repeat: no-repeat;
+                background-size: cover;
+                border-radius: 50%
+            }
+
+            h4 {
+                @include theme-aware('color', 'text-para-color');
+                font-size: 20px;
+                font-weight: 600;
+                letter-spacing: 0.2px;
+                flex: 1 1 auto;
+
+                .plan-alert-button {
+                    display: inline-flex;
+                    align-items: center;
+                    padding-inline: 30px;
+                    border-radius: 30px;
+                    height: 48px;
+                    @include theme-aware('background-color', 'listing-popup-bg');
+                    border: 1px solid;
+                    @include theme-aware('border-color', 'sidebar-border-color');
+                    @include theme-aware('color', 'text-para-color');
+                    text-transform: uppercase;
+
+                    .fr-tooltip-icon {
+                        margin-inline-end: 0;
+                        height: inherit;
+
+                        svg {
+                            width: 18px;
+                            height: 18px;
+                        }
+                    }
+                    .fr-tooltip {
+                        margin-inline-start: 8px;
+                        vertical-align: middle;
+                        text-transform: initial;
+
+                        &.fr-tooltip-top {
+                            .fr-tooltip-content {
+                                &:after {
+                                    width: 22px;
+                                    height: 22px;
+                                    bottom: 0;
+                                    margin-bottom: -13px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        p {
+            @include theme-aware('color', 'link-text-color');
+            font-size: 18px;
+            font-weight: 600;
+
+            > * {
+                @include theme-aware('color', 'text-color');
+                font-weight: normal;
+            }
+
+            &:last-child {
+                > * {
+                    @include theme-aware('color', 'dark-light-border')
+                }
+            }
+        }
+
+        p + p {
+            margin-block-start: 16px;
+        }
+    }
+
+    .fr-tooltip-content {
+        width: 162px;
+    }
+}

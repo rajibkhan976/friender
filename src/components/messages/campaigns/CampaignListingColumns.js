@@ -24,6 +24,7 @@ import {
 } from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
+import { showModal } from "../../../actions/PlanAction";
 import moment from 'moment';
 import extensionAccesories from "../../../configuration/extensionAccesories";
 
@@ -153,34 +154,43 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	};
 
 	const handleSwitchToggleStatus = (e) => {
-		const campaignId = params?.data?.campaign_id || params?.data?._id;
-
-		if (!params?.data?.friends_added ||
-			(params?.data?.friends_added === 0
-				|| params?.data?.friends_pending === 0
-				|| params?.data?.campaign_end_time_status && (new Date(params?.data?.campaign_end_time) < new Date()))
-			&& e.target.checked) {
-			Alertbox(
-				`${params?.data?.friends_added === 0 || params?.data?.friends_pending === 0
-					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
-				}`,
-				"warning",
-				3000,
-				"bottom-right"
-			);
-
+		if (
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+		) {
 			e.preventDefault();
-			e.stopPropagation();
-			return false;
-
+			setCampaignStatus(false)
+			dispatch(showModal(true))
 		} else {
-			// params?.setIsEditingCampaign({
-			// 	...params?.data,
-			// 	status: e.target.checked,
-			// });
-			// setCampaignStatus(e.target.checked);
-			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
+			const campaignId = params?.data?.campaign_id || params?.data?._id;
+
+			if (!params?.data?.friends_added ||
+				(params?.data?.friends_added === 0
+					|| params?.data?.friends_pending === 0
+					|| params?.data?.campaign_end_time_status && (new Date(params?.data?.campaign_end_time) < new Date()))
+				&& e.target.checked) {
+				Alertbox(
+					`${params?.data?.friends_added === 0 || params?.data?.friends_pending === 0
+						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+					}`,
+					"warning",
+					3000,
+					"bottom-right"
+				);
+
+				e.preventDefault();
+				e.stopPropagation();
+				return false;
+
+			} else {
+				// params?.setIsEditingCampaign({
+				// 	...params?.data,
+				// 	status: e.target.checked,
+				// });
+				// setCampaignStatus(e.target.checked);
+				camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
+			}
 		}
 	};
 

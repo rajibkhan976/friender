@@ -635,6 +635,21 @@ function PageHeader({ headerText = "" }) {
 					infoToolTip: true,
 				});
 				break;
+			
+			case "my-profile":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: false,
+					sortHeader: false,
+					filterHeader: false,
+					quickAction: false,
+					exportHeader: false,
+					listingLengthWell: false,
+					infoToolTip: false,
+				});
+				break;
 
 			default:
 				if (params?.campaignId) {

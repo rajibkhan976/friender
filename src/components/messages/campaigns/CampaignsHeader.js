@@ -5,6 +5,7 @@ import {
 	ChevronLeftArrowIcon,
 } from "../../../assets/icons/Icons";
 import { useSelector, useDispatch } from 'react-redux';
+import { showModal } from "../../../actions/PlanAction";
 import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
@@ -76,45 +77,55 @@ const CampaignsHeader = ({
 
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {
-		const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
-
-		if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined
-			|| location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0) {
-			setCampaignsStatusActivity(false);
-
-			Alertbox(
-				"This campaign currently has no pending friend(s). To turn on the campaign, please add some friends",
-				"warning",
-				3000,
-				"bottom-right"
-			);
-			return false;
-		}
-
-		if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
-			|| location?.state?.data?.campaign_end_time_status
-			&& (new Date(location?.state?.data?.campaign_end_time) < new Date()))
-			&& e.target.checked) {
-			setCampaignsStatusActivity(false);
-
-			Alertbox(
-				`${location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
-					? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
-					: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
-				}`,
-				"warning",
-				3000,
-				"bottom-right"
-			);
-			return false;
-
+		if (
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+		) {
+			e.preventDefault();
+			
+			setCampaignsStatusActivity(false)
+			dispatch(showModal(true))
 		} else {
-			camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
-			// extensionAccesories.sendMessageToExt({
-			// 	action: "update_schedules"
-			//   });
-			// We don't need that if we enables that, then toggle is not working..
-			// toggleEditCampaign(e.target.checked);
+			const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
+
+			if (!location?.state?.data?.friends_added || location?.state?.data?.friends_added === undefined
+				|| location?.state?.data?.friends_added === null || location?.state?.data?.friends_added === 0) {
+				setCampaignsStatusActivity(false);
+
+				Alertbox(
+					"This campaign currently has no pending friend(s). To turn on the campaign, please add some friends",
+					"warning",
+					3000,
+					"bottom-right"
+				);
+				return false;
+			}
+
+			if ((location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
+				|| location?.state?.data?.campaign_end_time_status
+				&& (new Date(location?.state?.data?.campaign_end_time) < new Date()))
+				&& e.target.checked) {
+				setCampaignsStatusActivity(false);
+
+				Alertbox(
+					`${location?.state?.data?.friends_added === 0 || location?.state?.data?.friends_pending === 0
+						? "This campaign currently has no pending friend(s). To turn on the campaign, please add some friends"
+						: "The campaign you are attempting to turn on has exceeded its end date and time. To proceed, you need to modify the campaign accordingly."
+					}`,
+					"warning",
+					3000,
+					"bottom-right"
+				);
+				return false;
+
+			} else {
+				camapignStatusToggleUpdateAPI(campaignId, e.target.checked);
+				// extensionAccesories.sendMessageToExt({
+				// 	action: "update_schedules"
+				//   });
+				// We don't need that if we enables that, then toggle is not working..
+				// toggleEditCampaign(e.target.checked);
+			}
 		}
 	};
 

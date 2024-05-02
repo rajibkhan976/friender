@@ -195,6 +195,11 @@ const SidebarPopUp = (props) => {
             {/* <li className="no-click">
               <NavLink to="/">My Profile</NavLink>
             </li> */}
+            <li>
+              <NavLink to="/my-profile">
+                My Profile
+              </NavLink>
+            </li>
             {props.authenticated && <li>
               <NavLink to="/settings/settings">
                 Settings

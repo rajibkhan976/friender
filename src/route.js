@@ -80,6 +80,10 @@ const EditCampaign = lazy(() =>
 	import("./pages/messages/campaigns/edit/EditCampaign")
 );
 
+const MyProfile = lazy(() => 
+	import("./pages/MyProfile")
+)
+
 const Routeing = () => {
 	const dispatch = useDispatch();
 	const deleteAllInterval = async (callback) => {
@@ -212,6 +216,15 @@ const Routeing = () => {
 								}
 							/>
 						</Route>
+
+						<Route
+							path="my-profile"
+							element={
+								<Suspense fallback={""}>
+									<MyProfile />
+								</Suspense>
+							}
+						/>
 
 						{/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}
 						<Route

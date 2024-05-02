@@ -25,6 +25,8 @@ import {
 import NumberRangeInput from "../../components/common/NumberRangeInput";
 import DropSelector from "../../components/formComponents/DropSelector";
 import Switch from "../../components/formComponents/Switch";
+import Alertbox from "../../components/common/Toast";
+import { showModal } from "../../actions/PlanAction";
 
 const FriendsQueue = () => {
 	const dispatch = useDispatch();
@@ -406,6 +408,57 @@ const FriendsQueue = () => {
 	// console.log(friendsQueueRecordsCount);
 	// console.log(friendRequestSentInsight);
 
+	const runFriendsQueue = (e) => {
+		const le_plan = localStorage?.getItem('fr_plan')?.toLowerCase();
+
+		if (le_plan === "free" && e.target.checked) {
+			e.preventDefault();
+			e.stopPropagation();
+			dispatch(showModal(true))
+			setFriendRequestQueueSettings({
+				...friendRequestQueueSettings,
+				run_friend_queue: false
+			})
+			console.log('here');
+			return false;
+		} else if (le_plan === "basic" && e.target.checked) {
+			console.log('here');
+			// console.log("BASIC PLAN");
+			Alertbox(
+				`Friend request sending has started without message sending. Upgrade to send messages with friend requests.`,
+				"info-plan-toast",
+				3000,
+				"bottom-right",
+				"",
+				"Info",
+				{
+					url: 'sales@tier5.us',
+					text: "Upgrade"
+				}
+			);
+			setFriendRequestQueueSettings(
+				(friendRequestQueueSettings) => {
+					return {
+						...friendRequestQueueSettings,
+						run_friend_queue:
+							!friendRequestQueueSettings.run_friend_queue,
+					};
+				}
+			);
+		} else {
+			console.log('here');
+			setFriendRequestQueueSettings(
+				(friendRequestQueueSettings) => {
+					return {
+						...friendRequestQueueSettings,
+						run_friend_queue:
+							!friendRequestQueueSettings?.run_friend_queue,
+					};
+				}
+			);
+		}
+	}
+
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
 			{modalOpen && (
@@ -573,17 +626,34 @@ const FriendsQueue = () => {
 								} friend queue`}</div>
 								<Switch
 									checked={friendRequestQueueSettings?.run_friend_queue}
-									handleChange={() => {
-										if (friendRequestQueueSettings) {
-											console.log(friendRequestQueueSettings);
-											const payload = { ...friendRequestQueueSettings };
-											Object.assign(payload, {
-												run_friend_queue:
-													!friendRequestQueueSettings.run_friend_queue,
-											});
-											timeoutToSaveFriendsQueueSettings.current = setTimeout(
-												() => dispatch(saveFriendsQueueSettings(payload)),
-												1000
+									handleChange={(e) => {
+										if (
+											localStorage?.getItem('fr_plan')?.toLowerCase() === "free" &&
+											e.target.checked
+										) {
+											e.preventDefault();
+											e.stopPropagation();
+											dispatch(showModal(true))
+											setFriendRequestQueueSettings({
+												...friendRequestQueueSettings,
+												run_friend_queue: false
+											})
+											return false
+										} else if (
+											localStorage?.getItem('fr_plan')?.toLowerCase() === "basic" &&
+											e.target.checked
+										) {
+											Alertbox(
+												`Friend request sending has started without message sending. Upgrade to send messages with friend requests.`,
+												"info-plan-toast",
+												3000,
+												"bottom-right",
+												"",
+												"Info",
+												{
+													url: 'sales@tier5.us',
+													text: "Upgrade"
+												}
 											);
 											setFriendRequestQueueSettings(
 												(friendRequestQueueSettings) => {
@@ -594,7 +664,29 @@ const FriendsQueue = () => {
 													};
 												}
 											);
-											clearTimeout(timeoutToSaveFriendsQueueSettings);
+										} else {
+											if (friendRequestQueueSettings) {
+												// console.log(friendRequestQueueSettings);
+												const payload = { ...friendRequestQueueSettings };
+												Object.assign(payload, {
+													run_friend_queue:
+														!friendRequestQueueSettings.run_friend_queue,
+												});
+												timeoutToSaveFriendsQueueSettings.current = setTimeout(
+													() => dispatch(saveFriendsQueueSettings(payload)),
+													1000
+												);
+												setFriendRequestQueueSettings(
+													(friendRequestQueueSettings) => {
+														return {
+															...friendRequestQueueSettings,
+															run_friend_queue:
+																!friendRequestQueueSettings.run_friend_queue,
+														};
+													}
+												);
+												clearTimeout(timeoutToSaveFriendsQueueSettings);
+											}
 										}
 									}}
 									smallVariant

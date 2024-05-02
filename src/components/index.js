@@ -7,6 +7,7 @@ import PageLoader from "../components/common/loaders/PageLoader";
 import { ToastContainer } from "react-toastify";
 import { fetchUserProfile } from "../services/authentication/facebookData";
 import { ReactComponent as FriendQueueErrorIcon } from "../assets/images/FriendQueueErrorIcon.svg";
+import PlanModal from "./common/PlanModal";
 // import socket  from "../configuration/socket-connection";
 
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
@@ -43,14 +44,15 @@ const Footer = lazy(() => import("./common/Footer"));
 // });
 
 const MainComponent = () => {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const { darkMode } = useContext(ModeContext);
-	const { pageLoaderMode, switchLoaderOn, switchLoaderOff } =
-		useContext(LoaderContext);
-	const [isSynced, setIsSynced] = useState(false);
 	const [showFriendsQueueErr, setShowFriendsQueueErr] = useState(false);
 	const friendsQueueErrorCount = useRef(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { darkMode } = useContext(ModeContext);
+  const { pageLoaderMode, switchLoaderOn, switchLoaderOff } = useContext(LoaderContext);
+  const [isSynced, setIsSynced] = useState(false);
+  //const [isHeader, setIsHeader] = useState(false);
+  const planModal = useSelector((state) => state.plan.showModal)
 
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
@@ -214,6 +216,7 @@ const MainComponent = () => {
 				</Suspense>
 			</div>
 			{pageLoaderMode ? <PageLoader /> : ""}
+			{planModal && <PlanModal />}
 		</main>
 	);
 };
