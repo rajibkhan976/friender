@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    plan: 'free',
+    plan: '1',
     showModal: false
 }
 

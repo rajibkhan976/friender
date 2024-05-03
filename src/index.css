@@ -90,6 +90,7 @@
 .Toastify__toast--info {
 	&:has(.alert-inner-plan) {
 		/* &:after { */
+			opacity: 1 Im !important;
 			background: linear-gradient(
 				90deg, 
 				rgba(0, 148, 255, 0.2), 

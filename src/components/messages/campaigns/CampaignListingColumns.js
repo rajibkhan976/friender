@@ -155,8 +155,8 @@ export const CampaignStatusCellRenderer = memo((params) => {
 
 	const handleSwitchToggleStatus = (e) => {
 		if (
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 		) {
 			e.preventDefault();
 			setCampaignStatus(false)

@@ -411,7 +411,7 @@ const FriendsQueue = () => {
 	const runFriendsQueue = (e) => {
 		const le_plan = localStorage?.getItem('fr_plan')?.toLowerCase();
 
-		if (le_plan === "free" && e.target.checked) {
+		if (le_plan === "1" && e.target.checked) {
 			e.preventDefault();
 			e.stopPropagation();
 			dispatch(showModal(true))
@@ -421,7 +421,7 @@ const FriendsQueue = () => {
 			})
 			console.log('here');
 			return false;
-		} else if (le_plan === "basic" && e.target.checked) {
+		} else if (le_plan === "2" && e.target.checked) {
 			console.log('here');
 			// console.log("BASIC PLAN");
 			Alertbox(
@@ -628,7 +628,7 @@ const FriendsQueue = () => {
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
 										if (
-											localStorage?.getItem('fr_plan')?.toLowerCase() === "free" &&
+											localStorage?.getItem('fr_plan')?.toLowerCase() === "1" &&
 											e.target.checked
 										) {
 											e.preventDefault();
@@ -640,7 +640,7 @@ const FriendsQueue = () => {
 											})
 											return false
 										} else if (
-											localStorage?.getItem('fr_plan')?.toLowerCase() === "basic" &&
+											localStorage?.getItem('fr_plan')?.toLowerCase() === "2" &&
 											e.target.checked
 										) {
 											Alertbox(

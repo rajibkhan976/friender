@@ -56,7 +56,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className={module["page-wrapers"]}>
+    <div className={`${module["page-wrapers"]} ${module['signup-wrapper']}`}>
       <div className={module["logo-wraper"]}>
         {/* <img src={Logo} alt="" /> */}
         <Logo />
@@ -75,11 +75,10 @@ const SignupPage = () => {
       ) : (
         <div className={module["auth-heading-info"]}>
           <h3 className="text-center">
-            Sign up for FREE trial and start
-            <br /> using Friender in seconds!
+            <span>Create</span>  your account, gain<br/>access to all features
           </h3>
           <p className="text-center">
-            Manage organic marketing through automation
+            Use friender for free. No credit card required
           </p>
         </div>
       )}
@@ -90,7 +89,7 @@ const SignupPage = () => {
       ) : (
         <form
           onSubmit={handelerSubmit}
-          className="authpage-form"
+          className="authpage-form signup-form"
           autoComplete="new-password"
         >
           <EmailInput
@@ -112,7 +111,7 @@ const SignupPage = () => {
             placeholderText="Enter Full Name"
             nameEntered={nameEnter}
           /> */}
-          <div className="remember-wraper signup-checkbox">
+          {/* <div className="remember-wraper signup-checkbox">
             <label className="check-container d-block">
               I accept Friender{" "}
               <Link to="/terms-conditions" target="_blank">
@@ -125,8 +124,8 @@ const SignupPage = () => {
               />
               <span className="checkmark"></span>
             </label>
-          </div>
-          {emailValidation === null && isSubscribed ? (
+          </div> */}
+          {emailValidation === null ? (
             <Button
               extraClass="btn-primary w-100"
               loaderValue={loader}
@@ -146,7 +145,7 @@ const SignupPage = () => {
         <p className={module["footer-text"]}>&nbsp;</p>
       ) : (
         <p className={module["footer-text"]}>
-          Already have an account? <Link to="/">Log in</Link>
+          Already have an account? <Link to="/">Sign in</Link>
         </p>
       )}
     </div>

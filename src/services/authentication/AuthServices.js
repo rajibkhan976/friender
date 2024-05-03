@@ -60,6 +60,10 @@ export const userLogin = (email, password) => {
           "fr_debug_mode",
           result.data.debug_mode
         );
+        localStorage.setItem(
+          "fr_plan",
+          (result?.plan || result?.plan != undefined) ? result?.plan : "3"
+        )
         // call the function to store device info
         storeDeviceInformations();
         resolve(result.data);

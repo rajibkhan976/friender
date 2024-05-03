@@ -1929,7 +1929,7 @@ const MySetting = () => {
 	// const planCheck = e => {
 	// 	if (
 	// 		e.target.checked &&
-	// 		(localStorage?.getItem('fr_plan') && localStorage?.getItem('fr_plan')?.toLowerCase() === "free")
+	// 		(localStorage?.getItem('fr_plan') && localStorage?.getItem('fr_plan')?.toLowerCase() === "1")
 	// 	) {
 	// 		console.log('here');
 	// 		e.preventDefault();
@@ -2093,7 +2093,7 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 													e.preventDefault()
 													setDontSendFrindReqFrnd(false);
 													dispatch(showModal(true))
@@ -2122,7 +2122,7 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 													e.preventDefault()
 													setDontSendFrindReqIRejct(false);
 													dispatch(showModal(true))
@@ -2150,7 +2150,7 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 													e.preventDefault()
 													setDontSendFrindReqThyRejct(false);
 													dispatch(showModal(true))
@@ -2176,7 +2176,7 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 													e.preventDefault()
 													setDontSendFrindReqFbRejct(false);
 													dispatch(showModal(true))
@@ -2203,7 +2203,7 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 													e.preventDefault()
 													setReFrndng(false);
 													setRefrienderingOpen(false);
@@ -2307,7 +2307,7 @@ const MySetting = () => {
 												handleChange={(e) => {
 													if (e.target.checked) {
 														if (localStorage?.getItem('fr_plan')) {
-															if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+															if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 																e.preventDefault()
 																if (reFrndng) {
 																	setReFriendOpenKeywords(!reFriendOpenKeywords);
@@ -2394,7 +2394,7 @@ const MySetting = () => {
 								handleChange={(e) => {
 									if (e.target.checked) {
 										if (localStorage?.getItem('fr_plan')) {
-											if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free") {
+											if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1") {
 												e.preventDefault()
 												setAutoCnclFrndRque(false);
 												setDeletePendingFrndOpen(false);
@@ -2526,8 +2526,8 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 													) {
 													e.preventDefault()
 													setSndMsgAcptsFrndReqToggle(false);
@@ -2637,8 +2637,8 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 												) {
 													e.preventDefault()
 													setSndMsgRejtFrndReqToggle(false);
@@ -2731,8 +2731,8 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 												) {
 													e.preventDefault()
 													sertSndMsgSomeoneSndFrndReqToggle(false);
@@ -2833,8 +2833,8 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 												) {
 													e.preventDefault()
 													setSndMsgRejtIncomingFrndReqToggle(false);
@@ -2935,8 +2935,8 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 												) {
 													e.preventDefault()
 													setSndMsgAcptsIncomingFrndReqToggle(false);
@@ -3030,8 +3030,8 @@ const MySetting = () => {
 											if (e.target.checked) {
 												if (localStorage?.getItem('fr_plan')) {
 													if (
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "free" ||
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "basic"
+															localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
+															localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
 													) {
 														e.preventDefault()
 														setSendMessageIfExistsIncoming(false);

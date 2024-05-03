@@ -18,7 +18,7 @@ const MyProfile = () => {
             facebookID: localStorage.getItem('fr_default_fb'),
             userDP: profiles[0]?.fb_profile_picture ? profiles[0]?.fb_profile_picture : ProfilePhoto,
             facebookURL: profiles[0]?.fb_profile_url,
-            plan: localStorage?.getItem('fr_plan') ? localStorage?.getItem('fr_plan') : 'free'
+            plan: localStorage?.getItem('fr_plan') ? localStorage?.getItem('fr_plan') : '1'
         })
     }, [profiles])
     return (
@@ -35,12 +35,19 @@ const MyProfile = () => {
                         <h4 className="d-flex f-1 f-justify-between f-align-center">
                             {userDetails?.name}
                             <span className="plan-alert-button">
-                                {userDetails?.plan}
-                                <Tooltip
-                                    direction="top"
-                                    textContent="Your data will be deleted after 30 days of inactivity."
-                                    type="info"
-                                />
+                                {
+                                    userDetails?.plan == 1 ?
+                                        'FREE' :
+                                        userDetails?.plan == 2 ?
+                                            'BASIC' : 'ULTIMATE'
+                                }
+                                {userDetails?.plan == 1 &&
+                                    <Tooltip
+                                        direction="top"
+                                        textContent="Your data will be deleted after 30 days of inactivity."
+                                        type="info"
+                                    />
+                                }
                             </span>
                         </h4>
                     </div>
