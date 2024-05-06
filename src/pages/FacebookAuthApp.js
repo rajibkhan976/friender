@@ -194,6 +194,9 @@ const FacebookAuthApp = () => {
   }
 
   useEffect(() => {
+    if (!localStorage?.getItem('registrationPayload') || localStorage?.getItem('registrationPayload') == undefined) {
+      navigate('/signup')
+    }
     // localStorage.removeItem("fr_onboarding");
     /**
      *  @facebookAuthInfo is holding the facebook auth response in Stringify version, please parse it to get the object info.
@@ -231,7 +234,7 @@ const FacebookAuthApp = () => {
           checkValue={showConnect}
           onChangeCheck={() => setShowConnect(!showConnect)}
           checkText="I have comprehended and accepted this information"
-          extraClass={module['fb-checkmark-text']}
+          extraClass={'fb-checkmark-text'}
         />
         {showConnect ?
             <span className={module['connect-to-facebook']}>

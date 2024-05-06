@@ -35,6 +35,7 @@ const LoginPage = () => {
       .then((res) => {
         localStorage.setItem("fr_default_email", emailEntered);
         localStorage.setItem("submenu_status", 0);
+        localStorage.removeItem('registrationPayload');
         setEmailAlreadyExists(res.payload.message);
       })
       .catch((error) => {
@@ -110,9 +111,9 @@ const LoginPage = () => {
         )}
       </form>
 
-      {/* <p className={module["footer-text"]}>
+      <p className={module["footer-text"]}>
         Don't have an account? <Link to="/signup">Sign up</Link>
-      </p> */}
+      </p>
     </div>
   );
 };

@@ -66,6 +66,12 @@
       display: inline-flex;
       vertical-align: middle;
     }
+    
+    &.fb-checkmark-text {
+      input:checked + .checkmark {
+        background-color: $themeDefaultPrimary1;
+      }
+    }
   }
 
 

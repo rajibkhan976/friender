@@ -34,21 +34,31 @@ const SignupPage = () => {
   };
   const handelerSubmit = (e) => {
     e.preventDefault();
-    setLoader(true);
 
+    const registerPayload = {
+      email: emailEntered,
+      registrationType: 1,
+      plan: 1
+    }
+
+    localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
+    navigate('/facebook-auth');
+    // setLoader(true);
+    // COMMENTED OUT DUE TO FLOW CHANGE
     //console.log("the email entered***",emailEntered);
-    dispatch(register({ email: emailEntered, name: nameEntered }))
-      .then((response) => {
-        setEmailAlreadyExists(response.payload);
-      })
-      .catch((error) => {
-        //console.log("error::::", error);
-        setEmailAlreadyExists(error);
-      })
-      .finally(() => {
-        setLoader(false);
-        //navigate('/success');
-      });
+    // dispatch(register({ email: emailEntered, name: nameEntered }))
+    //   .then((response) => {
+    //     setEmailAlreadyExists(response.payload);
+    //   })
+    //   .catch((error) => {
+    //     //console.log("error::::", error);
+    //     setEmailAlreadyExists(error);
+    //   })
+    //   .finally(() => {
+    //     setLoader(false);
+    //     //navigate('/success');
+    //   });
+    // COMMENTED OUT DUE TO FLOW CHANGE
   };
   const successClick = (event) => {
     dispatch(regOut());

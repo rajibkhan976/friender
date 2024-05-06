@@ -43,6 +43,7 @@ import Messages from "./pages/messages";
 
 const LoginComponent = AuthLayout(LoginPage);
 const SignupComponent = AuthLayout(SignupPage);
+const FacebookAuthAppComponent = AuthLayout(FacebookAuthApp);
 const ForgetPasswordComponent = AuthLayout(ForgetPasswordPage);
 const CreatePasswordComponent = AuthLayout(CreatePasswordPage);
 
@@ -317,10 +318,10 @@ const Routeing = () => {
 							path='onboarding'
 							element={<OnboardingPage />}
 						></Route>
-						<Route
+						{/* <Route
 							path='/facebook-auth'
 							element={<FacebookAuthApp />}
-						></Route>
+						></Route> */}
 					</Route>
 				</Route>
 				<Route element={<UnProtectedRoute />}>
@@ -340,6 +341,10 @@ const Routeing = () => {
 					<Route
 						path='/terms-conditions'
 						element={<TermsConditions />}
+					></Route>
+					<Route
+						path='/facebook-auth'
+						element={<FacebookAuthAppComponent />}
 					></Route>
 				</Route>
 				<Route
