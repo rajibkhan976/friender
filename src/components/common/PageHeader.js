@@ -55,11 +55,11 @@ import {
 	whiteListFriend,
 	BlockListFriend,
 } from "../../actions/FriendsAction";
-import { getGroupById } from "../../actions/MySettingAction";
 import { fetchGroups } from "../../actions/MessageAction";
 import {
 	fRQueueExtMsgSendHandler,
-	getFriendsQueueRecords,
+	getFriendsQueueRecordsFromIndexDB,
+	getFriendsQueueRecordsChunk,
 	popFriendsQueueRecordsFromQueue,
 	removeFriendsQueueRecordsFromIndexDB,
 	reorderFriendsQueueRecordsInIndexDB,
@@ -1242,7 +1242,11 @@ function PageHeader({ headerText = "" }) {
 				totalCount: 0,
 			})
 		);
-		dispatch(getFriendsQueueRecords());
+		dispatch(getFriendsQueueRecordsChunk())
+			.unwrap()
+			.then((response) =>
+				dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+			);
 		dispatch(fetchGroups())
 			.unwrap()
 			.then((res) => {
@@ -1617,7 +1621,12 @@ function PageHeader({ headerText = "" }) {
 			dispatch(resetUploadedFriendsQueueCsvReport(null));
 			dispatch(uploadFriendsQueueRecordsForReview(data))
 				.unwrap()
-				.then((response) => response)
+				.then((response) => {
+					if (response && response?.status === 400) {
+						setSelectedCsvFile(null);
+						Alertbox(response?.data, "error", 1000, "bottom-right");
+					}
+				})
 				.catch((error) => {
 					if (error) {
 						// console.log(error);
@@ -1659,12 +1668,6 @@ function PageHeader({ headerText = "" }) {
 	);
 
 	const handleSaveKeywords = () => {
-		// if (keyword && !savedKeyword.includes(keyword.trim())) {
-		// 	setSavedKeyword([...savedKeyword, keyword]);
-		// 	setSelectedKeyword([]);
-		// 	setShowKeywordSuggestionBar(false);
-		// 	setShouldModify(true);
-		// }
 		if (selectedKeyword.length) {
 			const copyOfSavedKeyword = [...savedKeyword];
 			selectedKeyword.forEach((item) => {
@@ -1674,7 +1677,6 @@ function PageHeader({ headerText = "" }) {
 			});
 			setSavedKeyword(copyOfSavedKeyword);
 			setSelectedKeyword([]);
-			// setShowKeywordSuggestionBar(false);
 			setShouldModify(true);
 		}
 	};
@@ -1774,7 +1776,7 @@ function PageHeader({ headerText = "" }) {
 						totalCount: 0,
 					})
 				);
-				dispatch(getFriendsQueueRecords())
+				dispatch(getFriendsQueueRecordsChunk())
 					.unwrap()
 					.then((response) => {
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
@@ -1788,6 +1790,7 @@ function PageHeader({ headerText = "" }) {
 							// console.log(fr_queue_settings[0])
 							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
 						}
+						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId));
 					})
 					.catch((error) => {
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")

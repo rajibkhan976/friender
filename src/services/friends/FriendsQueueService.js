@@ -120,11 +120,20 @@ export const uploadFriendsQueueRecordsStepOne = async (
 		const response = await axios.post(
 			`${config.uploadFriendsQueueRecordStepOne}?taskName=${taskName}&fb_user_id=${fb_user_id}`,
 			data,
-			{ headers: { "Content-Type": "text/csv" } }
+			{ 
+				headers: { "Content-Type": "text/csv" }, 
+				validateStatus: (status) => {
+					return status < 500; // Resolve only if the status code is less than 500
+			  	} 
+			}
 		);
+		
 		if (response.status === 200) {
-			return response.data;
-		} else {
+			return response;
+		} else if (response.status === 400) {
+			return response;
+		}
+		else {
 			throw new Error(
 				"There is an issue while uploading friends queue record. Please contact support."
 			);

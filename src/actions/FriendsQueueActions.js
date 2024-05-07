@@ -21,7 +21,8 @@ const initialState = {
 	friendsQueueRecordsCount: 0,
 	isCsvSubmittedForReview: false,
 	isChunkedDataFetchedFromApi: false,
-	isDataFetchedFromApi: false,
+	isDataFetchingFromApi: false,
+	isFriendsQueueListLoading: false,
 	isListLoading: false,
 	isLoading: false,
 	movedFriendsQueueRecordsToTopResponse: null,
@@ -73,9 +74,48 @@ export const getFriendsQueueRecordsInChunk = createAsyncThunk(
 
 		for (let i = 0; i < totalRecordCount; i += incrementBy) {
 			response = await fetchFriendsQueueRecords(fbUserId, i);
-			if (response && Array.isArray(response.data)) {
-				incrementBy = response.data.length;
-				response.data.forEach((item) => {
+			if (response && Array.isArray(response?.data)) {
+				incrementBy = response?.data?.length;
+				response?.data.forEach((item) => {
+					compiledChunkData.push(item);
+				});
+			}
+		}
+
+		saveFriendsQueueRecordsInIndexDb(
+			fbUserId,
+			compiledChunkData,
+			compiledChunkData.length
+		);
+
+		return response;
+	}
+);
+
+export const getFriendsQueueRecordsChunk = createAsyncThunk(
+	"friendsQueue/getFriendsQueueRecordsChunk",
+	async () => {
+		const fbUserId = localStorage.getItem("fr_default_fb");
+		const compiledChunkData = [];
+		let skip = 0;
+		let totalRecordCount = 0;
+		let response = null;
+
+		response = await fetchFriendsQueueRecords(fbUserId, skip);
+
+		if (response && Array.isArray(response?.data)) {
+			skip = response?.data?.length;
+			totalRecordCount = response?.totalNumberOfRecords;
+			response?.data.forEach((item) => {
+				compiledChunkData.push(item);
+			});
+		}
+
+		for (let i = skip; i < totalRecordCount; i += skip) {
+			response = await fetchFriendsQueueRecords(fbUserId, i);
+			if (response && Array.isArray(response?.data)) {
+				skip = response?.data?.length;
+				response?.data.forEach((item) => {
 					compiledChunkData.push(item);
 				});
 			}
@@ -263,7 +303,7 @@ export const saveFriendsQueueSettings = createAsyncThunk(
 			})
 		);
 		fRQueueExtMsgSendHandler(friendsQueueSettings);
-		return {response: response, friendsQueueSettings: friendsQueueSettings};
+		return { response: response, friendsQueueSettings: friendsQueueSettings };
 	}
 );
 
@@ -306,7 +346,7 @@ export const friendsQueueSlice = createSlice({
 			state.isChunkedDataFetchedFromApi = action.payload;
 		},
 		resetIsDataFetchedFromApi: (state, action) => {
-			state.isDataFetchedFromApi = action.payload;
+			state.isDataFetchingFromApi = action.payload;
 		},
 		resetFriendsQueueSettings: (state, action) => {
 			state.friendsQueueSettings = action.payload;
@@ -328,18 +368,27 @@ export const friendsQueueSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[getFriendsQueueRecords.pending]: (state, action) => {
-			state.isDataFetchedFromApi = false;
+		[getFriendsQueueRecords.pending]: (state) => {
+			state.isDataFetchingFromApi = true;
 		},
 		[getFriendsQueueRecords.fulfilled]: (state, action) => {
 			const { data, limit_used, totalNumberOfRecords } = action?.payload ?? {};
-			state.isDataFetchedFromApi = true;
+			state.isDataFetchingFromApi = false;
 			state.friendsQueueRecordsFirstChunkLength = data.length;
 			state.friendsQueueRecordsLimit = limit_used;
 			state.friendsQueueRecordsCount = totalNumberOfRecords;
 		},
 		[getFriendsQueueRecords.rejected]: (state) => {
-			state.isDataFetchedFromApi = false;
+			state.isDataFetchingFromApi = false;
+		},
+		[getFriendsQueueRecordsChunk.pending]: (state) => {
+			state.isDataFetchingFromApi = true;
+		},
+		[getFriendsQueueRecordsChunk.fulfilled]: (state, action) => {
+			state.isDataFetchingFromApi = false;
+		},
+		[getFriendsQueueRecordsChunk.rejected]: (state) => {
+			state.isDataFetchingFromApi = false;
 		},
 		[getFriendsQueueRecordsInChunk.pending]: (state) => {
 			state.isChunkedDataFetchedFromApi = false;
@@ -351,15 +400,15 @@ export const friendsQueueSlice = createSlice({
 			state.isChunkedDataFetchedFromApi = false;
 		},
 		[getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
-			state.isListLoading = true;
+			state.isFriendsQueueListLoading = true;
 		},
 		[getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
 			const { friendsQueueData } = action?.payload ?? {};
-			state.isListLoading = false;
+			state.isFriendsQueueListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
 		},
 		[getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
-			state.isListLoading = false;
+			state.isFriendsQueueListLoading = false;
 		},
 		[removeFriendsQueueRecordsFromIndexDB.pending]: (state) => {
 			state.isListLoading = true;
@@ -424,8 +473,11 @@ export const friendsQueueSlice = createSlice({
 		[saveFriendsQueueSettings.fulfilled]: (state, action) => {
 			state.isLoading = false;
 			const { friendsQueueSettings, response } = action?.payload ?? {};
-			console.log(friendsQueueSettings)
-			localStorage.setItem("fr_queue_settings", JSON.stringify([friendsQueueSettings]));
+			console.log(friendsQueueSettings);
+			localStorage.setItem(
+				"fr_queue_settings",
+				JSON.stringify([friendsQueueSettings])
+			);
 			state.friendsQueueSettings = friendsQueueSettings;
 			state.savedFriendsQueueSettingsResponse = response;
 		},
@@ -447,7 +499,8 @@ export const friendsQueueSlice = createSlice({
 		},
 		[uploadFriendsQueueRecordsForReview.fulfilled]: (state, action) => {
 			state.isCsvSubmittedForReview = false;
-			state.uploadedFriendsQueueCsvReport = action.payload;
+			if (action.payload?.status === 200)
+				state.uploadedFriendsQueueCsvReport = action.payload?.data;
 		},
 		[uploadFriendsQueueRecordsForReview.rejected]: (state) => {
 			state.isCsvSubmittedForReview = false;

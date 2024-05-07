@@ -120,6 +120,13 @@
             margin-top: 0;
             margin-bottom: 0;
 
+            .search-icon {
+                background-image: url("../../../images/SearchIcon.svg");
+                background-repeat: no-repeat;
+                background-position-x: 95%;
+                background-position-y: center;
+            }
+
             input {
                 padding: 0;
                 padding-left: 20px;

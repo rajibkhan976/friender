@@ -818,19 +818,21 @@
       padding: 0 12px 0 28px;
 
       .run-friend-queue {
-        width: 196px;
+        max-width: 196px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         background-color: rgba(49, 48, 55, 1);
-        padding: 1rem;
         border: 1px solid rgba(118, 116, 133, 1);
         border-radius: 4px;
+        height: 50px;
 
         .run {
           font-size: 14px;
           color: rgba(189, 189, 189, 1);
           line-height: 19px;
           font-weight: 400;
+          margin-left: 8px;
         }
       }
     }

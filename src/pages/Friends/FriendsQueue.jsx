@@ -76,14 +76,14 @@ const FriendsQueue = () => {
 	const friendsQueueRecordsLimit = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsLimit
 	);
-	const friendsQueueRecordsFirstChunkLength = useSelector(
-		(state) => state.friendsQueue.friendsQueueRecordsFirstChunkLength
+	const isFriendsQueueListLoading = useSelector(
+		(state) => state.friendsQueue.isFriendsQueueListLoading
 	);
 	const isListLoading = useSelector(
 		(state) => state.friendsQueue.isListLoading
 	);
-	const isDataFetchedFromApi = useSelector(
-		(state) => state.friendsQueue.isDataFetchedFromApi
+	const isDataFetchingFromApi = useSelector(
+		(state) => state.friendsQueue.isDataFetchingFromApi
 	);
 	const isChunkedDataFetchedFromApi = useSelector(
 		(state) => state.friendsQueue.isChunkedDataFetchedFromApi
@@ -335,43 +335,43 @@ const FriendsQueue = () => {
 					time_delay: 3,
 				});
 			});
-		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
+		// dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		getSettingsData();
 
 		return () => clearTimeout(timeoutToSaveFriendsQueueSettings);
 	}, []);
 
-	useEffect(() => {
-		if (isDataFetchedFromApi) {
-			timeoutToFetchFriendsQueueData.current = setTimeout(
-				() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
-				3500
-			);
-		}
-		return () => clearTimeout(timeoutToFetchFriendsQueueData);
-	}, [isDataFetchedFromApi]);
+	// useEffect(() => {
+	// 	if (isDataFetchingFromApi) {
+	// 		timeoutToFetchFriendsQueueData.current = setTimeout(
+	// 			() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
+	// 			3500
+	// 		);
+	// 	}
+	// 	return () => clearTimeout(timeoutToFetchFriendsQueueData);
+	// }, [isDataFetchingFromApi]);
 
-	useEffect(() => {
-		if (friendsQueueRecordsFirstChunkLength < friendsQueueRecordsCount) {
-			dispatch(resetIsChunkedDataFetchedFromApi(false));
-			dispatch(
-				getFriendsQueueRecordsInChunk(
-					friendsQueueRecordsCount,
-					friendsQueueRecordsLimit
-				)
-			);
-		}
-	}, [
-		friendsQueueRecordsFirstChunkLength,
-		friendsQueueRecordsCount,
-		friendsQueueRecordsLimit,
-	]);
+	// useEffect(() => {
+	// 	if (friendsQueueRecordsFirstChunkLength < friendsQueueRecordsCount) {
+	// 		dispatch(resetIsChunkedDataFetchedFromApi(false));
+	// 		dispatch(
+	// 			getFriendsQueueRecordsInChunk(
+	// 				friendsQueueRecordsCount,
+	// 				friendsQueueRecordsLimit
+	// 			)
+	// 		);
+	// 	}
+	// }, [
+	// 	friendsQueueRecordsFirstChunkLength,
+	// 	friendsQueueRecordsCount,
+	// 	friendsQueueRecordsLimit,
+	// ]);
 
-	useEffect(() => {
-		if (isChunkedDataFetchedFromApi) {
-			dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
-		}
-	}, [isChunkedDataFetchedFromApi]);
+	// useEffect(() => {
+	// 	if (isChunkedDataFetchedFromApi) {
+	// 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
+	// 	}
+	// }, [isChunkedDataFetchedFromApi]);
 
 	// useEffect(() => {
 	// 	if (friendsQueueSettings && friendsQueueSettings?.length > 0) {
@@ -396,8 +396,8 @@ const FriendsQueue = () => {
 	// }, [debouncedFriendsQueueSettings]);
 
 	useEffect(() => {
-		dispatch(countCurrentListsize(friendsQueueRecordsCount));
-	}, [friendsQueueRecordsCount]);
+		dispatch(countCurrentListsize(friendsQueueRecords?.length));
+	}, [friendsQueueRecords]);
 
 	useEffect(() => {
 		dispatch(getFriendsRequestSentInsight(frndReqSentPeriod));
@@ -700,7 +700,7 @@ const FriendsQueue = () => {
 			)}
 			{friendsQueueRecords?.length > 0 &&
 			!loading &&
-			!isListLoading &&
+			!isDataFetchingFromApi &&
 			inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
@@ -709,7 +709,7 @@ const FriendsQueue = () => {
 					reset={isReset}
 					setReset={setIsReset}
 				/>
-			) : loading || isListLoading ? (
+			) : loading || isDataFetchingFromApi ? (
 				<ListingLoader />
 			) : (
 				<NoDataFound
