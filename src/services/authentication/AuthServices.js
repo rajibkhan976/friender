@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "../../configuration/config";
 import extensionAccesories from "../../configuration/extensionAccesories";
 import helper from "../../helpers/helper"
+import { fRQueueExtMsgSendHandler } from "../../actions/FriendsQueueActions";
 let headers = {
   "Content-Type": "application/json",
 };
@@ -64,6 +65,14 @@ export const userLogin = (email, password) => {
           frLoginToken: result.data.token,
           frDebugMode: result.data.debug_mode,
         });
+
+        console.log("log innnnnn")
+        const res = await fRQueueExtMsgSendHandler({
+          frQueueRunning: false,
+          requestLimited: false,
+          requestLimitValue: 0
+        })
+        console.log("frq msg resp", res);
         if(isExtensionInstalled){
           // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
           extensionAccesories.sendMessageToExt({
