@@ -195,11 +195,15 @@ const SidebarPopUp = (props) => {
             {/* <li className="no-click">
               <NavLink to="/">My Profile</NavLink>
             </li> */}
-            <li>
-              <NavLink to="/my-profile">
-                My Profile
-              </NavLink>
-            </li>
+            {
+              (JSON.parse(localStorage.getItem('fr_pass_changed')) === 1 &&
+              JSON.parse(localStorage.getItem('fr_onboarding')) === 1) &&
+              <li>
+                <NavLink to="/my-profile">
+                  My Profile
+                </NavLink>
+              </li>
+            }
             {props.authenticated && <li>
               <NavLink to="/settings/settings">
                 Settings

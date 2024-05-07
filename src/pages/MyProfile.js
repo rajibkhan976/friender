@@ -12,8 +12,9 @@ const MyProfile = () => {
     const [userDetails, setUserDetails] = useState(null)
 
     useEffect(()=>{
+        console.log('profiles', profiles);
         setUserDetails({
-            name: JSON.parse(localStorage.getItem('fr_facebook_auth')).name,
+            name: JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name ? JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name : profiles[0]?.name ? profiles[0]?.name : "Anonymous",
             email: localStorage.getItem('fr_default_email'),
             facebookID: localStorage.getItem('fr_default_fb'),
             userDP: profiles[0]?.fb_profile_picture ? profiles[0]?.fb_profile_picture : ProfilePhoto,
