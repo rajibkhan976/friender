@@ -650,6 +650,21 @@ function PageHeader({ headerText = "" }) {
 					infoToolTip: false,
 				});
 				break;
+			
+			case "facebook-auth":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: false,
+					searchHeader: false,
+					sortHeader: false,
+					filterHeader: false,
+					quickAction: false,
+					exportHeader: false,
+					listingLengthWell: false,
+					infoToolTip: false,
+				});
+				break;
 
 			default:
 				if (params?.campaignId) {
