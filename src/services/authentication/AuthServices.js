@@ -68,7 +68,8 @@ export const userLogin = (email, password) => {
           // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
           extensionAccesories.sendMessageToExt({
             action: "frienderLogin",
-            frLoginToken: result.data.token
+            frLoginToken: result.data.token,
+            userPlan:result?.data?.plan?result.data.plan:"0"
           });
         }
         localStorage.setItem(
