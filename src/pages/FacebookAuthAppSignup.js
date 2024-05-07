@@ -17,13 +17,20 @@ const FacebookAuthAppSignup = () => {
   const dispatch = useDispatch()
   const [loader, setLoader] = useState(false);
   const [showConnect, setShowConnect] = useState(false)
+  const [token,setToken] = useState("")
 
   const registerUser = async (userRegisterPayload) => {
-    dispatch(register(userRegisterPayload))
+   return  dispatch(register(userRegisterPayload))
           .unwrap()
           .then(res => {
+            localStorage.setItem("fr_token", res?.token);
+            localStorage.setItem("fr_signup", true);
+            setToken(token)
+            console.log("here we go setup the token",res)
+            return true
           }).catch(error => {
             console.log('error while registering ::::', error);
+            return false
           })
   }
 
@@ -34,7 +41,7 @@ const FacebookAuthAppSignup = () => {
             userID: facebookAuthInfo?.userID
           }
     // console.log('userRegisterPayload >>>>', userRegisterPayload, "facebookAuthInfo", facebookAuthInfo?.userID);
-      registerUser(userRegisterPayload)
+      await registerUser(userRegisterPayload)
     
           if(facebookAuthInfo){
             const profilebody = {

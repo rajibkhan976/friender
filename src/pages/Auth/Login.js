@@ -50,7 +50,11 @@ const LoginPage = () => {
         setLoader(false);
       });
   };
-  useEffect(() => {}, [emailAlreadyExists]);
+  useEffect(() => {
+    let isSignupUser = localStorage.getItem("fr_signup")
+    console.log("isSignupUser",isSignupUser)
+
+  }, [emailAlreadyExists]);
 
   return (
     <div className={module["page-wrapers"]}>
