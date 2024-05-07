@@ -30,6 +30,7 @@ const FacebookAuthAppSignup = () => {
             return true
           }).catch(error => {
             console.log('error while registering ::::', error);
+            alert("The facebook account you are trying to connect is already connected to a different account.")
             return false
           })
   }

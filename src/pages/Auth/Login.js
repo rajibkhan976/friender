@@ -116,9 +116,9 @@ const LoginPage = () => {
         )}
       </form>
 
-      {/* <p className={module["footer-text"]}>
+      <p className={module["footer-text"]}>
         Don't have an account? <Link to="/signup">Sign up</Link>
-      </p> */}
+      </p>
     </div>
   );
 };

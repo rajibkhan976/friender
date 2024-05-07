@@ -204,11 +204,21 @@ const MainComponent = () => {
 			<ToastContainer />
 			<div className='main-wrapper'>
 				<div className='body-content-wraper'>
-					<Suspense fallback={""}>
-						<Sidebar isSynced={isSynced} />
-					</Suspense>
+					{
+						(
+							localStorage?.getItem('fr_signup') == undefined || 
+							!JSON.parse(localStorage?.getItem('fr_signup'))
+						) &&
+						<Suspense fallback={""}>
+							<Sidebar isSynced={isSynced} />
+						</Suspense>
+					}
 					<div className='main-content rightside-content d-flex'>
-						{showHeader() && (
+						{
+							showHeader() && (
+							localStorage?.getItem('fr_signup') == undefined || 
+							!JSON.parse(localStorage?.getItem('fr_signup'))
+						) && (
 							<Suspense fallback={""}>
 								<PageHeader />
 							</Suspense>

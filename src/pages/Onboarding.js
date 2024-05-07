@@ -201,7 +201,7 @@ const OnboardingPage = () => {
                 setSelectedValueOne(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>
@@ -213,7 +213,7 @@ const OnboardingPage = () => {
                 setSelectedValueTwo(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>
@@ -225,7 +225,7 @@ const OnboardingPage = () => {
                 setSelectedValueThree(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>
