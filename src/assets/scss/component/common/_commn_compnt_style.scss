@@ -1375,6 +1375,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    filter: drop-shadow(4px 4px 80px rgb(96 91 255 / 10%)) drop-shadow(-4px -4px 80px rgb(96 91 255 / 10%));
 
     figure {
       margin-block-end: 42.26px;

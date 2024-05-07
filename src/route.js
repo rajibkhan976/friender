@@ -40,12 +40,14 @@ import { useDispatch } from "react-redux";
 import { getSendFriendReqst } from "./actions/FriendsAction";
 
 import Messages from "./pages/messages";
+import FacebookAuthAppSignup from "./pages/FacebookAuthAppSignup";
+
 
 const LoginComponent = AuthLayout(LoginPage);
 const SignupComponent = AuthLayout(SignupPage);
-const FacebookAuthAppComponent = AuthLayout(FacebookAuthApp);
 const ForgetPasswordComponent = AuthLayout(ForgetPasswordPage);
 const CreatePasswordComponent = AuthLayout(CreatePasswordPage);
+const FacebookSignupComponent = AuthLayout(FacebookAuthAppSignup)
 
 const Settings = lazy(() => import("./pages/mysetting"));
 const FriendsList = lazy(() => import("./pages/Friends/FriendsList"));
@@ -318,10 +320,10 @@ const Routeing = () => {
 							path='onboarding'
 							element={<OnboardingPage />}
 						></Route>
-						{/* <Route
+						<Route
 							path='/facebook-auth'
 							element={<FacebookAuthApp />}
-						></Route> */}
+						></Route>
 					</Route>
 				</Route>
 				<Route element={<UnProtectedRoute />}>
@@ -343,8 +345,8 @@ const Routeing = () => {
 						element={<TermsConditions />}
 					></Route>
 					<Route
-						path='/facebook-auth'
-						element={<FacebookAuthAppComponent />}
+						path='/facebook-auth-signup'
+						element={<FacebookSignupComponent />}
 					></Route>
 				</Route>
 				<Route

@@ -2071,7 +2071,15 @@ const MySetting = () => {
 
 						{/* ========== Friends Settings ============ */}
 						<p className='fr-heading'>
-							<span>Friend request settings</span>
+							<span>Friend request settings 
+							{
+								localStorage?.getItem('fr_plan')?.toLowerCase() === "1" &&
+								<button 
+									className="btn btn-inline"
+									onClick={()=>dispatch(showModal(true))}
+								>Upgrade</button>
+							}
+							</span>
 						</p>
 
 						<div className='setting'>
@@ -2097,6 +2105,8 @@ const MySetting = () => {
 													e.preventDefault()
 													setDontSendFrindReqFrnd(false);
 													dispatch(showModal(true))
+												} else {
+													setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
 												}
 											} else {
 												setDontSendFrindReqFrnd(!dontSendFrindReqFrnd);
@@ -2126,6 +2136,8 @@ const MySetting = () => {
 													e.preventDefault()
 													setDontSendFrindReqIRejct(false);
 													dispatch(showModal(true))
+												} else {
+													setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
 												}
 											} else {
 												setDontSendFrindReqIRejct(!dontSendFrindReqIRejct);
@@ -2154,6 +2166,8 @@ const MySetting = () => {
 													e.preventDefault()
 													setDontSendFrindReqThyRejct(false);
 													dispatch(showModal(true))
+												} else {
+													setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
 												}
 											} else {
 												setDontSendFrindReqThyRejct(!dontSendFrindReqThyRejct);
@@ -2180,6 +2194,8 @@ const MySetting = () => {
 													e.preventDefault()
 													setDontSendFrindReqFbRejct(false);
 													dispatch(showModal(true))
+												} else {
+													setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
 												}
 											} else {
 												setDontSendFrindReqFbRejct(!dontSendFrindReqFbRejct);
@@ -2208,6 +2224,9 @@ const MySetting = () => {
 													setReFrndng(false);
 													setRefrienderingOpen(false);
 													dispatch(showModal(true))
+												} else {
+													setReFrndng(!reFrndng);
+													setRefrienderingOpen(!refrienderingOpen);
 												}
 											} else {
 												setReFrndng(!reFrndng);
@@ -2399,6 +2418,9 @@ const MySetting = () => {
 												setAutoCnclFrndRque(false);
 												setDeletePendingFrndOpen(false);
 												dispatch(showModal(true))
+											} else {
+												setAutoCnclFrndRque(!autoCnclFrndRque);
+												setDeletePendingFrndOpen(!deletePendingFrndOpen);
 											}
 										} else {
 											setAutoCnclFrndRque(!autoCnclFrndRque);
@@ -2511,7 +2533,15 @@ const MySetting = () => {
 						{/* ========== Message Settings ============ */}
 						<p className='fr-heading'>
 							{/*<span>Message settings<span className="warn-badget">Coming soon</span></span>*/}
-							<span>Message settings</span>
+							<span>Message settings
+								{
+									localStorage?.getItem('fr_plan')?.toLowerCase() === "1" &&
+									<button 
+										className="btn btn-inline"
+										onClick={()=>dispatch(showModal(true))}
+									>Upgrade</button>
+								}
+							</span>
 						</p>
 
 						{/* {======= Send Message When someone accepted my friend request =======} */}
@@ -2526,12 +2556,23 @@ const MySetting = () => {
 									handleChange={(e) => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
-												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+												if (localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 													) {
 													e.preventDefault()
 													setSndMsgAcptsFrndReqToggle(false);
 													dispatch(showModal(true))
+												}
+												else {
+													setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
+		
+													if (!sndMsgAcptsFrndReqToggle) {
+														localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+													}
+		
+													TurnOffMsgPanelDependsOnToggle(
+														sndMsgAcptsFrndReqToggle,
+														setSelectMsgTempAcceptsFrndReq
+													);
 												}
 											} else {
 												setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
@@ -2637,13 +2678,20 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 												) {
 													e.preventDefault()
 													setSndMsgRejtFrndReqToggle(false);
 													setSndMsgRejtFrndReqOpen(false);
 													dispatch(showModal(true))
+												}
+												else {
+													setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
+													setSndMsgRejtFrndReqOpen(!sndMsgRejtFrndReqOpen);
+													TurnOffMsgPanelDependsOnToggle(
+														sndMsgRejtFrndReqToggle,
+														setSelectMsgTempRejectFrndReq
+													);
 												}
 											} else {
 												setSndMsgRejtFrndReqToggle(!sndMsgRejtFrndReqToggle);
@@ -2731,12 +2779,19 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-													localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+													localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 												) {
 													e.preventDefault()
 													sertSndMsgSomeoneSndFrndReqToggle(false);
 													dispatch(showModal(true))
+												} else {
+													sertSndMsgSomeoneSndFrndReqToggle(
+														!sndMsgSomeoneSndFrndReqToggle
+													);
+													TurnOffMsgPanelDependsOnToggle(
+														sndMsgSomeoneSndFrndReqToggle,
+														setSelectMsgSomeoneSndFrndReq
+													);
 												}
 											} else {
 												sertSndMsgSomeoneSndFrndReqToggle(
@@ -2833,12 +2888,19 @@ const MySetting = () => {
 										if (e.target.checked) {
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 												) {
 													e.preventDefault()
 													setSndMsgRejtIncomingFrndReqToggle(false);
 													dispatch(showModal(true))
+												} else {
+													setSndMsgRejtIncomingFrndReqToggle(
+														!sndMsgRejtIncomingFrndReqToggle
+													);
+													TurnOffMsgPanelDependsOnToggle(
+														sndMsgRejtIncomingFrndReqToggle,
+														setSelectMsgRejtIncomingFrndReq
+													);
 												}
 											} else {
 												setSndMsgRejtIncomingFrndReqToggle(
@@ -2933,14 +2995,22 @@ const MySetting = () => {
 									checked={sndMsgAcptsIncomingFrndReqToggle}
 									handleChange={(e) => {
 										if (e.target.checked) {
+											console.log(localStorage?.getItem('fr_plan')?.toLowerCase());
 											if (localStorage?.getItem('fr_plan')) {
 												if (
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-														localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+														localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 												) {
 													e.preventDefault()
 													setSndMsgAcptsIncomingFrndReqToggle(false);
 													dispatch(showModal(true))
+												} else {
+													setSndMsgAcptsIncomingFrndReqToggle(
+														!sndMsgAcptsIncomingFrndReqToggle
+													);
+													TurnOffMsgPanelDependsOnToggle(
+														sndMsgAcptsIncomingFrndReqToggle,
+														setSelectMsgAcptsIncomingFrndReq
+													);
 												}
 											} else {
 												setSndMsgAcptsIncomingFrndReqToggle(
@@ -3030,8 +3100,7 @@ const MySetting = () => {
 											if (e.target.checked) {
 												if (localStorage?.getItem('fr_plan')) {
 													if (
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+															localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 													) {
 														e.preventDefault()
 														setSendMessageIfExistsIncoming(false);

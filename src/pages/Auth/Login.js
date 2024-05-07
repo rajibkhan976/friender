@@ -33,6 +33,7 @@ const LoginPage = () => {
     dispatch(logUserIn({ email: emailEntered, password: passwordEntered }))
       .unwrap()
       .then((res) => {
+        // console.log('res >>>', res);
         localStorage.setItem("fr_default_email", emailEntered);
         localStorage.setItem("submenu_status", 0);
         localStorage.removeItem('registrationPayload');

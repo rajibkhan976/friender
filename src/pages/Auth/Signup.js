@@ -5,7 +5,7 @@ import Button from "../../components/formComponents/Button";
 import Email from "../../assets/images/email.png";
 import module from "./styling/authpages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { register, regOut } from "../../actions/AuthAction";
+import { register, registerEmail, regOut } from "../../actions/AuthAction";
 import { Logo } from "../../assets/icons/Icons";
 
 const SignupPage = () => {
@@ -32,17 +32,35 @@ const SignupPage = () => {
   const handleCheck = (event) => {
     setIsSubscribed((current) => !current);
   };
-  const handelerSubmit = (e) => {
+
+  const handelerSubmit = async (e) => {
     e.preventDefault();
+    setLoader(true)
 
-    const registerPayload = {
-      email: emailEntered,
-      registrationType: 1,
-      plan: 1
-    }
+    dispatch(registerEmail({email: emailEntered}))
+      .then(res => {
+        if (res?.payload?.createUser) {
+          setEmailAlreadyExists("")
+          setEmailValidation(false)
+          const registerPayload = {
+            email: emailEntered,
+            registrationType: 1,
+            plan: 1
+          }
 
-    localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
-    navigate('/facebook-auth');
+          localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
+          navigate('/facebook-auth-signup')
+          setLoader(false)
+        } else {
+          console.log('res.payload.message', res.payload.message);
+          setEmailAlreadyExists(res.payload.message)
+          setEmailValidation(true)
+          setLoader(false)
+        }
+      })
+
+    // localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
+    // navigate('/facebook-auth-signup');
     // setLoader(true);
     // COMMENTED OUT DUE TO FLOW CHANGE
     //console.log("the email entered***",emailEntered);
@@ -110,11 +128,11 @@ const SignupPage = () => {
             setEmailValidation={setEmailValidation}
             setEmailEntered={setEmailEntered}
           />
-          {!emailValidation && emailAlreadyExists && (
+          {emailAlreadyExists && 
             <span className="error-mesage existing-email">
               {emailAlreadyExists}
             </span>
-          )}
+          }
           {/* <TextInput
             labelText="Full Name"
             labelSubText="(Optional)"

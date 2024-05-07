@@ -36,10 +36,11 @@ const MyProfile = () => {
                             {userDetails?.name}
                             <span className="plan-alert-button">
                                 {
-                                    userDetails?.plan == 1 ?
+                                    (userDetails?.plan == 1 || userDetails?.plan == "1") ?
                                         'FREE' :
-                                        userDetails?.plan == 2 ?
-                                            'BASIC' : 'ULTIMATE'
+                                        // userDetails?.plan == 2 ?
+                                        //     'BASIC' :
+                                            'ULTIMATE'
                                 }
                                 {userDetails?.plan == 1 &&
                                     <Tooltip

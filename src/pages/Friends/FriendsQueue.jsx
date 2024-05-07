@@ -639,32 +639,34 @@ const FriendsQueue = () => {
 												run_friend_queue: false
 											})
 											return false
-										} else if (
-											localStorage?.getItem('fr_plan')?.toLowerCase() === "2" &&
-											e.target.checked
-										) {
-											Alertbox(
-												`Friend request sending has started without message sending. Upgrade to send messages with friend requests.`,
-												"info-plan-toast",
-												3000,
-												"bottom-right",
-												"",
-												"Info",
-												{
-													url: 'sales@tier5.us',
-													text: "Upgrade"
-												}
-											);
-											setFriendRequestQueueSettings(
-												(friendRequestQueueSettings) => {
-													return {
-														...friendRequestQueueSettings,
-														run_friend_queue:
-															!friendRequestQueueSettings.run_friend_queue,
-													};
-												}
-											);
-										} else {
+										} 
+										// else if (
+										// 	localStorage?.getItem('fr_plan')?.toLowerCase() === "2" &&
+										// 	e.target.checked
+										// ) {
+										// 	Alertbox(
+										// 		`Friend request sending has started without message sending. Upgrade to send messages with friend requests.`,
+										// 		"info-plan-toast",
+										// 		3000,
+										// 		"bottom-right",
+										// 		"",
+										// 		"Info",
+										// 		{
+										// 			url: 'sales@tier5.us',
+										// 			text: "Upgrade"
+										// 		}
+										// 	);
+										// 	setFriendRequestQueueSettings(
+										// 		(friendRequestQueueSettings) => {
+										// 			return {
+										// 				...friendRequestQueueSettings,
+										// 				run_friend_queue:
+										// 					!friendRequestQueueSettings.run_friend_queue,
+										// 			};
+										// 		}
+										// 	);
+										// } 
+										else {
 											if (friendRequestQueueSettings) {
 												// console.log(friendRequestQueueSettings);
 												const payload = { ...friendRequestQueueSettings };

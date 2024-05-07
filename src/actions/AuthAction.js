@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // import { response } from "express";
-import { forgetPassword, onboarding, resetPassword, resetUserPassword, userLogin, userRegister } from "../services/authentication/AuthServices";
+import { checkUserEmail, forgetPassword, onboarding, resetPassword, resetUserPassword, userLogin, userRegister } from "../services/authentication/AuthServices";
 import extensionAccesories from "../configuration/extensionAccesories"
 import helper from "../helpers/helper";
 let token = localStorage.getItem('fr_token');
@@ -16,17 +16,40 @@ const initialState = token ? {
 };
 
 
+export const registerEmail=createAsyncThunk(
+  "auth/emailCheck",
+  async({email},{rejectWithValue})=>{
+    try{
+      const res = await checkUserEmail(email)
+      return res;
+    } catch(err) {
+      return rejectWithValue(err)
+    }
+  }
+)
+
+// export const register=createAsyncThunk(
+//   "auth/register",
+//   async({email,name},{rejectWithValue})=>{
+//     try{
+//       const res= await userRegister(email,name)
+//       return res;
+//     }catch(err){
+//       return rejectWithValue(err)
+//     }
+//   }
+// )
+
 export const register=createAsyncThunk(
   "auth/register",
-  async({email,name},{rejectWithValue})=>{
+  async(userRegPayload,{rejectWithValue})=>{
     try{
-      const res= await userRegister(email,name)
+      const res= await userRegister(userRegPayload)
       return res;
     }catch(err){
       return rejectWithValue(err)
     }
   }
-
 )
 
 export const logUserIn= createAsyncThunk(
@@ -35,7 +58,9 @@ export const logUserIn= createAsyncThunk(
     /**  @param arg {{ email:string, password: string }} */
     //  const {email,password}=props
       try{
+        // console.log('TRYING LOGGING IN WITH', email,password);
         const res=await userLogin(email,password);
+        // console.log('loginuser responded ', res);
         return res;
       }catch(err){
         return rejectWithValue(err)

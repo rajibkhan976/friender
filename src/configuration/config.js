@@ -15,6 +15,8 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		process.env.REACT_APP_ENV +
 		"/register",
+	checkRegisterEmail:
+		`https://${process.env.REACT_APP_AUTH}.execute-api.us-east-1.amazonaws.com/${process.env.REACT_APP_ENV}/check-user-email`,
 	loginsUrl:
 		"https://" +
 		process.env.REACT_APP_AUTH +

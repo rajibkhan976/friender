@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { register } from "../actions/AuthAction";
 import module from "./Auth/styling/authpages.module.scss";
 import FacebookLogin from 'react-facebook-login';
 import { ConnectToFacebook, DisabledConnectToFacebook, Logo } from "../assets/icons/Icons";
@@ -9,103 +10,119 @@ import {
   saveUserProfile
 } from "../services/authentication/facebookData";
 import Alertbox from "../components/common/Toast";
+import { useDispatch } from "react-redux";
 
-const FacebookAuthApp = () => {
+const FacebookAuthAppSignup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [loader, setLoader] = useState(false);
   const [showConnect, setShowConnect] = useState(false)
 
   const connectProfile = async (facebookAuthInfo) => {
-    // console.log("facebookAuthInfo", facebookAuthInfo)
-    if(facebookAuthInfo){
-        const profilebody = {
-        name: facebookAuthInfo?.name,
-        profilePicture: facebookAuthInfo?.picture?.data?.url,
-        fbAuthInfo : facebookAuthInfo
-      };
-      const facebookProfile = await extensionAccesories.sendMessageToExt({
-        action: "syncprofile",
-        frLoginToken: localStorage.getItem("fr_token"),
-      });
-      // console.log("facebookProfile",facebookProfile)
-      // if(facebookProfile?.error == "No response"){
-      //   alert("Facebook authentication failed, either you are not logged in or facebook has changed its response structure. Please try again or contact friender support")
-      //   return false
-      // }
-
-      switch(facebookProfile?.error?.message){
-        case "No response":
-          Alertbox(
-            `Facebook authentication failed, either you are not logged in or facebook has changed its response structure. Please try again or contact friender support`,
-            "error",
-            1000,
-            "bottom-right"
-          );
-          return false
-          break;
-        case "Could not establish connection. Receiving end does not exist.":
-          // Alertbox(
-          //   `Please install the extension to complete the authentication`,
-          //   "error",
-          //   1000,
-          //   "bottom-right"
-          // );
-          // Alternate method, we wil fetch fb user id linked with facebook auth account in GS page with the help of profile link
-          // Save the  profile data into to database
-          const userProfileRes = await saveUserProfile(profilebody);
-          // console.log("saving data without user id as ext is not installed",userProfileRes)
-      
-          // If the response to save profile is true then save the fb details in localstorage else dont move forward
-            if(userProfileRes?.status == 200){
-              localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
-              return true
-            }
-          return false
-      }  
-
-      if(facebookProfile?.error){
-        // console.log("I should be here if there is any unfortunate error")
-        const userProfileRes = await saveUserProfile(profilebody);
-        // console.log("saving data without user id as ext is not installed",userProfileRes)
-    
-        // If the response to save profile is true then save the fb details in localstorage else dont move forward
-          if(userProfileRes?.status == 200){
-            localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
-            return true
+    let userRegisterPayload = JSON.parse(localStorage.getItem('registrationPayload'))
+          userRegisterPayload = {
+            ...userRegisterPayload,
+            userID: facebookAuthInfo?.userID
           }
-        return false
-      }
-      
-      // console.log("facebookprofile info",facebookProfile)
-      localStorage.setItem("fr_current_fbId", facebookProfile.uid.toString());
-   
-        // userId: facebookProfile?.uid.toString(),
-        // name: facebookAuthInfo?.name,
-        // profilePicture: facebookAuthInfo?.picture?.data?.url,
-        // profileUrl: "https://www.facebook.com" + facebookProfile.path,
-        // fbAuthInfo : facebookAuthInfo
+    // console.log('userRegisterPayload >>>>', userRegisterPayload, "facebookAuthInfo", facebookAuthInfo?.userID);
 
-      profilebody["userId"] = facebookProfile?.uid.toString()
-      profilebody["profileUrl"] = "https://wwww.facebook.com" + facebookProfile.path
-      // console.log("******* Ext installed and userId fetched",profilebody)
-      // Save the  profile data into to database
-       const userProfileRes = await saveUserProfile(profilebody);
-      //  console.log("888888 userProfiles response",userProfileRes)
-  
-       // If the response to save profile is true then save the fb details in localstorage else dont move forward
-        if(userProfileRes?.status == 200){
-          localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
-          return true
-        }
-      }else{
-        Alertbox(
-            `Facebook authentication failed, please try again`,
-            "error",
-            1000,
-            "bottom-right"
-          );
-          return false
-        }
+    dispatch(register(userRegisterPayload))
+          .unwrap()
+          .then(res => {
+            console.log('res', res);
+            // IF REGISTER API GIVES A GO STORE USER PROFILE INFO
+            localStorage.setItem("fr_token", res?.token);
+
+            if(facebookAuthInfo){
+                const profilebody = {
+                name: facebookAuthInfo?.name,
+                profilePicture: facebookAuthInfo?.picture?.data?.url,
+                fbAuthInfo : facebookAuthInfo
+              };
+              const facebookProfile = extensionAccesories.sendMessageToExt({
+                action: "syncprofile",
+                frLoginToken: localStorage.getItem("fr_token"),
+              });
+              // console.log("facebookProfile",facebookProfile)
+              // if(facebookProfile?.error == "No response"){
+              //   alert("Facebook authentication failed, either you are not logged in or facebook has changed its response structure. Please try again or contact friender support")
+              //   return false
+              // }
+        
+              switch(facebookProfile?.error?.message){
+                case "No response":
+                  Alertbox(
+                    `Facebook authentication failed, either you are not logged in or facebook has changed its response structure. Please try again or contact friender support`,
+                    "error",
+                    1000,
+                    "bottom-right"
+                  );
+                  return false
+                  break;
+                case "Could not establish connection. Receiving end does not exist.":
+                  // Alertbox(
+                  //   `Please install the extension to complete the authentication`,
+                  //   "error",
+                  //   1000,
+                  //   "bottom-right"
+                  // );
+                  // Alternate method, we wil fetch fb user id linked with facebook auth account in GS page with the help of profile link
+                  // Save the  profile data into to database
+                  const userProfileRes = saveUserProfile(profilebody);
+                  // console.log("saving data without user id as ext is not installed",userProfileRes)
+              
+                  // If the response to save profile is true then save the fb details in localstorage else dont move forward
+                    if(userProfileRes?.status == 200){
+                      localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
+                      return true
+                    }
+                  return false
+              }  
+        
+              if(facebookProfile?.error){
+                // console.log("I should be here if there is any unfortunate error")
+                const userProfileRes = saveUserProfile(profilebody);
+                // console.log("saving data without user id as ext is not installed",userProfileRes)
+            
+                // If the response to save profile is true then save the fb details in localstorage else dont move forward
+                  if(userProfileRes?.status == 200){
+                    localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
+                    return true
+                  }
+                return false
+              }
+              
+              // console.log("facebookprofile info",facebookProfile)
+              localStorage.setItem("fr_current_fbId", facebookProfile.uid.toString());
+           
+                // userId: facebookProfile?.uid.toString(),
+                // name: facebookAuthInfo?.name,
+                // profilePicture: facebookAuthInfo?.picture?.data?.url,
+                // profileUrl: "https://www.facebook.com" + facebookProfile.path,
+                // fbAuthInfo : facebookAuthInfo
+        
+              profilebody["userId"] = facebookProfile?.uid.toString()
+              profilebody["profileUrl"] = "https://wwww.facebook.com" + facebookProfile.path
+              // console.log("******* Ext installed and userId fetched",profilebody)
+              // Save the  profile data into to database
+               const userProfileRes = saveUserProfile(profilebody);
+              //  console.log("888888 userProfiles response",userProfileRes)
+          
+               // If the response to save profile is true then save the fb details in localstorage else dont move forward
+                if(userProfileRes?.status == 200){
+                  localStorage.setItem(`fr_facebook_auth`, JSON.stringify(facebookAuthInfo))
+                  return true
+                }
+              }else{
+                Alertbox(
+                    `Facebook authentication failed, please try again`,
+                    "error",
+                    1000,
+                    "bottom-right"
+                  );
+                  return false
+                }
+          })
     };
 
 
@@ -182,18 +199,21 @@ const FacebookAuthApp = () => {
         return false
       }
 
-      localStorage.removeItem("fr_onboarding");
+      // localStorage.removeItem("fr_onboarding");
       let checkAuth = await connectProfile(response)
       
       
       if(checkAuth == true){
-        // console.log("after auth")
+        console.log("after auth")
         proceedFurther()
       }
     }
   }
 
   useEffect(() => {
+    if (!localStorage?.getItem('registrationPayload') || localStorage?.getItem('registrationPayload') == undefined) {
+      navigate('/signup')
+    }
     // localStorage.removeItem("fr_onboarding");
     /**
      *  @facebookAuthInfo is holding the facebook auth response in Stringify version, please parse it to get the object info.
@@ -253,4 +273,4 @@ const FacebookAuthApp = () => {
   );
 };
 
-export default FacebookAuthApp;
+export default FacebookAuthAppSignup;

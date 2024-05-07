@@ -78,8 +78,7 @@ const CampaignsHeader = ({
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {
 		if (
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "1" ||
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "2"
+			localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
 		) {
 			e.preventDefault();
 			
