@@ -86,7 +86,7 @@ export const userLogin = (email, password) => {
         );
         localStorage.setItem(
           "fr_plan",
-          (result?.data?.plan || result?.data?.plan != undefined) ? result?.data?.plan : "2"
+          result?.data?.plan
         );
         // call the function to store device info
         storeDeviceInformations();

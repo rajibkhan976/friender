@@ -2442,7 +2442,18 @@ const MySetting = () => {
 											? "btn delete-pending-frnd btn-deleting"
 											: "btn delete-pending-frnd"
 									}
-									onClick={() => setDeletePendingFrndModalOpen(true)}
+									onClick={(e) => {
+										e.preventDefault();
+										
+										if (
+											localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
+										) {
+											dispatch(showModal(true))
+											setDeletePendingFrndModalOpen(false)
+										} else {
+											setDeletePendingFrndModalOpen(true)
+										}
+									}}
 									// style={{ background: !deletePendingFrndStartFinding ? '#B54B54' : '#ba7c82' }}
 									disabled={deletePendingFrndStartFinding}
 								>
