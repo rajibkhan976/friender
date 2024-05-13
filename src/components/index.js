@@ -190,7 +190,7 @@ const MainComponent = () => {
 					<div className='friend-queue-error-txt'>
 						<FriendQueueErrorIcon className='friend-queue-error-icon' />
 						{`Sending friend requests to ${friendsQueueErrorCount.current} individual(s) was unsuccessful either due to an
-					unknown error from Facebook or they are already in the friend/pending list.`}
+					unknown error from Facebook or they already exists in the friend/pending list.`}
 					</div>
 					<button
 						className='friend-queue-error-close-btn'

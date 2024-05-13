@@ -267,8 +267,9 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 						className='fb-friend-request-warning-tooitip'
 						style={{ left: `${mousePos.x}px`, top: `${mousePos.y}px` }}
 					>
-						Sending friend request was unsuccessful due to an unknown error from
-						Facebook.
+						Sending friend request was unsuccessful either due to an unknown
+						error from Facebook or the profile already exists in the
+						friend/pending list.
 					</span>,
 					document.getElementById("root")
 				)}
@@ -1121,11 +1122,11 @@ export const SourceRendererPending = memo((params) => {
 		);
 	}
 
-	if (params?.data?.finalSource === "friendsQueue") {
+	if (params?.data?.finalSource?.toLowerCase() === "csv") {
 		return (
 			<div className='friend-sync-source d-flex f-align-center'>
 				<SourceCsvIcon className='friend-sync-source-icon' />
-				CSV Upload
+				{params?.data?.csvName}
 			</div>
 		);
 	}

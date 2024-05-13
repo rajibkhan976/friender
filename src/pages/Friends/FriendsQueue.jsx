@@ -76,12 +76,6 @@ const FriendsQueue = () => {
 	const friendsQueueRecordsLimit = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsLimit
 	);
-	const isFriendsQueueListLoading = useSelector(
-		(state) => state.friendsQueue.isFriendsQueueListLoading
-	);
-	const isListLoading = useSelector(
-		(state) => state.friendsQueue.isListLoading
-	);
 	const isDataFetchingFromApi = useSelector(
 		(state) => state.friendsQueue.isDataFetchingFromApi
 	);
@@ -266,25 +260,6 @@ const FriendsQueue = () => {
 		}
 	};
 
-	// const useDebounce = (value, delay) => {
-	// 	const [debouncedValue, setDebouncedValue] = useState(value);
-
-	// 	useEffect(() => {
-	// 		const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
-
-	// 		return () => {
-	// 			clearTimeout(timer);
-	// 		};
-	// 	}, [value, delay]);
-
-	// 	return debouncedValue;
-	// };
-
-	// const debouncedFriendsQueueSettings = useDebounce(
-	// 	friendRequestQueueSettings,
-	// 	1000
-	// );
-
 	useEffect(() => {
 		dispatch(getFriendsQueueSettings())
 			.unwrap()
@@ -373,28 +348,6 @@ const FriendsQueue = () => {
 	// 	}
 	// }, [isChunkedDataFetchedFromApi]);
 
-	// useEffect(() => {
-	// 	if (friendsQueueSettings && friendsQueueSettings?.length > 0) {
-	// 		setFriendRequestQueueSettings({
-	// 			fb_user_id: friendsQueueSettings[0]?.fb_user_id,
-	// 			request_limit_value: friendsQueueSettings[0]?.request_limit_value,
-	// 			request_limited: friendsQueueSettings[0]?.request_limited,
-	// 			run_friend_queue: friendsQueueSettings[0]?.run_friend_queue,
-	// 			time_delay: Number(friendsQueueSettings[0]?.time_delay),
-	// 		});
-	// 	}
-	// }, [friendsQueueSettings]);
-
-	// useEffect(() => {
-	// 	if (
-	// 		debouncedFriendsQueueSettings &&
-	// 		Object.keys(debouncedFriendsQueueSettings)?.length > 1
-	// 	) {
-	// 		dispatch(resetFriendsQueueSettings(null));
-	// 		dispatch(saveFriendsQueueSettings(debouncedFriendsQueueSettings));
-	// 	}
-	// }, [debouncedFriendsQueueSettings]);
-
 	useEffect(() => {
 		dispatch(countCurrentListsize(friendsQueueRecords?.length));
 	}, [friendsQueueRecords]);
@@ -409,20 +362,20 @@ const FriendsQueue = () => {
 	// console.log(friendRequestSentInsight);
 
 	const runFriendsQueue = (e) => {
-		const le_plan = localStorage?.getItem('fr_plan')?.toLowerCase();
+		const le_plan = localStorage?.getItem("fr_plan")?.toLowerCase();
 
 		if (le_plan === "1" && e.target.checked) {
 			e.preventDefault();
 			e.stopPropagation();
-			dispatch(showModal(true))
+			dispatch(showModal(true));
 			setFriendRequestQueueSettings({
 				...friendRequestQueueSettings,
-				run_friend_queue: false
-			})
-			console.log('here');
+				run_friend_queue: false,
+			});
+			console.log("here");
 			return false;
 		} else if (le_plan === "2" && e.target.checked) {
-			console.log('here');
+			console.log("here");
 			// console.log("BASIC PLAN");
 			Alertbox(
 				`Friend request sending has started without message sending. Upgrade to send messages with friend requests.`,
@@ -432,32 +385,26 @@ const FriendsQueue = () => {
 				"",
 				"Info",
 				{
-					url: 'sales@tier5.us',
-					text: "Upgrade"
+					url: "sales@tier5.us",
+					text: "Upgrade",
 				}
 			);
-			setFriendRequestQueueSettings(
-				(friendRequestQueueSettings) => {
-					return {
-						...friendRequestQueueSettings,
-						run_friend_queue:
-							!friendRequestQueueSettings.run_friend_queue,
-					};
-				}
-			);
+			setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+				return {
+					...friendRequestQueueSettings,
+					run_friend_queue: !friendRequestQueueSettings.run_friend_queue,
+				};
+			});
 		} else {
-			console.log('here');
-			setFriendRequestQueueSettings(
-				(friendRequestQueueSettings) => {
-					return {
-						...friendRequestQueueSettings,
-						run_friend_queue:
-							!friendRequestQueueSettings?.run_friend_queue,
-					};
-				}
-			);
+			console.log("here");
+			setFriendRequestQueueSettings((friendRequestQueueSettings) => {
+				return {
+					...friendRequestQueueSettings,
+					run_friend_queue: !friendRequestQueueSettings?.run_friend_queue,
+				};
+			});
 		}
-	}
+	};
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -628,18 +575,18 @@ const FriendsQueue = () => {
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
 										if (
-											localStorage?.getItem('fr_plan')?.toLowerCase() === "1" &&
+											localStorage?.getItem("fr_plan")?.toLowerCase() === "1" &&
 											e.target.checked
 										) {
 											e.preventDefault();
 											e.stopPropagation();
-											dispatch(showModal(true))
+											dispatch(showModal(true));
 											setFriendRequestQueueSettings({
 												...friendRequestQueueSettings,
-												run_friend_queue: false
-											})
-											return false
-										} 
+												run_friend_queue: false,
+											});
+											return false;
+										}
 										// else if (
 										// 	localStorage?.getItem('fr_plan')?.toLowerCase() === "2" &&
 										// 	e.target.checked
@@ -665,7 +612,7 @@ const FriendsQueue = () => {
 										// 			};
 										// 		}
 										// 	);
-										// } 
+										// }
 										else {
 											if (friendRequestQueueSettings) {
 												// console.log(friendRequestQueueSettings);

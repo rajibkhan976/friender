@@ -38,6 +38,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	removeSelectedFriends,
 	updateWhiteListStatusOfSelectesList,
+	updateSelectedFriends,
 } from "../../actions/FriendListAction";
 import {
 	saveUserProfile,
@@ -635,7 +636,7 @@ function PageHeader({ headerText = "" }) {
 					infoToolTip: true,
 				});
 				break;
-			
+
 			case "my-profile":
 				setHeaderOptions({
 					...headerOptions,
@@ -650,7 +651,7 @@ function PageHeader({ headerText = "" }) {
 					infoToolTip: false,
 				});
 				break;
-			
+
 			case "facebook-auth":
 				setHeaderOptions({
 					...headerOptions,
@@ -813,6 +814,8 @@ function PageHeader({ headerText = "" }) {
 						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
 					}
 				});
+			dispatch(updateSelectedFriends([]));
+			setIsComponentVisible(false);
 			// console.log(selectedFriends);
 		}
 	};
@@ -849,6 +852,8 @@ function PageHeader({ headerText = "" }) {
 						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
 					}
 				});
+			dispatch(updateSelectedFriends([]));
+			setIsComponentVisible(false);
 			// console.log(selectedFriends);
 		}
 	};
@@ -1469,26 +1474,10 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	// console.log(accessOptions);
-	const [keywordSuggestions, setKeywordSuggestions] = useState([
-		"Front-end Developer",
-		"Marketer",
-		"AI & UX",
-		"Founder",
-		"CEO",
-		"CTO",
-		"Digital",
-		"Co-Founder",
-		"Business",
-		"Design",
-		"Manager",
-		"Startup",
-	]);
 	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
 		useState(false);
 	const [keyword, setKeyword] = useState("");
-	const [selectedKeyword, setSelectedKeyword] = useState([]);
 	const [savedKeyword, setSavedKeyword] = useState([]);
-	const [shouldModify, setShouldModify] = useState(false);
 
 	const timeout = useRef(null);
 
@@ -1582,23 +1571,8 @@ function PageHeader({ headerText = "" }) {
 		setGroupMsgSelect2(null);
 		setQuickMsg1(null);
 		setQuickMsg2(null);
-		setKeywordSuggestions([
-			"Front-end Developer",
-			"Marketer",
-			"AI & UX",
-			"Founder",
-			"CEO",
-			"CTO",
-			"Digital",
-			"Co-Founder",
-			"Business",
-			"Design",
-			"Manager",
-			"Startup",
-		]);
 		setShowKeywordSuggestionBar(false);
 		setKeyword("");
-		setSelectedKeyword([]);
 		setSavedKeyword([]);
 		dispatch(resetUploadedFriendsQueueCsvReport(null));
 		dispatch(resetUploadedFriendsQueueRecordResponse(null));
@@ -1681,31 +1655,6 @@ function PageHeader({ headerText = "" }) {
 		}),
 		[isFocused, isDragAccept, isDragReject]
 	);
-
-	const handleSaveKeywords = () => {
-		if (selectedKeyword.length) {
-			const copyOfSavedKeyword = [...savedKeyword];
-			selectedKeyword.forEach((item) => {
-				if (!copyOfSavedKeyword.includes(item)) {
-					copyOfSavedKeyword.push(item);
-				}
-			});
-			setSavedKeyword(copyOfSavedKeyword);
-			setSelectedKeyword([]);
-			setShouldModify(true);
-		}
-	};
-
-	const handleClearKeywords = () => {
-		setKeyword("");
-		setSelectedKeyword([]);
-	};
-
-	const handleKeywordOnClick = (keywordItem) => {
-		if (keywordItem && !selectedKeyword.includes(keywordItem.trim())) {
-			setSelectedKeyword([...selectedKeyword, keywordItem]);
-		}
-	};
 
 	const handleImportFriendsQueueCsv = () => {
 		if (uploadedFriendsQueueCsvReport) {
@@ -2073,46 +2022,20 @@ function PageHeader({ headerText = "" }) {
 									<div className='import-data-input keyword-input'>
 										<label className='task-name-label keywords-label'>
 											Keywords (optional)
-											{!keyword && !selectedKeyword.length && !shouldModify ? (
-												<figure
-													className='icon-arrow-down'
-													onClick={() => {
-														if (!showKeywordSuggestionBar) {
-															setSelectMessageOptionOpen1(false);
-															setSelectMessageOptionOpen2(false);
-														}
-														setShowKeywordSuggestionBar(
-															!showKeywordSuggestionBar
-														);
-													}}
-												>
-													<ChevronDownArrowIcon size={18} />
-												</figure>
-											) : null}
-											{(keyword || selectedKeyword.length) && !shouldModify ? (
-												<>
-													<div
-														className='keyword-clear-action'
-														onClick={handleClearKeywords}
-													>
-														Clear selection
-													</div>
-													<div
-														className='keyword-save-action'
-														onClick={handleSaveKeywords}
-													>
-														Save
-													</div>
-												</>
-											) : null}
-											{shouldModify ? (
-												<div
-													className='keyword-save-action'
-													onClick={() => setShouldModify(false)}
-												>
-													Modify
-												</div>
-											) : null}
+											<figure
+												className='icon-arrow-down'
+												onClick={() => {
+													if (!showKeywordSuggestionBar) {
+														setSelectMessageOptionOpen1(false);
+														setSelectMessageOptionOpen2(false);
+													}
+													setShowKeywordSuggestionBar(
+														!showKeywordSuggestionBar
+													);
+												}}
+											>
+												<ChevronDownArrowIcon size={18} />
+											</figure>
 										</label>
 										<input
 											type='text'
@@ -2121,7 +2044,6 @@ function PageHeader({ headerText = "" }) {
 											onChange={(e) => {
 												e.stopPropagation();
 												setKeyword(e.target.value);
-												setShowKeywordSuggestionBar(true);
 											}}
 											onKeyDown={(e) => {
 												if (
@@ -2129,12 +2051,13 @@ function PageHeader({ headerText = "" }) {
 													keyword &&
 													e.target.value &&
 													e.target.value.trim() &&
-													!keywordSuggestions.includes(e.target.value.trim())
+													!savedKeyword.includes(e.target.value.trim())
 												) {
-													setKeywordSuggestions([
-														...keywordSuggestions,
+													setSavedKeyword([
+														...savedKeyword,
 														e.target.value.trim(),
 													]);
+													setShowKeywordSuggestionBar(true);
 													setKeyword("");
 												}
 											}}
@@ -2145,44 +2068,29 @@ function PageHeader({ headerText = "" }) {
 										/>
 										{showKeywordSuggestionBar && (
 											<div className='keyword-suggestion-bar'>
-												{!shouldModify &&
-													keywordSuggestions.map((item, index) => (
-														<button
-															className={
-																selectedKeyword.includes(item) ||
-																savedKeyword.includes(item)
-																	? "keyword-item saved"
-																	: "keyword-item"
-															}
-															key={index}
-															onClick={() => handleKeywordOnClick(item)}
-														>
-															{item}
-														</button>
-													))}
-												{shouldModify &&
-													savedKeyword.map((item, index) => (
-														<button
-															className={"keyword-item saved should-modify"}
-															key={index}
-														>
-															{item}
-															<WhiteCrossIcon
-																className='cross-icon'
-																onClick={() =>
-																	setSavedKeyword(
-																		savedKeyword.filter(
-																			(keyword) => keyword !== item
+												{savedKeyword?.length
+													? savedKeyword.map((item, index) => (
+															<button
+																className={"keyword-item saved should-modify"}
+																key={index}
+															>
+																{item}
+																<WhiteCrossIcon
+																	className='cross-icon'
+																	onClick={() =>
+																		setSavedKeyword(
+																			savedKeyword.filter(
+																				(keyword) => keyword !== item
+																			)
 																		)
-																	)
-																}
-															/>
-														</button>
-													))}
+																	}
+																/>
+															</button>
+													  ))
+													: null}
 											</div>
 										)}
 									</div>
-
 									<div className='uploaded-csv-report'>
 										<div className='report-block'>
 											<div className='block-title'>
