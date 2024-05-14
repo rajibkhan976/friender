@@ -3108,22 +3108,7 @@ const MySetting = () => {
 									<Switch
 										checked={sendMessageIfExistsIncoming}
 										handleChange={(e) => {
-											if (e.target.checked) {
-												if (localStorage?.getItem('fr_plan')) {
-													if (
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
-													) {
-														e.preventDefault()
-														setSendMessageIfExistsIncoming(false);
-														dispatch(showModal(true))
-													}
-												}  else {
-													setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
-												}
-											}
-											else {
-												setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
-											}
+											setSendMessageIfExistsIncoming(!sendMessageIfExistsIncoming);
 										}}
 									/>
 
