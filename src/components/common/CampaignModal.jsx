@@ -1281,7 +1281,7 @@ const CalenderModal = ({
 											if (e.target.checked) {
 												if (localStorage?.getItem('fr_plan')) {
 													if (
-															localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
+														Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 3
 													) {
 														e.preventDefault()
 														dispatch(showModal(true))

@@ -78,12 +78,13 @@ const CampaignsHeader = ({
 	// CAMPAIGN TOGGLE BUTTON SWITCHING..
 	const switchPauseCampaign = async (e) => {
 		if (
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
+			Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 3
 		) {
 			e.preventDefault();
 			
 			setCampaignsStatusActivity(false)
 			dispatch(showModal(true))
+			return false
 		} else {
 			const campaignId = location?.state?.data?._id || location?.state?.data?.campaign_id;
 

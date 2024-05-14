@@ -155,11 +155,12 @@ export const CampaignStatusCellRenderer = memo((params) => {
 
 	const handleSwitchToggleStatus = (e) => {
 		if (
-			localStorage?.getItem('fr_plan')?.toLowerCase() === "1"
+			Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 3
 		) {
 			e.preventDefault();
 			setCampaignStatus(false)
 			dispatch(showModal(true))
+			return false
 		} else {
 			const campaignId = params?.data?.campaign_id || params?.data?._id;
 

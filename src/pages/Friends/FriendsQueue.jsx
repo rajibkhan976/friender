@@ -575,7 +575,7 @@ const FriendsQueue = () => {
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
 										if (
-											localStorage?.getItem("fr_plan")?.toLowerCase() === "1" &&
+											Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 2 &&
 											e.target.checked
 										) {
 											e.preventDefault();
