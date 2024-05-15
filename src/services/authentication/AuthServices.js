@@ -97,6 +97,10 @@ export const userLogin = (email, password) => {
           "fr_plan",
           result?.data?.plan
         );
+        localStorage.setItem(
+          "fr_plan_name",
+          result?.data?.plan_name
+        );
         // call the function to store device info
         storeDeviceInformations();
         // console.log('loginuser responded IN SERVICE ', result);

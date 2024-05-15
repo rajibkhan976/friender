@@ -2073,7 +2073,7 @@ const MySetting = () => {
 						<p className='fr-heading'>
 							<span>Friend request settings 
 							{
-								Number(localStorage?.getItem('fr_plan')?.toLowerCase()) < 5 &&
+								Number(localStorage?.getItem('fr_plan')?.toLowerCase()) < 2 &&
 								<button 
 									className="btn btn-inline"
 									onClick={()=>dispatch(showModal(true))}
@@ -2521,7 +2521,7 @@ const MySetting = () => {
 							{/*<span>Message settings<span className="warn-badget">Coming soon</span></span>*/}
 							<span>Message settings
 								{
-									Number(localStorage?.getItem('fr_plan')?.toLowerCase()) < 5 &&
+									Number(localStorage?.getItem('fr_plan')?.toLowerCase()) < 2 &&
 									<button 
 										className="btn btn-inline"
 										onClick={()=>dispatch(showModal(true))}
