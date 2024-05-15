@@ -2,8 +2,8 @@
 
 $themes: (
   default: (
-    text-color: $themeDefaultPrimary2,
-    text-para-color: $themeDefaultPrimary3,
+    text-color: $themeDefaultPrimary2, // ffffff
+    text-para-color: $themeDefaultPrimary3, // bdbdbd
     button-bg: $themeLightPrimary1,
     btn-hover: $themePrimaryBlue6,
     btn-hover-text: $themeDefaultPrimary2,
@@ -31,7 +31,7 @@ $themes: (
     menu-toggle-bg: $themeSecondaryGrey13,
     menu-toggle-border: $themeSecondaryGrey14,
     link-text-hover-color: $themeDefaultPrimary2,
-    dark-light-border: $themeDefaultPrimary1,
+    dark-light-border: $themeDefaultPrimary1, // 0094ff
     input-edit-background: $themeDefaultSecondary1,
     table-headings: $themeDefaultPrimary4,
     table-row-hover-bg: $themeDefaultSecondary2,

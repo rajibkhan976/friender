@@ -52,6 +52,13 @@
         @include bordered($themeRed1, 1px, solid);
       }
     }
+
+    &.onboard-select {
+      .select-arrow {
+        margin-top: 8px;
+        margin-right: 10px;
+      }
+    }
   }
 }
 .input-wrapper {

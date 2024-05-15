@@ -35,6 +35,7 @@ import moment from "moment";
 import { getGroupById } from "actions/MySettingAction";
 import { timeOptions } from "../../helpers/timeOptions";
 import extensionAccesories from "../../configuration/extensionAccesories"
+import { showModal } from "../../actions/PlanAction";
 const CalenderModal = ({
 	type = "CREATE_CAMPAIGN",
 	open = false,
@@ -308,6 +309,7 @@ const CalenderModal = ({
 				response = await dispatch(createCampaign(payload)).unwrap();
 			} else {
 				response = await dispatch(updateCampaign(payload)).unwrap();
+				// console.log("response ::: ", response)
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules"
 				  });
@@ -1275,7 +1277,25 @@ const CalenderModal = ({
 								<div className='campaign-view-details-toggle'>
 									<Switch
 										checked={isCampaignToggleOn}
-										handleChange={handleCampaignStatusChange}
+										handleChange={(e) => {
+											if (e.target.checked) {
+												if (localStorage?.getItem('fr_plan')) {
+													if (
+														Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 3
+													) {
+														e.preventDefault()
+														dispatch(showModal(true))
+														return false
+													} else {
+														handleCampaignStatusChange(e)
+													}
+												} else {
+													return false
+												}
+											} else {
+												handleCampaignStatusChange(e)
+											}
+										}}
 									/>
 								</div>
 

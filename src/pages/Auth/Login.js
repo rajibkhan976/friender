@@ -33,8 +33,10 @@ const LoginPage = () => {
     dispatch(logUserIn({ email: emailEntered, password: passwordEntered }))
       .unwrap()
       .then((res) => {
+        // console.log('res >>>', res);
         localStorage.setItem("fr_default_email", emailEntered);
         localStorage.setItem("submenu_status", 0);
+        localStorage.removeItem('registrationPayload');
         setEmailAlreadyExists(res.payload.message);
       })
       .catch((error) => {
@@ -48,7 +50,11 @@ const LoginPage = () => {
         setLoader(false);
       });
   };
-  useEffect(() => {}, [emailAlreadyExists]);
+  useEffect(() => {
+    let isSignupUser = localStorage.getItem("fr_signup")
+    console.log("isSignupUser",isSignupUser)
+
+  }, [emailAlreadyExists]);
 
   return (
     <div className={module["page-wrapers"]}>
@@ -110,9 +116,9 @@ const LoginPage = () => {
         )}
       </form>
 
-      {/* <p className={module["footer-text"]}>
+      <p className={module["footer-text"]}>
         Don't have an account? <Link to="/signup">Sign up</Link>
-      </p> */}
+      </p>
     </div>
   );
 };

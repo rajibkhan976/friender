@@ -41,7 +41,7 @@ const EditCampaign = (props) => {
 	const [view, setView] = useState(null);
 	const [isReset, setIsReset] = useState(null);
 	const loadingState = useSelector((state) => state.campaign.isLoading);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -114,11 +114,13 @@ const EditCampaign = (props) => {
 		},
 	];
 
+	console.log("isEditingCampaign", isEditingCampaign);
+
 	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
 			if (view === "view") {
-				// console.log('loadingState', loadingState);
+				console.log("loadingState", loadingState);
 				return (
 					<>
 						{isEditingCampaign?.friends?.length === 0 ? (
@@ -143,7 +145,7 @@ const EditCampaign = (props) => {
 					</>
 				);
 			} else {
-				// console.log('loadingState', loadingState);
+				console.log("loadingState", loadingState);
 				return (
 					<CampaignCreateEditLayout>
 						<div className='create-campaign-scheduler'>
@@ -209,6 +211,8 @@ const EditCampaign = (props) => {
 		}
 	};
 
+	console.log("editingCampaign", editingCampaign);
+
 	// FETCHING CAMPAIGN'S USERS..
 	const getCampaignUsersListFromAPI = async (
 		fbUserId = current_fb_id,
@@ -216,11 +220,12 @@ const EditCampaign = (props) => {
 		status = "all"
 	) => {
 		try {
-			await dispatch(fetchUsers({ fbUserId, campaignId, status })).unwrap().then((res) => {
-				// console.log('USERS COUNT', res);
-				dispatch(countCurrentListsize(res?.data?.length))
-			});
-
+			await dispatch(fetchUsers({ fbUserId, campaignId, status }));
+			// .unwrap()
+			// .then((res) => {
+			// 	console.log("USERS COUNT", res);
+			// 	dispatch(countCurrentListsize(res?.data?.length));
+			// });
 		} catch (error) {
 			// console.log(
 			// 	`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,
@@ -228,6 +233,12 @@ const EditCampaign = (props) => {
 			// );
 		}
 	};
+
+	useEffect(() => {
+		if (isEditingCampaign && isEditingCampaign?.friends) {
+			dispatch(countCurrentListsize(isEditingCampaign?.friends.length));
+		}
+	}, [isEditingCampaign]);
 
 	useEffect(() => {
 		setView(editViews?.find((el) => el.checked).label);

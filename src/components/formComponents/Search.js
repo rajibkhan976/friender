@@ -12,22 +12,28 @@ const Search = ({ extraClass, placeholderText = "Search...", onSearch, itemRef =
     }, [window.location.href])
 
     return (
-        <div className={`fr-search element-wraper ${extraClass ? extraClass : ''}`}>
-            <div className='form-field h-100'>
-                <input
-                    ref={itemRef}
-                    type="search"
-                    placeholder={placeholderText}
-                    onChange={(e) => onSearchChange(e)}
-                    value={searchValue}
-                    // tabIndex={setTabIndex}
-                    autoComplete="new-password"
-                    className={errors ? "form-control error" : "form-control"}
-                />
-                {errors && <span className="error-mesage">{errors}</span>}
-            </div>
-        </div>
-    );
+			<div
+				className={`fr-search element-wraper ${extraClass ? extraClass : ""}`}
+			>
+				<div className='form-field h-100'>
+					<input
+						ref={itemRef}
+						type='search'
+						placeholder={placeholderText}
+						onChange={(e) => onSearchChange(e)}
+						value={searchValue}
+						// tabIndex={setTabIndex}
+						autoComplete='new-password'
+						className={
+							errors
+								? "form-control search-icon error"
+								: "form-control search-icon"
+						}
+					/>
+					{errors && <span className='error-mesage'>{errors}</span>}
+				</div>
+			</div>
+		);
 };
 
 export default Search;

@@ -6,7 +6,7 @@ import UnProtectedRoute from "./middleware/UnProtectedRoute";
 import { history } from "./helpers/history";
 import MainComponent from "./components";
 import LoginPage from "./pages/Auth/Login";
-// import SignupPage from "./pages/Auth/Signup";
+import SignupPage from "./pages/Auth/Signup";
 import ForgetPasswordPage from "./pages/Auth/ForgetPassword";
 import CreatePasswordPage from "./pages/Auth/CreatePassword";
 import ResetPasswordPage from "./pages/ResetPassword";
@@ -40,14 +40,18 @@ import { useDispatch } from "react-redux";
 import { getSendFriendReqst } from "./actions/FriendsAction";
 
 import Messages from "./pages/messages";
+import FacebookAuthAppSignup from "./pages/FacebookAuthAppSignup";
+
 
 const LoginComponent = AuthLayout(LoginPage);
-// const SignupComponent = AuthLayout(SignupPage);
+const SignupComponent = AuthLayout(SignupPage);
 const ForgetPasswordComponent = AuthLayout(ForgetPasswordPage);
 const CreatePasswordComponent = AuthLayout(CreatePasswordPage);
+const FacebookSignupComponent = AuthLayout(FacebookAuthAppSignup)
 
 const Settings = lazy(() => import("./pages/mysetting"));
 const FriendsList = lazy(() => import("./pages/Friends/FriendsList"));
+const FriendsQueue = lazy(() => import("./pages/Friends/FriendsQueue"));
 const WhiteList = lazy(() => import("./pages/Friends/WhiteList"));
 const IncomingPendingRequest = lazy(() =>
 	import("./pages/Friends/IncomingPendingRequest")
@@ -78,6 +82,10 @@ const CreateCampaign = lazy(() =>
 const EditCampaign = lazy(() =>
 	import("./pages/messages/campaigns/edit/EditCampaign")
 );
+
+const MyProfile = lazy(() => 
+	import("./pages/MyProfile")
+)
 
 const Routeing = () => {
 	const dispatch = useDispatch();
@@ -212,6 +220,15 @@ const Routeing = () => {
 							/>
 						</Route>
 
+						<Route
+							path="my-profile"
+							element={
+								<Suspense fallback={""}>
+									<MyProfile />
+								</Suspense>
+							}
+						/>
+
 						{/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}
 						<Route
 							path='friends'
@@ -222,6 +239,14 @@ const Routeing = () => {
 								element={
 									<Suspense fallback={""}>
 										<FriendsList />
+									</Suspense>
+								}
+							></Route>
+							<Route
+								path='friends-queue'
+								element={
+									<Suspense fallback={""}>
+										<FriendsQueue />
 									</Suspense>
 								}
 							></Route>
@@ -306,7 +331,7 @@ const Routeing = () => {
 						path='/login'
 						element={<LoginComponent />}
 					></Route>
-					{/* <Route path="/signup" element={<SignupComponent />}></Route> */}
+					<Route path="/signup" element={<SignupComponent />}></Route>
 					<Route
 						path='/forget-password'
 						element={<ForgetPasswordComponent />}
@@ -318,6 +343,10 @@ const Routeing = () => {
 					<Route
 						path='/terms-conditions'
 						element={<TermsConditions />}
+					></Route>
+					<Route
+						path='/facebook-auth-signup'
+						element={<FacebookSignupComponent />}
 					></Route>
 				</Route>
 				<Route

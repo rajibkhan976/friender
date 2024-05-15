@@ -138,3 +138,5 @@ TestReport
 .vscode
 .idea
 .idea/workspace.xml
+
+object.js

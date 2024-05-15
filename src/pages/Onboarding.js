@@ -148,25 +148,30 @@ const OnboardingPage = () => {
   useEffect(()=>{
     let password_reset_status = localStorage.getItem("fr_pass_changed");
     let user_onbording_status = localStorage.getItem("fr_onboarding");
-    
+    let isSignupUser = localStorage.getItem("fr_signup")
+    console.log("isSignupUser",isSignupUser,user_onbording_status)
+
     if (password_reset_status != 1) {
       navigate("/reset-password");
     } else if (user_onbording_status == 1) {
       navigate("/");
     } 
     
-    
-    /**
-     * If user revisit/refresh on this page and detials are not submitted then send back to the facebook auth screen.
-     */
-      let checkIfRevisit = localStorage.getItem('onboaring_page_check')
-      if(checkIfRevisit != undefined && checkIfRevisit == 'true'){
-        localStorage.removeItem("fr_facebook_auth")
-        localStorage.setItem('onboaring_page_check',false)
-        navigate("/")
-      }else{
-        localStorage.setItem('onboaring_page_check',true)
-      }
+    // If not sign up user then revist checking is enabled else stay in this same page if refresh
+    // if(isSignupUser == undefined || isSignupUser == null){
+    //   console.log("I am in revist")
+      /**
+       * If user revisit/refresh on this page and detials are not submitted then send back to the facebook auth screen.
+       */
+        let checkIfRevisit = localStorage.getItem('onboaring_page_check')
+        if(checkIfRevisit != undefined && checkIfRevisit == 'true'){
+          localStorage.removeItem("fr_facebook_auth")
+          localStorage.setItem('onboaring_page_check',false)
+          navigate("/")
+        }else{
+          localStorage.setItem('onboaring_page_check',true)
+        }
+    // }
 
 
   },[])
@@ -196,7 +201,7 @@ const OnboardingPage = () => {
                 setSelectedValueOne(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>
@@ -208,7 +213,7 @@ const OnboardingPage = () => {
                 setSelectedValueTwo(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>
@@ -220,7 +225,7 @@ const OnboardingPage = () => {
                 setSelectedValueThree(e.target.value);
               }}
               width={"100%"}
-              extraClass="form-field"
+              extraClass="form-field onboard-select"
               elementClass="form-control"
             />
           </div>

@@ -5,7 +5,7 @@ import Button from "../../components/formComponents/Button";
 import Email from "../../assets/images/email.png";
 import module from "./styling/authpages.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { register, regOut } from "../../actions/AuthAction";
+import { register, registerEmail, regOut } from "../../actions/AuthAction";
 import { Logo } from "../../assets/icons/Icons";
 
 const SignupPage = () => {
@@ -32,23 +32,51 @@ const SignupPage = () => {
   const handleCheck = (event) => {
     setIsSubscribed((current) => !current);
   };
-  const handelerSubmit = (e) => {
-    e.preventDefault();
-    setLoader(true);
 
+  const handelerSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true)
+
+    dispatch(registerEmail({email: emailEntered}))
+      .then(res => {
+        if (res?.payload?.createUser) {
+          setEmailAlreadyExists("")
+          setEmailValidation(false)
+          const registerPayload = {
+            email: emailEntered,
+            registrationType: 1,
+            plan: 1
+          }
+
+          localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
+          navigate('/facebook-auth-signup')
+          setLoader(false)
+        } else {
+          console.log('res.payload.message', res.payload.message);
+          setEmailAlreadyExists(res.payload.message)
+          setEmailValidation(true)
+          setLoader(false)
+        }
+      })
+
+    // localStorage.setItem('registrationPayload', JSON.stringify(registerPayload))
+    // navigate('/facebook-auth-signup');
+    // setLoader(true);
+    // COMMENTED OUT DUE TO FLOW CHANGE
     //console.log("the email entered***",emailEntered);
-    dispatch(register({ email: emailEntered, name: nameEntered }))
-      .then((response) => {
-        setEmailAlreadyExists(response.payload);
-      })
-      .catch((error) => {
-        //console.log("error::::", error);
-        setEmailAlreadyExists(error);
-      })
-      .finally(() => {
-        setLoader(false);
-        //navigate('/success');
-      });
+    // dispatch(register({ email: emailEntered, name: nameEntered }))
+    //   .then((response) => {
+    //     setEmailAlreadyExists(response.payload);
+    //   })
+    //   .catch((error) => {
+    //     //console.log("error::::", error);
+    //     setEmailAlreadyExists(error);
+    //   })
+    //   .finally(() => {
+    //     setLoader(false);
+    //     //navigate('/success');
+    //   });
+    // COMMENTED OUT DUE TO FLOW CHANGE
   };
   const successClick = (event) => {
     dispatch(regOut());
@@ -56,7 +84,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className={module["page-wrapers"]}>
+    <div className={`${module["page-wrapers"]} ${module['signup-wrapper']}`}>
       <div className={module["logo-wraper"]}>
         {/* <img src={Logo} alt="" /> */}
         <Logo />
@@ -75,11 +103,10 @@ const SignupPage = () => {
       ) : (
         <div className={module["auth-heading-info"]}>
           <h3 className="text-center">
-            Sign up for FREE trial and start
-            <br /> using Friender in seconds!
+            <span>Create</span>  your account, gain<br/>access to all features
           </h3>
           <p className="text-center">
-            Manage organic marketing through automation
+            Use friender for free. No credit card required
           </p>
         </div>
       )}
@@ -90,7 +117,7 @@ const SignupPage = () => {
       ) : (
         <form
           onSubmit={handelerSubmit}
-          className="authpage-form"
+          className="authpage-form signup-form"
           autoComplete="new-password"
         >
           <EmailInput
@@ -101,18 +128,18 @@ const SignupPage = () => {
             setEmailValidation={setEmailValidation}
             setEmailEntered={setEmailEntered}
           />
-          {!emailValidation && emailAlreadyExists && (
+          {emailAlreadyExists && 
             <span className="error-mesage existing-email">
               {emailAlreadyExists}
             </span>
-          )}
+          }
           {/* <TextInput
             labelText="Full Name"
             labelSubText="(Optional)"
             placeholderText="Enter Full Name"
             nameEntered={nameEnter}
           /> */}
-          <div className="remember-wraper signup-checkbox">
+          {/* <div className="remember-wraper signup-checkbox">
             <label className="check-container d-block">
               I accept Friender{" "}
               <Link to="/terms-conditions" target="_blank">
@@ -125,8 +152,8 @@ const SignupPage = () => {
               />
               <span className="checkmark"></span>
             </label>
-          </div>
-          {emailValidation === null && isSubscribed ? (
+          </div> */}
+          {emailValidation === null ? (
             <Button
               extraClass="btn-primary w-100"
               loaderValue={loader}
@@ -146,7 +173,7 @@ const SignupPage = () => {
         <p className={module["footer-text"]}>&nbsp;</p>
       ) : (
         <p className={module["footer-text"]}>
-          Already have an account? <Link to="/">Log in</Link>
+          Already have an account? <Link to="/">Sign in</Link>
         </p>
       )}
     </div>

@@ -10,6 +10,17 @@
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
+
+  .signup-wrapper {
+    .auth-heading-info {
+      h3 {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 27.28px;
+        letter-spacing: 0.01em;
+      }
+    }
+  }
 }
 
 .page-wrapers {
@@ -83,6 +94,10 @@
 
     h3 {
       @include hedadingText();
+
+      span {
+        color: $themePrimaryBlue11;
+      }
     }
 
     p {
@@ -189,8 +204,25 @@
   justify-content: center;
   flex-wrap: nowrap;
   align-items: center;
+  color: #767485;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 19.1px;
+  letter-spacing: 0.03em;
+
+  input + .checkmark {
+    color: red;
+    // &:checked + .checkmark {
+    //     background-color: #0094FF;
+    //     border-color: #0094FF;
+    // }
+  }
 
   > svg {
     margin-top: 20px;
   }
+}
+
+.checked-auth {
+  
 }

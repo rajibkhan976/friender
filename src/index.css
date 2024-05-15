@@ -87,6 +87,21 @@
 		rgba(27, 27, 29, 0.6)
 	);
 }
+.Toastify__toast--info {
+	&:has(.alert-inner-plan) {
+		/* &:after { */
+			opacity: 1 Im !important;
+			background: linear-gradient(
+				90deg, 
+				rgba(0, 148, 255, 0.2), 
+				rgba(27, 27, 29, 0.6));
+		/* } */
+
+		svg[fill] {
+			fill: #0094FF;
+		}
+	}
+}
 /** colored notifications share the same progress bar color **/
 
 /** Classes for the close button. Better use your own closeButton **/
@@ -345,4 +360,56 @@
 	width: 40%;
 	display: inline-block;
 	font-size: 10px;
+}
+
+.fb-friend-request-warning-tooitip {
+    width: 186px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background-color: rgba(49, 48, 55, 1);
+	padding: 8px;
+    border-radius: 4px;
+	text-align: center;
+	font-size: 12px;
+	line-height: 18px;
+	font-weight: 400;
+	color: #fff;
+    z-index: 1;
+}
+
+.friend-queue-error-report {
+	width: 100%;
+	height: 32px;
+	background-color: rgba(115, 48, 54, 1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.friend-queue-error-report > .friend-queue-error-txt {
+	font-size: 14px;
+	line-height: 19px;
+	font-weight: 500;
+	color: rgba(255, 191, 197, 1);
+	margin-left: 24px;
+}
+
+.friend-queue-error-txt > .friend-queue-error-icon {
+	margin-right: 8px;
+}
+
+.friend-queue-error-report > .friend-queue-error-close-btn {
+	width: 47px;
+	height: 24px;
+	margin-right: 8px;
+	padding: 2px;
+	border-radius: 3px;
+	background-color: #b54b54 !important;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 500;
+	cursor: pointer;
+	color: rgba(255, 219, 222, 1) !important;
 }

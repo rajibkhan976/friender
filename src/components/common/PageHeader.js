@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, memo } from "react";
+import { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
@@ -11,7 +11,6 @@ import {
 	// FilterIcon,
 	ActionIcon,
 	// ExportIcon,
-	DeleteIcon,
 	WhitelabelIcon,
 	BlockIcon,
 	UnfriendIcon,
@@ -20,6 +19,18 @@ import {
 	OpenInNewTab,
 	InfoIcon,
 } from "../../assets/icons/Icons";
+import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
+import { ReactComponent as ExportCSVIcon } from "../../assets/images/ExportCSVIcon.svg";
+import { ReactComponent as GrayWarningCircleIcon } from "../../assets/images/GrayWarningCircleIcon.svg";
+import { ReactComponent as MoveTopIcon } from "../../assets/images/MoveTopIcon.svg";
+import { ReactComponent as NextIcon } from "../../assets/images/NextIcon.svg";
+import { ReactComponent as ProgressIconOne } from "../../assets/images/ProgressIconOne.svg";
+import { ReactComponent as ProgressIconTwo } from "../../assets/images/ProgressIconTwo.svg";
+import { ReactComponent as SheetIcon } from "../../assets/images/SheetIcon.svg";
+import { ReactComponent as UploadIcon } from "../../assets/images/UploadIcon.svg";
+import { ReactComponent as WhiteArrowLeftIcon } from "../../assets/images/WhiteArrowLeftIcon.svg";
+import { ReactComponent as WhiteCrossIcon } from "../../assets/images/WhiteCrossIcon.svg";
+import { ChevronDownArrowIcon } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
@@ -27,22 +38,39 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	removeSelectedFriends,
 	updateWhiteListStatusOfSelectesList,
+	updateSelectedFriends,
 } from "../../actions/FriendListAction";
 import {
 	saveUserProfile,
 	fetchUserProfile,
 } from "../../services/authentication/facebookData";
+import { setProfileSpaces } from "../../actions/ProfilespaceActions";
 import {
-	setProfileSpaces,
-	setDefaultProfileId,
-} from "../../actions/ProfilespaceActions";
-import { getSendFriendReqst, reLoadFrList, unLoadFrList } from "../../actions/FriendsAction";
+	getSendFriendReqst,
+	reLoadFrList,
+	unLoadFrList,
+} from "../../actions/FriendsAction";
 import {
 	deleteFriend,
 	getFriendList,
 	whiteListFriend,
 	BlockListFriend,
 } from "../../actions/FriendsAction";
+import { fetchGroups } from "../../actions/MessageAction";
+import {
+	fRQueueExtMsgSendHandler,
+	getFriendsQueueRecordsFromIndexDB,
+	getFriendsQueueRecordsChunk,
+	popFriendsQueueRecordsFromQueue,
+	removeFriendsQueueRecordsFromIndexDB,
+	reorderFriendsQueueRecordsInIndexDB,
+	reorderFriendsQueueRecordsToTop,
+	resetUploadedFriendsQueueCsvReport,
+	resetFriendsQueueRecordsMetadata,
+	resetUploadedFriendsQueueRecordResponse,
+	uploadFriendsQueueRecordsForReview,
+	uploadFriendsQueueRecordsForSaving,
+} from "../../actions/FriendsQueueActions";
 import Modal from "./Modal";
 import DeleteImgIcon from "../../assets/images/deleteModal.png";
 import extensionAccesories from "../../configuration/extensionAccesories";
@@ -54,6 +82,9 @@ import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
 import { addUsersToCampaign } from "../../actions/CampaignsActions";
 import { utils } from "../../helpers/utils";
+import DropSelectMessage from "../messages/DropSelectMessage";
+import { useDropzone } from "react-dropzone";
+import moment from "moment";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -140,6 +171,13 @@ const accessibilityOptions = [
 		icon: <ActionIcon />,
 		active: false,
 	},
+	{
+		type: "queueListAction",
+		status: false,
+		text: "Actions",
+		icon: <ActionIcon />,
+		active: false,
+	},
 	// {
 	//   type: "exportHeader",
 	//   status: false,
@@ -148,6 +186,7 @@ const accessibilityOptions = [
 	//   active: false,
 	// },
 ];
+
 const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
 // If the socket connection failed then reconnect
@@ -159,13 +198,44 @@ const socket = io(SOCKET_URL, {
 socket.on("connect", function () {
 	socket.emit("join", { token: localStorage.getItem("fr_token") });
 });
+
 socket.on("disconnect", (reason) => {
 	// console.log("disconnect due to " + reason);
 });
+
 socket.on("connect_error", (e) => {
 	//console.log("There Is a connection Error in header", e);
 	socket.io.opts.transports = ["websocket", "polling"];
 });
+
+const baseStyle = {
+	flex: 1,
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	padding: "80px",
+	borderWidth: 2,
+	borderRadius: 2,
+	borderColor: "rgba(0, 148, 255, 1)",
+	borderStyle: "dashed",
+	backgroundColor: "rgba(0, 148, 255, 0.1)",
+	color: "#bdbdbd",
+	outline: "none",
+	transition: "border .24s ease-in-out",
+	marginTop: "16px",
+};
+
+const focusedStyle = {
+	borderColor: "#2196f3",
+};
+
+const acceptStyle = {
+	borderColor: "#00e676",
+};
+
+const rejectStyle = {
+	borderColor: "#ff1744",
+};
 
 function PageHeader({ headerText = "" }) {
 	const dispatch = useDispatch();
@@ -181,7 +251,9 @@ function PageHeader({ headerText = "" }) {
 	const selectedFriends = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
-	const blacklistedFriends = useSelector((state) => state.friendlist.selected_friends.filter((el) => el?.blacklist_status));
+	const blacklistedFriends = useSelector((state) =>
+		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
+	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.friendlist.curr_list_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
@@ -202,7 +274,9 @@ function PageHeader({ headerText = "" }) {
 	const [runningUnfriend, setRunningUnfriend] = useState(false);
 	const [isAddingToCampaign, setIsAddingToCampaign] = useState(false);
 	const [selectedCampaign, setSelectedCampaign] = useState("Select");
-	const campaignsCreated = useSelector((state) => state.campaign.campaignsArray);
+	const campaignsCreated = useSelector(
+		(state) => state.campaign.campaignsArray
+	);
 	const [campaignListSelector, setCampaignListSelector] = useState(false);
 	const [selectedCampaignName, setSelectedCampaignName] = useState("Select");
 
@@ -210,23 +284,25 @@ function PageHeader({ headerText = "" }) {
 		dispatch(unLoadFrList());
 		setTimeout(() => {
 			dispatch(reLoadFrList());
-		}, 300)
-	}
+		}, 300);
+	};
 
 	useEffect(() => {
 		setSelectedCampaign("Select");
 		setCampaignListSelector(false);
 		setSelectedCampaignName("Select");
+	}, [isAddingToCampaign]);
 
-	}, [isAddingToCampaign])
 	useEffect(() => {
 		if (!modalOpen) {
 			setWhiteCountInUnfriend(null);
 		}
 	}, [modalOpen]);
+
 	const closeAccessItem = (e) => {
 		setIsComponentVisible(false);
 	};
+
 	useEffect(() => {
 		if (!isComponentVisible) {
 			const updatedAccess = accessOptions.map((accessObj) => {
@@ -239,12 +315,16 @@ function PageHeader({ headerText = "" }) {
 			setAccessOptions(updatedAccess);
 		}
 	}, [isComponentVisible]);
+
 	// const [isStopingSync, setIsStopingSync] = useState(false);
 	alertBrodcater();
+
 	const onSearchModified = useCallback((e) => {
 		dispatch(updateFilter(e));
 	}, []);
+
 	const [update, setUpdate] = useState(syncBtnDefaultState);
+
 	useEffect(() => {
 		if (update === syncBtnDefaultState) {
 			setIsSyncing(false);
@@ -319,6 +399,12 @@ function PageHeader({ headerText = "" }) {
 						status: headerOptions.quickAction,
 					};
 
+				case "queueListAction":
+					return {
+						...accessObj,
+						status: headerOptions.queueListAction,
+					};
+
 				case "exportHeader":
 					return {
 						...accessObj,
@@ -328,7 +414,6 @@ function PageHeader({ headerText = "" }) {
 				default:
 					break;
 			}
-
 			return accessObj;
 		});
 
@@ -405,6 +490,23 @@ function PageHeader({ headerText = "" }) {
 					filterHeader: true,
 					quickAction: true,
 					exportHeader: true,
+					listingLengthWell: true,
+					queryTopHeader: {
+						active: true,
+						content:
+							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+					},
+				});
+				break;
+
+			case "friends-queue":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: true,
+					queueListAction: true,
+					exportCSV: true,
 					listingLengthWell: true,
 					queryTopHeader: {
 						active: true,
@@ -535,6 +637,36 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
+			case "my-profile":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: false,
+					sortHeader: false,
+					filterHeader: false,
+					quickAction: false,
+					exportHeader: false,
+					listingLengthWell: false,
+					infoToolTip: false,
+				});
+				break;
+
+			case "facebook-auth":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: false,
+					searchHeader: false,
+					sortHeader: false,
+					filterHeader: false,
+					quickAction: false,
+					exportHeader: false,
+					listingLengthWell: false,
+					infoToolTip: false,
+				});
+				break;
+
 			default:
 				if (params?.campaignId) {
 					setHeaderOptions({
@@ -554,10 +686,12 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const closeFilterDropdown = (item) => {
-		//onsole.log(item.type == "quickAction" && item.active, accessOptions);
+		//console.log(item.type == "quickAction" && item.active, accessOptions);
 		const accessPlaceholder = [...accessOptions];
 		accessPlaceholder.filter(
-			(arrayOpt) => item.type == "quickAction" && item.active,
+			(arrayOpt) =>
+				(item.type === "quickAction" || item.type === "queueListAction") &&
+				item.active,
 			accessOptions
 		)[0].active = false;
 		setAccessOptions(accessPlaceholder);
@@ -581,7 +715,8 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${
+								selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} whitelisted successfully!`,
 							"success",
 							1000,
@@ -615,7 +750,8 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${
+								selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} blacklisted successfully!`,
 							"success",
 							3000,
@@ -629,6 +765,7 @@ function PageHeader({ headerText = "" }) {
 				});
 		}
 	};
+
 	const checkBeforeUnfriend = async (item) => {
 		if (item) {
 			closeFilterDropdown(item);
@@ -644,16 +781,95 @@ function PageHeader({ headerText = "" }) {
 			setModalOpen(true);
 		}
 	};
+
+	const alterFriendsQueueRecordsOrder = (item) => {
+		if (item) {
+			closeFilterDropdown(item);
+		}
+		if (selectedFriends && selectedFriends.length > 0) {
+			const fbIdList = [];
+			selectedFriends?.forEach((item) => {
+				if (item._id) {
+					fbIdList.push(item?._id);
+				}
+			});
+			dispatch(
+				reorderFriendsQueueRecordsToTop({
+					topRecords: fbIdList,
+					fb_user_id: defaultFbId,
+				})
+			)
+				.unwrap()
+				.then((response) => {
+					dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
+					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+						? JSON.parse(localStorage.getItem("fr_queue_settings"))
+						: null;
+					if (
+						fr_queue_settings?.length &&
+						typeof fr_queue_settings[0] === "object" &&
+						Object.keys(fr_queue_settings[0]).length >= 5
+					) {
+						// console.log(fr_queue_settings[0])
+						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+					}
+				});
+			dispatch(updateSelectedFriends([]));
+			setIsComponentVisible(false);
+			// console.log(selectedFriends);
+		}
+	};
+
+	const deleteRecordsFromFriendsQueue = (item) => {
+		if (item) {
+			closeFilterDropdown(item);
+		}
+		if (selectedFriends && selectedFriends.length > 0) {
+			const fbIdList = [];
+			selectedFriends?.forEach((item) => {
+				if (item._id) {
+					fbIdList.push(item?._id);
+				}
+			});
+			dispatch(
+				popFriendsQueueRecordsFromQueue({
+					removeRecords: fbIdList,
+					fb_user_id: defaultFbId,
+				})
+			)
+				.unwrap()
+				.then((response) => {
+					dispatch(removeFriendsQueueRecordsFromIndexDB(fbIdList));
+					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+						? JSON.parse(localStorage.getItem("fr_queue_settings"))
+						: null;
+					if (
+						fr_queue_settings?.length &&
+						typeof fr_queue_settings[0] === "object" &&
+						Object.keys(fr_queue_settings[0]).length >= 5
+					) {
+						// console.log(fr_queue_settings[0])
+						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+					}
+				});
+			dispatch(updateSelectedFriends([]));
+			setIsComponentVisible(false);
+			// console.log(selectedFriends);
+		}
+	};
+
 	const skipWhitList = () => {
 		const listWithOutWhites = selectedFriends.filter((item) => {
 			return item.whitelist_status !== 1;
 		});
 		unfriend(listWithOutWhites);
 	};
+
 	const handleBeforeUnload = (e) => {
 		e.preventDefault();
 		e.returnValue = "";
 	};
+
 	const checkFBConnection = async () => {
 		const profileData = await fetchUserProfile();
 		// if user id is present already with the facebook auth information then :
@@ -725,8 +941,7 @@ function PageHeader({ headerText = "" }) {
 		//console.log("camo sele",item)
 		setSelectedCampaignName(item?.campaign_name);
 		setSelectedCampaign(item?.campaign_id);
-
-	}
+	};
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		// console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
@@ -786,13 +1001,16 @@ function PageHeader({ headerText = "" }) {
 						cmd: "alert",
 						type: "success",
 						time: 3000,
-						message: `${item.friendName
-							} unfriended successfully!   (Unfriending ${i + 1}/${unfriendableList.length
-							})`,
+						message: `${
+							item.friendName
+						} unfriended successfully!   (Unfriending ${i + 1}/${
+							unfriendableList.length
+						})`,
 						position: "bottom-right",
 					});
 					Alertbox(
-						`${item.friendName} unfriended successfully!   (Unfriending ${i + 1
+						`${item.friendName} unfriended successfully!   (Unfriending ${
+							i + 1
 						}/${unfriendableList.length})`,
 						"success",
 						3000,
@@ -814,6 +1032,7 @@ function PageHeader({ headerText = "" }) {
 		setRunningUnfriend(false);
 		window.removeEventListener("beforeunload", handleBeforeUnload);
 	};
+
 	const syncFriend = async () => {
 		setInlineLoader(true);
 		try {
@@ -1000,6 +1219,12 @@ function PageHeader({ headerText = "" }) {
 					};
 					break;
 
+				case "queueListAction":
+					return {
+						...accessObj,
+						status: headerOptions.queueListAction,
+					};
+
 				case "exportHeader":
 					return {
 						...accessObj,
@@ -1030,6 +1255,31 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
+		dispatch(
+			resetFriendsQueueRecordsMetadata({
+				firstChunkLength: 0,
+				limitUsed: 0,
+				totalCount: 0,
+			})
+		);
+		dispatch(getFriendsQueueRecordsChunk())
+			.unwrap()
+			.then((response) =>
+				dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+			);
+		dispatch(fetchGroups())
+			.unwrap()
+			.then((res) => {
+				const data = res?.data;
+				// console.log(data);
+				if (data && data.length) {
+					setGroupMessages(data);
+				}
+			})
+			.catch((error) =>
+				console.log("Error when try to fetching all groups -- ", error)
+			);
+
 		setLinks(locationArray);
 
 		validateHeaderOptions(locationPathName[locationPathName.length - 1]);
@@ -1046,7 +1296,7 @@ function PageHeader({ headerText = "" }) {
 			facebookData?.fb_data == null ||
 			facebookData?.fb_data == "" ||
 			localStorage.getItem("fr_default_fb") !==
-			facebookData?.fb_data?.fb_user_id ||
+				facebookData?.fb_data?.fb_user_id ||
 			localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
 		) {
 			localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id);
@@ -1174,39 +1424,44 @@ function PageHeader({ headerText = "" }) {
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
 			let payload = {
-				"campaignId": selectedCampaign,
-				"facebookUserId": localStorage.getItem("fr_default_fb"),
-				"friend_details": addFriendsToCampaign.map((item) => {
+				campaignId: selectedCampaign,
+				facebookUserId: localStorage.getItem("fr_default_fb"),
+				friend_details: addFriendsToCampaign.map((item) => {
 					return {
-						"friendFbId": item.friendFbId ? item.friendFbId : null,
-						"friendAddedAt": item.created_at ? item.created_at : null,
-						"finalSource": item.finalSource ? item.finalSource : null,
-						"friendName": item.friendName ? item.friendName : null,
-						"friendProfilePicture": item.friendProfilePicture ? item.friendProfilePicture : null,
-						"friendProfileUrl": item.friendProfileUrl ? item.friendProfileUrl : null,
-						"groupName": item.groupName ? item.groupName : null,
-						"status": "pending",
-						"groupUrl": item.groupUrl ? item.groupUrl : null,
-						"matchedKeyword": item.matchedKeyword ? item.matchedKeyword : null,
-					}
+						friendFbId: item.friendFbId ? item.friendFbId : null,
+						friendAddedAt: item.created_at ? item.created_at : null,
+						finalSource: item.finalSource ? item.finalSource : null,
+						friendName: item.friendName ? item.friendName : null,
+						friendProfilePicture: item.friendProfilePicture
+							? item.friendProfilePicture
+							: null,
+						friendProfileUrl: item.friendProfileUrl
+							? item.friendProfileUrl
+							: null,
+						groupName: item.groupName ? item.groupName : null,
+						status: "pending",
+						groupUrl: item.groupUrl ? item.groupUrl : null,
+						matchedKeyword: item.matchedKeyword ? item.matchedKeyword : null,
+					};
 				}),
-			}
-			dispatch(addUsersToCampaign(payload)).unwrap().then((res) => {
-				refreshFrList();
-				dispatch(removeSelectedFriends());
-				Alertbox(
-					`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
-					"success",
-					1000,
-					"bottom-right"
-				);
-			}
-			).catch((err) => {
-				console.log("Add to campaign:", err);
-			})
+			};
+			dispatch(addUsersToCampaign(payload))
+				.unwrap()
+				.then((res) => {
+					refreshFrList();
+					dispatch(removeSelectedFriends());
+					Alertbox(
+						`${addFriendsToCampaign?.length} friend(s) has been added to campaign successfully.`,
+						"success",
+						1000,
+						"bottom-right"
+					);
+				})
+				.catch((err) => {
+					console.log("Add to campaign:", err);
+				});
 			setIsAddingToCampaign(false);
 			setSelectedCampaign("Select");
-
 		} catch (error) {
 			Alertbox(`${error}`, "error", 1000, "bottom-right");
 		}
@@ -1216,6 +1471,328 @@ function PageHeader({ headerText = "" }) {
 		//dispatch(removeSelectedFriends());
 		setSelectedCampaign("Select");
 		setIsAddingToCampaign(false);
+	};
+
+	// console.log(accessOptions);
+	const [showKeywordSuggestionBar, setShowKeywordSuggestionBar] =
+		useState(false);
+	const [keyword, setKeyword] = useState("");
+	const [savedKeyword, setSavedKeyword] = useState([]);
+
+	const timeout = useRef(null);
+
+	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
+	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
+	const [taskName, setTaskName] = useState(`CSV Upload ${Date.now()}`);
+	const [friendsQueueCsvUploadStep, setFriendsQueueCsvUploadStep] = useState(0);
+
+	const [selectMessageOptionOpen1, setSelectMessageOptionOpen1] =
+		useState(false);
+	const [groupMessages, setGroupMessages] = useState([]);
+	const [groupMsgSelect1, setGroupMsgSelect1] = useState(null);
+	const [quickMsg1, setQuickMsg1] = useState(null);
+	const [quickMsgModalOpen1, setQuickMsgModalOpen1] = useState(false);
+	const [usingSelectOption1, setUsingSelectOption1] = useState(false);
+	const [unselectedError1, setUnselectedError1] = useState(false);
+
+	const [selectMessageOptionOpen2, setSelectMessageOptionOpen2] =
+		useState(false);
+	const [groupMsgSelect2, setGroupMsgSelect2] = useState(null);
+	const [quickMsg2, setQuickMsg2] = useState(null);
+	const [quickMsgModalOpen2, setQuickMsgModalOpen2] = useState(false);
+	const [usingSelectOption2, setUsingSelectOption2] = useState(false);
+	const [unselectedError2, setUnselectedError2] = useState(false);
+
+	const uploadedFriendsQueueCsvReport = useSelector(
+		(state) => state.friendsQueue.uploadedFriendsQueueCsvReport
+	);
+	const uploadedFriendsQueueRecordResponse = useSelector(
+		(state) => state.friendsQueue.uploadedFriendsQueueRecordResponse
+	);
+
+	useEffect(() => {
+		if (quickMsg1) {
+			setUsingSelectOption1(false);
+		}
+	}, [quickMsg1]);
+
+	useEffect(() => {
+		if (quickMsg2) {
+			setUsingSelectOption2(false);
+		}
+	}, [quickMsg2]);
+
+	// HANDLE THE DIFFERENT SELECT OPTION ON ONE COMPONENT AS KEEP ONLY ONE AT A TIME..
+	useEffect(() => {
+		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+
+		if (quickMsg1 && !selectMsgUsing) {
+			setGroupMsgSelect1(null);
+		}
+		if (selectMsgUsing) {
+			setQuickMsg1(null);
+		}
+	}, [groupMsgSelect1, quickMsg1]);
+
+	useEffect(() => {
+		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+
+		if (quickMsg2 && !selectMsgUsing) {
+			setGroupMsgSelect2(null);
+		}
+		if (selectMsgUsing) {
+			setQuickMsg2(null);
+		}
+	}, [groupMsgSelect2, quickMsg2]);
+
+	useEffect(() => {
+		// dispatch(
+		// 	resetFriendsQueueRecordsMetadata({
+		// 		firstChunkLength: 0,
+		// 		limitUsed: 0,
+		// 		totalCount: 0,
+		// 	})
+		// );
+		// dispatch(getFriendsQueueRecords());
+
+		return () => {
+			localStorage.removeItem("fr_edit_mode_quickCampMsg");
+			localStorage.removeItem("fr_quickMessage_campaigns_message");
+		};
+	}, []);
+
+	const handleShowCsvUploadModal = () => {
+		setTaskName(`CSV Upload ${moment().format("YYYYMMDDHHmmss")}`);
+		setSelectedCsvFile(null);
+		setShowUploadCsvModal(true);
+		setFriendsQueueCsvUploadStep(0);
+		setSelectedCsvFile(null);
+		setGroupMsgSelect1(null);
+		setGroupMsgSelect2(null);
+		setQuickMsg1(null);
+		setQuickMsg2(null);
+		setShowKeywordSuggestionBar(false);
+		setKeyword("");
+		setSavedKeyword([]);
+		dispatch(resetUploadedFriendsQueueCsvReport(null));
+		dispatch(resetUploadedFriendsQueueRecordResponse(null));
+	};
+
+	const onDrop = useCallback((acceptedFiles) => {
+		if (acceptedFiles && acceptedFiles[0].size <= 1048576) {
+			setSelectedCsvFile(acceptedFiles);
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		}
+
+		if (acceptedFiles && acceptedFiles[0].size > 1048576) {
+			Alertbox(
+				`The file you are attempting to upload exceeds 1MB in size.`,
+				"error",
+				1000,
+				"bottom-right"
+			);
+		}
+	}, []);
+
+	const onError = useCallback((Error) => {
+		console.log(Error);
+	}, []);
+
+	// console.log(selectedCsvFile);
+
+	const handleCsvUpload = () => {
+		if (selectedCsvFile && taskName && !uploadedFriendsQueueCsvReport) {
+			const data = {
+				csvFile: selectedCsvFile[0],
+				taskName: taskName,
+				fb_user_id: defaultFbId,
+			};
+			dispatch(resetUploadedFriendsQueueCsvReport(null));
+			dispatch(uploadFriendsQueueRecordsForReview(data))
+				.unwrap()
+				.then((response) => {
+					if (response && response?.status === 400) {
+						setSelectedCsvFile(null);
+						Alertbox(response?.data, "error", 1000, "bottom-right");
+					}
+				})
+				.catch((error) => {
+					if (error) {
+						// console.log(error);
+						setSelectedCsvFile(null);
+						Alertbox(
+							`Failed to initiate the review of the CSV file.`,
+							"error",
+							1000,
+							"bottom-right"
+						);
+					}
+				});
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		}
+		if (uploadedFriendsQueueCsvReport) {
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+		}
+	};
+
+	// console.log(friendsQueueCsvUploadStep);
+
+	const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
+		useDropzone({
+			onDrop,
+			onError,
+			accept: { "text/csv": [".csv"] },
+			multiple: false,
+			// maxSize: 1000000,
+		});
+
+	const style = useMemo(
+		() => ({
+			...baseStyle,
+			...(isFocused ? focusedStyle : {}),
+			...(isDragAccept ? acceptStyle : {}),
+			...(isDragReject ? rejectStyle : {}),
+		}),
+		[isFocused, isDragAccept, isDragReject]
+	);
+
+	const handleImportFriendsQueueCsv = () => {
+		if (uploadedFriendsQueueCsvReport) {
+			let friendRequestSent = null;
+			let friendRequestAccepted = null;
+
+			if (groupMsgSelect1 && groupMsgSelect1._id) {
+				friendRequestSent = {
+					groupId: groupMsgSelect1._id,
+					quickMessage: "",
+				};
+			}
+
+			if (quickMsg1 && quickMsg1.messengerText) {
+				friendRequestSent = {
+					groupId: "",
+					quickMessage: quickMsg1.messengerText,
+				};
+			}
+
+			if (groupMsgSelect2 && groupMsgSelect2._id) {
+				friendRequestAccepted = {
+					groupId: groupMsgSelect2._id,
+					quickMessage: "",
+				};
+			}
+
+			if (quickMsg2 && quickMsg2.messengerText) {
+				friendRequestAccepted = {
+					groupId: "",
+					quickMessage: quickMsg2.messengerText,
+				};
+			}
+
+			const data = {
+				taskId: uploadedFriendsQueueCsvReport?.result?.taskId,
+				fb_user_id: defaultFbId,
+				keywords: savedKeyword,
+				friendRequestSent: friendRequestSent,
+				friendRequestAccepted: friendRequestAccepted,
+			};
+
+			dispatch(resetUploadedFriendsQueueRecordResponse(null));
+
+			dispatch(uploadFriendsQueueRecordsForSaving(data))
+				.unwrap()
+				.then((response) => {
+					if (response) {
+						// console.log(response);
+						Alertbox(
+							`Initiating the upload of the CSV file.`,
+							"success",
+							1000,
+							"bottom-right"
+						);
+					}
+				})
+				.catch((error) => {
+					if (error) {
+						console.log(error);
+						Alertbox(
+							`Failed to initiate the upload of the CSV file.`,
+							"error",
+							1000,
+							"bottom-right"
+						);
+					}
+				});
+		}
+	};
+
+	useEffect(() => {
+		if (uploadedFriendsQueueRecordResponse) {
+			timeout.current = setTimeout(() => {
+				setShowUploadCsvModal(false);
+				setFriendsQueueCsvUploadStep(0);
+				dispatch(resetUploadedFriendsQueueCsvReport(null));
+				dispatch(resetUploadedFriendsQueueRecordResponse(null));
+				dispatch(
+					resetFriendsQueueRecordsMetadata({
+						firstChunkLength: 0,
+						limitUsed: 0,
+						totalCount: 0,
+					})
+				);
+				dispatch(getFriendsQueueRecordsChunk())
+					.unwrap()
+					.then((response) => {
+						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+							? JSON.parse(localStorage.getItem("fr_queue_settings"))
+							: null;
+						if (
+							fr_queue_settings?.length &&
+							typeof fr_queue_settings[0] === "object" &&
+							Object.keys(fr_queue_settings[0]).length >= 5
+						) {
+							// console.log(fr_queue_settings[0])
+							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+						}
+						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId));
+					})
+					.catch((error) => {
+						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+							? JSON.parse(localStorage.getItem("fr_queue_settings"))
+							: null;
+						if (
+							fr_queue_settings?.length &&
+							typeof fr_queue_settings[0] === "object" &&
+							Object.keys(fr_queue_settings[0]).length >= 5
+						) {
+							// console.log(fr_queue_settings[0])
+							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+						}
+					});
+			}, 3000);
+		}
+
+		return () => clearTimeout(timeout);
+	}, [uploadedFriendsQueueRecordResponse]);
+
+	const handleClickDownloadSampleCsv = () => {
+		const sampleCsvHeader = "Facebook id,Facebook profile URL,Keywords";
+		const sampleCsvBlob = new Blob([sampleCsvHeader], {
+			type: "text/csv;charset=utf-8,",
+		});
+		const sampleCsvUrl = URL.createObjectURL(sampleCsvBlob);
+		const sampleCsvLink = document.createElement("a");
+		sampleCsvLink.setAttribute("href", sampleCsvUrl);
+		sampleCsvLink.setAttribute("download", "sample_csv.csv");
+		sampleCsvLink.click();
+	};
+
+	const handleClickDownloadErrorList = (url) => {
+		if (url) {
+			const errorListLink = document.createElement("a");
+			errorListLink.setAttribute("href", url);
+			errorListLink.click();
+		}
 	};
 
 	return (
@@ -1236,7 +1813,7 @@ function PageHeader({ headerText = "" }) {
 								{" "}
 								{selectedFriends.length > 0
 									? // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
-									selectedFriends.filter((el) => el?.whitelist_status)?.length
+									  selectedFriends.filter((el) => el?.whitelist_status)?.length
 									: Number(0)}{" "}
 							</b>{" "}
 							of them are currently on your whitelist. Are you sure you want to
@@ -1252,7 +1829,7 @@ function PageHeader({ headerText = "" }) {
 					ExtraProps={{
 						primaryBtnDisable:
 							whiteCountInUnfriend === 0 ||
-								whiteCountInUnfriend === selectedFriends.length
+							whiteCountInUnfriend === selectedFriends.length
 								? true
 								: false,
 					}}
@@ -1267,22 +1844,11 @@ function PageHeader({ headerText = "" }) {
 					bodyText={
 						<>
 							You have selected <b>{selectedFriends.length}</b> friend(s)
-							{blacklistedFriends?.length >
-								0 ? (
+							{blacklistedFriends?.length > 0 ? (
 								<>
-									, and{" "}
-									<b>
-										{
-											blacklistedFriends
-												?.length
-										}
-									</b>{" "}
-									of them
-									{blacklistedFriends
-										?.length > 1
-										? " are"
-										: " is"}{" "}
-									currently on your blacklist
+									, and <b>{blacklistedFriends?.length}</b> of them
+									{blacklistedFriends?.length > 1 ? " are" : " is"} currently on
+									your blacklist
 								</>
 							) : (
 								""
@@ -1295,9 +1861,7 @@ function PageHeader({ headerText = "" }) {
 						</>
 					}
 					closeBtnTxt={
-						blacklistedFriends?.length > 0
-							? "Skip blacklisted"
-							: "Cancel"
+						blacklistedFriends?.length > 0 ? "Skip blacklisted" : "Cancel"
 					}
 					closeBtnFun={
 						blacklistedFriends?.length > 0
@@ -1310,34 +1874,35 @@ function PageHeader({ headerText = "" }) {
 						setSelectedCampaign("Select");
 					}}
 					ModalFun={() => AddToCampaign(selectedFriends)}
-					btnText={
-						blacklistedFriends?.length > 0
-							? "Yes, add all"
-							: "Add"
-					}
+					btnText={blacklistedFriends?.length > 0 ? "Yes, add all" : "Add"}
 					modalWithChild={true}
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
-						cancelBtnDisable: blacklistedFriends.length > 0 ?
-							selectedFriends?.length === blacklistedFriends?.length
-								? true
-								: selectedCampaign === "Select"
+						cancelBtnDisable:
+							blacklistedFriends.length > 0
+								? selectedFriends?.length === blacklistedFriends?.length
+									? true
+									: selectedCampaign === "Select"
 									? true
 									: false
-							: false
+								: false,
 					}}
 					additionalClass='add-campaign-modal'
 				>
 					{/* If Campaign created, list else disable and show link for creation */}
 					<>
 						<h6>Choose campaign</h6>
-						<span className='select-wrapers w-100' onClick={() => { setCampaignListSelector(!campaignListSelector) }}>
-
+						<span
+							className='select-wrapers w-100'
+							onClick={() => {
+								setCampaignListSelector(!campaignListSelector);
+							}}
+						>
 							<div className='selector_box'>
 								{utils.cropParagraph(selectedCampaignName, 32)}
-								{campaignsCreated?.length > 0 &&
-									campaignListSelector && <ul className="selector_box_options">
+								{campaignsCreated?.length > 0 && campaignListSelector && (
+									<ul className='selector_box_options'>
 										{campaignsCreated?.map((item, index) => {
 											return (
 												<li
@@ -1349,12 +1914,11 @@ function PageHeader({ headerText = "" }) {
 												</li>
 											);
 										})}
-
-									</ul>}
+									</ul>
+								)}
 
 								<span className='select-arrow'></span>
 							</div>
-
 						</span>
 						{campaignsCreated?.length <= 0 && (
 							<span className='inline-note warning-note-inline'>
@@ -1375,6 +1939,362 @@ function PageHeader({ headerText = "" }) {
 				</Modal>
 			)}
 
+			{headerOptions.exportCSV && showUploadCsvModal && (
+				<Modal
+					modalType='normal-type'
+					modalIcon={null}
+					headerText={"Import data"}
+					bodyText={
+						<>
+							{friendsQueueCsvUploadStep === 3 &&
+							uploadedFriendsQueueCsvReport ? (
+								<>
+									<div className='friend-request-queue-message-field'>
+										<label className='friend-request-sent-message-label'>
+											Send message when friend request is sent (optional)
+										</label>
+
+										<DropSelectMessage
+											type='CAMPAIGNS_MESSAGE'
+											placeholder='Select message group'
+											openSelectOption={selectMessageOptionOpen1}
+											handleIsOpenSelectOption={(status) => {
+												if (status) {
+													setSelectMessageOptionOpen2(false);
+													setShowKeywordSuggestionBar(false);
+												}
+												setSelectMessageOptionOpen1(status);
+											}}
+											groupList={groupMessages}
+											groupSelect={groupMsgSelect1}
+											setGroupSelect={setGroupMsgSelect1}
+											quickMessage={quickMsg1 && quickMsg1}
+											setQuickMessage={setQuickMsg1}
+											quickMsgModalOpen={quickMsgModalOpen1}
+											setQuickMsgOpen={setQuickMsgModalOpen1}
+											isDisabled={false}
+											usingSelectOptions={usingSelectOption1}
+											setUsingSelectOptions={setUsingSelectOption1}
+											unselectedError={unselectedError1}
+											setUnselectedError={setUnselectedError1}
+											customWrapperClass='friend-request-queue-select-msg-wrapper'
+											customSelectPanelClass='friend-request-queue-select-panel'
+											customSelectPanelPageClass='friend-request-queue-select-panel-page'
+											customQuickMsgTooltipStyleClass='campaigns-quick-msg-tooltip'
+										/>
+									</div>
+
+									<div className='friend-request-queue-message-field'>
+										<label className='friend-request-accepted-message-label'>
+											Send message when friend request is accepted (optional)
+										</label>
+
+										<DropSelectMessage
+											type='CAMPAIGNS_MESSAGE'
+											placeholder='Select message group'
+											openSelectOption={selectMessageOptionOpen2}
+											handleIsOpenSelectOption={(status) => {
+												if (status) {
+													setSelectMessageOptionOpen1(false);
+													setShowKeywordSuggestionBar(false);
+												}
+												setSelectMessageOptionOpen2(status);
+											}}
+											groupList={groupMessages}
+											groupSelect={groupMsgSelect2}
+											setGroupSelect={setGroupMsgSelect2}
+											quickMessage={quickMsg2 && quickMsg2}
+											setQuickMessage={setQuickMsg2}
+											quickMsgModalOpen={quickMsgModalOpen2}
+											setQuickMsgOpen={setQuickMsgModalOpen2}
+											isDisabled={false}
+											usingSelectOptions={usingSelectOption2}
+											setUsingSelectOptions={setUsingSelectOption2}
+											unselectedError={unselectedError2}
+											setUnselectedError={setUnselectedError2}
+											customWrapperClass='friend-request-queue-select-msg-wrapper'
+											customSelectPanelClass='friend-request-queue-select-panel'
+											customSelectPanelPageClass='friend-request-queue-select-panel-page'
+											customQuickMsgTooltipStyleClass='campaigns-quick-msg-tooltip'
+										/>
+									</div>
+
+									<div className='import-data-input keyword-input'>
+										<label className='task-name-label keywords-label'>
+											Keywords (optional)
+											<figure
+												className='icon-arrow-down'
+												onClick={() => {
+													if (!showKeywordSuggestionBar) {
+														setSelectMessageOptionOpen1(false);
+														setSelectMessageOptionOpen2(false);
+													}
+													setShowKeywordSuggestionBar(
+														!showKeywordSuggestionBar
+													);
+												}}
+											>
+												<ChevronDownArrowIcon size={18} />
+											</figure>
+										</label>
+										<input
+											type='text'
+											className={`task-name-field keyword-field`}
+											value={keyword}
+											onChange={(e) => {
+												e.stopPropagation();
+												setKeyword(e.target.value);
+											}}
+											onKeyDown={(e) => {
+												if (
+													e.key === "Enter" &&
+													keyword &&
+													e.target.value &&
+													e.target.value.trim() &&
+													!savedKeyword.includes(e.target.value.trim())
+												) {
+													setSavedKeyword([
+														...savedKeyword,
+														e.target.value.trim(),
+													]);
+													setShowKeywordSuggestionBar(true);
+													setKeyword("");
+												}
+											}}
+											placeholder='Type your keywords here'
+											style={
+												showKeywordSuggestionBar ? {} : { marginBottom: "8px" }
+											}
+										/>
+										{showKeywordSuggestionBar && (
+											<div className='keyword-suggestion-bar'>
+												{savedKeyword?.length
+													? savedKeyword.map((item, index) => (
+															<button
+																className={"keyword-item saved should-modify"}
+																key={index}
+															>
+																{item}
+																<WhiteCrossIcon
+																	className='cross-icon'
+																	onClick={() =>
+																		setSavedKeyword(
+																			savedKeyword.filter(
+																				(keyword) => keyword !== item
+																			)
+																		)
+																	}
+																/>
+															</button>
+													  ))
+													: null}
+											</div>
+										)}
+									</div>
+									<div className='uploaded-csv-report'>
+										<div className='report-block'>
+											<div className='block-title'>
+												<span className='block-txt'>Total records</span>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total no. of records found in the uploaded sheet
+												</div>
+											</div>
+											<div className='block-stat total'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.totalNumberOfRecords
+												}
+											</div>
+										</div>
+										<div className='report-block'>
+											<div className='block-title'>
+												<span className='block-txt'>Records added</span>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total no. of records added from the uploaded sheet
+												</div>
+											</div>
+											<div className='block-stat added'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.numberOfRecordsWillBeAdded
+												}
+											</div>
+										</div>
+									</div>
+									<div className='uploaded-csv-report'>
+										<div className='report-block'>
+											<div className='block-title'>
+												<span className='block-txt'>Records skipped</span>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Users skipped as they are already present in the
+													friend queue.
+												</div>
+											</div>
+											<div className='block-stat skipped'>
+												{
+													uploadedFriendsQueueCsvReport?.result
+														?.numberOfSkippedRecords
+												}
+											</div>
+										</div>
+										<div className='report-block'>
+											<div className='block-title'>
+												<span className='block-txt'>Number of errors</span>
+												<GrayWarningCircleIcon className='import-csv-report-tooltip-icon' />
+												<div className='import-csv-report-tooltip'>
+													Total number of errors found. Download the error list
+													file to review and address the issues.
+												</div>
+											</div>
+											<div className='block-stat errors'>
+												{uploadedFriendsQueueCsvReport?.result?.numberOfErrors}
+											</div>
+										</div>
+									</div>
+									<div className='custom-modal-footer report-footer'>
+										<div
+											className='download-sample-csv'
+											onClick={() =>
+												handleClickDownloadErrorList(
+													uploadedFriendsQueueCsvReport?.fileUrl
+												)
+											}
+										>
+											<CsvDownloadIcon className='csv-download-icon' />
+											<div className='download-sample-csv-txt1'>
+												Download&nbsp;
+											</div>
+											<div className='download-sample-csv-txt2'>error list</div>
+										</div>
+										<button
+											type='button'
+											className={
+												selectedCsvFile && taskName
+													? "import-csv-nxt-btn active"
+													: "import-csv-nxt-btn disabled"
+											}
+											onClick={handleImportFriendsQueueCsv}
+										>
+											Import
+											<WhiteArrowLeftIcon className='next-icon' />
+										</button>
+									</div>
+								</>
+							) : (
+								<div className='import-data-input'>
+									<label className='task-name-label'>
+										Task name <span className='danger-note'>*</span>
+									</label>
+
+									<input
+										type='text'
+										className={`task-name-field `}
+										value={taskName}
+										onChange={(e) => setTaskName(e.target.value)}
+									/>
+
+									<div
+										className='import-csv'
+										{...getRootProps({ style })}
+									>
+										<input {...getInputProps()} />
+										{selectedCsvFile && friendsQueueCsvUploadStep === 1 ? (
+											<>
+												<SheetIcon className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													CSV file is ready for upload...
+												</p>
+												<span className='import-condition-one'>
+													{selectedCsvFile[0]?.name}
+												</span>
+											</>
+										) : selectedCsvFile &&
+										  friendsQueueCsvUploadStep === 2 &&
+										  !uploadedFriendsQueueCsvReport ? (
+											<>
+												<ProgressIconOne className='import-csv-icon' />
+												<span className='progress'>98%</span>
+												<p className='import-csv-txt'>
+													The CSV file is currently in the process of being
+													uploaded and reviewed
+												</p>
+												<span className='import-condition-one'>
+													{selectedCsvFile[0]?.name}
+												</span>
+											</>
+										) : uploadedFriendsQueueCsvReport ? (
+											<>
+												<ProgressIconTwo className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													CSV file successfully uploaded and reviewed
+												</p>
+											</>
+										) : (
+											<>
+												<UploadIcon className='import-csv-icon' />
+												<p className='import-csv-txt'>
+													Drag & drop or{" "}
+													<span className='sub-txt'>Choose file</span> to upload
+												</p>
+												<span className='import-condition-one'>
+													Supported formats: csv
+												</span>
+												<span className='import-condition-two'>
+													(Maximum upload size is 1 MB)
+												</span>
+											</>
+										)}
+									</div>
+									<p className='import-csv-note'>
+										<span className='danger-note'>* Note: </span>Ensure your
+										data sheet includes links to Facebook profiles or the user
+										IDs of Facebook users.
+									</p>
+									<div className='custom-modal-footer'>
+										<div
+											className='download-sample-csv'
+											onClick={handleClickDownloadSampleCsv}
+										>
+											<CsvDownloadIcon className='csv-download-icon' />
+											<div className='download-sample-csv-txt1'>
+												Download&nbsp;
+											</div>
+											<div className='download-sample-csv-txt2'>
+												sample template
+											</div>
+										</div>
+										<button
+											type='button'
+											className={
+												selectedCsvFile && taskName
+													? "import-csv-nxt-btn active"
+													: "import-csv-nxt-btn disabled"
+											}
+											onClick={handleCsvUpload}
+										>
+											Next
+											{selectedCsvFile && taskName ? (
+												<WhiteArrowLeftIcon className='next-icon' />
+											) : (
+												<NextIcon className='next-icon' />
+											)}
+										</button>
+									</div>
+								</div>
+							)}
+						</>
+					}
+					open={showUploadCsvModal}
+					setOpen={setShowUploadCsvModal}
+					ModalFun={() => {}}
+					additionalClass={`import-csv-modal`}
+					modalButtons={false}
+				/>
+			)}
+
 			<div className='common-header d-flex f-align-center f-justify-between'>
 				<div className='left-div d-flex d-flex-column'>
 					<div className='header-breadcrumb'>
@@ -1383,13 +2303,13 @@ function PageHeader({ headerText = "" }) {
 								"links[links.length - 1]",
 								links[links.length - 2]?.location
 							)} */}
-							{headerText != ""
+							{headerText !== ""
 								? headerText
 								: links.length > 0
-									? links[links.length - 2]?.location !== "campaigns"
-										? links[links.length - 1].location
-										: "Campaigns"
-									: ""}
+								? links[links.length - 2]?.location !== "campaigns"
+									? links[links.length - 1].location
+									: "Campaigns"
+								: ""}
 							{headerOptions.listingLengthWell && (
 								<span className='num-header-count num-well'>{listCount}</span>
 							)}
@@ -1426,6 +2346,16 @@ function PageHeader({ headerText = "" }) {
               /> */}
 						</div>
 					)}
+					{headerOptions.exportCSV && (
+						<div
+							className='export-csv-action'
+							onClick={handleShowCsvUploadModal}
+						>
+							<ExportCSVIcon className='export-csv-icon' />
+							<div className='export-csv-tooltip'>CSV upload</div>
+						</div>
+					)}
+
 					{headerOptions.searchHeader && (
 						<Search
 							extraClass='fr-search-header'
@@ -1476,13 +2406,19 @@ function PageHeader({ headerText = "" }) {
 										ref={clickedRef}
 									>
 										<button
-											className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
-												? "active"
-												: ""
-												}`}
+											className={`accessibility-btn btn h-100 ${
+												accessItem.active || accessItem.type == "exportHeader"
+													? "active"
+													: ""
+											}`}
 											key={accessItem.type + i}
 											onClick={() => onAccessClick(accessItem)}
-											ref={accessItem.type == "quickAction" ? actionRef : null}
+											ref={
+												accessItem.type === "quickAction" ||
+												accessItem.type === "queueListAction"
+													? actionRef
+													: null
+											}
 										>
 											<figure className='accessibility-icon'>
 												{accessItem.icon}
@@ -1491,12 +2427,59 @@ function PageHeader({ headerText = "" }) {
 												{accessItem.text}
 											</span>
 										</button>
+										{accessItem.type === "queueListAction" &&
+											isComponentVisible && (
+												<div
+													className={`fr-dropdown fr-dropdownAction ${
+														accessItem.type === "queueListAction" &&
+														accessItem.active
+															? "active"
+															: ""
+													}`}
+												>
+													<ul>
+														<li
+															className='del-fr-action'
+															onClick={() =>
+																deleteRecordsFromFriendsQueue(accessItem)
+															}
+															data-disabled={
+																!selectedFriends || selectedFriends.length === 0
+																	? true
+																	: false
+															}
+														>
+															<figure>
+																<UnfriendIcon />
+															</figure>
+															<span>Remove</span>
+														</li>
+														<li
+															className='del-fr-action'
+															onClick={() =>
+																alterFriendsQueueRecordsOrder(accessItem)
+															}
+															data-disabled={
+																!selectedFriends || selectedFriends.length === 0
+																	? true
+																	: false
+															}
+														>
+															<figure>
+																<MoveTopIcon />
+															</figure>
+															<span>Move to top</span>
+														</li>
+													</ul>
+												</div>
+											)}
 										{accessItem.type == "quickAction" && isComponentVisible && (
 											<div
-												className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
-													? "active"
-													: ""
-													}`}
+												className={`fr-dropdown fr-dropdownAction ${
+													accessItem.type == "quickAction" && accessItem.active
+														? "active"
+														: ""
+												}`}
 											>
 												<ul>
 													<li

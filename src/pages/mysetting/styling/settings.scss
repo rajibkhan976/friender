@@ -36,6 +36,15 @@
         &:not(:first-child) {
           margin-top: 40px;
         }
+
+        .btn {
+          font-size: 10px;
+          line-height: 13.6px;
+          height: 22px;
+          font-weight: 400;
+          padding-inline: 5px;
+          margin-inline: 12px 20px;
+        }
       }
 
       &::-webkit-scrollbar {

@@ -1,12 +1,12 @@
 import { toast } from "react-toastify";
-import { ErrorIcon, OpenInNewTab, SuccessIcon, WarningIcon } from "../../assets/icons/Icons";
+import { ErrorIcon, InfoIcon, OpenInNewTab, SuccessIcon, WarningIcon } from "../../assets/icons/Icons";
 import { NavLink } from "react-router-dom";
 
 // import "react-toastify/dist/ReactToastify.css";
 // minified version is also included
 // import 'react-toastify/dist/ReactToastify.min.css';
 
-const Alertbox = (msg = "success", type = "success", delay,position="top-right", groupLink="", title = '') => {
+const Alertbox = (msg = "success", type = "success", delay,position="top-right", groupLink="", title = '', isAction=null) => {
   switch (type) {
     case "success":
       return toast.success(
@@ -114,6 +114,30 @@ const Alertbox = (msg = "success", type = "success", delay,position="top-right",
           theme: "colored",
         }
       );
+      case "info-plan-toast":
+        return toast.info(
+          <div className="alert-inner alert-inner-plan">
+            <div className="alert-inner-sec">
+              <div className="msg-header warning-header">{title}</div>
+              <div className="msg warning-txt d-flex f-align-center f-justify-between">
+                <p>{msg}</p>
+                {isAction&&<a href={`mailto:${isAction?.url}`}>{isAction?.text}</a>}
+              </div>
+            </div>
+            <span className="alert-divider"></span>
+          </div>,
+            {
+              icon:(<InfoIcon />),
+              position: position,
+              autoClose: false,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            }
+          );
     default:
       return toast.warning(
         <div className="alert-inner">

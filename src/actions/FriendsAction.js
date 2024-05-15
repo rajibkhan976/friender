@@ -9,6 +9,7 @@ import {
 import { fetchFriendLost } from "../services/friends/FriendListServices";
 //import { useLiveQuery } from "dexie-react-hooks";
 import { clientDB } from "../app/db";
+
 const initialState = {
   isLoading: true,
   current_fb_id: null,

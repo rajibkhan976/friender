@@ -2,16 +2,36 @@ import axios from "axios";
 import config from "../../configuration/config";
 import extensionAccesories from "../../configuration/extensionAccesories";
 import helper from "../../helpers/helper"
+import { fRQueueExtMsgSendHandler } from "../../actions/FriendsQueueActions";
 let headers = {
   "Content-Type": "application/json",
 };
 
-export const userRegister = (email, name) => {
+export const checkUserEmail = (email) => {
+  console.log('email >>>', email);
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        config.checkRegisterEmail,
+        {
+          "email": email
+        },
+        {headers:headers}
+      ).then((result) => {
+        resolve(result.data)
+      }).catch((error) => {
+        console.log('ERROR IN REGISTERING EMAIL::::', error);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
+
+export const userRegister = (regPayload) => {
   return new Promise((resolve, reject) => {
     axios
       .post(
         config.registerUrl,
-        { email: email, name: name },
+        regPayload,
         { headers: headers }
       )
       .then((result) => {
@@ -20,7 +40,7 @@ export const userRegister = (email, name) => {
       .catch((error) => {
         console.log(
           "ERROR REGISTER:::",
-          error?.response?.data ? error.response.data : error.message
+          error
         );
         reject(error?.response?.data ? error.response.data : error.message);
       });
@@ -28,6 +48,7 @@ export const userRegister = (email, name) => {
 };
 
 export const userLogin = (email, password) => {
+  // console.log('TRYING LOGGING IN WITH IN SERVICE', email,password);
   return new Promise((resolve, reject) => {
     axios
       .post(
@@ -36,16 +57,28 @@ export const userLogin = (email, password) => {
         { headers: headers }
       )
       .then(async(result) => {
+        console.log('>>>>>>>>>>', result?.data?.plan);
+        // console.log('GOT RESULT IN SERVICE::::', result);
         localStorage.setItem("fr_token", result.data.token);
         const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
           action: "extensionInstallation",
           frLoginToken: result.data.token,
           frDebugMode: result.data.debug_mode,
         });
+
+        console.log("log innnnnn")
+        const res = await fRQueueExtMsgSendHandler({
+          frQueueRunning: false,
+          requestLimited: false,
+          requestLimitValue: 0
+        })
+        console.log("frq msg resp", res);
         if(isExtensionInstalled){
+          // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
           extensionAccesories.sendMessageToExt({
             action: "frienderLogin",
-            frLoginToken: result.data.token
+            frLoginToken: result.data.token,
+            userPlan:result?.data?.plan?result.data.plan:"0"
           });
         }
         localStorage.setItem(
@@ -60,8 +93,17 @@ export const userLogin = (email, password) => {
           "fr_debug_mode",
           result.data.debug_mode
         );
+        localStorage.setItem(
+          "fr_plan",
+          result?.data?.plan
+        );
+        localStorage.setItem(
+          "fr_plan_name",
+          result?.data?.plan_name
+        );
         // call the function to store device info
         storeDeviceInformations();
+        // console.log('loginuser responded IN SERVICE ', result);
         resolve(result.data);
       })
       .catch((error) => {

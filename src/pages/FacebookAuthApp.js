@@ -231,7 +231,8 @@ const FacebookAuthApp = () => {
           checkValue={showConnect}
           onChangeCheck={() => setShowConnect(!showConnect)}
           checkText="I have comprehended and accepted this information"
-          extraClass={module['fb-checkmark-text']}
+          // extraClass={module['fb-checkmark-text']}
+          extraClass={'fb-checkmark-text'}
         />
         {showConnect ?
             <span className={module['connect-to-facebook']}>

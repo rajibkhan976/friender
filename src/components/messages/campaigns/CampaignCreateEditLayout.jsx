@@ -273,6 +273,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 			}
 			if (type === "EDIT") {
 				response = await dispatch(updateCampaign(payload)).unwrap();
+				console.log("response ::: ", response)
+				extensionAccesories.sendMessageToExt({
+					action: "update_schedules"
+				  });
 			}
 
 			if (response?.data?.length === 0) {
@@ -404,9 +408,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 					
 				campaignData.campaignStatus = findTheCampaign?.status;
 				campaignData.oldMessageGroupId = getOldMessageGroupId();
-				extensionAccesories.sendMessageToExt({
-					action: "update_schedules"
-				});
 			}
 
 			// TRANSFERING DATA..
