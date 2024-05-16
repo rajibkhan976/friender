@@ -151,7 +151,7 @@ const FriendsQueue = () => {
 			cellRenderer: MessageGroupRequestAcceptedRenderer,
 		},
 		{
-			field: "task_name",
+			field: "task_name" ? "task_name" : "finalSource",
 			headerName: "Source",
 			headerTooltip: "Friends source",
 			tooltipComponent: CustomHeaderTooltip,

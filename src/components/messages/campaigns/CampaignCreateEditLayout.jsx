@@ -347,9 +347,13 @@ const CampaignCreateEditLayout = ({ children }) => {
 		if (!isLoadingBtn) {
 			setLoadingBtn(true);
 
-			if (campaignName?.value?.trim() === '') {
+			if (campaignName?.value?.trim() === "") {
 				setLoadingBtn(false);
-				setCampaignName({ ...campaignName, isError: true, errorMsg: 'Enter campaign name' });
+				setCampaignName({
+					...campaignName,
+					isError: true,
+					errorMsg: "Enter campaign name",
+				});
 			}
 
 			// VALIDATE THE FORM, (SELECT GROUP MESSAGE)
@@ -389,7 +393,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 				quickMessage: quickMsg,
 				messageLimit: msgLimit,
 				campaignEndTimeStatus: showEndDateAndTime,
-				campaignEndTime: endDateAndTime?.value ? new Date(endDateAndTime?.value) : '',
+				campaignEndTime: endDateAndTime?.value
+					? new Date(endDateAndTime?.value)
+					: "",
 				campaignStatus: status,
 				timeDelay: timeDelay,
 				campaignLabelColor: getRandomCampaignColor(),
@@ -405,7 +411,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 					campaignsArray.find(
 						(campaign) => campaign?.campaign_id === params?.campaignId
 					);
-					
+
 				campaignData.campaignStatus = findTheCampaign?.status;
 				campaignData.oldMessageGroupId = getOldMessageGroupId();
 			}
@@ -426,10 +432,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 		let msgLimitValue = event.target.value;
 
 		// Remove any non-digit characters, including 'e'
-		msgLimitValue = msgLimitValue.replace(/\D/g, '');
+		msgLimitValue = msgLimitValue.replace(/\D/g, "");
 
 		if (!msgLimitValue) {
-			msgLimitValue = '';
+			msgLimitValue = "";
 		}
 
 		const parsedValue = parseInt(msgLimitValue);
@@ -509,7 +515,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 	 */
 	const fetchCampaignDetails = async () => {
 		try {
-			const res = await fetchCampaign({ fbUserId: current_fb_id, campaignId: params?.campaignId });
+			const res = await fetchCampaign({
+				fbUserId: current_fb_id,
+				campaignId: params?.campaignId,
+			});
 			const data = res?.data;
 
 			if (data && data.length) {
@@ -522,7 +531,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 				}
 
 				if (campaignData?.campaign_name) {
-					const modifiedTempValue = truncateAndAddEllipsis(campaignData?.campaign_name, 40);
+					const modifiedTempValue = truncateAndAddEllipsis(
+						campaignData?.campaign_name,
+						40
+					);
 
 					setCampaignName({
 						...campaignName,
@@ -542,7 +554,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 				}
 
 				if (campaignData?.campaign_end_time) {
-					const formatEndTime = moment(campaignData.campaign_end_time).format("YYYY-MM-DD HH:mm:ss");
+					const formatEndTime = moment(campaignData.campaign_end_time).format(
+						"YYYY-MM-DD HH:mm:ss"
+					);
 					setEndDateAndTime({ ...endDateAndTime, value: formatEndTime });
 				}
 
@@ -560,14 +574,22 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 				// Have to setting the Schedule from here..
 				if (campaignData?.schedule?.length) {
-					updateSchedularOfCalender(campaignData?.schedule, campaignData?.campaign_name, campaignData?.campaign_label_color);
+					updateSchedularOfCalender(
+						campaignData?.schedule,
+						campaignData?.campaign_name,
+						campaignData?.campaign_label_color
+					);
 				}
 			}
-
 		} catch (error) {
 			// Handle other unexpected errors
 			console.log("Error Catch:", error);
-			Alertbox("An unexpected error occurred. Please try again later.", "error", 1000, "bottom-right");
+			Alertbox(
+				"An unexpected error occurred. Please try again later.",
+				"error",
+				1000,
+				"bottom-right"
+			);
 		}
 	};
 
@@ -581,7 +603,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 		if (selectMsgUsing) {
 			setQuickMsg(null);
 		}
-
 	}, [groupMsgSelect, quickMsg]);
 
 	useEffect(() => {
@@ -630,7 +651,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 		}
 	}, [campaignSchedule]);
 
-
 	return (
 		<div className='campaigns-edit d-flex d-flex-column'>
 			{/* CAMPAIGN CREATE/VIEW EVENT MODAL COMPONENT */}
@@ -643,8 +663,9 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 					<input
 						type='text'
-						className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
-							}`}
+						className={`campaigns-name-field ${
+							campaignName?.isError ? "campaigns-error-input-field" : ""
+						}`}
 						placeholder={campaignName?.placeholder}
 						value={campaignName?.tempValue}
 						onChange={handleCampaignName}
@@ -668,7 +689,41 @@ const CampaignCreateEditLayout = ({ children }) => {
 						groupSelect={groupMsgSelect}
 						setGroupSelect={setGroupMsgSelect}
 						quickMessage={quickMsg && quickMsg}
-						setQuickMessage={setQuickMsg}
+						setQuickMessage={(message) => {
+							console.log(message);
+							setQuickMsg(message);
+
+							const campaignData = {
+								campaignName: campaignName?.value,
+								messageGroupId: groupMsgSelect?._id,
+								quickMessage: message,
+								messageLimit: msgLimit,
+								campaignEndTimeStatus: showEndDateAndTime,
+								campaignEndTime: endDateAndTime?.value
+									? new Date(endDateAndTime?.value)
+									: "",
+								campaignStatus: status,
+								timeDelay: timeDelay,
+								campaignLabelColor: getRandomCampaignColor(),
+							};
+
+							if (type === "EDIT" && params?.campaignId) {
+								campaignData.campaignId = params?.campaignId;
+
+								// For Edit Campaign Needs the Status to be as it as..
+								// delete campaignData.campaignStatus;
+								const findTheCampaign =
+									campaignsArray?.length &&
+									campaignsArray.find(
+										(campaign) => campaign?.campaign_id === params?.campaignId
+									);
+
+								campaignData.campaignStatus = findTheCampaign?.status;
+								campaignData.oldMessageGroupId = getOldMessageGroupId();
+								// TRANSFERING DATA..
+								handleSavedData(type, campaignData, setLoadingBtn);
+							}
+						}}
 						quickMsgModalOpen={quickMsgModalOpen}
 						setQuickMsgOpen={setQuickMsgModalOpen}
 						isDisabled={false}
@@ -714,10 +769,11 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 				<div className='campaigns-input campaign-end-field'>
 					<label
-						className={`d-flex ${!showEndDateAndTime
-							? "campaigns-end-dateTime-label"
-							: "campaigns-end-dateTime-label-enabled"
-							}`}
+						className={`d-flex ${
+							!showEndDateAndTime
+								? "campaigns-end-dateTime-label"
+								: "campaigns-end-dateTime-label-enabled"
+						}`}
 					>
 						<Switch
 							// isDisabled={!editCampaign || editCampaign?.friends_pending === 0}
@@ -726,23 +782,23 @@ const CampaignCreateEditLayout = ({ children }) => {
 							smallVariant
 						/>
 
-						<span className="campaign-end-datetime-span">End date & time</span>
+						<span className='campaign-end-datetime-span'>End date & time</span>
 
-
-						<span className="campaigns-input-tooltip">
+						<span className='campaigns-input-tooltip'>
 							<Tooltip
-								type="info"
+								type='info'
 								customWidth={200}
 								iconColor={"#313037"}
-								textContent="The campaign will automatically deactivate at the specified date and time."
+								textContent='The campaign will automatically deactivate at the specified date and time.'
 							/>
 						</span>
-
 					</label>
 
 					<input
 						type='datetime-local'
-						className={`campaigns-datetime-select ${endDateAndTime?.isError ? 'campaigns-error-input-field' : ''}`}
+						className={`campaigns-datetime-select ${
+							endDateAndTime?.isError ? "campaigns-error-input-field" : ""
+						}`}
 						value={endDateAndTime?.value}
 						style={{
 							visibility: !showEndDateAndTime ? "hidden" : "visible",
@@ -763,15 +819,28 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 			{/* CAMPAIGNS SAVE OR CANCEL BUTTONS BOTTOM SECTION */}
 			<div className='campaigns-save-buttons-container'>
-				<button className='btn btn-grey' onClick={handleClickToCancelEditCampaign}>Cancel</button>
+				<button
+					className='btn btn-grey'
+					onClick={handleClickToCancelEditCampaign}
+				>
+					Cancel
+				</button>
 
 				<button
 					className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""}`}
 					onClick={handleClickToSaveCampaign}
 					// disabled={disableSubmit() || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
-					disabled={isSaveDisabled || unselectedError || (showEndDateAndTime && endDateAndTime?.isError)}
+					disabled={
+						isSaveDisabled ||
+						unselectedError ||
+						(showEndDateAndTime && endDateAndTime?.isError)
+					}
 				>
-					{isLoadingBtn ? type === "EDIT" ? "Updating..." : "Saving..." : "Save campaign"}
+					{isLoadingBtn
+						? type === "EDIT"
+							? "Updating..."
+							: "Saving..."
+						: "Save campaign"}
 				</button>
 			</div>
 		</div>

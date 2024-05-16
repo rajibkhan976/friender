@@ -224,10 +224,25 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 
 	return (
 		<span className='name-image-renderer'>
-			{params?.data?.friendProfileUrl || params?.data?.friendFbId ? (
+			{params?.data?.friendProfileUrl ||
+			params?.data?.friendFbId ||
+			params?.data?.friendName ? (
 				<>
-					<UserIcon className='placeholder-img' />
-					<div className='placeholder-name'>Facebook user</div>
+					{params?.data?.friendProfilePicture ? (
+						<span
+							className='fb-display-pic'
+							style={{
+								backgroundImage: `url(${params?.data?.friendProfilePicture})`,
+							}}
+						></span>
+					) : (
+						<UserIcon className='placeholder-img' />
+					)}
+					<div className='placeholder-name'>
+						{params?.data?.friendName
+							? params?.data?.friendName
+							: "Facebook user"}
+					</div>
 				</>
 			) : (
 				<span className='muted-text'>N/A</span>
@@ -1030,8 +1045,61 @@ export const RefriendCountRenderer = memo((params) => {
 
 export const SourceRendererPending = memo((params) => {
 	// console.log(params);
-	if (params?.data?.finalSource?.toLowerCase() === "group") {
+	if (
+		params?.data?.finalSource?.toLowerCase() === "group" ||
+		params?.data?.finalSource?.toLowerCase() === "suggestions" ||
+		params?.data?.finalSource?.toLowerCase() === "friends" ||
+		params?.data?.finalSource?.toLowerCase() === "post"
+	) {
 		const groupName = params?.data?.groupName;
+		const sourceName = params?.data?.sourceName;
+
+		if (sourceName) {
+			return (
+				<div className='friend-sync-source d-flex f-align-center'>
+					{sourceName === "suggestions" ? (
+						<span
+							className={
+								sourceName.length > 12
+									? "friendSource tooltipFullName"
+									: "friendSource"
+							}
+							data-text={sourceName.length > 12 && sourceName}
+						>
+							<span>
+								{sourceName.length > 12
+									? sourceName.substring(0, 12) + "..."
+									: sourceName}
+							</span>
+						</span>
+					) : sourceName !== "suggestions" && params?.data?.sourceUrl ? (
+						<span
+							className={
+								sourceName.length > 12
+									? "friendSource tooltipFullName"
+									: "friendSource"
+							}
+							data-text={sourceName.length > 12 && sourceName}
+						>
+							<span>
+								{sourceName.length > 12
+									? sourceName.substring(0, 12) + "..."
+									: sourceName}
+							</span>
+							<Link
+								to={params?.data?.sourceUrl}
+								className='ico-open-link'
+								target='_blank'
+							>
+								<OpenInNewTab />
+							</Link>
+						</span>
+					) : (
+						<span className='no-keywords muted-text'>N/A</span>
+					)}
+				</div>
+			);
+		}
 
 		if (params?.data?.groupUrl && groupName) {
 			return (

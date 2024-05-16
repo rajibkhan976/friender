@@ -1482,6 +1482,7 @@ function PageHeader({ headerText = "" }) {
 	const timeout = useRef(null);
 
 	const [selectedCsvFile, setSelectedCsvFile] = useState(null);
+	const [disableCsvSelection, setDisableCsvSelection] = useState(false);
 	const [showUploadCsvModal, setShowUploadCsvModal] = useState(false);
 	const [taskName, setTaskName] = useState(`CSV Upload ${Date.now()}`);
 	const [friendsQueueCsvUploadStep, setFriendsQueueCsvUploadStep] = useState(0);
@@ -1565,6 +1566,7 @@ function PageHeader({ headerText = "" }) {
 		setTaskName(`CSV Upload ${moment().format("YYYYMMDDHHmmss")}`);
 		setSelectedCsvFile(null);
 		setShowUploadCsvModal(true);
+		setDisableCsvSelection(false);
 		setFriendsQueueCsvUploadStep(0);
 		setSelectedCsvFile(null);
 		setGroupMsgSelect1(null);
@@ -1577,26 +1579,6 @@ function PageHeader({ headerText = "" }) {
 		dispatch(resetUploadedFriendsQueueCsvReport(null));
 		dispatch(resetUploadedFriendsQueueRecordResponse(null));
 	};
-
-	const onDrop = useCallback((acceptedFiles) => {
-		if (acceptedFiles && acceptedFiles[0].size <= 1048576) {
-			setSelectedCsvFile(acceptedFiles);
-			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
-		}
-
-		if (acceptedFiles && acceptedFiles[0].size > 1048576) {
-			Alertbox(
-				`The file you are attempting to upload exceeds 1MB in size.`,
-				"error",
-				1000,
-				"bottom-right"
-			);
-		}
-	}, []);
-
-	const onError = useCallback((Error) => {
-		console.log(Error);
-	}, []);
 
 	// console.log(selectedCsvFile);
 
@@ -1613,6 +1595,7 @@ function PageHeader({ headerText = "" }) {
 				.then((response) => {
 					if (response && response?.status === 400) {
 						setSelectedCsvFile(null);
+						setDisableCsvSelection(false);
 						Alertbox(response?.data, "error", 1000, "bottom-right");
 					}
 				})
@@ -1620,6 +1603,7 @@ function PageHeader({ headerText = "" }) {
 					if (error) {
 						// console.log(error);
 						setSelectedCsvFile(null);
+						setDisableCsvSelection(false);
 						Alertbox(
 							`Failed to initiate the review of the CSV file.`,
 							"error",
@@ -1637,6 +1621,27 @@ function PageHeader({ headerText = "" }) {
 
 	// console.log(friendsQueueCsvUploadStep);
 
+	const onDrop = useCallback((acceptedFiles) => {
+		if (acceptedFiles && acceptedFiles[0].size <= 1048576) {
+			setSelectedCsvFile(acceptedFiles);
+			setFriendsQueueCsvUploadStep(friendsQueueCsvUploadStep + 1);
+			setDisableCsvSelection(true);
+		}
+
+		if (acceptedFiles && acceptedFiles[0].size > 1048576) {
+			Alertbox(
+				`The file you are attempting to upload exceeds 1MB in size.`,
+				"error",
+				1000,
+				"bottom-right"
+			);
+		}
+	}, []);
+
+	const onError = useCallback((Error) => {
+		console.log(Error);
+	}, []);
+
 	const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } =
 		useDropzone({
 			onDrop,
@@ -1644,6 +1649,7 @@ function PageHeader({ headerText = "" }) {
 			accept: { "text/csv": [".csv"] },
 			multiple: false,
 			// maxSize: 1000000,
+			disabled: disableCsvSelection,
 		});
 
 	const style = useMemo(
@@ -1731,6 +1737,8 @@ function PageHeader({ headerText = "" }) {
 			timeout.current = setTimeout(() => {
 				setShowUploadCsvModal(false);
 				setFriendsQueueCsvUploadStep(0);
+				setSelectedCsvFile(null);
+				setDisableCsvSelection(false);
 				dispatch(resetUploadedFriendsQueueCsvReport(null));
 				dispatch(resetUploadedFriendsQueueRecordResponse(null));
 				dispatch(
@@ -2022,20 +2030,6 @@ function PageHeader({ headerText = "" }) {
 									<div className='import-data-input keyword-input'>
 										<label className='task-name-label keywords-label'>
 											Keywords (optional)
-											<figure
-												className='icon-arrow-down'
-												onClick={() => {
-													if (!showKeywordSuggestionBar) {
-														setSelectMessageOptionOpen1(false);
-														setSelectMessageOptionOpen2(false);
-													}
-													setShowKeywordSuggestionBar(
-														!showKeywordSuggestionBar
-													);
-												}}
-											>
-												<ChevronDownArrowIcon size={18} />
-											</figure>
 										</label>
 										<input
 											type='text'
@@ -2044,11 +2038,35 @@ function PageHeader({ headerText = "" }) {
 											onChange={(e) => {
 												e.stopPropagation();
 												setKeyword(e.target.value);
+												if (
+													e.target.value &&
+													e.target.value.trim() &&
+													e.target.value.trim().lastIndexOf(",") > -1 &&
+													!savedKeyword.includes(
+														e.target.value
+															.trim()
+															.substring(
+																0,
+																e.target.value.trim().lastIndexOf(",")
+															)
+													)
+												) {
+													setSavedKeyword([
+														...savedKeyword,
+														e.target.value
+															.trim()
+															.substring(
+																0,
+																e.target.value.trim().lastIndexOf(",")
+															),
+													]);
+													setShowKeywordSuggestionBar(true);
+													setKeyword("");
+												}
 											}}
 											onKeyDown={(e) => {
 												if (
 													e.key === "Enter" &&
-													keyword &&
 													e.target.value &&
 													e.target.value.trim() &&
 													!savedKeyword.includes(e.target.value.trim())
