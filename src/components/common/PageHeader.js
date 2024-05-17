@@ -2081,10 +2081,12 @@ function PageHeader({ headerText = "" }) {
 											}}
 											placeholder='Type your keywords here'
 											style={
-												showKeywordSuggestionBar ? {} : { marginBottom: "8px" }
+												showKeywordSuggestionBar && savedKeyword?.length > 0
+													? {}
+													: { marginBottom: "8px" }
 											}
 										/>
-										{showKeywordSuggestionBar && (
+										{showKeywordSuggestionBar && savedKeyword?.length > 0 && (
 											<div className='keyword-suggestion-bar'>
 												{savedKeyword?.length
 													? savedKeyword.map((item, index) => (

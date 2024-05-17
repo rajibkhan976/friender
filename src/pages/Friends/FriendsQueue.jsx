@@ -119,7 +119,7 @@ const FriendsQueue = () => {
 
 	const friendsQueueRef = [
 		{
-			field: "friendProfileUrl",
+			field: "friendName",
 			headerName: "Name",
 			headerCheckboxSelection: true,
 			checkboxSelection: true,
