@@ -1194,7 +1194,7 @@ export const SourceRendererPending = memo((params) => {
 		return (
 			<div className='friend-sync-source d-flex f-align-center'>
 				<SourceCsvIcon className='friend-sync-source-icon' />
-				{params?.data?.csvName}
+				{params?.data?.csvName ? params?.data?.csvName : "CSV Upload"}
 			</div>
 		);
 	}
