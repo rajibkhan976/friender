@@ -1036,8 +1036,9 @@ const CalenderModal = ({
 
 								<input
 									type='text'
-									className={`campaigns-name-field ${campaignName?.isError ? "campaigns-error-input-field" : ""
-										}`}
+									className={`campaigns-name-field ${
+										campaignName?.isError ? "campaigns-error-input-field" : ""
+									}`}
 									placeholder={campaignName?.placeholder}
 									value={campaignName?.tempValue}
 									onChange={handleCampaignName}
@@ -1063,7 +1064,46 @@ const CalenderModal = ({
 									groupSelect={groupMsgSelect}
 									setGroupSelect={setGroupMsgSelect}
 									quickMessage={quickMsg}
-									setQuickMessage={setQuickMsg}
+									setQuickMessage={(message) => {
+										const campaignToSave = {
+											campaignName: campaignName?.value,
+											messageGroupId: groupMsgSelect?._id,
+											quickMessage: message,
+											messageLimit: msgLimit,
+											campaignEndTimeStatus:
+												endDateAndTime !== "Invalid date" &&
+												endDateAndTime &&
+												endDateAndTime !== ""
+													? true
+													: false,
+											campaignEndTime: endDateAndTime
+												? new Date(endDateAndTime)
+												: "",
+											timeDelay: timeDelay,
+											campaignLabelColor: campaginColorPick,
+											campaignStatus: false,
+										};
+
+										if (isEditingModal && editingCampaign) {
+											const editingCampaignId =
+												editingCampaign?._id || editingCampaign?.campaign_id;
+											campaignToSave.campaignId = editingCampaignId;
+											const findTheCampaign =
+												campaignsArray?.length &&
+												campaignsArray.find(
+													(campaign) =>
+														campaign?.campaign_id === editingCampaignId
+												);
+											campaignToSave.campaignStatus = findTheCampaign?.status;
+
+											campaignToSave.oldMessageGroupId = getOldMessageGroupId();
+											handleClickToSaveCampaign(campaignToSave);
+											setCalenderModalType("");
+											setCalenderModalOpen(false);
+											setOpen(false);
+										}
+										setQuickMsg(message);
+									}}
 									quickMsgModalOpen={quickMsgModalOpen}
 									setQuickMsgOpen={setQuickMsgModalOpen}
 									isDisabled={false}
@@ -1209,8 +1249,9 @@ const CalenderModal = ({
 							Cancel
 						</button>
 						<button
-							className={`btn ${isLoadingBtn ? "campaign-loading-save-btn" : ""
-								}`}
+							className={`btn ${
+								isLoadingBtn ? "campaign-loading-save-btn" : ""
+							}`}
 							disabled={isSaveDisabled || unselectedError}
 							onClick={handleSubmitModalCampaign}
 						>

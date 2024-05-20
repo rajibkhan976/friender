@@ -1046,7 +1046,7 @@ export const RefriendCountRenderer = memo((params) => {
 export const SourceRendererPending = memo((params) => {
 	// console.log(params);
 	if (
-		params?.data?.finalSource?.toLowerCase() === "group" ||
+		params?.data?.finalSource?.toLowerCase() === "groups" ||
 		params?.data?.finalSource?.toLowerCase() === "suggestions" ||
 		params?.data?.finalSource?.toLowerCase() === "friends" ||
 		params?.data?.finalSource?.toLowerCase() === "post"
@@ -1101,44 +1101,44 @@ export const SourceRendererPending = memo((params) => {
 			);
 		}
 
-		if (params?.data?.groupUrl && groupName) {
-			return (
-				<div className='friend-sync-source d-flex f-align-center'>
-					{/* {console.log('here')} */}
-					{groupName ? (
-						<>
-							<figure className='friend-source text-center'>
-								{groupName === "sync" ? <FacebookSyncIcon /> : ""}
-							</figure>
-							<span
-								className={
-									groupName.length > 12
-										? "friendSource tooltipFullName"
-										: "friendSource"
-								}
-								data-text={groupName.length > 12 && groupName}
-							>
-								<SourceGroupIcon />{" "}
-								<span>
-									{groupName.length > 12
-										? groupName.substring(0, 12) + "..."
-										: groupName}
-								</span>
-								<Link
-									to={params?.data?.groupUrl}
-									className='ico-open-link'
-									target='_blank'
-								>
-									<OpenInNewTab />
-								</Link>
-							</span>
-						</>
-					) : (
-						<span className='no-keywords muted-text'>N/A</span>
-					)}
-				</div>
-			);
-		}
+		// if (params?.data?.groupUrl && groupName) {
+		// 	return (
+		// 		<div className='friend-sync-source d-flex f-align-center'>
+		// 			{/* {console.log('here')} */}
+		// 			{groupName ? (
+		// 				<>
+		// 					<figure className='friend-source text-center'>
+		// 						{groupName === "sync" ? <FacebookSyncIcon /> : ""}
+		// 					</figure>
+		// 					<span
+		// 						className={
+		// 							groupName.length > 12
+		// 								? "friendSource tooltipFullName"
+		// 								: "friendSource"
+		// 						}
+		// 						data-text={groupName.length > 12 && groupName}
+		// 					>
+		// 						<SourceGroupIcon />{" "}
+		// 						<span>
+		// 							{groupName.length > 12
+		// 								? groupName.substring(0, 12) + "..."
+		// 								: groupName}
+		// 						</span>
+		// 						<Link
+		// 							to={params?.data?.groupUrl}
+		// 							className='ico-open-link'
+		// 							target='_blank'
+		// 						>
+		// 							<OpenInNewTab />
+		// 						</Link>
+		// 					</span>
+		// 				</>
+		// 			) : (
+		// 				<span className='no-keywords muted-text'>N/A</span>
+		// 			)}
+		// 		</div>
+		// 	);
+		// }
 	}
 
 	if (params?.data?.finalSource?.toLowerCase() === "sync") {
