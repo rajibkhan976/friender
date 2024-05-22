@@ -8,12 +8,17 @@ import { getGroupById } from 'actions/MySettingAction';
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from 'react-router-dom';
-import { createCampaign, updateCampaign, updateCampaignSchedule, updateCampaignDetails, syncCampaignStatus } from "actions/CampaignsActions";
-import { fetchCampaign } from 'services/campaigns/CampaignServices';
+import {
+	createCampaign,
+	updateCampaign,
+	updateCampaignSchedule,
+	updateCampaignDetails,
+	syncCampaignStatus,
+} from "actions/CampaignsActions";
+import { fetchCampaign } from "services/campaigns/CampaignServices";
 import Alertbox from "components/common/Toast";
-import Tooltip from 'components/common/Tooltip';
+import Tooltip from "components/common/Tooltip";
 import extensionAccesories from "../../../configuration/extensionAccesories";
-
 
 const CampaignCreateEditLayout = ({ children }) => {
 	const params = useParams();
@@ -26,9 +31,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	const campaignSchedule = useSelector(
 		(state) => state.campaign.campaignSchedule
 	);
-	const campaignsArray = useSelector(
-		(state) => state.campaign.campaignsArray
-	);
+	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
 
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 
@@ -68,10 +71,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 	// END DATE & TIME STATE..
 	const [showEndDateAndTime, setShowEndDateAndTime] = useState(false);
 	const [endDateAndTime, setEndDateAndTime] = useState({
-		value: '',
+		value: "",
 		placeholder: "Choose data & time",
 		isError: false,
-		errorMsg: '',
+		errorMsg: "",
 	});
 
 	// TIME DELAY..
@@ -154,7 +157,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 	const truncateAndAddEllipsis = (stringText, maxLength) => {
 		if (stringText?.trim()?.length >= maxLength) {
 			let truncatedString = stringText.substring(0, maxLength);
-			return truncatedString + '...';
+			return truncatedString + "...";
 		} else {
 			return stringText;
 		}
@@ -170,16 +173,18 @@ const CampaignCreateEditLayout = ({ children }) => {
 				isError: true,
 				errorMsg: "Enter campaign name",
 			});
-
 		} else if (value.length > 40) {
 			const modifiedText = truncateAndAddEllipsis(value, 40);
 			setCampaignName({ ...campaignName, tempValue: modifiedText });
-
 		} else {
-			setCampaignName({ ...campaignName, isError: false, errorMsg: "", tempValue: value });
+			setCampaignName({
+				...campaignName,
+				isError: false,
+				errorMsg: "",
+				tempValue: value,
+			});
 		}
 	};
-
 
 	// HANDLE THE FOCUS EVENT FOR VALIDATION ON TEXT FIELDS..
 	const handleFocusValidationOnTextField = (_event) => {
@@ -209,7 +214,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 		setShowEndDateAndTime(!showEndDateAndTime);
 
 		if (!showEndDateAndTime) {
-			setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: '' });
+			setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: "" });
 		}
 	};
 
@@ -227,20 +232,29 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 		if (showEndDateAndTime) {
 			if (value?.length === 0) {
-				setEndDateAndTime({ ...endDateAndTime, isError: true, errorMsg: 'Blank not allowed' });
+				setEndDateAndTime({
+					...endDateAndTime,
+					isError: true,
+					errorMsg: "Blank not allowed",
+				});
 			} else {
-				setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: '' });
+				setEndDateAndTime({ ...endDateAndTime, isError: false, errorMsg: "" });
 			}
 		}
 	};
 
-
 	// CREATE/UPDATE CAMPAIGN FUNCTION..
-	const campaignAddOrUpdateRequestToAPI = async (type, payload, setLoadingBtn) => {
+	const campaignAddOrUpdateRequestToAPI = async (
+		type,
+		payload,
+		setLoadingBtn,
+		campaignId = null
+	) => {
 		dispatch(syncCampaignStatus());
 
 		if (!payload?.schedule || payload?.schedule?.length === 0) {
-			Alertbox("Please ensure that you schedule your campaign for at least one specific time before saving.",
+			Alertbox(
+				"Please ensure that you schedule your campaign for at least one specific time before saving.",
 				"error",
 				1000,
 				"bottom-right",
@@ -254,10 +268,19 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 		if (campaignsArray?.length) {
 			if (type === "CREATE") {
-				const campaignExistsCheck = campaignsArray.findIndex((campaign) => campaign?.campaign_name?.trim()?.toLowerCase() === payload?.campaignName?.trim()?.toLowerCase());
+				const campaignExistsCheck = campaignsArray.findIndex(
+					(campaign) =>
+						campaign?.campaign_name?.trim()?.toLowerCase() ===
+						payload?.campaignName?.trim()?.toLowerCase()
+				);
 
 				if (campaignExistsCheck > -1) {
-					Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+					Alertbox(
+						"The campaign name is already in use, please try a different name.",
+						"error",
+						1000,
+						"bottom-right"
+					);
 					setCampaignName({ ...campaignName, isError: true, errorMsg: "" });
 					setLoadingBtn(false);
 					return false;
@@ -273,40 +296,41 @@ const CampaignCreateEditLayout = ({ children }) => {
 			}
 			if (type === "EDIT") {
 				response = await dispatch(updateCampaign(payload)).unwrap();
-				console.log("response ::: ", response)
+				console.log("response ::: ", response);
 				extensionAccesories.sendMessageToExt({
-					action: "update_schedules"
-				  });
+					action: "update_schedules",
+				});
 			}
 
 			if (response?.data?.length === 0) {
-				Alertbox("The campaign name is already in use, please try a different name.", "error", 1000, "bottom-right");
+				Alertbox(
+					"The campaign name is already in use, please try a different name.",
+					"error",
+					1000,
+					"bottom-right"
+				);
 				setLoadingBtn(false);
 			} else {
 				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
 				setLoadingBtn(false);
 				// navigate("/messages/campaigns");
-				navigate("/campaigns");
+				if (!campaignId) {
+					navigate("/campaigns");
+				}
 			}
-
 		} catch (error) {
 			// Handle other unexpected errors
 			console.log("Error Catch:", error);
-			Alertbox(
-				error?.message,
-				"error",
-				1000,
-				"bottom-right"
-			);
+			Alertbox(error?.message, "error", 1000, "bottom-right");
 			setLoadingBtn(false);
 		}
 	};
 
-
 	// TRANSFORM CAMPAIGN SCHEDULES PROPERTY INTO THE OBJECT FOR API PAYLOAD..
 	const transformCampaignSchedulesPayload = (schedules = []) => {
 		const transformSchedules = [];
-		schedules && schedules?.length &&
+		schedules &&
+			schedules?.length &&
 			schedules.forEach((schedule) => {
 				// const fromTime = moment(schedule.start).format("YYYY-MM-DD HH:mm:ss");
 				// const toTime = moment(schedule.end).format("YYYY-MM-DD HH:mm:ss");
@@ -327,18 +351,26 @@ const CampaignCreateEditLayout = ({ children }) => {
 
 	// GETTING OLDER MESSAGE GROUP ID.. (FOR EDIT CAMPAIGN ONLY)
 	const getOldMessageGroupId = () => {
-		return localStorage.getItem("old_message_group_id_campaign") ? localStorage.getItem("old_message_group_id_campaign") : '';
+		return localStorage.getItem("old_message_group_id_campaign")
+			? localStorage.getItem("old_message_group_id_campaign")
+			: "";
 	};
 
 	// HANDLE SAVED DATA FROM CHILD..
-	const handleSavedData = (type, data, setLoadingBtn = () => null) => {
-		const transformCampaignSchedules = transformCampaignSchedulesPayload(campaignSchedule);
+	const handleSavedData = (
+		type,
+		data,
+		setLoadingBtn = () => null,
+		campaignId = null
+	) => {
+		const transformCampaignSchedules =
+			transformCampaignSchedulesPayload(campaignSchedule);
 		const payload = {
 			...data,
 			fbUserId: current_fb_id,
 			schedule: transformCampaignSchedules || [],
 		};
-		campaignAddOrUpdateRequestToAPI(type, payload, setLoadingBtn);
+		campaignAddOrUpdateRequestToAPI(type, payload, setLoadingBtn, campaignId);
 	};
 
 	// HANDLE CLICK ON THE SAVE CAMPAIGNS..
@@ -417,7 +449,7 @@ const CampaignCreateEditLayout = ({ children }) => {
 			}
 
 			// TRANSFERING DATA..
-			handleSavedData(type, campaignData, setLoadingBtn);
+			handleSavedData(type, campaignData, setLoadingBtn, null);
 		}
 	};
 
@@ -684,15 +716,14 @@ const CampaignCreateEditLayout = ({ children }) => {
 					<DropSelectMessage
 						type='CAMPAIGNS_MESSAGE'
 						openSelectOption={selectMessageOptionOpen}
-						handleIsOpenSelectOption={setSelectMessageOptionOpen}
+						handleIsOpenSelectOption={(status) => {
+							setSelectMessageOptionOpen(status);
+						}}
 						groupList={groupMessages}
 						groupSelect={groupMsgSelect}
 						setGroupSelect={setGroupMsgSelect}
 						quickMessage={quickMsg && quickMsg}
 						setQuickMessage={(message) => {
-							console.log(message);
-							setQuickMsg(message);
-
 							const campaignData = {
 								campaignName: campaignName?.value,
 								messageGroupId: groupMsgSelect?._id,
@@ -721,11 +752,21 @@ const CampaignCreateEditLayout = ({ children }) => {
 								campaignData.campaignStatus = findTheCampaign?.status;
 								campaignData.oldMessageGroupId = getOldMessageGroupId();
 								// TRANSFERING DATA..
-								handleSavedData(type, campaignData, setLoadingBtn);
+								handleSavedData(
+									type,
+									campaignData,
+									setLoadingBtn,
+									params?.campaignId
+								);
 							}
+							console.log(message);
+
+							setQuickMsg(message);
 						}}
 						quickMsgModalOpen={quickMsgModalOpen}
-						setQuickMsgOpen={setQuickMsgModalOpen}
+						setQuickMsgOpen={(status) => {
+							setQuickMsgModalOpen(status);
+						}}
 						isDisabled={false}
 						usingSelectOptions={usingSelectOption}
 						setUsingSelectOptions={setUsingSelectOption}
