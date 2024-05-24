@@ -37,18 +37,27 @@ export const storeFriendListIndexDb = async (fbId, friendList) => {
 export const getFriendList = createAsyncThunk(
   "facebook/getFriendList",
   async (payload) => {
-    const res = await fetchFriendList(payload);
+    let frlistResp = await fetchFriendList(payload);
+    if(frlistResp?.data?.[0].total_no_of_friends>4000){
+       let maxBatch = Math.ceil(frlistResp.data[0].total_no_of_friends/4000);
+       for(let i=2;i<=maxBatch;i++){
+             let currResp = await fetchFriendList({...payload,page:i});
+             if(currResp.data[0].friend_details.length>0){
+              frlistResp.data[0].friend_details.push(...currResp.data[0].friend_details);
+             }
+       }
+    }
 
-    let friendList = res?.data?.[0].friend_details
-      ? res.data[0].friend_details.length
+    let friendList = frlistResp?.data?.[0].friend_details
+      ? frlistResp.data[0].friend_details.length
       : false;
 
     if (friendList) {
-      storeFriendListIndexDb(payload.fbUserId, res);
+      storeFriendListIndexDb(payload.fbUserId, frlistResp);
     }
 
     // console.log("************res***********",res)
-    return res;
+    return frlistResp;
   }
 );
 
