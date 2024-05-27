@@ -1240,8 +1240,12 @@ export const SourceRendererPending = memo((params) => {
     if (params?.data?.finalSource?.toLowerCase() === "csv") {
         return (
             <div className='friend-sync-source d-flex f-align-center'>
+				<figure className='friend-source text-center'>
                 <SourceCsvIcon className='friend-sync-source-icon' />
-                {params?.data?.csvName ? params?.data?.csvName : "CSV Upload"}
+				</figure>
+				<span>
+                	{params?.data?.csvName ? params?.data?.csvName : "CSV Upload"}
+				</span>
             </div>
         );
     }
@@ -1249,8 +1253,12 @@ export const SourceRendererPending = memo((params) => {
     if (params?.data?.task_name) {
         return (
             <div className='friend-sync-source d-flex f-align-center'>
-                <SourceCsvIcon className='friend-sync-source-icon' />
-                {params?.data?.task_name}
+                <figure className='friend-source text-center'>
+					<SourceCsvIcon className='friend-sync-source-icon' />
+				</figure>
+				<span>
+                	{params?.data?.task_name}
+				</span>
             </div>
         );
     }

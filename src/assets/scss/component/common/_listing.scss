@@ -732,14 +732,17 @@
   color: #fff;
   .friend-source {
     flex: 0 0 0;
+    display: inline-flex; 
+    vertical-align: middle;
     // text-align: center;
     // margin-right: 10px;
     // display: inline-flex;
     // align-items: start;
     // justify-content: start;
     svg {
-      margin-top: 10px;
       margin-right: 5px;
+      width:32px;
+      
 
       *[fill] {
         fill: #fff;
