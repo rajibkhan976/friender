@@ -740,6 +740,13 @@
     svg {
       margin-top: 10px;
       margin-right: 5px;
+
+      *[fill] {
+        fill: #fff;
+      }
+      *[stroke] {
+        stroke: #fff;
+      }
     }
   }
 

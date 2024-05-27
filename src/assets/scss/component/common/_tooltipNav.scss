@@ -11,7 +11,7 @@
         content-visibility: auto;
         contain:layout;
         @include border-radius(2px);
-        padding: 14px 18px;
+        padding: 14px;
         pointer-events: none;
         position: absolute;
         font-size: 12px;
@@ -42,7 +42,22 @@
                 align-content: center;
                 flex-wrap: wrap;
                 span{
-                  padding-right: 10px;
+                  margin-inline-end: 10px;
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  // flex: 0 0 30px;
+
+                  svg {
+                    width: 28px;
+
+                    *[fill] {
+                      fill: #fff;
+                    }
+                    *[stroke] {
+                      stroke: #fff;
+                    }
+                  }
                 }
 
                 &:last-child {

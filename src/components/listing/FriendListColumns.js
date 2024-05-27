@@ -19,6 +19,10 @@ import {
 	Tier2Icon,
 	Tier1Icon,
 	IncomingRequestIcon,
+	SuggestFriendIcon,
+	FriendsFriendIcon,
+	PostIcon,
+	SyncIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -1048,176 +1052,206 @@ export const RefriendCountRenderer = memo((params) => {
 });
 
 export const SourceRendererPending = memo((params) => {
-	// console.log(params);
-	if (
-		params?.data?.finalSource?.toLowerCase() === "groups" ||
-		params?.data?.finalSource?.toLowerCase() === "suggestions" ||
-		params?.data?.finalSource?.toLowerCase() === "friends" ||
-		params?.data?.finalSource?.toLowerCase() === "post"
-	) {
-		const groupName = params?.data?.groupName;
-		const sourceName = params?.data?.sourceName;
+    // console.log(params);
+    if (
+        params?.data?.finalSource?.toLowerCase() === "groups" ||
+        params?.data?.finalSource?.toLowerCase() === "group" ||
+        params?.data?.finalSource?.toLowerCase() === "suggestions" ||
+        params?.data?.finalSource?.toLowerCase() === "friends" ||
+        params?.data?.finalSource?.toLowerCase() === "post"
+    ) {
+        const sourceName = params?.data?.sourceName;
 
-		if (sourceName) {
-			return (
-				<div className='friend-sync-source d-flex f-align-center'>
-					{sourceName === "suggestions" ? (
-						<span
-							className={
-								sourceName.length > 12
-									? "friendSource tooltipFullName"
-									: "friendSource"
-							}
-							data-text={sourceName.length > 12 && sourceName}
-						>
-							<SuggestedFriendsIcon className='' />
-							<span>
-								{sourceName.length > 12
-									? sourceName.substring(0, 12) + "..."
-									: sourceName}
-							</span>
-						</span>
-					) : sourceName !== "suggestions" && params?.data?.sourceUrl ? (
-						<span
-							className={
-								sourceName.length > 12
-									? "friendSource tooltipFullName"
-									: "friendSource"
-							}
-							data-text={sourceName.length > 12 && sourceName}
-						>
-							{" "}
-							{params?.data?.finalSource?.toLowerCase() === "post" ? (
-								<PostsIcon className='' />
-							) : params?.data?.finalSource?.toLowerCase() === "groups" ? (
-								<GroupsIcon className='' />
-							) : params?.data?.finalSource?.toLowerCase() === "friends" ? (
-								<FriendsIcon className='' />
-							) : null}
-							<span>
-								{sourceName.length > 12
-									? sourceName.substring(0, 12) + "..."
-									: sourceName}
-							</span>
-							<Link
-								to={params?.data?.sourceUrl}
-								className='ico-open-link'
-								target='_blank'
-							>
-								<OpenInNewTab />
-							</Link>
-						</span>
-					) : (
-						<span className='no-keywords muted-text'>N/A</span>
-					)}
-				</div>
-			);
-		}
+        if (sourceName) {
+            return (
+                <div className='friend-sync-source d-flex f-align-center'>
+                    {
+                        params?.data?.sourceUrl ?
+                        <Link
+                            to={params?.data?.sourceUrl}
+                            className={`friend-sync-source d-flex f-align-center ${sourceName?.length > 12 ? 'tooltipFullName' : ''}`}
+                            target='_blank'
+                            data-text={sourceName?.length > 12 && sourceName}
+                        >
+                            <figure className='friend-source text-center'>
+                                {
+                                    (params?.data?.finalSource?.toLowerCase() === "groups" ||
+                                    params?.data?.finalSource?.toLowerCase() === "group") ?
+                                        <SourceGroupIcon /> :
+                                    params?.data?.finalSource?.toLowerCase() === "suggestions" ?
+                                        <SuggestFriendIcon /> :
+                                    params?.data?.finalSource?.toLowerCase() === "friends" ?
+                                        <FriendsFriendIcon /> :
+                                    params?.data?.finalSource?.toLowerCase() === "post" ?
+                                        <PostIcon /> : ''
+                                }
+                            </figure>
+                            <span>
+                                {
+                                    params?.data?.finalSource?.toLowerCase() === "post" ? 
+                                        'Post' :
+                                    params?.data?.finalSource?.toLowerCase() === "suggestions" ?
+                                        'Suggested Friends' :
+                                    params?.data?.finalSource?.toLowerCase() === "friends" ?
+                                        'Friends of Friends' :
+                                    sourceName.length > 12
+                                        ? sourceName.substring(0, 12) + "..."
+                                        : sourceName
+                                }
+                            </span>
+                            &nbsp;
+                            <OpenInNewTab />
+                        </Link> : 
+                        <span className='no-keywords muted-text'>N/A</span>
+                    }
+                    {/* // : sourceName !== "suggestions" && params?.data?.sourceUrl ? (
+                    //     <span
+                    //         className={
+                    //             sourceName.length > 12
+                    //                 ? "friendSource tooltipFullName"
+                    //                 : "friendSource"
+                    //         }
+                    //         data-text={sourceName.length > 12 && sourceName}
+                    //     >
+                    //         <span>
+                    //             {sourceName.length > 12
+                    //                 ? sourceName.substring(0, 12) + "..."
+                    //                 : sourceName}
+                    //         </span>
+                    //         <Link
+                    //             to={params?.data?.sourceUrl}
+                    //             className='ico-open-link'
+                    //             target='_blank'
+                    //         >
+                    //             <OpenInNewTab />
+                    //         </Link>
+                    //     </span>
+                    // ) */}
+                </div>
+            );
+        } else {
+            if (params?.data?.groupUrl && params?.data?.groupName) {
+                return (
+                    <Link
+                        to={params?.data?.groupUrl}
+                        className={`friend-sync-source d-flex f-align-center ${params?.data?.groupName?.length > 12 ? 'tooltipFullName' : ''}`}
+                        target='_blank'
+                        data-text={params?.data?.groupName?.length > 12 && params?.data?.groupName}
+                    >
+                        {params?.data?.groupName ? (
+                            <>
+                                <figure className='friend-source text-center'>
+                                    <SourceGroupIcon />
+                                </figure>
+                                <span>
+                                    {
+                                        params?.data?.groupName?.length > 12 ? 
+                                            params?.data?.groupName.substring(0, 12) + "..." :
+                                            params?.data?.groupName
+                                    }
+                                </span>
+                            </>
+                        ) : (
+                            <span className='no-keywords muted-text'>N/A</span>
+                        )}
+                    </Link>
+                )
+            }
+        }
 
-		// if (params?.data?.groupUrl && groupName) {
-		// 	return (
-		// 		<div className='friend-sync-source d-flex f-align-center'>
-		// 			{/* {console.log('here')} */}
-		// 			{groupName ? (
-		// 				<>
-		// 					<figure className='friend-source text-center'>
-		// 						{groupName === "sync" ? <FacebookSyncIcon /> : ""}
-		// 					</figure>
-		// 					<span
-		// 						className={
-		// 							groupName.length > 12
-		// 								? "friendSource tooltipFullName"
-		// 								: "friendSource"
-		// 						}
-		// 						data-text={groupName.length > 12 && groupName}
-		// 					>
-		// 						<SourceGroupIcon />{" "}
-		// 						<span>
-		// 							{groupName.length > 12
-		// 								? groupName.substring(0, 12) + "..."
-		// 								: groupName}
-		// 						</span>
-		// 						<Link
-		// 							to={params?.data?.groupUrl}
-		// 							className='ico-open-link'
-		// 							target='_blank'
-		// 						>
-		// 							<OpenInNewTab />
-		// 						</Link>
-		// 					</span>
-		// 				</>
-		// 			) : (
-		// 				<span className='no-keywords muted-text'>N/A</span>
-		// 			)}
-		// 		</div>
-		// 	);
-		// }
-	}
+        // if (params?.data?.groupUrl && groupName) {
+        //     return (
+        //         <div className='friend-sync-source d-flex f-align-center'>
+        //             {/* {console.log('here')} */}
+        //             {groupName ? (
+        //                 <>
+        //                     <figure className='friend-source text-center'>
+        //                         {groupName === "sync" ? <FacebookSyncIcon /> : ""}
+        //                     </figure>
+        //                     <span
+        //                         className={
+        //                             groupName.length > 12
+        //                                 ? "friendSource tooltipFullName"
+        //                                 : "friendSource"
+        //                         }
+        //                         data-text={groupName.length > 12 && groupName}
+        //                     >
+        //                         <SourceGroupIcon />{" "}
+        //                         <span>
+        //                             {groupName.length > 12
+        //                                 ? groupName.substring(0, 12) + "..."
+        //                                 : groupName}
+        //                         </span>
+        //                         <Link
+        //                             to={params?.data?.groupUrl}
+        //                             className='ico-open-link'
+        //                             target='_blank'
+        //                         >
+        //                             <OpenInNewTab />
+        //                         </Link>
+        //                     </span>
+        //                 </>
+        //             ) : (
+        //                 <span className='no-keywords muted-text'>N/A</span>
+        //             )}
+        //         </div>
+        //     );
+        // }
+    }
 
-	if (params?.data?.finalSource?.toLowerCase() === "sync") {
-		return (
-			<div className='friend-sync-source d-flex f-align-center'>
-				{/* {console.log('here')} */}
-				{params?.data?.finalSource ? (
-					<>
-						<figure className='friend-source text-center'>
-							<SyncSourceIcon />
-						</figure>
-						<span
-							className={
-								params?.data?.finalSource.length > 12
-									? "friendSource tooltipFullName"
-									: "friendSource"
-							}
-							data-text={params?.data?.finalSource}
-						>
-							{params?.data?.finalSource.length > 12
-								? params?.data?.finalSource.substring(0, 12) + "..."
-								: params?.data?.finalSource}
-						</span>
-					</>
-				) : (
-					<span className='no-keywords muted-text'>N/A</span>
-				)}
-			</div>
-		);
-	}
+    if (params?.data?.finalSource?.toLowerCase() === "sync") {
+        return (
+            <div className='friend-sync-source d-flex f-align-center'>
+                <>
+                    <figure className='friend-source text-center'>
+                        {/* <SyncSourceIcon /> */}
+                        <SyncIcon />
+                    </figure>
+                    <span
+                        className="friendSource"
+                    >
+                        Sync
+                    </span>
+                </>
+            </div>
+        );
+    }
 
-	if (params?.data?.finalSource?.toLowerCase() === "incoming") {
-		return (
-			<div className='friend-sync-source d-flex f-align-center'>
-				<figure className='friend-source text-center'>
-					<IncomingRequestIcon />
-				</figure>
-				<span
-					className={
-						params?.data?.finalSource.length > 12
-							? "friendSource tooltipFullName"
-							: "friendSource"
-					}
-					data-text={params?.data?.finalSource}
-				>
-					Incoming request
-				</span>
-			</div>
-		);
-	}
+    if (params?.data?.finalSource?.toLowerCase() === "incoming") {
+        return (
+            <div className='friend-sync-source d-flex f-align-center'>
+                <figure className='friend-source text-center'>
+                    <IncomingRequestIcon />
+                </figure>
+                <span
+                    className={
+                        params?.data?.finalSource.length > 12
+                            ? "friendSource tooltipFullName"
+                            : "friendSource"
+                    }
+                    data-text={params?.data?.finalSource}
+                >
+                    Incoming request
+                </span>
+            </div>
+        );
+    }
 
-	if (params?.data?.finalSource?.toLowerCase() === "csv") {
-		return (
-			<div className='friend-sync-source d-flex f-align-center'>
-				<SourceCsvIcon className='friend-sync-source-icon' />
-				{params?.data?.csvName ? params?.data?.csvName : "CSV Upload"}
-			</div>
-		);
-	}
+    if (params?.data?.finalSource?.toLowerCase() === "csv") {
+        return (
+            <div className='friend-sync-source d-flex f-align-center'>
+                <SourceCsvIcon className='friend-sync-source-icon' />
+                {params?.data?.csvName ? params?.data?.csvName : "CSV Upload"}
+            </div>
+        );
+    }
 
-	if (params?.data?.task_name) {
-		return (
-			<div className='friend-sync-source d-flex f-align-center'>
-				<SourceCsvIcon className='friend-sync-source-icon' />
-				{params?.data?.task_name}
-			</div>
-		);
-	}
+    if (params?.data?.task_name) {
+        return (
+            <div className='friend-sync-source d-flex f-align-center'>
+                <SourceCsvIcon className='friend-sync-source-icon' />
+                {params?.data?.task_name}
+            </div>
+        );
+    }
 });

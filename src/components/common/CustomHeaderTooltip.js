@@ -74,11 +74,7 @@ const CustomHeaderTooltip = (props) => {
 									</span>
 									Incoming request
 								</li>
-							</ul>
-							<div className='commingSoon'>
-								<span className='warn-badget'>Coming Soon</span>
-							</div>
-							<ul className='muted'>
+								
 								<li>
 									<span>
 										{" "}
@@ -100,7 +96,10 @@ const CustomHeaderTooltip = (props) => {
 									</span>{" "}
 									Request from post
 								</li>
+							
 							</ul>
+							
+							
 						</div>
 					</div>
 				);
