@@ -27,6 +27,7 @@ import DropSelector from "../../components/formComponents/DropSelector";
 import Switch from "../../components/formComponents/Switch";
 import Alertbox from "../../components/common/Toast";
 import { showModal } from "../../actions/PlanAction";
+import ToolTipPro from "components/common/ToolTipPro";
 
 const FriendsQueue = () => {
 	const dispatch = useDispatch();
@@ -70,9 +71,13 @@ const FriendsQueue = () => {
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
 	);
+
+	console.log("RECORDS FOR FRIRNDS QUEUE -- ", friendsQueueRecords);
+
 	const friendsQueueRecordsCount = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsCount
 	);
+
 	const friendsQueueRecordsLimit = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecordsLimit
 	);
@@ -102,6 +107,16 @@ const FriendsQueue = () => {
 
 	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(0);
 	const [keywordList, setKeyWordList] = useState(0);
+	const [sendableRecordsCount, setSendableRecordsCount] = useState(0);
+
+	// 
+	useEffect(() => {
+		if (friendsQueueRecords) {
+			// const filteredErrorRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === false);
+			const filteredSendbleRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === null && item.is_active === true);
+			setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
+		}
+	}, [friendsQueueRecords]);
 
 	// get Settings data
 	const getSettingsData = async () => {
@@ -417,13 +432,13 @@ const FriendsQueue = () => {
 						<>
 							{keywordList?.length > 0
 								? keywordList.map((el, i) => (
-										<span
-											className={`tags positive-tags`}
-											key={`key-${i}`}
-										>
-											{el}
-										</span>
-								  ))
+									<span
+										className={`tags positive-tags`}
+										key={`key-${i}`}
+									>
+										{el}
+									</span>
+								))
 								: "No specific keyword used"}
 						</>
 					}
@@ -437,6 +452,23 @@ const FriendsQueue = () => {
 			)}
 			{!loading && (
 				<div className='friends-queue-action-bar'>
+					<div className="friends-queue-action-bar-item">
+						<div className='friends-queue-total-count-area'>
+							<div className='friend-req-sent-count'>
+								<div className='count'>{sendableRecordsCount ?? 0}</div>
+								<div className='count-descriptor'>Sendable requests</div>
+							</div>
+
+							<div className="friend-req-queue-tooltip-container">
+								<ToolTipPro
+									isInteract={false}
+									type="query-gray"
+									textContent="Total number of people in the queue who will receive a friend request."
+								/>
+							</div>
+						</div>
+					</div>
+
 					<div className='friends-queue-action-bar-item'>
 						<div className='friend-req-sent-filter'>
 							<div className='friend-req-sent-count'>
@@ -568,9 +600,8 @@ const FriendsQueue = () => {
 					<div className='friends-queue-action-bar-item'>
 						<div className='friend-req-run-queue'>
 							<div className='run-friend-queue'>
-								<div className='run'>{`${
-									friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
-								} friend queue`}</div>
+								<div className='run'>{`${friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
+									} friend queue`}</div>
 								<Switch
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
@@ -646,9 +677,9 @@ const FriendsQueue = () => {
 				</div>
 			)}
 			{friendsQueueRecords?.length > 0 &&
-			!loading &&
-			!isDataFetchingFromApi &&
-			inactiveAfter !== null ? (
+				!loading &&
+				!isDataFetchingFromApi &&
+				inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
 					friendsListingRef={friendsQueueRef}
@@ -667,10 +698,10 @@ const FriendsQueue = () => {
 							currently empty
 						</>
 					}
-					// interactionText='Clear filter'
-					// isInteraction={() => {
-					// 	setIsReset(!isReset);
-					// }}
+				// interactionText='Clear filter'
+				// isInteraction={() => {
+				// 	setIsReset(!isReset);
+				// }}
 				/>
 			)}
 		</div>

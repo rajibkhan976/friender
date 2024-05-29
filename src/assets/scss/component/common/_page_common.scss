@@ -678,14 +678,15 @@
     margin-top: 6rem;
   }
 
-  .friends-queue-action-bar-item:nth-child(-n+2) {
+  .friends-queue-action-bar-item:nth-child(-n+3) {
     height: 90%;
     margin-top: 6px;
     border-right: 1px solid rgba(49, 48, 55, 1);
+    margin-right: 2%;
   }
 
   .friends-queue-action-bar-item {
-    width: 25%;
+    // width: 25%;
     height: 100%;
     padding: 8px 8px 8px 0;
     display: flex;
@@ -725,6 +726,18 @@
         font-size: 14px;
         line-height: 19px;
       }
+    }
+
+    .friends-queue-total-count-area {
+      @extend .friend-req-sent-filter;
+      width: 150px;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+    }
+
+    .friend-req-queue-tooltip-container {
+      margin-top: 20px;
     }
 
     .friend-req-send-limit {
@@ -782,6 +795,7 @@
 
     .friend-req-time-delay {
       width: 95%;
+      min-width: 180px;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -819,6 +833,7 @@
 
       .run-friend-queue {
         max-width: 196px;
+        width: 180px;
         display: flex;
         justify-content: space-between;
         align-items: center;
