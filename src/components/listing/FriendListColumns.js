@@ -546,7 +546,8 @@ export const AgeRenderer = memo((params) => {
 		age = ageInDays;
 	} else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
 		// const lostDate = new Date(params?.data?.lost_friend_at?.toLowerCase());
-		const lostDate = params?.data?.updated_at?.toLowerCase();
+		// const lostDate = params?.data?.updated_at?.toLowerCase(); COMMENTED OUT OUT DUE TO SORT ISSUE IN LOST LIST
+		const lostDate = params?.data?.created_at?.toLowerCase();
 		const ageInDays = ageCalculator(lostDate);
 		age = ageInDays;
 	} else if (params?.data?.deleted_status === 1) {
