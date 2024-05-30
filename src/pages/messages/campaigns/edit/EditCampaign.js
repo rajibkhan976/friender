@@ -95,7 +95,7 @@ const EditCampaign = (props) => {
 			cellRenderer: KeywordRenderer,
 		},
 		{
-			field: "groupName" ? "groupName" : "finalSource",
+			field: "finalSource",
 			headerName: "Source",
 			headerTooltip: "Friends source",
 			tooltipComponent: CustomHeaderTooltip,

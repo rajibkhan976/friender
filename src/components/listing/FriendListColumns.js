@@ -466,7 +466,8 @@ export const AgeRenderer = memo((params) => {
 			statusSync = params?.data?.created_at?.toLowerCase();
 		}
 	} else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
-		statusSync = params?.data?.updated_at?.toLowerCase();
+		// statusSync = params?.data?.updated_at?.toLowerCase();
+		statusSync = params?.data?.created_at?.toLowerCase();
 	} else if (params?.data?.deleted_status === 1) {
 		statusSync = params?.data?.deleted_at?.toLowerCase();
 	} else {

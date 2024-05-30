@@ -362,7 +362,7 @@ const WhiteList = () => {
     //   },
     // },
     {
-      field: "groupName" ? "groupName" : "finalSource",
+      field: "finalSource",
       headerName: "Source",
       filter: "agTextColumnFilter",
       headerTooltip: 'Friends source',
