@@ -7,6 +7,7 @@ import {
   getFriendListFromIndexDb,
 } from "../../actions/FriendsAction";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
+import { getProfileSettingFromIndexDb } from "../../actions/MySettingAction";
 
 const Friends = () => {
   // :::: This is the parent component for all Type of Friend List::::
@@ -33,40 +34,58 @@ const Friends = () => {
       }
 
       // Fetch data from index db first
+      dispatch(getProfileSettingFromIndexDb(savedFbUId)).unwrap().then((res) => {
+        dispatch( getFriendListFromIndexDb({ fbUserId: savedFbUId})).unwrap()
+          .then((response) => {
+            if (
+              response &&
+              response.data &&
+              response.data.length &&
+              response.data[0].friend_details.length > 0
+            ) {
+              dispatch(
+                updateNumberofListing(
+                  response.data[0].friend_details.filter(
+                    (item) => item.deleted_status !== 1
+                  ).length
+                )
+              );
+            } else {
+              //console.log("here");
+              dispatch(updateNumberofListing(0));
+            }
+          });
+      });
+      // dispatch(
+      //   getFriendListFromIndexDb({
+      //     // token: localStorage.getItem("fr_token"),
+      //     fbUserId: savedFbUId,
+      //   })
+      // )
+      //   .unwrap()
+      //   .then((response) => {
+      //     if (
+      //       response &&
+      //       response.data &&
+      //       response.data.length &&
+      //       response.data[0].friend_details.length > 0
+      //     ) {
+      //       dispatch(
+      //         updateNumberofListing(
+      //           response.data[0].friend_details.filter(
+      //             (item) => item.deleted_status !== 1
+      //           ).length
+      //         )
+      //       );
+      //     } else {
+      //       //console.log("here");
+      //       dispatch(updateNumberofListing(0));
+      //     }
+      //   });
+      console.log("helooyuyuyuy");
       dispatch(
-        getFriendListFromIndexDb({
-          // token: localStorage.getItem("fr_token"),
-          fbUserId: savedFbUId,
-        })
-      )
-        .unwrap()
-        .then((response) => {
-          if (
-            response &&
-            response.data &&
-            response.data.length &&
-            response.data[0].friend_details.length > 0
-          ) {
-            dispatch(
-              updateNumberofListing(
-                response.data[0].friend_details.filter(
-                  (item) => item.deleted_status !== 1
-                ).length
-              )
-            );
-          } else {
-            //console.log("here");
-            dispatch(updateNumberofListing(0));
-          }
-        });
-
-      dispatch(
-        getFriendList({
-          // token: localStorage.getItem("fr_token"),
-          fbUserId: savedFbUId,
-        })
-      )
-        .unwrap()
+        getFriendList({fbUserId: savedFbUId})
+      ).unwrap()
         .then((response) => {
           if (
             response.data &&

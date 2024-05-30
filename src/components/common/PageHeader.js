@@ -279,7 +279,25 @@ function PageHeader({ headerText = "" }) {
 	);
 	const [campaignListSelector, setCampaignListSelector] = useState(false);
 	const [selectedCampaignName, setSelectedCampaignName] = useState("Select");
+	const friendsListData = useSelector(
+		(state) => state.facebook_data.fb_data
+	);
+	useEffect(()=>{		
+				if (friendsListData) {
+					if (friendsListData.last_sync_at) {
+						setTooltip(friendsListData.last_sync_at);
+						localStorage.removeItem("fr_tooltip");
+					} else {
+						localStorage.setItem(
+							"fr_tooltip",
+							friendsListData.last_sync_at
+						);
+						setTooltip(friendsListData.last_sync_at);
+					}
+				}
+			
 
+	},[friendsListData]);
 	const refreshFrList = () => {
 		dispatch(unLoadFrList());
 		setTimeout(() => {
@@ -1300,24 +1318,7 @@ function PageHeader({ headerText = "" }) {
 			localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
 		) {
 			localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id);
-			dispatch(
-				getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") })
-			)
-				.unwrap()
-				.then((response) => {
-					if (response) {
-						if (!response?.data?.[0]?.last_sync_at) {
-							setTooltip("");
-							localStorage.removeItem("fr_tooltip");
-						} else {
-							localStorage.setItem(
-								"fr_tooltip",
-								response?.data[0]?.last_sync_at
-							);
-							setTooltip(response?.data[0]?.last_sync_at);
-						}
-					}
-				});
+			
 		} else {
 			setTooltip(facebookData?.fb_data?.last_sync_at);
 		}
@@ -1333,7 +1334,7 @@ function PageHeader({ headerText = "" }) {
 			localStorage.removeItem("fr_update");
 			setUpdate(syncBtnDefaultState);
 		}
-	}, []);
+	}, [facebookData]);
 
 	const MassagebuttonClick = (messageType) => {
 		// console.log("clicked msgobj::::>>", messageType);
@@ -2400,7 +2401,7 @@ function PageHeader({ headerText = "" }) {
 								</span>
 							</button>
 							<span className='last-sync-status text-center'>
-								<TooltipDate />
+							{facebookData && <TooltipDate />}
 							</span>
 						</div>
 					)}

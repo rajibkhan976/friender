@@ -138,6 +138,7 @@ const Listing = (props) => {
 	];
 
 	const headerCheckboxHandle = (event) => {
+		if(!gridRef?.current?.api)return;
 		// let paginationSize = gridRef.current.api.paginationGetPageSize();
 		let currentPageNum = gridRef.current.api.paginationGetCurrentPage();
 		// let totalRowsCount = gridRef.current.api.getDisplayedRowCount();
@@ -365,7 +366,8 @@ const Listing = (props) => {
 		}
 	};
 	function deselectHeaderCheckbox() {
-		const checkboxColumn = gridRef.current.columnApi.getColumn("friendName"); // Replace 'friendName' with your actual checkbox column ID
+		if(gridRef?.current?.columnApi){
+			const checkboxColumn = gridRef.current.columnApi.getColumn("friendName"); // Replace 'friendName' with your actual checkbox column ID
 		// console.log("chekcbox loadererrer",checkboxColumn);
 		if (checkboxColumn?.colDef?.headerCheckboxSelection) {
 			// const isHeaderCheckboxSelected = checkboxColumn.getColDef().headerCheckboxSelection;
@@ -376,10 +378,15 @@ const Listing = (props) => {
 			gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
 			gridRef.current.api.refreshHeader();
 		}
+
+		}
 	}
 
 	// gridRef.current.api
 	const resetPaginationSelection = (self) => {
+		if(!self?.api){
+			return;
+		}
 		// console.log("heloooooooo", self)
 		//Deselect previously selected rows to reset selection
 		//self.api.deselectAll();

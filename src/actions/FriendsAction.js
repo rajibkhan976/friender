@@ -214,7 +214,7 @@ const fbSlice = createSlice({
         state.isLoading = true;
       }
     },
-    [getFriendListFromIndexDb.fulfilled]: (state) => {
+    [getFriendListFromIndexDb.rejected]: (state) => {
       state.isLoading = false;
     },
     [getFriendList.pending]: (state) => {

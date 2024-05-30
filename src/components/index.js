@@ -159,7 +159,6 @@ const MainComponent = () => {
 
 	useEffect(() => {
 		if (friendsQueueRecords) {
-			console.log(friendsQueueRecords);
 			let count = 0;
 			friendsQueueRecords.forEach((item) => {
 				if (item && item?.status !== null && item?.status === 0) {

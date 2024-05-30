@@ -39,7 +39,7 @@ const FriendsList = () => {
 	//::::Friend List geting data from Redux::::
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.facebook_data.isLoading);
-	const mySettings = useSelector((state) => state.settings.mySettings);
+	//const mySettings = useSelector((state) => state.settings.mySettings.friends_willbe_inactive_after);
 	const [filterFrndList, setFilterFrndList] = useState([]);
 	// const [pageSet, setPageSet] = useState(new Set());
 	const [listFilteredCount, setListFilteredCount] = useState(null);
@@ -52,7 +52,7 @@ const FriendsList = () => {
 	// );
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
-	const [inactiveAfter, setInactiveAfter] = useState(null);
+	const inactiveAfter = useSelector((state) => state.settings.mySettings.friends_willbe_inactive_after);
 	const friendsList = useSelector(
 		(state) => state.facebook_data.current_friend_list
 	);
@@ -78,22 +78,22 @@ const FriendsList = () => {
 		return valB - valA;
 	};
 	// get Settings data
-	const getSettingsData = async () => {
-		if (mySettings?.data[0]?.friends_willbe_inactive_after) {
-			setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after);
-		} else {
-			const dataSettings = await dispatch(
-				getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })
-			).unwrap();
-			if (dataSettings) {
-				setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after);
-			}
-		}
-	};
+	// const getSettingsData = async () => {
+	// 	if (mySettings?.data[0]?.friends_willbe_inactive_after) {
+	// 		//setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after);
+	// 	} else {
+	// 		const dataSettings = await dispatch(
+	// 			getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })
+	// 		).unwrap();
+	// 		if (dataSettings) {
+	// 			//setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after);
+	// 		}
+	// 	}
+	// };
 
 	useEffect(() => {
 		dispatch(fetchAllCampaigns());
-		getSettingsData();
+		//getSettingsData();
 	}, []);
 
 	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {

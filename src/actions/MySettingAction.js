@@ -8,11 +8,60 @@ import {
     fetchAllGroupMessages,
     fetchGroupById,
 } from "../services/SettingServices";
+import { clientDB } from "../app/db";
 
  const initialState = {
-     mySettings: null,
+     mySettings: {
+      "friends_willbe_inactive_after":0
+     },
     isLoading: true,
   };
+
+  /**
+   * function  store profile setting in index DB
+   * @param {string} fbId 
+   * @param {object} profileSetting 
+   */
+  export const storeProfileSettingIndexDb = async (fbId, profileSetting) => {
+    if (!fbId || typeof fbId !== 'string') {
+      console.error("Error: fbId must be a valid string",typeof fbId);
+      return;
+    }
+    
+    try {
+      // Use put to set the fbId as the key
+      await clientDB.profileSettings.put({
+        fbId: fbId,
+        profileSettingData:profileSetting,
+      });
+      console.log("Profile setting stored successfully!");
+    } catch (error) {
+      console.error("Error storing profile setting:", error);
+    }
+  };
+
+export const getProfileSettingFromIndexDb = createAsyncThunk(
+  "settings/getProfileSettingFromIndexDb",
+  async (fbUserId) => {
+    let indFriendList = [];
+    try {
+      const res = await clientDB.profileSettings
+        .where("fbId")
+        .equals(fbUserId)
+        .first();
+      indFriendList = res?.profileSettingData;
+    } catch (err) {
+      console.log("Error in fetching in idex DB of setting", err)
+
+      if (indFriendList.length <= 0) {
+        const resp = await fetchProfileSetting({ fbUserId: fbUserId });
+        indFriendList = resp?.data[0];
+        storeProfileSettingIndexDb(fbUserId,indFriendList);
+      }
+    }
+    return indFriendList;
+  }
+);
 
 
 /**
@@ -106,7 +155,11 @@ export const getAllGroupMessages = createAsyncThunk(
   export const saveAllSettings=createAsyncThunk(
     "settings/saveAllSettings",
     async (payload)=>{
-    const res =saveSettings(payload);
+    const res = await saveSettings(payload);
+    if(res.data[0]){
+      console.log("fbid",payload);
+      storeProfileSettingIndexDb(payload.facebookUserId,res.data[0])
+    }
     return res;
     }
   );
@@ -121,6 +174,19 @@ export const getAllGroupMessages = createAsyncThunk(
         }
     },
     extraReducers: {
+      [getProfileSettingFromIndexDb.pending]: (state) => {
+        state.isLoading = true;
+      },
+      [getProfileSettingFromIndexDb.fulfilled]: (state, action) => {
+        let syncData = {
+           "data" : action?.payload ? [action?.payload]
+                  : [] }
+        state.mySettings = syncData;
+        state.isLoading = false;
+      },
+      [getProfileSettingFromIndexDb.rejected]: (state) => {
+        state.isLoading = false;
+      },
         [getMySettings.pending]: (state) => {
           state.isLoading = true;
         },
