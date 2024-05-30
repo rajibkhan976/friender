@@ -160,21 +160,26 @@ const LostFriends = () => {
     //   }
     // },
     {
-      field: "message_thread",
-      headerName: "Message Count",
-      headerTooltip: 'Messages',
-      headerClass: 'header-messages',
-      cellRenderer: MessageRenderer,
-      // width: 100,
-      maxWidth: 100,
-      filter: "agNumberColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
+			field: "message_thread",
+			headerName: "Message Count",
+			headerTooltip: "Messages",
+			headerClass: "header-messages",
+			cellRenderer: MessageRenderer,
+			// width: 100,
+			maxWidth: 100,
+			filter: "agNumberColumnFilter",
+			filterParams: {
+				buttons: ["apply", "reset"],
+				suppressMiniFilter: true,
+				closeOnApply: true,
+				filterOptions: [
+					"lessThan",
+					"greaterThan",
+					"lessThanOrEqual",
+					"greaterThanOrEqual",
+				],
+			},
+		},
     {
       field: "created_at",
       headerName: "Age",
@@ -295,23 +300,71 @@ const LostFriends = () => {
       },
     },
     {
-      field: "finalSource",
-      headerName: "Source",
-      filter: "agTextColumnFilter",
-      headerTooltip: 'Friends source',
-      tooltipComponent: CustomHeaderTooltip,
-      headerClass: 'header-query-tooltip',
-      cellRenderer: SourceRendererPending,
-      // lockPosition: "right",
-      // minWidth: 185,
-      // maxWidth: 185,
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
+			field: "finalSource",
+			headerName: "Source",
+			filter: "agTextColumnFilter",
+			headerTooltip: "Friends source",
+			tooltipComponent: CustomHeaderTooltip,
+			headerClass: "header-query-tooltip",
+			cellRenderer: SourceRendererPending,
+			// lockPosition: "right",
+			minWidth: 185,
+			filterValueGetter: (params) => {
+				return {
+					finalSource: params?.data?.finalSource,
+						sourceName: params?.data?.finalSource === 'post' || 
+						params?.data?.finalSource === 'sync' ? 
+						null : 
+						params?.data?.finalSource === "incoming" ?
+							'Incoming request' :
+						params?.data?.finalSource === 'friends' ?
+							'Friends of Friends' : 
+						params?.data?.finalSource === 'suggestions' ?
+							'Suggested Friends' :
+							params?.data?.sourceName
+				}
+			},
+			filterParams: {
+				buttons: ["apply", "reset"],
+				debounceMs: 200,
+				suppressMiniFilter: true,
+				closeOnApply: true,
+				filterOptions: [
+					{
+						displayKey: "contains",
+						displayName: "Contains",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+						},
+					},
+					{
+						displayKey: "notContains",
+						displayName: "Not Contains",
+						predicate: ([filterValue], cellValue) => {
+							return !cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
+										!cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+						},
+					},
+					{
+						displayKey: "startsWith",
+						displayName: "Starts With",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0 ||
+										cellValue?.finalSource?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
+						},
+					},
+					{
+						displayKey: "endsWith",
+						displayName: "Ends With",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName?.toLowerCase().slice(-1) === filterValue.toLowerCase() ||
+										cellValue?.finalSource?.toLowerCase().slice(-1) === filterValue.toLowerCase()
+						},
+					},
+				]
+			}
+		},
   ];
 
   // const getFbUserId = async () => {
