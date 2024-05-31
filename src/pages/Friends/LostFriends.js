@@ -81,6 +81,10 @@ const LostFriends = () => {
     return age
   }
 
+	function matchesFilter(cellValue, filterValues) {
+		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
+	}
+
   const friendsLostinRef = [
     {
       field: "friendName",
@@ -334,16 +338,18 @@ const LostFriends = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
 						displayKey: "notContains",
 						displayName: "Not Contains",
 						predicate: ([filterValue], cellValue) => {
-							return !cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										!cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										!matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{

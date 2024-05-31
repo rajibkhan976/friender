@@ -110,6 +110,10 @@ const BlackList = () => {
     return age
   }
 
+	function matchesFilter(cellValue, filterValues) {
+		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
+	}
+
   const friendsListinRef = [
     {
       field: "friendName",
@@ -221,21 +225,21 @@ const BlackList = () => {
             displayKey: 'lessThan',
             displayName: 'Less than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue, cellValue) < filterValue
+              return ageComparator(cellValue) < filterValue
             }
           },
           {
             displayKey: 'greaterThan',
             displayName: 'Greater than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue, cellValue) > filterValue
+              return ageComparator(cellValue) > filterValue
             }
           },
           {
             displayKey: 'equals',
             displayName: 'Equals',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(filterValue, cellValue) == filterValue
+              return ageComparator(cellValue) == filterValue
             }
           },
         ],
@@ -387,16 +391,18 @@ const BlackList = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
 						displayKey: "notContains",
 						displayName: "Not Contains",
 						predicate: ([filterValue], cellValue) => {
-							return !cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										!cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										!matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
@@ -476,21 +482,6 @@ const BlackList = () => {
     //     ],
     //   },
     // },
-    {
-      field: "message_thread",
-      headerName: "Message Count",
-      headerTooltip: 'Messages',
-      headerClass: 'header-messages',
-      cellRenderer: MessageRenderer,
-      // width: 100,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
     {
       field: "engagement",
       headerName: "Engagement",

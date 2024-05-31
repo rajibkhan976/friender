@@ -140,6 +140,10 @@ const FriendsList = () => {
 		return age;
 	};
 
+	function matchesFilter(cellValue, filterValues) {
+		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
+	}
+
 	const friendsListinRef = [
 		{
 			field: "friendName",
@@ -516,16 +520,16 @@ const FriendsList = () => {
 			filterValueGetter: (params) => {
 				return {
 					finalSource: params?.data?.finalSource,
-						sourceName: params?.data?.finalSource === 'post' || 
-						params?.data?.finalSource === 'sync' ? 
-						null : 
-						params?.data?.finalSource === "incoming" ?
-							'Incoming request' :
-						params?.data?.finalSource === 'friends' ?
-							'Friends of Friends' : 
-						params?.data?.finalSource === 'suggestions' ?
-							'Suggested Friends' :
-							params?.data?.sourceName
+					sourceName: params?.data?.finalSource === 'post' || 
+								params?.data?.finalSource === 'sync' ? 
+								null : 
+								params?.data?.finalSource === "incoming" ?
+									'Incoming request' :
+								params?.data?.finalSource === 'friends' ?
+									'Friends of Friends' : 
+								params?.data?.finalSource === 'suggestions' ?
+									'Suggested Friends' :
+									params?.data?.sourceName
 				}
 			},
 			filterParams: {
@@ -538,16 +542,18 @@ const FriendsList = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
 						displayKey: "notContains",
 						displayName: "Not Contains",
 						predicate: ([filterValue], cellValue) => {
-							return !cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										!cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										!matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{

@@ -92,6 +92,10 @@ const FriendsList = () => {
     return age
   }
 
+	function matchesFilter(cellValue, filterValues) {
+		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
+	}
+
   const friendsListinRef = [
     {
       field: "friendName",
@@ -329,16 +333,18 @@ const FriendsList = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
 						displayKey: "notContains",
 						displayName: "Not Contains",
 						predicate: ([filterValue], cellValue) => {
-							return !cellValue?.sourceName?.toLowerCase().includes(filterValue.toLowerCase()) ||
-										!cellValue?.finalSource?.toLowerCase().includes(filterValue.toLowerCase())
+							return cellValue?.sourceName ? 
+										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										!matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
@@ -361,26 +367,26 @@ const FriendsList = () => {
 			}
 		},
     {
-			field: "message_thread",
-			headerName: "Message Count",
-			headerTooltip: "Messages",
-			headerClass: "header-messages",
-			cellRenderer: MessageRenderer,
-			// width: 100,
-			maxWidth: 100,
-			filter: "agNumberColumnFilter",
-			filterParams: {
-				buttons: ["apply", "reset"],
-				suppressMiniFilter: true,
-				closeOnApply: true,
-				filterOptions: [
-					"lessThan",
-					"greaterThan",
-					"lessThanOrEqual",
-					"greaterThanOrEqual",
-				],
-			},
-		},
+      field: "reactionThread",
+      headerName: "Total Reaction",
+      headerTooltip: 'Reactions',
+      headerClass: 'header-reaction',
+      cellRenderer: ReactionRenderer,
+      width: 75,
+      // maxWidth: 75,
+      filter: "agNumberColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: [
+          "lessThan",
+          "greaterThan",
+          "lessThanOrEqual",
+          "greaterThanOrEqual",
+        ],
+      },
+    },
     {
       field: "commentThread",
       headerName: "Total Comment",
@@ -420,21 +426,26 @@ const FriendsList = () => {
     //   },
     // },
     {
-      field: "message_thread",
-      headerName: "Message Count",
-      headerTooltip: 'Messages',
-      headerClass: 'header-messages',
-      cellRenderer: MessageRenderer,
-      width: 100,
-      // maxWidth: 100,
-      filter: "agTextColumnFilter",
-      filterParams: {
-        buttons: ["apply", "reset"],
-        suppressMiniFilter: true,
-        closeOnApply: true,
-        filterOptions: ["contains", "notContains", "startsWith", "endsWith"],
-      },
-    },
+			field: "message_thread",
+			headerName: "Message Count",
+			headerTooltip: "Messages",
+			headerClass: "header-messages",
+			cellRenderer: MessageRenderer,
+			// width: 100,
+			maxWidth: 100,
+			filter: "agNumberColumnFilter",
+			filterParams: {
+				buttons: ["apply", "reset"],
+				suppressMiniFilter: true,
+				closeOnApply: true,
+				filterOptions: [
+					"lessThan",
+					"greaterThan",
+					"lessThanOrEqual",
+					"greaterThanOrEqual",
+				],
+			},
+		},
     {
       field: "engagement",
       headerName: "Engagement",
