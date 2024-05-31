@@ -409,16 +409,16 @@ const BlackList = () => {
 						displayKey: "startsWith",
 						displayName: "Starts With",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0 ||
-										cellValue?.finalSource?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
+							return cellValue?.sourceName?.toLowerCase().startsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().startsWith(filterValue.toLowerCase())
 						},
 					},
 					{
 						displayKey: "endsWith",
 						displayName: "Ends With",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().slice(-1) === filterValue.toLowerCase() ||
-										cellValue?.finalSource?.toLowerCase().slice(-1) === filterValue.toLowerCase()
+							return cellValue?.sourceName?.toLowerCase().endsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().endsWith(filterValue.toLowerCase())
 						},
 					},
 				]
@@ -430,7 +430,29 @@ const BlackList = () => {
       headerTooltip: 'Reactions',
       headerClass: 'header-reaction',
       // width: 75,
+			maxWidth: 100,
       cellRenderer: ReactionRenderer,
+      filter: "agNumberColumnFilter",
+      filterParams: {
+        buttons: ["apply", "reset"],
+        suppressMiniFilter: true,
+        closeOnApply: true,
+        filterOptions: [
+          "lessThan",
+          "greaterThan",
+          "lessThanOrEqual",
+          "greaterThanOrEqual",
+        ],
+      },
+    },
+    {
+      field: "commentThread",
+      headerName: "Total Comment",
+      headerTooltip: 'Comments',
+      headerClass: 'header-comments',
+      // width: 75,
+      maxWidth: 75,
+      cellRenderer: CommentRenderer,
       filter: "agNumberColumnFilter",
       filterParams: {
         buttons: ["apply", "reset"],

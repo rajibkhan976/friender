@@ -418,16 +418,16 @@ const WhiteList = () => {
 						displayKey: "startsWith",
 						displayName: "Starts With",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0 ||
-										cellValue?.finalSource?.toLowerCase().indexOf(filterValue.toLowerCase()) === 0
+							return cellValue?.sourceName?.toLowerCase().startsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().startsWith(filterValue.toLowerCase())
 						},
 					},
 					{
 						displayKey: "endsWith",
 						displayName: "Ends With",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName?.toLowerCase().slice(-1) === filterValue.toLowerCase() ||
-										cellValue?.finalSource?.toLowerCase().slice(-1) === filterValue.toLowerCase()
+							return cellValue?.sourceName?.toLowerCase().endsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().endsWith(filterValue.toLowerCase())
 						},
 					},
 				]
