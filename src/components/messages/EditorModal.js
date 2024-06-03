@@ -24,7 +24,9 @@ const EditorModal = ({
 	setSendMessage,
 	oldGroupId,
 }) => {
+	
 	const [isExtanded, setExtanded] = useState(false);
+
 	const editorStateValue = useMemo(() => {
 		if (type === "ACCEPT_REQ") {
 			return localStorage.getItem("fr_quickMessage_accept_req") || "";
@@ -48,6 +50,14 @@ const EditorModal = ({
 
 		if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
 			return localStorage.getItem("fr_quickMessage_campaigns_message") || "";
+		}
+
+		if (type === "FR_QUE_REQ_SENT") {
+			return localStorage.getItem("fr_quickMessage_queue_sent_req") || "";
+		}
+
+		if (type === "FR_QUE_REQ_ACCEPT") {
+			return localStorage.getItem("fr_quickMessage_queue_accept_req") || "";
 		}
 	}, [open]);
 

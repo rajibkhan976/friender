@@ -94,6 +94,20 @@ const DropSelectMessage = ({
 			);
 			setUnselectedError(false);
 		}
+
+		if (quickMessage && type === "FR_QUE_REQ_SENT") {
+			localStorage.setItem(
+				"fr_quickMessage_queue_sent_req",
+				quickMessage?.__raw
+			);
+		}
+
+		if (quickMessage && type === "FR_QUE_REQ_ACCEPT") {
+			localStorage.setItem(
+				"fr_quickMessage_queue_accept_req",
+				quickMessage?.__raw
+			);
+		}
 	}, [quickMessage]);
 
 	/**

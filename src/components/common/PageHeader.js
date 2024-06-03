@@ -1280,11 +1280,25 @@ function PageHeader({ headerText = "" }) {
 				totalCount: 0,
 			})
 		);
-		dispatch(getFriendsQueueRecordsChunk())
-			.unwrap()
-			.then((response) =>
-				dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-			);
+		if (location?.pathname === "/friends/friends-queue") {
+			dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+				.unwrap()
+				.then((res) => {
+					console.log(res);
+					dispatch(getFriendsQueueRecordsChunk())
+						.unwrap()
+						.then((response) =>
+							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+						);
+				})
+				.catch((error) => {
+					dispatch(getFriendsQueueRecordsChunk())
+						.unwrap()
+						.then((response) =>
+							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+						);
+				});
+		}
 		dispatch(fetchGroups())
 			.unwrap()
 			.then((res) => {
@@ -1547,19 +1561,33 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [groupMsgSelect2, quickMsg2]);
 
-	useEffect(() => {
-		// dispatch(
-		// 	resetFriendsQueueRecordsMetadata({
-		// 		firstChunkLength: 0,
-		// 		limitUsed: 0,
-		// 		totalCount: 0,
-		// 	})
-		// );
-		// dispatch(getFriendsQueueRecords());
+	const reFetchDataOnRunFriendQueueSuccess = (event) => {
+		console.log(event);
+		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
+		if (event?.data === "fr_queue_success") {
+			dispatch(getFriendsQueueRecordsChunk())
+				.unwrap()
+				.then((response) =>
+					dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+				);
+		}
+	};
 
+	useEffect(() => {
+		window.addEventListener(
+			"message",
+			(event) => {
+				console.log(event);
+				reFetchDataOnRunFriendQueueSuccess(event);
+			},
+			false
+		);
 		return () => {
 			localStorage.removeItem("fr_edit_mode_quickCampMsg");
 			localStorage.removeItem("fr_quickMessage_campaigns_message");
+			window.removeEventListener("message", (event) => {
+				reFetchDataOnRunFriendQueueSuccess(event);
+			});
 		};
 	}, []);
 
@@ -1573,7 +1601,9 @@ function PageHeader({ headerText = "" }) {
 		setGroupMsgSelect1(null);
 		setGroupMsgSelect2(null);
 		setQuickMsg1(null);
+		localStorage.removeItem("fr_quickMessage_queue_sent_req");
 		setQuickMsg2(null);
+		localStorage.removeItem("fr_quickMessage_queue_accept_req");
 		setShowKeywordSuggestionBar(false);
 		setKeyword("");
 		setSavedKeyword([]);
@@ -1964,7 +1994,7 @@ function PageHeader({ headerText = "" }) {
 										</label>
 
 										<DropSelectMessage
-											type='CAMPAIGNS_MESSAGE'
+											type='FR_QUE_REQ_SENT'
 											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen1}
 											handleIsOpenSelectOption={(status) => {
@@ -1999,7 +2029,7 @@ function PageHeader({ headerText = "" }) {
 										</label>
 
 										<DropSelectMessage
-											type='CAMPAIGNS_MESSAGE'
+											type='FR_QUE_REQ_ACCEPT'
 											placeholder='Select message group'
 											openSelectOption={selectMessageOptionOpen2}
 											handleIsOpenSelectOption={(status) => {

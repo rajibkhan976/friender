@@ -17,10 +17,7 @@ import Modal from "../../components/common/Modal";
 import {
 	getFriendsRequestSentInsight,
 	getFriendsQueueSettings,
-	getFriendsQueueRecordsInChunk,
-	getFriendsQueueRecordsFromIndexDB,
 	saveFriendsQueueSettings,
-	resetIsChunkedDataFetchedFromApi,
 } from "../../actions/FriendsQueueActions";
 import NumberRangeInput from "../../components/common/NumberRangeInput";
 import DropSelector from "../../components/formComponents/DropSelector";
@@ -62,7 +59,6 @@ const FriendsQueue = () => {
 			selected: false,
 		},
 	];
-	const timeoutToFetchFriendsQueueData = useRef(null);
 	const timeoutToSaveFriendsQueueSettings = useRef(null);
 
 	const friendRequestSentInsight = useSelector(
@@ -74,18 +70,8 @@ const FriendsQueue = () => {
 
 	console.log("RECORDS FOR FRIRNDS QUEUE -- ", friendsQueueRecords);
 
-	const friendsQueueRecordsCount = useSelector(
-		(state) => state.friendsQueue.friendsQueueRecordsCount
-	);
-
-	const friendsQueueRecordsLimit = useSelector(
-		(state) => state.friendsQueue.friendsQueueRecordsLimit
-	);
 	const isDataFetchingFromApi = useSelector(
 		(state) => state.friendsQueue.isDataFetchingFromApi
-	);
-	const isChunkedDataFetchedFromApi = useSelector(
-		(state) => state.friendsQueue.isChunkedDataFetchedFromApi
 	);
 
 	const fr_queue_settings = localStorage.getItem("fr_queue_settings")
@@ -109,11 +95,15 @@ const FriendsQueue = () => {
 	const [keywordList, setKeyWordList] = useState(0);
 	const [sendableRecordsCount, setSendableRecordsCount] = useState(0);
 
-	// 
+	//
 	useEffect(() => {
 		if (friendsQueueRecords) {
 			// const filteredErrorRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === false);
-			const filteredSendbleRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === null && item.is_active === true);
+			const filteredSendbleRecords =
+				friendsQueueRecords?.length &&
+				friendsQueueRecords.filter(
+					(item) => item.status === null && item.is_active === true
+				);
 			setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
 		}
 	}, [friendsQueueRecords]);
@@ -214,14 +204,6 @@ const FriendsQueue = () => {
 				};
 			});
 			clearTimeout(timeoutToSaveFriendsQueueSettings);
-			// if (friendRequestQueueSettings.request_limit_value >= 999) {
-			// 	setFriendRequestQueueSettings((friendRequestQueueSettings) => {
-			// 		return {
-			// 			...friendRequestQueueSettings,
-			// 			request_limit_value: 999,
-			// 		};
-			// 	});
-			// }
 		}
 
 		if (type === "DECREMENT" && friendRequestQueueSettings) {
@@ -319,38 +301,6 @@ const FriendsQueue = () => {
 		return () => clearTimeout(timeoutToSaveFriendsQueueSettings);
 	}, []);
 
-	// useEffect(() => {
-	// 	if (isDataFetchingFromApi) {
-	// 		timeoutToFetchFriendsQueueData.current = setTimeout(
-	// 			() => dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId)),
-	// 			3500
-	// 		);
-	// 	}
-	// 	return () => clearTimeout(timeoutToFetchFriendsQueueData);
-	// }, [isDataFetchingFromApi]);
-
-	// useEffect(() => {
-	// 	if (friendsQueueRecordsFirstChunkLength < friendsQueueRecordsCount) {
-	// 		dispatch(resetIsChunkedDataFetchedFromApi(false));
-	// 		dispatch(
-	// 			getFriendsQueueRecordsInChunk(
-	// 				friendsQueueRecordsCount,
-	// 				friendsQueueRecordsLimit
-	// 			)
-	// 		);
-	// 	}
-	// }, [
-	// 	friendsQueueRecordsFirstChunkLength,
-	// 	friendsQueueRecordsCount,
-	// 	friendsQueueRecordsLimit,
-	// ]);
-
-	// useEffect(() => {
-	// 	if (isChunkedDataFetchedFromApi) {
-	// 		dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
-	// 	}
-	// }, [isChunkedDataFetchedFromApi]);
-
 	useEffect(() => {
 		dispatch(countCurrentListsize(friendsQueueRecords?.length));
 	}, [friendsQueueRecords]);
@@ -420,13 +370,13 @@ const FriendsQueue = () => {
 						<>
 							{keywordList?.length > 0
 								? keywordList.map((el, i) => (
-									<span
-										className={`tags positive-tags`}
-										key={`key-${i}`}
-									>
-										{el}
-									</span>
-								))
+										<span
+											className={`tags positive-tags`}
+											key={`key-${i}`}
+										>
+											{el}
+										</span>
+								  ))
 								: "No specific keyword used"}
 						</>
 					}
@@ -440,18 +390,18 @@ const FriendsQueue = () => {
 			)}
 			{!loading && (
 				<div className='friends-queue-action-bar'>
-					<div className="friends-queue-action-bar-item">
+					<div className='friends-queue-action-bar-item'>
 						<div className='friends-queue-total-count-area'>
 							<div className='friend-req-sent-count'>
 								<div className='count'>{sendableRecordsCount ?? 0}</div>
 								<div className='count-descriptor'>Sendable requests</div>
 							</div>
 
-							<div className="friend-req-queue-tooltip-container">
+							<div className='friend-req-queue-tooltip-container'>
 								<ToolTipPro
 									isInteract={false}
-									type="query-gray"
-									textContent="Total number of people in the queue who will receive a friend request."
+									type='query-gray'
+									textContent='Total number of people in the queue who will receive a friend request.'
 								/>
 							</div>
 						</div>
@@ -588,13 +538,15 @@ const FriendsQueue = () => {
 					<div className='friends-queue-action-bar-item'>
 						<div className='friend-req-run-queue'>
 							<div className='run-friend-queue'>
-								<div className='run'>{`${friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
-									} friend queue`}</div>
+								<div className='run'>{`${
+									friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
+								} friend queue`}</div>
 								<Switch
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
 										if (
-											Number(localStorage?.getItem("fr_plan")?.toLowerCase()) < 2 &&
+											Number(localStorage?.getItem("fr_plan")?.toLowerCase()) <
+												2 &&
 											e.target.checked
 										) {
 											e.preventDefault();
@@ -665,9 +617,9 @@ const FriendsQueue = () => {
 				</div>
 			)}
 			{friendsQueueRecords?.length > 0 &&
-				!loading &&
-				!isDataFetchingFromApi &&
-				inactiveAfter !== null ? (
+			!loading &&
+			!isDataFetchingFromApi &&
+			inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
 					friendsListingRef={friendsQueueRef}
@@ -686,10 +638,10 @@ const FriendsQueue = () => {
 							currently empty
 						</>
 					}
-				// interactionText='Clear filter'
-				// isInteraction={() => {
-				// 	setIsReset(!isReset);
-				// }}
+					// interactionText='Clear filter'
+					// isInteraction={() => {
+					// 	setIsReset(!isReset);
+					// }}
 				/>
 			)}
 		</div>

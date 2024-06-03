@@ -46,13 +46,14 @@ const Footer = lazy(() => import("./common/Footer"));
 const MainComponent = () => {
 	const [showFriendsQueueErr, setShowFriendsQueueErr] = useState(false);
 	const friendsQueueErrorCount = useRef(0);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { darkMode } = useContext(ModeContext);
-  const { pageLoaderMode, switchLoaderOn, switchLoaderOff } = useContext(LoaderContext);
-  const [isSynced, setIsSynced] = useState(false);
-  //const [isHeader, setIsHeader] = useState(false);
-  const planModal = useSelector((state) => state.plan.showModal)
+	const navigate = useNavigate();
+	const location = useLocation();
+	const { darkMode } = useContext(ModeContext);
+	const { pageLoaderMode, switchLoaderOn, switchLoaderOff } =
+		useContext(LoaderContext);
+	const [isSynced, setIsSynced] = useState(false);
+	//const [isHeader, setIsHeader] = useState(false);
+	const planModal = useSelector((state) => state.plan.showModal);
 
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
@@ -77,11 +78,10 @@ const MainComponent = () => {
 			try {
 				let password_reset_status = localStorage.getItem("fr_pass_changed");
 				let user_onbording_status = localStorage.getItem("fr_onboarding");
-				let isSignupUser = localStorage.getItem("fr_signup")
+				let isSignupUser = localStorage.getItem("fr_signup");
 
+				console.log("in index isSignupUser", isSignupUser);
 
-				console.log("in index isSignupUser",isSignupUser)
-				
 				const userProfile = await fetchUserProfile();
 				// console.log("user info index",userProfile)
 				let fbAuthValidation = userProfile[0]?.fb_auth_info;
@@ -95,7 +95,7 @@ const MainComponent = () => {
 
 				// console.log("****** user profile",userProfile,user_onbording_status,fbAuthValidation)
 				if (fbAuthValidation == undefined) {
-					console.log("1")
+					console.log("1");
 					localStorage.removeItem("fr_facebook_auth");
 					navigate("/facebook-auth");
 
@@ -104,7 +104,7 @@ const MainComponent = () => {
 					fbAuthValidation != undefined &&
 					password_reset_status != 1
 				) {
-					console.log("2")
+					console.log("2");
 					localStorage.setItem(
 						"fr_facebook_auth",
 						JSON.stringify(fbAuthValidation)
@@ -115,7 +115,7 @@ const MainComponent = () => {
 					fbAuthValidation != undefined &&
 					user_onbording_status != 1
 				) {
-					console.log("3")
+					console.log("3");
 					localStorage.removeItem("fr_facebook_auth");
 					navigate("/facebook-auth");
 				} else {
@@ -159,9 +159,10 @@ const MainComponent = () => {
 
 	useEffect(() => {
 		if (friendsQueueRecords) {
+			// console.log(friendsQueueRecords);
 			let count = 0;
 			friendsQueueRecords.forEach((item) => {
-				if (item && item?.status !== null && item?.status === 0) {
+				if (item && item?.status === 0) {
 					count++;
 				}
 			});
@@ -207,8 +208,7 @@ const MainComponent = () => {
 						<Sidebar isSynced={isSynced} />
 					</Suspense>
 					<div className='main-content rightside-content d-flex'>
-						{
-							showHeader() && (
+						{showHeader() && (
 							<Suspense fallback={""}>
 								<PageHeader />
 							</Suspense>

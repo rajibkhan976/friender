@@ -37,10 +37,6 @@ import { Link } from "react-router-dom";
 import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
 import { utils } from "../../helpers/utils";
 import { ReactComponent as UserIcon } from "../../assets/images/UserIcon.svg";
-import { ReactComponent as FriendsIcon } from "../../assets/images/FriendsIcon.svg";
-import { ReactComponent as GroupsIcon } from "../../assets/images/GroupsIcon.svg";
-import { ReactComponent as PostsIcon } from "../../assets/images/PostsIcon.svg";
-import { ReactComponent as SuggestedFriendsIcon } from "../../assets/images/SuggestedFriendsIcon.svg";
 import { ReactComponent as SourceCsvIcon } from "../../assets/images/SourceCsvIcon.svg";
 import { ReactComponent as RedWarningSquareIcon } from "../../assets/images/RedWarningSquareIcon.svg";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
@@ -265,7 +261,7 @@ export const FriendQueueRecordsNameRenderer = memo((params) => {
 					<OpenInNewTab />
 				</a>
 			)}
-			{params?.data?.status !== null && params?.data?.status === 0 && (
+			{params?.data?.status === 0 && (
 				<RedWarningSquareIcon
 					className='fb-friend-request-warning'
 					onMouseEnter={(e) => {
