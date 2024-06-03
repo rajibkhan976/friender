@@ -40,6 +40,7 @@ const FriendsList = () => {
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	//const mySettings = useSelector((state) => state.settings.mySettings.friends_willbe_inactive_after);
+	//const mySettings = useSelector((state) => state.settings.mySettings.friends_willbe_inactive_after);
 	const [filterFrndList, setFilterFrndList] = useState([]);
 	// const [pageSet, setPageSet] = useState(new Set());
 	const [listFilteredCount, setListFilteredCount] = useState(null);
@@ -52,7 +53,7 @@ const FriendsList = () => {
 	// );
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
-	const inactiveAfter = useSelector((state) => state.settings.mySettings.friends_willbe_inactive_after);
+	const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
 	const friendsList = useSelector(
 		(state) => state.facebook_data.current_friend_list
 	);
@@ -65,7 +66,6 @@ const FriendsList = () => {
 		friendsList && dispatch(countCurrentListsize(filteredData.length));
 		dispatch(syncMainFriendList());
 	}, [dispatch, friendsList]);
-
 	/**
 	 * Custom comparator for columns with dates
 	 *

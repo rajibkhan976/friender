@@ -12,8 +12,9 @@ import { clientDB } from "../app/db";
 
  const initialState = {
      mySettings: {
+      data:[{
       "friends_willbe_inactive_after":0
-     },
+     }]},
     isLoading: true,
   };
 
@@ -43,23 +44,26 @@ import { clientDB } from "../app/db";
 export const getProfileSettingFromIndexDb = createAsyncThunk(
   "settings/getProfileSettingFromIndexDb",
   async (fbUserId) => {
-    let indFriendList = [];
+    let indProfileSetting = [];
     try {
       const res = await clientDB.profileSettings
         .where("fbId")
         .equals(fbUserId)
         .first();
-      indFriendList = res?.profileSettingData;
+      indProfileSetting = res?.profileSettingData;
+      if( !indProfileSetting || indProfileSetting.length <= 0){
+        throw new Error("No profile setting in index DB");
+      }
     } catch (err) {
       console.log("Error in fetching in idex DB of setting", err)
 
-      if (indFriendList.length <= 0) {
+      if ( !indProfileSetting || indProfileSetting.length <= 0) {
         const resp = await fetchProfileSetting({ fbUserId: fbUserId });
-        indFriendList = resp?.data[0];
-        storeProfileSettingIndexDb(fbUserId,indFriendList);
+        indProfileSetting = resp?.data[0];
+        storeProfileSettingIndexDb(fbUserId,indProfileSetting);
       }
     }
-    return indFriendList;
+    return indProfileSetting;
   }
 );
 

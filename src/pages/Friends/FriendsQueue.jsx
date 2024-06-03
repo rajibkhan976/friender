@@ -36,7 +36,7 @@ const FriendsQueue = () => {
 	const [isReset, setIsReset] = useState(null);
 
 	const [modalOpen, setModalOpen] = useState(false);
-	const [inactiveAfter, setInactiveAfter] = useState(null);
+	const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
 	const [listFilteredCount, setListFilteredCount] = useState(null);
 
 	const fbUserId = localStorage.getItem("fr_default_fb");
@@ -118,19 +118,7 @@ const FriendsQueue = () => {
 		}
 	}, [friendsQueueRecords]);
 
-	// get Settings data
-	const getSettingsData = async () => {
-		if (mySettings?.data[0]?.friends_willbe_inactive_after) {
-			setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after);
-		} else {
-			const dataSettings = await dispatch(
-				getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })
-			).unwrap();
-			if (dataSettings) {
-				setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after);
-			}
-		}
-	};
+
 
 	const friendsQueueRef = [
 		{
@@ -326,7 +314,7 @@ const FriendsQueue = () => {
 				});
 			});
 		// dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
-		getSettingsData();
+		//getSettingsData();
 
 		return () => clearTimeout(timeoutToSaveFriendsQueueSettings);
 	}, []);

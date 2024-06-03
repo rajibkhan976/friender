@@ -40,7 +40,7 @@ const BlackList = () => {
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
-  const [inactiveAfter, setInactiveAfter] = useState(null)
+  const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
@@ -54,22 +54,6 @@ const BlackList = () => {
   const [listFilteredCount, setListFilteredCount] = useState(null)
   const [isReset, setIsReset] = useState(null)
 
-  // get Settings data
-  const getSettingsData = async () => {
-    if (mySettings?.data[0]?.friends_willbe_inactive_after) {
-      setInactiveAfter(mySettings?.data[0]?.friends_willbe_inactive_after)
-    } else {
-      const dataSettings = await dispatch(getMySettings({ fbUserId: `${localStorage.getItem("fr_default_fb")}` })).unwrap();
-      if (dataSettings) {
-        setInactiveAfter(dataSettings?.data[0]?.friends_willbe_inactive_after)
-      }
-    }
-  }
-
-  useEffect(() => {
-    // console.log('mySettings', mySettings?.data[0]?.friends_willbe_inactive_after);
-    getSettingsData()
-  }, [])
 
   /**
    * Custom comparator for columns with dates
