@@ -278,10 +278,12 @@ function PageHeader({ headerText = "" }) {
 		(state) => state.campaign.campaignsArray
 	);
 	const [campaignListSelector, setCampaignListSelector] = useState(false);
+	const [isFrQueActionsEnabled, setIsFrQueActionsEnabled] = useState(false);
 	const [selectedCampaignName, setSelectedCampaignName] = useState("Select");
 	const friendsListData = useSelector(
 		(state) => state.facebook_data.fb_data
 	);
+
 	useEffect(()=>{		
 				if (friendsListData) {
 					if (friendsListData.last_sync_at) {
@@ -804,7 +806,7 @@ function PageHeader({ headerText = "" }) {
 		if (item) {
 			closeFilterDropdown(item);
 		}
-		if (selectedFriends && selectedFriends.length > 0) {
+		if (selectedFriends && selectedFriends.length > 0 && isFrQueActionsEnabled) {
 			const fbIdList = [];
 			selectedFriends?.forEach((item) => {
 				if (item._id) {
@@ -842,7 +844,7 @@ function PageHeader({ headerText = "" }) {
 		if (item) {
 			closeFilterDropdown(item);
 		}
-		if (selectedFriends && selectedFriends.length > 0) {
+		if (selectedFriends && selectedFriends.length > 0 && isFrQueActionsEnabled) {
 			const fbIdList = [];
 			selectedFriends?.forEach((item) => {
 				if (item._id) {
@@ -1281,6 +1283,7 @@ function PageHeader({ headerText = "" }) {
 			})
 		);
 		if (location?.pathname === "/friends/friends-queue") {
+			setIsFrQueActionsEnabled(false);
 			dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 				.unwrap()
 				.then((res) => {
@@ -1289,6 +1292,10 @@ function PageHeader({ headerText = "" }) {
 						.unwrap()
 						.then((response) =>
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+							.unwrap()
+							.then((result) => 
+								setIsFrQueActionsEnabled(true)
+							)
 						);
 				})
 				.catch((error) => {
@@ -1296,6 +1303,10 @@ function PageHeader({ headerText = "" }) {
 						.unwrap()
 						.then((response) =>
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+							.unwrap()
+							.then((result) => 
+								setIsFrQueActionsEnabled(true)
+							)
 						);
 				});
 		}
@@ -1565,10 +1576,19 @@ function PageHeader({ headerText = "" }) {
 		console.log(event);
 		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
+			setIsFrQueActionsEnabled(false);
 			dispatch(getFriendsQueueRecordsChunk())
 				.unwrap()
-				.then((response) =>
+				.then((resp) =>
 					dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+					.unwrap()
+					.then((response) =>
+						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+						.unwrap()
+						.then((result) => 
+							setIsFrQueActionsEnabled(true)
+						)
+					)
 				);
 		}
 	};
@@ -1779,6 +1799,7 @@ function PageHeader({ headerText = "" }) {
 						totalCount: 0,
 					})
 				);
+				setIsFrQueActionsEnabled(false);
 				dispatch(getFriendsQueueRecordsChunk())
 					.unwrap()
 					.then((response) => {
@@ -1793,7 +1814,11 @@ function PageHeader({ headerText = "" }) {
 							// console.log(fr_queue_settings[0])
 							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
 						}
-						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId));
+						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+						.unwrap()
+						.then((result) => 
+							setIsFrQueActionsEnabled(true)
+						);
 					})
 					.catch((error) => {
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
@@ -2495,7 +2520,7 @@ function PageHeader({ headerText = "" }) {
 																deleteRecordsFromFriendsQueue(accessItem)
 															}
 															data-disabled={
-																!selectedFriends || selectedFriends.length === 0
+																!selectedFriends || selectedFriends?.length === 0 || !isFrQueActionsEnabled
 																	? true
 																	: false
 															}
@@ -2511,7 +2536,7 @@ function PageHeader({ headerText = "" }) {
 																alterFriendsQueueRecordsOrder(accessItem)
 															}
 															data-disabled={
-																!selectedFriends || selectedFriends.length === 0
+																!selectedFriends || selectedFriends?.length === 0 || !isFrQueActionsEnabled
 																	? true
 																	: false
 															}
