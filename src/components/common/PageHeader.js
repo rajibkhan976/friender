@@ -1540,7 +1540,7 @@ function PageHeader({ headerText = "" }) {
 
 	// HANDLE THE DIFFERENT SELECT OPTION ON ONE COMPONENT AS KEEP ONLY ONE AT A TIME..
 	useEffect(() => {
-		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+		const selectMsgUsing = localStorage.getItem("fr_using_que_sent_message");
 
 		if (quickMsg1 && !selectMsgUsing) {
 			setGroupMsgSelect1(null);
@@ -1551,7 +1551,7 @@ function PageHeader({ headerText = "" }) {
 	}, [groupMsgSelect1, quickMsg1]);
 
 	useEffect(() => {
-		const selectMsgUsing = localStorage.getItem("fr_using_campaigns_message");
+		const selectMsgUsing = localStorage.getItem("fr_using_que_accept_message");
 
 		if (quickMsg2 && !selectMsgUsing) {
 			setGroupMsgSelect2(null);

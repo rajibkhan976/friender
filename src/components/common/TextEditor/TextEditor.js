@@ -197,6 +197,18 @@ export default function TextEditor({
 				localStorage.removeItem("fr_using_campaigns_message");
 			}
 
+			if (
+				modalType === "FR_QUE_REQ_SENT"
+			) {
+				localStorage.removeItem("fr_using_que_sent_message");
+			}
+
+			if (
+				modalType === "FR_QUE_REQ_ACCEPT"
+			) {
+				localStorage.removeItem("fr_using_que_accept_message");
+			}
+
 			setModalOpen(false);
 		}
 	};

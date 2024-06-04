@@ -5,7 +5,7 @@ import Dexie from 'dexie';
  */
 export const clientDB = new Dexie('frinderDB');
 
-clientDB.version(2).stores({
+clientDB.version(3).stores({
 	friendsLists: "fbId,friendsData", // Primary key and indexed props
 	friendsQueueRecords: "fbId,friendsQueueData,recordCount",
 	profileSettings: "fbId,profileSettingData",

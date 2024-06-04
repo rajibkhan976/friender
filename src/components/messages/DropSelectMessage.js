@@ -48,7 +48,7 @@ const DropSelectMessage = ({
 	const [editorStateValue, setEditorStateValue] = useState("");
 
 	useEffect(() => {
-		if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
+		if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE" || type === "FR_QUE_REQ_SENT" || type === "FR_QUE_REQ_ACCEPT") {
 			setSelectOption(groupSelect ? groupSelect.group_name : "");
 		}
 	}, [groupSelect]);
@@ -118,7 +118,7 @@ const DropSelectMessage = ({
 			saveMySetting();
 
 			// SELECTED OPTION SITUATION FOR CAMPAIGNS MESSAGE SELECT..
-			if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
+			if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE" || type === "FR_QUE_REQ_SENT" || type === "FR_QUE_REQ_ACCEPT") {
 				setUnselectedError(false);
 			}
 		}
@@ -239,6 +239,12 @@ const DropSelectMessage = ({
 		if (type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE") {
 			localStorage.setItem("fr_using_campaigns_message", true);
 		}
+		if (type === "FR_QUE_REQ_SENT") {
+			localStorage.setItem("fr_using_que_sent_message", true);
+		}
+		if (type === "FR_QUE_REQ_ACCEPT") {
+			localStorage.setItem("fr_using_que_accept_message", true);
+		}
 	};
 
 	// Rendering select options..
@@ -339,6 +345,40 @@ const DropSelectMessage = ({
 				return truncateTextTo32(selectOption || placeholder);
 			}
 		}
+
+		if (type === "FR_QUE_REQ_SENT") {
+			const isSelectUsing = localStorage.getItem("fr_using_que_sent_message");
+			// const isQuckMsgUsing = localStorage.getItem("fr_quickMessage_campaigns_message");
+
+			if (quickMessage && !isSelectUsing) {
+				return "Quick Message";
+			}
+
+			if (!isSelectUsing) {
+				return placeholder;
+			}
+
+			if (isSelectUsing) {
+				return truncateTextTo32(selectOption || placeholder);
+			}
+		}
+
+		if (type === "FR_QUE_REQ_ACCEPT") {
+			const isSelectUsing = localStorage.getItem("fr_using_que_accept_message");
+			// const isQuckMsgUsing = localStorage.getItem("fr_quickMessage_campaigns_message");
+
+			if (quickMessage && !isSelectUsing) {
+				return "Quick Message";
+			}
+
+			if (!isSelectUsing) {
+				return placeholder;
+			}
+
+			if (isSelectUsing) {
+				return truncateTextTo32(selectOption || placeholder);
+			}
+		}
 	};
 
 	/**
@@ -353,7 +393,7 @@ const DropSelectMessage = ({
 		if (
 			openSelectOption &&
 			!selectOption &&
-			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")
+			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE" || type === "FR_QUE_REQ_SENT" || type === "FR_QUE_REQ_ACCEPT")
 		) {
 			setUnselectedError(true);
 		}
@@ -362,14 +402,14 @@ const DropSelectMessage = ({
 		if (
 			openSelectOption &&
 			selectOption &&
-			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")
+			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE" || type === "FR_QUE_REQ_SENT" || type === "FR_QUE_REQ_ACCEPT")
 		) {
 			setUnselectedError(false);
 		}
 
 		if (
 			quickMessage &&
-			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE")
+			(type === "CAMPAIGNS_MESSAGE" || type === "CAMPAIGNS_MODAL_MESSAGE" || type === "FR_QUE_REQ_SENT" || type === "FR_QUE_REQ_ACCEPT")
 		) {
 			setUnselectedError(false);
 		}

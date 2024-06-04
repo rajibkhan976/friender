@@ -617,8 +617,7 @@ const FriendsQueue = () => {
 				</div>
 			)}
 			{friendsQueueRecords?.length > 0 &&
-			!loading &&
-			!isDataFetchingFromApi &&
+				!loading &&
 			inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
@@ -627,7 +626,7 @@ const FriendsQueue = () => {
 					reset={isReset}
 					setReset={setIsReset}
 				/>
-			) : loading || isDataFetchingFromApi ? (
+			) : loading ? (
 				<ListingLoader />
 			) : (
 				<NoDataFound
