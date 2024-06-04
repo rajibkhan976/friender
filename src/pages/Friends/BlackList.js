@@ -97,6 +97,48 @@ const BlackList = () => {
 	function matchesFilter(cellValue, filterValues) {
 		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
 	}
+  function sourceComparator(valueA, valueB, nodeA, nodeB, isDescending) {
+		// "groups", "group", "suggestions", "friends", "post", "sync", "incoming", "csv", task_name
+
+		const filterName = (dataSet) => {
+			const sourceNow = (dataSet?.finalSource?.toLowerCase() === "groups" ||
+								dataSet?.finalSource?.toLowerCase() === "group" ||
+								dataSet?.finalSource?.toLowerCase() === "suggestions" ||
+								dataSet?.finalSource?.toLowerCase() === "friends" ||
+								dataSet?.finalSource?.toLowerCase() === "post") ?
+									dataSet?.sourceName ?
+										dataSet?.finalSource?.toLowerCase() === "post" ? 
+											'Post' :
+										dataSet?.finalSource?.toLowerCase() === "suggestions" ?
+											'Suggested Friends' :
+										dataSet?.finalSource?.toLowerCase() === "friends" ?
+											'Friends of Friends' :
+										dataSet?.sourceName?.length > 12
+											? dataSet?.sourceName?.substring(0, 12) + "..."
+											: dataSet?.sourceName :
+									dataSet?.groupName :
+								dataSet?.finalSource?.toLowerCase() === "sync" ?
+									"Sync" :
+								dataSet?.finalSource?.toLowerCase() === "incoming" ?
+									"Incoming request" :
+								dataSet?.finalSource?.toLowerCase() === "csv" ?
+									dataSet?.sourceName ? 
+										dataSet?.sourceName :
+										dataSet?.csvName ? 
+											dataSet?.csvName : 
+											"CSV Upload" :
+								dataSet?.task_name
+			console.log('sourceNow >>>>>', sourceNow);
+			return sourceNow;
+		}
+								
+
+		let objA = filterName({...nodeA?.data})?.toLowerCase()
+		let objB = filterName({...nodeB?.data})?.toLowerCase()
+
+		if (objA == objB) return 0;
+		return (objA > objB) ? 1 : -1;
+	}
 
   const friendsListinRef = [
     {
@@ -406,7 +448,8 @@ const BlackList = () => {
 						},
 					},
 				]
-			}
+			},
+			comparator: sourceComparator
 		},
     {
       field: "reactionThread",
