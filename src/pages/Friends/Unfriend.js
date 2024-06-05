@@ -59,8 +59,8 @@ const FriendsList = () => {
    * @returns updated array which is descending / ascending / default
    */
   const dateComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
-    let valA = new Date(valueA);
-    let valB = new Date(valueB);
+    let valA = new Date(nodeA?.data?.deleted_at);
+    let valB = new Date(nodeB?.data?.deleted_at);
 
     return valB - valA;
   };
@@ -192,11 +192,17 @@ const FriendsList = () => {
     {
       field: "created_at",
       headerName: "Age",
-      headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
       cellRenderer: AgeRenderer,
       headerClass: 'header-query-tooltip',
-      filter: "agTextColumnFilter",
-      width: 110,
+      headerTooltip: "Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n",
+      filter: "agNumberColumnFilter",
+      maxWidth: 110,
+      filterValueGetter: (params) => {
+				return {
+          created_at: params?.data?.created_at,
+          deleted_at: params?.data?.deleted_at
+				}
+			},
       filterParams: {
         buttons: ["apply", "reset"],
         debounceMs: 200,
@@ -207,21 +213,21 @@ const FriendsList = () => {
             displayKey: 'lessThan',
             displayName: 'Less than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(cellValue) < filterValue
+              return ageComparator(cellValue?.deleted_at) < filterValue
             }
           },
           {
             displayKey: 'greaterThan',
             displayName: 'Greater than',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(cellValue) > filterValue
+              return ageComparator(cellValue?.deleted_at) > filterValue
             }
           },
           {
             displayKey: 'equals',
             displayName: 'Equals',
             predicate: ([filterValue], cellValue) => {
-              return ageComparator(cellValue) == filterValue
+              return ageComparator(cellValue?.deleted_at) == filterValue
             }
           },
         ],
