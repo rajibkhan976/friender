@@ -68,7 +68,7 @@ const FriendsQueue = () => {
 		(state) => state.friendsQueue.friendsQueueRecords
 	);
 
-	console.log("RECORDS FOR FRIRNDS QUEUE -- ", friendsQueueRecords);
+	// console.log("RECORDS FOR FRIRNDS QUEUE -- ", friendsQueueRecords);
 
 	const isDataFetchingFromApi = useSelector(
 		(state) => state.friendsQueue.isDataFetchingFromApi
@@ -108,7 +108,52 @@ const FriendsQueue = () => {
 		}
 	}, [friendsQueueRecords]);
 
+	function matchesFilter(cellValue, filterValues) {
+		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
+	}
 
+	function sourceComparator(valueA, valueB, nodeA, nodeB, isDescending) {
+		// "groups", "group", "suggestions", "friends", "post", "sync", "incoming", "csv", task_name
+
+		const filterName = (dataSet) => {
+			const sourceNow = (dataSet?.finalSource?.toLowerCase() === "groups" ||
+								dataSet?.finalSource?.toLowerCase() === "group" ||
+								dataSet?.finalSource?.toLowerCase() === "suggestions" ||
+								dataSet?.finalSource?.toLowerCase() === "friends" ||
+								dataSet?.finalSource?.toLowerCase() === "post") ?
+									dataSet?.sourceName ?
+										dataSet?.finalSource?.toLowerCase() === "post" ? 
+											'Post' :
+										dataSet?.finalSource?.toLowerCase() === "suggestions" ?
+											'Suggested Friends' :
+										dataSet?.finalSource?.toLowerCase() === "friends" ?
+											'Friends of Friends' :
+										dataSet?.sourceName?.length > 12
+											? dataSet?.sourceName?.substring(0, 12) + "..."
+											: dataSet?.sourceName :
+									dataSet?.groupName :
+								dataSet?.finalSource?.toLowerCase() === "sync" ?
+									"Sync" :
+								dataSet?.finalSource?.toLowerCase() === "incoming" ?
+									"Incoming request" :
+								dataSet?.finalSource?.toLowerCase() === "csv" ?
+									dataSet?.sourceName ? 
+										dataSet?.sourceName :
+										dataSet?.csvName ? 
+											dataSet?.csvName : 
+											"CSV Upload" :
+								dataSet?.task_name
+			console.log('sourceNow >>>>>', sourceNow);
+			return sourceNow;
+		}
+								
+
+		let objA = filterName({...nodeA?.data})?.toLowerCase()
+		let objB = filterName({...nodeB?.data})?.toLowerCase()
+
+		if (objA == objB) return 0;
+		return (objA > objB) ? 1 : -1;
+	}
 
 	const friendsQueueRef = [
 		{
@@ -144,14 +189,73 @@ const FriendsQueue = () => {
 			cellRenderer: MessageGroupRequestAcceptedRenderer,
 		},
 		{
-			field: "task_name" ? "task_name" : "finalSource",
+			field: "finalSource",
 			headerName: "Source",
+			filter: "agTextColumnFilter",
 			headerTooltip: "Friends source",
 			tooltipComponent: CustomHeaderTooltip,
 			headerClass: "header-query-tooltip",
 			cellRenderer: SourceRendererPending,
 			// lockPosition: "right",
 			minWidth: 185,
+			filterValueGetter: (params) => {
+				return {
+					finalSource: params?.data?.finalSource,
+					sourceName: params?.data?.finalSource === 'post' || 
+								params?.data?.finalSource === 'sync' ? 
+								null : 
+								params?.data?.finalSource === "incoming" ?
+									'Incoming request' :
+								params?.data?.finalSource === 'friends' ?
+									'Friends of Friends' : 
+								params?.data?.finalSource === 'suggestions' ?
+									'Suggested Friends' :
+									params?.data?.sourceName
+				}
+			},
+			filterParams: {
+				buttons: ["apply", "reset"],
+				debounceMs: 200,
+				suppressMiniFilter: true,
+				closeOnApply: true,
+				filterOptions: [
+					{
+						displayKey: "contains",
+						displayName: "Contains",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName ? 
+										matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										matchesFilter(cellValue?.finalSource, [filterValue])
+						},
+					},
+					{
+						displayKey: "notContains",
+						displayName: "Not Contains",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName ? 
+										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
+										!matchesFilter(cellValue?.finalSource, [filterValue])
+						},
+					},
+					{
+						displayKey: "startsWith",
+						displayName: "Starts With",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName?.toLowerCase().startsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().startsWith(filterValue.toLowerCase())
+						},
+					},
+					{
+						displayKey: "endsWith",
+						displayName: "Ends With",
+						predicate: ([filterValue], cellValue) => {
+							return cellValue?.sourceName?.toLowerCase().endsWith(filterValue.toLowerCase()) ||
+										cellValue?.finalSource?.toLowerCase().endsWith(filterValue.toLowerCase())
+						},
+					},
+				]
+			},
+			comparator: sourceComparator
 		},
 	];
 

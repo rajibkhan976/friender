@@ -125,39 +125,90 @@ const FriendRequestSentVersion = () => {
 
 
   const toggleDefaultRequest = async (event, item) => {
-    // console.log('id', id, 'event', event.target.checked);
-    if (event.target.checked) {
-      try {
-        if (item.default_sttings !== 1) {
-          const updatedData = await friendRequestHitory.map((x) =>
-            x._id === item._id
-              ? { ...x, default_sttings: 1 }
-              : { ...x, default_sttings: 0 }
+    // console.log(event, item);
+    // checked ? 
+    if (event?.target?.checked) {
+      //   {...setting object, active: setting-type = match ? toggle:as it is}
+      if (friendRequestHitory?.filter(el => el?.settings_type === item?.settings_type)?.length > 1) {
+        const updatedData = friendRequestHitory?.map(e => 
+                              e?._id === item?._id ?
+                                {...e, default_sttings: 1} :
+                                e?.settings_type === item?.settings_type ?
+                                  {...e, default_sttings: 0} :
+                                  {...e}
+                            )
+        // console.log("updated data :::: ", updatedData);
+        // setFriendRequestHistory(updatedData);
+
+        const updateDefault = await updateDefaultFriendRequestSettings({
+          settingsId: item._id,
+          defaultSttings: 1,
+        });
+
+        if (updateDefault) {
+          setFriendRequestHistory(updatedData);
+          Alertbox(
+            `Default friend request setting updated.`,
+            "success",
+            1000,
+            "bottom-right"
           );
-
-          if (updatedData) {
-            // console.log("updatedData", updatedData);
-            setFriendRequestHistory(updatedData);
-
-            const updateDefault = await updateDefaultFriendRequestSettings({
-              settingsId: item._id,
-              defaultSttings: 1,
-            });
-
-            if (updateDefault) {
-              Alertbox(
-                `Default friend request setting updated.`,
-                "success",
-                1000,
-                "bottom-right"
-              );
-            }
-          }
         }
-      } catch (error) {
-        // console.log(error);
+
+          //        const updateDefault = await updateDefaultFriendRequestSettings({
+          //           settingsId: item._id,
+          //           defaultSttings: 1,
+          //         });
+      
+          //         if (updateDefault) {
+          //           Alertbox(
+          //             `Default friend request setting updated.`,
+          //             "success",
+          //             1000,
+          //             "bottom-right"
+          //           );
+          //         }
       }
-    }
+    } 
+    // else {
+    //   //   {...setting object, active: setting-type = match ? false: alert}
+    //   if (friendRequestHitory?.filter(el => el?.settings_type === item?.settings_type)?.length > 1) {
+    //     // Uncheck current. switch on another
+    //   }
+    // }
+
+    // if (event.target.checked) {
+    //   try {
+    //     if (item.default_sttings !== 1) {
+    //       const updatedData = await friendRequestHitory.map((x) =>
+    //         x._id === item._id
+    //           ? { ...x, default_sttings: 1 }
+    //           : { ...x, default_sttings: 0 }
+    //       );
+
+    //       if (updatedData) {
+    //         // console.log("updatedData", updatedData);
+    //         setFriendRequestHistory(updatedData);
+
+    //         const updateDefault = await updateDefaultFriendRequestSettings({
+    //           settingsId: item._id,
+    //           defaultSttings: 1,
+    //         });
+
+    //         if (updateDefault) {
+    //           Alertbox(
+    //             `Default friend request setting updated.`,
+    //             "success",
+    //             1000,
+    //             "bottom-right"
+    //           );
+    //         }
+    //       }
+    //     }
+    //   } catch (error) {
+    //     // console.log(error);
+    //   }
+    // }
   };
 
   /**
