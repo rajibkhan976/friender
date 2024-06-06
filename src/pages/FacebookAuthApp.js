@@ -6,12 +6,16 @@ import { ConnectToFacebook, DisabledConnectToFacebook, Logo } from "../assets/ic
 import Checkbox from "../components/formComponents/Checkbox";
 import extensionAccesories from "../configuration/extensionAccesories";
 import {
+  fetchUserProfile,
   saveUserProfile
 } from "../services/authentication/facebookData";
 import Alertbox from "../components/common/Toast";
+import { setProfileSpaces } from "../actions/ProfilespaceActions";
+import { useDispatch } from "react-redux";
 
 const FacebookAuthApp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [loader, setLoader] = useState(false);
   const [showConnect, setShowConnect] = useState(false)
 
@@ -21,7 +25,8 @@ const FacebookAuthApp = () => {
         const profilebody = {
         name: facebookAuthInfo?.name,
         profilePicture: facebookAuthInfo?.picture?.data?.url,
-        fbAuthInfo : facebookAuthInfo
+        fbAuthInfo : facebookAuthInfo,
+        profileUrl: facebookAuthInfo.link,
       };
       const facebookProfile = await extensionAccesories.sendMessageToExt({
         action: "syncprofile",
@@ -130,6 +135,14 @@ const FacebookAuthApp = () => {
      * 2. @case2 If password is alredy reset then take the user to onBoarding questionaries screen
      * 3. @case3 onBoard questionaries is also already answered then take the user to getting-started screen.
      */
+
+    fetchUserProfile()
+      .then(res => {
+        if (res && res?.length) {
+          dispatch(setProfileSpaces(res))
+        }
+      })
+
     if (password_reset_status != 1) {
       navigate("/reset-password");
     } else if (user_onbording_status != 1) {

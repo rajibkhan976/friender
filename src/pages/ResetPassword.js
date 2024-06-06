@@ -61,7 +61,7 @@ const ResetPasswordPage = () => {
           }
         })
         .catch((error) => {
-          //console.log('here', error);
+          // console.log('here', error);
           setEmailAlreadyExists(error.message);
         })
         .finally(() => {

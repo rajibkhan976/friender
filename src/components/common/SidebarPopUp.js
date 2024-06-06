@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Themewitch from "../common/Themeswitch";
 import ProfilePhoto from "../../assets/images/profilePhoto.png";
 import { useEffect } from "react";
@@ -16,6 +16,8 @@ const SidebarPopUp = (props) => {
   // open profile on fb
   const openProfileonFb = (e) => {
     e.preventDefault();
+
+    console.log(props?.facebookAuthInfoStatus, props?.profiles);
     
     if (props?.facebookAuthInfoStatus) {
       // console.log('here');
@@ -147,10 +149,11 @@ const SidebarPopUp = (props) => {
         </svg>
       </button>
       <div className="profile-inner-wraper">
-        <NavLink 
+        <Link
           className="profile-popup-info"
           // onClick={e => openProfileonFb(e)}
-          to={props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.link : props?.profiles[0] ? props?.profiles[0]?.fb_profile_url : '/'}
+          // to={props?.facebookAuthInfoStatus ? props?.facebookAuthInfoStatus?.link : props?.profiles[0] ? props?.profiles[0]?.fb_profile_url : '/'}
+          to={props?.profiles[0]?.fb_profile_url ? props?.profiles[0]?.fb_profile_url : '/'}
           target="_blank"
         >
           <div className="img-section">
@@ -188,7 +191,7 @@ const SidebarPopUp = (props) => {
             </p>
             <span>{props.userEmail}</span>
           </div>
-        </NavLink>
+        </Link>
 
         <div className="popup-menu" onClick={props.closePopupFn}>
           <ul>

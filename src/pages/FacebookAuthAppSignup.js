@@ -48,7 +48,8 @@ const FacebookAuthAppSignup = () => {
             const profilebody = {
             name: facebookAuthInfo?.name,
             profilePicture: facebookAuthInfo?.picture?.data?.url,
-            fbAuthInfo : facebookAuthInfo
+            fbAuthInfo : facebookAuthInfo,
+            profileUrl: facebookAuthInfo.link,
           };
           const facebookProfile = await extensionAccesories.sendMessageToExt({
             action: "syncprofile",

@@ -178,6 +178,7 @@ const Sidebar = (props) => {
   const setShowProfileFn = (e) => {
     // console.log('clicked', facebookAuthInfoStatus);
     // setShowProfile((current) => profiles?.length > 0 ? !current : false)
+	getProfileData();
     setIsComponentVisible((current) => !current);
     setSubMenuFriends(false);
   };
@@ -766,15 +767,7 @@ const Sidebar = (props) => {
 								className='profile-photo'
 								onClick={setShowProfileFn}
 								style={{
-									backgroundImage: `url(${
-										profiles?.filter(
-											(el) => el.fb_user_id == defaultProfileId
-										)[0]?.fb_profile_picture
-											? profiles?.filter(
-													(el) => el.fb_user_id == defaultProfileId
-											  )[0]?.fb_profile_picture
-											: ProfilePhoto
-									})`,
+									backgroundImage: `url(${(profiles && profiles[0]?.fb_profile_picture) ? profiles[0]?.fb_profile_picture : ProfilePhoto})`,
 								}}
 							>
 								{/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}

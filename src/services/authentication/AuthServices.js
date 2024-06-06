@@ -189,8 +189,12 @@ export const resetUserPassword = (token, password) => {
         localStorage.setItem("fr_pass_changed", 1);
       })
       .catch((error) => {
-        //console.log("ERROR USER RESET:::", error);
-        reject(error?.response?.data ? error.response.data : error.message);
+        // console.log("ERROR USER RESET:::", error);
+        if (error === "Request failed with status code 400") {
+          reject("Password is not accepted please re-try with a new password!")
+        } else {
+          reject(error?.response?.data ? error.response.data : error.message);
+        }
       });
   });
 };
