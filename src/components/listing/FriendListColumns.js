@@ -503,59 +503,59 @@ export const AgeRenderer = memo((params) => {
 	// console.log("Params Here for FriendListColumn --- ", params.data);
 
 	// Calculates the Age for all..
-	// const ageCalculator = (bornDate) => {
-	// 	const todayUTC = moment().utc();
-	// 	const bornDateUTC = moment(bornDate, "YYYY-MM-DD HH:mm:ss").utc();
+	const ageCalculator = (bornDate) => {
+		const todayUTC = moment().utc();
+		const bornDateUTC = moment(bornDate, "YYYY-MM-DD HH:mm:ss").utc();
 
-	// 	// Age Differences..
-	// 	const timeDifference = Math.abs(todayUTC - bornDateUTC);
+		// Age Differences..
+		const timeDifference = Math.abs(todayUTC - bornDateUTC);
 
-	// 	// Calculate the time difference in milliseconds
-	// 	// const timeDifference = todayUTC.diff(bornDateUTC);
+		// Calculate the time difference in milliseconds
+		// const timeDifference = todayUTC.diff(bornDateUTC);
 
-	// 	// Calculate age in days..
-	// 	let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+		// Calculate age in days..
+		let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
 
-	// 	if (ageInDays === 0) {
-	// 		localTime =
-	// 			hours !== 0
-	// 				? `Today ${hours}h ${minutes}m Ago`
-	// 				: `Today ${minutes}m Ago`;
-	// 	}
+		if (ageInDays === 0) {
+			localTime =
+				hours !== 0
+					? `Today ${hours}h ${minutes}m Ago`
+					: `Today ${minutes}m Ago`;
+		}
 
-	// 	return Number(ageInDays);
-	// };
+		return Number(ageInDays);
+	};
 
-	// if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
-	// 	let requestDate;
+	if (params?.data?.friendRequestStatus?.toLowerCase() === "pending") {
+		let requestDate;
 
-	// 	if (params.data?.last_friend_request_send_at?.toLowerCase()) {
-	// 		if (params?.data?.refriending_attempt > 0) {
-	// 			requestDate = params?.data?.created_at?.toLowerCase();
-	// 		} else {
-	// 			requestDate = params?.data?.last_friend_request_send_at?.toLowerCase();
-	// 		}
-	// 	} else {
-	// 		requestDate = params?.data?.created_at?.toLowerCase();
-	// 	}
+		if (params.data?.last_friend_request_send_at?.toLowerCase()) {
+			if (params?.data?.refriending_attempt > 0) {
+				requestDate = params?.data?.created_at?.toLowerCase();
+			} else {
+				requestDate = params?.data?.last_friend_request_send_at?.toLowerCase();
+			}
+		} else {
+			requestDate = params?.data?.created_at?.toLowerCase();
+		}
 
-	// 	const ageInDays = ageCalculator(requestDate);
-	// 	age = ageInDays;
-	// } else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
-	// 	// const lostDate = new Date(params?.data?.lost_friend_at?.toLowerCase());
-	// 	// const lostDate = params?.data?.updated_at?.toLowerCase(); COMMENTED OUT OUT DUE TO SORT ISSUE IN LOST LIST
-	// 	const lostDate = params?.data?.created_at?.toLowerCase();
-	// 	const ageInDays = ageCalculator(lostDate);
-	// 	age = ageInDays;
-	// } else if (params?.data?.deleted_status === 1) {
-	// 	const unfriendedDate = params?.data?.deleted_at?.toLowerCase();
-	// 	const ageInDays = ageCalculator(unfriendedDate);
-	// 	age = ageInDays;
-	// } else {
-	// 	const actionDate = params?.data?.created_at?.toLowerCase();
-	// 	const ageInDays = ageCalculator(actionDate);
-	// 	age = ageInDays;
-	// }
+		const ageInDays = ageCalculator(requestDate);
+		age = ageInDays;
+	} else if (params?.data?.friendStatus?.toLowerCase() === "lost") {
+		// const lostDate = new Date(params?.data?.lost_friend_at?.toLowerCase());
+		// const lostDate = params?.data?.updated_at?.toLowerCase(); COMMENTED OUT OUT DUE TO SORT ISSUE IN LOST LIST
+		const lostDate = params?.data?.created_at?.toLowerCase();
+		const ageInDays = ageCalculator(lostDate);
+		age = ageInDays;
+	} else if (params?.data?.deleted_status === 1) {
+		const unfriendedDate = params?.data?.deleted_at?.toLowerCase();
+		const ageInDays = ageCalculator(unfriendedDate);
+		age = ageInDays;
+	} else {
+		const actionDate = params?.data?.created_at?.toLowerCase();
+		const ageInDays = ageCalculator(actionDate);
+		age = ageInDays;
+	}
 
 	//  let showingDate = new Date(localTime);
 	//  function getMonthName(monthNumber) {

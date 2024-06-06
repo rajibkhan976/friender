@@ -29,6 +29,7 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import Modal from "../../components/common/Modal";
 import { utils } from "../../helpers/utils";
 import helper from "../../helpers/helper"
+import moment from "moment";
 
 const FriendsList = () => {
   //::::Friend List geting data from Redux::::
@@ -67,7 +68,7 @@ const FriendsList = () => {
 
   const ageComparator = (targetDate) => {
     let statusSync = targetDate?.toLowerCase();
-    const localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
+    let localTime = utils.convertUTCtoLocal(statusSync?.replace(" ", "T") + ".000Z", true);
     let currentUTC = helper.curretUTCTime();
     let diffTime = Math.abs(currentUTC - new Date(statusSync).valueOf());
     let days = diffTime / (24 * 60 * 60 * 1000);
@@ -89,6 +90,34 @@ const FriendsList = () => {
     else age = 1;
 
     // console.log(filterValue, age);
+    // -------------------------
+		const ageCalculator = (bornDate) => {
+			const todayUTC = moment().utc();
+			const bornDateUTC = moment(bornDate, "YYYY-MM-DD HH:mm:ss").utc();
+	
+			// Age Differences..
+			const timeDifference = Math.abs(todayUTC - bornDateUTC);
+	
+			// Calculate the time difference in milliseconds
+			// const timeDifference = todayUTC.diff(bornDateUTC);
+	
+			// Calculate age in days..
+			let ageInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+	
+			if (ageInDays === 0) {
+				localTime =
+					hours !== 0
+						? `Today ${hours}h ${minutes}m Ago`
+						: `Today ${minutes}m Ago`;
+			}
+	
+			return Number(ageInDays);
+		};
+	
+		let requestDate = targetDate?.toLowerCase();
+		const ageInDays = ageCalculator(requestDate);
+		age = ageInDays;
+		// =========================
     return age
   }
 
