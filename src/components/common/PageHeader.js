@@ -60,7 +60,8 @@ import { fetchGroups } from "../../actions/MessageAction";
 import {
 	fRQueueExtMsgSendHandler,
 	getFriendsQueueRecordsFromIndexDB,
-	getFriendsQueueRecordsChunk,
+	getAllFriendsQueueRecordsInChunk,
+	getNewFriendsQueueRecordsInChunk,
 	popFriendsQueueRecordsFromQueue,
 	removeFriendsQueueRecordsFromIndexDB,
 	reorderFriendsQueueRecordsInIndexDB,
@@ -1288,7 +1289,7 @@ function PageHeader({ headerText = "" }) {
 				.unwrap()
 				.then((res) => {
 					console.log(res);
-					dispatch(getFriendsQueueRecordsChunk())
+					dispatch(getAllFriendsQueueRecordsInChunk())
 						.unwrap()
 						.then((response) =>
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
@@ -1299,7 +1300,7 @@ function PageHeader({ headerText = "" }) {
 						);
 				})
 				.catch((error) => {
-					dispatch(getFriendsQueueRecordsChunk())
+					dispatch(getAllFriendsQueueRecordsInChunk())
 						.unwrap()
 						.then((response) =>
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
@@ -1577,17 +1578,13 @@ function PageHeader({ headerText = "" }) {
 		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
 			setIsFrQueActionsEnabled(false);
-			dispatch(getFriendsQueueRecordsChunk())
+			dispatch(getNewFriendsQueueRecordsInChunk())
 				.unwrap()
 				.then((resp) =>
 					dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 					.unwrap()
 					.then((response) =>
-						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-						.unwrap()
-						.then((result) => 
-							setIsFrQueActionsEnabled(true)
-						)
+						setIsFrQueActionsEnabled(true)
 					)
 				);
 		}
@@ -1800,7 +1797,7 @@ function PageHeader({ headerText = "" }) {
 					})
 				);
 				setIsFrQueActionsEnabled(false);
-				dispatch(getFriendsQueueRecordsChunk())
+				dispatch(getAllFriendsQueueRecordsInChunk())
 					.unwrap()
 					.then((response) => {
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")

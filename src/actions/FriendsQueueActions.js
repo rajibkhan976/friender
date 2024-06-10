@@ -64,18 +64,28 @@ export const saveFriendsQueueRecordsInIndexDb = async (
 	}
 };
 
-export const getFriendsQueueRecordsInChunk = createAsyncThunk(
-	"friendsQueue/getFriendsQueueRecordsInChunk",
-	async (totalRecordCount, friendsQueueRecordsLimit) => {
-		const fbUserId = localStorage.getItem("fr_default_fb");
+export const getNewFriendsQueueRecordsInChunk = createAsyncThunk(
+	"friendsQueue/getNewFriendsQueueRecordsInChunk",
+	async () => {
+		const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
 		const compiledChunkData = [];
-		let incrementBy = friendsQueueRecordsLimit;
+
+		const oldData = fbUserId ? await clientDB.friendsQueueRecords
+			.where("fbId")
+			.equals(fbUserId)
+			.first() : {};
+
+		const { friendsQueueData, recordCount } = oldData;
+		compiledChunkData = friendsQueueData?.length ? [...friendsQueueData] : [];
+		let skip = friendsQueueData?.length ? friendsQueueData?.length : 0;
+		let totalRecordCount = recordCount ? recordCount + 1 : 0;
 		let response = null;
 
-		for (let i = 0; i < totalRecordCount; i += incrementBy) {
+		for (let i = skip; i < totalRecordCount; i += skip) {
 			response = await fetchFriendsQueueRecords(fbUserId, i);
 			if (response && Array.isArray(response?.data)) {
-				incrementBy = response?.data?.length;
+				skip = response?.data?.length;
+				totalRecordCount = response?.totalNumberOfRecords;
 				response?.data.forEach((item) => {
 					compiledChunkData.push(item);
 				});
@@ -92,8 +102,8 @@ export const getFriendsQueueRecordsInChunk = createAsyncThunk(
 	}
 );
 
-export const getFriendsQueueRecordsChunk = createAsyncThunk(
-	"friendsQueue/getFriendsQueueRecordsChunk",
+export const getAllFriendsQueueRecordsInChunk = createAsyncThunk(
+	"friendsQueue/getAllFriendsQueueRecordsInChunk",
 	async () => {
 		const fbUserId = localStorage.getItem("fr_default_fb");
 		const compiledChunkData = [];
@@ -382,23 +392,23 @@ export const friendsQueueSlice = createSlice({
 		[getFriendsQueueRecords.rejected]: (state) => {
 			state.isDataFetchingFromApi = false;
 		},
-		[getFriendsQueueRecordsChunk.pending]: (state) => {
+		[getAllFriendsQueueRecordsInChunk.pending]: (state) => {
 			state.isDataFetchingFromApi = true;
 		},
-		[getFriendsQueueRecordsChunk.fulfilled]: (state, action) => {
+		[getAllFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
 			state.isDataFetchingFromApi = false;
 		},
-		[getFriendsQueueRecordsChunk.rejected]: (state) => {
+		[getAllFriendsQueueRecordsInChunk.rejected]: (state) => {
 			state.isDataFetchingFromApi = false;
 		},
-		[getFriendsQueueRecordsInChunk.pending]: (state) => {
-			state.isChunkedDataFetchedFromApi = false;
+		[getNewFriendsQueueRecordsInChunk.pending]: (state) => {
+			state.isDataFetchingFromApi = true;
 		},
-		[getFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
-			state.isChunkedDataFetchedFromApi = true;
+		[getNewFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
+			state.isDataFetchingFromApi = false;
 		},
-		[getFriendsQueueRecordsInChunk.rejected]: (state) => {
-			state.isChunkedDataFetchedFromApi = false;
+		[getNewFriendsQueueRecordsInChunk.rejected]: (state) => {
+			state.isDataFetchingFromApi = false;
 		},
 		[getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
 			state.isFriendsQueueListLoading = true;

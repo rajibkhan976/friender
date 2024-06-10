@@ -105,6 +105,29 @@ const FriendsQueue = () => {
 					(item) => item.status === null && item.is_active === true
 				);
 			setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
+
+			if (friendsQueueRecords.every((item) => item?.status === 0) && friendRequestQueueSettings) {
+				// console.log(friendRequestQueueSettings);
+				const payload = { ...friendRequestQueueSettings };
+				Object.assign(payload, {
+					run_friend_queue:
+						false,
+				});
+				timeoutToSaveFriendsQueueSettings.current = setTimeout(
+					() => dispatch(saveFriendsQueueSettings(payload)),
+					1000
+				);
+				setFriendRequestQueueSettings(
+					(friendRequestQueueSettings) => {
+						return {
+							...friendRequestQueueSettings,
+							run_friend_queue:
+								false,
+						};
+					}
+				);
+				clearTimeout(timeoutToSaveFriendsQueueSettings);
+			}
 		}
 	}, [friendsQueueRecords]);
 
