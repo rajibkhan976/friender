@@ -68,7 +68,7 @@ export const getNewFriendsQueueRecordsInChunk = createAsyncThunk(
 	"friendsQueue/getNewFriendsQueueRecordsInChunk",
 	async () => {
 		const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
-		const compiledChunkData = [];
+		let compiledChunkData = [];
 
 		const oldData = fbUserId ? await clientDB.friendsQueueRecords
 			.where("fbId")
