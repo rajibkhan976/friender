@@ -1448,6 +1448,7 @@ function PageHeader({ headerText = "" }) {
 	// Add selected / forwarded friends to campaign
 	const AddToCampaign = (addFriendsToCampaign) => {
 		//dispatch(removeSelectedFriends());
+		console.log('addFriendsToCampaign >>>>', addFriendsToCampaign);
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
 			let payload = {
@@ -1465,9 +1466,9 @@ function PageHeader({ headerText = "" }) {
 						friendProfileUrl: item.friendProfileUrl
 							? item.friendProfileUrl
 							: null,
-						groupName: item.groupName ? item.groupName : null,
+						groupName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
 						status: "pending",
-						groupUrl: item.groupUrl ? item.groupUrl : null,
+						groupUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
 						matchedKeyword: item.matchedKeyword ? item.matchedKeyword : null,
 					};
 				}),

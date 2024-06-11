@@ -60,8 +60,12 @@ const MyProfile = () => {
                         </h4>
                     </div>
                     <p>Email: <a href={`mailto:${userDetails?.email}`}>{userDetails?.email}</a></p>
-                    <p>Facebook ID: <span>{userDetails?.facebookID}</span></p>
-                    <p>Facebook URL: <a href={userDetails?.facebookURL} target="_blank" rel="noreferrer">{`facebook.com/${userDetails?.facebookID}`}</a></p>
+                    <p>Facebook ID: <span>{(userDetails?.facebookID && userDetails?.facebookID != 'null') ? userDetails?.facebookID : 'Please complete the getting started'}</span></p>
+                    <p>Facebook URL:
+                        <a href={(userDetails?.facebookURL && userDetails?.facebookURL != 'null') ? userDetails?.facebookURL : ''} target="_blank" rel="noreferrer">
+                            {(userDetails?.facebookURL && userDetails?.facebookID != 'null') ? `facebook.com/${userDetails?.facebookID}` : 'Please complete the getting started'}
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
