@@ -105,29 +105,6 @@ const FriendsQueue = () => {
 					(item) => item.status === null && item.is_active === true
 				);
 			setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
-
-			if (friendsQueueRecords.every((item) => item?.status === 0) && friendRequestQueueSettings) {
-				// console.log(friendRequestQueueSettings);
-				const payload = { ...friendRequestQueueSettings };
-				Object.assign(payload, {
-					run_friend_queue:
-						false,
-				});
-				timeoutToSaveFriendsQueueSettings.current = setTimeout(
-					() => dispatch(saveFriendsQueueSettings(payload)),
-					1000
-				);
-				setFriendRequestQueueSettings(
-					(friendRequestQueueSettings) => {
-						return {
-							...friendRequestQueueSettings,
-							run_friend_queue:
-								false,
-						};
-					}
-				);
-				clearTimeout(timeoutToSaveFriendsQueueSettings);
-			}
 		}
 	}, [friendsQueueRecords]);
 
@@ -376,24 +353,6 @@ const FriendsQueue = () => {
 		dispatch(getFriendsQueueSettings())
 			.unwrap()
 			.then((response) => {
-				if (response && !response?.data?.length) {
-					dispatch(
-						saveFriendsQueueSettings({
-							fb_user_id: fbUserId,
-							request_limit_value: 50,
-							request_limited: true,
-							run_friend_queue: false,
-							time_delay: 3,
-						})
-					);
-					setFriendRequestQueueSettings({
-						fb_user_id: fbUserId,
-						request_limit_value: 50,
-						request_limited: true,
-						run_friend_queue: false,
-						time_delay: 3,
-					});
-				}
 				if (
 					response &&
 					response.data &&
@@ -404,24 +363,6 @@ const FriendsQueue = () => {
 					setFriendRequestQueueSettings(response.data[0]);
 				}
 			})
-			.catch((error) => {
-				dispatch(
-					saveFriendsQueueSettings({
-						fb_user_id: fbUserId,
-						request_limit_value: 50,
-						request_limited: true,
-						run_friend_queue: false,
-						time_delay: 3,
-					})
-				);
-				setFriendRequestQueueSettings({
-					fb_user_id: fbUserId,
-					request_limit_value: 50,
-					request_limited: true,
-					run_friend_queue: false,
-					time_delay: 3,
-				});
-			});
 		// dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		//getSettingsData();
 

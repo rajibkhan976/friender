@@ -1573,9 +1573,11 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [groupMsgSelect2, quickMsg2]);
 
+	const reFetchFrQueDataRef = useRef(null);
+
 	const reFetchDataOnRunFriendQueueSuccess = (event) => {
 		console.log("reFetchDataOnRunFriendQueueSuccess", event);
-		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
+		// if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
 			setIsFrQueActionsEnabled(false);
 			dispatch(getNewFriendsQueueRecordsInChunk())
@@ -1595,7 +1597,7 @@ function PageHeader({ headerText = "" }) {
 			"message",
 			(event) => {
 				console.log("addEventListener", event);
-				reFetchDataOnRunFriendQueueSuccess(event);
+				reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
 			},
 			false
 		);
@@ -1605,6 +1607,7 @@ function PageHeader({ headerText = "" }) {
 			window.removeEventListener("message", (event) => {
 				reFetchDataOnRunFriendQueueSuccess(event);
 			});
+			clearTimeout(reFetchFrQueDataRef);
 		};
 	}, []);
 
