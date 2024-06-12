@@ -1576,6 +1576,8 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [groupMsgSelect2, quickMsg2]);
 
+	const refetchFrQueDataTimeout = useRef(null);
+
 	const reFetchDataOnRunFriendQueueSuccess = (event) => {
 		console.log(event);
 		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
@@ -1598,7 +1600,7 @@ function PageHeader({ headerText = "" }) {
 			"message",
 			(event) => {
 				console.log(event);
-				reFetchDataOnRunFriendQueueSuccess(event);
+				refetchFrQueDataTimeout.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
 			},
 			false
 		);
@@ -1608,6 +1610,7 @@ function PageHeader({ headerText = "" }) {
 			window.removeEventListener("message", (event) => {
 				reFetchDataOnRunFriendQueueSuccess(event);
 			});
+			clearTimeout(refetchFrQueDataTimeout);
 		};
 	}, []);
 
