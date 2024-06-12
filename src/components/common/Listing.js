@@ -503,7 +503,11 @@ const Listing = (props) => {
 			console.log('localStorage.getItem("fr_default_fb")', localStorage.getItem("fr_default_fb"), 'params?.campaignId', params?.campaignId);
 			props?.getCurrentCampaignFriends(localStorage.getItem("fr_default_fb"), params?.campaignId, 'all')
 		} else {
-			Alertbox(`${removedContacts?.message || "Can't Remove Friends"}`, "error-toast", 1000, "bottom-right");
+				if(removedContacts?.message){
+					console.log("You can't Delete multiple Time same data", removedContacts?.message);
+				}else{
+					Alertbox("Can't Remove Friends", "error-toast", 1000, "bottom-right");
+				}
 		}
 	};
 
