@@ -1466,9 +1466,11 @@ function PageHeader({ headerText = "" }) {
 						friendProfileUrl: item.friendProfileUrl
 							? item.friendProfileUrl
 							: null,
-						groupName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
+						// groupName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
+						sourceName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
 						status: "pending",
-						groupUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
+						// groupUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
+						sourceUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
 						matchedKeyword: item.matchedKeyword ? item.matchedKeyword : null,
 					};
 				}),
