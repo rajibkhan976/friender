@@ -1448,7 +1448,6 @@ function PageHeader({ headerText = "" }) {
 	// Add selected / forwarded friends to campaign
 	const AddToCampaign = (addFriendsToCampaign) => {
 		//dispatch(removeSelectedFriends());
-		console.log('addFriendsToCampaign >>>>', addFriendsToCampaign);
 		try {
 			// console.log('addFriendsToCampaign', addFriendsToCampaign, 'selectedCampaign', selectedCampaign)
 			let payload = {
@@ -1466,11 +1465,9 @@ function PageHeader({ headerText = "" }) {
 						friendProfileUrl: item.friendProfileUrl
 							? item.friendProfileUrl
 							: null,
-						// groupName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
-						sourceName: item?.sourceName ? item?.sourceName : item?.groupName ? item?.groupName : null,
+						groupName: item.groupName ? item.groupName : null,
 						status: "pending",
-						// groupUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
-						sourceUrl: item?.sourceUrl ? item?.sourceUrl : item?.groupUrl ? item?.groupUrl : null,
+						groupUrl: item.groupUrl ? item.groupUrl : null,
 						matchedKeyword: item.matchedKeyword ? item.matchedKeyword : null,
 					};
 				}),
@@ -1576,10 +1573,8 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [groupMsgSelect2, quickMsg2]);
 
-	const refetchFrQueDataTimeout = useRef(null);
-
 	const reFetchDataOnRunFriendQueueSuccess = (event) => {
-		console.log(event);
+		console.log("reFetchDataOnRunFriendQueueSuccess", event);
 		if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
 			setIsFrQueActionsEnabled(false);
@@ -1599,8 +1594,8 @@ function PageHeader({ headerText = "" }) {
 		window.addEventListener(
 			"message",
 			(event) => {
-				console.log(event);
-				refetchFrQueDataTimeout.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
+				console.log("addEventListener", event);
+				reFetchDataOnRunFriendQueueSuccess(event);
 			},
 			false
 		);
@@ -1610,7 +1605,6 @@ function PageHeader({ headerText = "" }) {
 			window.removeEventListener("message", (event) => {
 				reFetchDataOnRunFriendQueueSuccess(event);
 			});
-			clearTimeout(refetchFrQueDataTimeout);
 		};
 	}, []);
 

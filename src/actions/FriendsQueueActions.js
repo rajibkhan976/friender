@@ -74,7 +74,7 @@ export const getNewFriendsQueueRecordsInChunk = createAsyncThunk(
 			.where("fbId")
 			.equals(fbUserId)
 			.first() : {};
-
+		console.log("oldData", oldData);
 		const { friendsQueueData, recordCount } = oldData;
 		compiledChunkData = friendsQueueData?.length ? [...friendsQueueData] : [];
 		let skip = friendsQueueData?.length ? friendsQueueData?.length : 0;
@@ -84,6 +84,7 @@ export const getNewFriendsQueueRecordsInChunk = createAsyncThunk(
 		for (let i = skip; i < totalRecordCount; i += skip) {
 			response = await fetchFriendsQueueRecords(fbUserId, i);
 			if (response && Array.isArray(response?.data)) {
+				console.log("newResponse", response);
 				skip = response?.data?.length;
 				totalRecordCount = response?.totalNumberOfRecords;
 				response?.data.forEach((item) => {
