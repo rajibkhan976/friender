@@ -398,7 +398,9 @@ const MySetting = () => {
 	];
 	const [reFriendSaveActive, setReFriendSaveActive] = useState(null);
 	const [reFriendOpenKeywords, setReFriendOpenKeywords] = useState(false);
-
+	// settings_added_time state
+	const [settingsAddedTime, setSettingsAddedTime] = useState(false);
+	const [settingsAddedTimeValue, setSettingsAddedTimeValue] = useState(null);
 	/**
 	 * ===== Auto-Saving the Settings with any toggle or button pressed ======
 	 */
@@ -467,7 +469,9 @@ const MySetting = () => {
 		quickMsgRejtIncomingFrndReqFrndReq,
 		quickMsgAcptsIncomingFrndReqFrndReq,
 		sendMessageIfExists,
-		sendMessageIfExistsIncoming
+		sendMessageIfExistsIncoming,
+		settingsAddedTime,
+		settingsAddedTimeValue
 	]);
 
 	useEffect(() => {
@@ -626,7 +630,7 @@ const MySetting = () => {
 			send_message_when_someone_accept_new_friend_request_settings: {
 				message_group_id: sndMsgAcptsFrndReqGroupSelect?._id || null,
 				quick_message: quickMsgAcptsFrndReq || null,
-				settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
+				settings_added_time: settingsAddedTimeValue
 			},
 			send_message_when_reject_friend_request: sndMsgRejtFrndReqToggle,
 			send_message_when_reject_friend_request_settings: {
@@ -869,6 +873,20 @@ const MySetting = () => {
 		// Send Message When Someone Accepts My Friend Requests.
 		// Turn On..
 		if (sndMsgAcptsFrndReqToggle) {
+			if(settingsAddedTime){
+				console.log(" 877 UTC Time Now :: ", getCurrentUTCTime())
+				payload.send_message_when_someone_accept_new_friend_request_settings = {
+					message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
+					quick_message: quickMsgAcptsFrndReq,
+					old_message_group_id:
+						sndMsgAcptsFrndReqGroupSelect?._id !==
+							localStorage.getItem("old_message_group_id")
+							? localStorage.getItem("old_message_group_id")
+							: null || "",
+					settings_added_time: getCurrentUTCTime()
+				};
+				setSettingsAddedTime(false)
+			}
 			if (usingSelectOptions) {
 				// console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
 				payload.send_message_when_someone_accept_new_friend_request_settings = {
@@ -879,7 +897,7 @@ const MySetting = () => {
 							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
-					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
+					settings_added_time: settingsAddedTimeValue
 				};
 
 				// if (selectMsgTempAcceptsFrndReq || sndMsgAcptsFrndReqToggle) {
@@ -897,7 +915,7 @@ const MySetting = () => {
 					quick_message: quickMsgAcptsFrndReq,
 					old_message_group_id:
 						localStorage.getItem("old_message_group_id") || "",
-					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
+					settings_added_time: settingsAddedTimeValue
 				};
 
 				// This Code is Shifted to TextEditor.js file..
@@ -919,7 +937,7 @@ const MySetting = () => {
 							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
-					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
+					settings_added_time: settingsAddedTimeValue
 				};
 				setUsingSelectOptions(false);
 			}
@@ -930,7 +948,7 @@ const MySetting = () => {
 					quick_message: quickMsgAcptsFrndReq,
 					old_message_group_id:
 						localStorage.getItem("old_message_group_id") || "",
-					settings_added_time: localStorage.getItem("currentUTC_someone_accept_new_frnd_req") ? localStorage.getItem("currentUTC_someone_accept_new_frnd_req") : null
+					settings_added_time: settingsAddedTimeValue
 				};
 			}
 		}
@@ -1134,7 +1152,8 @@ const MySetting = () => {
 		 */
 		dispatch(saveAllSettings(payload))
 			.unwrap()
-			.then(() => {
+			.then((settingsRes) => {
+				setSettingsAddedTimeValue(settingsRes.data[0].send_message_when_someone_accept_new_friend_request_settings[0].settings_added_time);
 				Alertbox(
 					"setting updated successfully",
 					"success",
@@ -1293,7 +1312,7 @@ const MySetting = () => {
 		);
 
 		if (data.send_message_when_someone_accept_new_friend_request_settings) {
-			const { message_group_id, quick_message } =
+			const { message_group_id, quick_message, settings_added_time } =
 				data?.send_message_when_someone_accept_new_friend_request_settings[0];
 
 			if (
@@ -1321,6 +1340,9 @@ const MySetting = () => {
 				quick_message !== undefined
 			) {
 				setQuickMsgAcptsFrndReq(quick_message);
+			}
+			if(settings_added_time){
+				setSettingsAddedTimeValue(settings_added_time)
 			}
 		}
 
@@ -2558,7 +2580,7 @@ const MySetting = () => {
 											setSndMsgAcptsFrndReqToggle(!sndMsgAcptsFrndReqToggle);
 
 											if (!sndMsgAcptsFrndReqToggle) {
-												localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
+												setSettingsAddedTime(true)
 											}
 
 											TurnOffMsgPanelDependsOnToggle(
