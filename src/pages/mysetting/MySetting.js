@@ -873,20 +873,6 @@ const MySetting = () => {
 		// Send Message When Someone Accepts My Friend Requests.
 		// Turn On..
 		if (sndMsgAcptsFrndReqToggle) {
-			if(settingsAddedTime){
-				console.log(" 877 UTC Time Now :: ", getCurrentUTCTime())
-				payload.send_message_when_someone_accept_new_friend_request_settings = {
-					message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
-					quick_message: quickMsgAcptsFrndReq,
-					old_message_group_id:
-						sndMsgAcptsFrndReqGroupSelect?._id !==
-							localStorage.getItem("old_message_group_id")
-							? localStorage.getItem("old_message_group_id")
-							: null || "",
-					settings_added_time: getCurrentUTCTime()
-				};
-				setSettingsAddedTime(false)
-			}
 			if (usingSelectOptions) {
 				// console.log("OLD MESSAGE GROUP ID -- ", localStorage.getItem("old_message_group_id"));
 				payload.send_message_when_someone_accept_new_friend_request_settings = {
@@ -926,6 +912,21 @@ const MySetting = () => {
 				// 	localStorage.setItem("currentUTC_someone_accept_new_frnd_req", getCurrentUTCTime());
 				// }
 			}
+
+			if(settingsAddedTime){
+				console.log(" UTC Time Now :: ", getCurrentUTCTime())
+				payload.send_message_when_someone_accept_new_friend_request_settings = {
+					message_group_id: sndMsgAcptsFrndReqGroupSelect?._id,
+					quick_message: quickMsgAcptsFrndReq,
+					old_message_group_id:
+						sndMsgAcptsFrndReqGroupSelect?._id !==
+							localStorage.getItem("old_message_group_id")
+							? localStorage.getItem("old_message_group_id")
+							: null || "",
+					settings_added_time: getCurrentUTCTime()
+				};
+				setSettingsAddedTime(false)
+			}
 		} else {
 			// Turn Off..
 			if (usingSelectOptions) {
@@ -937,7 +938,7 @@ const MySetting = () => {
 							localStorage.getItem("old_message_group_id")
 							? localStorage.getItem("old_message_group_id")
 							: null || "",
-					settings_added_time: settingsAddedTimeValue
+					settings_added_time: null
 				};
 				setUsingSelectOptions(false);
 			}
@@ -948,7 +949,7 @@ const MySetting = () => {
 					quick_message: quickMsgAcptsFrndReq,
 					old_message_group_id:
 						localStorage.getItem("old_message_group_id") || "",
-					settings_added_time: settingsAddedTimeValue
+					settings_added_time: null
 				};
 			}
 		}
