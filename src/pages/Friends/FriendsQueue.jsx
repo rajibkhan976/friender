@@ -91,7 +91,7 @@ const FriendsQueue = () => {
 	// console.log(fr_queue_settings);
 	// console.log(friendRequestQueueSettings);
 
-	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(0);
+	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(localStorage.getItem('fr_req_sent_from_que') ?? 0);
 	const [keywordList, setKeyWordList] = useState(0);
 	const [sendableRecordsCount, setSendableRecordsCount] = useState(0);
 
@@ -486,7 +486,10 @@ const FriendsQueue = () => {
 								name='pets'
 								id='pet-select'
 								value={frndReqSentPeriod}
-								onChange={(e) => setFrndReqSentPeriod(e.target.value)}
+								onChange={(e) => {
+									setFrndReqSentPeriod(e.target.value);
+									localStorage.setItem('fr_req_sent_from_que', e.target.value);
+								}}
 							>
 								<option value='0'>Today</option>
 								<option value='1'>This week</option>
