@@ -1578,7 +1578,7 @@ function PageHeader({ headerText = "" }) {
 	const reFetchFrQueDataRef = useRef(null);
 
 	const reFetchDataOnRunFriendQueueSuccess = (event) => {
-		console.log("reFetchDataOnRunFriendQueueSuccess", event);
+		// console.log("reFetchDataOnRunFriendQueueSuccess", event);
 		// if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
 			setIsFrQueActionsEnabled(false);
@@ -1598,7 +1598,7 @@ function PageHeader({ headerText = "" }) {
 		window.addEventListener(
 			"message",
 			(event) => {
-				console.log("addEventListener", event);
+				// console.log("addEventListener", event);
 				reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
 			},
 			false
