@@ -300,7 +300,6 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 	const [white, setWhite] = useState(params.data.whitelist_status);
 	const [black, setBlack] = useState(params.data.blacklist_status);
 	const dispatch = useDispatch();
-	// console.log(params.data);
 
 	return (
 		<span className='name-image-renderer'>
@@ -1050,7 +1049,6 @@ export const RefriendCountRenderer = memo((params) => {
 });
 
 export const SourceRendererPending = memo((params) => {
-    // console.log(params);
     if (
         params?.data?.finalSource?.toLowerCase() === "groups" ||
         params?.data?.finalSource?.toLowerCase() === "group" ||
@@ -1155,6 +1153,23 @@ export const SourceRendererPending = memo((params) => {
                     </Link>
                 )
             }
+			else {
+				return (
+					<div className='friend-sync-source d-flex f-align-center'>
+						<>
+							<figure className='friend-source text-center'>
+								{/* <SyncSourceIcon /> */}
+								<SyncIcon />
+							</figure>
+							<span
+								className="friendSource"
+							>
+								Sync
+							</span>
+						</>
+					</div>
+				);
+			}
         }
 
         // if (params?.data?.groupUrl && groupName) {
@@ -1266,4 +1281,53 @@ export const SourceRendererPending = memo((params) => {
             </div>
         );
     }
+
+	if (
+		(!params?.data?.finalSource &&
+		!params?.data?.sourceName &&
+		!params?.data?.sourceUrl) || 
+		params?.data?.finalSource === "friendsQueue" ||
+		(
+			params?.data?.finalSource === "groups" &&
+			!params?.data?.sourceName &&
+			params?.data?.sourceUrl
+		)
+	) {
+		return (
+			<div className='friend-sync-source d-flex f-align-center'>
+				<>
+					<figure className='friend-source text-center'>
+						{/* <SyncSourceIcon /> */}
+						<SyncIcon />
+					</figure>
+					<span
+						className="friendSource"
+					>
+						Sync
+					</span>
+				</>
+			</div>
+		);
+	}
+
+	if (
+		!params?.data?.finalSource &&
+		params?.data?.sourceName
+	) {
+		return (
+			<div className='friend-sync-source d-flex f-align-center'>
+				<>
+					<figure className='friend-source text-center'>
+						{/* <SyncSourceIcon /> */}
+						<SyncIcon />
+					</figure>
+					<span
+						className="friendSource"
+					>
+						{params?.data?.sourceName}
+					</span>
+				</>
+			</div>
+		);
+	}
 });
