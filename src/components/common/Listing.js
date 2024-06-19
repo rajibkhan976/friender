@@ -574,7 +574,10 @@ const Listing = (props) => {
 			// let selectedRows = gridRef.current.api.getSelectedRows();
 			//  console.log("selecttionchangeee eventntnntntntntntn", e);
 			const selectedNodes = gridRef.current.api.getSelectedNodes();
-			// console.log("selectedNodes", selectedNodes);
+			const api = gridRef.current.api;
+			const filteredNodes = api.getModel().rowsToDisplay;
+			const selectedFilteredRows = filteredNodes.filter(node => node.isSelected()).map(node => node.data);
+            //console.log('Selected Filtered Rows:', selectedFilteredRows);
 			let selectedUsers = [];
 
 			selectedNodes.forEach((node) => {
@@ -612,8 +615,10 @@ const Listing = (props) => {
 			}
 
 			// friendFbId
+			//console.log("selectedUsers++++", selectedUsers);
+
 			setSelectedFriends(
-				selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
+				selectedFilteredRows.length > 0 ? selectedFilteredRows:selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
 			);
 			if (selectedUsers?.length) {
 				localStorage.setItem(

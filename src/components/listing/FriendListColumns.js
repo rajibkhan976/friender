@@ -847,7 +847,7 @@ export const FriendsQueueRecordsKeywordRenderer = memo((params) => {
 										params.setKeyWordList(
 											params.data.matchedKeyword
 												.split(",")
-												.slice(1, params.data.matchedKeyword.split(",").length)
+												.slice(0, params.data.matchedKeyword.split(",").length)
 										);
 										params.setModalOpen(true);
 									}}
