@@ -1254,26 +1254,27 @@ function PageHeader({ headerText = "" }) {
 			dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 				.unwrap()
 				.then((res) => {
-					console.log(res);
 					dispatch(getAllFriendsQueueRecordsInChunk())
 						.unwrap()
-						.then((response) =>
+						.then((response) =>{
+							dispatch(removeSelectedFriends());
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 							.unwrap()
 							.then((result) => 
 								setIsFrQueActionsEnabled(true)
-							)
+							)}
 						);
 				})
 				.catch((error) => {
 					dispatch(getAllFriendsQueueRecordsInChunk())
 						.unwrap()
-						.then((response) =>
+						.then((response) =>{
+							dispatch(removeSelectedFriends());
 							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 							.unwrap()
 							.then((result) => 
 								setIsFrQueActionsEnabled(true)
-							)
+							)}
 						);
 				});
 		}
@@ -1550,12 +1551,13 @@ function PageHeader({ headerText = "" }) {
 			setIsFrQueActionsEnabled(false);
 			dispatch(getNewFriendsQueueRecordsInChunk())
 				.unwrap()
-				.then((resp) =>
+				.then((resp) =>{
+					dispatch(removeSelectedFriends());
 					dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
 					.unwrap()
 					.then((response) =>
 						setIsFrQueActionsEnabled(true)
-					)
+					)}
 				);
 		}
 	};
@@ -1771,6 +1773,7 @@ function PageHeader({ headerText = "" }) {
 				dispatch(getAllFriendsQueueRecordsInChunk())
 					.unwrap()
 					.then((response) => {
+						dispatch(removeSelectedFriends());
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
 							? JSON.parse(localStorage.getItem("fr_queue_settings"))
 							: null;
