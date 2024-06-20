@@ -8,40 +8,14 @@ import { ToastContainer } from "react-toastify";
 import { fetchUserProfile } from "../services/authentication/facebookData";
 import { ReactComponent as FriendQueueErrorIcon } from "../assets/images/FriendQueueErrorIcon.svg";
 import PlanModal from "./common/PlanModal";
-// import socket  from "../configuration/socket-connection";
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
+
+
 const Sidebar = lazy(() => import("./common/Sidebar"));
 const PageHeader = lazy(() => import("./common/PageHeader"));
 const Footer = lazy(() => import("./common/Footer"));
 
-// if (!socket.connected || !socket.auth || !socket.auth.token){
-//   console.log("socket connection from page index")
-//   const socket = io(SOCKET_URL, {
-//     transports: ["websocket"], // use WebSocket first, if available
-//     auth: {token: localStorage.getItem("fr_token")}
-//   });
-//   socket.on('connect', function () {
-//     socket.emit('join', {token: localStorage.getItem("fr_token")});
-//   });
-// }
-// socket.on("disconnect", (reason) => {
-//   console.log("disconnect due to " + reason);
-//   socket.connect();
-// });
 
-// socket.on("connect_error", (e) => {
-//   console.log("There Is a connection Error", e);
-//   socket.io.opts.transports = ["websocket", "polling"];
-//   socket.connect();
-// });
-
-// socket.on("facebookLoggedOut", (logoutUpdate)=>{
-//   console.log("updates :::  ", logoutUpdate);
-//   localStorage.removeItem("fr_update")
-//   localStorage.removeItem("fr_isSyncing")
-//   localStorage.removeItem("friendLength")
-// });
 
 const MainComponent = () => {
 	const [showFriendsQueueErr, setShowFriendsQueueErr] = useState(false);

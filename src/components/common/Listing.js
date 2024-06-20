@@ -463,10 +463,12 @@ const Listing = (props) => {
 
 	const filterChanged = useCallback(
 		(e) => {
+			//on any fliter application deseleting all
+			onChangeCheck(false)
 			let filteredCount = 0;
 			gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
 			props.getFilterNum(filteredCount);
-			console.log('filteredCount >>>>>', filteredCount);
+			
 
 			if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
 				setMaxSelect(filteredCount);

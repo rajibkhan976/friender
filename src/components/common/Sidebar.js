@@ -18,27 +18,14 @@ import {
   setProfileSpaces,
   setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
-import { io } from "socket.io-client";
 import { store } from "../../app/store";
 import "../../assets/scss/component/common/_sidebar.scss"
 
 
-// import socket  from "../../configuration/socket-connection";
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
-// if (!socket.connected || !socket.auth || !socket.auth.token){
-//   const socket = io(SOCKET_URL, {
-//     transports: ["websocket", "polling"], // use WebSocket first, if available
-//     auth: {token: localStorage.getItem("fr_token")}
-//   });
-// }
-let socket = io(SOCKET_URL, {
-  transports: ["websocket", "polling"], // use WebSocket first, if available
-  auth: { token: localStorage.getItem("fr_token") },
-});
 
-// console.log("socket connection from sidebar");
+
 
 const Sidebar = (props) => {
   const { clickedRef, isComponentVisible, setIsComponentVisible } =
@@ -67,19 +54,7 @@ const Sidebar = (props) => {
     (state) => state.profilespace.defaultProfileId
   );
 
-  useEffect(() => {
-    socket.on("connect", function () {
-      socket.emit("join", { token: localStorage.getItem("fr_token") });
-    });
-    socket.on("disconnect", (reason) => {
-      // console.log("disconnect due to " + reason);
-      socket.connect();
-    });
-    socket.on("connect_error", (e) => {
-      //console.log("There Is a connection Error", e);
-      socket.io.opts.transports = ["websocket", "polling"];
-    });
-  }, []);
+
 
   useEffect(() => {
     // alert("a")
@@ -89,33 +64,8 @@ const Sidebar = (props) => {
 
   const dispatch = useDispatch();
 
-  // socket.on("sendUpdate", (resp) => {
-  //   // console.log("Sync Uodate", resp)
-  //   console.log(".")
 
-  //   if (resp.update) {
-  //     localStorage.setItem("fr_update", resp?.update);
-  //   }
 
-  //   if (resp?.friendlist) {
-  //     console.log("Friend lis receive from ext sync", resp.friendlist)
-
-  //     // Fetch friend list after 1 min
-  //     setTimeout( () => {
-  //       dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
-  //       .unwrap()
-  //       .then((response) => {
-  //         // Nothing do for the time being
-  //       });
-  //     }, 1000*30)
-  //   }
-  // });
-  socket.on("facebookLoggedOut", (logoutUpdate) => {
-    // console.log("updates :::  ", logoutUpdate);
-    localStorage.removeItem("fr_update");
-    localStorage.removeItem("fr_isSyncing");
-    localStorage.removeItem("friendLength");
-  });
   useEffect(()=>{
     // alert("b")
     // setAuthenticated(false)

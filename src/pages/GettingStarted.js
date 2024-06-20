@@ -19,7 +19,6 @@ import {
 import {
   fetchFriendList
 } from "../services/friends/FriendListServices";
-import { io } from "socket.io-client";
 import { useOutletContext } from "react-router-dom";
 import ToolTipPro from "../components/common/ToolTipPro";
 const extInstallationChkDelay = 1000 * 5; // 5 secs

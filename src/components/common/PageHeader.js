@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
-import { io } from "socket.io-client";
-// import socket  from "../../configuration/socket-connection";
+
+
 import helper from "../../helpers/helper";
 import {
 	FacebookSyncIcon,
@@ -188,26 +188,8 @@ const accessibilityOptions = [
 	// },
 ];
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL;
 
-// If the socket connection failed then reconnect
-const socket = io(SOCKET_URL, {
-	transports: ["websocket", "polling"], // use WebSocket first, if available
-	auth: { token: localStorage.getItem("fr_token") },
-});
 
-socket.on("connect", function () {
-	socket.emit("join", { token: localStorage.getItem("fr_token") });
-});
-
-socket.on("disconnect", (reason) => {
-	// console.log("disconnect due to " + reason);
-});
-
-socket.on("connect_error", (e) => {
-	//console.log("There Is a connection Error in header", e);
-	socket.io.opts.transports = ["websocket", "polling"];
-});
 
 const baseStyle = {
 	flex: 1,
@@ -352,23 +334,7 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [update]);
 
-	socket.on("facebookLoggedOut", (logoutUpdate) => {
-		//console.log("updates :::  ", logoutUpdate);
-		setUpdate(syncBtnDefaultState);
-		setInlineLoader(false);
-		setIsSyncing("");
-		dispatch(getFriendList({ fbUserId: localStorage.getItem("fr_default_fb") }))
-			.unwrap()
-			.then((response) => {
-				if (response?.data?.length > 0) {
-					setTooltip(response?.data[0]?.friend_details[0]?.updated_at);
-					localStorage.setItem(
-						"fr_tooltip",
-						response?.data[0]?.friend_details[0]?.updated_at
-					);
-				}
-			});
-	});
+
 	/**
 	 * function to search array for not white-listed friend
 	 * @param {Array} list
