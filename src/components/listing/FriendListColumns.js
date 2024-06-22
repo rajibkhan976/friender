@@ -23,6 +23,11 @@ import {
 	FriendsFriendIcon,
 	PostIcon,
 	SyncIcon,
+	SyncArrowIcon,
+	SuggestedArrowIcon,
+	PostArrowIcon,
+	GroupArrowIcon,
+	FriendsFriendArrowIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -1073,13 +1078,17 @@ export const SourceRendererPending = memo((params) => {
                                 {
                                     (params?.data?.finalSource?.toLowerCase() === "groups" ||
                                     params?.data?.finalSource?.toLowerCase() === "group") ?
-                                        <SourceGroupIcon /> :
+                                        // <SourceGroupIcon /> 
+										<GroupArrowIcon /> :
                                     params?.data?.finalSource?.toLowerCase() === "suggestions" ?
-                                        <SuggestFriendIcon /> :
+                                        // <SuggestFriendIcon /> 
+										<SuggestedArrowIcon />:
                                     params?.data?.finalSource?.toLowerCase() === "friends" ?
-                                        <FriendsFriendIcon /> :
+                                        // <FriendsFriendIcon /> 
+										<FriendsFriendArrowIcon />:
                                     params?.data?.finalSource?.toLowerCase() === "post" ?
-                                        <PostIcon /> : ''
+                                        // <PostIcon /> 
+										<PostArrowIcon /> : ''
                                 }
                             </figure>
                             <span>
@@ -1137,7 +1146,8 @@ export const SourceRendererPending = memo((params) => {
                         {params?.data?.groupName ? (
                             <>
                                 <figure className='friend-source text-center'>
-                                    <SourceGroupIcon />
+                                    {/* <SourceGroupIcon /> */}
+									<GroupArrowIcon />
                                 </figure>
                                 <span>
                                     {
@@ -1159,7 +1169,8 @@ export const SourceRendererPending = memo((params) => {
 						<>
 							<figure className='friend-source text-center'>
 								{/* <SyncSourceIcon /> */}
-								<SyncIcon />
+								{/* <SyncIcon /> */}
+								<SyncArrowIcon />
 							</figure>
 							<span
 								className="friendSource"
@@ -1218,7 +1229,8 @@ export const SourceRendererPending = memo((params) => {
                 <>
                     <figure className='friend-source text-center'>
                         {/* <SyncSourceIcon /> */}
-                        <SyncIcon />
+                        {/* <SyncIcon /> */}
+						<SyncArrowIcon />
                     </figure>
                     <span
                         className="friendSource"
@@ -1298,7 +1310,8 @@ export const SourceRendererPending = memo((params) => {
 				<>
 					<figure className='friend-source text-center'>
 						{/* <SyncSourceIcon /> */}
-						<SyncIcon />
+						{/* <SyncIcon /> */}
+						<SyncArrowIcon />
 					</figure>
 					<span
 						className="friendSource"
@@ -1319,7 +1332,8 @@ export const SourceRendererPending = memo((params) => {
 				<>
 					<figure className='friend-source text-center'>
 						{/* <SyncSourceIcon /> */}
-						<SyncIcon />
+						{/* <SyncIcon /> */}
+						<SyncArrowIcon />
 					</figure>
 					<span
 						className="friendSource"

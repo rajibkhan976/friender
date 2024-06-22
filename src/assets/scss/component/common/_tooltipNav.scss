@@ -60,6 +60,13 @@
                   }
                 }
 
+                &:nth-child(2) {
+                  padding-block-end: 13px;
+                  margin-block-end: 12px;
+                  border-bottom: 1px solid;
+                  @include theme-aware('border-bottom-color', 'link-text-color');
+                }
+
                 &:last-child {
                   padding-bottom: 0;
                 }

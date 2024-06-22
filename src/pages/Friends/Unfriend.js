@@ -128,11 +128,14 @@ const FriendsList = () => {
 		// "groups", "group", "suggestions", "friends", "post", "sync", "incoming", "csv", task_name
 
 		const filterName = (dataSet) => {
-			const sourceNow = (dataSet?.finalSource?.toLowerCase() === "groups" ||
+			const sourceNow = (
+								// IF SOURCE IS GROUPS/GROUP/SUGGESTIONS/FRIENDS/POST
+								dataSet?.finalSource?.toLowerCase() === "groups" ||
 								dataSet?.finalSource?.toLowerCase() === "group" ||
 								dataSet?.finalSource?.toLowerCase() === "suggestions" ||
 								dataSet?.finalSource?.toLowerCase() === "friends" ||
 								dataSet?.finalSource?.toLowerCase() === "post") ?
+									// IF SOURCENAME IS PRESENT
 									dataSet?.sourceName ?
 										dataSet?.finalSource?.toLowerCase() === "post" ? 
 											'Post' :
@@ -143,19 +146,31 @@ const FriendsList = () => {
 										dataSet?.sourceName?.length > 12
 											? dataSet?.sourceName?.substring(0, 12) + "..."
 											: dataSet?.sourceName :
-									dataSet?.groupName :
+									// IF SOURCE IS NOT PRESENT BUT GROUPNAME AND URL ARE PRESENT (FOR OLDER VERSIONS)
+									(dataSet?.groupName && dataSet?.groupUrl) ? 
+										dataSet?.groupName :
+										'Sync':
+								// IF FINALSOURCE IS SYNC
 								dataSet?.finalSource?.toLowerCase() === "sync" ?
 									"Sync" :
+								// IF FINALSOURCE IS INCOMING
 								dataSet?.finalSource?.toLowerCase() === "incoming" ?
 									"Incoming request" :
+								// IF FINALSOURCE IS CSV
 								dataSet?.finalSource?.toLowerCase() === "csv" ?
 									dataSet?.sourceName ? 
 										dataSet?.sourceName :
 										dataSet?.csvName ? 
 											dataSet?.csvName : 
 											"CSV Upload" :
-								dataSet?.task_name
-			console.log('sourceNow >>>>>', sourceNow);
+								// IF TASKNAME (OLD)
+								dataSet?.task_name ?
+									dataSet?.task_name :
+										(!dataSet?.finalSource &&
+										dataSet?.sourceName) ? 
+											dataSet?.sourceName :
+											'Sync'
+									
 			return sourceNow;
 		}
 								

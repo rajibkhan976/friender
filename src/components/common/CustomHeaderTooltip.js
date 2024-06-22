@@ -9,7 +9,8 @@ import { InfoIcon,
   FriendsFriendIcon,
   SuggestFriendIcon,
   IncomingRequest,
-  PostIcon
+  PostIcon,
+  CSVAArrowIcon
 } from "../../assets/icons/Icons";
 import { ReactComponent as SourceCsvIcon } from "../../assets/images/SourceCsvIcon.svg";
 import "../../assets/scss/component/common/_tooltipNav.scss";
@@ -57,7 +58,8 @@ const CustomHeaderTooltip = (props) => {
 								</li>
 								<li>
 									<span>
-										<SourceCsvIcon />
+										{/* <SourceCsvIcon /> */}
+										<CSVAArrowIcon />
 									</span>
 									CSV Upload
 								</li>
