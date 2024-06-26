@@ -25,6 +25,7 @@ import Switch from "../../components/formComponents/Switch";
 import Alertbox from "../../components/common/Toast";
 import { showModal } from "../../actions/PlanAction";
 import ToolTipPro from "components/common/ToolTipPro";
+import extensionMethods from "../../configuration/extensionAccesories";
 
 const FriendsQueue = () => {
 	const dispatch = useDispatch();
@@ -94,6 +95,17 @@ const FriendsQueue = () => {
 	const [frndReqSentPeriod, setFrndReqSentPeriod] = useState(localStorage.getItem('fr_req_sent_from_que') ?? 0);
 	const [keywordList, setKeyWordList] = useState(0);
 	const [sendableRecordsCount, setSendableRecordsCount] = useState(0);
+
+	useEffect(() => {
+		sendMessageToExt();
+	},[])
+	const sendMessageToExt = async (data) => {
+		const extRes = await extensionMethods.sendMessageToExt({
+			action: "fRqueAlarmStatusCheck",
+			frLoginToken: localStorage.getItem("fr_token")
+		});
+		console.log("extRes in FRQUE LIST", extRes);
+	}
 
 	//
 	useEffect(() => {

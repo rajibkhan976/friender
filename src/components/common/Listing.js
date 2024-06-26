@@ -622,12 +622,7 @@ const Listing = (props) => {
 			setSelectedFriends(
 				selectedFilteredRows.length > 0 ? selectedFilteredRows:selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
 			);
-			if (selectedUsers?.length) {
-				localStorage.setItem(
-					"fr-selected-friends",
-					JSON.stringify(selectedUsers)
-				);
-			}
+		
 		},
 		[currentWhiteList, currentBlackList]
 	);
