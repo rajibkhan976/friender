@@ -66,17 +66,52 @@ const Sidebar = (props) => {
 
 
 
+  const authCheck = () => {
+    const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+    const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
+    const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ? 
+								JSON.parse(localStorage.getItem("fr_facebook_auth")) :
+								JSON.parse(props?.fbAuthInfo);
+
+	// console.log('here >>>>>', resetpassword_status === 1,onboarding_status === 1, facebookAuthInfo);
+
+
+	if (
+		resetpassword_status === 1 && 
+		onboarding_status === 1 && 
+		facebookAuthInfo?.accessToken!=undefined && 
+		facebookAuthInfo?.accessToken
+	){
+		// console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+		// console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
+		setAuthenticated(true);
+	}else{
+		setAuthenticated(false)
+	}
+	if (menu_refresh_status === 1) {
+		setSidebarOpenFriends(true);
+	} else {
+		setSidebarOpenFriends(false);
+	}
+  }
+
   useEffect(()=>{
     // alert("b")
     // setAuthenticated(false)
     const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
     const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
     const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
-    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ? 
+								JSON.parse(localStorage.getItem("fr_facebook_auth")) :
+								JSON.parse(props?.fbAuthInfo);
 
-
-
-  if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
+  if (
+		resetpassword_status === 1 && 
+		onboarding_status === 1 && 
+		facebookAuthInfo?.accessToken!=undefined && 
+		facebookAuthInfo?.accessToken
+	){
     // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
     // console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
     setAuthenticated(true);
@@ -264,6 +299,8 @@ const Sidebar = (props) => {
       localStorage.setItem("fr_sidebarToogle", true);
       setSidebarToogle(true);
     }
+
+	authCheck()
     // console.log("setSubMenuFriendsFn", checkIfNotFriends());
     // setSubMenuFriends(checkIfNotFriends());
   }, [location])

@@ -28,6 +28,7 @@ const MainComponent = () => {
 	const [isSynced, setIsSynced] = useState(false);
 	//const [isHeader, setIsHeader] = useState(false);
 	const planModal = useSelector((state) => state.plan.showModal);
+	const [fbAuthInfo, setFBAuthInfo] = useState(null)
 
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
@@ -65,6 +66,8 @@ const MainComponent = () => {
 						"fr_facebook_auth",
 						JSON.stringify(fbAuthValidation)
 					);
+
+					setFBAuthInfo(JSON.stringify(fbAuthValidation))
 				}
 
 				// console.log("****** user profile",userProfile,user_onbording_status,fbAuthValidation)
@@ -73,6 +76,7 @@ const MainComponent = () => {
 					localStorage.removeItem("fr_facebook_auth");
 					navigate("/facebook-auth");
 
+					setFBAuthInfo(null)
 					// facebook auth : true && reset password  : false = go to reset password
 				} else if (
 					fbAuthValidation != undefined &&
@@ -83,6 +87,9 @@ const MainComponent = () => {
 						"fr_facebook_auth",
 						JSON.stringify(fbAuthValidation)
 					);
+
+					setFBAuthInfo(JSON.stringify(fbAuthValidation))
+
 					navigate("/reset-password");
 					// facebook auth : true && user onboarding : false =  go back to facebook auth
 				} else if (
@@ -91,6 +98,7 @@ const MainComponent = () => {
 				) {
 					console.log("3");
 					localStorage.removeItem("fr_facebook_auth");
+					setFBAuthInfo(null)
 					navigate("/facebook-auth");
 				} else {
 					// facebook auth : true && reset password : true && onboarding : true = getting started
@@ -179,7 +187,10 @@ const MainComponent = () => {
 			<div className='main-wrapper'>
 				<div className='body-content-wraper'>
 					<Suspense fallback={""}>
-						<Sidebar isSynced={isSynced} />
+						<Sidebar 
+							isSynced={isSynced} 
+							fbAuthInfo={fbAuthInfo}
+						/>
 					</Suspense>
 					<div className='main-content rightside-content d-flex'>
 						{showHeader() && (
