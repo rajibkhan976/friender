@@ -1,3 +1,4 @@
+
 import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -33,6 +34,8 @@ const MainComponent = () => {
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
 	);
+
+	const friendsQueueErrorRecordsCount = useSelector((state) => state.friendsQueue.friendsQueueErrorRecordsCount);
 
 	const showHeader = () => {
 		if (
@@ -142,36 +145,38 @@ const MainComponent = () => {
 	useEffect(() => {
 		if (friendsQueueRecords) {
 			// console.log(friendsQueueRecords);
-			let count = 0;
-			friendsQueueRecords.forEach((item) => {
-				if (item && item?.status === 0) {
-					count++;
-				}
-			});
-			friendsQueueErrorCount.current = count;
-			if (count > 0) {
+			// let count = 0;
+			// friendsQueueRecords.forEach((item) => {
+			// 	if (item && item?.status === 0 && item?.is_active === true) {
+			// 		count++;
+			// 	}
+			// });
+			friendsQueueErrorCount.current = friendsQueueErrorRecordsCount;
+			if (friendsQueueErrorRecordsCount > 0) {
 				setShowFriendsQueueErr(true);
 			}
+
+			if (friendsQueueErrorRecordsCount === 0) {
+				setShowFriendsQueueErr(false);
+			}
 		}
-	}, [friendsQueueRecords]);
+	}, [friendsQueueRecords, friendsQueueErrorRecordsCount]);
 
 	return (
 		<main
 			className={
 				darkMode
-					? `main theme-default ${
-							location.pathname == "/extension-success" ? "success-page" : ""
-					  }`
-					: `main theme-light ${
-							location.pathname == "/extension-success" ? "success-page" : ""
-					  }`
+					? `main theme-default ${location.pathname == "/extension-success" ? "success-page" : ""
+					}`
+					: `main theme-light ${location.pathname == "/extension-success" ? "success-page" : ""
+					}`
 			}
 		>
 			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") && (
 				<div className='friend-queue-error-report'>
 					<div className='friend-queue-error-txt'>
 						<FriendQueueErrorIcon className='friend-queue-error-icon' />
-						{`Sending friend requests to ${friendsQueueErrorCount.current} individual(s) was unsuccessful either due to an
+						{`Sending friend requests to ${friendsQueueErrorRecordsCount} individual(s) was unsuccessful either due to an
 					unknown error from Facebook or they already exists in the friend/pending list.`}
 					</div>
 					<button
@@ -187,8 +192,8 @@ const MainComponent = () => {
 			<div className='main-wrapper'>
 				<div className='body-content-wraper'>
 					<Suspense fallback={""}>
-						<Sidebar 
-							isSynced={isSynced} 
+						<Sidebar
+							isSynced={isSynced}
 							fbAuthInfo={fbAuthInfo}
 						/>
 					</Suspense>

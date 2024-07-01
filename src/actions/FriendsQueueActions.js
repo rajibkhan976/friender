@@ -1,3 +1,4 @@
+
 import {
 	fetchFriendsRequestSentInsight,
 	fetchFriendsQueueSettings,
@@ -19,6 +20,7 @@ const initialState = {
 	friendsQueueRecordsLimit: 0,
 	friendsQueueRecordsFirstChunkLength: 0,
 	friendsQueueRecordsCount: 0,
+	friendsQueueErrorRecordsCount: 0,
 	isCsvSubmittedForReview: false,
 	isChunkedDataFetchedFromApi: false,
 	isDataFetchingFromApi: false,
@@ -390,6 +392,9 @@ export const friendsQueueSlice = createSlice({
 		resetUploadedFriendsQueueRecordResponse: (state, action) => {
 			state.uploadedFriendsQueueRecordResponse = action.payload;
 		},
+		setFriendsQueueErrorRecordsCount: (state, action) => {
+			state.friendsQueueErrorRecordsCount = action.payload;
+		}
 	},
 	extraReducers: {
 		[getFriendsQueueRecords.pending]: (state) => {
@@ -401,6 +406,10 @@ export const friendsQueueSlice = createSlice({
 			state.friendsQueueRecordsFirstChunkLength = data.length;
 			state.friendsQueueRecordsLimit = limit_used;
 			state.friendsQueueRecordsCount = totalNumberOfRecords;
+
+			if (data.length > 0) {
+				state.friendsQueueErrorRecordsCount = data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length;
+			}
 		},
 		[getFriendsQueueRecords.rejected]: (state) => {
 			state.isDataFetchingFromApi = false;
@@ -430,6 +439,10 @@ export const friendsQueueSlice = createSlice({
 			const { friendsQueueData } = action?.payload ?? {};
 			state.isFriendsQueueListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
+
+			if (friendsQueueData.length > 0) {
+				state.friendsQueueErrorRecordsCount = friendsQueueData.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length;
+			}
 		},
 		[getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
 			state.isFriendsQueueListLoading = false;
@@ -442,6 +455,10 @@ export const friendsQueueSlice = createSlice({
 			state.isListLoading = false;
 			state.friendsQueueRecords = friendsQueueData;
 			state.friendsQueueRecordsCount = recordCount;
+
+			if (friendsQueueData?.length > 0) {
+				state.friendsQueueErrorRecordsCount = friendsQueueData.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length;
+			}
 		},
 		[removeFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
 			state.isListLoading = false;
