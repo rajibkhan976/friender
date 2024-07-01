@@ -3,6 +3,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
+	fetchAllCampaignsFromIndexDB,
 	fetchCampaignById,
 	updateCampaignsArray,
 	syncCampaignStatus,
@@ -121,7 +122,10 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaigns());
+			dispatch(fetchAllCampaignsFromIndexDB())
+			.unwrap()
+			.then((resp) => dispatch(fetchAllCampaigns()))
+			.catch((error) => dispatch(fetchAllCampaigns()));
 			// .unwrap()
 			// .then((res) => {
 			// 	// console.log('res', res);

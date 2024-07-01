@@ -9,6 +9,7 @@ import {
 	fetchCampaignUsers,
 	deleteCampaignContactsService
 } from "../services/campaigns/CampaignServices";
+import { clientDB } from "../app/db";
 
 const initialState = {
 	isLoading: false,
@@ -116,11 +117,40 @@ const initialState = {
 	// ],
 };
 
+const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
+// console.log(fbUserId);
+
+export const saveCampaignDataInIndexDb = async (
+	fbUserId, campaignData
+) => {
+	try {
+		await clientDB.campaignLists.put({
+			fbId: fbUserId,
+			campaignData: campaignData,
+		});
+	} catch (error) {
+		throw new Error(error);
+	}
+};
+
+export const fetchAllCampaignsFromIndexDB = createAsyncThunk(
+	"campaigns/fetchAllCampaignsFromIndexDB",
+	async () => {
+		const response = fbUserId ? await clientDB.campaignLists
+			.where("fbId")
+			.equals(fbUserId)
+			.first() : [];
+
+		return response;
+	}
+);
+
 export const fetchAllCampaigns = createAsyncThunk(
-	"campaigns/getAllCampaigns",
+	"campaigns/fetchAllCampaigns",
 	async () => {
 		const res = await fetchAllCampaign();
 		// console.log(res);
+		Array.isArray(res) && fbUserId && saveCampaignDataInIndexDb(fbUserId, res);
 		return res;
 	}
 );
@@ -234,16 +264,29 @@ export const campaignSlice = createSlice({
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
-			state.isLoading = true;
+			// state.isLoading = true;
 		},
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
-			state.isLoading = false;
+			// state.isLoading = false;
+			// console.log(action);
 			state.campaignsArray = action?.payload;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
-			state.isLoading = false;
+			// state.isLoading = false;
 		},
 
+		[fetchAllCampaignsFromIndexDB.pending]: (state) => {
+			// state.isLoading = true;
+		},
+		[fetchAllCampaignsFromIndexDB.fulfilled]: (state, action) => {
+			// state.isLoading = false;
+			// console.log(action);
+			state.campaignsArray = action?.payload?.campaignData;
+		},
+		[fetchAllCampaignsFromIndexDB.rejected]: (state) => {
+			// state.isLoading = false;
+		},
+		
 		[fetchCampaignById.pending]: (state) => {
 			state.isLoading = false;
 		},
@@ -281,13 +324,19 @@ export const campaignSlice = createSlice({
 			});
 
 			if (newAdd) {
-				state.campaignsArray = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...state.campaignsArray];
+				const addedCampaignList = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...placeholderArray];
+				saveCampaignDataInIndexDb(fbUserId, addedCampaignList);
+				state.campaignsArray = [...addedCampaignList];
 			} else {
-				state.campaignsArray = action?.payload?.data
-					? placeholderArray.map(
-						(el) => el.campaign_id === actionResponse?.campaign_id
-					)
-					: placeholderArray;
+				const updatedCampaignList = action?.payload?.data
+				? placeholderArray.map(
+					(el) => el.campaign_id === actionResponse?.campaign_id
+				)
+				: placeholderArray;
+
+				saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
+
+				state.campaignsArray = updatedCampaignList;
 			}
 
 			state.isLoading = false;
@@ -307,7 +356,7 @@ export const campaignSlice = createSlice({
 			// const findThePickedCampaign = placeholderArray.find((arr) => arr._id === action?.payload?.data?._id || arr.campaign_id === action?.payload?.data?._id);
 			// console.log("FIND THE PICKED CAMPAIGN -- ", findThePickedCampaign);
 
-			state.campaignsArray = placeholderArray.map((campaign) => {
+			const updatedCampaignList = placeholderArray.map((campaign) => {
 				if (
 					campaign?.campaign_id === action?.payload?.data?._id ||
 					campaign?._id === action?.payload?.data?._id
@@ -318,7 +367,10 @@ export const campaignSlice = createSlice({
 					};
 				}
 				return campaign;
-			});
+			})
+
+			saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
+			state.campaignsArray = updatedCampaignList;
 			state.isLoading = false;
 		},
 		[updateCampaign.rejected]: (state) => {
@@ -345,7 +397,8 @@ export const campaignSlice = createSlice({
 			let idsArr1 = action?.payload?.campaignIds.map(obj => obj.campaignId);
 			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj.campaign_id));
 
-			state.campaignsArray = filteredArr2
+			saveCampaignDataInIndexDb(fbUserId, filteredArr2);
+			state.campaignsArray = filteredArr2;
 			state.isLoading = false;
 		},
 		[deleteCampaign.rejected]: (state) => {

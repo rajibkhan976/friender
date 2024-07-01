@@ -167,7 +167,7 @@ const MainComponent = () => {
 					  }`
 			}
 		>
-			{showFriendsQueueErr && (
+			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") && (
 				<div className='friend-queue-error-report'>
 					<div className='friend-queue-error-txt'>
 						<FriendQueueErrorIcon className='friend-queue-error-icon' />
