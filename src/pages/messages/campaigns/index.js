@@ -314,6 +314,8 @@ const Campaigns = () => {
 		return campaignsResult && campaignsResult;
 	};
 
+	console.log("isEditingCampaign", isEditingCampaign);
+
 	// FILTER CAMPAIGNS (TODAY, ALL)..
 	// const filterCampaignsBySpan = () => {
 	// 	let campaignsResult = [...campaignsCreated];

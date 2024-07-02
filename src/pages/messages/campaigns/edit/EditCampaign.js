@@ -22,6 +22,7 @@ import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCrea
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
 import {
 	fetchUsers,
+	fetchCampaignUsersFromIndexDB,
 	deleteCampaignContacts,
 	updateCampaignSchedule
 } from "../../../../actions/CampaignsActions";
@@ -232,6 +233,50 @@ const EditCampaign = (props) => {
 
 	console.log("isEditingCampaign", isEditingCampaign);
 
+	// useEffect(() => {
+	// 	if (isEditingCampaign && isEditingCampaign?.friends) {
+	// 		dispatch(countCurrentListsize(isEditingCampaign?.friends.length));
+	// 	}
+	// }, [isEditingCampaign]);
+
+	useEffect(() => {
+		setView(editViews?.find((el) => el.checked).label);
+	}, [editViews]);
+
+	// VIEW CHANGING FOR BETWEEN SCREEN EDIT AND PEOPLES VIEW..
+	useEffect(() => {
+		if (isEditingCampaign) {
+			// console.log('GOT TO EDIT ::::', isEditingCampaign);
+			setLoading(false);
+			if (
+				localStorage?.getItem("fr_editCampaign_view") &&
+				localStorage?.getItem("fr_editCampaign_view") !== "undefined"
+			) {
+				setView(JSON.parse(localStorage.getItem("fr_editCampaign_view"))?.mode);
+			} else {
+				setView("view");
+				localStorage.setItem(
+					"fr_editCampaign_view",
+					JSON.stringify({ mode: "view" })
+				);
+			}
+			dispatch(
+				updateCampaignSchedule(campaignSchedule.filter((item) => item.isSaved))
+			);
+		}
+
+		return () => {
+			setIsEditingCampaign(null);
+			dispatch(updateCampaignSchedule([]));
+		};
+	}, []);
+
+	useEffect(() => {
+		if (params?.campaignId) {
+			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
+		}
+	}, []);
+
 	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
 	const renderComponentsView = () => {
 		if (view && isEditingCampaign?.friends) {
@@ -336,12 +381,12 @@ const EditCampaign = (props) => {
 		status = "all"
 	) => {
 		try {
-			await dispatch(fetchUsers({ fbUserId, campaignId, status }));
-			// .unwrap()
-			// .then((res) => {
-			// 	console.log("USERS COUNT", res);
-			// 	dispatch(countCurrentListsize(res?.data?.length));
-			// });
+			await dispatch(fetchUsers({ fbUserId, campaignId, status }))
+			.unwrap()
+			.then((res) => {
+				console.log("USERS COUNT", res);
+				dispatch(countCurrentListsize(res?.data?.length));
+			});
 		} catch (error) {
 			// console.log(
 			// 	`GETTING ERROR WHILE FETCHING CAMPAIGN USERS - `,
@@ -349,50 +394,6 @@ const EditCampaign = (props) => {
 			// );
 		}
 	};
-
-	useEffect(() => {
-		if (isEditingCampaign && isEditingCampaign?.friends) {
-			dispatch(countCurrentListsize(isEditingCampaign?.friends.length));
-		}
-	}, [isEditingCampaign]);
-
-	useEffect(() => {
-		setView(editViews?.find((el) => el.checked).label);
-	}, [editViews]);
-
-	// VIEW CHANGING FOR BETWEEN SCREEN EDIT AND PEOPLES VIEW..
-	useEffect(() => {
-		if (isEditingCampaign) {
-			// console.log('GOT TO EDIT ::::', isEditingCampaign);
-			setLoading(false);
-			if (
-				localStorage?.getItem("fr_editCampaign_view") &&
-				localStorage?.getItem("fr_editCampaign_view") !== "undefined"
-			) {
-				setView(JSON.parse(localStorage.getItem("fr_editCampaign_view"))?.mode);
-			} else {
-				setView("view");
-				localStorage.setItem(
-					"fr_editCampaign_view",
-					JSON.stringify({ mode: "view" })
-				);
-			}
-			dispatch(
-				updateCampaignSchedule(campaignSchedule.filter((item) => item.isSaved))
-			);
-		}
-
-		return () => {
-			setIsEditingCampaign(null);
-			dispatch(updateCampaignSchedule([]));
-		};
-	}, []);
-
-	useEffect(() => {
-		if (params?.campaignId) {
-			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
-		}
-	}, []);
 
 	return (
 		<>

@@ -21,6 +21,7 @@ const initialState = {
 	campaignsArray: [],
 	campaignStatusChanges: {},
 	campaignsDetails: {},
+	campaignUsers: [],
 	campaignFilter: null,
 	campaignDuration: null
 	// campaignsArray: [
@@ -124,6 +125,7 @@ export const saveCampaignDataInIndexDb = async (
 	fbUserId, campaignData
 ) => {
 	try {
+		console.log("saveCampaignDataInIndexDb", campaignData);
 		await clientDB.campaignLists.put({
 			fbId: fbUserId,
 			campaignData: campaignData,
@@ -136,11 +138,11 @@ export const saveCampaignDataInIndexDb = async (
 export const fetchAllCampaignsFromIndexDB = createAsyncThunk(
 	"campaigns/fetchAllCampaignsFromIndexDB",
 	async () => {
-		const response = fbUserId ? await clientDB.campaignLists
+		const response = await clientDB.campaignLists
 			.where("fbId")
 			.equals(fbUserId)
-			.first() : [];
-
+			.first();
+		console.log("fetchAllCampaignsFromIndexDB", response);
 		return response;
 	}
 );
@@ -326,7 +328,7 @@ export const campaignSlice = createSlice({
 			if (newAdd) {
 				const addedCampaignList = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...placeholderArray];
 				saveCampaignDataInIndexDb(fbUserId, addedCampaignList);
-				state.campaignsArray = [...addedCampaignList];
+				// state.campaignsArray = [...addedCampaignList];
 			} else {
 				const updatedCampaignList = action?.payload?.data
 				? placeholderArray.map(
@@ -336,7 +338,7 @@ export const campaignSlice = createSlice({
 
 				saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
 
-				state.campaignsArray = updatedCampaignList;
+				// state.campaignsArray = updatedCampaignList;
 			}
 
 			state.isLoading = false;
@@ -370,7 +372,7 @@ export const campaignSlice = createSlice({
 			})
 
 			saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
-			state.campaignsArray = updatedCampaignList;
+			// state.campaignsArray = updatedCampaignList;
 			state.isLoading = false;
 		},
 		[updateCampaign.rejected]: (state) => {
@@ -398,7 +400,7 @@ export const campaignSlice = createSlice({
 			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj.campaign_id));
 
 			saveCampaignDataInIndexDb(fbUserId, filteredArr2);
-			state.campaignsArray = filteredArr2;
+			// state.campaignsArray = filteredArr2;
 			state.isLoading = false;
 		},
 		[deleteCampaign.rejected]: (state) => {
@@ -415,6 +417,18 @@ export const campaignSlice = createSlice({
 				campaignStatusObj[action.payload.campaignId] = action.payload.campaignStatus;
 			}
 			state.campaignStatusChanges = campaignStatusObj;
+
+			const campaignArr = JSON.stringify(current(state.campaignsArray));
+			const statusObj = campaignStatusObj;
+
+			const updatedCampaignList = campaignArr && JSON.parse(campaignArr) && statusObj ? JSON.parse(campaignArr).map((item) => {
+				if (item.campaign_id in statusObj) {
+					item.status = statusObj[item.campaign_id];
+				}
+				return item;
+			}) : [];
+
+			Array.isArray(updatedCampaignList) && updatedCampaignList?.length && saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;
@@ -449,6 +463,7 @@ export const campaignSlice = createSlice({
 		},
 	},
 });
+
 export const {
 	updateCampaignContext,
 	updateCampaignsArray,
@@ -459,4 +474,5 @@ export const {
 	updateCampaignFilter,
 	updateCampaignDuration
 } = campaignSlice.actions;
+
 export default campaignSlice.reducer;

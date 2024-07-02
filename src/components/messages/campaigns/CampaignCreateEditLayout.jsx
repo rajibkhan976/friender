@@ -10,6 +10,7 @@ import moment from "moment";
 import { useParams, useNavigate } from 'react-router-dom';
 import {
 	createCampaign,
+	fetchAllCampaignsFromIndexDB,
 	updateCampaign,
 	updateCampaignSchedule,
 	updateCampaignDetails,
@@ -292,10 +293,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 			let response;
 
 			if (type === "CREATE") {
-				response = await dispatch(createCampaign(payload)).unwrap();
+				response = await dispatch(createCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 			}
 			if (type === "EDIT") {
-				response = await dispatch(updateCampaign(payload)).unwrap();
+				response = await dispatch(updateCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 				console.log("response ::: ", response);
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules",

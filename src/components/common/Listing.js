@@ -29,7 +29,7 @@ import "../../assets/scss/component/common/_listing.scss";
 import DropSelector from "../formComponents/DropSelector";
 import Alertbox from "./Toast";
 import DeleteImgIcon from "../../assets/images/deleteModal.png"
-import { deleteCampaign } from "../../actions/CampaignsActions";
+import { fetchAllCampaignsFromIndexDB, deleteCampaign } from "../../actions/CampaignsActions";
 import Modal from "./Modal";
 import { useOutletContext, useParams } from "react-router-dom";
 // import e from "cors";
@@ -529,6 +529,7 @@ const Listing = (props) => {
 				.unwrap()
 				.then((res) => {
 					console.log('res', res);
+					dispatch(fetchAllCampaignsFromIndexDB());
 					Alertbox(
 						`Campaign(s) has been deleted successfully.`,
 						"success",

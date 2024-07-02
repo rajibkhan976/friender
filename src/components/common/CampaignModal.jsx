@@ -11,6 +11,7 @@ import {
 	createCampaign,
 	deleteCampaign,
 	fetchCampaignById,
+	fetchAllCampaignsFromIndexDB,
 	updateCampaign,
 	updateCampaignSchedule,
 	updateCampaignStatus,
@@ -311,9 +312,9 @@ const CalenderModal = ({
 			let response;
 
 			if (!isEditingModal) {
-				response = await dispatch(createCampaign(payload)).unwrap();
+				response = await dispatch(createCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 			} else {
-				response = await dispatch(updateCampaign(payload)).unwrap();
+				response = await dispatch(updateCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 				// console.log("response ::: ", response)
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules",
@@ -749,7 +750,7 @@ const CalenderModal = ({
 		try {
 			const response = await dispatch(
 				deleteCampaign([{ campaignId: id }])
-			).unwrap();
+			).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 
 			if (response?.data) {
 				setCampaignDeleteModalOpen(false);
@@ -794,7 +795,7 @@ const CalenderModal = ({
 		try {
 			await dispatch(
 				updateCampaignStatus({ campaignId, campaignStatus })
-			).unwrap();
+			).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 
 			extensionAccesories.sendMessageToExt({
 				action: "update_schedules",
@@ -898,7 +899,7 @@ const CalenderModal = ({
 				try {
 					await dispatch(
 						updateCampaignStatus({ campaignId, campaignStatus: false })
-					).unwrap();
+					).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
 				} catch (error) {
 					console.log("CAMPAIGN STATUS UPDATE ERROR - ", error);
 				}

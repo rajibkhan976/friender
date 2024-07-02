@@ -9,5 +9,7 @@ clientDB.version(4).stores({
 	friendsLists: "fbId,friendsData", // Primary key and indexed props
 	friendsQueueRecords: "fbId,friendsQueueData,recordCount",
 	profileSettings: "fbId,profileSettingData",
-	campaignLists: "++id, fbId, campaignData",
+	campaignLists: "fbId, campaignData",
 });
+
+// clientDB.delete();
