@@ -59,6 +59,26 @@ const FriendsQueue = () => {
 			label: "15 min",
 			selected: false,
 		},
+		{
+			value: 30,
+			label: "30 min",
+			selected: false,
+		},
+		{
+			value: Number(1 * 60),
+			label: "1 hr",
+			selected: false,
+		},
+		{
+			value: Number(2 * 60),
+			label: "2 hrs",
+			selected: false,
+		},
+		{
+			value: Number(4 * 60),
+			label: "4 hrs",
+			selected: false,
+		}
 	];
 	const timeoutToSaveFriendsQueueSettings = useRef(null);
 
@@ -320,6 +340,33 @@ const FriendsQueue = () => {
 					request_limit_value: parsedValue ? parsedValue : 50,
 				};
 			});
+			clearTimeout(timeoutToSaveFriendsQueueSettings);
+		}
+	};
+
+	// HANDLE TIME DELAY SELECT OPTIONS..
+	const handleTimeDelaySlotSelects = (e) => {
+		if (friendRequestQueueSettings) {
+			const payload = { ...friendRequestQueueSettings };
+
+			Object.assign(payload, {
+				time_delay: Number(e.target.value),
+			});
+
+			timeoutToSaveFriendsQueueSettings.current = setTimeout(
+				() => dispatch(saveFriendsQueueSettings(payload)),
+				1000
+			);
+
+			setFriendRequestQueueSettings(
+				(friendRequestQueueSettings) => {
+					return {
+						...friendRequestQueueSettings,
+						time_delay: Number(e.target.value),
+					};
+				}
+			);
+
 			clearTimeout(timeoutToSaveFriendsQueueSettings);
 		}
 	};
@@ -616,27 +663,7 @@ const FriendsQueue = () => {
 								extraClass='friend-req-time-delay-bar tinyWrap'
 								height='40px'
 								width='inherit'
-								handleChange={(e) => {
-									if (friendRequestQueueSettings) {
-										const payload = { ...friendRequestQueueSettings };
-										Object.assign(payload, {
-											time_delay: Number(e.target.value),
-										});
-										timeoutToSaveFriendsQueueSettings.current = setTimeout(
-											() => dispatch(saveFriendsQueueSettings(payload)),
-											1000
-										);
-										setFriendRequestQueueSettings(
-											(friendRequestQueueSettings) => {
-												return {
-													...friendRequestQueueSettings,
-													time_delay: Number(e.target.value),
-												};
-											}
-										);
-										clearTimeout(timeoutToSaveFriendsQueueSettings);
-									}
-								}}
+								handleChange={handleTimeDelaySlotSelects}
 							/>
 						</div>
 					</div>

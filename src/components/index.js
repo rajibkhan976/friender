@@ -1,7 +1,7 @@
 
 import { lazy, Suspense, useContext, useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { LoaderContext } from "../context/PageLoaderContext";
 import { ModeContext } from "../context/ThemeContext";
 import PageLoader from "../components/common/loaders/PageLoader";
@@ -9,7 +9,12 @@ import { ToastContainer } from "react-toastify";
 import { fetchUserProfile } from "../services/authentication/facebookData";
 import { ReactComponent as FriendQueueErrorIcon } from "../assets/images/FriendQueueErrorIcon.svg";
 import PlanModal from "./common/PlanModal";
-
+import { kyubiUserCheck } from '../services/authentication/AuthServices';
+import {
+	setProfileSpaces,
+	setDefaultProfileId,
+} from '../actions/ProfilespaceActions';
+import { userLogout } from '../actions/AuthAction';
 
 
 const Sidebar = lazy(() => import("./common/Sidebar"));
@@ -19,11 +24,12 @@ const Footer = lazy(() => import("./common/Footer"));
 
 
 const MainComponent = () => {
+	const dispatch = useDispatch();
 	const [showFriendsQueueErr, setShowFriendsQueueErr] = useState(false);
 	const friendsQueueErrorCount = useRef(0);
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { darkMode } = useContext(ModeContext);
+	const { darkMode, toggleDarkMode } = useContext(ModeContext);
 	const { pageLoaderMode, switchLoaderOn, switchLoaderOff } =
 		useContext(LoaderContext);
 	const [isSynced, setIsSynced] = useState(false);
@@ -49,6 +55,27 @@ const MainComponent = () => {
 			return true;
 		}
 	};
+
+	// Calling Kyubi Server to Check User's Status..
+	useEffect(() => {
+		const myExtensionId = process.env.REACT_APP_KYUBI_EXTENSION_ID;
+		const currentEmail = localStorage.getItem('fr_default_email');
+
+		(async () => {
+			if (myExtensionId && currentEmail) {
+				const kyubiUserCheckAPiResponse = await kyubiUserCheck(myExtensionId, currentEmail);
+
+				if (kyubiUserCheckAPiResponse?.status === false) {
+					dispatch(setDefaultProfileId(""));
+					dispatch(setProfileSpaces([]));
+					dispatch(userLogout());
+					if (!darkMode) {
+						toggleDarkMode();
+					}
+				}
+			}
+		})();
+	}, [navigate, dispatch, toggleDarkMode, darkMode]);
 
 	useEffect(() => {
 		switchLoaderOn();

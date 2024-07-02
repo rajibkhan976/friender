@@ -7,6 +7,25 @@ let headers = {
   "Content-Type": "application/json",
 };
 
+export const kyubiUserCheck = (extId, email) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        config.kyubiServerCheckUserUrl,
+        {
+          "extId": extId,
+          "email": email,
+        },
+        { headers: headers }
+      ).then((result) => {
+        resolve(result.data)
+      }).catch((error) => {
+        console.log('ERROR IN COMMUNICATION TO KYUBI SERVER::::', error);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
+
 export const checkUserEmail = (email) => {
   console.log('email >>>', email);
   return new Promise((resolve, reject) => {
@@ -16,7 +35,7 @@ export const checkUserEmail = (email) => {
         {
           "email": email
         },
-        {headers:headers}
+        { headers: headers }
       ).then((result) => {
         resolve(result.data)
       }).catch((error) => {
@@ -56,7 +75,7 @@ export const userLogin = (email, password) => {
         { email: email, password: password },
         { headers: headers }
       )
-      .then(async(result) => {
+      .then(async (result) => {
         console.log('>>>>>>>>>>', result?.data?.plan);
         // console.log('GOT RESULT IN SERVICE::::', result);
         localStorage.setItem("fr_token", result.data.token);
@@ -73,12 +92,12 @@ export const userLogin = (email, password) => {
           requestLimitValue: 0
         })
         console.log("frq msg resp", res);
-        if(isExtensionInstalled){
+        if (isExtensionInstalled) {
           // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
           extensionAccesories.sendMessageToExt({
             action: "frienderLogin",
             frLoginToken: result.data.token,
-            userPlan:result?.data?.plan?result.data.plan:"0"
+            userPlan: result?.data?.plan ? result.data.plan : "0"
           });
         }
         localStorage.setItem(
