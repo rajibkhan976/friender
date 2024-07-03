@@ -52,60 +52,64 @@ const CampaignsCalendar = () => {
 	buildOnWeekdaysArr();
 
 	useEffect(() => {
-		let campaignsArrayPlaceholder = campaignsArray;
-		const week = [
-			"Sunday",
-			"Monday",
-			"Tuesday",
-			"Wednesday",
-			"Thursday",
-			"Friday",
-			"Saturday",
-		];
+		let campaignsArrayPlaceholder = [];
+		if (campaignsArray && Array.isArray(campaignsArray)) {
+			
+			campaignsArrayPlaceholder = [...campaignsArray];
+			const week = [
+				"Sunday",
+				"Monday",
+				"Tuesday",
+				"Wednesday",
+				"Thursday",
+				"Friday",
+				"Saturday",
+			];
 
-		switch (campaignsFilter) {
-			case "active":
-				campaignsArrayPlaceholder = [
-					...campaignsArrayPlaceholder?.filter((el) => el?.status),
-				];
-				break;
+			switch (campaignsFilter) {
+				case "active":
+					campaignsArrayPlaceholder = [
+						...campaignsArrayPlaceholder?.filter((el) => el?.status),
+					];
+					break;
 
-			case "inactive":
-				campaignsArrayPlaceholder = [
-					...campaignsArrayPlaceholder?.filter((el) => !el?.status),
-				];
-				break;
+				case "inactive":
+					campaignsArrayPlaceholder = [
+						...campaignsArrayPlaceholder?.filter((el) => !el?.status),
+					];
+					break;
 
-			default:
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
-				break;
+				default:
+					campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
+					break;
+			}
+
+			switch (campaignDuration) {
+				case "today":
+					campaignsArrayPlaceholder = [
+						...campaignsArrayPlaceholder?.map(
+							(el) =>
+								el?.schedule?.filter(
+									(ex) => ex?.day === week[new Date().getDay()]
+								)?.length && {
+									...el,
+									schedule: [
+										...el?.schedule?.filter(
+											(ex) => ex?.day === week[new Date().getDay()]
+										),
+									],
+								}
+						),
+					];
+					break;
+
+				default:
+					campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
+					break;
+			}
+			// console.log(campaignsArrayPlaceholder);
+			dispatch(countCurrentListsize(campaignsArrayPlaceholder?.length));
 		}
-
-		switch (campaignDuration) {
-			case "today":
-				campaignsArrayPlaceholder = [
-					...campaignsArrayPlaceholder?.map(
-						(el) =>
-							el?.schedule?.filter(
-								(ex) => ex?.day === week[new Date().getDay()]
-							)?.length && {
-								...el,
-								schedule: [
-									...el?.schedule?.filter(
-										(ex) => ex?.day === week[new Date().getDay()]
-									),
-								],
-							}
-					),
-				];
-				break;
-
-			default:
-				campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
-				break;
-		}
-		// console.log(campaignsArrayPlaceholder);
-		dispatch(countCurrentListsize(campaignsArrayPlaceholder?.length));
 
 		if (
 			Array.isArray(campaignsArrayPlaceholder) &&

@@ -247,12 +247,12 @@ export const campaignSlice = createSlice({
 			const statusObj = state.campaignStatusChanges;
 			if (Object.keys(statusObj).length > 0) {
 				const campaignArr = state.campaignsArray;
-				state.campaignsArray = campaignArr.map((item) => {
+				state.campaignsArray = Array.isArray(campaignArr) && campaignArr?.length ? campaignArr.map((item) => {
 					if (item.campaign_id in statusObj) {
 						item.status = statusObj[item.campaign_id];
 					}
 					return item;
-				})
+				}) : [];
 			}
 			state.campaignStatusChanges = {};
 
