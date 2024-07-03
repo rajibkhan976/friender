@@ -389,6 +389,7 @@ const Campaigns = () => {
 	}, [location.pathname, radioOption]);
 
 	useEffect(() => {
+		dispatch(fetchAllCampaigns());
 		dispatch(fetchAllCampaignsFromIndexDB())
 		.unwrap()
 		.then((resp) => dispatch(fetchAllCampaigns()))
