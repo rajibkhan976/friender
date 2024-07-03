@@ -337,7 +337,8 @@ const CalenderModal = ({
 						}
 					}
 				}
-				Alertbox(`${response?.message}`, "success", 1000, "bottom-right");
+				console.log("response?.message", response?.message);
+				Alertbox(response?.message ? `${response?.message}` : "Campaign saved", "success", 1000, "bottom-right");
 				setLoadingBtn(false);
 				// navigate("/messages/campaigns");
 				navigate("/campaigns");

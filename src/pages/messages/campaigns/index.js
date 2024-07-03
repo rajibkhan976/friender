@@ -122,6 +122,10 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
+			dispatch(fetchAllCampaignsFromIndexDB())
+			.unwrap()
+			.then((resp) => dispatch(fetchAllCampaigns()))
+			.catch((error) => dispatch(fetchAllCampaigns()));
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
 				params?.campaignId
@@ -381,14 +385,15 @@ const Campaigns = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		dispatch(fetchAllCampaignsFromIndexDB())
-		.unwrap()
-		.then((resp) => dispatch(fetchAllCampaigns()))
-		.catch((error) => dispatch(fetchAllCampaigns()));
 		fetchAll();
 	}, [location.pathname, radioOption]);
 
 	useEffect(() => {
+		dispatch(fetchAllCampaignsFromIndexDB())
+		.unwrap()
+		.then((resp) => dispatch(fetchAllCampaigns()))
+		.catch((error) => dispatch(fetchAllCampaigns()));
+		
 		return () => {
 			dispatch(updateCampaignDuration(null));
 			dispatch(updateCampaignFilter(null));
