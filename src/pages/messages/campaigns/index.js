@@ -122,15 +122,6 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaignsFromIndexDB())
-			.unwrap()
-			.then((resp) => dispatch(fetchAllCampaigns()))
-			.catch((error) => dispatch(fetchAllCampaigns()));
-			// .unwrap()
-			// .then((res) => {
-			// 	// console.log('res', res);
-			// 	dispatch(countCurrentListsize(res?.length ? res?.length : 0))
-			// });
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
 				params?.campaignId
@@ -338,7 +329,7 @@ const Campaigns = () => {
 	useEffect(() => {
 		// console.log("isEditingCampaign", isEditingCampaign);
 
-		if (isEditingCampaign) {
+		if (isEditingCampaign && campaignsCreated && Array.isArray(campaignsCreated)) {
 			// console.log("isEditingCampaign", isEditingCampaign);
 			// console.log('isEditingCampaign CHANGED', isEditingCampaign);
 			let campaignsCreatedPlaceholder = [...campaignsCreated];
@@ -390,6 +381,10 @@ const Campaigns = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
+		dispatch(fetchAllCampaignsFromIndexDB())
+		.unwrap()
+		.then((resp) => dispatch(fetchAllCampaigns()))
+		.catch((error) => dispatch(fetchAllCampaigns()));
 		fetchAll();
 	}, [location.pathname, radioOption]);
 
