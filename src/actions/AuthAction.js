@@ -171,7 +171,7 @@ export const authSlice=createSlice({
         state.isLoggedIn = true;
       },
       [logUserIn.rejected]: (state,action) => {
-        //console.log("rejected",action.payload);
+        console.log("Login error here - ",action.payload);
         state.isLoggedIn = false;
         state.message=action.payload;
       },

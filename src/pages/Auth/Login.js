@@ -18,12 +18,33 @@ const LoginPage = () => {
   const [passwordValidation, setPasswordValidation] = useState(false);
   const [passwordEntered, setPasswordEntered] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
   const passwordEnter = (enter) => {
     setPasswordEntered(enter);
   };
   const passwordErrors = (error) => {
     setPasswordValidation(error);
+  };
+
+  /**
+   * FOR CUSTOM ERROR MESSAGE HANDLE FUNCTION..
+   * @param {*} error 
+   * @returns 
+   */
+  const customErrorMessage = (error) => {
+    const errorMessages = [
+      { pattern: /Rejected/, message: "Incorrect login credentials!" },
+      { pattern: /User is suspended\/deleted!/, message: "This account has been suspended." },
+      { pattern: /Incorrect login Credentials!/, message: "Incorrect login Credentials!" },
+    ];
+
+    for (const { pattern, message } of errorMessages) {
+      if (pattern.test(error)) {
+        return message;
+      }
+    }
+
+    return "An error occurred.";
   };
 
   const handelerSubmit = (e) => {
@@ -33,17 +54,18 @@ const LoginPage = () => {
     dispatch(logUserIn({ email: emailEntered, password: passwordEntered }))
       .unwrap()
       .then((res) => {
-        // console.log('res >>>', res);
+        console.log('USER LOGIN RESULT (RESPONSE) - ', res);
         localStorage.setItem("fr_default_email", emailEntered);
         localStorage.setItem("submenu_status", 0);
         localStorage.removeItem('registrationPayload');
+        // console.log('USER LOGIN RESULT (RES) - ', res);
         setEmailAlreadyExists(res.payload.message);
       })
       .catch((error) => {
         if (error.message === "Rejected") {
           setEmailAlreadyExists("Incorrect login Credentials!");
         } else {
-          setEmailAlreadyExists(JSON.stringify(error.message));
+          setEmailAlreadyExists(error?.message ? JSON.stringify(error.message) : customErrorMessage(error));
         }
       })
       .finally(() => {
@@ -52,7 +74,7 @@ const LoginPage = () => {
   };
   useEffect(() => {
     let isSignupUser = localStorage.getItem("fr_signup")
-    console.log("isSignupUser",isSignupUser)
+    console.log("isSignupUser", isSignupUser)
 
   }, [emailAlreadyExists]);
 

@@ -66,71 +66,147 @@ export const userRegister = (regPayload) => {
   });
 };
 
-export const userLogin = (email, password) => {
-  // console.log('TRYING LOGGING IN WITH IN SERVICE', email,password);
-  return new Promise((resolve, reject) => {
-    axios
-      .post(
-        config.loginsUrl,
-        { email: email, password: password },
-        { headers: headers }
-      )
-      .then(async (result) => {
-        console.log('>>>>>>>>>>', result?.data?.plan);
-        // console.log('GOT RESULT IN SERVICE::::', result);
-        localStorage.setItem("fr_token", result.data.token);
-        const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
-          action: "extensionInstallation",
-          frLoginToken: result.data.token,
-          frDebugMode: result.data.debug_mode,
-        });
+// export const userLoginOld = (email, password) => {
+//   console.log('TRYING LOGGING IN WITH IN SERVICE', email, password);
+//   return new Promise((resolve, reject) => {
+//     axios
+//       .post(
+//         config.loginsUrl,
+//         { email: email, password: password },
+//         { headers: headers }
+//       )
+//       .then(async (result) => {
+//         console.log('USER LOGIN RESULT (resolve) - ', result?.request?.status);
+//         // console.log('GOT RESULT IN SERVICE::::', result);
+//         if (result.request?.status === 200) {
+//           localStorage.setItem("fr_token", result.data.token);
+//           const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
+//             action: "extensionInstallation",
+//             frLoginToken: result.data.token,
+//             frDebugMode: result.data.debug_mode,
+//           });
 
-        console.log("log innnnnn")
-        const res = await fRQueueExtMsgSendHandler({
-          frQueueRunning: false,
-          requestLimited: false,
-          requestLimitValue: 0
-        })
-        console.log("frq msg resp", res);
-        if (isExtensionInstalled) {
-          // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
-          extensionAccesories.sendMessageToExt({
-            action: "frienderLogin",
-            frLoginToken: result.data.token,
-            userPlan: result?.data?.plan ? result.data.plan : "0"
+//           console.log('Login error here - ', result);
+
+//           console.log("log innnnnn")
+//           const res = await fRQueueExtMsgSendHandler({
+//             frQueueRunning: false,
+//             requestLimited: false,
+//             requestLimitValue: 0
+//           })
+//           console.log("frq msg resp", res);
+//           if (isExtensionInstalled) {
+//             // console.log('GOT RESULT IN SERVICE:::: EXTENSION IS INSTALLED');
+//             extensionAccesories.sendMessageToExt({
+//               action: "frienderLogin",
+//               frLoginToken: result.data.token,
+//               userPlan: result?.data?.plan ? result.data.plan : "0"
+//             });
+//           }
+//           localStorage.setItem(
+//             "fr_pass_changed",
+//             result.data.password_reset_status
+//           );
+//           localStorage.setItem(
+//             "fr_onboarding",
+//             result.data.user_onbording_status
+//           );
+//           localStorage.setItem(
+//             "fr_debug_mode",
+//             result.data.debug_mode
+//           );
+//           localStorage.setItem(
+//             "fr_plan",
+//             result?.data?.plan
+//           );
+//           localStorage.setItem(
+//             "fr_plan_name",
+//             result?.data?.plan_name
+//           );
+//           // call the function to store device info
+//           storeDeviceInformations();
+//           // console.log('loginuser responded IN SERVICE ', result);
+//           console.log('USER LOGIN RESULT (resolve) - ', result);
+//           resolve(result.data);
+//         } else {
+//           console.log('USER LOGIN RESULT (reject) - ', result);
+//           reject(result);
+//         }
+//       })
+//       .catch((error) => {
+//         // console.log(
+//         //   "ERROR LOGIN:::",
+//         //   error?.response?.data ? error.response.data : error.message
+//         // );
+//         console.log('USER LOGIN RESULT (error) - ', error);
+//         reject(error?.response?.data ? error.response.data : error.message);
+//       });
+//   });
+// };
+
+/**
+ * USER LOGIN WITH PROPER ERROR MESSAGE HANDLE
+ * @param {*} email 
+ * @param {*} password 
+ * @returns 
+ */
+export const userLogin = (email, password) => {
+  return new Promise((resolve, reject) => {
+    fetch(config.loginsUrl, {
+      method: 'POST',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+      .then(async (response) => {
+        const result = await response.json();
+        // console.log('USER LOGIN RESULT - ', result);
+
+        if (response.ok) {
+          // Handle successful response
+          // console.log('Login successful:', result);
+          localStorage.setItem("fr_token", result.token);
+
+          // Check if extension is installed
+          const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
+            action: "extensionInstallation",
+            frLoginToken: result.token,
+            frDebugMode: result.debug_mode,
           });
+
+          // Send message to extension if installed
+          if (isExtensionInstalled) {
+            extensionAccesories.sendMessageToExt({
+              action: "frienderLogin",
+              frLoginToken: result.token,
+              userPlan: result.plan || "0"
+            });
+          }
+
+          // Store additional information in localStorage
+          localStorage.setItem("fr_pass_changed", result.password_reset_status);
+          localStorage.setItem("fr_onboarding", result.user_onbording_status);
+          localStorage.setItem("fr_debug_mode", result.debug_mode);
+          localStorage.setItem("fr_plan", result.plan);
+          localStorage.setItem("fr_plan_name", result.plan_name);
+
+          // Call function to store device info
+          storeDeviceInformations();
+
+          // console.log('USER LOGIN RESULT (resolve) - ', result);
+
+          // Resolve with successful data
+          resolve(result);
+        } else {
+          // console.log('USER LOGIN RESULT (reject) - ', result);
+          reject(result);
         }
-        localStorage.setItem(
-          "fr_pass_changed",
-          result.data.password_reset_status
-        );
-        localStorage.setItem(
-          "fr_onboarding",
-          result.data.user_onbording_status
-        );
-        localStorage.setItem(
-          "fr_debug_mode",
-          result.data.debug_mode
-        );
-        localStorage.setItem(
-          "fr_plan",
-          result?.data?.plan
-        );
-        localStorage.setItem(
-          "fr_plan_name",
-          result?.data?.plan_name
-        );
-        // call the function to store device info
-        storeDeviceInformations();
-        // console.log('loginuser responded IN SERVICE ', result);
-        resolve(result.data);
       })
       .catch((error) => {
-        // console.log(
-        //   "ERROR LOGIN:::",
-        //   error?.response?.data ? error.response.data : error.message
-        // );
-        reject(error?.response?.data ? error.response.data : error.message);
+        // console.error('Error during login:', error);
+        reject(error.message || 'Network error');
       });
   });
 };
