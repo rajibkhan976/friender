@@ -103,13 +103,16 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 		try {
 			const response = await dispatch(
 				deleteCampaign([{ campaignId: id }])
-			).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+			).unwrap();
 
 			if (response?.data) {
+				dispatch(fetchAllCampaignsFromIndexDB());
 				setCampaignDeleteModalOpen(false);
+
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules"
 				  });
+
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,
 					"success",

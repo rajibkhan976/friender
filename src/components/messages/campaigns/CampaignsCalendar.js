@@ -53,7 +53,7 @@ const CampaignsCalendar = () => {
 
 	useEffect(() => {
 		let campaignsArrayPlaceholder = [];
-		if (campaignsArray && Array.isArray(campaignsArray)) {
+		if (campaignsArray && Array.isArray(campaignsArray) && campaignsArray?.length) {
 			
 			campaignsArrayPlaceholder = [...campaignsArray];
 			const week = [

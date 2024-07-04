@@ -122,10 +122,10 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaignsFromIndexDB())
-			.unwrap()
+			dispatch(fetchAllCampaignsFromIndexDB()).unwrap()
 			.then((resp) => dispatch(fetchAllCampaigns()))
 			.catch((error) => dispatch(fetchAllCampaigns()));
+			
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
 				params?.campaignId
@@ -390,10 +390,10 @@ const Campaigns = () => {
 
 	useEffect(() => {
 		dispatch(fetchAllCampaigns());
-		dispatch(fetchAllCampaignsFromIndexDB())
-		.unwrap()
-		.then((resp) => dispatch(fetchAllCampaigns()))
-		.catch((error) => dispatch(fetchAllCampaigns()));
+
+		dispatch(fetchAllCampaignsFromIndexDB()).unwrap()
+		.then((resp) => dispatch(fetchAllCampaignsFromIndexDB()))
+		.catch((error) => dispatch(fetchAllCampaignsFromIndexDB()));
 		
 		return () => {
 			dispatch(updateCampaignDuration(null));

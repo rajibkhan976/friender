@@ -312,9 +312,9 @@ const CalenderModal = ({
 			let response;
 
 			if (!isEditingModal) {
-				response = await dispatch(createCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+				response = await dispatch(createCampaign(payload)).unwrap();
 			} else {
-				response = await dispatch(updateCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+				response = await dispatch(updateCampaign(payload)).unwrap();
 				// console.log("response ::: ", response)
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules",
@@ -322,6 +322,7 @@ const CalenderModal = ({
 			}
 
 			if (response?.data) {
+				dispatch(fetchAllCampaignsFromIndexDB());
 				setScheduleTime(() => {
 					return {
 						date: [new Date()],
@@ -329,7 +330,9 @@ const CalenderModal = ({
 						end: "",
 					};
 				});
+
 				const rbcEventArr = document.getElementsByClassName("rbc-event");
+
 				if (rbcEventArr && rbcEventArr.length > 0) {
 					for (let i = 0; i < rbcEventArr.length; i++) {
 						if (!rbcEventArr[i].classList?.value.includes("campaign-saved")) {
@@ -337,8 +340,9 @@ const CalenderModal = ({
 						}
 					}
 				}
-				console.log("response?.message", response?.message);
+
 				Alertbox(response?.message ? `${response?.message}` : "Campaign saved", "success", 1000, "bottom-right");
+
 				setLoadingBtn(false);
 				// navigate("/messages/campaigns");
 				navigate("/campaigns");
@@ -751,14 +755,16 @@ const CalenderModal = ({
 		try {
 			const response = await dispatch(
 				deleteCampaign([{ campaignId: id }])
-			).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+			).unwrap();
 
 			if (response?.data) {
+				dispatch(fetchAllCampaignsFromIndexDB());
 				setCampaignDeleteModalOpen(false);
 
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules",
 				});
+
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,
 					"success",

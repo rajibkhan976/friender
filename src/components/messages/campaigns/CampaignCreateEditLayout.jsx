@@ -293,10 +293,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 			let response;
 
 			if (type === "CREATE") {
-				response = await dispatch(createCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+				response = await dispatch(createCampaign(payload)).unwrap();
 			}
 			if (type === "EDIT") {
-				response = await dispatch(updateCampaign(payload)).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+				response = await dispatch(updateCampaign(payload)).unwrap();
 				console.log("response ::: ", response);
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules",
@@ -312,8 +312,10 @@ const CampaignCreateEditLayout = ({ children }) => {
 				);
 				setLoadingBtn(false);
 			} else {
-				console.log("response?.message", response?.message);
+				dispatch(fetchAllCampaignsFromIndexDB());
+
 				Alertbox(response?.message ? `${response?.message}` : "Campaign saved", "success", 1000, "bottom-right");
+
 				setLoadingBtn(false);
 				// navigate("/messages/campaigns");
 				if (!campaignId) {
