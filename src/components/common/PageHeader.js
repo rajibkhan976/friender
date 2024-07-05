@@ -3,7 +3,6 @@ import { Link, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
 
-
 import helper from "../../helpers/helper";
 import {
 	FacebookSyncIcon,

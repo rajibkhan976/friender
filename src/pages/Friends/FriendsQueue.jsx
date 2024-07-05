@@ -29,6 +29,8 @@ import extensionMethods from "../../configuration/extensionAccesories";
 
 const FriendsQueue = () => {
 	const dispatch = useDispatch();
+	const stopFRQS = useRef(null);
+
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
 	const [isReset, setIsReset] = useState(null);
@@ -118,7 +120,21 @@ const FriendsQueue = () => {
 
 	useEffect(() => {
 		sendMessageToExt();
-	},[])
+		window.addEventListener(
+			"message",
+			(event) => {
+				// console.log("addEventListener", event);
+				stopFRQS.current = setTimeout(() => turnoffFriendQueue(event), 3000);
+			},
+			false
+		);
+		return () => {
+			window.removeEventListener("message", (event) => {
+				turnoffFriendQueue(event);
+			});
+			clearTimeout(stopFRQS);
+		};
+	}, [])
 	const sendMessageToExt = async (data) => {
 		const extRes = await extensionMethods.sendMessageToExt({
 			action: "fRqueAlarmStatusCheck",
@@ -149,54 +165,54 @@ const FriendsQueue = () => {
 
 		const filterName = (dataSet) => {
 			const sourceNow = (
-								// IF SOURCE IS GROUPS/GROUP/SUGGESTIONS/FRIENDS/POST
-								dataSet?.finalSource?.toLowerCase() === "groups" ||
-								dataSet?.finalSource?.toLowerCase() === "group" ||
-								dataSet?.finalSource?.toLowerCase() === "suggestions" ||
-								dataSet?.finalSource?.toLowerCase() === "friends" ||
-								dataSet?.finalSource?.toLowerCase() === "post") ?
-									// IF SOURCENAME IS PRESENT
-									dataSet?.sourceName ?
-										dataSet?.finalSource?.toLowerCase() === "post" ? 
-											'Post' :
-										dataSet?.finalSource?.toLowerCase() === "suggestions" ?
-											'Suggested Friends' :
-										dataSet?.finalSource?.toLowerCase() === "friends" ?
-											'Friends of Friends' :
-										dataSet?.sourceName?.length > 12
-											? dataSet?.sourceName?.substring(0, 12) + "..."
-											: dataSet?.sourceName :
-									// IF SOURCE IS NOT PRESENT BUT GROUPNAME AND URL ARE PRESENT (FOR OLDER VERSIONS)
-									(dataSet?.groupName && dataSet?.groupUrl) ? 
-										dataSet?.groupName :
-										'Sync':
-								// IF FINALSOURCE IS SYNC
-								dataSet?.finalSource?.toLowerCase() === "sync" ?
-									"Sync" :
-								// IF FINALSOURCE IS INCOMING
-								dataSet?.finalSource?.toLowerCase() === "incoming" ?
-									"Incoming request" :
-								// IF FINALSOURCE IS CSV
-								dataSet?.finalSource?.toLowerCase() === "csv" ?
-									dataSet?.sourceName ? 
-										dataSet?.sourceName :
-										dataSet?.csvName ? 
-											dataSet?.csvName : 
-											"CSV Upload" :
-								// IF TASKNAME (OLD)
-								dataSet?.task_name ?
-									dataSet?.task_name :
-										(!dataSet?.finalSource &&
-										dataSet?.sourceName) ? 
-											dataSet?.sourceName :
-											'Sync'
-									
+				// IF SOURCE IS GROUPS/GROUP/SUGGESTIONS/FRIENDS/POST
+				dataSet?.finalSource?.toLowerCase() === "groups" ||
+				dataSet?.finalSource?.toLowerCase() === "group" ||
+				dataSet?.finalSource?.toLowerCase() === "suggestions" ||
+				dataSet?.finalSource?.toLowerCase() === "friends" ||
+				dataSet?.finalSource?.toLowerCase() === "post") ?
+				// IF SOURCENAME IS PRESENT
+				dataSet?.sourceName ?
+					dataSet?.finalSource?.toLowerCase() === "post" ?
+						'Post' :
+						dataSet?.finalSource?.toLowerCase() === "suggestions" ?
+							'Suggested Friends' :
+							dataSet?.finalSource?.toLowerCase() === "friends" ?
+								'Friends of Friends' :
+								dataSet?.sourceName?.length > 12
+									? dataSet?.sourceName?.substring(0, 12) + "..."
+									: dataSet?.sourceName :
+					// IF SOURCE IS NOT PRESENT BUT GROUPNAME AND URL ARE PRESENT (FOR OLDER VERSIONS)
+					(dataSet?.groupName && dataSet?.groupUrl) ?
+						dataSet?.groupName :
+						'Sync' :
+				// IF FINALSOURCE IS SYNC
+				dataSet?.finalSource?.toLowerCase() === "sync" ?
+					"Sync" :
+					// IF FINALSOURCE IS INCOMING
+					dataSet?.finalSource?.toLowerCase() === "incoming" ?
+						"Incoming request" :
+						// IF FINALSOURCE IS CSV
+						dataSet?.finalSource?.toLowerCase() === "csv" ?
+							dataSet?.sourceName ?
+								dataSet?.sourceName :
+								dataSet?.csvName ?
+									dataSet?.csvName :
+									"CSV Upload" :
+							// IF TASKNAME (OLD)
+							dataSet?.task_name ?
+								dataSet?.task_name :
+								(!dataSet?.finalSource &&
+									dataSet?.sourceName) ?
+									dataSet?.sourceName :
+									'Sync'
+
 			return sourceNow;
 		}
-								
 
-		let objA = filterName({...nodeA?.data})?.toLowerCase()
-		let objB = filterName({...nodeB?.data})?.toLowerCase()
+
+		let objA = filterName({ ...nodeA?.data })?.toLowerCase()
+		let objB = filterName({ ...nodeB?.data })?.toLowerCase()
 
 		if (objA == objB) return 0;
 		return (objA > objB) ? 1 : -1;
@@ -255,13 +271,13 @@ const FriendsQueue = () => {
 			filterValueGetter: (params) => {
 				return {
 					finalSource: params?.data?.finalSource,
-					sourceName: params?.data?.finalSource === 'post' || 
-								params?.data?.finalSource === 'sync' ? 
-								null : 
-								params?.data?.finalSource === "incoming" ?
-									'Incoming request' :
-								params?.data?.finalSource === 'friends' ?
-									'Friends of Friends' : 
+					sourceName: params?.data?.finalSource === 'post' ||
+						params?.data?.finalSource === 'sync' ?
+						null :
+						params?.data?.finalSource === "incoming" ?
+							'Incoming request' :
+							params?.data?.finalSource === 'friends' ?
+								'Friends of Friends' :
 								params?.data?.finalSource === 'suggestions' ?
 									'Suggested Friends' :
 									params?.data?.sourceName
@@ -277,18 +293,18 @@ const FriendsQueue = () => {
 						displayKey: "contains",
 						displayName: "Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName ? 
-										matchesFilter(cellValue?.sourceName, [filterValue]) : 
-										matchesFilter(cellValue?.finalSource, [filterValue])
+							return cellValue?.sourceName ?
+								matchesFilter(cellValue?.sourceName, [filterValue]) :
+								matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
 						displayKey: "notContains",
 						displayName: "Not Contains",
 						predicate: ([filterValue], cellValue) => {
-							return cellValue?.sourceName ? 
-										!matchesFilter(cellValue?.sourceName, [filterValue]) : 
-										!matchesFilter(cellValue?.finalSource, [filterValue])
+							return cellValue?.sourceName ?
+								!matchesFilter(cellValue?.sourceName, [filterValue]) :
+								!matchesFilter(cellValue?.finalSource, [filterValue])
 						},
 					},
 					{
@@ -296,7 +312,7 @@ const FriendsQueue = () => {
 						displayName: "Starts With",
 						predicate: ([filterValue], cellValue) => {
 							return cellValue?.sourceName?.toLowerCase().startsWith(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().startsWith(filterValue.toLowerCase())
+								cellValue?.finalSource?.toLowerCase().startsWith(filterValue.toLowerCase())
 						},
 					},
 					{
@@ -304,7 +320,7 @@ const FriendsQueue = () => {
 						displayName: "Ends With",
 						predicate: ([filterValue], cellValue) => {
 							return cellValue?.sourceName?.toLowerCase().endsWith(filterValue.toLowerCase()) ||
-										cellValue?.finalSource?.toLowerCase().endsWith(filterValue.toLowerCase())
+								cellValue?.finalSource?.toLowerCase().endsWith(filterValue.toLowerCase())
 						},
 					},
 				]
@@ -507,6 +523,16 @@ const FriendsQueue = () => {
 			});
 		}
 	};
+	const turnoffFriendQueue = (event) => {
+		if (event?.data === "stop_fr_queue") {
+			console.log("********************* stop FRQS ***************************");
+			const payload = { ...friendRequestQueueSettings, request_limited: false };
+			// console.log("payload for switch off  --->   ", payload);
+			dispatch(saveFriendsQueueSettings(payload))
+			setFriendRequestQueueSettings({...friendRequestQueueSettings, request_limited: false,});
+			sendMessageToExt();
+		}
+	}
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -519,13 +545,13 @@ const FriendsQueue = () => {
 						<>
 							{keywordList?.length > 0
 								? keywordList.map((el, i) => (
-										<span
-											className={`tags positive-tags`}
-											key={`key-${i}`}
-										>
-											{el}
-										</span>
-								  ))
+									<span
+										className={`tags positive-tags`}
+										key={`key-${i}`}
+									>
+										{el}
+									</span>
+								))
 								: "No specific keyword used"}
 						</>
 					}
@@ -670,15 +696,14 @@ const FriendsQueue = () => {
 					<div className='friends-queue-action-bar-item'>
 						<div className='friend-req-run-queue'>
 							<div className='run-friend-queue'>
-								<div className='run'>{`${
-									friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
-								} friend queue`}</div>
+								<div className='run'>{`${friendRequestQueueSettings?.run_friend_queue ? "Stop" : "Run"
+									} friend queue`}</div>
 								<Switch
 									checked={friendRequestQueueSettings?.run_friend_queue}
 									handleChange={(e) => {
 										if (
 											Number(localStorage?.getItem("fr_plan")?.toLowerCase()) <
-												2 &&
+											2 &&
 											e.target.checked
 										) {
 											e.preventDefault();
@@ -750,7 +775,7 @@ const FriendsQueue = () => {
 			)}
 			{friendsQueueRecords?.length > 0 &&
 				!loading &&
-			inactiveAfter !== null ? (
+				inactiveAfter !== null ? (
 				<Listing
 					friendsData={friendsQueueRecords}
 					friendsListingRef={friendsQueueRef}
@@ -769,10 +794,10 @@ const FriendsQueue = () => {
 							currently empty
 						</>
 					}
-					// interactionText='Clear filter'
-					// isInteraction={() => {
-					// 	setIsReset(!isReset);
-					// }}
+				// interactionText='Clear filter'
+				// isInteraction={() => {
+				// 	setIsReset(!isReset);
+				// }}
 				/>
 			)}
 		</div>
