@@ -38,10 +38,23 @@ const curretUTCTime = () => {
     return ct.getTime() + ct.getTimezoneOffset() * 60000;
 }
 
+const debounce=(func, delay)=>{
+    let timeoutId;
+  
+    return function (...args) {
+      clearTimeout(timeoutId);
+  
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
+
 module.exports = {
     setCookie, 
     getCookie, 
     deleteCookie,
     curretUTCTime,
-    sleep
+    sleep,
+    debounce
 }

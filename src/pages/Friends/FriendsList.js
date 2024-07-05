@@ -35,6 +35,7 @@ import helper from "../../helpers/helper";
 import { utils } from "../../helpers/utils";
 import { fetchAllCampaigns, fetchAllCampaignsFromIndexDB } from "../../actions/CampaignsActions";
 import moment from "moment";
+import Listing2 from "../../components/common/Listing2";
 
 const FriendsList = () => {
 	//::::Friend List geting data from Redux::::
@@ -724,13 +725,14 @@ const FriendsList = () => {
 				/>
 			)}
 			{filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
-				<Listing
-					friendsData={filterFrndList}
-					friendsListingRef={friendsListinRef}
-					getFilterNum={setListFilteredCount}
-					reset={isReset}
-					setReset={setIsReset}
-				/>
+				// <Listing
+				// 	friendsData={filterFrndList}
+				// 	friendsListingRef={friendsListinRef}
+				// 	getFilterNum={setListFilteredCount}
+				// 	reset={isReset}
+				// 	setReset={setIsReset}
+				// />
+				<Listing2 />
 			)}
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}

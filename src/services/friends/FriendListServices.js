@@ -22,6 +22,24 @@ export const fetchFriendList = (payload)=>{
       })
   })
 }
+
+const fb_user_id= localStorage.getItem("fr_default_fb");
+export const fetchFriendList2 = (queryParams)=>{
+  return new Promise((resolve, reject)=>{
+    axios
+      .get(
+          config.fetchFriendListUrlv2,
+          { params: { ...queryParams, fb_user_id }, headers: headers },
+      ).then((result)=>{
+          resolve(result.data);
+      })
+      .catch((error)=>{
+        resolve({})
+        // console.log("ERROR FRIENDLIST::::", error?.response?.data ? error.response.data : error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
 // export const deleteFriends = (payload)=>{
 //   return new Promise((resolve, reject)=>{
 //     axios
