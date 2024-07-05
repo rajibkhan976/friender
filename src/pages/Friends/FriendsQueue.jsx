@@ -530,7 +530,11 @@ const FriendsQueue = () => {
 			// console.log("payload for switch off  --->   ", payload);
 			dispatch(saveFriendsQueueSettings(payload))
 			setFriendRequestQueueSettings({...friendRequestQueueSettings, request_limited: false,});
-			sendMessageToExt();
+			extensionMethods.sendMessageToExt({
+				action: "fRqueSettingUpdate",
+				frLoginToken: localStorage.getItem("fr_token"),
+				payload: payload,
+			});	
 		}
 	}
 
