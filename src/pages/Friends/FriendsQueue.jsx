@@ -526,10 +526,10 @@ const FriendsQueue = () => {
 	const turnoffFriendQueue = (event) => {
 		if (event?.data === "stop_fr_queue") {
 			console.log("********************* stop FRQS ***************************");
-			const payload = { ...friendRequestQueueSettings, request_limited: false };
+			const payload = { ...friendRequestQueueSettings, run_friend_queue: false };
 			// console.log("payload for switch off  --->   ", payload);
 			dispatch(saveFriendsQueueSettings(payload))
-			setFriendRequestQueueSettings({...friendRequestQueueSettings, request_limited: false,});
+			setFriendRequestQueueSettings({...friendRequestQueueSettings, run_friend_queue: false,});
 			extensionMethods.sendMessageToExt({
 				action: "fRqueSettingUpdate",
 				frLoginToken: localStorage.getItem("fr_token"),
