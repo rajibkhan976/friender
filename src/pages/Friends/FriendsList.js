@@ -35,7 +35,10 @@ import helper from "../../helpers/helper";
 import { utils } from "../../helpers/utils";
 import { fetchAllCampaigns, fetchAllCampaignsFromIndexDB } from "../../actions/CampaignsActions";
 import moment from "moment";
-import Listing2 from "../../components/common/Listing2";
+import Listing2 from "../../components/common/SSListing/Listing2";
+import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import config from "../../configuration/config";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const FriendsList = () => {
 	//::::Friend List geting data from Redux::::
@@ -694,6 +697,13 @@ const FriendsList = () => {
 		// },
 	];
 
+	const tableMethod = {}
+	const defaultParams = {
+		friend_status: "Activate",
+		deleted_status: 0,
+		fb_user_id: fb_user_id,
+	}
+
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
 			{modalOpen && (
@@ -732,7 +742,13 @@ const FriendsList = () => {
 				// 	reset={isReset}
 				// 	setReset={setIsReset}
 				// />
-				<Listing2 />
+				<Listing2 
+					//friendsData={filterFrndList}
+					listColDef = {FriendlistColDefs} 
+					baseUrl = {config.fetchFriendListUrlv2}
+					tableMethod = {tableMethod} 
+					defaultParams = {defaultParams}
+				/>
 			)}
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
