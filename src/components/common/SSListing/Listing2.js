@@ -23,7 +23,7 @@ export default function Listing2(props) {
     const [rowSelection, setRowSelection] = useState({});
     const [isRefetching, setIsRefetching] = useState(false);
     const [selectedRowIds, setSelectedRowIds] = useState({});
-    //const [selectAcross, setSelectAcross] = useState({selected:false,unSelected:[]})
+    const [selectAcross, setSelectAcross] = useState({selected:false,unSelected:[]})
 
     //table state
     const [selectAllState, setSelectAllState] = useState(false);
@@ -36,6 +36,10 @@ export default function Listing2(props) {
         pageIndex: 0,
         pageSize: 15, //customize the default page size
     });
+
+    useEffect(() => {
+      console.log('rowSelection', rowSelection);
+    }, [rowSelection])
 
     const handleSelectAllClick = (e) => {
         console.log('clicked');
@@ -53,16 +57,28 @@ export default function Listing2(props) {
         setSelectedRowIds(newSelectedRowIds);
     };
 
-    // const checkAll = e => {
-    //   console.log(e.target.checked);
+    const checkAll = e => {
+      console.log(e.target.checked);
 
-    //   setSelectAcross({
-    //     selected: e.target.checked,
-    //     unSelected: []
-    //   })
+      setSelectAcross({
+        selected: e.target.checked,
+        unSelected: []
+      })
 
-    //   handleSelectAllClick(e)
-    // }
+      if (e.target.checked) {
+        let obj = data.reduce((acc, item) => {
+          acc[item._id] = true;
+          return acc;
+        }, {});
+        obj = {...rowSelection, ...obj}
+        
+        setRowSelection(obj)
+      } else {
+        setRowSelection({})
+      }
+
+      // handleSelectAllClick(e)
+    }
     // const handleRowClick = (e, rowId) => {
     //   console.log('rowId >>>>>', rowId);
 
@@ -139,8 +155,8 @@ export default function Listing2(props) {
                     ...props.defaultParams,
                 }
 
-                 let response = await fetchFriendList2(queryParam)
-               //let response = await apiClient('get',`${props.baseUrl}`,{}, { ...queryParam });
+                // let response = await fetchFriendList2(queryParam)
+                let response = await apiClient('get',`${props.baseUrl}`,{}, { ...queryParam });
                 // try {
                 //     const data = await ApiClient.get(`${props.baseUrl}`, { ...queryParam });
                 //     console.log(data);
@@ -153,6 +169,19 @@ export default function Listing2(props) {
                 setRowCount(response.friend_count)
                 setData(response.friend_details);
 
+                // console.log(response.friend_details);
+                if (selectAcross?.selected) {
+                  let obj = response.friend_details.reduce((acc, item) => {
+                    acc[item._id] = true;
+                    return acc;
+                  }, {});
+                  obj = {...rowSelection, ...obj}
+
+                  // console.log('rowSelection', rowSelection, 'obj',obj);
+                  // console.log('rowSelection >>>', rowSelection, 'obj >>>', obj);
+                  setRowSelection(obj)
+                }
+                // console.log(selectAcross?.selected ? setRowSelection({...rowSelection, }));
                 // setRowCount(json.meta.totalRowCount);
             } catch (error) {
                 setIsError(true);
@@ -191,7 +220,7 @@ export default function Listing2(props) {
     const table = useMaterialReactTable({
         columns,
         data,
-        getRowId: (originalRow) => originalRow.friendFbId,
+        getRowId: (originalRow) => originalRow._id,
         enableRowSelection: true,
         enableSelectAll: true,
         selectAllMode: "page",
@@ -221,8 +250,8 @@ export default function Listing2(props) {
             setPagination(pagination);
         },
         onRowSelectionChange: (selectedRows) => {
-            //console.log("srows ->",selectedRows);
-            setRowSelection(selectedRows)
+          console.log(':::::', selectedRows());
+          setRowSelection(selectedRows)
         },
         onSortingChange: setSorting,
         onColumnFilterFnsChange: setColumnFilterFns,
@@ -433,11 +462,15 @@ export default function Listing2(props) {
     //note: you can also pass table options as props directly to <MaterialReactTable /> instead of using useMaterialReactTable
     //but the useMaterialReactTable hook will be the most recommended way to define table options
     return (<div className="react-table-container">
-        <input
+        <label>
+          <input
             type='checkbox'
-        //  value={selectAcross?.selected}
-        //  onChange={(e)=>checkAll(e)}
-        />
+            checked={selectAcross?.selected}
+            onChange={(e)=>checkAll(e)}
+          />
+
+          Select All
+        </label>
         <MaterialReactTable table={table} />
     </div>);
 }
