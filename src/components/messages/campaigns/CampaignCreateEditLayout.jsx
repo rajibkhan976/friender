@@ -10,7 +10,6 @@ import moment from "moment";
 import { useParams, useNavigate } from 'react-router-dom';
 import {
 	createCampaign,
-	fetchAllCampaignsFromIndexDB,
 	updateCampaign,
 	updateCampaignSchedule,
 	updateCampaignDetails,
@@ -312,7 +311,6 @@ const CampaignCreateEditLayout = ({ children }) => {
 				);
 				setLoadingBtn(false);
 			} else {
-				dispatch(fetchAllCampaignsFromIndexDB());
 
 				Alertbox(response?.message ? `${response?.message}` : "Campaign saved", "success", 1000, "bottom-right");
 

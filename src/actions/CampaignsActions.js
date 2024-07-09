@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
 	fetchCampaign,
 	fetchAllCampaign,
+	fetchAllCampaignCount,
 	createOrUpdateCampaignService,
 	updateCampaignStatusService,
 	addUsersToCampaignService,
@@ -9,7 +10,6 @@ import {
 	fetchCampaignUsers,
 	deleteCampaignContactsService
 } from "../services/campaigns/CampaignServices";
-import { clientDB } from "../app/db";
 
 const initialState = {
 	isLoading: false,
@@ -118,41 +118,20 @@ const initialState = {
 	// ],
 };
 
-const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
-// console.log(fbUserId);
-
-export const saveCampaignDataInIndexDb = async (
-	fbUserId, campaignData
-) => {
-	try {
-		console.log("saveCampaignDataInIndexDb", campaignData);
-		await clientDB.campaignLists.put({
-			fbId: fbUserId,
-			campaignData: campaignData,
-		});
-	} catch (error) {
-		throw new Error(error);
-	}
-};
-
-export const fetchAllCampaignsFromIndexDB = createAsyncThunk(
-	"campaigns/fetchAllCampaignsFromIndexDB",
-	async () => {
-		const response = await clientDB.campaignLists
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
-		console.log("fetchAllCampaignsFromIndexDB", response);
-		return response;
+export const fetchAllCampaigns = createAsyncThunk(
+	"campaigns/fetchAllCampaigns",
+	async (params = null) => {
+		const res = await fetchAllCampaign(params);
+		// console.log(res);
+		return res;
 	}
 );
 
-export const fetchAllCampaigns = createAsyncThunk(
-	"campaigns/fetchAllCampaigns",
-	async () => {
-		const res = await fetchAllCampaign();
-		// console.log(res);
-		Array.isArray(res) && fbUserId && saveCampaignDataInIndexDb(fbUserId, res);
+export const fetchAllCampaignsCount = createAsyncThunk(
+	"campaigns/fetchAllCampaignsCount",
+	async (params = null) => {
+		const res = await fetchAllCampaignCount(params);
+		console.log(res);
 		return res;
 	}
 );
@@ -266,27 +245,15 @@ export const campaignSlice = createSlice({
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
-			// state.isLoading = true;
+			state.isLoading = true;
 		},
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
-			// state.isLoading = false;
+			state.isLoading = false;
 			// console.log(action);
 			state.campaignsArray = action?.payload;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
-			// state.isLoading = false;
-		},
-
-		[fetchAllCampaignsFromIndexDB.pending]: (state) => {
-			// state.isLoading = true;
-		},
-		[fetchAllCampaignsFromIndexDB.fulfilled]: (state, action) => {
-			// state.isLoading = false;
-			// console.log(action);
-			state.campaignsArray = action?.payload?.campaignData;
-		},
-		[fetchAllCampaignsFromIndexDB.rejected]: (state) => {
-			// state.isLoading = false;
+			state.isLoading = false;
 		},
 		
 		[fetchCampaignById.pending]: (state) => {
@@ -327,7 +294,6 @@ export const campaignSlice = createSlice({
 
 			if (newAdd) {
 				const addedCampaignList = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...placeholderArray];
-				saveCampaignDataInIndexDb(fbUserId, addedCampaignList);
 				state.campaignsArray = [...addedCampaignList];
 			} else {
 				const updatedCampaignList = action?.payload?.data
@@ -335,8 +301,6 @@ export const campaignSlice = createSlice({
 					(el) => el.campaign_id === actionResponse?.campaign_id
 				)
 				: placeholderArray;
-
-				saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
 
 				state.campaignsArray = updatedCampaignList;
 			}
@@ -371,7 +335,6 @@ export const campaignSlice = createSlice({
 				return campaign;
 			}) : [];
 
-			saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
 			state.campaignsArray = updatedCampaignList;
 			state.isLoading = false;
 		},
@@ -399,7 +362,6 @@ export const campaignSlice = createSlice({
 			let idsArr1 = action?.payload?.campaignIds.map(obj => obj.campaignId);
 			const filteredArr2 = placeholderArray.filter(obj => !idsArr1.includes(obj.campaign_id));
 
-			saveCampaignDataInIndexDb(fbUserId, filteredArr2);
 			state.campaignsArray = filteredArr2;
 			state.isLoading = false;
 		},
@@ -427,8 +389,6 @@ export const campaignSlice = createSlice({
 				}
 				return item;
 			}) : [];
-
-			Array.isArray(updatedCampaignList) && updatedCampaignList?.length && saveCampaignDataInIndexDb(fbUserId, updatedCampaignList);
 		},
 		[updateCampaignStatus.rejected]: (state) => {
 			state.isLoading = false;

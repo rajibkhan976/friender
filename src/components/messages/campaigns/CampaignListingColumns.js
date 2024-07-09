@@ -16,7 +16,6 @@ import {
 } from "../../../assets/icons/Icons";
 import {
 	fetchCampaignById,
-	fetchAllCampaignsFromIndexDB,
 	updateCampaignContext,
 	updateCampaignsArray,
 	fetchUsers,
@@ -91,7 +90,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			if(campaignStatus){
 				(async () => {
 					try {
-						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
 						extensionAccesories.sendMessageToExt({
 							action: "update_schedules"
 						});
@@ -110,7 +109,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 			if(campaignStatus){
 				(async () => {
 					try {
-						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+						await dispatch(updateCampaignStatus({ campaignId, campaignStatus: false })).unwrap();
 						extensionAccesories.sendMessageToExt({
 							action: "update_schedules"
 						});
@@ -126,7 +125,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	// CAMPAIGN STATUS UPDATE VIA API..
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
-			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 			Alertbox(
 				`The campaign has been successfully turned ${campaignStatus ? "ON" : "OFF"
 				}`,

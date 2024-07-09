@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react";
-import { fetchAllCampaignsFromIndexDB, deleteCampaign, syncCampaignStatus } from "actions/CampaignsActions";
+import { deleteCampaign, syncCampaignStatus } from "actions/CampaignsActions";
 import {
 	CampaignNameCellRenderer,
 	CampaignStatusCellRenderer,
@@ -106,7 +106,6 @@ const CampaignsListingPage = ({ campaignsCreated, setIsEditingCampaign }) => {
 			).unwrap();
 
 			if (response?.data) {
-				dispatch(fetchAllCampaignsFromIndexDB());
 				setCampaignDeleteModalOpen(false);
 
 				extensionAccesories.sendMessageToExt({

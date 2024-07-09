@@ -3,7 +3,7 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchAllCampaignsFromIndexDB,
+	fetchAllCampaignsCount,
 	fetchCampaignById,
 	updateCampaignsArray,
 	syncCampaignStatus,
@@ -24,11 +24,24 @@ import CampaignsHeader from "components/messages/campaigns/CampaignsHeader";
 import NoDataFound from "components/common/NoDataFound";
 import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
+import { CampaignColDef } from "./list/CampaignColDef";
+import { FriendlistColDefs } from "../../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 
 const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
 );
+const CampaignList = lazy(() => import("./list/CampaignList"));
 const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
+
+const {
+	CampaignName,
+	Status,
+	FriendsAdded,
+	Pending,
+	ScheduledOn,
+	EndDateNTime,
+	Actions
+} = CampaignColDef;
 
 // VIEW OPTIONS FOR BASE CAMPAIGN PAGE
 const radioOptions = [
@@ -122,9 +135,8 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaignsFromIndexDB()).unwrap()
-			.then((resp) => dispatch(fetchAllCampaigns()))
-			.catch((error) => dispatch(fetchAllCampaigns()));
+			dispatch(fetchAllCampaigns()).unwrap();
+			// console.log(dispatch(fetchAllCampaignsCount()));
 			
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
@@ -390,10 +402,6 @@ const Campaigns = () => {
 
 	useEffect(() => {
 		dispatch(fetchAllCampaigns());
-
-		dispatch(fetchAllCampaignsFromIndexDB()).unwrap()
-		.then((resp) => dispatch(fetchAllCampaignsFromIndexDB()))
-		.catch((error) => dispatch(fetchAllCampaignsFromIndexDB()));
 		
 		return () => {
 			dispatch(updateCampaignDuration(null));
@@ -432,9 +440,20 @@ const Campaigns = () => {
 									/>
 								) : (
 									<Suspense fallback=''>
-										<CampaignsListingPage
+										{/* <CampaignsListingPage
 											campaignsCreated={filterCampaigns()}
 											setIsEditingCampaign={setIsEditingCampaign}
+										/> */}
+										<CampaignList 
+											listColDef={() =>[
+												CampaignName,
+												Status,
+												FriendsAdded,
+												Pending,
+												ScheduledOn,
+												EndDateNTime,
+												Actions
+											]} 	
 										/>
 									</Suspense>
 								)

@@ -11,10 +11,11 @@ let headers = {
  * FETCH ALL CAMPAIGNS
  * @returns
  */
-export const fetchAllCampaign = () => {
+export const fetchAllCampaign = (params) => {
+	const queryParams = params ? params : `?page_number=1&sort_by=friends_added&sort_order=asc&page_size=15`;
 	return new Promise((resolve, reject) => {
 		axios
-			.get(config.fetchAllCampaignsUrl, { headers: headers })
+			.get(config.fetchAllCampaignsUrl + queryParams, { headers: headers })
 			.then((res) => {
 				// console.log('res >>>>', res?.data?.data);
 				resolve(res?.data?.data)
@@ -22,7 +23,22 @@ export const fetchAllCampaign = () => {
 				// console.log(error);
 				reject(error)
 			})
-	})
+	});
+}
+
+export const fetchAllCampaignCount = (params) => {
+	const queryParams = params ? params : `?page_number=1&sort_by=friends_added&sort_order=asc&page_size=15`;
+	return new Promise((resolve, reject) => {
+		axios
+			.get(config.fetchAllCampaignsCountUrl + queryParams, { headers: headers })
+			.then((res) => {
+				// console.log('res >>>>', res?.data?.data);
+				resolve(res?.data?.data)
+			}).catch((error) => {
+				// console.log(error);
+				reject(error)
+			})
+	});
 }
 
 /**

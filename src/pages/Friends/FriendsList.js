@@ -33,7 +33,7 @@ import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "../../components/common/Modal";
 import helper from "../../helpers/helper";
 import { utils } from "../../helpers/utils";
-import { fetchAllCampaigns, fetchAllCampaignsFromIndexDB } from "../../actions/CampaignsActions";
+import { fetchAllCampaigns } from "../../actions/CampaignsActions";
 import moment from "moment";
 import Listing2 from "../../components/common/SSListing/Listing2";
 import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
@@ -97,10 +97,7 @@ const FriendsList = () => {
 	// };
 
 	useEffect(() => {
-		dispatch(fetchAllCampaignsFromIndexDB())
-		.unwrap()
-		.then((resp) => dispatch(fetchAllCampaigns()))
-		.catch((error) => dispatch(fetchAllCampaigns()));
+		dispatch(fetchAllCampaigns());
 		//getSettingsData();
 	}, []);
 

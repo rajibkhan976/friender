@@ -19,7 +19,12 @@ import {
   setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
 import { store } from "../../app/store";
-import "../../assets/scss/component/common/_sidebar.scss"
+import { ReactComponent as ContactIcon } from "../../assets/images/ContactIcon.svg";
+import { ReactComponent as CRMIcon } from "../../assets/images/CRMIcon.svg";
+import { ReactComponent as CampaignIcon } from "../../assets/images/CampaignIcon.svg";
+import { ReactComponent as PostsIcon } from "../../assets/images/PostsIcon.svg";
+import { ReactComponent as FriendRequestIcon } from "../../assets/images/FriendRequestIcon.svg";
+import "../../assets/scss/component/common/_sidebar.scss";
 
 
 
@@ -35,6 +40,7 @@ const Sidebar = (props) => {
   const navigate = useNavigate();
   const [sidebarToogle, setSidebarToogle] = useState(true);
   const [subMenuFriends, setSubMenuFriends] = useState(true);
+  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(true);
   const [subMenuMessage, setSubMenuMessage] = useState(true);
   // const [profiles, setProfiles] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
@@ -179,21 +185,32 @@ const Sidebar = (props) => {
   //   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
   //     "lost-friends"
   // }
+
   const setSubMenuFriendsFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
     setSubMenuFriends(!subMenuFriends);
   };
+
   const setSubMenuMessageFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
     setSubMenuMessage(!subMenuMessage)
   }
+
+  const setSubMenuFriendRequestFn = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setSubMenuFriendsRequest(!subMenuFriendRequest);
+  };
+
   const [dontSendFrindReqIRejct, setDontSendFrindReqIRejct] = useState(false);
+
   const setSidebarToogleFn = (e) => {
     localStorage.setItem("fr_sidebarToogle", !sidebarToogle);
     setSidebarToogle((current) => !current);
   };
+
   const setSidebarOpenFn = (e) => {
     localStorage.setItem("fr_sidebarToogle", false);
     localStorage.setItem("submenu_status", 1);
@@ -203,6 +220,7 @@ const Sidebar = (props) => {
     }
     setSidebarToogle(false);
   };
+
   const setSidebarHomeOpenFn = (e) => {
     localStorage.setItem("submenu_status", 0);
     setSidebarOpenFriends(false);
@@ -210,6 +228,7 @@ const Sidebar = (props) => {
     //menu_status_refresh = 0;
     //setSidebarToogle(false);
   };
+
   const [isActiveMenu, setIsActiveMenu] = useState(false);
   const [local_fb_id, setLocal_fb_id] = useState("");
 
@@ -398,8 +417,8 @@ const Sidebar = (props) => {
 							<li
 								className={
 									sidebarOpenFriends
-										? "nav-menu has-child activated link-seperator"
-										: "nav-menu has-child link-seperator"
+										? "nav-menu has-child activated"
+										: "nav-menu has-child"
 								}
 								onClick={setSidebarOpenFn}
 							>
@@ -409,7 +428,6 @@ const Sidebar = (props) => {
 									className={() =>
 										[
 											"/friends/friend-list",
-											"/friends/pending-request",
 											"/friends/unfriended-friends",
 											"/friends/whitelisted-friends",
 											"/friends/deactivated-friends",
@@ -421,12 +439,12 @@ const Sidebar = (props) => {
 									}
 									aria-label='Friends'
 								>
-									<FriendIcon />
+									<ContactIcon />
 									<span
 										onClick={(e) => setSubMenuFriendsFn(e)}
 										className='nav-menu-name'
 									>
-										Friends{" "}
+										Contacts{" "}
 										<span
 											onClick={(e) => setSubMenuFriendsFn(e)}
 											className={
@@ -457,12 +475,160 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
+												to='/friends/all'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- All</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
 												to='/friends/friend-list'
 												aria-label='Friends'
 											>
-												<span className='nav-menu-name'>- Friends list</span>
+												<span className='nav-menu-name'>- Friends</span>
 											</NavLink>
 										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/friend-list'
+												aria-label='Friends'
+											>
+												<span className='nav-menu-name'>- Non friends</span>
+											</NavLink>
+										</li>
+										
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/unfriended-friends'
+												aria-label='Unfriended Friends'
+											>
+												<span className='nav-menu-name'>- Unfriended</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/lost-friends'
+												aria-label='Lost Friends'
+											>
+												<span className='nav-menu-name'>- Lost</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/whitelisted-friends'
+												aria-label='Whitelisted Friends'
+											>
+												<span className='nav-menu-name'>- Whitelisted</span>
+											</NavLink>
+										</li>
+										<li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/blacklisted-friends'
+												aria-label='Blacklisted Friends'
+											>
+												<span className='nav-menu-name'>- Blacklisted</span>
+											</NavLink>
+										</li>
+										{/* <li
+											className='nav-menu'
+											onClick={listClick}
+										>
+											<NavLink
+												to='/friends/deactivated-friends'
+												aria-label='Deactivated Friends'
+											>
+												<span className='nav-menu-name'>- Deactivated</span>
+											</NavLink>
+										</li> */}
+
+										{/* <li className="nav-menu" onClick={setSidebarOpenFn}>
+                  <NavLink to="/friends/incoming-pending-request">
+                      <span className="nav-menu-name">- Incoming Pending Request</span>
+                  </NavLink>
+                </li>
+                <li className="nav-menu" onClick={setSidebarOpenFn}>
+                  <NavLink to="/friends/incoming-rejected-request">
+                      <span className="nav-menu-name">- Incoming Rejected Request</span>
+                  </NavLink>
+                </li> */}
+									</ul>
+								)}
+							</li>
+							{/* <span className="seperator"></span> */}
+							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+
+							<li
+								className={
+									subMenuFriendRequest
+										? "nav-menu has-child activated"
+										: "nav-menu has-child"
+								}
+								onClick={setSidebarOpenFn}
+							>
+								<NavLink
+									onClick={() => setSubMenuFriendRequestFn(true)}
+									to='/friends/friends-queue'
+									className={() =>
+										[
+											"/friends/pending-request",
+											"/friends/friends-queue",
+										].includes(location.pathname)
+											? "active"
+											: ""
+									}
+									aria-label='Friends'
+								>
+									<FriendRequestIcon />
+									<span
+										onClick={(e) => setSubMenuFriendRequestFn(e)}
+										className='nav-menu-name'
+									>
+										Friend requests
+										<span
+											onClick={(e) => setSubMenuFriendRequestFn(e)}
+											className={
+												subMenuFriendRequest
+													? "sub-menu-toogle"
+													: "sub-menu-toogle sub-closed"
+											}
+										>
+											<svg
+												width='18'
+												height='18'
+												viewBox='0 0 18 18'
+												fill='none'
+												xmlns='http://www.w3.org/2000/svg'
+											>
+												<path
+													d='M13.5 6.75L9 11.25L4.5 6.75'
+													stroke='white'
+												/>
+											</svg>
+										</span>
+									</span>
+								</NavLink>
+
+								{subMenuFriendRequest && (
+									<ul className='sub-menus'>
 										<li
 											className='nav-menu'
 											onClick={listClick}
@@ -485,83 +651,16 @@ const Sidebar = (props) => {
 												<span className='nav-menu-name'>- Pending request</span>
 											</NavLink>
 										</li>
-										<li
-											className='nav-menu'
-											onClick={listClick}
-										>
-											<NavLink
-												to='/friends/unfriended-friends'
-												aria-label='Unfriended Friends'
-											>
-												<span className='nav-menu-name'>- Unfriended</span>
-											</NavLink>
-										</li>
-										<li
-											className='nav-menu'
-											onClick={listClick}
-										>
-											<NavLink
-												to='/friends/whitelisted-friends'
-												aria-label='Whitelisted Friends'
-											>
-												<span className='nav-menu-name'>- Whitelisted</span>
-											</NavLink>
-										</li>
-										<li
-											className='nav-menu'
-											onClick={listClick}
-										>
-											<NavLink
-												to='/friends/deactivated-friends'
-												aria-label='Deactivated Friends'
-											>
-												<span className='nav-menu-name'>- Deactivated</span>
-											</NavLink>
-										</li>
-										<li
-											className='nav-menu'
-											onClick={listClick}
-										>
-											<NavLink
-												to='/friends/lost-friends'
-												aria-label='Lost Friends'
-											>
-												<span className='nav-menu-name'>- Lost friends</span>
-											</NavLink>
-										</li>
-
-										<li
-											className='nav-menu'
-											onClick={listClick}
-										>
-											<NavLink
-												to='/friends/blacklisted-friends'
-												aria-label='Blacklisted Friends'
-											>
-												<span className='nav-menu-name'>- Blacklisted</span>
-											</NavLink>
-										</li>
-										{/* <li className="nav-menu" onClick={setSidebarOpenFn}>
-                  <NavLink to="/friends/incoming-pending-request">
-                      <span className="nav-menu-name">- Incoming Pending Request</span>
-                  </NavLink>
-                </li>
-                <li className="nav-menu" onClick={setSidebarOpenFn}>
-                  <NavLink to="/friends/incoming-rejected-request">
-                      <span className="nav-menu-name">- Incoming Rejected Request</span>
-                  </NavLink>
-                </li> */}
+										
 									</ul>
 								)}
 							</li>
-							{/* <span className="seperator"></span> */}
-							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 
 							<li
 								className={
 									sidebarOpenFriends
-										? "nav-menu has-child activated link-seperator"
-										: "nav-menu has-child link-seperator"
+										? "nav-menu has-child activated"
+										: "nav-menu has-child"
 								}
 								onClick={setSidebarOpenFn}
 							>
@@ -653,8 +752,55 @@ const Sidebar = (props) => {
 									aria-label='Campaigns'
 									className={"text-left"}
 								>
-									<CampaignQuicActionIcon />
+									<CampaignIcon />
 									<span className='nav-menu-name'>Campaigns</span>
+								</NavLink>
+							</li>
+							<li
+								className='nav-menu has-child'
+							>
+								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+								<NavLink
+									// to='/crm'
+									aria-label='CRM'
+								>
+									<CRMIcon />
+									<span className='nav-menu-name'>
+										CRM
+										<span
+											onClick={(e) => console.log(e)}
+											className={
+												subMenuMessage
+													? "sub-menu-toogle"
+													: "sub-menu-toogle sub-closed"
+											}
+										>
+											<svg
+												width='18'
+												height='18'
+												viewBox='0 0 18 18'
+												fill='none'
+												xmlns='http://www.w3.org/2000/svg'
+											>
+												<path
+													d='M13.5 6.75L9 11.25L4.5 6.75'
+													stroke='white'
+												/>
+											</svg>
+										</span>
+									</span>
+								</NavLink>
+							</li>
+							<li
+								className='nav-menu'
+							>
+								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+								<NavLink
+									// to='/posts'
+									aria-label='Posts'
+								>
+									<PostsIcon />
+									<span className='nav-menu-name'>Posts</span>
 								</NavLink>
 							</li>
 						</ul>
@@ -925,4 +1071,5 @@ const Sidebar = (props) => {
 		</aside>
 	);
 };
+
 export default Sidebar;

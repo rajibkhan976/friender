@@ -10,7 +10,7 @@ import Radio from "../../common/Radio";
 import DropSelector from "../../formComponents/DropSelector";
 import Switch from "../../formComponents/Switch";
 import Alertbox from "../../common/Toast";
-import { fetchAllCampaignsFromIndexDB, updateCampaignStatus, syncCampaignStatus } from 'actions/CampaignsActions';
+import { updateCampaignStatus, syncCampaignStatus } from 'actions/CampaignsActions';
 import extensionAccesories from "../../../configuration/extensionAccesories";
 
 const CampaignsHeader = ({
@@ -45,7 +45,7 @@ const CampaignsHeader = ({
 	// CAMPAIGN STATUS UPDATE VIA API.. 
 	const camapignStatusToggleUpdateAPI = async (campaignId, campaignStatus) => {
 		try {
-			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap().then((resp) => dispatch(fetchAllCampaignsFromIndexDB()));
+			await dispatch(updateCampaignStatus({ campaignId, campaignStatus })).unwrap();
 			extensionAccesories.sendMessageToExt({
 				action: "update_schedules"
 			});
