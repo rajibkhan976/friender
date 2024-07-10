@@ -1104,8 +1104,8 @@ export const SourceRendererPending = memo((params) => {
                                         'Post' :
                                     params?.data?.finalSource?.toLowerCase() === "suggestions" ?
                                         'Suggested Friends' :
-                                    params?.data?.finalSource?.toLowerCase() === "friends" ?
-                                        'Friends of Friends' :
+                                    // params?.data?.finalSource?.toLowerCase() === "friends" ?
+                                    //     'Friends of Friends' :
                                     sourceName.length > 12
                                         ? sourceName.substring(0, 12) + "..."
                                         : sourceName

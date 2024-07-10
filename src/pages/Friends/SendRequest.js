@@ -146,8 +146,8 @@ const SendRequest = ({ deleteAllInterval }) => {
 											'Post' :
 										dataSet?.finalSource?.toLowerCase() === "suggestions" ?
 											'Suggested Friends' :
-										dataSet?.finalSource?.toLowerCase() === "friends" ?
-											'Friends of Friends' :
+										// dataSet?.finalSource?.toLowerCase() === "friends" ?
+										// 	'Friends of Friends' :
 										dataSet?.sourceName?.length > 12
 											? dataSet?.sourceName?.substring(0, 12) + "..."
 											: dataSet?.sourceName :
@@ -398,8 +398,8 @@ const SendRequest = ({ deleteAllInterval }) => {
 						null : 
 						params?.data?.finalSource === "incoming" ?
 							'Incoming request' :
-						params?.data?.finalSource === 'friends' ?
-							'Friends of Friends' : 
+						// params?.data?.finalSource === 'friends' ?
+						// 	'Friends of Friends' : 
 						params?.data?.finalSource === 'suggestions' ?
 							'Suggested Friends' :
 							params?.data?.sourceName
