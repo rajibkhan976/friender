@@ -61,6 +61,8 @@ const MainComponent = () => {
 		const myExtensionId = process.env.REACT_APP_KYUBI_EXTENSION_ID;
 		const currentEmail = localStorage.getItem('fr_default_email');
 
+		console.log('SUSPENSION FUNCTION');
+
 		(async () => {
 			if (myExtensionId && currentEmail) {
 				const kyubiUserCheckAPiResponse = await kyubiUserCheck(myExtensionId, currentEmail);

@@ -990,7 +990,7 @@ export const CountryRenderer = memo((params) => {
 	let countryName = "N/A";
 	let countryValue = "N/A";
 	if((typeof params.value)=== "object") {
-		countryName= params.value.props["aria-label"];
+		countryName= params?.value?.props["aria-label"];
 		countryValue=params?.value
 		//params.value.props["aria-label"]=params?.value?.props["aria-label"].toLowerCase();
 	}
