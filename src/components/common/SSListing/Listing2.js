@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
     MaterialReactTable,
     useMaterialReactTable,
@@ -16,6 +16,7 @@ import apiClient from '../../../services';
 export default function Listing2(props) {
     //mock data - strongly typed if you are using TypeScript (optional, but recommended)
     const theme = useTheme();
+    const isInitialRender = useRef(true);
     const textFilter = useSelector((state) => state.friendlist.searched_filter);
     const [data, setData] = useState([]);
     const [isError, setIsError] = useState(false);
@@ -114,98 +115,87 @@ export default function Listing2(props) {
     //   console.log('selectAcross :::',  selectAcross);
     // }, [selectAcross])
 
-    useEffect(() => {
-        console.log('columnFilters--- :::>>>', columnFilters);
-        console.log('columnFilterFns--- :::>>>', columnFilterFns);
-    }, [columnFilters, columnFilterFns])
-
-    useEffect(() => {
-
-        console.log('columnFilters :::', columnFilters);
-        //server side pagination on react material table
-        const fetchData = async () => {
-            //setData(props?.friendsData.slice( pagination.pageIndex*pagination.pageSize,pagination.pageSize*(pagination.pageIndex+1)));
-            // console.log("fetchData>>>>>>>>>>>",pagination.pageIndex,pagination.pageSize*(pagination.pageIndex+1));
-            if (!data.length) {
-                setIsLoading(true);
-            } else {
-                setIsRefetching(true);
-            }
-
-            // const url = new URL(
-            //   '/api/data',
-            //   process.env.NODE_ENV === 'production'
-            //     ? 'https://www.material-react-table.com'
-            //     : 'http://localhost:3000',
-            // );
-            // url.searchParams.set(
-            //   'start',
-            //   `${pagination.pageIndex * pagination.pageSize}`,
-            // );
-            // url.searchParams.set('size', `${pagination.pageSize}`);
-            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
-            // url.searchParams.set('globalFilter', globalFilter ?? '');
-            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));
-
-            try {
-                const queryParam = {
-                    page_number: pagination.pageIndex + 1,
-                    page_size: pagination.pageSize,
-                    search_string: textFilter,
-                    ...props.defaultParams,
-                }
-
-                // let response = await fetchFriendList2(queryParam)
-                let response = await apiClient('get',`${props.baseUrl}`,{}, { ...queryParam });
-                // try {
-                //     const data = await ApiClient.get(`${props.baseUrl}`, { ...queryParam });
-                //     console.log(data);
-                //   } catch (error) {
-                //     console.error('Error fetching data:', error);
-                //   }
-
-                response = response.data[0];
-               // console.log("data list batch", response);
-                setRowCount(response.friend_count)
-                setData(response.friend_details);
-
-                // console.log(response.friend_details);
-                if (selectAcross?.selected) {
-                  let obj = response.friend_details.reduce((acc, item) => {
-                    acc[item._id] = true;
-                    return acc;
-                  }, {});
-                  obj = {...rowSelection, ...obj}
-
-                  // console.log('rowSelection', rowSelection, 'obj',obj);
-                  // console.log('rowSelection >>>', rowSelection, 'obj >>>', obj);
-                  setRowSelection(obj)
-                }
-                // console.log(selectAcross?.selected ? setRowSelection({...rowSelection, }));
-                // setRowCount(json.meta.totalRowCount);
-            } catch (error) {
-                setIsError(true);
-                console.error(error);
-                return;
-            }
-            setIsError(false);
-            setIsLoading(false);
-            setIsRefetching(false);
+    // useEffect(() => {
+    //   console.log("columnFilters--- :::>>>", columnFilters);
+    //   console.log("columnFilterFns--- :::>>>", columnFilterFns);
+    // }, [columnFilters, columnFilterFns]);
+    const fetchData = async (paginationData, globalFilter, filteronColumn , filteronColumnFns ) => {
+    //  console.log("sorting||||--- :::>>>", sorting);
+      //setData(props?.friendsData.slice( pagination.pageIndex*pagination.pageSize,pagination.pageSize*(pagination.pageIndex+1)));
+      if (!data.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
+      }
+      try {
+        
+        const queryParam = {
+          page_number: paginationData.pageIndex + 1,
+          page_size: paginationData.pageSize,
+          search_string: globalFilter.length > 2 ? globalFilter : null,
+          ...props.defaultParams,
         };
 
-        const debouncedFetchData = helper.debounce(fetchData, 0);
-        debouncedFetchData();
+        if(filteronColumn.length>0){
+          const {values, fields, operators} = helper.listFilterParamsGenerator(filteronColumn,filteronColumnFns)
+          queryParam["values"] = JSON.stringify(values);
+          queryParam["fields"] =JSON.stringify(fields);
+          queryParam["operators"] = JSON.stringify(operators);
+          queryParam["filter"] = 1
+        }
 
+        console.log("sorting---outi :::>>>", sorting);
+        if(sorting.length>0){
+          console.log("sorting--- :::>>>", sorting);
+          queryParam["sort_by"] = sorting[0].id;
+          queryParam["sort_order"] = sorting[0].desc? "desc" : "asc";
 
+        }
+        //console.log("queryParam____>>", queryParam);
 
+        let response = await apiClient(
+          "get",
+          `${props.baseUrl}`,
+          {},
+          { ...queryParam }
+        );
+       // let response = await fetchFriendList2(queryParam);
+        const { data, count } = props.dataExtractor(response);
+        //console.log("data list batch____>>", data,count);
+        setRowCount(count);
+        setData(data);
+
+        // setRowCount(json.meta.totalRowCount);
+      } catch (error) {
+        setIsError(true);
+        console.error(error);
+        return;
+      }
+      setIsError(false);
+      setIsLoading(false);
+      setIsRefetching(false);
+    };
+    const debouncedFetchData = useCallback(
+      helper.debounce(fetchData, 1000),
+      []
+    );
+
+    useEffect(() => {
+      if (isInitialRender.current) {
+        isInitialRender.current = false; // Set to false after the first render
+      } else {
+      debouncedFetchData(pagination,textFilter,columnFilters,columnFilterFns);
+      }
     }, [
-        textFilter,
-        //columnFilters,
-        //globalFilter,
-        pagination.pageIndex,
-        pagination.pageSize,
-        sorting
+      textFilter,
+      columnFilters,
+      columnFilterFns,
+      sorting,
     ]);
+    useEffect(() => {
+      //console.log("pagination", pagination);
+      fetchData(pagination,textFilter,columnFilters,columnFilterFns);
+    }, [pagination.pageIndex, pagination.pageSize]);
 
     const columns = useMemo( props.listColDef, [ props.listColDef ] );
 
@@ -220,7 +210,8 @@ export default function Listing2(props) {
     const table = useMaterialReactTable({
         columns,
         data,
-        getRowId: (originalRow) => originalRow._id,
+        rowCount,
+        getRowId: (originalRow) => originalRow.friendFbId,
         enableRowSelection: true,
         enableSelectAll: true,
         selectAllMode: "page",
@@ -233,11 +224,13 @@ export default function Listing2(props) {
         columnFilterDisplayMode: 'popover',
         enableColumnFilterModes: true,
         manualFiltering: true,
+        enableSorting: true,
+       // manualSorting: true,
+        //enableMultiSort:true,
         //pagination setting start
-        // manualFiltering: true,
         enablePagination: true,
         manualPagination: true,
-        //manualSorting: true,
+        paginationDisplayMode: "pages",
         // muiToolbarAlertBannerProps: isError
         //   ? {
         //     color: 'error',
@@ -253,21 +246,19 @@ export default function Listing2(props) {
           console.log(':::::', selectedRows());
           setRowSelection(selectedRows)
         },
-        onSortingChange: setSorting,
+        //onSortingChange: setSorting,
         onColumnFilterFnsChange: setColumnFilterFns,
-        rowCount,
         state: {
             rowSelection,
             columnFilters,
             columnFilterFns,
-            // globalFilter,
             //isLoading,
             pagination,
             // showAlertBanner: isError,
             // showProgressBars: isRefetching,
-            //sorting,
+            sorting,
         },
-        paginationDisplayMode: "pages",
+        onSortingChange: setSorting,
         //pagination setting end
         //styling props
         muiTableContainerProps: { sx: { maxHeight: '600px' } },
@@ -474,3 +465,19 @@ export default function Listing2(props) {
         <MaterialReactTable table={table} />
     </div>);
 }
+
+
+   // const url = new URL(
+            //   '/api/data',
+            //   process.env.NODE_ENV === 'production'
+            //     ? 'https://www.material-react-table.com'
+            //     : 'http://localhost:3000',
+            // );
+            // url.searchParams.set(
+            //   'start',
+            //   `${pagination.pageIndex * pagination.pageSize}`,
+            // );
+            // url.searchParams.set('size', `${pagination.pageSize}`);
+            // url.searchParams.set('filters', JSON.stringify(columnFilters ?? []));
+            // url.searchParams.set('globalFilter', globalFilter ?? '');
+            // url.searchParams.set('sorting', JSON.stringify(sorting ?? []));

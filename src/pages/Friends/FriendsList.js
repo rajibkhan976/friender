@@ -700,6 +700,12 @@ const FriendsList = () => {
 		deleted_status: 0,
 		fb_user_id: fb_user_id,
 	}
+	const dataExtractor = (response)=>{
+			return {
+				data: response?.data[0]?.friend_details,
+				count: response?.data[0]?.friend_count
+			}
+	}
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
@@ -745,6 +751,7 @@ const FriendsList = () => {
 					baseUrl = {config.fetchFriendListUrlv2}
 					tableMethod = {tableMethod} 
 					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
 				/>
 			)}
 

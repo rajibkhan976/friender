@@ -49,12 +49,82 @@ const debounce=(func, delay)=>{
       }, delay);
     };
   }
+function camelToSnake(camelCaseStr) {
+    return camelCaseStr
+        .replace(/([a-z])([A-Z])/g, '$1_$2') // Insert underscore between lowercase and uppercase letters
+        .toLowerCase(); // Convert the entire string to lowercase
+}
 
+const fieldCorrector = (field) => {
+    const customValue = {
+        created_at: "age",
+        keywords:"matchedKeyword"
+
+    }
+    return customValue[field] ? customValue[field] : field;
+}
+const operatorsCorrector = (field) => {
+    const customValue = {
+        greater_than_or_equal_to: "greater_than_or_equals",
+        less_than_or_equal_to: "less_than_or_equals"
+    }
+    return customValue[field] ? customValue[field] : field;
+}
+const listFilterParamsGenerator = (columnFilter, filterFns) => {
+    if (!columnFilter || columnFilter.length === 0) {
+        return null;
+    }
+    let values = [];
+    let fields = [];
+    let operators = [];
+    columnFilter.forEach((item, idx) => {
+        // encodeURIComponent
+        values.push([encodeURIComponent(String(item.value))]);
+        fields.push(fieldCorrector(item.id));
+        operators.push(filterFns[item.id] ? [operatorsCorrector(camelToSnake(filterFns[item.id]))] : ["contains"]);
+
+    })
+    return {
+        values,
+        fields,
+        operators
+    }
+}
+function generateUrl(baseUrl, params) {
+    const url = new URL(baseUrl);
+
+    Object.keys(params).forEach(key => {
+        const value = params[key];
+
+        if (value === null || value === undefined) {
+            // Skip null or undefined values
+            return;
+        }
+
+        if (Array.isArray(value)) {
+            value.forEach((item, index) => {
+                if (Array.isArray(item)) {
+                    item.forEach((subItem, subIndex) => {
+                        url.searchParams.append(`${key}[${index}][${subIndex}]`, subItem);
+                    });
+                } else {
+                    url.searchParams.append(`${key}[]`, item);
+                }
+            });
+        } else {
+            url.searchParams.append(key, value);
+        }
+    });
+
+    return url.toString();
+}
 module.exports = {
     setCookie, 
     getCookie, 
     deleteCookie,
     curretUTCTime,
     sleep,
-    debounce
+    debounce,
+    listFilterParamsGenerator,
+    generateUrl
 }

@@ -194,6 +194,12 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-friends-queue-records-portal",
+	fetchFriendsQueueRecordv2:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/" +
+		appEnv +
+		"/fetch-friend-queue-records-v2",
 	fetchFriendsQueueSettings:
 		"https://" +
 		profileService +

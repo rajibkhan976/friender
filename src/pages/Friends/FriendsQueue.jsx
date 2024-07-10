@@ -26,6 +26,10 @@ import Alertbox from "../../components/common/Toast";
 import { showModal } from "../../actions/PlanAction";
 import ToolTipPro from "components/common/ToolTipPro";
 import extensionMethods from "../../configuration/extensionAccesories";
+import Listing2 from "../../components/common/SSListing/Listing2";
+import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumnDefs/FriendsQueueColDef";
+import config from "../../configuration/config";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const FriendsQueue = () => {
 	const dispatch = useDispatch();
@@ -538,6 +542,17 @@ const FriendsQueue = () => {
 		}
 	}
 
+	const tableMethod = {}
+	const defaultParams = {
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response) => {
+		return {
+			data: response?.data,
+			count: response?.count,
+		};
+	};
+
 	return (
 		<div className='main-content-inner d-flex d-flex-column'>
 			{modalOpen && (
@@ -777,16 +792,25 @@ const FriendsQueue = () => {
 					</div>
 				</div>
 			)}
-			{friendsQueueRecords?.length > 0 &&
-				!loading &&
+			{
 				inactiveAfter !== null ? (
-				<Listing
-					friendsData={friendsQueueRecords}
-					friendsListingRef={friendsQueueRef}
-					getFilterNum={setListFilteredCount}
-					reset={isReset}
-					setReset={setIsReset}
+				// <Listing
+				// 	friendsData={friendsQueueRecords}
+				// 	friendsListingRef={friendsQueueRef}
+				// 	getFilterNum={setListFilteredCount}
+				// 	reset={isReset}
+				// 	setReset={setIsReset}
+				// />
+
+				<Listing2 
+					//friendsData={filterFrndList}
+					listColDef = {FriendsQueueColDef} 
+					baseUrl = {config.fetchFriendsQueueRecordv2}
+					tableMethod = {tableMethod} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
 				/>
+
 			) : loading ? (
 				<ListingLoader />
 			) : (

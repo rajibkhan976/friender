@@ -988,8 +988,15 @@ export const MessageGroupRequestSentRenderer = memo((params) => {
 
 export const CountryRenderer = memo((params) => {
 	let countryName = "N/A";
-	if (params.value && params.value != "N/A") {
+	let countryValue = "N/A";
+	if((typeof params.value)=== "object") {
+		countryName= params.value.props["aria-label"];
+		countryValue=params?.value
+		//params.value.props["aria-label"]=params?.value?.props["aria-label"].toLowerCase();
+	}
+	if ((typeof params.value) === "string"&&params.value && params.value != "N/A") {
 		countryName = params.value.toLowerCase();
+		countryValue = params?.value;
 	}
 
 	return (
@@ -1015,7 +1022,7 @@ export const CountryRenderer = memo((params) => {
 								<Tier1Icon />
 							)}
 						</span>
-						<span className='country-name'>{countryName}</span>
+						<span className='country-name'>{countryValue}</span>
 					</>
 				) : (
 					<span className='muted-text'>N/A</span>
