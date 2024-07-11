@@ -39,9 +39,9 @@ const Sidebar = (props) => {
   const { darkMode, toggleDarkMode } = useContext(ModeContext);
   const navigate = useNavigate();
   const [sidebarToogle, setSidebarToogle] = useState(true);
-  const [subMenuFriends, setSubMenuFriends] = useState(true);
-  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(true);
-  const [subMenuMessage, setSubMenuMessage] = useState(true);
+  const [subMenuFriends, setSubMenuFriends] = useState(false);
+  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(false);
+  const [subMenuMessage, setSubMenuMessage] = useState(false);
   // const [profiles, setProfiles] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
   const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
@@ -189,18 +189,24 @@ const Sidebar = (props) => {
   const setSubMenuFriendsFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
+	!subMenuFriends && setSubMenuMessage(false);
+	!subMenuFriends && setSubMenuFriendsRequest(false);
     setSubMenuFriends(!subMenuFriends);
   };
 
   const setSubMenuMessageFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
+	!subMenuMessage && setSubMenuFriends(false);
+	!subMenuMessage && setSubMenuFriendsRequest(false);
     setSubMenuMessage(!subMenuMessage)
   }
 
   const setSubMenuFriendRequestFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
+	!subMenuFriendRequest && setSubMenuFriends(false);
+	!subMenuFriendRequest && setSubMenuMessage(false);
     setSubMenuFriendsRequest(!subMenuFriendRequest);
   };
 
@@ -427,10 +433,12 @@ const Sidebar = (props) => {
 									to='/friends/friend-list'
 									className={() =>
 										[
+											"/friends/all",
 											"/friends/friend-list",
+											"/friends/non-friends",
 											"/friends/unfriended-friends",
 											"/friends/whitelisted-friends",
-											"/friends/deactivated-friends",
+											// "/friends/deactivated-friends",
 											"/friends/lost-friends",
 											"/friends/blacklisted-friends",
 										].includes(location.pathname)
@@ -497,7 +505,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/friend-list'
+												to='/friends/non-friends'
 												aria-label='Friends'
 											>
 												<span className='nav-menu-name'>- Non friends</span>
@@ -761,7 +769,7 @@ const Sidebar = (props) => {
 							>
 								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 								<NavLink
-									// to='/crm'
+									to='/crm'
 									aria-label='CRM'
 								>
 									<CRMIcon />
@@ -796,7 +804,7 @@ const Sidebar = (props) => {
 							>
 								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 								<NavLink
-									// to='/posts'
+									to='/posts'
 									aria-label='Posts'
 								>
 									<PostsIcon />

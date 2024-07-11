@@ -25,6 +25,7 @@ import {
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
 import { showModal } from "../../../actions/PlanAction";
+import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 import moment from 'moment';
 import extensionAccesories from "../../../configuration/extensionAccesories";
 
@@ -305,9 +306,11 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const navigate = useNavigate();
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const { setCampaignDeleteModalOpen, setCampaignId } = params;
+	const [contextMenuPos, setContextMenuPos] = useState({x: 0, y: 0});
 
 	const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
-	const togggleContext = () => {
+	const togggleContext = (e) => {
+		setContextMenuPos({x: e.clientX, y: e.clientY});
 		setIsComponentVisible((current) => !current);
 		dispatch(updateCampaignContext(campaignId));
 	};
@@ -344,7 +347,6 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const handleDeleteCampaignOnClick = async () => {
 		setCampaignDeleteModalOpen(true);
 		setCampaignId(campaignId);
-		
 	};
 
 	return (
@@ -367,7 +369,15 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 				</button>
 
 				{isComponentVisible && (
-					<div className='context-menu'>
+					<CampaignSchedulerPopup>
+						<div 
+							className='context-menu' 
+							style={{
+								position: "absolute", 
+								top: contextMenuPos.y + (contextMenuPos.y / 100 * 5) + "px", 
+								left: contextMenuPos.x - (contextMenuPos.x / 100 * 5) + "px", 
+								backgroundColor: "rgb(22, 24, 25)"
+						}}>
 						<button
 							className='btn btn-edit'
 							onClick={handleEditCampaignOnClick}
@@ -387,6 +397,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 							Delete
 						</button>
 					</div>
+					</CampaignSchedulerPopup>
 				)}
 			</div>
 		</div>

@@ -12,13 +12,14 @@ let headers = {
  * @returns
  */
 export const fetchAllCampaign = (params) => {
-	const queryParams = params ? params : `?page_number=1&sort_by=friends_added&sort_order=asc&page_size=15`;
+	let queryParams = new URLSearchParams(params);
+	queryParams = queryParams.toString() ? "?" + queryParams.toString() : `?page_number=1&sort_by=friends_added&sort_order=asc&page_size=15`;
 	return new Promise((resolve, reject) => {
 		axios
 			.get(config.fetchAllCampaignsUrl + queryParams, { headers: headers })
 			.then((res) => {
-				// console.log('res >>>>', res?.data?.data);
-				resolve(res?.data?.data)
+				console.log('res >>>>', res?.data);
+				resolve(res?.data)
 			}).catch((error) => {
 				// console.log(error);
 				reject(error)

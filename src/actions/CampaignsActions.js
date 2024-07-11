@@ -250,7 +250,7 @@ export const campaignSlice = createSlice({
 		[fetchAllCampaigns.fulfilled]: (state, action) => {
 			state.isLoading = false;
 			// console.log(action);
-			state.campaignsArray = action?.payload;
+			state.campaignsArray = action?.payload?.data;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
 			state.isLoading = false;
