@@ -1,3 +1,4 @@
+import { UnlinkedNameCellRenderer } from "../../../listing/FriendListColumns";
 import { CommonColDefs } from "./CommonColDefs";
 
 const {
@@ -5,6 +6,7 @@ const {
   Gender,
   Age,
   Country,
+  FrindShip,
   TotalReaction,
   TotalComment,
   Engagement,
@@ -18,6 +20,42 @@ export const FriendlistColDefs = () => {
   return [
     Name,
     Gender,
+    Country,
+    MessageCount,
+    Age,
+    Keyword,
+    Source,
+  ];
+};
+export const LostFriendlistColDefs = () => {
+  return [
+    {
+      ...Name,
+      Cell: ({ renderedCellValue, row }) => {
+        return (
+          <UnlinkedNameCellRenderer value={renderedCellValue} data={row.original} />
+        )
+      },
+
+    },
+    Gender,
+    Age,
+    Country,
+    TotalReaction,
+    TotalComment,
+    Engagement,
+    MessageCount,
+    RecentEngagement,
+    Keyword,
+    Source,
+  ];
+};
+
+export const GlobalContactlistColDefs = () => {
+  return [
+    Name,
+    Gender,
+    FrindShip,
     Age,
     Country,
     TotalReaction,

@@ -768,6 +768,27 @@
   }
 }
 
+.friendship-cell {
+  font-size: 12px;
+  text-align: center;
+  
+  &.friend {
+    color: #49CE56;
+  }
+
+  &.unfriended {
+    color: #767485;
+  }
+
+  &.lost {
+    color: #FF6A77;
+  }
+
+  &.non-friend {
+    color: #F7D479;
+  }
+}
+
 .sync-date {
   .sync-ico {
     margin-right: 10px;

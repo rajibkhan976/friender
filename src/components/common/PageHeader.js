@@ -465,6 +465,42 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
+			case "all-contacts":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: true,
+					sortHeader: true,
+					filterHeader: true,
+					quickAction: true,
+					exportHeader: true,
+					listingLengthWell: true,
+					queryTopHeader: {
+						active: true,
+						content:
+							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+					},
+				});
+				break;
+			case "non-friends":
+				setHeaderOptions({
+					...headerOptions,
+					viewSelect: false,
+					syncManual: true,
+					searchHeader: true,
+					sortHeader: true,
+					filterHeader: true,
+					quickAction: true,
+					exportHeader: true,
+					listingLengthWell: true,
+					queryTopHeader: {
+						active: true,
+						content:
+							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+					},
+				});
+				break;
 
 			case "friend-list":
 				setHeaderOptions({

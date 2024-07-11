@@ -1,4 +1,4 @@
-import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
+import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
 
 export const CommonColDefs = {
     Name: {
@@ -8,6 +8,25 @@ export const CommonColDefs = {
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <UnlinkedNameCellWithOptionsRenderer value={renderedCellValue} data={row.original} />
+            )
+        },
+        columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
+        // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
+        //     <MenuItem
+        //       key="fuzzy"
+        //       onClick={() => onSelectFilterMode('fuzzy')}
+        //     >
+        //       Fuzzy Filter
+        //     </MenuItem>,
+        //   ],
+    },
+    FrindShip: {
+        accessorKey: 'friendship', //simple recommended way to define a column
+        header: 'Friendship',
+        enableHiding: false,
+        Cell: ({ renderedCellValue, row }) => {
+            return (
+                <FriendShipStatusRenderer value={renderedCellValue} data={row.original} />
             )
         },
         columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
@@ -39,7 +58,7 @@ export const CommonColDefs = {
         filterVariant: 'select'
     },
     Age: {
-        accessorKey: 'created_at',
+        accessorKey: 'age',
         header: 'Age',
         enableHiding: false,
         Cell: ({ renderedCellValue, row }) => {

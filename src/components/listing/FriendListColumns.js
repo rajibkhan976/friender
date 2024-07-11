@@ -28,6 +28,10 @@ import {
 	PostArrowIcon,
 	GroupArrowIcon,
 	FriendsFriendArrowIcon,
+	FriendsIcon,
+	UnfriendedIcon,
+	LostFriendsIcon,
+	NonFriendsIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -1028,6 +1032,23 @@ export const CountryRenderer = memo((params) => {
 					<span className='muted-text'>N/A</span>
 				)}
 			</span>
+		</span>
+	);
+});
+
+
+export const FriendShipStatusRenderer = memo((params) => {
+	const friendShipsUiObj ={
+		1:<span className={`friendship-cell friend`}><FriendsIcon/>Friend </span>,
+		 2:<span className={`friendship-cell unfriended`}><UnfriendedIcon/> Unfriended </span>,
+		 3:<span className={`friendship-cell lost`}><LostFriendsIcon/>Lost </span>,
+		4:<span className={`friendship-cell non-friend`}><NonFriendsIcon/>Non friend </span>,
+
+	}
+
+	return (
+		<span className={` d-flex f-align-center`}>
+			{friendShipsUiObj[params.value]}
 		</span>
 	);
 });

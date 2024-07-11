@@ -30,6 +30,10 @@ import Modal from "../../components/common/Modal";
 import { utils } from "../../helpers/utils";
 import helper from "../../helpers/helper"
 import moment from "moment";
+import { FriendlistColDefs, LostFriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import config from "../../configuration/config";
+import Listing2 from "../../components/common/SSListing/Listing2";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const LostFriends = () => {
   //::::Friend List geting data from Redux::::
@@ -523,6 +527,19 @@ const LostFriends = () => {
   // useEffect(() => {
   //   getFbUserId();
   // }, []);
+  const tableMethods = {
+    enableRowSelection: false
+  }
+	const defaultParams = {
+		friend_status: "Lost",
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response)=>{
+			return {
+				data: response?.data[0]?.friend_details,
+				count: response?.data[0]?.friend_count
+			}
+	}
 
   return (
     <div className="main-content-inner d-flex d-flex-column">
@@ -554,14 +571,14 @@ const LostFriends = () => {
       )}
       {friendsList?.length > 0 && (
         <>
-          <Listing
-            friendsData={friendsList}
-            friendsListingRef={friendsLostinRef}
-            // pageLoadSize={pageLoadSize}
-            getFilterNum={setListFilteredCount}
-            reset={isReset}
-            setReset={setIsReset}
-          />
+          <Listing2
+					//friendsData={filterFrndList}
+					listColDef = {LostFriendlistColDefs} 
+					baseUrl = {config.fetchFriendListUrlv2}
+					tableMethods = {tableMethods} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
+				/>
         </>
       )}
 

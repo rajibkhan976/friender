@@ -44,6 +44,7 @@ export default function Listing2(props) {
         pageSize: 15, //customize the default page size
     });
     const listMuiProps = MuiListStyleProps(theme);
+    const customTableMethods = props.tableMethods
 
     function getUniqueRecords(array1, array2) {
       // Merge the two arrays
@@ -371,15 +372,21 @@ export default function Listing2(props) {
             rowSelection,
             columnFilters,
             columnFilterFns,
-            //isLoading,
+            isLoading,
             pagination,
             // showAlertBanner: isError,
             // showProgressBars: isRefetching,
             sorting,
         },
         onSortingChange: setSorting,
+        //pagination setting end 
+        muiSkeletonProps: {
+          animation: 'wave',
+        },
+        ...customTableMethods,
         ...listMuiProps
-        //pagination setting end   
+          
+      
     })
 
 

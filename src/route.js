@@ -41,6 +41,8 @@ import { getSendFriendReqst } from "./actions/FriendsAction";
 
 import Messages from "./pages/messages";
 import FacebookAuthAppSignup from "./pages/FacebookAuthAppSignup";
+import GlobalContactList from "./pages/Friends/GlobalContactList";
+import NonFriendList from "./pages/Friends/NonFriendList";
 
 
 const LoginComponent = AuthLayout(LoginPage);
@@ -234,11 +236,28 @@ const Routeing = () => {
 							path='friends'
 							element={<Friends />}
 						>
+							
+							<Route
+								path='all-contacts'
+								element={
+									<Suspense fallback={""}>
+										<GlobalContactList />
+									</Suspense>
+								}
+							></Route>
 							<Route
 								path='friend-list'
 								element={
 									<Suspense fallback={""}>
 										<FriendsList />
+									</Suspense>
+								}
+							></Route>
+							<Route
+								path='non-friends'
+								element={
+									<Suspense fallback={""}>
+										<NonFriendList />
 									</Suspense>
 								}
 							></Route>

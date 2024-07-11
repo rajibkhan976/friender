@@ -542,7 +542,7 @@ const FriendsQueue = () => {
 		}
 	}
 
-	const tableMethod = {}
+	const tableMethods = {}
 	const defaultParams = {
 		fb_user_id: fb_user_id,
 	}
@@ -806,7 +806,7 @@ const FriendsQueue = () => {
 					//friendsData={filterFrndList}
 					listColDef = {FriendsQueueColDef} 
 					baseUrl = {config.fetchFriendsQueueRecordv2}
-					tableMethod = {tableMethod} 
+					tableMethods = {tableMethods} 
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
 				/>

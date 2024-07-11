@@ -30,6 +30,10 @@ import Modal from "../../components/common/Modal";
 import { utils } from "../../helpers/utils";
 import helper from "../../helpers/helper"
 import moment from "moment";
+import Listing2 from "../../components/common/SSListing/Listing2";
+import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import config from "../../configuration/config";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const FriendsList = () => {
   //::::Friend List geting data from Redux::::
@@ -564,6 +568,18 @@ const FriendsList = () => {
       cellClass: 'engagementCell'
     },
   ];
+  const tableMethods = {}
+	const defaultParams = {
+		friend_status: "Activate",
+		deleted_status: 1,
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response)=>{
+			return {
+				data: response?.data[0]?.friend_details,
+				count: response?.data[0]?.friend_count
+			}
+	}
   return (
     <div className="main-content-inner d-flex d-flex-column">
       {modalOpen && (
@@ -595,13 +611,14 @@ const FriendsList = () => {
       {unfriendList?.length > 0 && (
         <>
           {!loading && (
-            <Listing
-              friendsData={unfriendList}
-              friendsListingRef={friendsListinRef}
-              getFilterNum={setListFilteredCount}
-              reset={isReset}
-              setReset={setIsReset}
-            />
+            <Listing2 
+            //friendsData={filterFrndList}
+            listColDef = {FriendlistColDefs} 
+            baseUrl = {config.fetchFriendListUrlv2}
+            tableMethods = {tableMethods} 
+            defaultParams = {defaultParams}
+            dataExtractor = {dataExtractor}
+          />
           )}
         </>
       )}

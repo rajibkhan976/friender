@@ -2544,3 +2544,85 @@ export const CSVAArrowIcon = () => {
 		</svg>
 	)
 }
+
+
+export const FriendsIcon=()=>{
+	return (
+	  <svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		fill="none"
+		viewBox="0 0 16 16"
+	  >
+		<path
+		  stroke="#49CE56"
+		  strokeLinecap="round"
+		  strokeLinejoin="round"
+		  strokeWidth="1.4"
+		  d="M14.669 8l-2.667 2.667-1.333-1.334M2 14.001c0-1.473 2.09-2.667 4.667-2.667s4.666 1.194 4.666 2.667M9.998 5.333a3.333 3.333 0 11-6.667 0 3.333 3.333 0 016.667 0z"
+		></path>
+	  </svg>
+	);
+  }
+
+  export const UnfriendedIcon = ()=> {
+	return (
+	  <svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		fill="none"
+		viewBox="0 0 16 16"
+	  >
+		<path
+		  stroke="#767485"
+		  strokeLinecap="round"
+		  strokeLinejoin="round"
+		  d="M11.331 10.667L13.998 8M11.33 8l2.667 2.667M2 14c0-1.473 2.09-2.667 4.667-2.667s4.666 1.194 4.666 2.667M9.998 5.333a3.333 3.333 0 11-6.667 0 3.333 3.333 0 016.667 0z"
+		></path>
+	  </svg>
+	);
+  }
+
+
+
+  export const LostFriendsIcon = ()=> {
+	return (
+	  <svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		fill="none"
+		viewBox="0 0 16 16"
+	  >
+		<path
+		  stroke="#FF6A77"
+		  strokeLinecap="round"
+		  strokeLinejoin="round"
+		  strokeWidth="1.4"
+		  d="M3.3 14.001c0-1.473 2.09-2.667 4.667-2.667 2.578 0 4.667 1.194 4.667 2.667M11.3 5.333a3.333 3.333 0 11-6.667 0 3.333 3.333 0 016.667 0z"
+		></path>
+	  </svg>
+	);
+  }
+  export const NonFriendsIcon=()=>{
+	return (
+	  <svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="16"
+		height="16"
+		fill="none"
+		viewBox="0 0 16 16"
+	  >
+		<path
+		  stroke="#F7D479"
+		  strokeLinecap="round"
+		  strokeLinejoin="round"
+		  strokeWidth="1.4"
+		  d="M3.3 14.001c0-1.473 2.09-2.667 4.667-2.667 2.578 0 4.667 1.194 4.667 2.667M11.3 5.333a3.333 3.333 0 11-6.667 0 3.333 3.333 0 016.667 0z"
+		></path>
+	  </svg>
+	);
+  }
+  

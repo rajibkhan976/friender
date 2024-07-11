@@ -483,7 +483,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/all'
+												to='/friends/all-contacts'
 												aria-label='Friends'
 											>
 												<span className='nav-menu-name'>- All</span>
