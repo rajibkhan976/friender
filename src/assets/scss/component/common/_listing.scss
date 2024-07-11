@@ -95,7 +95,7 @@
         &:first-child {
           &:before {
             position: absolute;
-            content: '';
+            content: "";
             left: 0;
             height: 100%;
             height: 100%;
@@ -156,17 +156,17 @@
       .campaign-schedule-cell,
       .campaign-endTime-cell,
       .campaign-contextMenu-cell {
-          padding-left: 0;
+        padding-left: 0;
       }
 
       &:not(:first-child) {
         > * {
-          &:not( > .campaign-status-cell)
-          :not( > .campaign-count-cell)
-          :not( > .campaign-schedule-cell)
-          :not( > .campaign-endTime-cell)
-          :not( > .campaign-contextMenu-cell)
-          :not( > .campaign-pending-cell) {
+          &:not(> .campaign-status-cell)
+            :not(> .campaign-count-cell)
+            :not(> .campaign-schedule-cell)
+            :not(> .campaign-endTime-cell)
+            :not(> .campaign-contextMenu-cell)
+            :not(> .campaign-pending-cell) {
             padding-left: 18px;
           }
         }
@@ -175,7 +175,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+
         .friend-queue-keywords {
           background-color: rgba(41, 117, 49, 1);
           padding: 3px 12px;
@@ -732,7 +732,7 @@
   color: #fff;
   .friend-source {
     flex: 0 0 0;
-    display: inline-flex; 
+    display: inline-flex;
     vertical-align: middle;
     // text-align: center;
     // margin-right: 10px;
@@ -741,8 +741,7 @@
     // justify-content: start;
     svg {
       margin-right: 5px;
-      width:32px;
-      
+      width: 32px;
 
       *[fill] {
         fill: #fff;
@@ -866,7 +865,6 @@
   white-space: nowrap;
   //overflow: hidden;
   text-overflow: ellipsis;
-
 
   .fb-friend-request-warning {
     margin-inline-start: 8px;
@@ -1064,9 +1062,6 @@
   }
 }
 
-
-
-
 /*
 * ============= MUI REACT TABLE CUSTOMISATIONS ===============
 * =============  MUI TABLE CONTAINER AND COMMONS =============
@@ -1074,12 +1069,12 @@
 .react-table-container {
   /* height: 100%; */
   overflow: hidden;
-  height: 100%;
+  height: 100vh;
   // max-height: 88%;
 }
 
 .mui-table-container {
-  max-height: 900px !important;
+  max-height: 82vh !important;
 }
 
 // HEADERS SORTING ICONS
@@ -1087,55 +1082,65 @@
   color: white !important;
 }
 
+@media only screen and (max-height: 1000px) {
+  .mui-table-container {
+    max-height: 80vh !important;
+  }
+}
+
 @media only screen and (max-height: 900px) {
   .mui-table-container {
-      max-height: 720px !important;
+    max-height: 78vh !important;
   }
 }
 
 @media only screen and (max-height: 800px) {
   .mui-table-container {
-      max-height: 590px !important;
+    max-height: 75vh !important;
   }
 }
 
+@media only screen and (max-height: 700px) {
+  .mui-table-container {
+    max-height: 70vh !important;
+  }
+}
 
 /*
 * =============  MUI TABLE FILTER BLOCK MODAL =============
 */
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper {
   .MuiBox-root {
-      background-color: #131314;
+    background-color: #131314;
+    border-radius: 5px;
+    border-color: white;
+
+    div {
+      color: white;
+
+      button {
+        color: gray;
+      }
+
+      button:after {
+        color: white;
+      }
+    }
+
+    p {
+      color: lightgray;
+      margin-top: 5px;
+    }
+
+    .css-953pxc-MuiInputBase-root-MuiInput-root::before {
+      border: 1px solid gray;
+      padding-top: 5px;
       border-radius: 5px;
-      border-color: white;
+    }
 
-      div {
-          color: white;
-
-          
-          button {
-              color: gray;
-          }
-
-          button:after {
-              color: white;
-          }
-      }
-
-      p {
-          color: lightgray;
-          margin-top: 5px;
-      }
-
-      .css-953pxc-MuiInputBase-root-MuiInput-root::before {
-          border: 1px solid gray;
-          padding-top: 5px;
-          border-radius: 5px;
-      }
-
-      .css-953pxc-MuiInputBase-root-MuiInput-root::after {
-          border: none;
-      }
+    .css-953pxc-MuiInputBase-root-MuiInput-root::after {
+      border: none;
+    }
   }
 }
 
@@ -1144,44 +1149,80 @@
   background-color: #131314;
 
   .MuiListItemIcon-root.css-cveggr-MuiListItemIcon-root {
-      color: white;
+    color: white;
   }
 }
-
 
 /*
 * =============  MUI TABLE HEADER STYLES =============
 */
 .mui-table-head {
+  th {
+    min-width: 50px;
+  }
+
   // Name Heading..
   th[data-index="1"] {
-      width: 240px;
+    width: 240px;
   }
-  
+
+  // Gender, Age, Reaction, Comment, Engagement, Message Count, Recent Eng. , Keyword, Source Colum
+  th[data-index="2"],
+  th[data-index="3"],
+  th[data-index="5"],
+  th[data-index="6"],
+  th[data-index="7"],
+  th[data-index="8"],
+  th[data-index="9"] {
+    width: 150px;
+  }
+
+  // country Column
+  th[data-index="4"] {
+    width: 200px;
+  }
+
   .mui-table-head-cell {
-      // Heading Icons..
-      .MuiTableSortLabel-icon {
-          color: #ffffff !important;
-      }
+    // Heading Icons..
+    .MuiTableSortLabel-icon {
+      color: #ffffff !important;
+    }
   }
 }
-
 
 /*
 * =============  MUI TABLE BODY STYLES =============
 */
 .mui-table-body {
   // Name Body Cell..
+  td {
+    min-width: 50px;
+  }
   td[data-index="1"] {
-      width: 250px;
+    width: 250px;
   }
 
-  .tooltipFullName:before, .tooltipFullName:after {
-      display: none;
+  // Gender, Age, Reaction, Comment, Engagement, Message Count, Recent Eng. , Keyword, Source Colum
+  td[data-index="2"],
+  td[data-index="3"],
+  td[data-index="5"],
+  td[data-index="6"],
+  td[data-index="7"],
+  td[data-index="8"],
+  td[data-index="9"] {
+    width: 150px;
+  }
+
+  // country Column
+  td[data-index="4"] {
+    width: 200px;
+  }
+
+  .tooltipFullName:before,
+  .tooltipFullName:after {
+    display: none;
   }
 }
-
-
 
 /*
 * =============  MUI TABLE FOOTER STYLES =============
@@ -1212,24 +1253,24 @@
 
   // NAV FOR PAGINATION
   nav {
-      margin-left: 8rem;
+    margin-left: 8rem;
 
-      ul {
-          li:first-child {
-              display: none;
-          }
-
-          li:last-child {
-              display: none;
-          }
-
-          li {
-            button:hover,
-            .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover {
-              background-color: #131314;
-              color: white;
-            }
-          }
+    ul {
+      li:first-child {
+        display: none;
       }
+
+      li:last-child {
+        display: none;
+      }
+
+      li {
+        button:hover,
+        .css-yuzg60-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected:hover {
+          background-color: #131314;
+          color: white;
+        }
+      }
+    }
   }
 }
