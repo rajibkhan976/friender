@@ -2,17 +2,18 @@ import { darken } from "@mui/material";
 
 
 export const MuiListStyleProps = (theme) => {
-    const baseBackgroundColor =
+  const baseBackgroundColor =
     theme.palette.mode === "dark" ? "rgb(40, 44, 52)" : "#000000";
-    
-    return {
-          //pagination setting end
+
+  return {
+    //pagination setting end
     //styling props
     muiTableContainerProps: { className: "mui-table-container" },
     muiTablePaperProps: {
+      className: 'mui-table-paper',
       elevation: 0,
       sx: {
-        borderRadius: "5px",
+        borderRadius: "10px",
       },
     },
 
@@ -33,6 +34,7 @@ export const MuiListStyleProps = (theme) => {
     // }),
 
     muiTableHeadProps: {
+      className: 'mui-table-head',
       // Customizing table head cells
       sx: {
         "& .MuiTableCell-root": {
@@ -45,6 +47,7 @@ export const MuiListStyleProps = (theme) => {
     },
 
     muiTableHeadCellProps: {
+      className: 'mui-table-head-cell',
       //simple styling with the `sx` prop, works just like a style prop in this example
       sx: {
         fontWeight: "normal",
@@ -52,11 +55,6 @@ export const MuiListStyleProps = (theme) => {
         color: "#ffffff",
         backgroundColor: "#000000",
         height: "50px !important",
-
-        // Table Heading's Icons Color..
-        "& .MuiTableSortLabel-icon": {
-          color: "#ffffff !important", // Sort icon color
-        },
 
         // Table Heading's Icons Color..
         // Checkbox Icon on Header..
@@ -114,6 +112,7 @@ export const MuiListStyleProps = (theme) => {
     }),
 
     muiTableBodyProps: {
+      className: 'mui-table-body',
       sx: (theme) => ({
         table: {
           height: "100% !important",
@@ -134,23 +133,23 @@ export const MuiListStyleProps = (theme) => {
           padding: "1.5px",
         },
         '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]) > td':
-          {
-            // backgroundColor: darken(baseBackgroundColor, 0.1),
-            backgroundColor: "#1c1c1e",
-          },
+        {
+          // backgroundColor: darken(baseBackgroundColor, 0.1),
+          backgroundColor: "#1c1c1e",
+        },
         '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
-          {
-            backgroundColor: darken(baseBackgroundColor, 0.2),
-          },
+        {
+          backgroundColor: darken(baseBackgroundColor, 0.2),
+        },
         '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]) > td':
-          {
-            // backgroundColor: darken(baseBackgroundColor, 0.1),
-            backgroundColor: "#1c1c1e",
-          },
+        {
+          // backgroundColor: darken(baseBackgroundColor, 0.1),
+          backgroundColor: "#1c1c1e",
+        },
         '& tr:nth-of-type(even):not([data-selected="true"]):not([data-pinned="true"]):hover > td':
-          {
-            backgroundColor: darken(baseBackgroundColor, 0.2),
-          },
+        {
+          backgroundColor: darken(baseBackgroundColor, 0.2),
+        },
       }),
     },
 
@@ -194,9 +193,18 @@ export const MuiListStyleProps = (theme) => {
 
       sx: {
         "& .MuiBox-root": {
-          className: "mui-table-footer",
           position: "relative",
           justifyContent: "center",
+
+          '& .MuiBox-root': {
+            bottom: '18px',
+          },
+
+          '& .MuiInputBase-root': {
+            position: 'fixed',
+            right: '5rem',
+            marginTop: '35px'
+          }
         },
 
         "& .MuiTablePagination-root": {
@@ -288,6 +296,6 @@ export const MuiListStyleProps = (theme) => {
       baseBackgroundColor: baseBackgroundColor,
       draggingBorderColor: theme.palette.secondary.main,
     }),
-    }
+  }
 
 }

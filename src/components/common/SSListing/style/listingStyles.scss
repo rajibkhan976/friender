@@ -33,7 +33,7 @@
 /*
 * =============  MUI TABLE FILTER BLOCK MODAL =============
 */
-.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper.css-1t52068-MuiPaper-root-MuiPopover-paper {
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper {
     .MuiBox-root {
         background-color: #131314;
         border-radius: 5px;
@@ -82,22 +82,34 @@
 /*
 * =============  MUI TABLE HEADER STYLES =============
 */
-th.MuiTableCell-root.MuiTableCell-head.MuiTableCell-stickyHeader.MuiTableCell-alignLeft.MuiTableCell-sizeMedium.css-1yqocqp-MuiTableCell-root {
-    width: 240px;
+.mui-table-head {
+    // Name Heading..
+    th[data-index="1"] {
+        width: 240px;
+    }
+    
+    .mui-table-head-cell {
+        // Heading Icons..
+        .MuiTableSortLabel-icon {
+            color: #ffffff !important;
+        }
+    }
 }
 
 
 /*
 * =============  MUI TABLE BODY STYLES =============
 */
-td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignLeft.MuiTableCell-sizeMedium.css-116xlwv-MuiTableCell-root {
-    width: 250px;
+.mui-table-body {
+    // Name Body Cell..
+    td[data-index="1"] {
+        width: 250px;
+    }
 
     .tooltipFullName:before, .tooltipFullName:after {
         display: none;
     }
 }
-
 
 
 
@@ -113,18 +125,20 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignLeft.MuiTableCell-sizeM
     padding: 10px 0;
     margin-block: 0 40px;
     flex: 0 0 30px;
+    height: 50px;
+    border-top: 1px solid #313037;
 
-    .MuiBox-root.css-1llu0od {
-        bottom: 18px;
-    }
+    // .MuiBox-root.css-1llu0od {
+    //     bottom: 18px;
+    // }
 
-    .MuiInputBase-root.MuiInput-root.MuiInputBase-colorPrimary.css-1mmm5cp-MuiInputBase-root-MuiInput-root-MuiSelect-root,
-    .MuiBox-root.css-exd1zr.mui-footer-rows-per-page-input,
-    .mui-footer-rows-per-page-input {
-        // margin-left: 20rem;
-        position: fixed;
-        right: 5rem;
-    }
+    // .MuiInputBase-root.MuiInput-root.MuiInputBase-colorPrimary.css-1mmm5cp-MuiInputBase-root-MuiInput-root-MuiSelect-root,
+    // .MuiBox-root.css-exd1zr.mui-footer-rows-per-page-input,
+    // .mui-footer-rows-per-page-input {
+    //     // margin-left: 20rem;
+    //     position: fixed;
+    //     right: 5rem;
+    // }
 
     // NAV FOR PAGINATION
     nav {
@@ -148,9 +162,4 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignLeft.MuiTableCell-sizeM
             }
         }
     }
-}
-
-.mui-table-footer.MuiBox-root.css-1xb3m3a {
-    height: 50px;
-    border-top: 1px solid #313037;
 }
