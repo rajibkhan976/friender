@@ -9,7 +9,8 @@ import { fetchAllCampaign } from '../../../../services/campaigns/CampaignService
 import { useSelector } from "react-redux";
 import helper from "../../../../helpers/helper";
 import apiClient from "../../../../services";
-import "../../../../components/common/SSListing/style/listingStyles.scss";
+// import "../../../../components/common/SSListing/style/listingStyles.scss";
+import 'assets/scss/component/common/_listing.scss';
 import { MuiListStyleProps } from "../../../../components/common/SSListing/style/Style";
 
 export default function CampaignList(props) {
