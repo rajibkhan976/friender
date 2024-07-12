@@ -19,7 +19,6 @@ const initialState = {
 	campaignSchedule: [],
 	selectedCampaignSchedule: null,
 	campaignsArray: [],
-	totalCampaigns: 0,
 	campaignStatusChanges: {},
 	campaignsDetails: {},
 	campaignUsers: [],
@@ -260,7 +259,6 @@ export const campaignSlice = createSlice({
 			state.isLoading = false;
 			// console.log(action);
 			state.campaignsArray = action?.payload?.data;
-			state.totalCampaigns = action?.payload?.total_campaings;
 		},
 		[fetchAllCampaigns.rejected]: (state) => {
 			state.isLoading = false;

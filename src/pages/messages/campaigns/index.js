@@ -120,9 +120,6 @@ const Campaigns = () => {
 	const campaignsArray = useSelector(
 		(state) => state.campaign.campaignsArray
 	);
-	const totalCampaigns = useSelector(
-		(state) => state.campaign.totalCampaigns
-	);
 	const campaignsDetails = useSelector(
 		(state) => state.campaign.campaignsDetails
 	);
@@ -462,8 +459,6 @@ const Campaigns = () => {
 			fetchAll();
 		}
 	}, [campaignDuration, campaignFilter, location, radioOption]);
-
-	console.log("totalCampaigns", totalCampaigns);
 
 	useEffect(() => {
 		// dispatch(fetchAllCampaigns({sort_order: "asc"}))
