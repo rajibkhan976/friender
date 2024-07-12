@@ -13,18 +13,22 @@ const {
   MessageCount,
   RecentEngagement,
   Keyword,
-  Source,
+  Source
 } = CommonColDefs;
 
 export const FriendlistColDefs = () => {
   return [
     Name,
     Gender,
-    Country,
-    MessageCount,
     Age,
+    Country,
+    TotalReaction,
+    TotalComment,
+    Engagement,
+    MessageCount,
+    RecentEngagement,
     Keyword,
-    Source,
+    Source
   ];
 };
 export const LostFriendlistColDefs = () => {
@@ -47,7 +51,7 @@ export const LostFriendlistColDefs = () => {
     MessageCount,
     RecentEngagement,
     Keyword,
-    Source,
+    Source
   ];
 };
 
@@ -64,6 +68,6 @@ export const GlobalContactlistColDefs = () => {
     MessageCount,
     RecentEngagement,
     Keyword,
-    Source,
+    Source
   ];
 };

@@ -769,8 +769,11 @@
 }
 
 .friendship-cell {
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  //align-items: center;
   
   &.friend {
     color: #49CE56;
@@ -1294,4 +1297,8 @@
       }
     }
   }
+}
+
+.css-sui33z-MuiTableCell-root{
+  border-bottom: none !important;
 }
