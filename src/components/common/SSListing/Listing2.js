@@ -177,8 +177,10 @@ export default function Listing2(props) {
       obj = {...rowSelection, ...obj}
      
       setRowSelection(obj)
+      setRowSelectionTracker(obj)
     } else {
       setRowSelection({})
+      setRowSelectionTracker({})
     }
     // handleSelectAllClick(e)
   }
