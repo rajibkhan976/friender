@@ -237,7 +237,7 @@ function PageHeader({ headerText = "" }) {
 		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
 	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
-	const listCount = useSelector((state) => state.friendlist.curr_list_count);
+	const listCount = useSelector((state) => state.ssList.curr_list_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
 	const [links, setLinks] = useState([]);
 	const [accessOptions, setAccessOptions] = useState(accessibilityOptions);

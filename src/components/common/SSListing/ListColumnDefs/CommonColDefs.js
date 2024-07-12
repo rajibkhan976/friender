@@ -29,6 +29,13 @@ export const CommonColDefs = {
                 <FriendShipStatusRenderer value={renderedCellValue} data={row.original} />
             )
         },
+        filterVariant: 'multi-select',
+        filterSelectOptions: [
+            { label: 'Friend', value: 1 },
+            { label: 'Unfriended', value: 2 },
+            { label: 'Lost Friend', value: 3 },
+            { label: 'Non Friend', value: 4 },
+        ],
         columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem

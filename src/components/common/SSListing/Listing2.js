@@ -8,18 +8,20 @@ import {
     darken,
     useTheme
 } from '@mui/material';
-import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
-import { useSelector } from 'react-redux';
+//import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
+import { useDispatch, useSelector } from 'react-redux';
 import helper from "../../../helpers/helper"
-import apiClient from '../../../services';
-import CheckBox from '../../formComponents/Checkbox';
+// import apiClient from '../../../services';
+// import CheckBox from '../../formComponents/Checkbox';
 
 import "../../../assets/scss/component/common/_listing.scss"
+import { getListData, updateCurrlistCount, updateFilterState } from "../../../actions/SSListAction";
 
 
 export default function Listing2(props) {
     //mock data - strongly typed if you are using TypeScript (optional, but recommended)
     const theme = useTheme();
+    const dispatch = useDispatch();
     const textFilter = useSelector((state) => state.friendlist.searched_filter);
     const isInitialRender = useRef(true);
     const [data, setData] = useState([]);
@@ -229,69 +231,87 @@ export default function Listing2(props) {
     //   console.log("columnFilters--- :::>>>", columnFilters);
     //   console.log("columnFilterFns--- :::>>>", columnFilterFns);
     // }, [columnFilters, columnFilterFns]);
-    const fetchData = async (paginationData, globalFilter, filteronColumn , filteronColumnFns, sortingState ) => {
-    //  console.log("sorting||||--- :::>>>", sorting);
-    //setData(props?.friendsData.slice( pagination.pageIndex*pagination.pageSize,pagination.pageSize*(pagination.pageIndex+1)));
-    if (!data.length) {
-      setIsLoading(true);
-    } else {
-      setIsRefetching(true);
-    }
-    try {
-      const queryParam = {
-        page_number: paginationData.pageIndex + 1,
-        page_size: paginationData.pageSize,
-        search_string: globalFilter.length > 2 ? globalFilter : null,
-        ...props.defaultParams,
-      };
-
-      if (filteronColumn.length > 0) {
-        const { values, fields, operators } = helper.listFilterParamsGenerator(
-          filteronColumn,
-          filteronColumnFns
-        );
-        queryParam["values"] = JSON.stringify(values);
-        queryParam["fields"] = JSON.stringify(fields);
-        queryParam["operators"] = JSON.stringify(operators);
-        queryParam["filter"] = 1;
+    const fetchData = async (
+      paginationData,
+      globalFilter,
+      filteronColumn,
+      filteronColumnFns,
+      sortingState
+    ) => {
+      //  console.log("sorting||||--- :::>>>", sorting);
+      //setData(props?.friendsData.slice( pagination.pageIndex*pagination.pageSize,pagination.pageSize*(pagination.pageIndex+1)));
+      if (!data.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
       }
+      try {
+        const queryParam = {
+          page_number: paginationData.pageIndex + 1,
+          page_size: paginationData.pageSize,
+          search_string: globalFilter.length > 2 ? globalFilter : null,
+          ...props.defaultParams,
+        };
+
+        if (filteronColumn.length > 0) {
+          const { values, fields, operators } =
+            helper.listFilterParamsGenerator(filteronColumn, filteronColumnFns);
+          queryParam["values"] = JSON.stringify(values);
+          queryParam["fields"] = JSON.stringify(fields);
+          queryParam["operators"] = JSON.stringify(operators);
+          queryParam["filter"] = 1;
+        }
 
         //console.log("sorting---outi :::>>>", sortingState);
-        if(sortingState.length>0){
+        if (sortingState.length > 0) {
           //console.log("sorting--- :::>>>", sortingState);
           queryParam["sort_by"] = sortingState[0].id;
-          queryParam["sort_order"] = sortingState[0].desc? "desc" : "asc";
+          queryParam["sort_order"] = sortingState[0].desc ? "desc" : "asc";
         }
 
-      let response = await apiClient(
-        "get",
-        `${props.baseUrl}`,
-        {},
-        { ...queryParam }
-      );
-      // let response = await fetchFriendList2(queryParam);
-      const { data, count } = props.dataExtractor(response);
-      //console.log("data list batch____>>", data,count);
-      setRowCount(count);
-      setData(data);
+        const payload = {
+          queryParam : queryParam,
+          baseUrl : props.baseUrl,
+        }
 
-        if (selectAcross?.selected) {
-          let obj = response?.data[0]?.friend_details.reduce((acc, item) => {
-            // console.log('UNSELECTED OR NOT ', item._id , '>>>>>>>>', unSelectedIds?.includes(item._id));
-            if (!unSelectedIds?.includes(item._id)) {
-              acc[item?._id] = true;
-              return acc;
+        dispatch(getListData(payload))
+          .unwrap()
+          .then((response) => {
+            // let response = await fetchFriendList2(queryParam);
+            const { data, count } = props.dataExtractor(response);
+            //console.log("data list batch____>>", data,count);
+            setRowCount(count);
+            setData(data);
+            if( !queryParam.filter || queryParam.filter === 0 ){
+              dispatch(updateCurrlistCount(count));
             }
-          }, {});
-          obj = {...rowSelection, ...obj}
+            if (selectAcross?.selected) {
+              let obj = response?.data[0]?.friend_details.reduce(
+                (acc, item) => {
+                  // console.log('UNSELECTED OR NOT ', item._id , '>>>>>>>>', unSelectedIds?.includes(item._id));
+                  if (!unSelectedIds?.includes(item._id)) {
+                    acc[item?._id] = true;
+                    return acc;
+                  }
+                },
+                {}
+              );
+              obj = { ...rowSelection, ...obj };
+              setRowSelection(obj);
+            }
+          })
+          .catch((error) => {
+            setIsError(true);
+            console.error(error);
+            return;
+          });
+        // let response = await apiClient(
+        //   "get",
+        //   `${props.baseUrl}`,
+        //   {},
+        //   { ...queryParam }
+        // );
 
-
-          // console.log('rowSelection', rowSelection, 'obj',obj);
-          // console.log('rowSelection >>>', rowSelection, 'obj >>>', obj);
-          setRowSelection(obj)
-        }
-
-        // setRowCount(json.meta.totalRowCount);
       } catch (error) {
         setIsError(true);
         console.error(error);
@@ -311,6 +331,10 @@ export default function Listing2(props) {
         isInitialRender.current = false; // Set to false after the first render
       } else {
       debouncedFetchData(pagination,textFilter,columnFilters,columnFilterFns,sorting);
+      dispatch(updateFilterState({
+        filter_key_value: columnFilters,
+        filter_fun_state: columnFilterFns
+      }))
       }
     }, [
       textFilter,
