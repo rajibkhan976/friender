@@ -39,9 +39,9 @@ const Sidebar = (props) => {
   const { darkMode, toggleDarkMode } = useContext(ModeContext);
   const navigate = useNavigate();
   const [sidebarToogle, setSidebarToogle] = useState(true);
-  const [subMenuFriends, setSubMenuFriends] = useState(localStorage.getItem('subMenuFriends') ?? false);
-  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(localStorage.getItem('subMenuFriendRequest') ?? false);
-  const [subMenuMessage, setSubMenuMessage] = useState(localStorage.getItem('subMenuMessage') ?? false);
+  const [subMenuFriends, setSubMenuFriends] = useState(false);
+  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(false);
+  const [subMenuMessage, setSubMenuMessage] = useState(false);
   // const [profiles, setProfiles] = useState([]);
   const [authenticated, setAuthenticated] = useState(false);
   const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
@@ -153,7 +153,6 @@ const Sidebar = (props) => {
     // setShowProfile((current) => profiles?.length > 0 ? !current : false)
 	getProfileData();
     setIsComponentVisible((current) => !current);
-	localStorage.setItem('subMenuFriends', false);
     setSubMenuFriends(false);
   };
 
