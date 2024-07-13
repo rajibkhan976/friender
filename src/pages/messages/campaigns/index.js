@@ -2,14 +2,17 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	deleteCampaign,
 	fetchAllCampaigns,
 	fetchCampaignById,
 	updateCampaignsArray,
+	setCampaignDeleteModalOpen,
 	syncCampaignStatus,
 	updateCampaignFilter,
 	updateCampaignDuration,
 } from "actions/CampaignsActions";
 import { updateCurrlistCount } from "actions/SSListAction";
+import extensionAccesories from "../../../configuration/extensionAccesories";
 
 import {
 	ListingIcon,
@@ -23,6 +26,8 @@ import CampaignsHeader from "components/messages/campaigns/CampaignsHeader";
 import NoDataFound from "components/common/NoDataFound";
 import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
+import Modal from "components/common/Modal";
+import { DangerIcon } from "assets/icons/Icons";
 import { CampaignColDef } from "./list/CampaignColDef";
 
 const CampaignsCalendar = lazy(() =>
@@ -123,6 +128,13 @@ const Campaigns = () => {
 	const campaignDuration = useSelector(
 		(state) => state.campaign.campaignDuration
 	);
+	const isCampaignDeleteModalOpen = useSelector(
+		(state) => state.campaign.isCampaignDeleteModalOpen
+	);
+	
+	const campaignId = useSelector(
+		(state) => state.campaign.selectedCampaignId
+	);
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -130,6 +142,9 @@ const Campaigns = () => {
 	const [statusOption, setStatusOption] = useState(statusOptions);
 	const [editViews, setEditViews] = useState(editView);
 	const [isEditingCampaign, setIsEditingCampaign] = useState(null); //{isPaused: true}
+
+	console.log("campaignsFilter", campaignFilter);
+	console.log("campaignDuration", campaignDuration);
 
 	const fetchAll = async () => {
 		try {
@@ -339,6 +354,46 @@ const Campaigns = () => {
 		return campaignsResult && campaignsResult;
 	};
 
+	// DELETE CAMPAIGN API REQUEST..
+	const campaignDeleteAPIReq = async (id) => {
+		try {
+			const response = await dispatch(
+				deleteCampaign([{ campaignId: id }])
+			).unwrap();
+
+			if (response?.data) {
+				dispatch(setCampaignDeleteModalOpen(false));
+
+				extensionAccesories.sendMessageToExt({
+					action: "update_schedules"
+				  });
+
+				Alertbox(
+					`Campaign(s) has been deleted successfully.`,
+					"success",
+					1000,
+					"bottom-right"
+				);
+			} else if (response?.error?.code === "bad_request") {
+				dispatch(setCampaignDeleteModalOpen(false));
+				Alertbox(`${response?.error?.message}`, "error", 1000, "bottom-right");
+			} else {
+				dispatch(setCampaignDeleteModalOpen(false));
+				Alertbox(
+					`Failed to delete the campaign. Please check your input and try again.`,
+					"error",
+					1000,
+					"bottom-right"
+				);
+			}
+		} catch (error) {
+			dispatch(setCampaignDeleteModalOpen(false));
+			Alertbox(error, "error", 1000, "bottom-right");
+		} finally {
+			dispatch(setCampaignDeleteModalOpen(false));
+		}
+	};
+
 	console.log("isEditingCampaign", isEditingCampaign);
 
 	useEffect(() => {
@@ -406,13 +461,13 @@ const Campaigns = () => {
 	}, [campaignDuration, campaignFilter, location, radioOption]);
 
 	useEffect(() => {
-		dispatch(fetchAllCampaigns({sort_order: "asc"}))
-		.unwrap()
-		.then((resp) => {
-			if (resp) {
-				dispatch(updateCurrlistCount(resp?.total_campaings));
-			}
-		});
+		// dispatch(fetchAllCampaigns({sort_order: "asc"}))
+		// .unwrap()
+		// .then((resp) => {
+		// 	if (resp) {
+		// 		dispatch(updateCurrlistCount(resp?.total_campaings));
+		// 	}
+		// });
 		
 		return () => {
 			dispatch(updateCampaignDuration(null));
@@ -422,6 +477,19 @@ const Campaigns = () => {
 
 	return (
 		<div className='h-100 w-100 d-flex d-flex-column messages-campaign'>
+			<Modal
+				modalType='DELETE'
+				headerText={"Delete"}
+				bodyText={"Are you sure you want to delete ?"}
+				open={isCampaignDeleteModalOpen}
+				setOpen={(status) => dispatch(setCampaignDeleteModalOpen(status))}
+				ModalFun={() => {
+					campaignDeleteAPIReq(campaignId);
+				}}
+				btnText={"Yes, Delete"}
+				ModalIconElement={() => <DangerIcon />}
+				additionalClass={`campaign-view-details-delete-modal`}
+			/>
 			{loading ? (
 				<ListingLoader />
 			) : (
@@ -465,10 +533,6 @@ const Campaigns = () => {
 										/>
 									</Suspense>
 								)
-							) : !campaignsArray || campaignsArray?.length <= 0 ? (
-								<NoDataFound
-									customText={`No campaign(s) has been created yet`}
-								/>
 							) : (
 								<Suspense fallback=''>
 									<CampaignsCalendar

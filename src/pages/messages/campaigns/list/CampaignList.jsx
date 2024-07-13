@@ -192,6 +192,11 @@ export default function CampaignList(props) {
     // const handleRowClick = (e, rowId) => {
     //   console.log('rowId >>>>>', rowId);
 
+    // handleSelectAllClick(e)
+    // };
+    // const handleRowClick = (e, rowId) => {
+    //   console.log('rowId >>>>>', rowId);
+
     //   if (selectAcross?.selected) {
     //       if (!e.target.checked) {
     //               setSelectAcross({
@@ -458,7 +463,7 @@ export default function CampaignList(props) {
           handleSelectionChange(selectedRows)
           // setRowSelection(selectedRows)
         },
-        //onSortingChange: setSorting,
+        onSortingChange: setSorting,
         onColumnFilterFnsChange: setColumnFilterFns,
         state: {
             rowSelection,

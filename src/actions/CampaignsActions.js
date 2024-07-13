@@ -23,7 +23,9 @@ const initialState = {
 	campaignsDetails: {},
 	campaignUsers: [],
 	campaignFilter: null,
-	campaignDuration: null
+	campaignDuration: null,
+	isCampaignDeleteModalOpen: false,
+	selectedCampaignId: null,
 	// campaignsArray: [
 	// 	{
 	// 		_id: 1,
@@ -241,7 +243,13 @@ export const campaignSlice = createSlice({
 		},
 		updateCampaignDuration: (state, action) => {
 			state.campaignDuration = action?.payload
-		}
+		},
+		setCampaignDeleteModalOpen: (state, action) => {
+			state.isCampaignDeleteModalOpen = action?.payload;
+		},
+		setCampaignId: (state, action) => {
+			state.selectedCampaignId = action?.payload;
+		},
 	},
 	extraReducers: {
 		[fetchAllCampaigns.pending]: (state) => {
@@ -432,7 +440,9 @@ export const {
 	updateCampaignDetails,
 	syncCampaignStatus,
 	updateCampaignFilter,
-	updateCampaignDuration
+	updateCampaignDuration,
+	setCampaignDeleteModalOpen,
+	setCampaignId
 } = campaignSlice.actions;
 
 export default campaignSlice.reducer;

@@ -97,7 +97,7 @@ const FriendsList = () => {
 	// };
 
 	useEffect(() => {
-		dispatch(fetchAllCampaigns());
+		dispatch(fetchAllCampaigns({sort_order: "asc"}));
 		//getSettingsData();
 	}, []);
 

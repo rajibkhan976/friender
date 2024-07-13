@@ -20,7 +20,9 @@ import {
 	updateCampaignsArray,
 	fetchUsers,
 	updateCampaignStatus,
-	syncCampaignStatus
+	syncCampaignStatus,
+	setCampaignDeleteModalOpen,
+	setCampaignId,
 } from "actions/CampaignsActions";
 import useComponentVisible from "../../../helpers/useComponentVisible";
 import Alertbox from "../../common/Toast";
@@ -305,7 +307,7 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
-	const { setCampaignDeleteModalOpen, setCampaignId } = params;
+	// const { setCampaignDeleteModalOpen, setCampaignId } = params;
 	const [contextMenuPos, setContextMenuPos] = useState({x: 0, y: 0});
 
 	const { clickedRef, isComponentVisible, setIsComponentVisible } = useComponentVisible(false);
@@ -345,8 +347,8 @@ export const CampaignContextMenuCellRenderer = memo((params) => {
 	};
 
 	const handleDeleteCampaignOnClick = async () => {
-		setCampaignDeleteModalOpen(true);
-		setCampaignId(campaignId);
+		dispatch(setCampaignDeleteModalOpen(true));
+		dispatch(setCampaignId(campaignId));
 	};
 
 	return (
