@@ -413,3 +413,31 @@
 	cursor: pointer;
 	color: rgba(255, 219, 222, 1) !important;
 }
+
+.encrypted-msg-settings-tooltip-container {
+	position: relative;
+}
+
+.encrypted-msg-settings-tooltip-icon {
+	margin-left: 4px;
+}
+
+.encrypted-msg-settings-tooltip-icon:hover + .encrypted-msg-settings-tooltip {
+	display: flex;
+	background-color: rgba(64, 64, 64, 1);
+	justify-content: center;
+	align-items: center;
+	padding: 6px;
+	border-radius: 4px;
+	font-weight: 400;
+	font-size: 12;
+	line-height: 18px;
+}
+
+.encrypted-msg-settings-tooltip {
+	position: absolute;
+	left: 40px;
+	bottom: 25px;
+	z-index: 1;
+	display: none;
+}

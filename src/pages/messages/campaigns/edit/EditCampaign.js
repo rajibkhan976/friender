@@ -22,11 +22,10 @@ import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCrea
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
 import {
 	fetchUsers,
-	fetchCampaignUsersFromIndexDB,
 	deleteCampaignContacts,
 	updateCampaignSchedule
 } from "../../../../actions/CampaignsActions";
-import { countCurrentListsize } from "../../../../actions/FriendListAction";
+import { updateCurrlistCount } from "../../../../actions/SSListAction";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();
@@ -233,12 +232,6 @@ const EditCampaign = (props) => {
 
 	console.log("isEditingCampaign", isEditingCampaign);
 
-	// useEffect(() => {
-	// 	if (isEditingCampaign && isEditingCampaign?.friends) {
-	// 		dispatch(countCurrentListsize(isEditingCampaign?.friends.length));
-	// 	}
-	// }, [isEditingCampaign]);
-
 	useEffect(() => {
 		setView(editViews?.find((el) => el.checked).label);
 	}, [editViews]);
@@ -385,7 +378,7 @@ const EditCampaign = (props) => {
 			.unwrap()
 			.then((res) => {
 				console.log("USERS COUNT", res);
-				dispatch(countCurrentListsize(res?.data?.length));
+				dispatch(updateCurrlistCount(res?.data?.length));
 			});
 		} catch (error) {
 			// console.log(

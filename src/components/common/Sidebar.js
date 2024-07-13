@@ -60,17 +60,7 @@ const Sidebar = (props) => {
     (state) => state.profilespace.defaultProfileId
   );
 
-
-
-  useEffect(() => {
-    // alert("a")
-    getProfileData();
-  }, []);
-
-
   const dispatch = useDispatch();
-
-
 
   const authCheck = () => {
     const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
@@ -153,15 +143,6 @@ const Sidebar = (props) => {
     })()
   }, [localStorage.getItem("fr_facebook_auth") || localStorage.getItem("fr_pass_changed") || localStorage.getItem("fr_onboarding")]);
 
-  useEffect(() => {
-    const toggle = asyncLocalStorage.getItem("fr_sidebarToogle");
-    toggle.then((res) => {
-      if (res) {
-        setSidebarToogle(JSON.parse(res.toLowerCase()));
-      }
-    });
-  }, []);
-
   const closePopupFn = (e) => {
     setIsComponentVisible(false);
   };
@@ -173,6 +154,7 @@ const Sidebar = (props) => {
     setIsComponentVisible((current) => !current);
     setSubMenuFriends(false);
   };
+
   // const checkIfNotFriends = () => {
   //   return location.pathname.split("/")[location.pathname.split("/").length - 1] ===
   //     "friend-list" ||
@@ -189,24 +171,30 @@ const Sidebar = (props) => {
   const setSubMenuFriendsFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
-	!subMenuFriends && setSubMenuMessage(false);
-	!subMenuFriends && setSubMenuFriendsRequest(false);
+	if (!subMenuFriends) {
+		setSubMenuMessage(false);
+		setSubMenuFriendsRequest(false);
+	}
     setSubMenuFriends(!subMenuFriends);
   };
 
   const setSubMenuMessageFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
-	!subMenuMessage && setSubMenuFriends(false);
-	!subMenuMessage && setSubMenuFriendsRequest(false);
+	if (!subMenuMessage) {
+		setSubMenuFriends(false);
+		setSubMenuFriendsRequest(false);
+	}
     setSubMenuMessage(!subMenuMessage)
   }
 
   const setSubMenuFriendRequestFn = (e) => {
     e.stopPropagation();
     e.preventDefault();
-	!subMenuFriendRequest && setSubMenuFriends(false);
-	!subMenuFriendRequest && setSubMenuMessage(false);
+	if (!subMenuFriendRequest) {
+		setSubMenuFriends(false);
+		setSubMenuMessage(false);
+	}
     setSubMenuFriendsRequest(!subMenuFriendRequest);
   };
 
@@ -315,20 +303,67 @@ const Sidebar = (props) => {
     setSidebarOpenFn();
   };
 
-  useEffect(() => {
-    if(
-      location.pathname === "/facebook-auth" ||
-      location.pathname === "/reset-password" ||
-      location.pathname === "/onboarding"
-    ) {
-      localStorage.setItem("fr_sidebarToogle", true);
-      setSidebarToogle(true);
-    }
+  	const friendsSubMenuArr = [
+		"/friends/all",
+		"/friends/friend-list",
+		"/friends/non-friends",
+		"/friends/unfriended-friends",
+		"/friends/whitelisted-friends",
+		// "/friends/deactivated-friends",
+		"/friends/lost-friends",
+		"/friends/blacklisted-friends",
+	];
 
-	authCheck()
-    // console.log("setSubMenuFriendsFn", checkIfNotFriends());
-    // setSubMenuFriends(checkIfNotFriends());
-  }, [location])
+	const friendReqSubMenuArr = [
+		"/friends/pending-request",
+		"/friends/friends-queue",
+	];
+
+  	const messageSubMenuArr = [
+		"/messages/groups",
+		"/messages/segments",
+		"/messages/dmf",
+		// '/messages/campaigns'
+	];
+
+	useEffect(() => {
+		getProfileData();
+	
+		if (friendsSubMenuArr?.includes(location?.pathname)) {
+			setSubMenuFriends(true);
+		}
+	
+		if (friendReqSubMenuArr?.includes(location?.pathname)) {
+			setSubMenuFriendsRequest(true);
+		}
+	
+		if (messageSubMenuArr?.includes(location?.pathname)) {
+			setSubMenuMessage(true);
+		}
+	
+		const toggle = asyncLocalStorage.getItem("fr_sidebarToogle");
+	
+		toggle.then((res) => {
+		  if (res) {
+			setSidebarToogle(JSON.parse(res.toLowerCase()));
+		  }
+		});
+	  }, []);
+
+	useEffect(() => {
+		if(
+			location.pathname === "/facebook-auth" ||
+			location.pathname === "/reset-password" ||
+			location.pathname === "/onboarding"
+		) {
+			localStorage.setItem("fr_sidebarToogle", true);
+			setSidebarToogle(true);
+		}
+
+		authCheck()
+		// console.log("setSubMenuFriendsFn", checkIfNotFriends());
+		// setSubMenuFriends(checkIfNotFriends());
+	}, [location]);
 
   return (
 		<aside
@@ -429,22 +464,13 @@ const Sidebar = (props) => {
 								onClick={setSidebarOpenFn}
 							>
 								<NavLink
-									onClick={() => setSubMenuFriends(true)}
+									onClick={(e) => {
+										setSubMenuFriends(true);
+									}}
 									to='/friends/friend-list'
-									className={() =>
-										[
-											"/friends/all",
-											"/friends/friend-list",
-											"/friends/non-friends",
-											"/friends/unfriended-friends",
-											"/friends/whitelisted-friends",
-											// "/friends/deactivated-friends",
-											"/friends/lost-friends",
-											"/friends/blacklisted-friends",
-										].includes(location.pathname)
+									className={() => friendsSubMenuArr.includes(location?.pathname)
 											? "active"
-											: ""
-									}
+											: ""}
 									aria-label='Friends'
 								>
 									<ContactIcon />
@@ -476,7 +502,7 @@ const Sidebar = (props) => {
 										</span>
 									</span>
 								</NavLink>
-								{subMenuFriends && (
+								{subMenuFriends ? (
 									<ul className='sub-menus'>
 										<li
 											className='nav-menu'
@@ -484,7 +510,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/all-contacts'
-												aria-label='Friends'
+												aria-label='All'
 											>
 												<span className='nav-menu-name'>- All</span>
 											</NavLink>
@@ -506,7 +532,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/non-friends'
-												aria-label='Friends'
+												aria-label='Non friends'
 											>
 												<span className='nav-menu-name'>- Non friends</span>
 											</NavLink>
@@ -518,7 +544,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/unfriended-friends'
-												aria-label='Unfriended Friends'
+												aria-label='Unfriended'
 											>
 												<span className='nav-menu-name'>- Unfriended</span>
 											</NavLink>
@@ -529,7 +555,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/lost-friends'
-												aria-label='Lost Friends'
+												aria-label='Lost'
 											>
 												<span className='nav-menu-name'>- Lost</span>
 											</NavLink>
@@ -540,7 +566,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/whitelisted-friends'
-												aria-label='Whitelisted Friends'
+												aria-label='Whitelisted'
 											>
 												<span className='nav-menu-name'>- Whitelisted</span>
 											</NavLink>
@@ -551,7 +577,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/blacklisted-friends'
-												aria-label='Blacklisted Friends'
+												aria-label='Blacklisted'
 											>
 												<span className='nav-menu-name'>- Blacklisted</span>
 											</NavLink>
@@ -569,17 +595,17 @@ const Sidebar = (props) => {
 										</li> */}
 
 										{/* <li className="nav-menu" onClick={setSidebarOpenFn}>
-                  <NavLink to="/friends/incoming-pending-request">
-                      <span className="nav-menu-name">- Incoming Pending Request</span>
-                  </NavLink>
-                </li>
-                <li className="nav-menu" onClick={setSidebarOpenFn}>
-                  <NavLink to="/friends/incoming-rejected-request">
-                      <span className="nav-menu-name">- Incoming Rejected Request</span>
-                  </NavLink>
-                </li> */}
+												<NavLink to="/friends/incoming-pending-request">
+													<span className="nav-menu-name">- Incoming Pending Request</span>
+												</NavLink>
+												</li>
+												<li className="nav-menu" onClick={setSidebarOpenFn}>
+												<NavLink to="/friends/incoming-rejected-request">
+													<span className="nav-menu-name">- Incoming Rejected Request</span>
+												</NavLink>
+										</li> */}
 									</ul>
-								)}
+								) : null}
 							</li>
 							{/* <span className="seperator"></span> */}
 							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
@@ -593,16 +619,13 @@ const Sidebar = (props) => {
 								onClick={setSidebarOpenFn}
 							>
 								<NavLink
-									onClick={() => setSubMenuFriendRequestFn(true)}
+									onClick={(e) => {
+										setSubMenuFriendsRequest(true);
+									}}
 									to='/friends/friends-queue'
-									className={() =>
-										[
-											"/friends/pending-request",
-											"/friends/friends-queue",
-										].includes(location.pathname)
+									className={() => friendReqSubMenuArr.includes(location?.pathname)
 											? "active"
-											: ""
-									}
+											: ""}
 									aria-label='Friends'
 								>
 									<FriendRequestIcon />
@@ -635,7 +658,7 @@ const Sidebar = (props) => {
 									</span>
 								</NavLink>
 
-								{subMenuFriendRequest && (
+								{subMenuFriendRequest ? (
 									<ul className='sub-menus'>
 										<li
 											className='nav-menu'
@@ -643,7 +666,7 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/friends-queue'
-												aria-label='Friends'
+												aria-label='Friends queue'
 											>
 												<span className='nav-menu-name'>- Friends queue</span>
 											</NavLink>
@@ -654,14 +677,14 @@ const Sidebar = (props) => {
 										>
 											<NavLink
 												to='/friends/pending-request'
-												aria-label='Pending Friends'
+												aria-label='Pending request'
 											>
 												<span className='nav-menu-name'>- Pending request</span>
 											</NavLink>
 										</li>
 										
 									</ul>
-								)}
+								) : null}
 							</li>
 
 							<li
@@ -674,19 +697,12 @@ const Sidebar = (props) => {
 							>
 								<NavLink
 									to='/messages/groups'
-									onClick={() => {
+									onClick={(e) => {
 										setSubMenuMessage(true);
 									}}
-									className={() =>
-										[
-											"/messages/groups",
-											"/messages/segments",
-											"/messages/dmf",
-											// '/messages/campaigns'
-										].includes(location.pathname)
+									className={() => messageSubMenuArr.includes(location?.pathname)
 											? "active"
-											: ""
-									}
+											: ""}
 									aria-label='Messages'
 								>
 									<NavMessageIcon color={"#0094FF"} />
@@ -716,7 +732,7 @@ const Sidebar = (props) => {
 									</span>
 								</NavLink>
 
-								{subMenuMessage && (
+								{subMenuMessage ? (
 									<ul className='sub-menus'>
 										<li className='nav-menu'>
 											<NavLink
@@ -746,12 +762,12 @@ const Sidebar = (props) => {
 											</NavLink>
 										</li>
 										{/* <li className="nav-menu">
-                    <NavLink to="/messages/campaigns" aria-label="Friends">
-                      <span className="nav-menu-name">- Campaigns</span>
-                    </NavLink>
-                  </li> */}
+											<NavLink to="/messages/campaigns" aria-label="Friends">
+											<span className="nav-menu-name">- Campaigns</span>
+											</NavLink>
+										</li> */}
 									</ul>
-								)}
+								) : null}
 							</li>
 
 							<li className={"nav-menu campaigns-menu"}>
@@ -771,6 +787,7 @@ const Sidebar = (props) => {
 								<NavLink
 									to='/crm'
 									aria-label='CRM'
+									className='no-click'
 								>
 									<CRMIcon />
 									<span className='nav-menu-name'>
@@ -806,6 +823,7 @@ const Sidebar = (props) => {
 								<NavLink
 									to='/posts'
 									aria-label='Posts'
+									className='no-click'
 								>
 									<PostsIcon />
 									<span className='nav-menu-name'>Posts</span>
@@ -859,42 +877,42 @@ const Sidebar = (props) => {
 					{/* {sidebarToogle && ( */}
 					<>
 						{/* <li
-                className={
-                  authenticated
-                    ? "nav-menu closed-only no-click"
-                    : "nav-menu closed-only no-click"
-                }
-              >
-                <NavLink to="/">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="9"
-                      stroke="#BDBDBD"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="12"
-                      cy="17"
-                      r="0.5"
-                      fill="#BDBDBD"
-                      stroke="#BDBDBD"
-                    />
-                    <path
-                      d="M12 15V13.7396C12 13.0928 12.3971 12.5122 13 12.2778V12.2778C13.6029 12.0433 14 11.4628 14 10.8159V10C14 8.89543 13.1046 8 12 8V8C10.8954 8 10 8.89543 10 10V10.3333"
-                      stroke="#BDBDBD"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </NavLink>
-              </li> */}
+							className={
+							authenticated
+								? "nav-menu closed-only no-click"
+								: "nav-menu closed-only no-click"
+							}
+						>
+							<NavLink to="/">
+							<svg
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<circle
+								cx="12"
+								cy="12"
+								r="9"
+								stroke="#BDBDBD"
+								strokeWidth="2"
+								/>
+								<circle
+								cx="12"
+								cy="17"
+								r="0.5"
+								fill="#BDBDBD"
+								stroke="#BDBDBD"
+								/>
+								<path
+								d="M12 15V13.7396C12 13.0928 12.3971 12.5122 13 12.2778V12.2778C13.6029 12.0433 14 11.4628 14 10.8159V10C14 8.89543 13.1046 8 12 8V8C10.8954 8 10 8.89543 10 10V10.3333"
+								stroke="#BDBDBD"
+								strokeWidth="2"
+								/>
+							</svg>
+							</NavLink>
+						</li> */}
 
 						<li
 							ref={clickedRef}
@@ -931,8 +949,8 @@ const Sidebar = (props) => {
 						{!sidebarToogle && (
 							<li className='nav-menu feedback-nav'>
 								{/* {
-                  console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
-                } */}
+								console.log('facebookAuthInfoStatus', facebookAuthInfoStatus)
+								} */}
 								<span
 									className='profile-photo'
 									onClick={setShowProfileFn}
@@ -950,30 +968,30 @@ const Sidebar = (props) => {
 
 								{/* {
 
-                  console.log(
-                    'authenticated', authenticated, 
-                    'defaultProfileId', defaultProfileId, 
-                    'isComponentVisible', isComponentVisible,
-                    'facebookAuthInfoStatus', facebookAuthInfoStatus,
-                    'facebookAuthInfoStatus image', facebookAuthInfoStatus?.picture?.data?.url,
-                    'facebookAuthInfoStatus url', facebookAuthInfoStatus?.link
-                  )
-                } */}
+								console.log(
+									'authenticated', authenticated, 
+									'defaultProfileId', defaultProfileId, 
+									'isComponentVisible', isComponentVisible,
+									'facebookAuthInfoStatus', facebookAuthInfoStatus,
+									'facebookAuthInfoStatus image', facebookAuthInfoStatus?.picture?.data?.url,
+									'facebookAuthInfoStatus url', facebookAuthInfoStatus?.link
+								)
+								} */}
 
-								{/* {isComponentVisible && (
+												{/* {isComponentVisible && (
 
-                  <SidebarPopUp 
-                    authenticated={authenticated}
-                    profiles={profiles}
-                    switchProfile ={switchProfile}
-                    setShowProfileFn ={setShowProfileFn}
-                    userEmail={userEmail}
-                    closePopupFn = {closePopupFn}
-                    logoOut = {logoOut}
-                    defaultProfileId = {defaultProfileId}
-                    facebookAuthInfoStatus={facebookAuthInfoStatus}            
-                  />
-                )} */}
+								<SidebarPopUp 
+									authenticated={authenticated}
+									profiles={profiles}
+									switchProfile ={switchProfile}
+									setShowProfileFn ={setShowProfileFn}
+									userEmail={userEmail}
+									closePopupFn = {closePopupFn}
+									logoOut = {logoOut}
+									defaultProfileId = {defaultProfileId}
+									facebookAuthInfoStatus={facebookAuthInfoStatus}            
+								/>
+								)} */}
 								<Link
 									to='https://lnkw.co/friender-feedback'
 									target='_blank'
@@ -998,81 +1016,82 @@ const Sidebar = (props) => {
 						)}
 
 						{/* <li className="nav-menu opened-only no-click">
-                <button
-                  className="btn-transparent menu-detail"
-                  aria-label="Invite" 
-                >
-                  <svg
-                    width="46"
-                    height="40"
-                    viewBox="0 0 46 40"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.5"
-                      y="0.5"
-                      width="45"
-                      height="39"
-                      rx="4.5"
-                      fill="#605BFF"
-                      fillOpacity="0.1"
-                      stroke="#605BFF"
-                    />
-                    <circle cx="21.5" cy="17" r="3.75" fill="#605BFF" />
-                    <path
-                      d="M28.25 18.5L28.25 23"
-                      stroke="#605BFF"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M30.5 20.75L26 20.75"
-                      stroke="#605BFF"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M26.8566 26.2869C27.2028 26.2085 27.4105 25.8486 27.257 25.5285C26.8432 24.6652 26.163 23.9066 25.2814 23.3349C24.1966 22.6313 22.8674 22.25 21.5 22.25C20.1326 22.25 18.8034 22.6313 17.7186 23.3349C16.837 23.9066 16.1568 24.6652 15.743 25.5284C15.5895 25.8486 15.7972 26.2085 16.1434 26.2869C19.6698 27.0855 23.3302 27.0855 26.8566 26.2869Z"
-                      fill="#605BFF"
-                    />
-                  </svg>
-                </button>
-              </li>  */}
-						{/* <li className="nav-menu opened-only no-click">
-                <button className="btn-primary upgrade-btn">Upgrade</button>
-              </li>  */}
-						{/* <li className="nav-menu opened-only no-click">
-                <NavLink to="/" aria-label="FAQ">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="9"
-                      stroke="#BDBDBD"
-                      strokeWidth="2"
-                    />
-                    <circle
-                      cx="12"
-                      cy="17"
-                      r="0.5"
-                      fill="#BDBDBD"
-                      stroke="#BDBDBD"
-                    />
-                    <path
-                      d="M12 15V13.7396C12 13.0928 12.3971 12.5122 13 12.2778V12.2778C13.6029 12.0433 14 11.4628 14 10.8159V10C14 8.89543 13.1046 8 12 8V8C10.8954 8 10 8.89543 10 10V10.3333"
-                      stroke="#BDBDBD"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </NavLink>
-              </li> */}
+								<button
+								className="btn-transparent menu-detail"
+								aria-label="Invite" 
+								>
+								<svg
+									width="46"
+									height="40"
+									viewBox="0 0 46 40"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<rect
+									x="0.5"
+									y="0.5"
+									width="45"
+									height="39"
+									rx="4.5"
+									fill="#605BFF"
+									fillOpacity="0.1"
+									stroke="#605BFF"
+									/>
+									<circle cx="21.5" cy="17" r="3.75" fill="#605BFF" />
+									<path
+									d="M28.25 18.5L28.25 23"
+									stroke="#605BFF"
+									strokeWidth="2"
+									strokeLinecap="round"
+									/>
+									<path
+									d="M30.5 20.75L26 20.75"
+									stroke="#605BFF"
+									strokeWidth="2"
+									strokeLinecap="round"
+									/>
+									<path
+									d="M26.8566 26.2869C27.2028 26.2085 27.4105 25.8486 27.257 25.5285C26.8432 24.6652 26.163 23.9066 25.2814 23.3349C24.1966 22.6313 22.8674 22.25 21.5 22.25C20.1326 22.25 18.8034 22.6313 17.7186 23.3349C16.837 23.9066 16.1568 24.6652 15.743 25.5284C15.5895 25.8486 15.7972 26.2085 16.1434 26.2869C19.6698 27.0855 23.3302 27.0855 26.8566 26.2869Z"
+									fill="#605BFF"
+									/>
+								</svg>
+								</button>
+							</li>  */}
+							{/* <li className="nav-menu opened-only no-click">
+								<button className="btn-primary upgrade-btn">Upgrade</button>
+							</li>  */}
+							{/* <li className="nav-menu opened-only no-click">
+								<NavLink to="/" aria-label="FAQ">
+								<svg
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									fill="none"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<circle
+									cx="12"
+									cy="12"
+									r="9"
+									stroke="#BDBDBD"
+									strokeWidth="2"
+									/>
+									<circle
+									cx="12"
+									cy="17"
+									r="0.5"
+									fill="#BDBDBD"
+									stroke="#BDBDBD"
+									/>
+									<path
+									d="M12 15V13.7396C12 13.0928 12.3971 12.5122 13 12.2778V12.2778C13.6029 12.0433 14 11.4628 14 10.8159V10C14 8.89543 13.1046 8 12 8V8C10.8954 8 10 8.89543 10 10V10.3333"
+									stroke="#BDBDBD"
+									strokeWidth="2"
+									/>
+								</svg>
+								</NavLink>
+							</li> 
+						*/}
 					</>
 				</ul>
 			</div>

@@ -13,7 +13,7 @@ let headers = {
  */
 export const fetchAllCampaign = (params) => {
 	let queryParams = new URLSearchParams(params);
-	queryParams = queryParams.toString() ? "?" + queryParams.toString() : `?page_number=1&sort_by=friends_added&sort_order=asc&page_size=15`;
+	queryParams = queryParams.toString() ? "?" + queryParams.toString() : `?page_number=1&page_size=15`;
 	return new Promise((resolve, reject) => {
 		axios
 			.get(config.fetchAllCampaignsUrl + queryParams, { headers: headers })

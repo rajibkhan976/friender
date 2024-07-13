@@ -26,6 +26,7 @@ import ToolTipPro from "../../components/common/ToolTipPro";
 import Keyword from "../../components/common/Keyword";
 import DropSelectMessage from "../../components/messages/DropSelectMessage";
 import moment from "moment";
+import { ReactComponent as EncryptMsgIcon } from "../../assets/images/EncryptMsgIcon.svg";
 import { showModal } from "../../actions/PlanAction";
 
 
@@ -68,6 +69,9 @@ const MySetting = () => {
 
 	const [groupsToSelect, setGroupsToSelect] = useState([]);
 
+	
+	const [sendMsgIfChatEncrypted, setSendMsgIfChatEncrypted] =
+		useState(false);
 	const [sndMsgAcptsFrndReqToggle, setSndMsgAcptsFrndReqToggle] =
 		useState(false);
 	const [selectMsgTempAcceptsFrndReq, setSelectMsgTempAcceptsFrndReq] =
@@ -458,6 +462,7 @@ const MySetting = () => {
 		sndMsgDlcFrndRquInput,
 		sndMsgExptFrndRquOpenInput,
 		frndWillInactiveAfterDays,
+		sendMsgIfChatEncrypted,
 		sndMsgAcptsFrndReqToggle,
 		sndMsgRejtFrndReqToggle,
 		quickMsgAcptsFrndReq,
@@ -624,7 +629,8 @@ const MySetting = () => {
 				remove_after: cnclFrndRqueInput,
 			},
 			friends_willbe_inactive_after: Number(frndWillInactiveAfterDays),
-
+			
+			send_encrypted_message: sendMsgIfChatEncrypted,
 			send_message_when_someone_accept_new_friend_request:
 				sndMsgAcptsFrndReqToggle,
 			send_message_when_someone_accept_new_friend_request_settings: {
@@ -1306,6 +1312,8 @@ const MySetting = () => {
 
 		// Friends Will Inactive After Days Sync Data.
 		setFrndInactiveAfterDays(data?.friends_willbe_inactive_after ?? 30);
+
+		setSendMsgIfChatEncrypted(data?.send_encrypted_message);
 
 		// Send Message when someone accepts my friend request (SYNC-DATA).
 		setSndMsgAcptsFrndReqToggle(
@@ -2552,6 +2560,25 @@ const MySetting = () => {
 								}
 							</span>
 						</p>
+
+						<div
+							className={`setting ${sendMsgIfChatEncrypted ? "setting-actived" : ""
+								}`}
+						>
+							<div className='setting-child first encrypted-msg-settings-tooltip-container'>
+								<Switch
+									checked={sendMsgIfChatEncrypted}
+									handleChange={(e) => {
+										setSendMsgIfChatEncrypted(e.target.checked);
+									}}
+								/>
+								Send messages if chat is encrypted
+								<EncryptMsgIcon className="encrypted-msg-settings-tooltip-icon" />
+									<div className='encrypted-msg-settings-tooltip'>
+										When this setting is enabled, a new tab will open in your browser to send an encrypted message on Facebook. If you are in another tab, your browser will automatically switch to the Facebook tab, send the message, and then return you to your original tab.
+									</div>
+							</div>
+						</div>
 
 						{/* {======= Send Message When someone accepted my friend request =======} */}
 						{/* <div className={`setting ${sndMsgAcptsFrndReqOpen ? "setting-actived" : ""}`} onClick={() => setSndMsgAcptsFrndReqOpen(!sndMsgAcptsFrndReqOpen)}> */}

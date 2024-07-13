@@ -122,7 +122,7 @@ export const fetchAllCampaigns = createAsyncThunk(
 	"campaigns/fetchAllCampaigns",
 	async (params = null) => {
 		const res = await fetchAllCampaign(params);
-		// console.log(res);
+		console.log("fetchAllCampaigns", res);
 		return res;
 	}
 );

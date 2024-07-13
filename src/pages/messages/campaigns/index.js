@@ -3,14 +3,13 @@ import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchAllCampaigns,
-	fetchAllCampaignsCount,
 	fetchCampaignById,
 	updateCampaignsArray,
 	syncCampaignStatus,
 	updateCampaignFilter,
 	updateCampaignDuration,
 } from "actions/CampaignsActions";
-import { countCurrentListsize } from "actions/FriendListAction";
+import { updateCurrlistCount } from "actions/SSListAction";
 
 import {
 	ListingIcon,
@@ -25,7 +24,6 @@ import NoDataFound from "components/common/NoDataFound";
 import Alertbox from "components/common/Toast";
 import CreateCampaign from "./create/CreateCampaign";
 import { CampaignColDef } from "./list/CampaignColDef";
-import { FriendlistColDefs } from "../../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 
 const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
@@ -114,14 +112,14 @@ const Campaigns = () => {
 	const params = useParams();
 	const dispatch = useDispatch();
 	const loading = useSelector((state) => state.campaign.isLoading);
-	const campaignsCreated = useSelector(
+	const campaignsArray = useSelector(
 		(state) => state.campaign.campaignsArray
 	);
 	const campaignsDetails = useSelector(
 		(state) => state.campaign.campaignsDetails
 	);
 	const editing = useSelector((state) => state.campaign.editingCampaign);
-	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter);
+	const campaignFilter = useSelector((state) => state.campaign.campaignFilter);
 	const campaignDuration = useSelector(
 		(state) => state.campaign.campaignDuration
 	);
@@ -135,8 +133,36 @@ const Campaigns = () => {
 
 	const fetchAll = async () => {
 		try {
-			dispatch(fetchAllCampaigns()).unwrap();
-			// console.log(dispatch(fetchAllCampaignsCount()));
+			let urlSearchParamsObject = {sort_order: "asc"};
+			const weekDays = [
+				"Sunday",
+				"Monday",
+				"Tuesday",
+				"Wednesday",
+				"Thursday",
+				"Friday",
+				"Saturday",
+			];
+
+			const today = new Date();
+
+			if (campaignDuration && campaignDuration === "today") {
+				Object.assign(urlSearchParamsObject, { campaign_day: weekDays[today.getDay()] });
+			}
+
+			if (campaignFilter && campaignFilter === "inactive") {
+				Object.assign(urlSearchParamsObject, { campaign_status: 0 });
+			} else if (campaignFilter && campaignFilter === "active") {
+				Object.assign(urlSearchParamsObject, { campaign_status: 1 });
+			}
+			
+			dispatch(fetchAllCampaigns(urlSearchParamsObject))
+			.unwrap()
+			.then((resp) => {
+				if (resp) {
+					dispatch(updateCurrlistCount(resp?.total_campaings));
+				}
+			});
 			
 			if (
 				location?.pathname?.split("/")?.slice(-2)[0] === "campaigns" &&
@@ -154,16 +180,9 @@ const Campaigns = () => {
 		}
 	};
 
-	// UPDATING CAMPAIGNS LIST SIZE IN FRIEND LIST..
-	// useEffect(() => {
-	// 	if (campaignsCreated && campaignsCreated?.length === 0) {
-	// 		dispatch(countCurrentListsize(campaignsCreated?.length));
-	// 	}
-	// }, [campaignsCreated]);
-
 	// fetch clicked campaign
 	const fetchCampaign = async (editId) => {
-		let editCampaign = campaignsCreated?.find((el) => el?._id == editId);
+		let editCampaign = campaignsArray?.find((el) => el?._id == editId);
 
 		try {
 			if (campaignsDetails) {
@@ -218,7 +237,7 @@ const Campaigns = () => {
 
 		dispatch(updateCampaignDuration(el));
 
-		filterCampaigns();
+		// filterCampaigns();
 	};
 
 	// TOGGLE ACTIVE / INACTIVE CAMPAIGNS FOR CAMPAIGNS LIST
@@ -232,7 +251,7 @@ const Campaigns = () => {
 		);
 
 		dispatch(updateCampaignFilter(el));
-		filterCampaigns();
+		// filterCampaigns();
 	};
 
 	// TOGGLE EDIT CAMPAIGNS PAGE VIEW
@@ -280,7 +299,7 @@ const Campaigns = () => {
 
 	// FILTER CAMPAIGNS / FRIENDS FROM HEADER
 	const filterCampaigns = () => {
-		let campaignsResult = campaignsCreated;
+		let campaignsResult = campaignsArray;
 		const week = [
 			"Sunday",
 			"Monday",
@@ -292,7 +311,7 @@ const Campaigns = () => {
 		];
 
 		// Check for campaign status
-		switch (campaignsFilter) {
+		switch (campaignFilter) {
 			case "active":
 				campaignsResult = [...campaignsResult?.filter((el) => el?.status)];
 				break;
@@ -317,38 +336,18 @@ const Campaigns = () => {
 				campaignsResult = [...campaignsResult];
 		}
 
-		campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
 		return campaignsResult && campaignsResult;
 	};
 
 	console.log("isEditingCampaign", isEditingCampaign);
 
-	// FILTER CAMPAIGNS (TODAY, ALL)..
-	// const filterCampaignsBySpan = () => {
-	// 	let campaignsResult = [...campaignsCreated];
-
-	// 	switch (spanOption?.find(e => e.selected)?.value) {
-	// 		case "today":
-	// 			campaignsResult = campaignsResult?.filter((el) => new Date(el?.created_at).getDate() == new Date().getDate());
-	// 			break;
-
-	// 		default:
-	// 			campaignsResult = campaignsResult;
-	// 	}
-
-	// 	campaignsResult && dispatch(countCurrentListsize(campaignsResult?.length));
-	// 	return campaignsResult && campaignsResult;
-	// }
-
-	// UPDATE REDUX CAMPAIGNS ARRAY ON EDITED CAMPAIGN MODIFIED
-
 	useEffect(() => {
 		// console.log("isEditingCampaign", isEditingCampaign);
 
-		if (isEditingCampaign && campaignsCreated && Array.isArray(campaignsCreated)) {
+		if (isEditingCampaign && campaignsArray && Array.isArray(campaignsArray)) {
 			// console.log("isEditingCampaign", isEditingCampaign);
 			// console.log('isEditingCampaign CHANGED', isEditingCampaign);
-			let campaignsCreatedPlaceholder = [...campaignsCreated];
+			let campaignsCreatedPlaceholder = [...campaignsArray];
 			// console.log('campaignsCreatedPlaceholder', campaignsCreatedPlaceholder);
 			campaignsCreatedPlaceholder = campaignsCreatedPlaceholder?.map((el) =>
 				el?.campaign_id !== isEditingCampaign?.campaign_id
@@ -397,11 +396,23 @@ const Campaigns = () => {
 	}, [location.pathname]);
 
 	useEffect(() => {
-		fetchAll();
-	}, [location.pathname, radioOption]);
+		if (radioOption && 
+			Array.isArray(radioOption) && 
+			radioOption?.length && 
+			radioOption.some((item) => item?.label === "calendar" && item?.checked)
+		) {
+			fetchAll();
+		}
+	}, [campaignDuration, campaignFilter, location, radioOption]);
 
 	useEffect(() => {
-		dispatch(fetchAllCampaigns());
+		dispatch(fetchAllCampaigns({sort_order: "asc"}))
+		.unwrap()
+		.then((resp) => {
+			if (resp) {
+				dispatch(updateCurrlistCount(resp?.total_campaings));
+			}
+		});
 		
 		return () => {
 			dispatch(updateCampaignDuration(null));
@@ -426,7 +437,7 @@ const Campaigns = () => {
 						changeEditView={changeEditView}
 						createNew={createNew}
 						isEditingCampaign={isEditingCampaign}
-						campaignsCreated={campaignsCreated}
+						campaignsCreated={campaignsArray}
 						setIsEditingCampaign={setIsEditingCampaign}
 						toggleEditCampaign={toggleEditCampaign}
 						fetchCampaign={fetchCampaign}
@@ -434,11 +445,7 @@ const Campaigns = () => {
 					{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
 						<div className='campaigns-main'>
 							{radioOption?.find((el) => el.checked).label === "listing" ? (
-								!campaignsCreated || filterCampaigns()?.length <= 0 ? (
-									<NoDataFound
-										customText={`No campaign(s) has been created yet`}
-									/>
-								) : (
+								(
 									<Suspense fallback=''>
 										{/* <CampaignsListingPage
 											campaignsCreated={filterCampaigns()}
@@ -453,14 +460,18 @@ const Campaigns = () => {
 												ScheduledOn,
 												EndDateNTime,
 												Actions
-											]} 	
+											]}
+											radioOption={radioOption}
 										/>
 									</Suspense>
 								)
+							) : !campaignsArray || campaignsArray?.length <= 0 ? (
+								<NoDataFound
+									customText={`No campaign(s) has been created yet`}
+								/>
 							) : (
 								<Suspense fallback=''>
 									<CampaignsCalendar
-										campaignsCreated={filterCampaigns()}
 										setIsEditingCampaign={setIsEditingCampaign}
 									/>
 								</Suspense>

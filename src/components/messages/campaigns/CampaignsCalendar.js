@@ -4,7 +4,6 @@ import {
 	updateCampaignSchedule,
 	updateSelectedCampaignSchedule,
 } from "actions/CampaignsActions";
-import { countCurrentListsize } from "actions/FriendListAction";
 import { useLocation } from "react-router-dom";
 import { utils } from "../../../helpers/utils";
 import moment from "moment";
@@ -13,13 +12,10 @@ import CalenderModal from "../../common/CampaignModal";
 import CampaignSchedulerPopup from "./CampaignScedulerPopup";
 
 const CampaignsCalendar = () => {
-	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
-	const campaignsFilter = useSelector((state) => state.campaign.campaignFilter);
-	const campaignDuration = useSelector(
-		(state) => state.campaign.campaignDuration
-	);
+
 	const dispatch = useDispatch();
 	const location = useLocation();
+	const campaignsArray = useSelector((state) => state.campaign.campaignsArray);
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
 	const [calendarModalType, setCalenderModalType] = useState("CREATE_CAMPAIGN");
 	const [open, setOpen] = useState(false);
@@ -38,7 +34,9 @@ const CampaignsCalendar = () => {
 			date: moment().startOf("W"),
 		},
 	];
+
 	let iterator = 1;
+
 	const buildOnWeekdaysArr = () => {
 		weekdaysArr.push({
 			day: moment().startOf("W").add("d", iterator).format("dddd"),
@@ -49,81 +47,23 @@ const CampaignsCalendar = () => {
 			buildOnWeekdaysArr();
 		}
 	};
+
 	buildOnWeekdaysArr();
 
 	useEffect(() => {
-		let campaignsArrayPlaceholder = [];
-		if (campaignsArray && Array.isArray(campaignsArray) && campaignsArray?.length) {
-			
-			campaignsArrayPlaceholder = [...campaignsArray];
-			const week = [
-				"Sunday",
-				"Monday",
-				"Tuesday",
-				"Wednesday",
-				"Thursday",
-				"Friday",
-				"Saturday",
-			];
-
-			switch (campaignsFilter) {
-				case "active":
-					campaignsArrayPlaceholder = [
-						...campaignsArrayPlaceholder?.filter((el) => el?.status),
-					];
-					break;
-
-				case "inactive":
-					campaignsArrayPlaceholder = [
-						...campaignsArrayPlaceholder?.filter((el) => !el?.status),
-					];
-					break;
-
-				default:
-					campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
-					break;
-			}
-
-			switch (campaignDuration) {
-				case "today":
-					campaignsArrayPlaceholder = [
-						...campaignsArrayPlaceholder?.map(
-							(el) =>
-								el?.schedule?.filter(
-									(ex) => ex?.day === week[new Date().getDay()]
-								)?.length && {
-									...el,
-									schedule: [
-										...el?.schedule?.filter(
-											(ex) => ex?.day === week[new Date().getDay()]
-										),
-									],
-								}
-						),
-					];
-					break;
-
-				default:
-					campaignsArrayPlaceholder = [...campaignsArrayPlaceholder];
-					break;
-			}
-			// console.log(campaignsArrayPlaceholder);
-			dispatch(countCurrentListsize(campaignsArrayPlaceholder?.length));
-		}
-
 		if (
-			Array.isArray(campaignsArrayPlaceholder) &&
-			campaignsArrayPlaceholder.length < 1
+			Array.isArray(campaignsArray) &&
+			campaignsArray.length < 1
 		) {
 			dispatch(updateCampaignSchedule([]));
 		} else if (
-			Array.isArray(campaignsArrayPlaceholder) &&
-			campaignsArrayPlaceholder.length > 0
+			Array.isArray(campaignsArray) &&
+			campaignsArray.length > 0
 		) {
 			const campaignArr = [];
 			const groupedCampaignByDateNTime = [];
 
-			campaignsArrayPlaceholder.forEach((campaign) => {
+			campaignsArray.forEach((campaign) => {
 				if (campaign.schedule && Array.isArray(campaign?.schedule)) {
 					campaign?.schedule.forEach((campaignSchedule) => {
 						const date = moment(
@@ -328,7 +268,7 @@ const CampaignsCalendar = () => {
 			}
 			dispatch(updateCampaignSchedule(groupedCampaignByDateNTime));
 		}
-	}, [campaignsArray, showTooltip, campaignsFilter, campaignDuration]);
+	}, [campaignsArray, showTooltip]);
 
 	useEffect(() => {
 		return () => {

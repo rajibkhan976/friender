@@ -373,7 +373,7 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-campaign",
-	fetchCampaignUsers: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/fetch-campaign-users-v2`,
+	fetchCampaignUsers: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/fetch-campaign-users`,
 	deleteCampaignContactsUrl: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/delete-campaign-contacts`,
 	kyubiServerCheckUserUrl: `https://app.kyubi.io/api/end-user/get-status`,
 };

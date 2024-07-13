@@ -8,7 +8,20 @@ import {
     fetchAllGroupMessages,
     fetchGroupById,
 } from "../services/SettingServices";
+import extensionMethods from "../configuration/extensionAccesories";
 import { clientDB } from "../app/db";
+
+
+const dispatchSettingsToExtension = async (actionStr, dataObject) => {
+  console.log("sent user profile settings", dataObject);
+
+  const extRes = await extensionMethods.sendMessageToExt({
+    action: actionStr,
+    frLoginToken: localStorage.getItem("fr_token"),
+    payload: dataObject,
+  });
+  console.log("message res", extRes);
+};
 
  const initialState = {
      mySettings: {
@@ -146,8 +159,6 @@ export const getAllGroupMessages = createAsyncThunk(
     }
   );
 
-
-
   export const diviceHistoryList=createAsyncThunk(
     "settings/getDiviceHistoryList",
     async ()=>{
@@ -156,13 +167,17 @@ export const getAllGroupMessages = createAsyncThunk(
       return res;
     }
   )
+
   export const saveAllSettings=createAsyncThunk(
     "settings/saveAllSettings",
     async (payload)=>{
     const res = await saveSettings(payload);
     if(res.data[0]){
+
       console.log("fbid",payload);
-      storeProfileSettingIndexDb(payload.facebookUserId,res.data[0])
+      
+      dispatchSettingsToExtension("send_encrypted_message", {send_encrypted_message: payload?.send_encrypted_message});
+      storeProfileSettingIndexDb(payload.facebookUserId,res.data[0]);
     }
     return res;
     }
