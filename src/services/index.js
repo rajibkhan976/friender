@@ -20,6 +20,7 @@ const axiosInstance = axios.create({
 
 
 const apiClient = async (method, url, data = {}, params = {})=> {
+  console.log(method, url, data, params);
     try {
         const response = await axiosInstance({
           method: method,
@@ -27,6 +28,7 @@ const apiClient = async (method, url, data = {}, params = {})=> {
           data: method.toLowerCase() === 'post' ? data : {},
           params: method.toLowerCase() === 'get' ? params : {},
         });
+        console.log('response', response);
         return response.data;
       } catch (error) {
         console.error(`${method.toUpperCase()} request error:`, error);

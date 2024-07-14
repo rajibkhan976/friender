@@ -103,6 +103,18 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/user-delete-friend",
+	bulkOperationFriends:
+		"https://"+
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/"+
+		appEnv+
+		"/friend-list-bulk-operation",
+	fetchFriendCount:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/"+
+		appEnv+
+		"/fetch-contact-count",
 	fetchFriendLostUrl:
 		"https://" +
 		profileService +

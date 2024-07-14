@@ -1,10 +1,13 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import apiClient from "../services";
+import { bulkOperationContacts, fetchFriendCount } from "../services/SSListServices";
 
 const initialState = {
     isLoading: true,
+    friends_data: [],
     reFetching: false,
-    selected_friends: null,
+    selected_friends: [],
+    selection_obj: {},
     filter_state: {
         filter_key_value: null,
         filter_fun_state: null,
@@ -12,6 +15,7 @@ const initialState = {
     select_all_state: {},
     curr_list_count: 0,
     global_searched_filter: "",
+    pluginRowSelection: {}
 };
 
 export const getListData = createAsyncThunk(
@@ -29,10 +33,75 @@ export const getListData = createAsyncThunk(
   );
 
 
+export const getFriendCountAction = createAsyncThunk(
+    "sslist/getFriendCount",
+    async (payload) => {    
+        const queryParam = payload.queryParam
+        // console.log('queryParam', queryParam);
+        const res = await apiClient(
+            "get",
+            `${payload.baseUrl}`,
+            {},
+            { ...queryParam }
+        );
+        console.log('RES ', res);
+        return res;
+    }
+);
+
+
+// export const bulkAction = createAsyncThunk(
+//     "sslist/bulkAction",
+//     async (payload) => {    
+//         let queryParam = payload.queryParam
+//             queryParam = {
+//                 ...queryParam,
+//                 include_list: JSON.parse(queryParam.include_list)
+//             }
+//             console.log('queryParam', queryParam);
+//         const res = await apiClient(
+//             "post",
+//             `${payload.baseUrl}`,
+//             {...queryParam},
+//             {}
+//         );
+//         console.log('RES ', res);
+//         return res;
+//     }
+// );
+
+export const bulkAction = createAsyncThunk(
+    "sslist/bulkAction",
+    async (payload) => {
+        console.log('PAYLOAD IN ACTION', payload);
+        const res = await bulkOperationContacts(payload);
+        console.log('RES IN ACTION', res);
+        return res;
+    }
+)
+
+// export const getSendFriendReqstCount = createAsyncThunk(
+//     "facebook/getSendFriendReqst",
+//     async (payload) => {
+//       const res = await fetchFriendCount(payload);
+//       console.log('res', res);
+//       return res;
+//     }
+//   );
+
 export const ssListSlice = createSlice({
     name: "sslist",
     initialState,
     reducers: {
+        updateFriendsData: () => {
+
+        },
+        updateRowSelection: (state, action) => {
+            state.pagination = action.payload
+        },
+        updateSelectAllState: (state, action) => {
+            state.select_all_state = action.payload;
+        },
         updateFilterState: (state, action) => {
             state.filter_state = action.payload;
         },
@@ -64,8 +133,13 @@ export const ssListSlice = createSlice({
                 return item;
             });
         },
+        updateSelectionObj: (state, action) => {
+            state.selection_obj = {...action.payload}
+        },
         updateSelectedFriends: (state, action) => {
-            state.selected_friends = action.payload;
+            console.log('action', action?.payload);
+            // console.log('COMPARE OLDER ::: WITH NEW >>>', state.selected_friends.filter(id => !(id in rowSelection)));
+            state.selected_friends = [...action?.payload];
         },
         removeSelectedFriends: (state, action) => {
             state.selected_friends = [];
@@ -90,6 +164,9 @@ export const ssListSlice = createSlice({
 });
 
 export const {
+    updateRowSelection,
+    updateSelectionObj,
+    updateSelectAllState,
     updateFilterState,
     updateCurrlistCount,
     updateSelectedFriends,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, memo, useMemo } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 
 import BreadCrumb from "./BreadCrumb";
 
@@ -18,6 +18,7 @@ import {
 	OpenInNewTab,
 	InfoIcon,
 } from "../../assets/icons/Icons";
+import config from "../../configuration/config"
 import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
 import { ReactComponent as ExportCSVIcon } from "../../assets/images/ExportCSVIcon.svg";
 import { ReactComponent as GrayWarningCircleIcon } from "../../assets/images/GrayWarningCircleIcon.svg";
@@ -85,6 +86,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
+import { bulkAction, getFriendCountAction, getListData, updateRowSelection, updateSelectAllState } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -220,6 +222,7 @@ const rejectStyle = {
 };
 
 function PageHeader({ headerText = "" }) {
+	const navigate = useNavigate()
 	const dispatch = useDispatch();
 	const searchRef = useRef(null);
 	const params = useParams();
@@ -233,6 +236,12 @@ function PageHeader({ headerText = "" }) {
 	const selectedFriends = useSelector(
 		(state) => state.friendlist.selected_friends
 	);
+	// ssList
+	const selectedListItems = useSelector((state) => state.ssList.selected_friends)
+	const filter_state = useSelector((state) => state.ssList.filter_state)
+	const textFilter = useSelector((state) => state.friendlist.searched_filter);
+    const select_all_state = useSelector((state) => state.ssList.select_all_state)
+	// ssList
 	const blacklistedFriends = useSelector((state) =>
 		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
 	);
@@ -265,6 +274,7 @@ function PageHeader({ headerText = "" }) {
 	const friendsListData = useSelector(
 		(state) => state.facebook_data.fb_data
 	);
+	const [actionableContacts, setActionableContacts] = useState(null)
 
 	useEffect(()=>{		
 				if (friendsListData) {
@@ -1502,6 +1512,7 @@ function PageHeader({ headerText = "" }) {
 		//dispatch(removeSelectedFriends());
 		setSelectedCampaign("Select");
 		setIsAddingToCampaign(false);
+		dispatch(updateSelectedFriends([]));
 	};
 
 	// console.log(accessOptions);
@@ -1865,25 +1876,208 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
+	const fetchFriendListV2 = () => {
+		let payload = {}
+
+		// page_number: paginationData.pageIndex + 1,
+		//   page_size: paginationData.pageSize,
+		// search_string: textFilter?.length > 2 ? textFilter : null,
+
+		dispatch(getListData())
+	}
+
+
+	// NEW FUNCTIONS FOR BULK ACTIONS
+	const assemblePayload = (action, url) => {
+		let queryParam = {
+			fb_user_id: defaultFbId,
+			check: select_all_state?.selected ? 'all' : 'some',
+			include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
+			exclude_list: (select_all_state?.selected && select_all_state?.unselected?.length > 0) ? JSON.stringify([...select_all_state?.unselected?.map(el => el?._id)]) : [],
+			operation: action,
+			friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+		};
+
+		if (searchValue?.trim() !== "") {
+			queryParam["searchString"] = searchValue
+		}
+
+		if (filter_state?.filter_key_value?.length > 0) {
+			const { values, fields, operators } = helper.listFilterParamsGenerator(
+				filter_state?.filter_key_value,
+				filter_state?.filter_fun_state
+			);
+			queryParam["values"] = JSON.stringify(values);
+			queryParam["fields"] = JSON.stringify(fields);
+			queryParam["operators"] = JSON.stringify(operators);
+			queryParam["filter"] = 1;
+		}
+
+		//console.log("sorting---outi :::>>>", sortingState);
+		// if (sortingState.length > 0) {
+		// 	//console.log("sorting--- :::>>>", sortingState);
+		// 	queryParam["sort_by"] = sortingState[0].id;
+		// 	queryParam["sort_order"] = sortingState[0].desc ? "desc" : "asc";
+		// }
+
+		return {
+			queryParam: queryParam,
+			baseUrl: url,
+		};
+	}
+
+	const triggerBulkOperation = (bulkType=null) => {
+		return new Promise((resolve, reject) => {
+			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
+			let payload = {
+					fb_user_id: defaultFbId,
+					check: select_all_state?.selected ? 'all' : 'some',
+					include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
+					exclude_list: (select_all_state?.selected && select_all_state?.unselected?.length > 1) ? [...select_all_state?.unselected.map(el => el?._id)]: [],
+					operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
+					friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+				}
+			
+			if (filter_state?.filter_key_value?.length > 0) {
+				const { values, fields, operators } = helper.listFilterParamsGenerator(
+					filter_state?.filter_key_value,
+					filter_state?.filter_fun_state
+				);
+				payload["values"] = JSON.stringify(values);
+				payload["fields"] = JSON.stringify(fields);
+				payload["operators"] = JSON.stringify(operators);
+				payload["filter"] = 1;
+			}
+
+			if (searchValue?.trim() !== "") {
+				payload["searchString"] = searchValue
+			}
+
+			if (bulkType === 'skipWhitelisted') {
+				payload['skip_whitelist'] = true
+			}
+			if (bulkType === 'skipBlacklisted') {
+				payload['campaign_id'] = selectedCampaign
+				payload['skip_blacklist'] = true
+			}
+			if (bulkType === 'campaign') {
+				payload['campaign_id'] = selectedCampaign
+				console.log(payload);
+			}
+			dispatch(bulkAction(payload)).unwrap()
+				.then((res) => {
+					// console.log('res ', res?.data);
+					Alertbox(
+						res?.data,
+						"success",
+						1000,
+						"bottom-right"
+					);
+					setModalOpen(false)
+					dispatch(updateSelectAllState({}))
+					dispatch(updateSelectedFriends([]));
+					// setAccessOptions(accessibilityOptions);
+					setIsComponentVisible(false);
+					dispatch(updateSelectAllState({}))
+					dispatch(removeSelectedFriends());
+					dispatch(updateRowSelection({}));
+					setIsAddingToCampaign(false)
+				})
+		})
+	}
+
+	const checkForBulkAction = (bulkType=null) => {
+		let payload;
+		// payload = assemblePayload(bulkType, !actionableContacts ? config.fetchFriendCount : config.bulkOperationFriends)
+		console.log(bulkType);
+
+		if (bulkType === 'unfriend' || bulkType === 'campaign') {
+			payload = assemblePayload(bulkType, config.fetchFriendCount)
+			console.log('payload', payload);
+
+			if (!actionableContacts) {
+				dispatch(getFriendCountAction(payload)).unwrap()
+					.then((res) => {
+						console.log('res', res);
+						setActionableContacts({...res})
+						if (bulkType === 'unfriend') {
+							setModalOpen(true)
+						}
+					})
+			} 
+			// if (bulkType === 'unfriend') {
+				// else {
+				// 	triggerBulkOperation(bulkType)
+				// 		.then((res) => {
+				// 			console.log('res', res);
+				// 			setActionableContacts(null)
+				// 		})
+				// 		.catch((error) => {
+				// 			console.log(error);
+				// 		})
+				// }
+			// }
+		} 
+		// else if (bulkType === 'campaign') {
+		// 	console.log('bulk campaign', selectedListItems)
+		// 	// setIsAddingToCampaign(true);
+		// }
+		else {
+			console.log('selectedListItems', selectedListItems);
+
+			if (bulkType === 'whitelist') {
+				if (selectedListItems?.length === selectedListItems?.filter(el => el?.whitelist_status === 1).length)  {
+					return false
+				}
+			}
+
+			if (bulkType === 'blacklist') {
+				if (selectedListItems?.length === selectedListItems?.filter(el => el?.blacklist_status === 1).length)  {
+					return false
+				}
+			}
+
+
+			triggerBulkOperation(bulkType)
+				.then((res) => {
+					console.log('res', res);
+					setActionableContacts(null)
+				})
+				.catch((error) => {
+					console.log(error);
+				})
+		}
+	}
+
 	return (
 		<>
 			{/* <Prompt
         when={runningUnfriend}
         message={() => 'Are you sure you want to leave this page? Your changes will not be saved.'}
       /> */}
-			{selectedFriends?.length > 0 && (
+			{/* {selectedFriends?.length > 0 && ( */}
+			{(selectedListItems?.length > 0 || select_all_state?.selected) && (
 				<Modal
 					modalType='delete-type'
 					modalIcon={DeleteImgIcon}
 					headerText={"Unfriend"}
 					bodyText={
 						<>
-							You have selected <b>{selectedFriends.length}</b> friend(s), and{" "}
+							{/* You have selected <b>{selectedFriends.length}</b> friend(s), and{" "} */}
+							{/* {console.log(Number(actionableContacts?.friend_count))} */}
+							You have selected {
+													select_all_state?.selected ? 
+														<><b>All</b> friend(s)</> : 
+														// <><b>{selectedListItems?.length}</b> {selectedListItems?.length > 1 ? 'friend(s),' : 'friend,'}</>
+														<><b>{Number(actionableContacts?.friend_count)}</b> {Number(actionableContacts?.friend_count) > 1 ? 'friend(s),' : 'friend,'}</>
+												}
 							<b>
 								{" "}
-								{selectedFriends.length > 0
+								{/* {selectedFriends.length > 0 */}
+								{ selectedListItems?.length > 0 || Number(actionableContacts?.friend_count) // select_all_state?.selected
 									? // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
-									  selectedFriends.filter((el) => el?.whitelist_status)?.length
+									//   selectedFriends.filter((el) => el?.whitelist_status)?.length
+										Number(actionableContacts?.whitelist_count)
 									: Number(0)}{" "}
 							</b>{" "}
 							of them are currently on your whitelist. Are you sure you want to
@@ -1891,15 +2085,18 @@ function PageHeader({ headerText = "" }) {
 						</>
 					}
 					closeBtnTxt={"Yes, unfriend"}
-					closeBtnFun={unfriend}
+					// closeBtnFun={unfriend}
+					closeBtnFun={()=>triggerBulkOperation('unfriend')}
 					open={modalOpen}
 					setOpen={setModalOpen}
-					ModalFun={skipWhitList}
+					// ModalFun={skipWhitList}
+					ModalFun={()=>checkForBulkAction('skipWhitelisted')}
 					btnText={"Skip whitelisted"}
 					ExtraProps={{
 						primaryBtnDisable:
-							whiteCountInUnfriend === 0 ||
-							whiteCountInUnfriend === selectedFriends.length
+							// whiteCountInUnfriend === 0 ||
+							// whiteCountInUnfriend === selectedFriends.length
+							Number(actionableContacts?.whitelist_count) === 0
 								? true
 								: false,
 					}}
@@ -1907,35 +2104,36 @@ function PageHeader({ headerText = "" }) {
 			)}
 
 			{/* Modal for Campaign Add */}
-			{selectedFriends?.length > 0 && isAddingToCampaign && (
+			{/* {selectedFriends?.length > 0 && isAddingToCampaign && ( */}
+			{selectedListItems?.length > 0 && isAddingToCampaign && (
 				<Modal
 					ModalIconElement={CampaignModalIcon}
 					headerText={"Add to Campaign"}
 					bodyText={
 						<>
-							You have selected <b>{selectedFriends.length}</b> friend(s)
-							{blacklistedFriends?.length > 0 ? (
+							You have selected <b>{selectedListItems.length}</b> friend(s)
+							{Number(actionableContacts?.blacklist_count) > 0 ? (
 								<>
-									, and <b>{blacklistedFriends?.length}</b> of them
-									{blacklistedFriends?.length > 1 ? " are" : " is"} currently on
+									, and <b>{Number(actionableContacts?.blacklist_count)}</b> of them
+									{Number(actionableContacts?.blacklist_count) > 1 ? " are" : " is"} currently on
 									your blacklist
 								</>
 							) : (
 								""
 							)}
 							. Are you sure you want to add{" "}
-							{blacklistedFriends?.length > 1
+							{Number(actionableContacts?.blacklist_count) > 1
 								? "all of these friends"
 								: "this friend"}{" "}
 							to campaign?
 						</>
 					}
 					closeBtnTxt={
-						blacklistedFriends?.length > 0 ? "Skip blacklisted" : "Cancel"
+						Number(actionableContacts?.blacklist_count) > 0 ? "Skip blacklisted" : "Cancel"
 					}
-					closeBtnFun={
-						blacklistedFriends?.length > 0
-							? skipBlackList
+					closeBtnFun={() => 
+						Number(actionableContacts?.blacklist_count) > 0
+							? triggerBulkOperation('skipBlacklisted')//skipBlackList
 							: skipAddingToCampaign
 					}
 					open={isAddingToCampaign}
@@ -1943,15 +2141,16 @@ function PageHeader({ headerText = "" }) {
 						setIsAddingToCampaign(null);
 						setSelectedCampaign("Select");
 					}}
-					ModalFun={() => AddToCampaign(selectedFriends)}
-					btnText={blacklistedFriends?.length > 0 ? "Yes, add all" : "Add"}
+					// ModalFun={() => AddToCampaign(selectedListItems)}
+					ModalFun={() => triggerBulkOperation('campaign')}
+					btnText={Number(actionableContacts?.blacklist_count) > 0 ? "Yes, add all" : "Add"}
 					modalWithChild={true}
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
 						cancelBtnDisable:
-							blacklistedFriends.length > 0
-								? selectedFriends?.length === blacklistedFriends?.length
+							Number(actionableContacts?.blacklist_count) > 0
+								? selectedListItems?.length === Number(actionableContacts?.blacklist_count)
 									? true
 									: selectedCampaign === "Select"
 									? true
@@ -2566,12 +2765,13 @@ function PageHeader({ headerText = "" }) {
 												<ul>
 													<li
 														className='del-fr-action'
-														onClick={() => checkBeforeUnfriend(accessItem)}
-														data-disabled={
-															!selectedFriends || selectedFriends.length === 0
-																? true
-																: false
-														}
+														// onClick={() => checkBeforeUnfriend(accessItem)}
+														onClick={()=>checkForBulkAction('unfriend')}
+														// data-disabled={
+														// 	!selectedFriends || selectedFriends.length === 0
+														// 		? true
+														// 		: false
+														// }
 													>
 														<figure>
 															<UnfriendIcon />
@@ -2580,8 +2780,9 @@ function PageHeader({ headerText = "" }) {
 													</li>
 													<li
 														className='whiteLabel-fr-action'
-														onClick={() => whiteLabeledUsers(accessItem)}
-														data-disabled={!whiteListable}
+														// onClick={() => whiteLabeledUsers(accessItem)}
+														// data-disabled={!whiteListable}
+														onClick={() => checkForBulkAction('whitelist')}
 													>
 														<figure>
 															<WhitelabelIcon />
@@ -2617,8 +2818,9 @@ function PageHeader({ headerText = "" }) {
 													{/* </li> */}
 													<li
 														className='block-fr-action'
-														onClick={() => BlocklistUser(accessItem)}
-														data-disabled={!blacklistable}
+														// onClick={() => BlocklistUser(accessItem)}
+														// data-disabled={!blacklistable}
+														onClick={() => checkForBulkAction('blacklist')}
 													>
 														<figure>
 															<BlockIcon color={"#767485"} />
@@ -2627,10 +2829,14 @@ function PageHeader({ headerText = "" }) {
 													</li>
 													<li
 														className='campaign-fr-action'
-														onClick={() => checkBeforeAddToCampaign(accessItem)}
-														data-disabled={
-															!selectedFriends || selectedFriends.length === 0
-														}
+														// onClick={() => checkBeforeAddToCampaign(accessItem)}
+														// data-disabled={
+														// 	!selectedFriends || selectedFriends.length === 0
+														// }
+														onClick={() => {
+															setIsAddingToCampaign(true)
+															checkForBulkAction('campaign')
+														}}
 													>
 														<figure>
 															<CampaignQuicActionIcon />

@@ -15,7 +15,7 @@ import helper from "../../../helpers/helper"
 // import CheckBox from '../../formComponents/Checkbox';
 
 import "../../../assets/scss/component/common/_listing.scss"
-import { getListData, updateCurrlistCount, updateFilterState } from "../../../actions/SSListAction";
+import { getListData, updateCurrlistCount, updateFilterState, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
 
 
 export default function Listing2(props) {
@@ -23,6 +23,9 @@ export default function Listing2(props) {
     const theme = useTheme();
     const dispatch = useDispatch();
     const textFilter = useSelector((state) => state.friendlist.searched_filter);
+    const selected = useSelector((state) => state.ssList.selected_friends)
+    const filter_state = useSelector((state) => state.ssList.filter_state)
+    const select_all_state = useSelector((state) => state.ssList.select_all_state)
     const isInitialRender = useRef(true);
     const [data, setData] = useState([]);
     const [isError, setIsError] = useState(false);
@@ -77,7 +80,8 @@ export default function Listing2(props) {
       // console.log('rowSelection', rowSelection);
       // Fetching all unselectedIds by comparing with the previous rowSelection
       const usIds = Object.keys(rowSelectionTracker).filter(id => !(id in rowSelection));
- 
+      
+
  
       //if unSelectedIs is not empty  then
       if(unSelectedIds){
@@ -99,11 +103,20 @@ export default function Listing2(props) {
             ...selectAcross,
             unSelected: [...updateUncheckIdsIfChecked]
           })
+          dispatch(updateSelectAllState({
+            ...selectAcross,
+            unSelected: [...updateUncheckIdsIfChecked]
+          }))
           // console.log('updateUncheckIdsIfChecked', updateUncheckIdsIfChecked);
         }
+
+        let filterUnFromSelected = rowSelectionTracker?.length ? Object.keys(rowSelectionTracker)?.filter(item => !updateUncheckIdsIfChecked.includes(item)) : Object.keys(rowSelection)?.filter(item => !updateUncheckIdsIfChecked.includes(item));
+        // console.log('filterReduxSelected >>>', filterUnFromSelected);
+        let unSelectFromRedux = selected?.filter(el => !updateUncheckIdsIfChecked.includes(el?._id))
+        let arrayOfTrackerObjects = [...data?.filter(item => filterUnFromSelected?.includes(item?._id)), ...unSelectFromRedux];
+        // console.log('arrayOfTrackerObjects', Array.from(new Set(arrayOfTrackerObjects)));
+        dispatch(updateSelectedFriends(Array.from(new Set(arrayOfTrackerObjects))));
       }else{
- 
- 
         // If no previous global state value available then add it for the first time
         setUnselectedIds(usIds)
         
@@ -112,10 +125,20 @@ export default function Listing2(props) {
             ...selectAcross,
             unSelected: [...usIds]
           })
+          dispatch(updateSelectAllState({
+            ...selectAcross,
+            unSelected: [...usIds]
+          }))
           // console.log('usIds', usIds);
         }
+
+        let filterUnFromSelected = rowSelectionTracker?.length ? Object.keys(rowSelectionTracker)?.filter(item => !usIds.includes(item)) : Object.keys(rowSelection)?.filter(item => !usIds.includes(item));
+        // console.log('filterReduxSelected >>>', filterUnFromSelected);
+        let unSelectFromRedux = selected?.filter(el => !usIds.includes(el?._id))
+        let arrayOfTrackerObjects = [...data?.filter(item => filterUnFromSelected?.includes(item?._id)), ...unSelectFromRedux];
+        // console.log('arrayOfTrackerObjects', Array.from(new Set(arrayOfTrackerObjects)));
+        dispatch(updateSelectedFriends(Array.from(new Set(arrayOfTrackerObjects))));
       }
- 
  
     }, [rowSelection,rowSelectionTracker])
 
@@ -171,6 +194,11 @@ export default function Listing2(props) {
       unSelected: []
     })
 
+    dispatch(updateSelectAllState({
+      selected: e.target.checked,
+      unSelected: []
+    }))
+
     if (e.target.checked) {
       let obj = data.reduce((acc, item) => {
         acc[item._id] = true;
@@ -183,6 +211,7 @@ export default function Listing2(props) {
     } else {
       setRowSelection({})
       setRowSelectionTracker({})
+      dispatch(updateSelectedFriends([]))
     }
     // handleSelectAllClick(e)
   }
@@ -325,6 +354,10 @@ export default function Listing2(props) {
       helper.debounce(fetchData, 1000),
       []
     );
+
+    useEffect(() => {
+      console.log('filter_state updated', filter_state);
+    }, [filter_state])
 
     useEffect(() => {
       if (isInitialRender.current) {

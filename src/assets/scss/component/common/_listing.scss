@@ -971,13 +971,14 @@
   @include border-radius(10px);
   height: 80px;
   flex: 0 0 80px;
-  position: absolute;
-  top: 51px;
-  width: 96%;
+  // position: absolute;
+  // top: 51px;
+  // width: 96%;
+  margin-block: 30px 15px;
   z-index: 9;
   left: 0;
   right: 0;
-  margin: 0 auto;
+  // margin: 0 auto;
 
   p {
     @include theme-aware("color", "text-para-color");
@@ -986,6 +987,10 @@
       @include theme-aware("color", "text-color");
       margin-left: 5px;
     }
+  }
+
+  .fr-custom-check {
+    margin-inline-start: 10px;
   }
 }
 
@@ -1092,8 +1097,8 @@
 */
 .react-table-container {
   /* height: 100%; */
-  overflow: hidden;
-  height: 100vh;
+  // overflow: hidden;
+  // height: 100vh;
   // max-height: 88%;
 }
 
@@ -1171,6 +1176,8 @@
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded {
   color: white;
   background-color: #131314;
+  display: flex;
+  flex-direction: column;
 
   .MuiListItemIcon-root.css-cveggr-MuiListItemIcon-root {
     color: white;
@@ -1252,7 +1259,7 @@
 * =============  MUI TABLE FOOTER STYLES =============
 */
 .mui-table-footer {
-  position: fixed !important;
+  // position: fixed !important;
   bottom: 0;
   // left: 0;
   // width: calc(100% - 20px);
@@ -1297,6 +1304,9 @@
       }
     }
   }
+
+  position: static !important;
+  margin-block-end: 0;
 }
 
 // .css-sui33z-MuiTableCell-root{
