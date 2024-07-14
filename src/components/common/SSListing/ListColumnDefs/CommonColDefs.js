@@ -36,7 +36,9 @@ export const CommonColDefs = {
             { label: 'Lost Friend', value: 3 },
             { label: 'Non Friend', value: 4 },
         ],
-        columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
+        enableColumnFilterModes: false,
+        filterFns:'equals',
+      //  columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem
         //       key="fuzzy"
@@ -110,7 +112,7 @@ export const CommonColDefs = {
         }
     },
     Engagement: {
-        accessorKey: 'engagement', //simple recommended way to define a column
+        accessorKey: 'total_engagement', //simple recommended way to define a column
         header: 'Engagement',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,

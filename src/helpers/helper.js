@@ -79,7 +79,11 @@ const listFilterParamsGenerator = (columnFilter, filterFns) => {
     let operators = [];
     columnFilter.forEach((item, idx) => {
         // encodeURIComponent
-        values.push([encodeURIComponent(String(item.value))]);
+        filterFns = { 
+            ...filterFns,
+            friendship: "multi_select"
+        };
+        values.push([item.value]);
         fields.push(fieldCorrector(item.id));
         operators.push(filterFns[item.id] ? [operatorsCorrector(camelToSnake(filterFns[item.id]))] : ["contains"]);
 

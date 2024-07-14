@@ -8,6 +8,11 @@ export const MuiListStyleProps = (theme) => {
   return {
     //pagination setting end
     //styling props
+
+    muiFilterTextFieldProps: (rowProps)=>{
+      return({
+      helperText:`Filter Mode: ${rowProps?.columnDef?._filterFn? rowProps?.columnDef?._filterFn : "Contains"}`,
+        })},
     muiTableContainerProps: { className: "mui-table-container" },
     muiTablePaperProps: {
       className: 'mui-table-paper',
@@ -81,11 +86,11 @@ export const MuiListStyleProps = (theme) => {
         },
 
         // Other Icons on Header..
-        "& .MuiSvgIcon-root:first-child": {
-          // marginRight: '10px',
-          // marginLeft: '10px',
-          color: "#ffffff",
-        },
+        // "& .MuiSvgIcon-root:first-child": {
+        //   // marginRight: '10px',
+        //   // marginLeft: '10px',
+        //   color: "#ffffff",
+        // },
         "& span": {
           color: "#ffffff",
         },
@@ -106,8 +111,8 @@ export const MuiListStyleProps = (theme) => {
       sx: {
         fontWeight: column.getIsPinned() ? "bold" : "normal",
         color: "white",
-        borderBottom: "none",
-        marginBottom: "3px",
+        borderBottom: "5px solid #000000",
+       // marginBottom: "3px",
       },
     }),
 
@@ -130,7 +135,7 @@ export const MuiListStyleProps = (theme) => {
           height: `50px !important`,
         },
         "& tr": {
-          padding: "1.5px",
+         // padding: "1.5px",
         },
         '& tr:nth-of-type(odd):not([data-selected="true"]):not([data-pinned="true"]) > td':
         {

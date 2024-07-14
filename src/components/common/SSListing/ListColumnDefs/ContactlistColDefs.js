@@ -20,6 +20,10 @@ export const FriendlistColDefs = () => {
   return [
     Name,
     Gender,
+    {
+    ...FrindShip,
+    enableColumnFilter: false,
+    },
     Age,
     Country,
     TotalReaction,
@@ -43,6 +47,7 @@ export const LostFriendlistColDefs = () => {
 
     },
     Gender,
+    FrindShip,
     Age,
     Country,
     TotalReaction,

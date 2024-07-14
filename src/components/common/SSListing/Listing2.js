@@ -360,7 +360,7 @@ export default function Listing2(props) {
         selectAllMode: "page",
         enableTopToolbar: false,
         enableBottomToolbar: true,
-        enableColumnResizing: true,
+        //enableColumnResizing: true,
         enableStickyHeader: true,
         enableStickyFooter: true,
         enableColumnActions: false,
