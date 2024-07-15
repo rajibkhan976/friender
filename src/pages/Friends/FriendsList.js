@@ -96,10 +96,11 @@ const FriendsList = () => {
 	// 	}
 	// };
 
-	useEffect(() => {
-		dispatch(fetchAllCampaigns({sort_order: "asc"}));
-		//getSettingsData();
-	}, []);
+	// useEffect(() => {
+	// 	// WHY IS THIS BEING CALLED?
+	// 	dispatch(fetchAllCampaigns({sort_order: "asc"}));
+	// 	//getSettingsData();
+	// }, []);
 
 	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
 		// console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);

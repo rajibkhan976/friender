@@ -22,6 +22,7 @@ export const getListData = createAsyncThunk(
     "sslist/getListData",
     async (payload) => {
         const queryParam = payload.queryParam
+        console.log('queryParam', queryParam);
       const res  = await apiClient(
         "get",
         `${payload.baseUrl}`,
@@ -37,7 +38,6 @@ export const getFriendCountAction = createAsyncThunk(
     "sslist/getFriendCount",
     async (payload) => {    
         const queryParam = payload.queryParam
-        // console.log('queryParam', queryParam);
         const res = await apiClient(
             "get",
             `${payload.baseUrl}`,

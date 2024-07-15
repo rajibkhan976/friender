@@ -38,6 +38,11 @@ export const CommonColDefs = {
         ],
         enableColumnFilterModes: false,
         filterFns:'equals',
+        filterSelectProps: {
+            classes: {
+                root: 'fr-checkbox',
+            },
+        },
       //  columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem

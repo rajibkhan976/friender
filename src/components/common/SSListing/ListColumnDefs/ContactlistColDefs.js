@@ -17,7 +17,7 @@ const {
 } = CommonColDefs;
 
 export const FriendlistColDefs = () => {
-  return [
+  const columns = [
     Name,
     Gender,
     {
@@ -34,9 +34,19 @@ export const FriendlistColDefs = () => {
     Keyword,
     Source
   ];
+
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
 };
 export const LostFriendlistColDefs = () => {
-  return [
+  const columns = [
     {
       ...Name,
       Cell: ({ renderedCellValue, row }) => {
@@ -58,10 +68,20 @@ export const LostFriendlistColDefs = () => {
     Keyword,
     Source
   ];
+
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
 };
 
 export const GlobalContactlistColDefs = () => {
-  return [
+  const columns =  [
     Name,
     Gender,
     FrindShip,
@@ -75,4 +95,14 @@ export const GlobalContactlistColDefs = () => {
     Keyword,
     Source
   ];
+
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
 };

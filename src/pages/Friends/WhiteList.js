@@ -640,7 +640,7 @@ const WhiteList = () => {
 			}
 	}
   return (
-    <div className="main-content-inner d-flex d-flex-column">
+    <div className="main-content-inner d-flex d-flex-column listing-main">
       {modalOpen && (
         <Modal
           modalType="normal-type"

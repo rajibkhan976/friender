@@ -606,6 +606,7 @@
 .friendSource {
   display: flex;
   align-items: center;
+  white-space: nowrap;
 
   span {
     margin: 0 7px 0 7px;

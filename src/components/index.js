@@ -218,7 +218,7 @@ const MainComponent = () => {
 				</div>
 			)}
 			<ToastContainer />
-			<div className='main-wrapper'>
+			<div className={`main-wrapper ${showFriendsQueueErr && location?.pathname?.includes("friends-queue") ? 'showingQueue' : ''}`}>
 				<div className='body-content-wraper'>
 					<Suspense fallback={""}>
 						<Sidebar

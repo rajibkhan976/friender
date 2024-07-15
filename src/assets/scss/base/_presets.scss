@@ -324,6 +324,10 @@ main {
   display: flex;
   flex-direction: column;
   @include theme-aware("color", "text-color");
+
+  &.showingQueue {
+    height: calc(100vh - 32px);
+  }
 }
 
 .theme-light {
@@ -455,6 +459,34 @@ main {
       
       .mui-table-footer .MuiInputBase-root {
         right: 30px !important;
+        height: 30px;
+        width: 90px;
+        padding: 0;
+        border: 1px solid #1c1c1e;
+        background: #1c1c1e;
+        background-image: url("../../images/arrow1.svg");
+        @include theme-aware("color", "items-per-page-color");
+        background-repeat: no-repeat;
+        background-position: right 3px center;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        background-size: 10px 9px;
+        background-position: calc(100% - 5px) center;
+        margin-top: 0;
+
+        .MuiSelect-select.MuiSelect-standard.MuiInputBase-input.MuiInput-input {
+          font-size: 12px;
+          padding-left: 9px;
+          color: #bdbdbd;
+
+          &::after {
+            content: ' view';
+          }
+        }
+
+        svg.MuiSvgIcon-root {
+          display: none !important;
+        }
       }
     }
   }

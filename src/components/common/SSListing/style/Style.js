@@ -71,12 +71,14 @@ export const MuiListStyleProps = (theme) => {
         },
         // Checked Situation on header checkbox
         "& .Mui-checked .MuiSvgIcon-root": {
-          color: "#1976d2",
+          // color: "#1976d2",
+          color: '#605bff',
           backgroundColor: "none",
         },
         // Interminate Situation on header checkbox
         "& .MuiCheckbox-indeterminate .MuiSvgIcon-root": {
-          color: "#1976d2",
+          // color: "#1976d2",
+          color: '#605bff',
           backgroundColor: "none",
         },
 
@@ -132,7 +134,7 @@ export const MuiListStyleProps = (theme) => {
           overflowY: "auto !important",
         },
         "& td": {
-          height: `50px !important`,
+          height: `55px !important`,
         },
         "& tr": {
          // padding: "1.5px",
@@ -185,7 +187,8 @@ export const MuiListStyleProps = (theme) => {
           borderRadius: "5px",
         },
         "&.Mui-checked .MuiSvgIcon-root": {
-          color: "#0094FF",
+          // color: "#0094FF",
+          color: '#605bff',
           backgroundColor: "none",
         },
       },
@@ -279,8 +282,10 @@ export const MuiListStyleProps = (theme) => {
           color: "#8998B8", // Change this to your desired color for pagination numbers
         },
         "& .MuiPaginationItem-page.Mui-selected": {
-          backgroundColor: "#1976d2", // Change this to your desired color for selected page numbers
-          color: "#ffffff !important",
+          // backgroundColor: "#1976d2", // Change this to your desired color for selected page numbers
+          backgroundColor: '#0094ff',
+          // color: "#ffffff !important",
+          color: "#000000"
         },
         "& .MuiTablePagination-root": {
           color: "#8998B8", // Change this to your desired color for "Rows per page" text

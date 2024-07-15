@@ -425,6 +425,10 @@
           background: rgb(255 255 255 / 10%);
           pointer-events: none;
           @include margins(15px, 25px, 15px, 25px);
+
+          // @media screen and (max-height: 991px) {
+          //   margin-bottom: 0;
+          // }
         }
 
         &:first-child::before {
@@ -512,10 +516,11 @@
           
           svg {
             flex: 0 0 24px;
-          }
 
-          svg {
-            flex: 0 0 24px;
+            @media (max-height: 767px) {
+              flex: 0 0 18px;
+              height: inherit;
+            }
           }
 
           span {
@@ -532,10 +537,18 @@
               flex: 1 1 auto;
               margin-left: 6px;
             }
+
+            @media (max-height:767px) {
+              font-size: 12px;
+            }
           }
 
           &:hover {
             background: linear-gradient(90deg, rgba(0, 148, 255, 0.2) 0.73%, rgba(0, 148, 255, 0) 100%);
+          }
+
+          @media (max-height: 767px) {
+            padding-block: 3px;
           }
         }
 
@@ -550,6 +563,10 @@
 
               .nav-menu-name {
                 margin-left: 0;
+              }
+
+              @media (max-height: 767px) {
+                padding-block: 3px;
               }
             }
           }
@@ -570,6 +587,10 @@
 
       .nav-menu+.nav-menu:not(.link-seperator) {
         margin-top: 5px;
+
+        @media (max-height: 767px) {
+          margin-top: 2px;
+        }
       }
 
       .nav-menu {
@@ -822,6 +843,10 @@
           margin-right: 12px;
         }
       }
+
+      // @media (max-height: 991px) {
+      //   margin-bottom: 5px;
+      // }
     }
 
     .logo-closed {
