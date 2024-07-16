@@ -138,7 +138,7 @@ const Listing = (props) => {
 	];
 
 	const headerCheckboxHandle = (event) => {
-		if(!gridRef?.current?.api)return;
+		if (!gridRef?.current?.api) return;
 		// let paginationSize = gridRef.current.api.paginationGetPageSize();
 		let currentPageNum = gridRef.current.api.paginationGetCurrentPage();
 		// let totalRowsCount = gridRef.current.api.getDisplayedRowCount();
@@ -366,25 +366,25 @@ const Listing = (props) => {
 		}
 	};
 	function deselectHeaderCheckbox() {
-		if(gridRef?.current?.columnApi){
+		if (gridRef?.current?.columnApi) {
 			const checkboxColumn = gridRef.current.columnApi.getColumn("friendName"); // Replace 'friendName' with your actual checkbox column ID
-		// console.log("chekcbox loadererrer",checkboxColumn);
-		if (checkboxColumn?.colDef?.headerCheckboxSelection) {
-			// const isHeaderCheckboxSelected = checkboxColumn.getColDef().headerCheckboxSelection;
-			// console.log('Is header checkbox selected:', isHeaderCheckboxSelected);
-			checkboxColumn.colDef.headerCheckboxSelection = false;
-			gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
-			checkboxColumn.colDef.headerCheckboxSelection = true;
-			gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
-			gridRef.current.api.refreshHeader();
-		}
+			// console.log("chekcbox loadererrer",checkboxColumn);
+			if (checkboxColumn?.colDef?.headerCheckboxSelection) {
+				// const isHeaderCheckboxSelected = checkboxColumn.getColDef().headerCheckboxSelection;
+				// console.log('Is header checkbox selected:', isHeaderCheckboxSelected);
+				checkboxColumn.colDef.headerCheckboxSelection = false;
+				gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
+				checkboxColumn.colDef.headerCheckboxSelection = true;
+				gridRef.current.columnApi.applyColumnState({ state: [checkboxColumn] });
+				gridRef.current.api.refreshHeader();
+			}
 
 		}
 	}
 
 	// gridRef.current.api
 	const resetPaginationSelection = (self) => {
-		if(!self?.api){
+		if (!self?.api) {
 			return;
 		}
 		// console.log("heloooooooo", self)
@@ -468,7 +468,7 @@ const Listing = (props) => {
 			let filteredCount = 0;
 			gridRef.current.api.forEachNodeAfterFilter(() => filteredCount++);
 			props.getFilterNum(filteredCount);
-			
+
 
 			if (gridRef.current.api.filterManager.activeColumnFilters.length > 0) {
 				setMaxSelect(filteredCount);
@@ -505,11 +505,11 @@ const Listing = (props) => {
 			console.log('localStorage.getItem("fr_default_fb")', localStorage.getItem("fr_default_fb"), 'params?.campaignId', params?.campaignId);
 			props?.getCurrentCampaignFriends(localStorage.getItem("fr_default_fb"), params?.campaignId, 'all')
 		} else {
-				if(removedContacts?.message){
-					console.log("You can't Delete multiple Time same data", removedContacts?.message);
-				}else{
-					Alertbox("Can't Remove Friends", "error-toast", 1000, "bottom-right");
-				}
+			if (removedContacts?.message) {
+				console.log("You can't Delete multiple Time same data", removedContacts?.message);
+			} else {
+				Alertbox("Can't Remove Friends", "error-toast", 1000, "bottom-right");
+			}
 		}
 	};
 
@@ -571,6 +571,8 @@ const Listing = (props) => {
 		}
 	}, []);
 
+
+	// #region SELECTION CHANGED
 	const selectionChanged = useCallback(
 		(e) => {
 			// let selectedRows = gridRef.current.api.getSelectedRows();
@@ -579,7 +581,7 @@ const Listing = (props) => {
 			const api = gridRef.current.api;
 			const filteredNodes = api.getModel().rowsToDisplay;
 			const selectedFilteredRows = filteredNodes.filter(node => node.isSelected()).map(node => node.data);
-            //console.log('Selected Filtered Rows:', selectedFilteredRows);
+			//console.log('Selected Filtered Rows:', selectedFilteredRows);
 			let selectedUsers = [];
 
 			selectedNodes.forEach((node) => {
@@ -598,7 +600,8 @@ const Listing = (props) => {
 					}
 				}
 
-				if (newObj?.status && !newObj?.campaign_name && (newObj?.status !== 'pending' || newObj?.status !== 'pending')) {
+				// HAVE TO REPLACE WITH ALL SELECT EFFECT..
+				if (newObj?.status && !newObj?.campaign_name && (newObj?.status !== 'pending' && newObj?.status !== 'Pending encrypted')) {
 					// If the row doesn't meet the criteria, deselect it
 					node.setSelected(false);
 					// selectedUsers = [...selectedUsers, {...newObj, rowId: node.id, selected: false, selectable: false}];
@@ -620,15 +623,15 @@ const Listing = (props) => {
 			//console.log("selectedUsers++++", selectedUsers);
 
 			setSelectedFriends(
-				selectedFilteredRows.length > 0 ? selectedFilteredRows:selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
+				selectedFilteredRows.length > 0 ? selectedFilteredRows : selectedUsers || selectedUsers.length !== 0 ? selectedUsers : null
 			);
-		
+
 		},
 		[currentWhiteList, currentBlackList]
 	);
 
 	/**
-	 * RENDERS THE CHECKBOX TITLE AFTER SELECTS THE FRIENDS
+	 // #region RENDERS THE CHECKBOX TITLE AFTER SELECTS THE FRIENDS
 	 * @param {*} maxLength 
 	 * @param {*} selectedFriends 
 	 * @returns 
@@ -674,7 +677,7 @@ const Listing = (props) => {
 	};
 
 	/**
-	 * RENDER THE CHECKBOX ACCORDING TO DIFFERENT LOGICS
+	 // #region RENDER THE CHECKBOX ACCORDING TO DIFFERENT LOGICS
 	 * @param {*} maxLength 
 	 * @param {*} selectedFriends 
 	 */

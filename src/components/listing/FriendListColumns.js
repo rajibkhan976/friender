@@ -201,29 +201,31 @@ export const GeneralNameCellRenderer = memo((params) => {
 	);
 });
 
+
+// #region NAME/CHECKCBOX
 export const UnlinkedNameCellRenderer = memo((params) => {
 	return (
 		<span
-			className={`name-image-renderer ${
-				params?.data?.status === "sent" ||
-				params?.data?.status === "send" ||
-				params?.data?.status === "successful"
-					? "frnd-send-status"
+			className={`name-image-renderer ${params?.data?.status === "sent" || params?.data?.status === "send" 
+				|| params?.data?.status === "successful"
+				|| params?.data?.status === "failed" 
+					? // params?.data?.status === "successful"
+					"frnd-send-status"
 					: ""
-			}`}
+				}`}
 		>
 			<span
-				className='fb-display-pic'
+				className="fb-display-pic"
 				style={{
 					backgroundImage: `url(${params.data.friendProfilePicture})`,
 				}}
 			></span>
-			<span className='fb-name'>{params.value}</span>
+			<span className="fb-name">{params.value}</span>
 			<a
 				href={params.data.friendProfileUrl}
-				target='_blank'
-				rel='noreferrer'
-				className='ico-open-link'
+				target="_blank"
+				rel="noreferrer"
+				className="ico-open-link"
 			>
 				<OpenInNewTab />
 			</a>
