@@ -554,7 +554,7 @@ const FriendsQueue = () => {
 	};
 
 	return (
-		<div className='main-content-inner d-flex d-flex-column listing-main'>
+		<div className='main-content-inner d-flex d-flex-column listing-main listing-campaign'>
 			{modalOpen && (
 				<Modal
 					modalType='normal-type'

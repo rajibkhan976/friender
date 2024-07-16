@@ -1449,7 +1449,7 @@
     // width: inherit;
 
     &:first-child {
-      width: 40px;
+      width: 40px !important;
     }
     &.friendName-cell-class {
       width: 248px;
@@ -1721,6 +1721,41 @@
       .MuiSvgIcon-root {
         color: $themeDefaultPrimary1;
       }
+    }
+  }
+}
+
+.MuiList-root {
+  .MuiMenuItem-root {
+    height: 40px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.12px;
+
+    svg {
+      fill: #767485;
+    }
+
+    &.Mui-selected {
+      svg {
+        fill: $themeDefaultPrimary1;
+        color: $themeDefaultPrimary1;
+      }
+    }
+
+    &:nth-child(2) {
+      color: #49CE56;
+    }
+    &:nth-child(3) {
+      color: #F7D479;
+    }
+    &:nth-child(4) {
+      color: #767485;
+    }
+    &:nth-child(5) {
+      color: #FF6A77;
     }
   }
 }

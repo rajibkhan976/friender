@@ -495,10 +495,12 @@ main {
       overflow: hidden;
     }
 
-    td,
-    th {
-      min-width: 40px;
-      width: inherit;
+    &:not(.listing-campaign) {
+      td,
+      th {
+        min-width: 40px;
+        width: inherit;
+      }
     }
   }
 }

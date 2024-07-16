@@ -311,7 +311,7 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
       "Friendship",
       `This section showcases all\n kinds of friendship statuses.`
     ),
-    enableColumnFilter: false,
+    // enableColumnFilter: false,
   },
   {
     ...TotalReaction,
