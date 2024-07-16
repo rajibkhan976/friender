@@ -5,7 +5,6 @@ import {
 } from 'material-react-table';
 import { MuiListStyleProps } from "./style/Style";
 import {
-    darken,
     useTheme
 } from '@mui/material';
 //import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
@@ -15,7 +14,7 @@ import helper from "../../../helpers/helper"
 // import CheckBox from '../../formComponents/Checkbox';
 
 import "../../../assets/scss/component/common/_listing.scss"
-import { getListData, updateCurrlistCount, updateFilterState, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
+import { getListData, updateFilterState, updateMRTrowSelectionState, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
 
 
 export default function Listing2(props) {
@@ -25,43 +24,70 @@ export default function Listing2(props) {
     const textFilter = useSelector((state) => state.friendlist.searched_filter);
     const selected = useSelector((state) => state.ssList.selected_friends)
     const filter_state = useSelector((state) => state.ssList.filter_state)
-    const select_all_state = useSelector((state) => state.ssList.select_all_state)
+  //  const select_all_state = useSelector((state) => state.ssList.select_all_state)
     const isInitialRender = useRef(true);
-    const [data, setData] = useState([]);
+    const data = useSelector((state) => state.ssList.ssList_data);
+    // const [data, setData] = useState([]);
     const [isError, setIsError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [rowSelection, setRowSelection] = useState({});
+    //const [isLoading, setIsLoading] = useState(false);
+    const isLoading = useSelector((state) => state.ssList.isLoading);
+   // const [rowSelection, setRowSelection] = useState({});
+    const rowSelection = useSelector((state) => state.ssList.MRT_selected_rows_state);
     const [rowSelectionTracker, setRowSelectionTracker] = useState({});
     const [isRefetching, setIsRefetching] = useState(false);
-    const [selectedRowIds, setSelectedRowIds] = useState({});
+//const [selectedRowIds, setSelectedRowIds] = useState({});
     const [selectAcross, setSelectAcross] = useState({selected:false,unSelected:[]})
 
     //table state
-    const [selectAllState, setSelectAllState] = useState(false);
+  //  const [selectAllState, setSelectAllState] = useState(false);
     const [unSelectedIds,setUnselectedIds] = useState([]);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnFilterFns, setColumnFilterFns] = useState([]);
-    const [globalFilter, setGlobalFilter] = useState('');
+   // const [globalFilter, setGlobalFilter] = useState('');
     const [sorting, setSorting] = useState([]);
-    const [rowCount, setRowCount] = useState();
+    const rowCount = useSelector((state) => state.ssList.list_filtered_count);
+   // const [rowCount, setRowCount] = useState();
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 15, //customize the default page size
     });
     const listMuiProps = MuiListStyleProps(theme);
     const customTableMethods = props.tableMethods
-
+     const setRowSelection = (selectState) =>{
+        //* Note VVI: always have to pass the old selection state
+        console.log("selectState",selectState)
+        const newSelction = selectState(rowSelection);
+        dispatch(updateMRTrowSelectionState(newSelction))
+     }
+      // useEffect(()=>{
+      // setIsLoading(true);
+      // setTimeout(() => {
+      //   setIsLoading(false);
+      // }, 500);
+    //   console.log("lolo dile__",data);
+    //  },[data]);
+    // function getUniqueRecords(array1, array2) {
+    //   // Merge the two arrays
+    //   const mergedArray = [...array1, ...array2];
+   
+    //   // Create a Set to filter out duplicates
+    //   const uniqueSet = new Set(mergedArray);
+   
+    //   // Convert the Set back to an array
+    //   const uniqueArray = Array.from(uniqueSet);
+   
+    //   return uniqueArray;
+    // }
     function getUniqueRecords(array1, array2) {
-      // Merge the two arrays
-      const mergedArray = [...array1, ...array2];
-   
-      // Create a Set to filter out duplicates
-      const uniqueSet = new Set(mergedArray);
-   
-      // Convert the Set back to an array
-      const uniqueArray = Array.from(uniqueSet);
-   
-      return uniqueArray;
+      // Create a Set to store unique elements
+      const uniqueSet = new Set();
+      for (const item of array1) {
+        uniqueSet.add(item);
+      }
+      for (const item of array2) {
+        uniqueSet.add(item);
+      }
+      return Array.from(uniqueSet);
     }
  
  
@@ -77,7 +103,7 @@ export default function Listing2(props) {
  
  
     useEffect(() => {
-      // console.log('rowSelection', rowSelection);
+       //console.log('rowSelection??????>>>>>>________', rowSelection);
       // Fetching all unselectedIds by comparing with the previous rowSelection
       const usIds = Object.keys(rowSelectionTracker).filter(id => !(id in rowSelection));
       
@@ -206,10 +232,10 @@ export default function Listing2(props) {
       }, {});
       obj = {...rowSelection, ...obj}
      
-      setRowSelection(obj)
-      setRowSelectionTracker(obj)
+      dispatch(updateMRTrowSelectionState(obj));
+      setRowSelectionTracker(obj);
     } else {
-      setRowSelection({})
+      dispatch(updateMRTrowSelectionState({}));
       setRowSelectionTracker({})
       dispatch(updateSelectedFriends([]))
     }
@@ -260,6 +286,20 @@ export default function Listing2(props) {
     //   console.log("columnFilters--- :::>>>", columnFilters);
     //   console.log("columnFilterFns--- :::>>>", columnFilterFns);
     // }, [columnFilters, columnFilterFns]);
+    useEffect(()=>{
+      if (selectAcross?.selected) {
+        let obj = data.reduce((acc, item) => {
+          // Ensure item and item._id are valid
+          if (item?._id && !unSelectedIds?.includes(item._id)) {
+            acc[item._id] = true;
+          }
+          return acc; // Always return acc
+        }, {});
+    
+        obj = { ...rowSelection, ...obj };
+        dispatch(updateMRTrowSelectionState(obj));
+      }
+    },[data]);
     const fetchData = async (
       paginationData,
       globalFilter,
@@ -269,11 +309,11 @@ export default function Listing2(props) {
     ) => {
       //  console.log("sorting||||--- :::>>>", sorting);
       //setData(props?.friendsData.slice( pagination.pageIndex*pagination.pageSize,pagination.pageSize*(pagination.pageIndex+1)));
-      if (!data.length) {
-        setIsLoading(true);
-      } else {
-        setIsRefetching(true);
-      }
+      // if (!data.length) {
+      //   setIsLoading(true);
+      // } else {
+      //   setIsRefetching(true);
+      // }
       try {
         const queryParam = {
           page_number: paginationData.pageIndex + 1,
@@ -301,33 +341,34 @@ export default function Listing2(props) {
         const payload = {
           queryParam : queryParam,
           baseUrl : props.baseUrl,
+          responseAdapter: props.dataExtractor,
         }
 
         dispatch(getListData(payload))
           .unwrap()
           .then((response) => {
             // let response = await fetchFriendList2(queryParam);
-            const { data, count } = props.dataExtractor(response);
-            //console.log("data list batch____>>", data,count);
-            setRowCount(count);
-            setData(data);
-            if( !queryParam.filter || queryParam.filter === 0 ){
-              dispatch(updateCurrlistCount(count));
-            }
-            if (selectAcross?.selected) {
-              let obj = response?.data[0]?.friend_details.reduce(
-                (acc, item) => {
-                  // console.log('UNSELECTED OR NOT ', item._id , '>>>>>>>>', unSelectedIds?.includes(item._id));
-                  if (!unSelectedIds?.includes(item._id)) {
-                    acc[item?._id] = true;
-                    return acc;
-                  }
-                },
-                {}
-              );
-              obj = { ...rowSelection, ...obj };
-              setRowSelection(obj);
-            }
+            // const { data, count } = response;
+            // console.log("data list batch____>>", data,count);
+            // setRowCount(count);
+            // setData(data);
+            // if( !queryParam.filter || queryParam.filter === 0 ){
+            //   dispatch(updateCurrlistCount(count));
+            // }
+            // if (selectAcross?.selected) {
+            //   let obj = response?.data[0]?.friend_details.reduce(
+            //     (acc, item) => {
+            //       // console.log('UNSELECTED OR NOT ', item._id , '>>>>>>>>', unSelectedIds?.includes(item._id));
+            //       if (!unSelectedIds?.includes(item._id)) {
+            //         acc[item?._id] = true;
+            //         return acc;
+            //       }
+            //     },
+            //     {}
+            //   );
+            //   obj = { ...rowSelection, ...obj };
+            //   setRowSelection(obj);
+            // }
           })
           .catch((error) => {
             setIsError(true);
@@ -347,7 +388,7 @@ export default function Listing2(props) {
         return;
       }
       setIsError(false);
-      setIsLoading(false);
+    //  setIsLoading(false);
       setIsRefetching(false);
     };
     const debouncedFetchData = useCallback(
@@ -361,6 +402,7 @@ export default function Listing2(props) {
 
     useEffect(() => {
       if (isInitialRender.current) {
+        dispatch(updateMRTrowSelectionState({}))
         isInitialRender.current = false; // Set to false after the first render
       } else {
       debouncedFetchData(pagination,textFilter,columnFilters,columnFilterFns,sorting);
@@ -379,7 +421,7 @@ export default function Listing2(props) {
       fetchData(pagination,textFilter,columnFilters,columnFilterFns,sorting);
     }, [pagination.pageIndex, pagination.pageSize,sorting]);
 
-  const columns = useMemo(props.listColDef, [props.listColDef]);
+  const columns = useMemo(props.listColDef, [props.listColDef,data]);
   
 
     //pass table options to useMaterialReactTable
@@ -454,7 +496,7 @@ export default function Listing2(props) {
     return (<div className="react-table-container">
       { 
         (
-          Object.keys(rowSelection)?.length > 0 ||
+          ( rowSelection && Object.keys(rowSelection)?.length > 0) ||
           selectAcross?.selected
         ) &&
         <div className="selection-popup d-flex f-justify-center f-align-center">

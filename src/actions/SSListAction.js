@@ -2,18 +2,32 @@ import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import apiClient from "../services";
 import { bulkOperationContacts, fetchFriendCount } from "../services/SSListServices";
 
+//way to use adapter function stringyfy
+//
+let adapter = {}; 
 const initialState = {
     isLoading: true,
-    friends_data: [],
-    reFetching: false,
+    ssList_data: [],
+    isRefetching: false,
     selected_friends: [],
+    listFetchParams:{
+        queryParam: {},
+        baseUrl: "",
+        responseAdapter: ""
+    },
+    MRT_selected_rows_state: {},
     selection_obj: {},
     filter_state: {
         filter_key_value: null,
         filter_fun_state: null,
     },
+    pagination_state: {
+        page_number: 0,
+        page_size: 15,
+    },
+    list_filtered_count: 0,
+    list_unfiltered_count: 0,
     select_all_state: {},
-    curr_list_count: 0,
     global_searched_filter: "",
     pluginRowSelection: {}
 };
@@ -29,7 +43,11 @@ export const getListData = createAsyncThunk(
         {},
         { ...queryParam }
       );
-      return res;
+      if(payload.responseAdapter){
+        adapter = payload.responseAdapter;
+      }
+      //adapter = payload.responseAdapter? payload.responseAdapter(res) : res;
+      return adapter(res);
     }
   );
 
@@ -106,7 +124,13 @@ export const ssListSlice = createSlice({
             state.filter_state = action.payload;
         },
         updateCurrlistCount: (state, action) => {
-            state.curr_list_count = action.payload;
+            state.list_unfiltered_count = action.payload;
+        },
+        updateMRTrowSelectionState : (state, action) =>{
+            state.MRT_selected_rows_state = action.payload;  
+        },
+        removeMTRallRowSelection : (state,action) => {
+            state.MRT_selected_rows_state = {};
         },
         updateWhiteListStatusOfSelectesList: (state, action) => {
             // console.log("list satussss   action ommmmm",action.payload)
@@ -153,12 +177,32 @@ export const ssListSlice = createSlice({
         },
     },
     extraReducers: {
-        [getListData.pending]: (state) => {
-            state.isLoading = true;
+        [getListData.pending]: (state,action) => {
+            if(!state.ssList_data.length || state.ssList_data.length === 0){
+                state.isLoading = true;
+            }else{
+                state.isLoading = true;
+                state.isRefetching = true;
+            }
+            state.pagination_state = {
+                page_number:action.meta?.arg?.page_number,
+                page_size:action.meta?.arg?.page_size,
+            };
+            state.listFetchParams = {
+                queryParam: action.meta?.arg?.queryParam,
+                baseUrl: action.meta?.arg?.baseUrl,
+                responseAdapter: action.meta?.arg?.responseAdapter?.toString(),
+            }
+            //console.log("action.payload>>>", action);
         },
         [getListData.fulfilled]: (state, action) => {
             state.isLoading = false;
-            state.reFetching = false;
+            state.isRefetching = false;
+            state.list_filtered_count = action.payload.count;
+            if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
+                state.list_unfiltered_count = action.payload.count;
+              }
+            state.ssList_data = action.payload.data; 
         },
     },
 });
@@ -166,6 +210,7 @@ export const ssListSlice = createSlice({
 export const {
     updateRowSelection,
     updateSelectionObj,
+    updateMRTrowSelectionState,
     updateSelectAllState,
     updateFilterState,
     updateCurrlistCount,
@@ -174,6 +219,7 @@ export const {
     updateNumberofListing,
     countCurrentListsize,
     updateWhiteListStatusOfSelectesList,
-    updateBlackListStatusOfSelectesList
+    updateBlackListStatusOfSelectesList,
+    removeMTRallRowSelection
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

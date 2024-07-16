@@ -86,7 +86,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
-import { bulkAction, getFriendCountAction, getListData, updateRowSelection, updateSelectAllState } from "../../actions/SSListAction";
+import { bulkAction, getFriendCountAction, getListData, removeMTRallRowSelection, updateRowSelection, updateSelectAllState } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -246,7 +246,7 @@ function PageHeader({ headerText = "" }) {
 		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
 	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
-	const listCount = useSelector((state) => state.ssList.curr_list_count);
+	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
 	const [links, setLinks] = useState([]);
 	const [accessOptions, setAccessOptions] = useState(accessibilityOptions);
@@ -274,7 +274,8 @@ function PageHeader({ headerText = "" }) {
 	const friendsListData = useSelector(
 		(state) => state.facebook_data.fb_data
 	);
-	const [actionableContacts, setActionableContacts] = useState(null)
+	const [actionableContacts, setActionableContacts] = useState(null);
+	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
 
 	useEffect(()=>{		
 				if (friendsListData) {
@@ -436,6 +437,22 @@ function PageHeader({ headerText = "" }) {
 		validateHeaderOptions(locationPathName[locationPathName.length - 1]);
 	}, [location]);
 
+	const refreshAndDeselectList = () =>{
+	
+		//const funStr = listFetchParams.responseAdapter;
+		//const responseAdapter = eval(`(${funStr})`);
+		const payload = {
+			queryParam :listFetchParams.queryParam,
+			baseUrl : listFetchParams.baseUrl,
+			//responseAdapter: props.dataExtractor,
+		  }
+		 dispatch(getListData(payload)).unwrap().then((res)=>{
+			//console.log("list res ",res);
+		 }).catch((err)=>{
+			console.log("Error in page header list fetch",err);
+		 });
+		 dispatch(removeMTRallRowSelection());
+	} 
 	const onAccessClick = (e) => {
 		const updatedAccess = accessOptions.map((accessObj) => {
 			if (accessObj.type === e.type) {
@@ -1876,15 +1893,15 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	const fetchFriendListV2 = () => {
-		let payload = {}
+	// const fetchFriendListV2 = () => {
+	// 	let payload = {}
 
 		// page_number: paginationData.pageIndex + 1,
 		//   page_size: paginationData.pageSize,
 		// search_string: textFilter?.length > 2 ? textFilter : null,
 
-		dispatch(getListData())
-	}
+	// 	dispatch(getListData())
+	// }
 
 
 	// NEW FUNCTIONS FOR BULK ACTIONS
@@ -1893,7 +1910,7 @@ function PageHeader({ headerText = "" }) {
 			fb_user_id: defaultFbId,
 			check: select_all_state?.selected ? 'all' : 'some',
 			include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
-			exclude_list: (select_all_state?.selected && select_all_state?.unselected?.length > 0) ? JSON.stringify([...select_all_state?.unselected?.map(el => el?._id)]) : [],
+			exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 0) ? JSON.stringify([...select_all_state?.unSelected?.map(el => el)]) : [],
 			operation: action,
 			friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
 		};
@@ -1933,7 +1950,7 @@ function PageHeader({ headerText = "" }) {
 					fb_user_id: defaultFbId,
 					check: select_all_state?.selected ? 'all' : 'some',
 					include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
-					exclude_list: (select_all_state?.selected && select_all_state?.unselected?.length > 1) ? [...select_all_state?.unselected.map(el => el?._id)]: [],
+					exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 1) ? [...select_all_state?.unSelected.map(el => el)]: [],
 					operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
 					friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
 				}
@@ -1973,6 +1990,7 @@ function PageHeader({ headerText = "" }) {
 						1000,
 						"bottom-right"
 					);
+					refreshAndDeselectList();
 					setModalOpen(false)
 					dispatch(updateSelectAllState({}))
 					dispatch(updateSelectedFriends([]));
