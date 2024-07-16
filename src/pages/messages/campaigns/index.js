@@ -511,7 +511,7 @@ const Campaigns = () => {
 						fetchCampaign={fetchCampaign}
 					/>
 					{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
-						<div className='campaigns-main'>
+						<div className='campaigns-main listing-main'>
 							{radioOption?.find((el) => el.checked).label === "listing" ? (
 								(
 									<Suspense fallback=''>

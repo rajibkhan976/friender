@@ -510,7 +510,8 @@ function PageHeader({ headerText = "" }) {
 					queryTopHeader: {
 						active: true,
 						content:
-							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+							// "Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+							"You can view all Facebook accounts here, regardless of whether they are your friends or not."
 					},
 				});
 				break;

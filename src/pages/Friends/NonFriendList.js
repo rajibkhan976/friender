@@ -96,10 +96,10 @@ const NonFriendList = () => {
 	// 	}
 	// };
 
-	useEffect(() => {
-		dispatch(fetchAllCampaigns({sort_order: "asc"}));
-		//getSettingsData();
-	}, []);
+	// useEffect(() => {
+	// 	dispatch(fetchAllCampaigns({sort_order: "asc"}));
+	// 	//getSettingsData();
+	// }, []);
 
 	const someComparator = (valueA, valueB, nodeA, nodeB, isDescending) => {
 		// console.log(nodeA.data.matchedKeyword, nodeB.data.matchedKeyword);

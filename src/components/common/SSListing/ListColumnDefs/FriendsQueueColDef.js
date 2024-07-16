@@ -8,7 +8,7 @@ const {
 } = CommonColDefs;
 
 export const FriendsQueueColDef = () => {
-  return [
+  const columns = [
     {...Name,
       Cell:({ renderedCellValue, row }) => {
         return (
@@ -17,6 +17,7 @@ export const FriendsQueueColDef = () => {
         
     }
     },
+    Keyword,
     {
 			accessorKey: "message_group_request_sent",
 			header: "Message group: when friend request is sent",
@@ -38,7 +39,16 @@ export const FriendsQueueColDef = () => {
         )
     }
 		},
-    Keyword,
     Source,
   ];
+
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
 };

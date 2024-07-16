@@ -36,6 +36,7 @@ export const CommonColDefs = {
             { label: 'Lost Friend', value: 3 },
             { label: 'Non Friend', value: 4 },
         ],
+        enableColumnFilter: true,
         enableColumnFilterModes: false,
         filterFns:'equals',
         filterSelectProps: {
