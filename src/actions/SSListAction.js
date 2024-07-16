@@ -15,6 +15,10 @@ const initialState = {
         baseUrl: "",
         responseAdapter: ""
     },
+    selectAcross : {
+        selected:false,
+        unSelected:[]
+    },
     MRT_selected_rows_state: {},
     selection_obj: {},
     filter_state: {
@@ -129,8 +133,19 @@ export const ssListSlice = createSlice({
         updateMRTrowSelectionState : (state, action) =>{
             state.MRT_selected_rows_state = action.payload;  
         },
+        updateSelectAcross : (state, action) => {
+            console.log("action.payload)))))0000",action.payload)
+            state.selectAcross = {
+                selected:action.payload.selected,
+                unSelected:action.payload.unSelected
+            };
+        },
         removeMTRallRowSelection : (state,action) => {
             state.MRT_selected_rows_state = {};
+            state.selectAcross = {
+                selected:false,
+                unSelected:[]
+            }
         },
         updateWhiteListStatusOfSelectesList: (state, action) => {
             // console.log("list satussss   action ommmmm",action.payload)
@@ -208,6 +223,7 @@ export const ssListSlice = createSlice({
 });
 
 export const {
+    updateSelectAcross,
     updateRowSelection,
     updateSelectionObj,
     updateMRTrowSelectionState,

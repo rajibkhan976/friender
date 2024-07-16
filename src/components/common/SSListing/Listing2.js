@@ -10,74 +10,59 @@ import {
 //import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
 import { useDispatch, useSelector } from 'react-redux';
 import helper from "../../../helpers/helper"
-// import apiClient from '../../../services';
-// import CheckBox from '../../formComponents/Checkbox';
+
 
 import "../../../assets/scss/component/common/_listing.scss"
-import { getListData, updateFilterState, updateMRTrowSelectionState, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
+import { getListData, updateFilterState, updateMRTrowSelectionState, updateSelectAcross, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
 
 
 export default function Listing2(props) {
-    //mock data - strongly typed if you are using TypeScript (optional, but recommended)
-    const theme = useTheme();
-    const dispatch = useDispatch();
-    const textFilter = useSelector((state) => state.friendlist.searched_filter);
-    const selected = useSelector((state) => state.ssList.selected_friends)
-    const filter_state = useSelector((state) => state.ssList.filter_state)
+  //mock data - strongly typed if you are using TypeScript (optional, but recommended)
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const textFilter = useSelector((state) => state.friendlist.searched_filter);
+  const selected = useSelector((state) => state.ssList.selected_friends)
+  const filter_state = useSelector((state) => state.ssList.filter_state)
   //  const select_all_state = useSelector((state) => state.ssList.select_all_state)
-    const isInitialRender = useRef(true);
-    const data = useSelector((state) => state.ssList.ssList_data);
-    // const [data, setData] = useState([]);
-    const [isError, setIsError] = useState(false);
-    //const [isLoading, setIsLoading] = useState(false);
-    const isLoading = useSelector((state) => state.ssList.isLoading);
-   // const [rowSelection, setRowSelection] = useState({});
-    const rowSelection = useSelector((state) => state.ssList.MRT_selected_rows_state);
-    const [rowSelectionTracker, setRowSelectionTracker] = useState({});
-    const [isRefetching, setIsRefetching] = useState(false);
-//const [selectedRowIds, setSelectedRowIds] = useState({});
-    const [selectAcross, setSelectAcross] = useState({selected:false,unSelected:[]})
-
-    //table state
+  const isInitialRender = useRef(true);
+  const data = useSelector((state) => state.ssList.ssList_data);
+  // const [data, setData] = useState([]);
+  const [isError, setIsError] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useSelector((state) => state.ssList.isLoading);
+  // const [rowSelection, setRowSelection] = useState({});
+  const rowSelection = useSelector((state) => state.ssList.MRT_selected_rows_state);
+  const [rowSelectionTracker, setRowSelectionTracker] = useState({});
+  const [isRefetching, setIsRefetching] = useState(false);
+  //const [selectedRowIds, setSelectedRowIds] = useState({});
+  //const [selectAcross, setSelectAcross] = useState({selected:false,unSelected:[]})
+  const selectAcross = useSelector((state) => state.ssList.selectAcross);
+  //table state
   //  const [selectAllState, setSelectAllState] = useState(false);
-    const [unSelectedIds,setUnselectedIds] = useState([]);
-    const [columnFilters, setColumnFilters] = useState([]);
-    const [columnFilterFns, setColumnFilterFns] = useState([]);
-   // const [globalFilter, setGlobalFilter] = useState('');
-    const [sorting, setSorting] = useState([]);
-    const rowCount = useSelector((state) => state.ssList.list_filtered_count);
-   // const [rowCount, setRowCount] = useState();
-    const [pagination, setPagination] = useState({
-        pageIndex: 0,
-        pageSize: 15, //customize the default page size
-    });
-    const listMuiProps = MuiListStyleProps(theme);
-    const customTableMethods = props.tableMethods
-     const setRowSelection = (selectState) =>{
-        //* Note VVI: always have to pass the old selection state
-        console.log("selectState",selectState)
-        const newSelction = selectState(rowSelection);
-        dispatch(updateMRTrowSelectionState(newSelction))
-     }
-      // useEffect(()=>{
-      // setIsLoading(true);
-      // setTimeout(() => {
-      //   setIsLoading(false);
-      // }, 500);
-    //   console.log("lolo dile__",data);
-    //  },[data]);
-    // function getUniqueRecords(array1, array2) {
-    //   // Merge the two arrays
-    //   const mergedArray = [...array1, ...array2];
-   
-    //   // Create a Set to filter out duplicates
-    //   const uniqueSet = new Set(mergedArray);
-   
-    //   // Convert the Set back to an array
-    //   const uniqueArray = Array.from(uniqueSet);
-   
-    //   return uniqueArray;
-    // }
+  const [unSelectedIds, setUnselectedIds] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
+  const [columnFilterFns, setColumnFilterFns] = useState([]);
+  // const [globalFilter, setGlobalFilter] = useState('');
+  const [sorting, setSorting] = useState([]);
+  const rowCount = useSelector((state) => state.ssList.list_filtered_count);
+  // const [rowCount, setRowCount] = useState();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 15, //customize the default page size
+  });
+  const listMuiProps = MuiListStyleProps(theme);
+  const customTableMethods = props.tableMethods
+  const setRowSelection = (selectState) => {
+    //* Note VVI: always have to pass the old selection state
+    //console.log("selectState", selectState)
+    const newSelction = selectState(rowSelection);
+    dispatch(updateMRTrowSelectionState(newSelction))
+  }
+  const setSelectAcross = (args) =>{
+    console.log("selectAcross", args)
+    dispatch(updateSelectAcross(args))
+  }
+      
     function getUniqueRecords(array1, array2) {
       // Create a Set to store unique elements
       const uniqueSet = new Set();
@@ -520,7 +505,7 @@ export default function Listing2(props) {
                 <label className="fr-custom-check">
                   <input
                     type='checkbox'
-                    checked={selectAcross?.selected && selectAcross?.unSelected?.length === 0 && unSelectedIds?.length === 0}
+                    checked={(selectAcross?.selected && selectAcross?.unSelected?.length === 0 && unSelectedIds?.length === 0)||(selected.length === rowCount)}
                     onChange={(e)=>checkAll(e)}
                   />
                   <span className="checkmark"></span>

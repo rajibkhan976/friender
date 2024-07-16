@@ -81,7 +81,7 @@ import useComponentVisible from "../../helpers/useComponentVisible";
 import ToolTipPro from "./ToolTipPro";
 import { alertBrodcater, fr_channel } from "./AlertBrodcater";
 import "../../assets/scss/component/common/_page_header.scss";
-import { addUsersToCampaign } from "../../actions/CampaignsActions";
+import { addUsersToCampaign, fetchAllCampaigns } from "../../actions/CampaignsActions";
 import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
@@ -277,6 +277,10 @@ function PageHeader({ headerText = "" }) {
 	const [actionableContacts, setActionableContacts] = useState(null);
 	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
 
+
+	useEffect(()=>{
+		dispatch(fetchAllCampaigns({sort_order: "asc"}));
+	},[]);
 	useEffect(()=>{		
 				if (friendsListData) {
 					if (friendsListData.last_sync_at) {
@@ -1909,11 +1913,15 @@ function PageHeader({ headerText = "" }) {
 		let queryParam = {
 			fb_user_id: defaultFbId,
 			check: select_all_state?.selected ? 'all' : 'some',
-			include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
+			//include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
 			exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 0) ? JSON.stringify([...select_all_state?.unSelected?.map(el => el)]) : [],
 			operation: action,
 			friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
 		};
+
+		if(!select_all_state?.selected){
+			queryParam["include_list"] = JSON.stringify([...selectedListItems?.map(el => el?._id)]);
+		}
 
 		if (searchValue?.trim() !== "") {
 			queryParam["searchString"] = searchValue
@@ -1949,10 +1957,14 @@ function PageHeader({ headerText = "" }) {
 			let payload = {
 					fb_user_id: defaultFbId,
 					check: select_all_state?.selected ? 'all' : 'some',
-					include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
+					//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
 					exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 1) ? [...select_all_state?.unSelected.map(el => el)]: [],
 					operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
 					friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+				}
+
+				if(!select_all_state?.selected){
+					payload["include_list"]=[...selectedListItems?.map(el => el?._id)];
 				}
 			
 			if (filter_state?.filter_key_value?.length > 0) {
