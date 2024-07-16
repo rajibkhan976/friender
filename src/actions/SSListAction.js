@@ -45,7 +45,7 @@ export const getListData = createAsyncThunk(
         "get",
         `${payload.baseUrl}`,
         {},
-        { ...queryParam }
+        { ...queryParam, local_time: new Date().toISOString().slice(0, 19).replace("T", " ")}
       );
       if(payload.responseAdapter){
         adapter = payload.responseAdapter;
@@ -64,7 +64,7 @@ export const getFriendCountAction = createAsyncThunk(
             "get",
             `${payload.baseUrl}`,
             {},
-            { ...queryParam }
+            { ...queryParam, local_time: new Date().toISOString().slice(0, 19).replace("T", " ") }
         );
         console.log('RES ', res);
         return res;

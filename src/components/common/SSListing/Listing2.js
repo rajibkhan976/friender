@@ -13,13 +13,14 @@ import helper from "../../../helpers/helper"
 
 
 import "../../../assets/scss/component/common/_listing.scss"
-import { getListData, updateFilterState, updateMRTrowSelectionState, updateSelectAcross, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
+import { getListData, removeMTRallRowSelection, updateFilterState, updateMRTrowSelectionState, updateSelectAcross, updateSelectAllState, updateSelectedFriends } from "../../../actions/SSListAction";
 
 
 export default function Listing2(props) {
   //mock data - strongly typed if you are using TypeScript (optional, but recommended)
   const theme = useTheme();
   const dispatch = useDispatch();
+  const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
   const textFilter = useSelector((state) => state.friendlist.searched_filter);
   const selected = useSelector((state) => state.ssList.selected_friends)
   const filter_state = useSelector((state) => state.ssList.filter_state)
@@ -62,6 +63,10 @@ export default function Listing2(props) {
     console.log("selectAcross", args)
     dispatch(updateSelectAcross(args))
   }
+  useEffect(() => {
+    console.log("useEffect_+_+_+_+_+_+_+>>>>", props)
+    console.log('+++++++++props.listColDef+++++++++++', props.listColDef);
+  },[props])
       
     function getUniqueRecords(array1, array2) {
       // Create a Set to store unique elements
@@ -387,7 +392,7 @@ export default function Listing2(props) {
 
     useEffect(() => {
       if (isInitialRender.current) {
-        dispatch(updateMRTrowSelectionState({}))
+        dispatch(removeMTRallRowSelection({}))
         isInitialRender.current = false; // Set to false after the first render
       } else {
       debouncedFetchData(pagination,textFilter,columnFilters,columnFilterFns,sorting);
@@ -405,8 +410,9 @@ export default function Listing2(props) {
       //console.log("pagination", pagination);
       fetchData(pagination,textFilter,columnFilters,columnFilterFns,sorting);
     }, [pagination.pageIndex, pagination.pageSize,sorting]);
-
-  const columns = useMemo(props.listColDef, [props.listColDef,data]);
+   
+  const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
+  
   
 
     //pass table options to useMaterialReactTable

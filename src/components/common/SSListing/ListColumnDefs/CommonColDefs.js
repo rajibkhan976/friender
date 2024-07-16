@@ -140,20 +140,22 @@ export const CommonColDefs = {
             )
         }
     },
-    RecentEngagement: {
-        accessorKey: 'last_engagement_date', //simple recommended way to define a column
-        header: 'Recent Engagement',
-        //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
-        enableHiding: false,
-        columnFilterModeOptions: [ 'lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
-        Cell: ({ renderedCellValue, row }) => {
-            return (
-                <RecentEngagementRenderer value={renderedCellValue} data={row.original} />
-            )
-        }
+    RecentEngagement: (inactiveAfter)=>{
+        return({
+            accessorKey: 'last_engagement_date', //simple recommended way to define a column
+            header: 'Recent Engagement',
+            //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
+            enableHiding: false,
+            columnFilterModeOptions: [ 'lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+            Cell: ({ renderedCellValue, row }) => {
+                return (
+                    <RecentEngagementRenderer value={renderedCellValue} data={{...row.original}} inactiveAfter={inactiveAfter} />
+                )
+            }
+        })   
     },
     Keyword: {
-        accessorKey: 'keywords', //simple recommended way to define a column
+        accessorKey: 'matchedKeyword', //simple recommended way to define a column
         header: 'Keyword(s)',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
@@ -165,7 +167,7 @@ export const CommonColDefs = {
         }
     },
     Source: {
-        accessorKey: 'finalSource', //simple recommended way to define a column
+        accessorKey: 'source', //simple recommended way to define a column
         header: 'Source',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,

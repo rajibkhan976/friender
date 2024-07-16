@@ -8,8 +8,6 @@ import {
   AgeRenderer,
   CommentRenderer,
   CountryRenderer,
-  CountryTierRenderer,
-  CreationRenderer,
   EngagementGetter,
   EngagementRenderer,
   GenderRenderer,

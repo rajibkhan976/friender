@@ -525,10 +525,9 @@ const LostFriends = () => {
   // };
 
   // useEffect(() => {
-  //   getFbUserId();
+  //   getFbUserId();p
   // }, []);
   const tableMethods = {
-    enableRowSelection: false
   }
 	const defaultParams = {
 		friend_status: "Lost",

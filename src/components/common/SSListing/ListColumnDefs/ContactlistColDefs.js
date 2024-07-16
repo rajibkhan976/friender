@@ -16,7 +16,7 @@ const {
   Source
 } = CommonColDefs;
 
-export const FriendlistColDefs = () => {
+export const FriendlistColDefs = (inactiveAfter) => {
   const columns = [
     Name,
     Gender,
@@ -30,7 +30,7 @@ export const FriendlistColDefs = () => {
     TotalComment,
     Engagement,
     MessageCount,
-    RecentEngagement,
+    RecentEngagement(inactiveAfter),
     Keyword,
     Source
   ];
@@ -45,7 +45,7 @@ export const FriendlistColDefs = () => {
     },
   }));
 };
-export const LostFriendlistColDefs = () => {
+export const LostFriendlistColDefs = (inactiveAfter) => {
   const columns = [
     {
       ...Name,
@@ -64,7 +64,7 @@ export const LostFriendlistColDefs = () => {
     TotalComment,
     Engagement,
     MessageCount,
-    RecentEngagement,
+    RecentEngagement(inactiveAfter),
     Keyword,
     Source
   ];
@@ -80,7 +80,7 @@ export const LostFriendlistColDefs = () => {
   }));
 };
 
-export const GlobalContactlistColDefs = () => {
+export const GlobalContactlistColDefs = (inactiveAfter) => {
   const columns =  [
     Name,
     Gender,
@@ -91,7 +91,7 @@ export const GlobalContactlistColDefs = () => {
     TotalComment,
     Engagement,
     MessageCount,
-    RecentEngagement,
+    RecentEngagement(inactiveAfter),
     Keyword,
     Source
   ];
