@@ -179,6 +179,7 @@ const {
   Source
 } = CommonColDefs;
 
+// #region Friendlist ColDefs
 export const FriendlistColDefs = (inactiveAfter) => {
   const columns = [
     Name,
@@ -230,17 +231,20 @@ export const FriendlistColDefs = (inactiveAfter) => {
     },
   }));
 };
+
+// #region Lost Friends List
 export const LostFriendlistColDefs = (inactiveAfter) => {
   const columns = [
-    {
-      ...Name,
-      Cell: ({ renderedCellValue, row }) => {
-        return (
-          <UnlinkedNameCellRenderer value={renderedCellValue} data={row.original} />
-        )
-      },
+    // {
+    //   ...Name,
+    //   Cell: ({ renderedCellValue, row }) => {
+    //     return (
+    //       <UnlinkedNameCellRenderer value={renderedCellValue} data={row.original} />
+    //     )
+    //   },
 
-    },
+    // },
+    Name,
     { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
     {
       ...Age,
@@ -290,6 +294,7 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
   }));
 };
 
+// #region Global Contact List
 export const GlobalContactlistColDefs = (inactiveAfter) => {
   const columns =  [
     Name,
