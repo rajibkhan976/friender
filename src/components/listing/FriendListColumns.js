@@ -1294,17 +1294,39 @@ export const SourceRendererPending = memo((params) => {
 
     if (params?.data?.finalSource?.toLowerCase() === "csv") {
         return (
-            <div className='friend-sync-source d-flex f-align-center'>
+            <div className={`
+				friend-sync-source 
+				d-flex 
+				f-align-center 
+				${
+					params?.data?.sourceName ?
+						params?.data?.sourceName?.length > 12 ? 
+						'tooltipFullName' : '' :
+						params?.data?.csvName?.length > 12 ?
+							params?.data?.csvName?.substring(0,12)+"..." :
+							""
+				}`}
+				data-text={
+					params?.data?.sourceName?.length > 12 ? 
+						params?.data?.sourceName :
+						params?.data?.csvName?.length > 12 ?
+							params?.data?.csvNamen: ""
+				}	
+			>
 				<figure className='friend-source text-center'>
                 <SourceCsvIcon className='friend-sync-source-icon' />
 				</figure>
 				<span>
                 	{
 						params?.data?.sourceName ? 
-							params?.data?.sourceName :
-							params?.data?.csvName ? 
-								params?.data?.csvName : 
-								"CSV Upload"
+							params?.data?.sourceName?.length > 12 ? 
+								params?.data?.sourceName?.substring(0,12)+"..." : 
+								params?.data?.sourceName :
+							params?.data?.csvName?.length > 12 ?
+								params?.data?.csvName?.substring(0,12)+"..." :
+								params?.data?.csvName ? 
+									params?.data?.csvName : 
+									"CSV Upload"
 					}
 				</span>
             </div>
@@ -1313,12 +1335,19 @@ export const SourceRendererPending = memo((params) => {
 
     if (params?.data?.task_name) {
         return (
-            <div className='friend-sync-source d-flex f-align-center'>
+            <div className={`
+				friend-sync-source 
+				d-flex 
+				f-align-center 
+				${
+					params?.data?.task_name?.length > 12 ? 
+						'tooltipFullName' : ''
+				}`}>
                 <figure className='friend-source text-center'>
 					<SourceCsvIcon className='friend-sync-source-icon' />
 				</figure>
 				<span>
-                	{params?.data?.task_name}
+                	{params?.data?.task_name?.length > 12 ? params?.data?.task_name?.substring(0,12)+"..." : params?.data?.task_name}
 				</span>
             </div>
         );

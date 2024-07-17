@@ -489,6 +489,37 @@ main {
           display: none !important;
         }
       }
+
+
+      tbody {
+        tr {
+          &:hover,
+          &:has(:hover) {
+            z-index: 9;
+          }
+          &:first-child {
+            td {
+              &:hover,
+              &:has(:hover) {
+                z-index: 9;
+              }
+              .tooltipFullName {
+                &:before {
+                  bottom: auto;
+                  top: 32px;
+                }
+                &:after {
+                  top: 25px;
+                  bottom: auto;
+                }
+              }
+              &:not(:hover) {
+                z-index: 2;
+              }
+            }
+          }
+        }
+      }
     }
 
     .friends-queue-action-bar ~ .react-table-container {
