@@ -535,8 +535,9 @@ const LostFriends = () => {
 	}
 	const dataExtractor = (response)=>{
 			return {
-				data: response?.data[0]?.friend_details,
-				count: response?.data[0]?.friend_count
+        res : response,
+				data : response?.data[0]?.friend_details,
+				count : response?.data[0]?.friend_count
 			}
 	}
 

@@ -43,19 +43,20 @@ import { BlockListFriend, whiteListFriend } from "../../actions/FriendsAction";
 import helper from "../../helpers/helper";
 //import { removeSelectedFriends } from "../../actions/FriendListAction";
 import { Link } from "react-router-dom";
-import { updateWhiteListStatusOfSelectesList } from "../../actions/FriendListAction";
+import { updateWhiteListStatusOfSelectesList, updateBlackListStatusOfSelectesList } from "../../actions/SSListAction";
 import { utils } from "../../helpers/utils";
 import { ReactComponent as UserIcon } from "../../assets/images/UserIcon.svg";
 import { ReactComponent as SourceCsvIcon } from "../../assets/images/SourceCsvIcon.svg";
 import { ReactComponent as RedWarningSquareIcon } from "../../assets/images/RedWarningSquareIcon.svg";
 //let savedFbUId = localStorage.getItem("fr_default_fb");
 import moment from "moment";
+//import { updateBlackListStatusOfSelectesList } from "../../actions/SSListAction";
 
-export const handlewhiteListUser = (dispatch, friendId, status) => {
+export const handlewhiteListUser = (dispatch, params, status) => {
 	const payload = [
 		{
 			fbUserId: localStorage.getItem("fr_default_fb"),
-			friendFbId: friendId,
+			friendFbId: params.friendFbId,
 			status: status,
 		},
 	];
@@ -70,8 +71,8 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
 				1000,
 				"bottom-right"
 			);
-			// console.log("response after white listing >>>>>>",res)
-			dispatch(updateWhiteListStatusOfSelectesList(res.data));
+		 	//console.log("response after white listing >>>>>>",res)
+			dispatch(updateWhiteListStatusOfSelectesList({...params, status}));
 		})
 		.catch((err) => {
 			Alertbox(`${err.message} `, "error", 2000, "bottom-right");
@@ -79,11 +80,11 @@ export const handlewhiteListUser = (dispatch, friendId, status) => {
 		});
 };
 
-export const handleBlockingUser = (dispatch, friendId, status) => {
+export const handleBlockingUser = (dispatch, params, status) => {
 	const payload = [
 		{
 			fbUserId: localStorage.getItem("fr_default_fb"),
-			friendFbId: friendId,
+			friendFbId: params.friendFbId,
 			status: status,
 		},
 	];
@@ -98,6 +99,7 @@ export const handleBlockingUser = (dispatch, friendId, status) => {
 				1000,
 				"bottom-right"
 			);
+			dispatch(updateBlackListStatusOfSelectesList({...params, status}));
 			// dispatch(removeSelectedFriends());
 		})
 		.catch((err) => {
@@ -129,7 +131,7 @@ export const NameCellRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handlewhiteListUser(dispatch, params.data.friendFbId, 0);
+						handlewhiteListUser(dispatch, params.data, 0);
 					}}
 				>
 					{<WhitelabelIcon color={"#FEC600"} />}
@@ -139,7 +141,7 @@ export const NameCellRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handlewhiteListUser(dispatch, params.data.friendFbId, 1);
+						handlewhiteListUser(dispatch, params.data, 1);
 					}}
 				>
 					{<WhitelabelIcon color={"#767485"} />}
@@ -150,7 +152,7 @@ export const NameCellRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handleBlockingUser(dispatch, params.data.friendFbId, 0);
+						handleBlockingUser(dispatch, params.data, 0);
 					}}
 				>
 					{<BlockIcon color={"#FF6A77"} />}
@@ -160,7 +162,7 @@ export const NameCellRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handleBlockingUser(dispatch, params.data.friendFbId, 1);
+						handleBlockingUser(dispatch, params.data, 1);
 					}}
 				>
 					{<BlockIcon color={"#767485"} />}
@@ -347,7 +349,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handlewhiteListUser(dispatch, params.data.friendFbId, 0);
+						handlewhiteListUser(dispatch, params.data, 0);
 						setWhite(false);
 					}}
 				>
@@ -358,7 +360,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handlewhiteListUser(dispatch, params.data.friendFbId, 1);
+						handlewhiteListUser(dispatch, params.data, 1);
 						setWhite(true);
 					}}
 				>
@@ -370,7 +372,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handleBlockingUser(dispatch, params.data.friendFbId, 0);
+						handleBlockingUser(dispatch, params.data, 0);
 						setBlack(false);
 					}}
 				>
@@ -381,7 +383,7 @@ export const UnlinkedNameCellWithOptionsRenderer = memo((params) => {
 				<span
 					className='profile-whitelabeled'
 					onClick={() => {
-						handleBlockingUser(dispatch, params.data.friendFbId, 1);
+						handleBlockingUser(dispatch, params.data, 1);
 						setBlack(true);
 					}}
 				>

@@ -548,6 +548,7 @@ const FriendsQueue = () => {
 	}
 	const dataExtractor = (response) => {
 		return {
+			res:response,
 			data: response?.data,
 			count: response?.count,
 		};

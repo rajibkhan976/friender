@@ -31,14 +31,12 @@ import { ReactComponent as SheetIcon } from "../../assets/images/SheetIcon.svg";
 import { ReactComponent as UploadIcon } from "../../assets/images/UploadIcon.svg";
 import { ReactComponent as WhiteArrowLeftIcon } from "../../assets/images/WhiteArrowLeftIcon.svg";
 import { ReactComponent as WhiteCrossIcon } from "../../assets/images/WhiteCrossIcon.svg";
-import { ChevronDownArrowIcon } from "../../assets/icons/Icons";
 import Tooltip from "./Tooltip";
 import Search from "../formComponents/Search";
 import Alertbox from "./Toast";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	removeSelectedFriends,
-	updateWhiteListStatusOfSelectesList,
 	updateSelectedFriends,
 } from "../../actions/FriendListAction";
 import {
@@ -87,7 +85,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
-import { bulkAction, getFriendCountAction, getListData, removeMTRallRowSelection, updateRowSelection, updateSelectAllState } from "../../actions/SSListAction";
+import { bulkAction, getFriendCountAction, getListData, removeMTRallRowSelection, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -242,12 +240,10 @@ function PageHeader({ headerText = "" }) {
 	const filter_state = useSelector((state) => state.ssList.filter_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
     const select_all_state = useSelector((state) => state.ssList.select_all_state)
+	//const current_list_selection_count = useSelector((state) => state.ssList.selected_friends_curr_count)
 	const selectAcross = useSelector((state) => state.ssList.selectAcross)
 	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
 	// ssList
-	const blacklistedFriends = useSelector((state) =>
-		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
-	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
 	const listFilteredCount = useSelector((state) => state.ssList.list_filtered_count);
@@ -280,6 +276,12 @@ function PageHeader({ headerText = "" }) {
 	);
 	const [actionableContacts, setActionableContacts] = useState(null);
 	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
+	const list_filtered_count = useSelector((state) => state.ssList.list_filtered_count);
+	// const currlist_total_blacklist_count = useSelector((state) => state.ssList.currlist_total_blacklist_count);
+	// const currlist_total_whitelist_count = useSelector((state) => state.ssList.currlist_total_whitelist_count);
+	const selected_friends_curr_count = useSelector((state) => state.ssList.selected_friends_curr_count);
+	const selected_whitelist_contacts = useSelector((state) => state.ssList.selected_friends_total_whiteList_count);
+	const selected_blacklist_contacts = useSelector((state) => state.ssList.selected_friends_total_blackList_count);
 
 
 	useEffect(()=>{
@@ -379,9 +381,11 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
-		setWhiteListable(searchForNotWhiteLst(selectedFriends));
-		setBlacklistable(searchForNotBlackLst(selectedFriends));
-	}, [selectedFriends]);
+		setWhiteListable(selected_whitelist_contacts<selected_friends_curr_count);;
+		setBlacklistable(selected_blacklist_contacts<selected_friends_curr_count);
+	}, [selected_friends_curr_count,
+		selected_whitelist_contacts,
+		selected_blacklist_contacts,]);
 
 	useEffect(() => {
 		const addAccess = accessOptions.map((accessObj) => {
@@ -2030,16 +2034,16 @@ function PageHeader({ headerText = "" }) {
 			payload = assemblePayload(bulkType, config.fetchFriendCount)
 			console.log('payload', payload);
 
-			if (!actionableContacts) {
-				dispatch(getFriendCountAction(payload)).unwrap()
-					.then((res) => {
-						console.log('res', res);
-						setActionableContacts({...res})
+			// if (!actionableContacts) {
+				// dispatch(getFriendCountAction(payload)).unwrap()
+				// 	.then((res) => {
+				// 		console.log('res', res);
+						//setActionableContacts({...res})
 						if (bulkType === 'unfriend') {
 							setModalOpen(true)
 						}
-					})
-			} 
+					// })
+			// } 
 			// if (bulkType === 'unfriend') {
 				// else {
 				// 	triggerBulkOperation(bulkType)
@@ -2127,28 +2131,21 @@ function PageHeader({ headerText = "" }) {
         message={() => 'Are you sure you want to leave this page? Your changes will not be saved.'}
       /> */}
 			{/* {selectedFriends?.length > 0 && ( */}
-			{(selectedListItems?.length > 0 || select_all_state?.selected) && (
+			{(selected_friends_curr_count > 0 || select_all_state?.selected) && (
 				<Modal
 					modalType='delete-type'
 					modalIcon={DeleteImgIcon}
 					headerText={"Unfriend"}
 					bodyText={
-						<>
-							{/* You have selected <b>{selectedFriends.length}</b> friend(s), and{" "} */}
-							{/* {console.log(Number(actionableContacts?.friend_count))} */}
-							You have selected {
-													select_all_state?.selected ? 
-														<><b>All</b> friend(s)</> : 
-														// <><b>{selectedListItems?.length}</b> {selectedListItems?.length > 1 ? 'friend(s),' : 'friend,'}</>
-														<><b>{Number(actionableContacts?.friend_count)}</b> {Number(actionableContacts?.friend_count) > 1 ? 'friend(s),' : 'friend,'}</>
-												}
+						<>You have selected
+							{selected_friends_curr_count === list_filtered_count ? <><b>All</b> friend(s)</>
+								: <><b>&nbsp;{Number(selected_friends_curr_count)}&nbsp;</b>
+									{Number(selected_friends_curr_count) > 1 ? 'friend(s),' : 'friend,'}</>}
 							<b>
 								{" "}
-								{/* {selectedFriends.length > 0 */}
-								{ selectedListItems?.length > 0 || Number(actionableContacts?.friend_count) // select_all_state?.selected
-									? // ? selectedFriends.reduce((acc, curr) => acc + curr.whitelist_status, 0)
-									//   selectedFriends.filter((el) => el?.whitelist_status)?.length
-										Number(actionableContacts?.whitelist_count)
+								{selected_friends_curr_count > 0 || Number(selected_whitelist_contacts)
+									?
+									Number(selected_whitelist_contacts)
 									: Number(0)}{" "}
 							</b>{" "}
 							of them are currently on your whitelist. Are you sure you want to
@@ -2167,7 +2164,7 @@ function PageHeader({ headerText = "" }) {
 						primaryBtnDisable:
 							// whiteCountInUnfriend === 0 ||
 							// whiteCountInUnfriend === selectedFriends.length
-							Number(actionableContacts?.whitelist_count) === 0
+							Number(selected_whitelist_contacts) === 0
 								? true
 								: false,
 					}}
@@ -2176,34 +2173,34 @@ function PageHeader({ headerText = "" }) {
 
 			{/* Modal for Campaign Add */}
 			{/* {selectedFriends?.length > 0 && isAddingToCampaign && ( */}
-			{selectedListItems?.length > 0 && isAddingToCampaign && (
+			{selected_friends_curr_count > 0 && isAddingToCampaign && (
 				<Modal
 					ModalIconElement={CampaignModalIcon}
 					headerText={"Add to Campaign"}
 					bodyText={
 						<>
-							You have selected <b>{selectedListItems.length}</b> friend(s)
-							{Number(actionableContacts?.blacklist_count) > 0 ? (
+							You have selected <b>{selected_friends_curr_count}</b> friend(s)
+							{Number(selected_blacklist_contacts) > 0 ? (
 								<>
-									, and <b>{Number(actionableContacts?.blacklist_count)}</b> of them
-									{Number(actionableContacts?.blacklist_count) > 1 ? " are" : " is"} currently on
+									, and <b>{Number(selected_blacklist_contacts)}</b> of them
+									{Number(selected_blacklist_contacts) > 1 ? " are" : " is"} currently on
 									your blacklist
 								</>
 							) : (
 								""
 							)}
 							. Are you sure you want to add{" "}
-							{Number(actionableContacts?.blacklist_count) > 1
+							{Number(selected_blacklist_contacts) > 1
 								? "all of these friends"
 								: "this friend"}{" "}
 							to campaign?
 						</>
 					}
 					closeBtnTxt={
-						Number(actionableContacts?.blacklist_count) > 0 ? "Skip blacklisted" : "Cancel"
+						Number(selected_blacklist_contacts) > 0 ? "Skip blacklisted" : "Cancel"
 					}
 					closeBtnFun={() => 
-						Number(actionableContacts?.blacklist_count) > 0
+						Number(selected_blacklist_contacts) > 0
 							? triggerBulkOperation('skipBlacklisted')//skipBlackList
 							: skipAddingToCampaign
 					}
@@ -2214,14 +2211,14 @@ function PageHeader({ headerText = "" }) {
 					}}
 					// ModalFun={() => AddToCampaign(selectedListItems)}
 					ModalFun={() => triggerBulkOperation('campaign')}
-					btnText={Number(actionableContacts?.blacklist_count) > 0 ? "Yes, add all" : "Add"}
+					btnText={Number(selected_blacklist_contacts) > 0 ? "Yes, add all" : "Add"}
 					modalWithChild={true}
 					ExtraProps={{
 						primaryBtnDisable:
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
 						cancelBtnDisable:
-							Number(actionableContacts?.blacklist_count) > 0
-								? selectedListItems?.length === Number(actionableContacts?.blacklist_count)
+							Number(selected_blacklist_contacts) > 0
+								? selectedListItems?.length === Number(selected_blacklist_contacts)
 									? true
 									: selectedCampaign === "Select"
 									? true
@@ -2853,7 +2850,7 @@ function PageHeader({ headerText = "" }) {
 													<li
 														className={`whiteLabel-fr-action ${checkDisability('whitelist') ? 'disabled' : ''}`}
 														// onClick={() => whiteLabeledUsers(accessItem)}
-														// data-disabled={!whiteListable}
+														 data-disabled={!whiteListable}
 														onClick={() => checkForBulkAction('whitelist')}
 													>
 														<figure>
@@ -2891,7 +2888,7 @@ function PageHeader({ headerText = "" }) {
 													<li
 														className={`block-fr-action ${checkDisability('blacklist') ? 'disabled' : ''}`}
 														// onClick={() => BlocklistUser(accessItem)}
-														// data-disabled={!blacklistable}
+														data-disabled={!blacklistable}
 														onClick={() => checkForBulkAction('blacklist')}
 													>
 														<figure>

@@ -69,7 +69,7 @@ export default function Listing2(props) {
     dispatch(updateMRTrowSelectionState(newSelction));
   };
   const setSelectAcross = (args) => {
-    console.log("selectAcross", args);
+    //console.log("selectAcross", args);
     dispatch(updateSelectAcross(args));
   };
   // useEffect(() => {
@@ -442,7 +442,7 @@ export default function Listing2(props) {
     fetchData(pagination, textFilter, columnFilters, columnFilterFns, sorting);
   }, [pagination.pageIndex, pagination.pageSize, sorting]);
 
-  const columns = useMemo(props.listColDef, [props.listColDef, data]);
+  const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
 
   //pass table options to useMaterialReactTable
   const table = useMaterialReactTable({

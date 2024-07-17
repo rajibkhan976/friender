@@ -609,6 +609,7 @@ const BlackList = () => {
 	}
 	const dataExtractor = (response)=>{
 			return {
+        res:response,
 				data: response?.data[0]?.friend_details,
 				count: response?.data[0]?.friend_count
 			}

@@ -10,6 +10,12 @@ const initialState = {
     ssList_data: [],
     isRefetching: false,
     selected_friends: [],
+    ssList_data_obj: {},
+    currlist_total_blacklist_count:0,
+    currlist_total_whitelist_count:0,
+    selected_friends_curr_count: 0,
+    selected_friends_total_blackList_count: 0,
+    selected_friends_total_whiteList_count: 0,
     listFetchParams:{
         queryParam: {},
         baseUrl: "",
@@ -17,10 +23,10 @@ const initialState = {
     },
     selectAcross : {
         selected:false,
-        unSelected:[]
+        unSelected:[],
+        unSelected_row_data:[],
     },
     MRT_selected_rows_state: {},
-    selection_obj: {},
     filter_state: {
         filter_key_value: null,
         filter_fun_state: null,
@@ -131,43 +137,59 @@ export const ssListSlice = createSlice({
             state.list_unfiltered_count = action.payload;
         },
         updateMRTrowSelectionState : (state, action) =>{
-            state.MRT_selected_rows_state = action.payload;  
+            state.MRT_selected_rows_state = action.payload; 
+            if(!state.selectAcross.selected){
+                state.selected_friends_curr_count = Object.keys(state.MRT_selected_rows_state).length;
+            }
         },
-        updateSelectAcross : (state, action) => {
-            console.log("action.payload)))))0000",action.payload)
+        updateSelectAcross: (state, action) => {
+            //console.log("action.payload)))))0000",action.payload)
             state.selectAcross = {
-                selected:action.payload.selected,
-                unSelected:action.payload.unSelected
+                selected: action.payload.selected,
+                unSelected: action.payload.unSelected
             };
+            if (action.payload.selected) {
+                state.selected_friends_curr_count = state.list_filtered_count - action.payload.unSelected.length;
+                let { unselect_whitelist, unselect_blacklist } = action?.payload?.unSelected?.reduce((acc, curr) => {
+                    return (
+                        {
+                            unselect_whitelist: acc.unselect_whitelist + (state?.ssList_data_obj[curr]?.whitelist_status ? 1 : 0),
+                            unselect_blacklist: acc.unselect_blacklist + (state.ssList_data_obj[curr]?.blacklist_status ? 1 : 0)
+                        })
+                }, { unselect_whitelist: 0, unselect_blacklist: 0 })
+                state.selected_friends_total_blackList_count = state.currlist_total_blacklist_count - unselect_blacklist;
+                state.selected_friends_total_whiteList_count = state.currlist_total_whitelist_count - unselect_whitelist;
+
+            }
         },
         removeMTRallRowSelection : (state,action) => {
             state.MRT_selected_rows_state = {};
             state.selectAcross = {
                 selected:false,
                 unSelected:[]
-            }
+            };
+            state.selected_friends_curr_count = 0;
+            state.selected_friends_total_blackList_count = 0;
+            state.selected_friends_total_whiteList_count = 0;
+            state.selected_friends = [];
         },
         updateWhiteListStatusOfSelectesList: (state, action) => {
-            // console.log("list satussss   action ommmmm",action.payload)
-            let statusObj = {};
-            action.payload.forEach((item) => {
-                statusObj[item.friendFbId] = item.status;
-            });
-            state.selected_friends = state.selected_friends.map((item) => {
-                if (item.friendFbId in statusObj) {
-                    item.whitelist_status = statusObj[item.friendFbId];
+            //console.log('action.payload', action.payload);
+            state.ssList_data_obj[action.payload._id].whitelist_status = action.payload.status;
+            action.payload.status===1? state.selected_friends_total_whiteList_count += 1 : state.selected_friends_total_whiteList_count -= 1;
+            state.selected_friends = state.selected_friends.map(item => {
+                if (item._id === action.payload._id) {
+                    item.whitelist_status = action.payload.status;
                 }
                 return item;
             });
         },
         updateBlackListStatusOfSelectesList: (state, action) => {
-            let statusObj = {};
-            action.payload.forEach((item) => {
-                statusObj[item.friendFbId] = item.status;
-            });
-            state.selected_friends = state.selected_friends.map((item) => {
-                if (item.friendFbId in statusObj) {
-                    item.blacklist_status = statusObj[item.friendFbId];
+            state.ssList_data_obj[action.payload._id].blacklist_status = action.payload.status;
+            action.payload.status? state.selected_friends_total_blackList_count += 1 : state.selected_friends_total_blackList_count -= 1;
+            state.selected_friends = state.selected_friends.map(item => {
+                if (item._id === action.payload._id) {
+                    item.blacklist_status = action.payload.status;
                 }
                 return item;
             });
@@ -176,12 +198,21 @@ export const ssListSlice = createSlice({
             state.selection_obj = {...action.payload}
         },
         updateSelectedFriends: (state, action) => {
-            console.log('action', action?.payload);
-            // console.log('COMPARE OLDER ::: WITH NEW >>>', state.selected_friends.filter(id => !(id in rowSelection)));
-            state.selected_friends = [...action?.payload];
-        },
-        removeSelectedFriends: (state, action) => {
-            state.selected_friends = [];
+          //* VVI Selected friends must be updated always
+          state.selected_friends = [...action?.payload];
+          if (!state.selectAcross.selected) {
+            let { whitelist, blacklist } = action?.payload?.reduce(
+              (acc, curr) => {
+                return {
+                  whitelist: acc.whitelist + (curr?.whitelist_status ? 1 : 0),
+                  blacklist: acc.blacklist + (curr?.blacklist_status ? 1 : 0),
+                };
+              },
+              { whitelist: 0, blacklist: 0 }
+            );
+            state.selected_friends_total_blackList_count = blacklist;
+            state.selected_friends_total_whiteList_count = whitelist;
+          }
         },
         updateGlobalFilter: (state, action) => {
             state.global_searched_filter = action.payload;
@@ -221,7 +252,18 @@ export const ssListSlice = createSlice({
             if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
                 state.list_unfiltered_count = action.payload.count;
               }
+            if(action.payload?.res?.data[0]?.total_blacklist_count){
+                state.currlist_total_blacklist_count = action.payload.res?.data[0]?.total_blacklist_count;
+            }
+            if(action.payload?.res?.data[0]?.total_whitelist_count){
+                state.currlist_total_whitelist_count = action.payload.res?.data[0]?.total_whitelist_count;
+            }
             state.ssList_data = action.payload.data; 
+            //let listObj = {};
+            action.payload.data?.forEach((item) => {
+                state.ssList_data_obj[item._id] = item;
+            });
+            //state.ssList_data_obj = listObj;
         },
     },
 });
