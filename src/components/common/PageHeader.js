@@ -17,6 +17,7 @@ import {
 	CampaignModalIcon,
 	OpenInNewTab,
 	InfoIcon,
+	AddToQueueAction,
 } from "../../assets/icons/Icons";
 import config from "../../configuration/config"
 import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
@@ -241,6 +242,8 @@ function PageHeader({ headerText = "" }) {
 	const filter_state = useSelector((state) => state.ssList.filter_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
     const select_all_state = useSelector((state) => state.ssList.select_all_state)
+	const selectAcross = useSelector((state) => state.ssList.selectAcross)
+	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
 	// ssList
 	const blacklistedFriends = useSelector((state) =>
 		state.friendlist.selected_friends.filter((el) => el?.blacklist_status)
@@ -587,7 +590,7 @@ function PageHeader({ headerText = "" }) {
 					viewSelect: false,
 					searchHeader: true,
 					listingLengthWell: true,
-					quickAction: false,
+					quickAction: true,
 					syncManual: true,
 				});
 				break;
@@ -598,7 +601,7 @@ function PageHeader({ headerText = "" }) {
 					viewSelect: false,
 					searchHeader: true,
 					listingLengthWell: true,
-					quickAction: false,
+					quickAction: true,
 					syncManual: true,
 				});
 				break;
@@ -2080,6 +2083,42 @@ function PageHeader({ headerText = "" }) {
 		}
 	}
 
+	useEffect(() => {
+		if (Object.keys(MRT_selected_rows_state)?.length > 0) {
+			dispatch(removeMTRallRowSelection())
+		}
+	}, [location])
+
+	const checkDisability = useCallback((item) => {
+		// console.log(location?.pathname, Object.keys(MRT_selected_rows_state));
+		if (
+			selectAcross?.selected || Object.keys(MRT_selected_rows_state)?.length > 0
+		) {
+			if (item === 'whitelist' && location?.pathname?.split('/').pop() === 'whitelisted-friends') {
+				console.log(location?.pathname?.split('/').pop());
+				return true
+			}
+			if (item === 'blacklist' && location?.pathname?.split('/').pop() === 'blacklisted-friends') {
+				console.log(location?.pathname?.split('/').pop());
+				return true
+			}
+			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'unfriended-friends') {
+				console.log(location?.pathname?.split('/').pop());
+				return true
+			}
+			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'lost-friends') {
+				console.log(location?.pathname?.split('/').pop());
+				return true
+			}
+			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'non-friends') {
+				console.log(location?.pathname?.split('/').pop());
+				return true
+			}			
+		} else {
+			return true
+		}
+	}, [location?.pathname, MRT_selected_rows_state])
+
 	return (
 		<>
 			{/* <Prompt
@@ -2795,7 +2834,7 @@ function PageHeader({ headerText = "" }) {
 											>
 												<ul>
 													<li
-														className='del-fr-action'
+														className={`del-fr-action ${checkDisability('unfriend') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeUnfriend(accessItem)}
 														onClick={()=>checkForBulkAction('unfriend')}
 														// data-disabled={
@@ -2810,7 +2849,7 @@ function PageHeader({ headerText = "" }) {
 														<span>Unfriend</span>
 													</li>
 													<li
-														className='whiteLabel-fr-action'
+														className={`whiteLabel-fr-action ${checkDisability('whitelist') ? 'disabled' : ''}`}
 														// onClick={() => whiteLabeledUsers(accessItem)}
 														// data-disabled={!whiteListable}
 														onClick={() => checkForBulkAction('whitelist')}
@@ -2848,7 +2887,7 @@ function PageHeader({ headerText = "" }) {
                         </li> */}
 													{/* </li> */}
 													<li
-														className='block-fr-action'
+														className={`block-fr-action ${checkDisability('blacklist') ? 'disabled' : ''}`}
 														// onClick={() => BlocklistUser(accessItem)}
 														// data-disabled={!blacklistable}
 														onClick={() => checkForBulkAction('blacklist')}
@@ -2859,7 +2898,7 @@ function PageHeader({ headerText = "" }) {
 														<span>Blacklist</span>
 													</li>
 													<li
-														className='campaign-fr-action'
+														className={`campaign-fr-action ${checkDisability('campaign') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeAddToCampaign(accessItem)}
 														// data-disabled={
 														// 	!selectedFriends || selectedFriends.length === 0
@@ -2873,6 +2912,19 @@ function PageHeader({ headerText = "" }) {
 															<CampaignQuicActionIcon />
 														</figure>
 														<span>Campaign</span>
+													</li>
+													<li
+														className={`campaign-fr-action ${checkDisability('queue') ? 'disabled' : ''}`}
+														// onClick={() => checkBeforeAddToCampaign(accessItem)}
+														// data-disabled={
+														// 	!selectedFriends || selectedFriends.length === 0
+														// }
+														onClick={() => checkForBulkAction('queue')}
+													>
+														<figure>
+															<AddToQueueAction />
+														</figure>
+														<span>Add to Queue</span>
 													</li>
 												</ul>
 											</div>
