@@ -736,6 +736,7 @@ const NonFriendList = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
+			
 			{filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
 				// <Listing
 				// 	friendsData={filterFrndList}
