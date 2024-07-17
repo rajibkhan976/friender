@@ -82,28 +82,28 @@ const Friends = () => {
       //       dispatch(updateNumberofListing(0));
       //     }
       //   });
-      console.log("helooyuyuyuy");
-      dispatch(
-        getFriendList({fbUserId: savedFbUId})
-      ).unwrap()
-        .then((response) => {
-          if (
-            response.data &&
-            response.data.length &&
-            response.data[0].friend_details.length > 0
-          ) {
-            dispatch(
-              updateNumberofListing(
-                response.data[0].friend_details.filter(
-                  (item) => item.deleted_status !== 1
-                ).length
-              )
-            );
-          } else {
-            //console.log("here");
-            dispatch(updateNumberofListing(0));
-          }
-        });
+      // console.log("helooyuyuyuy");
+      // dispatch(
+      //   getFriendList({fbUserId: savedFbUId})
+      // ).unwrap()
+      //   .then((response) => {
+      //     if (
+      //       response.data &&
+      //       response.data.length &&
+      //       response.data[0].friend_details.length > 0
+      //     ) {
+      //       dispatch(
+      //         updateNumberofListing(
+      //           response.data[0].friend_details.filter(
+      //             (item) => item.deleted_status !== 1
+      //           ).length
+      //         )
+      //       );
+      //     } else {
+      //       //console.log("here");
+      //       dispatch(updateNumberofListing(0));
+      //     }
+      //   });
     } catch (error) {
       //console.log(error);
     }
