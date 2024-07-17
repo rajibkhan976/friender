@@ -190,6 +190,9 @@ export const ssListSlice = createSlice({
             //console.log(":Clear Search Reducer fired");
             state.global_searched_filter = "";
         },
+        updateListNumCount: (state, action) => {
+            state.list_filtered_count = action.payload.count
+        }
     },
     extraReducers: {
         [getListData.pending]: (state,action) => {
@@ -214,6 +217,7 @@ export const ssListSlice = createSlice({
             state.isLoading = false;
             state.isRefetching = false;
             state.list_filtered_count = action.payload.count;
+            console.log('COUNT CHANGED :::::', action.payload);
             if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
                 state.list_unfiltered_count = action.payload.count;
               }

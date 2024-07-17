@@ -250,6 +250,7 @@ function PageHeader({ headerText = "" }) {
 	);
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
+	const listFilteredCount = useSelector((state) => state.ssList.list_filtered_count);
 	const facebookData = useSelector((state) => state?.facebook_data);
 	const [links, setLinks] = useState([]);
 	const [accessOptions, setAccessOptions] = useState(accessibilityOptions);
@@ -2662,7 +2663,8 @@ function PageHeader({ headerText = "" }) {
 									: "Campaigns"
 								: ""}
 							{headerOptions.listingLengthWell && (
-								<span className='num-header-count num-well'>{listCount}</span>
+								// <span className='num-header-count num-well'>{listCount}</span>
+								<span className='num-header-count num-well'>{listFilteredCount}</span>
 							)}
 							{headerOptions.infoToolTip && (
 								<ToolTipPro

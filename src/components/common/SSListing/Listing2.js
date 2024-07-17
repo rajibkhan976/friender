@@ -72,10 +72,10 @@ export default function Listing2(props) {
     console.log("selectAcross", args);
     dispatch(updateSelectAcross(args));
   };
-  useEffect(() => {
-    console.log("useEffect_+_+_+_+_+_+_+>>>>", props);
-    console.log("+++++++++props.listColDef+++++++++++", props.listColDef);
-  }, [props]);
+  // useEffect(() => {
+  //   console.log("useEffect_+_+_+_+_+_+_+>>>>", props);
+  //   console.log("+++++++++props.listColDef+++++++++++", props.listColDef);
+  // }, [props]);
 
   function getUniqueRecords(array1, array2) {
     // Create a Set to store unique elements
