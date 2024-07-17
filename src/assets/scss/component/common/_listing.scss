@@ -1790,3 +1790,27 @@
     // }
   }
 }
+
+.MuiPopover-root.MuiModal-root:has(.fr-filter-friendship) .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper {
+  left: 45.8dvw !important;
+  top: 15px !important;
+}
+
+.MuiPopover-root.MuiModal-root:has(.fr-filter-friendship) ~ .MuiPopover-root {
+  &.MuiModal-root {
+    &:not(:has(.fr-filter-friendship)) {
+      .MuiPaper-root{
+        &.MuiPaper-elevation{
+          &.MuiPaper-rounded{
+            &.MuiPaper-elevation8{
+              &.MuiPopover-paper {
+                left: 47dvw !important;
+                top: 90px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -37,7 +37,8 @@ export const CommonColDefs = {
             { label: 'Non Friend', value: 4 },
         ],
         muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Friendship' 
+            placeholder: 'Filter by Friendship',
+            className: 'fr-filter-friendship'
         },
         enableColumnFilter: true,
         enableColumnFilterModes: false,
