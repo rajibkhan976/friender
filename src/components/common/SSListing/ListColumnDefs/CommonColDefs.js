@@ -36,6 +36,9 @@ export const CommonColDefs = {
             { label: 'Lost Friend', value: 3 },
             { label: 'Non Friend', value: 4 },
         ],
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Friendship' 
+        },
         enableColumnFilter: true,
         enableColumnFilterModes: false,
         filterFns:'equals',
@@ -64,7 +67,11 @@ export const CommonColDefs = {
                 <GenderRenderer value={renderedCellValue} data={row.original} />
             )
         },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Gender'
+        },
         columnFilterModeOptions: ['equals'],
+        enableColumnFilterModes: false,
         filterSelectOptions: [
             { label: 'Male', value: 'Male' },
             { label: 'Female', value: 'Female' },
@@ -81,6 +88,9 @@ export const CommonColDefs = {
                 <AgeRenderer value={renderedCellValue} data={row.original} />
             )
         },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Age' 
+        },
         columnFilterModeOptions: ['equals', 'lessThan', 'greaterThan']
     },
     Country: {
@@ -92,7 +102,11 @@ export const CommonColDefs = {
             return (
                 <CountryRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Country' 
+        },
+        enableColumnFilterModes: true,
     },
     TotalReaction: {
         accessorKey: 'reactionThread', //simple recommended way to define a column
@@ -103,7 +117,10 @@ export const CommonColDefs = {
             return (
                 <ReactionRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Reactions' 
+        },
     },
     TotalComment: {
         accessorKey: 'commentThread', //simple recommended way to define a column
@@ -115,7 +132,10 @@ export const CommonColDefs = {
             return (
                 <CommentRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Comments' 
+        },
     },
     Engagement: {
         accessorKey: 'total_engagement', //simple recommended way to define a column
@@ -127,7 +147,10 @@ export const CommonColDefs = {
             return (
                 <EngagementRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Total Engagement' 
+        },
     },
     MessageCount: {
         accessorKey: 'message_thread', //simple recommended way to define a column
@@ -139,7 +162,10 @@ export const CommonColDefs = {
             return (
                 <MessageRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Message Count' 
+        },
     },
     RecentEngagement: (inactiveAfter)=>{
         return({
@@ -152,7 +178,10 @@ export const CommonColDefs = {
                 return (
                     <RecentEngagementRenderer value={renderedCellValue} data={{...row.original}} inactiveAfter={inactiveAfter} />
                 )
-            }
+            },
+            muiFilterTextFieldProps: { 
+                placeholder: 'Filter by Recent Engagement' 
+            },
         })   
     },
     Keyword: {
@@ -165,7 +194,10 @@ export const CommonColDefs = {
             return (
                 <KeywordRenderer value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Keywords' 
+        },
     },
     Source: {
         accessorKey: 'source', //simple recommended way to define a column
@@ -177,6 +209,9 @@ export const CommonColDefs = {
             return (
                 <SourceRendererPending value={renderedCellValue} data={row.original} />
             )
-        }
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Sourcename' 
+        },
     }
 };

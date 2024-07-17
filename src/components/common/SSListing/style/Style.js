@@ -10,9 +10,12 @@ export const MuiListStyleProps = (theme) => {
     //styling props
 
     muiFilterTextFieldProps: (rowProps)=>{
+      let filterState = rowProps?.column?.columnDef?._filterFn ? rowProps?.column?.columnDef?._filterFn : rowProps?.column?.columnDef?.filterFns ? rowProps?.column?.columnDef?.filterFns : 'auto';
+      console.log('rowProps', filterState);
       return({
-      helperText:`Filter Mode: ${rowProps?.columnDef?._filterFn? rowProps?.columnDef?._filterFn : "Contains"}`,
-        })},
+          helperText:`Filter Mode: ${filterState}`,
+        })
+      },
     muiTableContainerProps: { className: "mui-table-container" },
     muiTablePaperProps: {
       className: 'mui-table-paper',
