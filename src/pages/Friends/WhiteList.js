@@ -668,7 +668,7 @@ const WhiteList = () => {
           additionalClass="modal-keywords"
         />
       )}
-      {whiteList?.length > 0 && (
+      {/* {whiteList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
            <Listing2 
@@ -681,7 +681,15 @@ const WhiteList = () => {
          />
           )}
         </>
-      )}
+      )} */}
+           <Listing2 
+              //friendsData={filterFrndList}
+              listColDef = {FriendlistColDefs} 
+              baseUrl = {config.fetchFriendListUrlv2}
+              tableMethods = {tableMethods} 
+              defaultParams = {defaultParams}
+              dataExtractor = {dataExtractor}
+            />
       {
         !loading &&
         whiteList?.length === 0 &&

@@ -738,7 +738,7 @@ const NonFriendList = () => {
 				/>
 			)}
 			
-			{filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
+			{/* {filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
 				// <Listing
 				// 	friendsData={filterFrndList}
 				// 	friendsListingRef={friendsListinRef}
@@ -754,7 +754,15 @@ const NonFriendList = () => {
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
 				/>
-			)}
+			)} */}
+				<Listing2 
+					//friendsData={filterFrndList}
+					listColDef = {FriendlistColDefs} 
+					baseUrl = {config.fetchFriendListUrlv2}
+					tableMethods = {tableMethods} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
+				/>
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
 

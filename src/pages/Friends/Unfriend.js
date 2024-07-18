@@ -609,7 +609,7 @@ const FriendsList = () => {
           additionalClass="modal-keywords"
         />
       )}
-      {unfriendList?.length > 0 && (
+      {/* {unfriendList?.length > 0 && (
         <>
           {!loading && (
             <Listing2 
@@ -622,7 +622,15 @@ const FriendsList = () => {
           />
           )}
         </>
-      )}
+      )} */}
+        <Listing2 
+          //friendsData={filterFrndList}
+          listColDef = {FriendlistColDefs} 
+          baseUrl = {config.fetchFriendListUrlv2}
+          tableMethods = {tableMethods} 
+          defaultParams = {defaultParams}
+          dataExtractor = {dataExtractor}
+        />
 
       {
         !loading &&

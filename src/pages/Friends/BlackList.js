@@ -642,7 +642,7 @@ const BlackList = () => {
           additionalClass="modal-keywords"
         />
       )}
-      {blackList?.length > 0 && (
+      {/* {blackList?.length > 0 && (
         <>
           {!loading && inactiveAfter !== null && (
             <Listing2 
@@ -655,7 +655,16 @@ const BlackList = () => {
           />
           )}
         </>
-      )}
+      )} */}
+
+          <Listing2 
+            //friendsData={filterFrndList}
+            listColDef = {FriendlistColDefs} 
+            baseUrl = {config.fetchFriendListUrlv2}
+            tableMethods = {tableMethods} 
+            defaultParams = {defaultParams}
+            dataExtractor = {dataExtractor}
+          />
       {
         !loading &&
         blackList?.length === 0 &&

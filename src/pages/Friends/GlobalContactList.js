@@ -256,7 +256,7 @@ const GlobalContactList = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
+			{/* {filterFrndList?.length > 0 && !loading && inactiveAfter !== null && (
 				// <Listing
 				// 	friendsData={filterFrndList}
 				// 	friendsListingRef={friendsListinRef}
@@ -272,7 +272,15 @@ const GlobalContactList = () => {
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
 				/>
-			)}
+			)} */}
+				<Listing2 
+					//friendsData={filterFrndList}
+					listColDef = {GlobalContactlistColDefs} 
+					baseUrl = {config.fetchFriendListUrlv2}
+					tableMethods = {tableMethods} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
+				/>
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
 

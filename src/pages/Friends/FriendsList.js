@@ -76,7 +76,7 @@ const FriendsList = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{filterFrndList?.length > 0   && (
+			{/* {filterFrndList?.length > 0   && ( */}
 				<Listing2 
 					listColDef = {FriendlistColDefs} 
 					baseUrl = {config.fetchFriendListUrlv2}
@@ -84,7 +84,7 @@ const FriendsList = () => {
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
 				/>
-			)}
+			{/* )} */}
 			{filterFrndList?.length > 0 && listFilteredCount === 0 && (
 				<NoDataFound
 					customText='Whoops!'

@@ -569,7 +569,7 @@ const LostFriends = () => {
           additionalClass="modal-keywords"
         />
       )}
-      {friendsList?.length > 0 && (
+      {/* {friendsList?.length > 0 && (
         <>
           <Listing2
 					//friendsData={filterFrndList}
@@ -580,7 +580,15 @@ const LostFriends = () => {
 					dataExtractor = {dataExtractor}
 				/>
         </>
-      )}
+      )} */}
+          <Listing2
+            //friendsData={filterFrndList}
+            listColDef = {LostFriendlistColDefs} 
+            baseUrl = {config.fetchFriendListUrlv2}
+            tableMethods = {tableMethods} 
+            defaultParams = {defaultParams}
+            dataExtractor = {dataExtractor}
+          />
 
       {
         !loading &&
