@@ -690,7 +690,7 @@ const WhiteList = () => {
               defaultParams = {defaultParams}
               dataExtractor = {dataExtractor}
             />
-      {
+      {/* {
         !loading &&
         whiteList?.length === 0 &&
         <NoDataFound />
@@ -704,7 +704,7 @@ const WhiteList = () => {
           interactionText="Clear filter"
           isInteraction={() => { setIsReset(!isReset) }}
         />
-      )}
+      )} */}
     </div>
   );
 };

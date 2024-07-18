@@ -223,6 +223,12 @@ export const ssListSlice = createSlice({
         },
         updateListNumCount: (state, action) => {
             state.list_filtered_count = action.payload.count
+        },
+        resetFilters: (state, action) => {
+            state.filter_state = {
+                filter_key_value: null,
+                filter_fun_state: null,
+            }
         }
     },
     extraReducers: {
@@ -269,6 +275,7 @@ export const ssListSlice = createSlice({
 });
 
 export const {
+    resetFilters,
     updateSelectAcross,
     updateRowSelection,
     updateSelectionObj,
@@ -282,6 +289,7 @@ export const {
     countCurrentListsize,
     updateWhiteListStatusOfSelectesList,
     updateBlackListStatusOfSelectesList,
-    removeMTRallRowSelection
+    removeMTRallRowSelection,
+    crealGlobalFilter
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

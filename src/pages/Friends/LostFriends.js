@@ -590,7 +590,7 @@ const LostFriends = () => {
             dataExtractor = {dataExtractor}
           />
 
-      {
+      {/* {
         !loading &&
         friendsList?.length === 0 &&
         <NoDataFound />
@@ -604,7 +604,7 @@ const LostFriends = () => {
           interactionText="Clear filter"
           isInteraction={() => { setIsReset(!isReset) }}
         />
-      }
+      } */}
     </div>
   );
 };

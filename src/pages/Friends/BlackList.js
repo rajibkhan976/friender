@@ -665,7 +665,7 @@ const BlackList = () => {
             defaultParams = {defaultParams}
             dataExtractor = {dataExtractor}
           />
-      {
+      {/* {
         !loading &&
         blackList?.length === 0 &&
         <NoDataFound />
@@ -680,7 +680,7 @@ const BlackList = () => {
           interactionText="Clear filter"
           isInteraction={() => { setIsReset(!isReset) }}
         />
-      )}
+      )} */}
     </div>
   );
 };

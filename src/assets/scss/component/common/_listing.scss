@@ -1151,6 +1151,22 @@
       }
     }
   }
+
+  &:has(.no-data-found) {
+    table {
+      height: 100%;
+      overflow: hidden;
+
+      td:has(>.no-data-found) {
+        background-color: transparent !important;
+
+        .no-data-found {
+          height: auto;
+          min-height: 321px;
+        }
+      }
+    }
+  }
 }
 
 .mui-table-container {
@@ -1827,4 +1843,11 @@
       }
     }
   }
+}
+
+.mui-table-footer:has(nav) .MuiTablePagination-root > *:first-child .MuiInputBase-root.MuiInput-root {
+  display: none;
+}
+.mui-table-footer:has(nav li:nth-child(3)) .MuiTablePagination-root > *:first-child .MuiInputBase-root.MuiInput-root {
+  display: block;
 }

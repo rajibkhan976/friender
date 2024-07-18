@@ -766,7 +766,7 @@ const NonFriendList = () => {
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
 
-			{loading && <ListingLoader />}
+			{/* {loading && <ListingLoader />}
 
 			{filterFrndList?.length > 0 && listFilteredCount === 0 && (
 				<NoDataFound
@@ -782,7 +782,7 @@ const NonFriendList = () => {
 						setIsReset(!isReset);
 					}}
 				/>
-			)}
+			)} */}
 		</div>
 	);
 };

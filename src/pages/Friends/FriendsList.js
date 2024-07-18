@@ -85,7 +85,7 @@ const FriendsList = () => {
 					dataExtractor = {dataExtractor}
 				/>
 			{/* )} */}
-			{filterFrndList?.length > 0 && listFilteredCount === 0 && (
+			{/* {filterFrndList?.length > 0 && listFilteredCount === 0 && (
 				<NoDataFound
 					customText='Whoops!'
 					additionalText={
@@ -99,7 +99,7 @@ const FriendsList = () => {
 						setIsReset(!isReset);
 					}}
 				/>
-			)}
+			)} */}
 		</div>
 	);
 };

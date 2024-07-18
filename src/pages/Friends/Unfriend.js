@@ -632,7 +632,7 @@ const FriendsList = () => {
           dataExtractor = {dataExtractor}
         />
 
-      {
+      {/* {
         !loading &&
         unfriendList?.length === 0 &&
         <NoDataFound />
@@ -647,7 +647,7 @@ const FriendsList = () => {
           interactionText="Clear filter"
           isInteraction={() => { setIsReset(!isReset) }}
         />
-      )}
+      )} */}
     </div>
   );
 };

@@ -11,14 +11,17 @@ import helper from "../../../helpers/helper";
 
 import "../../../assets/scss/component/common/_listing.scss";
 import {
+  crealGlobalFilter,
   getListData,
   removeMTRallRowSelection,
+  resetFilters,
   updateFilterState,
   updateMRTrowSelectionState,
   updateSelectAcross,
   updateSelectAllState,
   updateSelectedFriends,
 } from "../../../actions/SSListAction";
+import {crealFilter, removeSelectedFriends} from "../../../actions/FriendListAction"
 import NoDataFound from "../NoDataFound";
 
 export default function Listing2(props) {
@@ -444,12 +447,38 @@ export default function Listing2(props) {
 
   const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
 
+  useEffect(() => {
+    dispatch(resetFilters())
+    dispatch(crealFilter(""))
+    dispatch(crealGlobalFilter())
+  }, [])
+
+  const RenderEmpty = () => {
+    // console.log('HIIIII', filter_state);
+    return (
+      ((filter_state?.filter_key_value || filter_state?.filter_key_value) && !isLoading) ? 
+        <NoDataFound
+          customText="Whoops!"
+          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
+          interactionText="Clear filter"
+          isInteraction={() => {
+            setColumnFilters([])
+            setColumnFilterFns([])
+            dispatch(resetFilters())
+            dispatch(crealFilter(""))
+            dispatch(crealGlobalFilter())
+          }}
+        /> : <NoDataFound />
+    )
+  }
+
   //pass table options to useMaterialReactTable
   const table = useMaterialReactTable({
     columns,
     data,
     rowCount,
     getRowId: (originalRow) => originalRow._id,
+    renderEmptyRowsFallback: RenderEmpty,
     enableRowSelection: true,
     enableSelectAll: true,
     selectAllMode: "page",
@@ -557,11 +586,11 @@ export default function Listing2(props) {
           </div>
         )}
 
-      {data && data?.length > 0 ? (
+      {/* {data && data?.length > 0 ? ( */}
         <MaterialReactTable table={table} />
-      ) : (
+      {/* ) : (
         <NoDataFound />
-      )}
+      )} */}
     </div>
   );
 }
