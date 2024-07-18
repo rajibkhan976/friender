@@ -588,7 +588,7 @@ export const AgeRenderer = memo((params) => {
 				className='tooltipFullName ageTooltip w-100 h-100 d-flex f-align-center'
 				data-text={localTime}
 			>
-				{age}
+				{params?.value}
 			</span>
 		</span>
 	);

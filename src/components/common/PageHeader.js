@@ -2024,11 +2024,14 @@ function PageHeader({ headerText = "" }) {
 				payload['campaign_id'] = selectedCampaign
 				console.log(payload);
 			}
+			if (bulkType === 'queue') {
+				payload["settings_id"] = "664f3fc8915b190008002485";
+			}
 			dispatch(bulkAction(payload)).unwrap()
 				.then((res) => {
 					// console.log('res ', res?.data);
 					Alertbox(
-						res?.data,
+						bulkType === 'queue'?res?.data?.message:res?.data,
 						"success",
 						1000,
 						"bottom-right"
