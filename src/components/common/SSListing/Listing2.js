@@ -422,7 +422,7 @@ export default function Listing2(props) {
 
   useEffect(() => {
     if (isInitialRender.current) {
-      dispatch(updateMRTrowSelectionState({}));
+      dispatch(removeMTRallRowSelection())
       isInitialRender.current = false; // Set to false after the first render
     } else {
       debouncedFetchData(

@@ -19,9 +19,10 @@ const Modal = ({
   additionalClass = "",
   modalWithChild = false,
   children,
+  isLoading=false
 }) => {
   // const [isLoadingSkeleton, setIsLoadingSkeleton] = React.useState(false);
-  const [isLoadingSkeleton] = React.useState(false);
+ // const [isLoadingSkeleton] = React.useState(false);
 
   return (
     <div
@@ -32,7 +33,7 @@ const Modal = ({
     // }}
     >
       <div className="modal">
-        {!isLoadingSkeleton ? (
+        {!isLoading ? (
           <div className="modal-content-wraper">
             <span
               className="close-modal"

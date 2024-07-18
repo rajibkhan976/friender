@@ -603,7 +603,7 @@ const BlackList = () => {
   ];
   const tableMethods = {}
 	const defaultParams = {
-		friend_status: "Activate",
+		friend_status: "all",
 		blacklist_status: 1,
 		fb_user_id: fb_user_id,
 	}
