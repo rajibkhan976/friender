@@ -52,6 +52,8 @@ import { ReactComponent as RedWarningSquareIcon } from "../../assets/images/RedW
 import moment from "moment";
 //import { updateBlackListStatusOfSelectesList } from "../../actions/SSListAction";
 
+import Modal from "../common/Modal"
+
 export const handlewhiteListUser = (dispatch, params, status) => {
 	const payload = [
 		{
@@ -878,65 +880,88 @@ export const FriendsQueueRecordsKeywordRenderer = memo((params) => {
 });
 
 export const KeywordRenderer = memo((params) => {
-	// console.log(params.data);
-	// const keywords =
-	//   params.value?.length > 0 && params.value[0].selected_keywords?.length > 0
-	//     ? params.value[0].selected_keywords
-	//     : null;
-
+	const [modalOpen, setModalOpen] = useState(false);
+	const [keyWords, setKeyWords] = useState([]);
+  
 	const [matchedKeyword, setMatchedKeyword] = useState(
-		params?.data.matchedKeyword
-			? params?.data.matchedKeyword
-					.split(",")
-					.filter((keyW) => keyW.trim() !== "")
-			: []
+	  params?.data.matchedKeyword
+		? params?.data.matchedKeyword
+			.split(",")
+			.filter((keyW) => keyW.trim() !== "")
+		: []
 	);
-
-	// console.log(matchedKeyword);
-
-	//className={sourceFriend.length > 12 ? "friendSource tooltipFullName" : "friendSource"} data-text={sourceFriend.length > 12 && sourceFriend}
+  
+	const modalRoot = document.getElementById("modal-root");
+  
 	return (
-		<>
-			{matchedKeyword?.length > 0 && !params.data.is_incoming ? (
-				<span className={`sync-box-wrap d-flex f-align-center key-box-wrap`}>
-					{Array.isArray(matchedKeyword) ? (
-						<span
-							className={
-								matchedKeyword[0].length > 12
-									? "tooltipFullName sync-txt tags positive-tags"
-									: "sync-txt tags positive-tags"
-							}
-							data-text={matchedKeyword[0].length > 12 && matchedKeyword[0]}
-						>
-							{matchedKeyword[0].length > 12
-								? matchedKeyword[0].substring(0, 12) + "..."
-								: matchedKeyword[0]}
+	  <>
+		{modalOpen && modalRoot &&
+		  createPortal(
+			<Modal
+			  modalType="normal-type"
+			  modalIcon={null}
+			  headerText={"Keyword(s)"}
+			  bodyText={
+				<>
+				  {keyWords?.matchedKeyword?.length > 0 && keyWords?.matchedKeyword
+					? keyWords?.matchedKeyword.map((el, i) => (
+						<span className={`tags positive-tags`} key={`key-${i}`}>
+						  {el}
 						</span>
-					) : (
-						0
-					)}
-					{Array.isArray(matchedKeyword) && matchedKeyword.length > 1 ? (
-						<span
-							className='syn-tag-count'
-							onClick={() => {
-								params.setKeyWords({
-									matchedKeyword: matchedKeyword,
-								});
-								params.setModalOpen(true);
-							}}
-						>
-							+{matchedKeyword.length - 1}
-						</span>
-					) : (
-						""
-					)}
-				</span>
+					  ))
+					: "No specific keyword used"}
+				</>
+			  }
+			  open={modalOpen}
+			  setOpen={setModalOpen}
+			  ModalFun={null}
+			  btnText={" "}
+			  modalButtons={false}
+			  additionalClass="modal-keywords"
+			/>,
+			modalRoot
+		  )}
+  
+		{matchedKeyword?.length > 0 && !params.data.is_incoming ? (
+		  <span className={`sync-box-wrap d-flex f-align-center key-box-wrap`}>
+			{Array.isArray(matchedKeyword) ? (
+			  <span
+				className={
+				  matchedKeyword[0].length > 12
+					? "tooltipFullName sync-txt tags positive-tags"
+					: "sync-txt tags positive-tags"
+				}
+				data-text={matchedKeyword[0].length > 12 && matchedKeyword[0]}
+			  >
+				{matchedKeyword[0].length > 12
+				  ? matchedKeyword[0].substring(0, 12) + "..."
+				  : matchedKeyword[0]}
+			  </span>
 			) : (
-				<span className='no-keywords muted-text'>N/A</span>
+			  0
 			)}
-		</>
+			{Array.isArray(matchedKeyword) && matchedKeyword.length > 1 ? (
+			  <span
+				className="syn-tag-count"
+				onClick={() => {
+				  setKeyWords({
+					matchedKeyword: matchedKeyword,
+				  });
+				  setModalOpen(true);
+				}}
+			  >
+				+{matchedKeyword.length - 1}
+			  </span>
+			) : (
+			  ""
+			)}
+		  </span>
+		) : (
+		  <span className="no-keywords muted-text">N/A</span>
+		)}
+	  </>
 	);
-});
+  });
 
 export const MessageGroupRequestAcceptedRenderer = memo((params) => {
 	const groupArray = useSelector((state) => state.message.groupArray);

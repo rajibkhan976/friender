@@ -1135,6 +1135,20 @@
 					}
         }
       }
+
+      td {
+        .syn-tag-count {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 100%;
+          flex: 0 0 26px;
+          aspect-ratio: 1;
+          border: 1px solid $themeGreen4;
+          color: $themeGreen4;
+          background-color: rgba($themeGreen4, 0.1);
+        }
+      }
     }
   }
 }
