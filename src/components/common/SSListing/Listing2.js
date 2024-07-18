@@ -525,6 +525,7 @@ export default function Listing2(props) {
       isLoading,
       showProgressBars: false,
       showLoadingOverlay: false,
+      isSaving: false,
       // showSkeletons: data.length === 0 ? true : false,
       pagination,
       // showAlertBanner: isError,
@@ -544,7 +545,7 @@ export default function Listing2(props) {
   //note: you can also pass table options as props directly to <MaterialReactTable /> instead of using useMaterialReactTable
   //but the useMaterialReactTable hook will be the most recommended way to define table options
   return (
-    <div className="react-table-container">
+    <div className={`react-table-container ${isLoading ? 'is-loading':''}`}  style={{ width: '100%', minWidth: '800px' }}>
       {((rowSelection && Object.keys(rowSelection)?.length > 0) ||
         selectAcross?.selected) && (
           <div className="selection-popup d-flex f-justify-center f-align-center">

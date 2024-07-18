@@ -89,6 +89,10 @@ body {
     }
   }
   // For message drag n drop
+
+  > .MuiTooltip-popper {
+    display: none !important;
+  }
 }
 *[data-disabled="true"],
 *[disabled] {

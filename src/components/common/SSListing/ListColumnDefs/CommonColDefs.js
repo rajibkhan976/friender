@@ -69,7 +69,8 @@ export const CommonColDefs = {
             )
         },
         muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Gender'
+            placeholder: 'Filter by Gender',
+            className: 'fr-filter-gender'
         },
         columnFilterModeOptions: ['equals'],
         enableColumnFilterModes: false,

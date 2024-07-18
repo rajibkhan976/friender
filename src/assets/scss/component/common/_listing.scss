@@ -1851,3 +1851,37 @@
 .mui-table-footer:has(nav li:nth-child(3)) .MuiTablePagination-root > *:first-child .MuiInputBase-root.MuiInput-root {
   display: block;
 }
+
+.fr-filter-gender > .MuiInputBase-root.MuiInput-root,
+.fr-filter-friendship > .MuiInputBase-root.MuiInput-root {
+  padding-left: 15px;
+
+  .MuiInputAdornment-root {
+    margin-right: 0;
+  }
+}
+
+.react-table-container.is-loading {
+  max-width: 100% !important;
+  width: 100% !important;
+  >.MuiPaper-root {
+    max-width: 100% !important;
+    width: 100% !important;
+    >.MuiTableContainer-root {
+      max-width: 100% !important;
+      width: 100% !important;
+      table {
+        max-width: 100% !important;
+        width: 100% !important;
+        table-layout: fixed !important;
+        
+        td,
+        th {
+          &:not(:first-child) {
+            width: calc((100% - 60px)/12);
+          }
+        }
+      }
+    }
+  }
+}
