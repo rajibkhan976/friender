@@ -33,7 +33,7 @@ import Modal from "../../components/common/Modal";
 import { utils } from "../../helpers/utils";
 import moment from "moment";
 import Listing2 from "../../components/common/SSListing/Listing2";
-import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import { WhiteAndBlacklistContactlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 import config from "../../configuration/config";
 const fb_user_id= localStorage.getItem("fr_default_fb");
 
@@ -684,7 +684,7 @@ const WhiteList = () => {
       )} */}
            <Listing2 
               //friendsData={filterFrndList}
-              listColDef = {FriendlistColDefs} 
+              listColDef = {WhiteAndBlacklistContactlistColDefs} 
               baseUrl = {config.fetchFriendListUrlv2}
               tableMethods = {tableMethods} 
               defaultParams = {defaultParams}

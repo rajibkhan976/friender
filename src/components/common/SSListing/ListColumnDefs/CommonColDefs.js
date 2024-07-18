@@ -10,6 +10,9 @@ export const CommonColDefs = {
                 <UnlinkedNameCellWithOptionsRenderer value={renderedCellValue} data={row.original} />
             )
         },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Name',
+        },
         columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem

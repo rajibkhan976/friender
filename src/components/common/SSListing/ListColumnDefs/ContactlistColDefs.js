@@ -182,7 +182,10 @@ const {
 // #region Friendlist ColDefs
 export const FriendlistColDefs = (inactiveAfter) => {
   const columns = [
-    Name,
+    {
+      ...Name,
+      header: addTooltipToHeader("Name", "Name")
+    },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
     ...Age,
@@ -217,7 +220,10 @@ export const FriendlistColDefs = (inactiveAfter) => {
     ...RecentEngagement(inactiveAfter),
     header: addTooltipToHeader("Recent Engagement", "Recent Engagement"),
   },
-  Keyword,
+  {
+    ...Keyword,
+    header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
+  },
   { ...Source, header: sourceTooltipToHeader("Source") },
   ];
 
@@ -244,7 +250,10 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
     //   },
 
     // },
-    Name,
+    {
+      ...Name,
+      header: addTooltipToHeader("Name", "Name")
+    },Name,
     { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
     {
       ...Age,
@@ -279,8 +288,69 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
       ...RecentEngagement(inactiveAfter),
       header: addTooltipToHeader("Recent Engagement", "Recent Engagement"),
     },
-    Keyword,
+    {
+      ...Keyword,
+      header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
+    },
     { ...Source, header: sourceTooltipToHeader("Source") },
+  ];
+
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
+};
+
+// #region White List
+export const WhiteAndBlacklistContactlistColDefs = (inactiveAfter) => {
+  const columns = [
+    {
+      ...Name,
+      header: addTooltipToHeader("Name", "Name")
+    },
+  { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
+  {
+    ...Age,
+    header: addTooltipToHeader(
+      "Age",
+      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`
+    ),
+  },
+  {
+    ...Country,
+    header: countryTooltipRenderer("Country"),
+  },
+  {
+    ...FrindShip,
+    header: addTooltipToHeader(
+      "Friendship",
+      `This section showcases all\n kinds of friendship statuses.`
+    ),
+  },
+  {
+    ...TotalReaction,
+    header: addTooltipToHeader("Total Reaction", "Reactions"),
+  },
+  { ...TotalComment, header: addTooltipToHeader("Total Comment", "Comments") },
+  {
+    ...Engagement,
+    header: addTooltipToHeader("Engagement", "Total Engagement"),
+  },
+  { ...MessageCount, header: addTooltipToHeader("Message Count", "Messages") },
+  {
+    ...RecentEngagement(inactiveAfter),
+    header: addTooltipToHeader("Recent Engagement", "Recent Engagement"),
+  },
+  {
+    ...Keyword,
+    header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
+  },
+  { ...Source, header: sourceTooltipToHeader("Source") },
   ];
 
   return columns.map(col => ({
@@ -297,7 +367,10 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
 // #region Global Contact List
 export const GlobalContactlistColDefs = (inactiveAfter) => {
   const columns =  [
-    Name,
+  {
+    ...Name,
+    header: addTooltipToHeader("Name", "Name")
+  },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
     ...Age,
@@ -332,7 +405,10 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
     ...RecentEngagement(inactiveAfter),
     header: addTooltipToHeader("Recent Engagement", "Recent Engagement"),
   },
-  Keyword,
+  {
+    ...Keyword,
+    header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
+  },
   { ...Source, header: sourceTooltipToHeader("Source") },
   ];
 
