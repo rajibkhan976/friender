@@ -29,11 +29,11 @@ const breadlinks = [
     linkString: "Menu",
   },
   {
-    links: "/friends",
-    linkString: "Friends",
+    links: "/contacts",
+    linkString: "Contacts",
   },
   {
-    links: "/friends/incoming-rejectng-request",
+    links: "/contacts/incoming-rejectng-request",
     linkString: "Incoming Rejected Request",
   },
 ];

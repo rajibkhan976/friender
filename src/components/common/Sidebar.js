@@ -304,14 +304,14 @@ const Sidebar = (props) => {
   };
 
   	const friendsSubMenuArr = [
-		"/friends/all",
-		"/friends/friend-list",
-		"/friends/non-friends",
-		"/friends/unfriended-friends",
-		"/friends/whitelisted-friends",
-		// "/friends/deactivated-friends",
-		"/friends/lost-friends",
-		"/friends/blacklisted-friends",
+		"/contacts/all",
+		"/contacts/friend-list",
+		"/contacts/non-friends",
+		"/contacts/unfriended-friends",
+		"/contacts/whitelisted-friends",
+		// "/contacts/deactivated-friends",
+		"/contacts/lost-friends",
+		"/contacts/blacklisted-friends",
 	];
 
 	const friendReqSubMenuArr = [
@@ -467,7 +467,7 @@ const Sidebar = (props) => {
 									onClick={(e) => {
 										setSubMenuFriends(true);
 									}}
-									to='/friends/friend-list'
+									to='/contacts/all-contacts'
 									className={() => friendsSubMenuArr.includes(location?.pathname)
 											? "active"
 											: ""}
@@ -509,7 +509,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/all-contacts'
+												to='/contacts/all-contacts'
 												aria-label='All'
 											>
 												<span className='nav-menu-name'>- All</span>
@@ -520,7 +520,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/friend-list'
+												to='/contacts/friend-list'
 												aria-label='Friends'
 											>
 												<span className='nav-menu-name'>- Friends</span>
@@ -531,7 +531,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/non-friends'
+												to='/contacts/non-friends'
 												aria-label='Non friends'
 											>
 												<span className='nav-menu-name'>- Non friends</span>
@@ -543,7 +543,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/unfriended-friends'
+												to='/contacts/unfriended-friends'
 												aria-label='Unfriended'
 											>
 												<span className='nav-menu-name'>- Unfriended</span>
@@ -554,7 +554,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/lost-friends'
+												to='/contacts/lost-friends'
 												aria-label='Lost'
 											>
 												<span className='nav-menu-name'>- Lost</span>
@@ -565,7 +565,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/whitelisted-friends'
+												to='/contacts/whitelisted-friends'
 												aria-label='Whitelisted'
 											>
 												<span className='nav-menu-name'>- Whitelisted</span>
@@ -576,7 +576,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/friends/blacklisted-friends'
+												to='/contacts/blacklisted-friends'
 												aria-label='Blacklisted'
 											>
 												<span className='nav-menu-name'>- Blacklisted</span>

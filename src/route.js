@@ -233,7 +233,7 @@ const Routeing = () => {
 
 						{/* <Route path="settings/my-settings" element={<MySetting />}></Route> */}
 						<Route
-							path='friends'
+							path='contacts'
 							element={<Friends />}
 						>
 							
@@ -262,14 +262,6 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='friends-queue'
-								element={
-									<Suspense fallback={""}>
-										<FriendsQueue />
-									</Suspense>
-								}
-							></Route>
-							<Route
 								path='whitelisted-friends'
 								element={
 									<Suspense fallback={""}>
@@ -290,15 +282,6 @@ const Routeing = () => {
 								element={
 									<Suspense fallback={""}>
 										<IncomingPendingRequest />
-									</Suspense>
-								}
-							></Route>
-
-							<Route
-								path='pending-request'
-								element={
-									<Suspense fallback={""}>
-										<SendRequest deleteAllInterval={deleteAllInterval} />
 									</Suspense>
 								}
 							></Route>
@@ -331,6 +314,27 @@ const Routeing = () => {
 								element={
 									<Suspense fallback={""}>
 										<LostFriends />
+									</Suspense>
+								}
+							></Route>
+						</Route>
+						<Route
+							path='friends'
+							element={<Friends />}
+						>
+							<Route
+								path='pending-request'
+								element={
+									<Suspense fallback={""}>
+										<SendRequest deleteAllInterval={deleteAllInterval} />
+									</Suspense>
+								}
+							></Route>
+							<Route
+								path='friends-queue'
+								element={
+									<Suspense fallback={""}>
+										<FriendsQueue />
 									</Suspense>
 								}
 							></Route>

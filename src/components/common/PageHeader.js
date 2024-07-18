@@ -443,7 +443,7 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
-		// console.log("location array -- ", locationArray);
+		console.log("location array -- ", locationArray);
 
 		setLinks(locationArray);
 
