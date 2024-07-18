@@ -1,5 +1,6 @@
 import React from "react";
 import { XMarkIcon } from "../../assets/icons/Icons";
+import SkeletonModal from "./loaders/SkeletonModal/SkeletonModal";
 
 const Modal = ({
   headerText,
@@ -15,10 +16,13 @@ const Modal = ({
   ModalIconElement,
   ExtraProps = {},
   modalButtons = true,
-  additionalClass="",
+  additionalClass = "",
   modalWithChild = false,
   children,
 }) => {
+  // const [isLoadingSkeleton, setIsLoadingSkeleton] = React.useState(false);
+  const [isLoadingSkeleton] = React.useState(false);
+
   return (
     <div
       className={`modal-background ${additionalClass}`}
@@ -28,64 +32,68 @@ const Modal = ({
     // }}
     >
       <div className="modal">
-        <div className="modal-content-wraper">
-          <span
-            className="close-modal"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            <XMarkIcon />
-          </span>
-          <div className={`modal-header d-flex f-align-center ${modalType}`}>
-            {modalIcon && (
-              <figure>
-                <img src={modalIcon} className="modal-icon" alt="" loading='lazy' />
-              </figure>
-            )}
-            {ModalIconElement && (
-              <span
-                className="icon-modal-comm"
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                <ModalIconElement />
-              </span>
-            )}
-            <span style={{ color: modalType === "DELETE" ? '#FF6A77' : '#fff' }}>{headerText}</span>
-          </div>
-          <div className="modal-content">{bodyText} </div>
-
-          {modalWithChild && <div className="modal-content">{children}</div>}
-
-          {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
-            <button
-              className="btn-primary outline"
-              disabled={ExtraProps?.cancelBtnDisable}
-              onClick={
-                closeBtnFun
-                  ? () => { closeBtnFun() }
-                  : () => {
-                    setOpen(false);
-                  }
-              }
+        {!isLoadingSkeleton ? (
+          <div className="modal-content-wraper">
+            <span
+              className="close-modal"
+              onClick={() => {
+                setOpen(false);
+              }}
             >
-              {closeBtnTxt}
-            </button>
-            {ModalFun && (
+              <XMarkIcon />
+            </span>
+            <div className={`modal-header d-flex f-align-center ${modalType}`}>
+              {modalIcon && (
+                <figure>
+                  <img src={modalIcon} className="modal-icon" alt="" loading='lazy' />
+                </figure>
+              )}
+              {ModalIconElement && (
+                <span
+                  className="icon-modal-comm"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <ModalIconElement />
+                </span>
+              )}
+              <span style={{ color: modalType === "DELETE" ? '#FF6A77' : '#fff' }}>{headerText}</span>
+            </div>
+            <div className="modal-content">{bodyText}</div>
+
+            {modalWithChild && <div className="modal-content">{children}</div>}
+
+            {modalButtons && <div className="modal-buttons d-flex justifyContent-end">
               <button
-                className={modalType === "DELETE" ? `btn-danger unfriend` : `btn-primary unfriend`}
-                disabled={ExtraProps?.primaryBtnDisable}
-                onClick={() => {
-                  ModalFun();
-                }}
+                className="btn-primary outline"
+                disabled={ExtraProps?.cancelBtnDisable}
+                onClick={
+                  closeBtnFun
+                    ? () => { closeBtnFun() }
+                    : () => {
+                      setOpen(false);
+                    }
+                }
               >
-                {btnText}
+                {closeBtnTxt}
               </button>
-            )}
-          </div>}
-        </div>
+              {ModalFun && (
+                <button
+                  className={modalType === "DELETE" ? `btn-danger unfriend` : `btn-primary unfriend`}
+                  disabled={ExtraProps?.primaryBtnDisable}
+                  onClick={() => {
+                    ModalFun();
+                  }}
+                >
+                  {btnText}
+                </button>
+              )}
+            </div>}
+          </div>
+        ) : (
+          <SkeletonModal onCrossClick={() => { setOpen(false) }} />
+        )}
       </div>
     </div>
   );

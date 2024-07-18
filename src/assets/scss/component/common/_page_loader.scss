@@ -1,11 +1,11 @@
-@use '../../../../assets/scss/abstract/mixins' as *;
+@use "../../../../assets/scss/abstract/mixins" as *;
 @use "../../../../assets/scss//abstract/color" as *;
 
 .page-loader {
     position: fixed;
     inset: 0;
     // padding: 30px;
-    @include theme-aware('background-color', 'loader-bg');
+    @include theme-aware("background-color", "loader-bg");
     z-index: 99999;
 
     .page-loader-top {
@@ -13,7 +13,7 @@
 
         .page-loader-menu {
             flex: 0 0 80px;
-            @include theme-aware('background', 'loader-component-bg');
+            @include theme-aware("background", "loader-component-bg");
             padding: 20px 25px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
             // @include border-radius(10px);
@@ -35,12 +35,12 @@
                 li {
                     height: 30px;
                     width: 100%;
-                    
+
                     position: relative;
                     @include border-radius(3px);
 
                     &:not(:last-child):after {
-                        content: '';
+                        content: "";
                         position: absolute;
                         bottom: 0;
                         margin-bottom: -16px;
@@ -50,7 +50,7 @@
                 }
 
                 li + li {
-                    margin-top: 34px
+                    margin-top: 34px;
                 }
             }
 
@@ -69,7 +69,7 @@
                 flex: 0 0 80px;
                 padding: 15px 30px;
                 // @include border-radius(10px);
-                @include theme-aware('background', 'loader-component-bg');
+                @include theme-aware("background", "loader-component-bg");
                 box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08);
 
                 .page-loader-title {
@@ -101,13 +101,12 @@
                     }
                 }
             }
-            
         }
     }
 
     .page-loader-bottom {
         flex: 0 0 40px;
-        // margin-top: 10px; 
+        // margin-top: 10px;
         // @include border-radius(5px);
     }
 }
@@ -128,35 +127,35 @@
         span {
             display: inline-block;
             height: 24px;
-            
+
             @include border-radius(5px);
 
             &:nth-child(1) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(2) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(3) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(4) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(5) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(6) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(7) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(8) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
             &:nth-child(9) {
-                width: (random(81) + 24)+px
+                width: (random(81) + 24) + px;
             }
         }
     }
@@ -166,7 +165,6 @@
         .page-loader-row {
             @include border-radius(3px);
             height: 50px;
-            
         }
 
         .page-loader-row + .page-loader-row {
@@ -196,24 +194,24 @@
         }
     }
     &.settings-loader {
-      //background: #BDBDBD;
-      @include theme-aware('background-color', 'listing-cell-bg');
-      height: 100%;
-      padding: 30px 50px;
-      margin-top: 0;
-      .page-loader-tableHeader {
-        flex-direction: column;
-        .skeleton-loader {
-          width: 100%;
-          margin-bottom: 5px;
-          &.closed-settings {
-            height: 50px;
-          }
-          &.opened-settings {
-            height: 114px;
-          }
+        //background: #BDBDBD;
+        @include theme-aware("background-color", "listing-cell-bg");
+        height: 100%;
+        padding: 30px 50px;
+        margin-top: 0;
+        .page-loader-tableHeader {
+            flex-direction: column;
+            .skeleton-loader {
+                width: 100%;
+                margin-bottom: 5px;
+                &.closed-settings {
+                    height: 50px;
+                }
+                &.opened-settings {
+                    height: 114px;
+                }
+            }
         }
-      }
     }
 }
 
@@ -224,18 +222,18 @@
     background-size: 50px 500px;
     background-position: 0 0;
     animation: shine 2.5s ease-in-out infinite;
-  }
+}
 
-  .theme-light .skeleton-loader {
-      width: 100%;
-      display: block;
-      background-repeat: repeat-y;
-      background-size: 50px 500px;
-      background-position: 0 0;
-      animation: shineLight 2.5s ease-in-out infinite;
-    }
+.theme-light .skeleton-loader {
+    width: 100%;
+    display: block;
+    background-repeat: repeat-y;
+    background-size: 50px 500px;
+    background-position: 0 0;
+    animation: shineLight 2.5s ease-in-out infinite;
+}
 
-  @keyframes shine {
+@keyframes shine {
     0% {
         background: rgb(211, 211, 211, 0.2);
     }
@@ -245,9 +243,9 @@
     100% {
         background: rgb(211, 211, 211, 0.2);
     }
-  }
+}
 
-  @keyframes shineLight {
+@keyframes shineLight {
     0% {
         background: rgb(211, 211, 211, 0.4);
     }
@@ -257,4 +255,4 @@
     100% {
         background: rgb(211, 211, 211, 0.4);
     }
-  }
+}
