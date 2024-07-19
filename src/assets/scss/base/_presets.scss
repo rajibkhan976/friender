@@ -57,7 +57,7 @@ body {
   text-rendering: optimizeSpeed;
   line-height: 1;
   overflow: hidden;
-  font-family: "Nunito", sans-serif;
+  font-family: "Nunito", sans-serif !important;
 
   // For message drag n drop
   > .draggable-list__item {
@@ -461,6 +461,11 @@ main {
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
+      font-family: "Nunito", sans-serif !important;
+
+      * {
+        font-family: "Nunito", sans-serif !important;
+      }
       
       .mui-table-footer .MuiInputBase-root {
         right: 30px !important;
