@@ -1,7 +1,7 @@
 import { darken } from "@mui/material";
 
 
-export const MuiListStyleProps = (theme) => {
+export const MuiListStyleProps = (theme, dataLength) => {
   const baseBackgroundColor =
     theme.palette.mode === "dark" ? "rgb(40, 44, 52)" : "#000000";
 
@@ -55,7 +55,7 @@ export const MuiListStyleProps = (theme) => {
     },
 
     muiTableHeadCellProps: {
-      className: 'mui-table-head-cell',
+      className: `mui-table-head-cell ${dataLength > 0 ? 'has-contancts':'has-no-contacts'}`,
       //simple styling with the `sx` prop, works just like a style prop in this example
       sx: {
         fontWeight: "normal",

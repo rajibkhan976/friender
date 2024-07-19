@@ -63,7 +63,7 @@ export default function Listing2(props) {
     pageIndex: 0,
     pageSize: 15, //customize the default page size
   });
-  const listMuiProps = MuiListStyleProps(theme);
+  const listMuiProps = MuiListStyleProps(theme, data?.length);
   const customTableMethods = props.tableMethods;
   const setRowSelection = (selectState) => {
     //* Note VVI: always have to pass the old selection state

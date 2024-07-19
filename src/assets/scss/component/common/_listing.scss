@@ -1459,6 +1459,11 @@
     .MuiTableSortLabel-icon {
       color: #ffffff !important;
     }
+
+    &.has-no-contacts {
+      opacity: 0.2;
+      pointer-events: none;
+    }
   }
 
   .Mui-TableHeadCell-Content-Labels {
