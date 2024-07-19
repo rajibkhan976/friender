@@ -253,7 +253,7 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
     {
       ...Name,
       header: addTooltipToHeader("Name", "Name")
-    },Name,
+    },
     { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
     {
       ...Age,
