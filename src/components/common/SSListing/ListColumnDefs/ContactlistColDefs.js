@@ -188,6 +188,14 @@ export const FriendlistColDefs = (inactiveAfter) => {
     },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
+    ...FrindShip,
+    header: addTooltipToHeader(
+      "Friendship",
+      `This section showcases all\n kinds of friendship statuses.`
+    ),
+    enableColumnFilter: false,
+  },
+  {
     ...Age,
     header: addTooltipToHeader(
       "Age",
@@ -197,14 +205,6 @@ export const FriendlistColDefs = (inactiveAfter) => {
   {
     ...Country,
     header: countryTooltipRenderer("Country"),
-  },
-  {
-    ...FrindShip,
-    header: addTooltipToHeader(
-      "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
-    ),
-    enableColumnFilter: false,
   },
   {
     ...TotalReaction,
@@ -256,6 +256,14 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
     },
     { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
     {
+      ...FrindShip,
+      header: addTooltipToHeader(
+        "Friendship",
+        `This section showcases all\n kinds of friendship statuses.`
+      ),
+      enableColumnFilter: false,
+    },
+    {
       ...Age,
       header: addTooltipToHeader(
         "Age",
@@ -265,14 +273,6 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
     {
       ...Country,
       header: countryTooltipRenderer("Country"),
-    },
-    {
-      ...FrindShip,
-      header: addTooltipToHeader(
-        "Friendship",
-        `This section showcases all\n kinds of friendship statuses.`
-      ),
-      enableColumnFilter: false,
     },
     {
       ...TotalReaction,
@@ -315,6 +315,13 @@ export const WhiteAndBlacklistContactlistColDefs = (inactiveAfter) => {
     },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
+    ...FrindShip,
+    header: addTooltipToHeader(
+      "Friendship",
+      `This section showcases all\n kinds of friendship statuses.`
+    ),
+  },
+  {
     ...Age,
     header: addTooltipToHeader(
       "Age",
@@ -324,13 +331,6 @@ export const WhiteAndBlacklistContactlistColDefs = (inactiveAfter) => {
   {
     ...Country,
     header: countryTooltipRenderer("Country"),
-  },
-  {
-    ...FrindShip,
-    header: addTooltipToHeader(
-      "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
-    ),
   },
   {
     ...TotalReaction,
@@ -373,6 +373,14 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
   },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
+    ...FrindShip,
+    header: addTooltipToHeader(
+      "Friendship",
+      `This section showcases all\n kinds of friendship statuses.`
+    ),
+    // enableColumnFilter: false,
+  },
+  {
     ...Age,
     header: addTooltipToHeader(
       "Age",
@@ -382,14 +390,6 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
   {
     ...Country,
     header: countryTooltipRenderer("Country"),
-  },
-  {
-    ...FrindShip,
-    header: addTooltipToHeader(
-      "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
-    ),
-    // enableColumnFilter: false,
   },
   {
     ...TotalReaction,

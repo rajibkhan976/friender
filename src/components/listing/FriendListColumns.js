@@ -1153,7 +1153,7 @@ export const SourceRendererPending = memo((params) => {
                                     params?.data?.finalSource?.toLowerCase() === "post" ? 
                                         'Post' :
                                     params?.data?.finalSource?.toLowerCase() === "suggestions" ?
-                                        'Suggested Friends' :
+                                        'Suggested Fr...' :
                                     // params?.data?.finalSource?.toLowerCase() === "friends" ?
                                     //     'Friends of Friends' :
                                     sourceName.length > 12
@@ -1301,7 +1301,16 @@ export const SourceRendererPending = memo((params) => {
 
     if (params?.data?.finalSource?.toLowerCase() === "incoming") {
         return (
-            <div className='friend-sync-source d-flex f-align-center'>
+            // <div className='friend-sync-source d-flex f-align-center'>
+			<div 
+				className='
+					friend-sync-source 
+					d-flex 
+					f-align-center 
+					tooltipFullName
+				'
+				data-text={'Incoming Request'}
+				>
                 <figure className='friend-source text-center'>
                     <IncomingRequestIcon />
                 </figure>
@@ -1311,9 +1320,9 @@ export const SourceRendererPending = memo((params) => {
                             ? "friendSource tooltipFullName"
                             : "friendSource"
                     }
-                    data-text={params?.data?.finalSource}
+                    // data-text={params?.data?.finalSource}
                 >
-                    Incoming request
+                    Incoming req...
                 </span>
             </div>
         );

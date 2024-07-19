@@ -708,10 +708,11 @@
 }
 
 .friend-gender {
+  justify-content: center;
   .friend-gender-ico {
     flex: 0 0 16px;
     text-align: center;
-    margin-right: 10px;
+    // margin-right: 10px; COMMENTED OUT FOR DESIGN IN GENDER TD IN LISTING 2
     display: inline-flex;
     align-items: center;
     justify-content: center;
