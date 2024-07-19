@@ -42,7 +42,7 @@ export default function CampaignList(props) {
         pageIndex: 0,
         pageSize: 15, //customize the default page size
     });
-    const listMuiProps = MuiListStyleProps(theme);
+    const listMuiProps = MuiListStyleProps(theme, data?.length);
     const customTableMethods = props.tableMethods
 
     function getUniqueRecords(array1, array2) {
