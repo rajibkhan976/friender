@@ -4,7 +4,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { MuiListStyleProps } from "./style/Style";
-import { useTheme } from "@mui/material";
+import { MenuItem, useTheme } from "@mui/material";
 //import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
 import { useDispatch, useSelector } from "react-redux";
 import helper from "../../../helpers/helper";
@@ -499,6 +499,15 @@ export default function Listing2(props) {
     // enablePagination: true,
     manualPagination: true,
     paginationDisplayMode: "pages",
+    filterFns: {
+      notContains: (row, id, filterValue) => {
+        console.log('row, id, filterValue', row, id, filterValue);
+        return row.getValue(id) === filterValue;
+      },
+    },
+    localization: {
+      filterCustomFilterFn: 'Custom Filter Fn',
+    },
     // muiToolbarAlertBannerProps: isError
     //   ? {
     //     color: 'error',
@@ -539,7 +548,7 @@ export default function Listing2(props) {
       variant: 'rectangular',
     },
     ...customTableMethods,
-    ...listMuiProps,
+    ...listMuiProps
   });
 
   //note: you can also pass table options as props directly to <MaterialReactTable /> instead of using useMaterialReactTable

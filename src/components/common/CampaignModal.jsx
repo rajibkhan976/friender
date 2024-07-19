@@ -1057,8 +1057,8 @@ const CalenderModal = ({
 									<path
 										d='M9.08073 4H0.914062M0.914062 4L4.41406 7.5M0.914062 4L4.41406 0.5'
 										stroke='#0094FF'
-										stroke-linecap='round'
-										stroke-linejoin='round'
+										strokeLinecap='round'
+										strokeLinejoin='round'
 									/>
 								</svg>
 							</span>
@@ -1374,7 +1374,7 @@ const CalenderModal = ({
 								<label>End date & time</label>
 
 								<input
-									type='datetime-local'
+									type='datetimeLocal'
 									className='mt'
 									value={endDateAndTime}
 									onChange={handleChangeEndDateAndTime}
@@ -1395,7 +1395,7 @@ const CalenderModal = ({
 						</button>
 						<button
 							className={`btn ${
-								isLoadingBtn ? "campaign-loading-save-btn" : ""
+								isLoadingBtn ? "campaignLoading-save-btn" : ""
 							}`}
 							disabled={isSaveDisabled || unselectedError}
 							onClick={handleSubmitModalCampaign}
@@ -1586,7 +1586,7 @@ const CalenderModal = ({
 
 							<div className='row'>
 								<div className='col-full campaign-view-details-col'>
-									<div className='icon icon-messages-limit-calender'>
+									<div className='icon icon-messagesLimit-calender'>
 										<MessagesLimitCalenderIcon />
 									</div>
 

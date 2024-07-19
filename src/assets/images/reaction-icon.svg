@@ -1,7 +1,7 @@
 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="8" cy="8" r="8" fill="url(#paint0_radial_4071_1409)"/>
-<ellipse cx="5.33464" cy="6.33325" rx="0.666667" ry="1" fill="#131314" stroke="#131314" stroke-linecap="round"/>
-<ellipse cx="10.6667" cy="6.33331" rx="0.666667" ry="1" fill="#131314" stroke="#131314" stroke-linecap="round"/>
+<ellipse cx="5.33464" cy="6.33325" rx="0.666667" ry="1" fill="#131314" stroke="#131314" strokeLinecap="round"/>
+<ellipse cx="10.6667" cy="6.33331" rx="0.666667" ry="1" fill="#131314" stroke="#131314" strokeLinecap="round"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.96797 10.3334C4.71689 10.3334 4.59135 10.3334 4.51628 10.4281C4.44121 10.5227 4.46659 10.6313 4.51734 10.8486C4.8486 12.2666 6.28233 13.3333 8.00081 13.3333C9.71929 13.3333 11.153 12.2666 11.4843 10.8486C11.535 10.6313 11.5604 10.5227 11.4853 10.4281C11.4103 10.3334 11.2847 10.3334 11.0337 10.3334H4.96797Z" fill="#131314"/>
 <defs>
 <radialGradient id="paint0_radial_4071_1409" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(8 8) rotate(90) scale(8)">

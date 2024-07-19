@@ -1,4 +1,11 @@
+import { MenuItem } from "@mui/material";
 import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
+
+const notContainsFilterFn = (row, id, filterValue) => {
+    console.log(!row.getValue(id).toLowerCase().includes(filterValue.toLowerCase()));
+    return !row.getValue(id).toLowerCase().includes(filterValue.toLowerCase());
+  };
+  
 
 export const CommonColDefs = {
     Name: {
@@ -14,6 +21,57 @@ export const CommonColDefs = {
             placeholder: 'Filter by Name',
         },
         columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
+        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+            return [
+                <MenuItem
+                    key="1"
+                    onClick={() => onSelectFilterMode('contains')}
+                >
+                    <div>Contains</div>
+                </MenuItem>,
+                <MenuItem
+                    key="2"
+                    onClick={() => onSelectFilterMode('equals')}
+                >
+                    <div>Equals</div>
+                </MenuItem>,
+                <MenuItem
+                    key="3"
+                    onClick={() => onSelectFilterMode('notEquals')}
+                >
+                    <div>Not Equals</div>
+                </MenuItem>,
+                <MenuItem
+                    key="4"
+                    onClick={() => onSelectFilterMode('startsWith')}
+                >
+                    <div>Starts With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="5"
+                    onClick={() => onSelectFilterMode('endsWith')}
+                >
+                    <div>Ends With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="6"
+                    onClick={() => onSelectFilterMode('empty')}
+                >
+                    <div>Blank</div>
+                </MenuItem>,
+                <MenuItem
+                    key="7"
+                    onClick={() => onSelectFilterMode('notEmpty')}
+                >
+                    <div>Not Blank</div>
+                </MenuItem>,
+                <MenuItem
+                    key="8"
+                    onClick={() => onSelectFilterMode('notContains')}
+                >
+                    <div>Not Contains</div>
+                </MenuItem>,
+        ]}
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem
         //       key="fuzzy"
@@ -102,7 +160,7 @@ export const CommonColDefs = {
         accessorKey: 'country', //simple recommended way to define a column
         header: 'Country',
         enableHiding: false,
-        columnFilterModeOptions: ['contains', 'startsWith', 'endsWith'],
+        columnFilterModeOptions: ['contains', 'startsWith', 'endsWith', 'notContains'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <CountryRenderer value={renderedCellValue} data={row.original} />
@@ -112,6 +170,33 @@ export const CommonColDefs = {
             placeholder: 'Filter by Country' 
         },
         enableColumnFilterModes: true,
+        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+            return [
+                <MenuItem
+                    key="1"
+                    onClick={() => onSelectFilterMode('contains')}
+                >
+                    <div>Contains</div>
+                </MenuItem>,
+                <MenuItem
+                    key="2"
+                    onClick={() => onSelectFilterMode('startsWith')}
+                >
+                    <div>Starts With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="3"
+                    onClick={() => onSelectFilterMode('endsWith')}
+                >
+                    <div>Ends With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="4"
+                    onClick={() => onSelectFilterMode('notContains')}
+                >
+                    <div>Not Contains</div>
+                </MenuItem>,
+        ]}
     },
     TotalReaction: {
         accessorKey: 'reactionThread', //simple recommended way to define a column
@@ -209,7 +294,7 @@ export const CommonColDefs = {
         header: 'Source',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
-        columnFilterModeOptions: ['contains', 'startsWith', 'endsWith'],
+        columnFilterModeOptions: ['contains', 'startsWith', 'endsWith', 'notContains'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <SourceRendererPending value={renderedCellValue} data={row.original} />
@@ -218,5 +303,36 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: { 
             placeholder: 'Filter by Sourcename' 
         },
+        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+            return [
+                <MenuItem
+                    key="1"
+                    onClick={() => onSelectFilterMode('contains')}
+                >
+                    <div>Contains</div>
+                </MenuItem>,
+                <MenuItem
+                    key="2"
+                    onClick={() => onSelectFilterMode('startsWith')}
+                >
+                    <div>Starts With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="3"
+                    onClick={() => onSelectFilterMode('endsWith')}
+                >
+                    <div>Ends With</div>
+                </MenuItem>,
+                <MenuItem
+                    key="4"
+                    onClick={() => onSelectFilterMode('notContains')}
+                >
+                    <div>Not Contains</div>
+                </MenuItem>,
+        ]}
     }
 };
+
+export const filterFns = {
+    notContains: notContainsFilterFn,
+  };
