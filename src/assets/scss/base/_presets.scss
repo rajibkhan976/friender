@@ -529,6 +529,14 @@ main {
           }
         }
       }
+
+      &.is-loading {
+        td {
+          &::after {
+            background: #1c1c1e !important;
+          }
+        }
+      }
     }
 
     .friends-queue-action-bar ~ .react-table-container {

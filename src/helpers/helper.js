@@ -84,9 +84,10 @@ const listFilterParamsGenerator = (columnFilter, filterFns) => {
             friendship: "multi_select"
         };
         values.push([item.value]);
-        fields.push(fieldCorrector(item.id));
+        fields.push(fieldCorrector(item.id) === 'last_engagement_date' ? 'recent_engagement' : fieldCorrector(item.id));
+        // console.log('item.id', item.id === "last_engagement_date", 'fieldCorrector(item.id)', fieldCorrector(item.id));
         operators.push(filterFns[item.id] ? [operatorsCorrector(camelToSnake(filterFns[item.id]))] : ["contains"]);
-
+        // console.log('fields :::::', fields?.map(item => item === 'last_engagement_date' ? 'recent_engagement' : item));
     })
     return {
         values,

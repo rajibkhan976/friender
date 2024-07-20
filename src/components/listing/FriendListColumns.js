@@ -623,6 +623,9 @@ export const RecentEngagementRenderer = memo((params) => {
 		}
 	}, [params]);
 
+
+	console.log('CALC ENG :::::::');
+
 	return (
 		<span className={`h-100 w-100 d-flex f-align-center`}>
 			<span

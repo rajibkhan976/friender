@@ -336,6 +336,10 @@ export default function Listing2(props) {
     // } else {
     //   setIsRefetching(true);
     // }
+    const updatedFl = filteronColumn?.length > 0 && filteronColumn?.filter(el => el?.value?.length > 0)
+    // console.log(updatedFl);
+    // console.log('filteronColumn', filteronColumn);
+
     try {
       const queryParam = {
         page_number: paginationData.pageIndex + 1,
@@ -344,9 +348,9 @@ export default function Listing2(props) {
         ...props.defaultParams,
       };
 
-      if (filteronColumn.length > 0) {
+      if (updatedFl.length > 0) {
         const { values, fields, operators } = helper.listFilterParamsGenerator(
-          filteronColumn,
+          updatedFl,
           filteronColumnFns
         );
         queryParam["values"] = JSON.stringify(values);
@@ -444,6 +448,10 @@ export default function Listing2(props) {
     //console.log("pagination", pagination);
     fetchData(pagination, textFilter, columnFilters, columnFilterFns, sorting);
   }, [pagination.pageIndex, pagination.pageSize, sorting]);
+
+  useEffect(() => {
+    console.log('columnFilters', columnFilters);
+  }, [columnFilters])
 
   const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
 

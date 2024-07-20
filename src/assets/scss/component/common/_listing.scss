@@ -1828,7 +1828,8 @@
 }
 
 .MuiPopover-root.MuiModal-root:has(.fr-filter-friendship) .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation8.MuiPopover-paper {
-  left: 45.8dvw !important;
+  // left: 45.8dvw !important;
+  left: 33.8% !important;
   top: 15px !important;
 }
 
@@ -1840,7 +1841,8 @@
           &.MuiPaper-rounded{
             &.MuiPaper-elevation8{
               &.MuiPopover-paper {
-                left: 47dvw !important;
+                // left: 47dvw !important;
+                left: 34.5% !important;
                 top: 90px !important;
               }
             }
