@@ -18,6 +18,10 @@ import {
   CreationRenderer,
 } from "../../components/listing/FriendListColumns";
 import NoDataFound from "../../components/common/NoDataFound";
+import { PendingListColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import Listing2 from "../../components/common/SSListing/Listing2";
+import config from "../../configuration/config";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const breadlinks = [
   {
@@ -280,29 +284,31 @@ const IncomingPendingRequest = () => {
     getFbUserId();
   }, []);
 
+  	// Any list specific Methods 
+	const tableMethods = {
+    enableRowSelection: false,
+  };
+	//query params
+	const defaultParams = {
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response)=>{
+			return {
+				res:response,
+				data: response?.data,
+				count: response?.count
+			}
+	}
+
   return (
     <div className="main-content-inner d-flex d-flex-column">
-      {friendsList?.length > 0 && (
-        <>
-          <Listing
-            friendsData={friendsList}
-            friendsListingRef={friendsListinRef}
-            setLoadingStatus={setLoadingStatus}
-            // pageLoadSize={pageLoadSize}
-            getFilterNum={setListFilteredCount}
-            reset={isReset}
-            setReset={setIsReset}
-          />
-        </>
-      )}
-
-      {loading && <ListingLoader />}
-      {noDataFound && listFilteredCount === 0 && <NoDataFound
-        customText="Whoops!"
-        additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
-        interactionText="Clear filter"
-        isInteraction={() => { setIsReset(!isReset) }}
-      />}
+     <Listing2 
+					listColDef = {PendingListColDefs} 
+					baseUrl = {config.fetchPendingListv2}
+					tableMethods = {tableMethods} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
+				/>
     </div>
   );
 };

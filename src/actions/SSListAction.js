@@ -102,7 +102,7 @@ export const bulkAction = createAsyncThunk(
     "sslist/bulkAction",
     async (payload) => {
         console.log('PAYLOAD IN ACTION', payload);
-        const res = await bulkOperationContacts(payload);
+        const res = await bulkOperationContacts({...payload,local_time:new Date().toISOString().slice(0, 19).replace("T", " ")});
         console.log('RES IN ACTION', res);
         return res;
     }

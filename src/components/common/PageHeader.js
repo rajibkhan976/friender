@@ -73,6 +73,7 @@ import {
 } from "../../actions/FriendsQueueActions";
 import Modal from "./Modal";
 import DeleteImgIcon from "../../assets/images/deleteModal.png";
+import purpleAlertPng from "../../assets/images/purpleAlertPng.png"
 import extensionAccesories from "../../configuration/extensionAccesories";
 import { updateFilter } from "../../actions/FriendListAction";
 import { updateMessageType } from "../../actions/MessageAction";
@@ -276,6 +277,7 @@ function PageHeader({ headerText = "" }) {
 	);
 	const [isFetchingbulkActionCount, setIsFetchingbulkActionCount] = useState(false);
 	const [actionableContacts, setActionableContacts] = useState({"whitelist_count":0,"blacklist_count":0,"friendsCount":0});
+	const [modalAddQueueOpen, setModalAddQueueOpen] = useState(false);
 	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
 	const list_filtered_count = useSelector((state) => state.ssList.list_filtered_count);
 	// const currlist_total_blacklist_count = useSelector((state) => state.ssList.currlist_total_blacklist_count);
@@ -1944,6 +1946,9 @@ function PageHeader({ headerText = "" }) {
 			queryParam['unfriend'] = true;
 
 		}
+		if (action === 'queue') {
+			queryParam["settings_id"] = "664f3fc8915b190008002485";
+		}
 
 		if (filter_state?.filter_key_value?.length > 0) {
 			const { values, fields, operators } = helper.listFilterParamsGenerator(
@@ -2052,14 +2057,17 @@ function PageHeader({ headerText = "" }) {
 		// payload = assemblePayload(bulkType, !actionableContacts ? config.fetchFriendCount : config.bulkOperationFriends)
 		console.log(bulkType);
 
-		if (bulkType === 'unfriend' || bulkType === 'campaign') {
+		if (bulkType === 'unfriend' || bulkType === 'campaign' || bulkType === 'queue') {
 			payload = assemblePayload(bulkType, config.fetchFriendCount)
 			//console.log('payload', payload);
 
 			setIsFetchingbulkActionCount(true)
 			if(bulkType === 'unfriend'){
 				setModalOpen(true)
+			}else if( bulkType === 'queue'){
+				setModalAddQueueOpen(true);
 			}
+
 			 if (selected_friends_curr_count>0) {
 				dispatch(getFriendCountAction(payload)).unwrap()
 					.then((res) => {
@@ -2153,10 +2161,39 @@ function PageHeader({ headerText = "" }) {
 
 	return (
 		<>
-			{/* <Prompt
-        when={runningUnfriend}
-        message={() => 'Are you sure you want to leave this page? Your changes will not be saved.'}
-      /> */}
+			{(selected_friends_curr_count > 0 || select_all_state?.selected)  && 
+			<Modal
+				modalType='confused-type'
+				modalIcon={purpleAlertPng}
+				headerText={"Add to Queue"}
+				bodyText={
+					<>You have selected
+						{ <><b>&nbsp;{Number(actionableContacts.nonFriend_count)}&nbsp;</b>
+								{Number(actionableContacts.nonFriend_count) > 1 ? 'contact(s),' : 'contact,'}</>}
+						Are you sure you want to add them to friend queue
+					</>
+				}
+				closeBtnTxt={"Cancel"}
+				// closeBtnFun={unfriend}
+				closeBtnFun={()=>setModalAddQueueOpen(false)}
+				open={modalAddQueueOpen}
+				setOpen={setModalAddQueueOpen}
+				// ModalFun={skipWhitList}
+				ModalFun={()=>{
+					setModalAddQueueOpen(false)
+					triggerBulkOperation('queue')}}
+				btnText={"Add to queue"}
+				// ExtraProps={{
+				// 	primaryBtnDisable:
+				// 		// whiteCountInUnfriend === 0 ||
+				// 		// whiteCountInUnfriend === selectedFriends.length
+				// 		Number(actionableContacts.whitelist_count) === 0 ||
+				// 		Number(actionableContacts.whitelist_count) === Number(actionableContacts.friendsCount)
+				// 			? true
+				// 			: false,
+				// }}
+				isLoading={isFetchingbulkActionCount}		
+			/>}
 			{/* {selectedFriends?.length > 0 && ( */}
 			{(selected_friends_curr_count > 0 || select_all_state?.selected) && (
 				<Modal
@@ -2231,7 +2268,7 @@ function PageHeader({ headerText = "" }) {
 					closeBtnFun={() => 
 						Number(actionableContacts.blacklist_count) > 0
 							? triggerBulkOperation('skipBlacklisted')//skipBlackList
-							: skipAddingToCampaign
+							: skipAddingToCampaign()
 					}
 					open={isAddingToCampaign}
 					setOpen={() => {
@@ -2247,7 +2284,7 @@ function PageHeader({ headerText = "" }) {
 							campaignsCreated?.length <= 0 || selectedCampaign === "Select",
 						cancelBtnDisable:
 							Number(actionableContacts.blacklist_count) > 0
-								? selectedListItems?.length === Number(actionableContacts.blacklist_count)
+								? selected_friends_curr_count === Number(actionableContacts.blacklist_count)
 									? true
 									: selectedCampaign === "Select"
 									? true

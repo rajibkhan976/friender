@@ -85,6 +85,12 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-user-friendlistv2",
+	fetchPendingListv2:
+		"https://" +
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/" +
+		appEnv +
+		"/fetch-send-friend-request-log-v2",
 	whiteListFriend:
 		"https://" +
 		profileService +

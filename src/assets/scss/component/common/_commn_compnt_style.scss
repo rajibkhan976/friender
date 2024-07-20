@@ -285,6 +285,19 @@
         }
       }
 
+      &.confused-type {
+        display: flex;
+        align-items: center;
+        color: $themePurple2;
+        .modal-icon {
+          margin-right: 4px;
+        }
+
+        span {
+          color: $themePurple2 !important;
+        }
+      }
+
       // span.icon-modal-comm {
       //   margin-top: -0.4rem;
       // }

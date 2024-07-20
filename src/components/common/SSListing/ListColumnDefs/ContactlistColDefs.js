@@ -176,7 +176,8 @@ const {
   MessageCount,
   RecentEngagement,
   Keyword,
-  Source
+  Source,
+  Refrending
 } = CommonColDefs;
 
 // #region Friendlist ColDefs
@@ -184,7 +185,7 @@ export const FriendlistColDefs = (inactiveAfter) => {
   const columns = [
     {
       ...Name,
-      header: addTooltipToHeader("Name", "Name")
+      
     },
   { ...Gender, header: addTooltipToHeader("Gender", "Gender") },
   {
@@ -422,3 +423,24 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
     },
   }));
 };
+
+export const PendingListColDefs = (inactiveAfter) => {
+  const columns = [
+    {
+      ...Name,
+      Cell: ({ renderedCellValue, row }) => {
+        return (
+            <UnlinkedNameCellRenderer value={renderedCellValue} data={row.original} />
+        )
+    }
+    },
+    {...Gender,
+      accessorKey:"gender"
+    },
+    Age,
+    Refrending,
+    Keyword,
+    Source,
+  ];
+  return columns;
+}

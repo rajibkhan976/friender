@@ -1,16 +1,22 @@
 import { MenuItem } from "@mui/material";
-import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
+import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, RefriendCountRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
 
 const notContainsFilterFn = (row, id, filterValue) => {
     console.log(!row.getValue(id).toLowerCase().includes(filterValue.toLowerCase()));
     return !row.getValue(id).toLowerCase().includes(filterValue.toLowerCase());
   };
   
+  const addTooltipToHeader = (header, tooltipText) => (
+    <div className="fr-ls-tooltip">
+      <span>{header}</span>
+      <span className="tooltiptext">{tooltipText}</span>
+    </div>
+  );
 
 export const CommonColDefs = {
     Name: {
         accessorKey: 'friendName', //simple recommended way to define a column
-        header: 'Name',
+        header: addTooltipToHeader("Name", "Name"),
         enableHiding: false,
         Cell: ({ renderedCellValue, row }) => {
             return (
@@ -330,6 +336,20 @@ export const CommonColDefs = {
                     <div>Not Contains</div>
                 </MenuItem>,
         ]}
+    },
+    Refrending:{
+        accessorKey: 'refriending_attempt', //simple recommended way to define a column
+        header: '# Re-friending',
+        enableHiding: false,
+        columnFilterModeOptions:[ 'equals', 'notEquals', 'empty', 'notEmpty','lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        Cell: ({ renderedCellValue, row }) => {
+            return (
+                <RefriendCountRenderer value={renderedCellValue} data={row.original} />
+            )
+        },
+        muiFilterTextFieldProps: { 
+            placeholder: 'Filter by Refriending' 
+        },
     }
 };
 

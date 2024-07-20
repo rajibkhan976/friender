@@ -23,7 +23,10 @@ import CustomHeaderTooltip from "../../components/common/CustomHeaderTooltip";
 import { utils } from "../../helpers/utils";
 import helper from "../../helpers/helper"
 import moment from "moment";
-
+import Listing2 from "../../components/common/SSListing/Listing2";
+import { PendingListColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
+import config from "../../configuration/config";
+const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const SendRequest = ({ deleteAllInterval }) => {
   //::::Friend List geting data from Redux::::
@@ -487,8 +490,23 @@ const SendRequest = ({ deleteAllInterval }) => {
   // useEffect(() => {
   //   console.log("//////////////", keyWords);
   // }, [keyWords]);
+
+  const tableMethods = {
+    enableRowSelection: false,
+  };
+	//query params
+	const defaultParams = {
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response)=>{
+			return {
+				res:response,
+				data: response?.data,
+				count: response?.total_pending_request
+			}
+	}
   return (
-    <div className="main-content-inner fff d-flex d-flex-column">
+    <div className="main-content-inner fff d-flex d-flex-column listing-main">
       {modalOpen && (
         <Modal
           modalType="normal-type"
@@ -515,36 +533,20 @@ const SendRequest = ({ deleteAllInterval }) => {
           additionalClass="modal-keywords"
         />
       )}
-      {friendsList?.length > 0 && (
+     
         <>
-          {!loading && (
-            <Listing
-              friendsData={friendsList}
-              friendsListingRef={friendsListinRef}
-              getFilterNum={setListFilteredCount}
-              reset={isReset}
-              setReset={setIsReset}
-            />
-          )}
+        <Listing2 
+					listColDef = {PendingListColDefs} 
+					baseUrl = {config.fetchPendingListv2}
+					tableMethods = {tableMethods} 
+					defaultParams = {defaultParams}
+					dataExtractor = {dataExtractor}
+				/>
+         
         </>
-      )}
+      
 
-      {
-        !loading &&
-        friendsList?.length === 0 &&
-        <NoDataFound />
-      }
-      {loading ? (
-        <ListingLoader />
-      ) : (
-        friendsList?.length > 0 && listFilteredCount === 0 &&
-        <NoDataFound
-          customText="Whoops!"
-          additionalText={<>We couldn’t find the data<br /> that you filtered for.</>}
-          interactionText="Clear filter"
-          isInteraction={() => { setIsReset(!isReset) }}
-        />
-      )}
+    
     </div>
   );
 };
