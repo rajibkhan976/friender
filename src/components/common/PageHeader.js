@@ -58,12 +58,12 @@ import {
 import { fetchGroups } from "../../actions/MessageAction";
 import {
 	fRQueueExtMsgSendHandler,
-	getFriendsQueueRecordsFromIndexDB,
+	// getFriendsQueueRecordsFromIndexDB,
 	getAllFriendsQueueRecordsInChunk,
 	getNewFriendsQueueRecordsInChunk,
 	popFriendsQueueRecordsFromQueue,
 	removeFriendsQueueRecordsFromIndexDB,
-	reorderFriendsQueueRecordsInIndexDB,
+	// reorderFriendsQueueRecordsInIndexDB,
 	reorderFriendsQueueRecordsToTop,
 	resetUploadedFriendsQueueCsvReport,
 	resetFriendsQueueRecordsMetadata,
@@ -864,7 +864,7 @@ function PageHeader({ headerText = "" }) {
 			)
 				.unwrap()
 				.then((response) => {
-					dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
+					// dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
 					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
 						? JSON.parse(localStorage.getItem("fr_queue_settings"))
 						: null;
@@ -1326,33 +1326,31 @@ function PageHeader({ headerText = "" }) {
 			})
 		);
 		if (location?.pathname === "/friends/friends-queue") {
-			setIsFrQueActionsEnabled(false);
-			dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-				.unwrap()
-				.then((res) => {
-					dispatch(getAllFriendsQueueRecordsInChunk())
-						.unwrap()
-						.then((response) =>{
-							dispatch(removeSelectedFriends());
-							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-							.unwrap()
-							.then((result) => 
-								setIsFrQueActionsEnabled(true)
-							)}
-						);
-				})
-				.catch((error) => {
-					dispatch(getAllFriendsQueueRecordsInChunk())
-						.unwrap()
-						.then((response) =>{
-							dispatch(removeSelectedFriends());
-							dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-							.unwrap()
-							.then((result) => 
-								setIsFrQueActionsEnabled(true)
-							)}
-						);
-				});
+			// setIsFrQueActionsEnabled(false);
+			// dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+			// 	.unwrap()
+			// 	.then((res) => {
+			// 		dispatch(getAllFriendsQueueRecordsInChunk())
+			// 			.unwrap()
+			// 			.then((response) =>{
+			// 				dispatch(removeSelectedFriends())
+			// 				.unwrap()
+			// 				.then((result) => 
+			// 					setIsFrQueActionsEnabled(true)
+			// 				)}
+			// 			);
+			// 	})
+			// 	.catch((error) => {
+			// 		dispatch(getAllFriendsQueueRecordsInChunk())
+			// 			.unwrap()
+			// 			.then((response) =>{
+			// 				dispatch(removeSelectedFriends())
+			// 				.unwrap()
+			// 				.then((result) => 
+			// 					setIsFrQueActionsEnabled(true)
+			// 				)}
+			// 			);
+			// 	});
 		}
 		dispatch(fetchGroups())
 			.unwrap()
@@ -1629,8 +1627,7 @@ function PageHeader({ headerText = "" }) {
 			dispatch(getNewFriendsQueueRecordsInChunk())
 				.unwrap()
 				.then((resp) =>{
-					dispatch(removeSelectedFriends());
-					dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+					dispatch(removeSelectedFriends())
 					.unwrap()
 					.then((response) =>
 						setIsFrQueActionsEnabled(true)
@@ -1862,11 +1859,11 @@ function PageHeader({ headerText = "" }) {
 							// console.log(fr_queue_settings[0])
 							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
 						}
-						dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
-						.unwrap()
-						.then((result) => 
-							setIsFrQueActionsEnabled(true)
-						);
+						// dispatch(getFriendsQueueRecordsFromIndexDB(defaultFbId))
+						// .unwrap()
+						// .then((result) => 
+						// 	setIsFrQueActionsEnabled(true)
+						// );
 					})
 					.catch((error) => {
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")

@@ -8,7 +8,7 @@ import {
 } from "../services/friends/FriendListServices";
 import { fetchFriendLost } from "../services/friends/FriendListServices";
 //import { useLiveQuery } from "dexie-react-hooks";
-import { clientDB } from "../app/db";
+// import { clientDB } from "../app/db";
 
 const initialState = {
   isLoading: true,
@@ -21,57 +21,57 @@ const initialState = {
 };
 
 export const storeFriendListIndexDb = async (fbId, friendList) => {
-  // console.log("starting storing the dat in IDB with fb id", fbId);
-  try {
-    // Add the new friend!
-    const id = await clientDB.friendsLists.put({
-      fbId: fbId,
-      friendsData: friendList,
-    });
-    // console.log("index dvb id", id);
-  } catch (error) {
-    // console.log(`Failed to add : ${error}`);
-  }
+  // // console.log("starting storing the dat in IDB with fb id", fbId);
+  // try {
+  //   // Add the new friend!
+  //   const id = await clientDB.friendsLists.put({
+  //     fbId: fbId,
+  //     friendsData: friendList,
+  //   });
+  //   // console.log("index dvb id", id);
+  // } catch (error) {
+  //   // console.log(`Failed to add : ${error}`);
+  // }
 };
 
 export const getFriendList = createAsyncThunk(
   "facebook/getFriendList",
-  async (payload) => {
-    let frlistResp = await fetchFriendList(payload);
-    if(frlistResp?.data?.[0].total_no_of_friends>4000){
-       let maxBatch = Math.ceil(frlistResp.data[0].total_no_of_friends/4000);
-       for(let i=2;i<=maxBatch;i++){
-             let currResp = await fetchFriendList({...payload,page:i});
-             if(currResp.data[0].friend_details.length>0){
-              frlistResp.data[0].friend_details.push(...currResp.data[0].friend_details);
-             }
-       }
-    }
+  // async (payload) => {
+  //   let frlistResp = await fetchFriendList(payload);
+  //   if(frlistResp?.data?.[0].total_no_of_friends>4000){
+  //      let maxBatch = Math.ceil(frlistResp.data[0].total_no_of_friends/4000);
+  //      for(let i=2;i<=maxBatch;i++){
+  //            let currResp = await fetchFriendList({...payload,page:i});
+  //            if(currResp.data[0].friend_details.length>0){
+  //             frlistResp.data[0].friend_details.push(...currResp.data[0].friend_details);
+  //            }
+  //      }
+  //   }
 
-    let friendList = frlistResp?.data?.[0].friend_details
-      ? frlistResp.data[0].friend_details.length
-      : false;
+  //   let friendList = frlistResp?.data?.[0].friend_details
+  //     ? frlistResp.data[0].friend_details.length
+  //     : false;
 
-    if (friendList) {
-      storeFriendListIndexDb(payload.fbUserId, frlistResp);
-    }
+  //   if (friendList) {
+  //     // storeFriendListIndexDb(payload.fbUserId, frlistResp);
+  //   }
 
-    // console.log("************res***********",res)
-    return frlistResp;
-  }
+  //   // console.log("************res***********",res)
+  //   return frlistResp;
+  // }
 );
 
-export const getFriendListFromIndexDb = createAsyncThunk(
-  "facebook/getFriendListFromIndexDb",
-  async (payload) => {
-    const indFriendList = await clientDB.friendsLists
-      .where("fbId")
-      .equals(payload.fbUserId)
-      .first();
+// export const getFriendListFromIndexDb = createAsyncThunk(
+//   "facebook/getFriendListFromIndexDb",
+//   async (payload) => {
+//     const indFriendList = await clientDB.friendsLists
+//       .where("fbId")
+//       .equals(payload.fbUserId)
+//       .first();
 
-    return indFriendList;
-  }
-);
+//     return indFriendList;
+//   }
+// );
 
 export const getFriendLost = createAsyncThunk(
   "facebook/getFriendLost",
@@ -192,50 +192,50 @@ const fbSlice = createSlice({
     }
   },
   extraReducers: {
-    [getFriendListFromIndexDb.pending]: (state) => {
-      // console.log("Fetch friend pending state");
-      state.isLoading = true;
-    },
-    [getFriendListFromIndexDb.fulfilled]: (state, action) => {
-      // console.log("Updating data from index db");
+    // [getFriendListFromIndexDb.pending]: (state) => {
+    //   // console.log("Fetch friend pending state");
+    //   state.isLoading = true;
+    // },
+    // [getFriendListFromIndexDb.fulfilled]: (state, action) => {
+    //   // console.log("Updating data from index db");
 
-      let syncData = action?.payload?.friendsData?.data
-        ? action?.payload?.friendsData?.data[0]
-        : "";
-      state.fb_data = syncData;
-      state.current_fb_id = syncData?.fb_user_id ? syncData.fb_user_id : "";
-      state.current_friend_list = syncData?.friend_details
-        ? syncData.friend_details
-        : [];
+    //   let syncData = action?.payload?.friendsData?.data
+    //     ? action?.payload?.friendsData?.data[0]
+    //     : "";
+    //   state.fb_data = syncData;
+    //   state.current_fb_id = syncData?.fb_user_id ? syncData.fb_user_id : "";
+    //   state.current_friend_list = syncData?.friend_details
+    //     ? syncData.friend_details
+    //     : [];
 
-      if (state.current_friend_list.length) {
-        state.isLoading = false;
-      } else {
-        state.isLoading = true;
-      }
-    },
-    [getFriendListFromIndexDb.rejected]: (state) => {
-      state.isLoading = false;
-    },
-    [getFriendList.pending]: (state) => {
-      // console.log("Fetch friend pending state");
-      // state.isLoading = false;
-    },
-    [getFriendList.fulfilled]: (state, action) => {
-      //console.log("Updating friend list from db");
-      state.isLoading = false;
-      state.fb_data = action?.payload?.data ? action?.payload?.data[0] : "";
-      state.current_fb_id = action?.payload?.data
-        ? action.payload.data[0].fb_user_id
-        : "";
-      state.current_friend_list =
-        action?.payload?.data?.length > 0
-          ? action.payload.data[0].friend_details
-          : [];
-    },
-    [getFriendList.rejected]: (state) => {
-      state.isLoading = false;
-    },
+    //   if (state.current_friend_list.length) {
+    //     state.isLoading = false;
+    //   } else {
+    //     state.isLoading = true;
+    //   }
+    // },
+    // [getFriendListFromIndexDb.rejected]: (state) => {
+    //   state.isLoading = false;
+    // },
+    // [getFriendList.pending]: (state) => {
+    //   // console.log("Fetch friend pending state");
+    //   // state.isLoading = false;
+    // },
+    // [getFriendList.fulfilled]: (state, action) => {
+    //   //console.log("Updating friend list from db");
+    //   state.isLoading = false;
+    //   state.fb_data = action?.payload?.data ? action?.payload?.data[0] : "";
+    //   state.current_fb_id = action?.payload?.data
+    //     ? action.payload.data[0].fb_user_id
+    //     : "";
+    //   state.current_friend_list =
+    //     action?.payload?.data?.length > 0
+    //       ? action.payload.data[0].friend_details
+    //       : [];
+    // },
+    // [getFriendList.rejected]: (state) => {
+    //   state.isLoading = false;
+    // },
     [whiteListFriend.pending]: (state, action) => {
       if (action.meta.arg?.bulkAction) {
         state.current_friend_list = updateWhiteList(

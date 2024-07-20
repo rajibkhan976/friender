@@ -11,7 +11,7 @@ import {
 } from "../services/friends/FriendsQueueService";
 import extensionMethods from "../configuration/extensionAccesories";
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import { clientDB } from "../app/db";
+// import { clientDB } from "../app/db";
 
 const initialState = {
 	friendRequestSentInsight: null,
@@ -50,70 +50,70 @@ export const fRQueueExtMsgSendHandler = async (data) => {
 	console.log("message res", extRes);
 };
 
-export const saveFriendsQueueRecordsInIndexDb = async (
-	fbUserId,
-	friendsQueueRecords,
-	recordCount
-) => {
-	try {
-		await clientDB.friendsQueueRecords.put({
-			fbId: fbUserId,
-			friendsQueueData: friendsQueueRecords,
-			recordCount: recordCount,
-		});
-	} catch (error) {
-		throw new Error(error);
-	}
-};
+// export const saveFriendsQueueRecordsInIndexDb = async (
+// 	fbUserId,
+// 	friendsQueueRecords,
+// 	recordCount
+// ) => {
+// 	try {
+// 		await clientDB.friendsQueueRecords.put({
+// 			fbId: fbUserId,
+// 			friendsQueueData: friendsQueueRecords,
+// 			recordCount: recordCount,
+// 		});
+// 	} catch (error) {
+// 		throw new Error(error);
+// 	}
+// };
 
 export const getNewFriendsQueueRecordsInChunk = createAsyncThunk(
 	"friendsQueue/getNewFriendsQueueRecordsInChunk",
 	async () => {
-		const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
-		let compiledChunkData = [];
+		// const fbUserId = localStorage.getItem("fr_default_fb") ?? '';
+		// let compiledChunkData = [];
 
-		const oldData = fbUserId ? await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first() : {};
-		console.log("oldData", oldData);
-		const { friendsQueueData, recordCount } = oldData;
-		compiledChunkData = friendsQueueData?.length ? [...friendsQueueData] : [];
-		let skip = friendsQueueData?.length ? friendsQueueData?.length : 0;
-		let totalRecordCount = recordCount ? recordCount + 1 : 0;
-		let response = null;
+		// const oldData = fbUserId ? await clientDB.friendsQueueRecords
+		// 	.where("fbId")
+		// 	.equals(fbUserId)
+		// 	.first() : {};
+		// console.log("oldData", oldData);
+		// const { friendsQueueData, recordCount } = oldData;
+		// compiledChunkData = friendsQueueData?.length ? [...friendsQueueData] : [];
+		// let skip = friendsQueueData?.length ? friendsQueueData?.length : 0;
+		// let totalRecordCount = recordCount ? recordCount + 1 : 0;
+		// let response = null;
 
-		if (!totalRecordCount) {
-			response = await fetchFriendsQueueRecords(fbUserId, skip);
+		// if (!totalRecordCount) {
+		// 	response = await fetchFriendsQueueRecords(fbUserId, skip);
 
-			if (response && Array.isArray(response?.data)) {
-				skip = response?.data?.length;
-				totalRecordCount = response?.totalNumberOfRecords;
-				response?.data.forEach((item) => {
-					compiledChunkData.push(item);
-				});
-			}
-		}
+		// 	if (response && Array.isArray(response?.data)) {
+		// 		skip = response?.data?.length;
+		// 		totalRecordCount = response?.totalNumberOfRecords;
+		// 		response?.data.forEach((item) => {
+		// 			compiledChunkData.push(item);
+		// 		});
+		// 	}
+		// }
 
-		for (let i = skip; i < totalRecordCount; i += skip) {
-			response = await fetchFriendsQueueRecords(fbUserId, i);
-			if (response && Array.isArray(response?.data)) {
-				console.log("newResponse", response);
-				skip = response?.data?.length;
-				totalRecordCount = response?.totalNumberOfRecords;
-				response?.data.forEach((item) => {
-					compiledChunkData.push(item);
-				});
-			}
-		}
+		// for (let i = skip; i < totalRecordCount; i += skip) {
+		// 	response = await fetchFriendsQueueRecords(fbUserId, i);
+		// 	if (response && Array.isArray(response?.data)) {
+		// 		console.log("newResponse", response);
+		// 		skip = response?.data?.length;
+		// 		totalRecordCount = response?.totalNumberOfRecords;
+		// 		response?.data.forEach((item) => {
+		// 			compiledChunkData.push(item);
+		// 		});
+		// 	}
+		// }
 
-		saveFriendsQueueRecordsInIndexDb(
-			fbUserId,
-			compiledChunkData,
-			compiledChunkData.length
-		);
+		// // saveFriendsQueueRecordsInIndexDb(
+		// // 	fbUserId,
+		// // 	compiledChunkData,
+		// // 	compiledChunkData.length
+		// // );
 
-		return response;
+		// return response;
 	}
 );
 
@@ -147,11 +147,11 @@ export const getAllFriendsQueueRecordsInChunk = createAsyncThunk(
 			}
 		}
 
-		saveFriendsQueueRecordsInIndexDb(
-			fbUserId,
-			compiledChunkData,
-			compiledChunkData.length
-		);
+		// saveFriendsQueueRecordsInIndexDb(
+		// 	fbUserId,
+		// 	compiledChunkData,
+		// 	compiledChunkData.length
+		// );
 
 		return response;
 	}
@@ -165,127 +165,127 @@ export const getFriendsQueueRecords = createAsyncThunk(
 
 		const response = await fetchFriendsQueueRecords(fbUserId, skip);
 
-		if (response && response.data) {
-			saveFriendsQueueRecordsInIndexDb(
-				fbUserId,
-				response.data,
-				response.totalNumberOfRecords
-			);
-		}
+		// if (response && response.data) {
+		// 	saveFriendsQueueRecordsInIndexDb(
+		// 		fbUserId,
+		// 		response.data,
+		// 		response.totalNumberOfRecords
+		// 	);
+		// }
 
 		return response;
 	}
 );
 
-export const getFriendsQueueRecordsFromIndexDB = createAsyncThunk(
-	"friendsQueue/getFriendsQueueRecordsFromIndexDB",
-	async (fbUserId) => {
-		const response = await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
+// export const getFriendsQueueRecordsFromIndexDB = createAsyncThunk(
+// 	"friendsQueue/getFriendsQueueRecordsFromIndexDB",
+// 	async (fbUserId) => {
+// 		const response = await clientDB.friendsQueueRecords
+// 			.where("fbId")
+// 			.equals(fbUserId)
+// 			.first();
 
-		return response;
-	}
-);
+// 		return response;
+// 	}
+// );
 
-export const reorderFriendsQueueRecordsInIndexDB = createAsyncThunk(
-	"friendsQueue/reorderFriendsQueueRecordsInIndexDB",
-	async (recordIds) => {
-		const fbUserId = localStorage.getItem("fr_default_fb");
-		let oldData = [];
+// export const reorderFriendsQueueRecordsInIndexDB = createAsyncThunk(
+// 	"friendsQueue/reorderFriendsQueueRecordsInIndexDB",
+// 	async (recordIds) => {
+// 		const fbUserId = localStorage.getItem("fr_default_fb");
+// 		let oldData = [];
 
-		const response = await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
+// 		const response = await clientDB.friendsQueueRecords
+// 			.where("fbId")
+// 			.equals(fbUserId)
+// 			.first();
 
-		if (
-			response &&
-			Array.isArray(response.friendsQueueData) &&
-			response.friendsQueueData.length
-		) {
-			oldData = [...response.friendsQueueData];
-		}
+// 		if (
+// 			response &&
+// 			Array.isArray(response.friendsQueueData) &&
+// 			response.friendsQueueData.length
+// 		) {
+// 			oldData = [...response.friendsQueueData];
+// 		}
 
-		if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
-			const sortedOldData = [
-				...oldData.sort((a, b) => b.order_id - a.order_id),
-			];
+// 		if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
+// 			const sortedOldData = [
+// 				...oldData.sort((a, b) => b.order_id - a.order_id),
+// 			];
 
-			const selectedData = oldData.filter((item) =>
-				recordIds.includes(item._id)
-			);
+// 			const selectedData = oldData.filter((item) =>
+// 				recordIds.includes(item._id)
+// 			);
 
-			const filteredData = oldData.filter(
-				(item) => !recordIds.includes(item._id)
-			);
+// 			const filteredData = oldData.filter(
+// 				(item) => !recordIds.includes(item._id)
+// 			);
 
-			selectedData.forEach((item) => {
-				Object.assign(item, {
-					order_id: sortedOldData[0].order_id + 1,
-				});
-			});
+// 			selectedData.forEach((item) => {
+// 				Object.assign(item, {
+// 					order_id: sortedOldData[0].order_id + 1,
+// 				});
+// 			});
 
-			selectedData.forEach((item) => {
-				filteredData.unshift(item);
-			});
+// 			selectedData.forEach((item) => {
+// 				filteredData.unshift(item);
+// 			});
 
-			clientDB.friendsQueueRecords.clear();
+// 			clientDB.friendsQueueRecords.clear();
 
-			await clientDB.friendsQueueRecords.put({
-				fbId: fbUserId,
-				friendsQueueData: filteredData,
-				recordCount: filteredData.length,
-			});
-		}
+// 			await clientDB.friendsQueueRecords.put({
+// 				fbId: fbUserId,
+// 				friendsQueueData: filteredData,
+// 				recordCount: filteredData.length,
+// 			});
+// 		}
 
-		const newResponse = await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
+// 		const newResponse = await clientDB.friendsQueueRecords
+// 			.where("fbId")
+// 			.equals(fbUserId)
+// 			.first();
 
-		return newResponse;
-	}
-);
+// 		return newResponse;
+// 	}
+// );
 
 export const removeFriendsQueueRecordsFromIndexDB = createAsyncThunk(
 	"friendsQueue/removeFriendsQueueRecordsFromIndexDB",
 	async (recordIds) => {
-		const fbUserId = localStorage.getItem("fr_default_fb");
-		let oldData = [];
+		// const fbUserId = localStorage.getItem("fr_default_fb");
+		// let oldData = [];
 
-		const response = await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
+		// const response = await clientDB.friendsQueueRecords
+		// 	.where("fbId")
+		// 	.equals(fbUserId)
+		// 	.first();
 
-		if (
-			response &&
-			Array.isArray(response.friendsQueueData) &&
-			response.friendsQueueData.length
-		) {
-			oldData = [...response.friendsQueueData];
-		}
+		// if (
+		// 	response &&
+		// 	Array.isArray(response.friendsQueueData) &&
+		// 	response.friendsQueueData.length
+		// ) {
+		// 	oldData = [...response.friendsQueueData];
+		// }
 
-		if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
-			oldData = oldData.filter((item) => !recordIds.includes(item._id));
+		// if (oldData.length && Array.isArray(recordIds) && recordIds.length) {
+		// 	oldData = oldData.filter((item) => !recordIds.includes(item._id));
 
-			clientDB.friendsQueueRecords.clear();
+		// 	clientDB.friendsQueueRecords.clear();
 
-			await clientDB.friendsQueueRecords.put({
-				fbId: fbUserId,
-				friendsQueueData: oldData,
-				recordCount: oldData.length,
-			});
-		}
+		// 	await clientDB.friendsQueueRecords.put({
+		// 		fbId: fbUserId,
+		// 		friendsQueueData: oldData,
+		// 		recordCount: oldData.length,
+		// 	});
+		// }
 
-		const newResponse = await clientDB.friendsQueueRecords
-			.where("fbId")
-			.equals(fbUserId)
-			.first();
+		// const newResponse = await clientDB.friendsQueueRecords
+		// 	.where("fbId")
+		// 	.equals(fbUserId)
+		// 	.first();
 
-		return newResponse;
+		// return newResponse;
 	}
 );
 
@@ -423,30 +423,30 @@ export const friendsQueueSlice = createSlice({
 		[getAllFriendsQueueRecordsInChunk.rejected]: (state) => {
 			state.isDataFetchingFromApi = false;
 		},
-		[getNewFriendsQueueRecordsInChunk.pending]: (state) => {
-			state.isDataFetchingFromApi = true;
-		},
-		[getNewFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
-			state.isDataFetchingFromApi = false;
-		},
-		[getNewFriendsQueueRecordsInChunk.rejected]: (state) => {
-			state.isDataFetchingFromApi = false;
-		},
-		[getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
-			state.isFriendsQueueListLoading = true;
-		},
-		[getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData } = action?.payload ?? {};
-			state.isFriendsQueueListLoading = false;
-			state.friendsQueueRecords = friendsQueueData;
+		// [getNewFriendsQueueRecordsInChunk.pending]: (state) => {
+		// 	state.isDataFetchingFromApi = true;
+		// },
+		// [getNewFriendsQueueRecordsInChunk.fulfilled]: (state, action) => {
+		// 	state.isDataFetchingFromApi = false;
+		// },
+		// [getNewFriendsQueueRecordsInChunk.rejected]: (state) => {
+		// 	state.isDataFetchingFromApi = false;
+		// },
+		// [getFriendsQueueRecordsFromIndexDB.pending]: (state) => {
+		// 	state.isFriendsQueueListLoading = true;
+		// },
+		// [getFriendsQueueRecordsFromIndexDB.fulfilled]: (state, action) => {
+		// 	const { friendsQueueData } = action?.payload ?? {};
+		// 	state.isFriendsQueueListLoading = false;
+		// 	state.friendsQueueRecords = friendsQueueData;
 
-			if (friendsQueueData.length > 0) {
-				state.friendsQueueErrorRecordsCount = friendsQueueData.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length;
-			}
-		},
-		[getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
-			state.isFriendsQueueListLoading = false;
-		},
+		// 	if (friendsQueueData.length > 0) {
+		// 		state.friendsQueueErrorRecordsCount = friendsQueueData.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length;
+		// 	}
+		// },
+		// [getFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
+		// 	state.isFriendsQueueListLoading = false;
+		// },
 		[removeFriendsQueueRecordsFromIndexDB.pending]: (state) => {
 			state.isListLoading = true;
 		},
@@ -463,17 +463,17 @@ export const friendsQueueSlice = createSlice({
 		[removeFriendsQueueRecordsFromIndexDB.rejected]: (state) => {
 			state.isListLoading = false;
 		},
-		[reorderFriendsQueueRecordsInIndexDB.pending]: (state) => {
-			state.isListLoading = true;
-		},
-		[reorderFriendsQueueRecordsInIndexDB.fulfilled]: (state, action) => {
-			const { friendsQueueData } = action?.payload ?? {};
-			state.isListLoading = false;
-			state.friendsQueueRecords = friendsQueueData;
-		},
-		[reorderFriendsQueueRecordsInIndexDB.rejected]: (state) => {
-			state.isListLoading = false;
-		},
+		// [reorderFriendsQueueRecordsInIndexDB.pending]: (state) => {
+		// 	state.isListLoading = true;
+		// },
+		// [reorderFriendsQueueRecordsInIndexDB.fulfilled]: (state, action) => {
+		// 	const { friendsQueueData } = action?.payload ?? {};
+		// 	state.isListLoading = false;
+		// 	state.friendsQueueRecords = friendsQueueData;
+		// },
+		// [reorderFriendsQueueRecordsInIndexDB.rejected]: (state) => {
+		// 	state.isListLoading = false;
+		// },
 		[getFriendsRequestSentInsight.pending]: (state) => {
 			state.isLoading = true;
 		},
