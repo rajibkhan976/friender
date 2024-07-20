@@ -13,7 +13,9 @@ import moment from "moment";
 import Listing2 from "../../components/common/SSListing/Listing2";
 import {  GlobalContactlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 import config from "../../configuration/config";
-const fb_user_id= localStorage.getItem("fr_default_fb");
+import { fetchUserProfile } from "../../services/authentication/facebookData";
+
+// const fb_user_id = localStorage.getItem("fr_default_fb");
 
 const GlobalContactList = () => {
 	//::::Friend List geting data from Redux::::
@@ -25,7 +27,7 @@ const GlobalContactList = () => {
 	// const [pageSet, setPageSet] = useState(new Set());
 	const [listFilteredCount, setListFilteredCount] = useState(null);
 	const [isReset, setIsReset] = useState(null);
-
+	const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
 	// const friendsList = useSelector((state) =>
 	//   state.facebook_data.current_friend_list.filter(
 	//     (item) => item.deleted_status !== 1 && item.friendStatus === "Activate"
@@ -225,6 +227,22 @@ const GlobalContactList = () => {
 				count: response?.data[0]?.friend_count
 			}
 	}
+	// setTimeout(()=>{
+	// 	set_fb_user_id(localStorage.setItem("fr_default_fb", '12345675'));
+	// },10000)
+
+	useEffect(() => {
+		if (!fb_user_id || fb_user_id == null) {
+		fetchUserProfile().then((res) => {
+      if (res && res.length) {
+        // setProfiles(res);
+          localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+          set_fb_user_id(res[0].fb_user_id);
+      }
+    });
+	}
+	}, [])
+
 
 	return (
 		<div className='main-content-inner d-flex d-flex-column listing-main'>
@@ -273,6 +291,7 @@ const GlobalContactList = () => {
 					dataExtractor = {dataExtractor}
 				/>
 			)} */}
+			{fb_user_id !=null?
 				<Listing2 
 					//friendsData={filterFrndList}
 					listColDef = {GlobalContactlistColDefs} 
@@ -281,6 +300,8 @@ const GlobalContactList = () => {
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
 				/>
+				:""
+			}
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
 

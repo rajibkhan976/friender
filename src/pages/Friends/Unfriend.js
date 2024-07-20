@@ -33,8 +33,8 @@ import moment from "moment";
 import Listing2 from "../../components/common/SSListing/Listing2";
 import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 import config from "../../configuration/config";
-const fb_user_id= localStorage.getItem("fr_default_fb");
-
+// const fb_user_id= localStorage.getItem("fr_default_fb");
+import { fetchUserProfile } from "../../services/authentication/facebookData";
 const FriendsList = () => {
   //::::Friend List geting data from Redux::::
   const dispatch = useDispatch();
@@ -43,6 +43,8 @@ const FriendsList = () => {
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list
   );
+  const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
+
   const [keyWords, setKeyWords] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const getFbUserIdCall = useOutletContext();
@@ -581,6 +583,21 @@ const FriendsList = () => {
 				count: response?.data[0]?.friend_count
 			}
 	}
+
+  useEffect(() => {
+    if (!fb_user_id || fb_user_id == null) {
+    fetchUserProfile().then((res) => {
+      if (res && res.length) {
+        // setProfiles(res);
+          localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+          set_fb_user_id(res[0].fb_user_id);
+      }
+    });
+  }
+  }, [])
+  
+
+
   return (
     <div className="main-content-inner d-flex d-flex-column listing-main">
       {modalOpen && (
@@ -623,14 +640,14 @@ const FriendsList = () => {
           )}
         </>
       )} */}
-        <Listing2 
+        {fb_user_id!=null?<Listing2 
           //friendsData={filterFrndList}
           listColDef = {FriendlistColDefs} 
           baseUrl = {config.fetchFriendListUrlv2}
           tableMethods = {tableMethods} 
           defaultParams = {defaultParams}
           dataExtractor = {dataExtractor}
-        />
+        /> :""}
 
       {/* {
         !loading &&

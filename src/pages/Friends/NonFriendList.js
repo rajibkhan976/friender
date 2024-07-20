@@ -23,6 +23,7 @@ import {
 	StatusRenderer,
 	EngagementRenderer,
 } from "../../components/listing/FriendListColumns";
+import { fetchUserProfile } from "../../services/authentication/facebookData";
 import ListingLoader from "../../components/common/loaders/ListingLoader";
 import NoDataFound from "../../components/common/NoDataFound";
 import { useEffect, useState } from "react";
@@ -38,7 +39,7 @@ import moment from "moment";
 import Listing2 from "../../components/common/SSListing/Listing2";
 import { FriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 import config from "../../configuration/config";
-const fb_user_id= localStorage.getItem("fr_default_fb");
+// const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const NonFriendList = () => {
 	//::::Friend List geting data from Redux::::
@@ -50,6 +51,7 @@ const NonFriendList = () => {
 	// const [pageSet, setPageSet] = useState(new Set());
 	const [listFilteredCount, setListFilteredCount] = useState(null);
 	const [isReset, setIsReset] = useState(null);
+	const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
 
 	// const friendsList = useSelector((state) =>
 	//   state.facebook_data.current_friend_list.filter(
@@ -707,6 +709,20 @@ const NonFriendList = () => {
 			}
 	}
 
+	useEffect(() => {
+		if (!fb_user_id || fb_user_id == null) {
+		fetchUserProfile().then((res) => {
+			if (res && res.length) {
+				// setProfiles(res);
+					localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+					set_fb_user_id(res[0].fb_user_id);
+			}
+		});
+	}
+	}, [])
+	
+	
+
 	return (
 		<div className='main-content-inner d-flex d-flex-column listing-main'>
 			{modalOpen && (
@@ -755,14 +771,14 @@ const NonFriendList = () => {
 					dataExtractor = {dataExtractor}
 				/>
 			)} */}
-				<Listing2 
+				{fb_user_id!=null?<Listing2 
 					//friendsData={filterFrndList}
 					listColDef = {FriendlistColDefs} 
 					baseUrl = {config.fetchFriendListUrlv2}
 					tableMethods = {tableMethods} 
 					defaultParams = {defaultParams}
 					dataExtractor = {dataExtractor}
-				/>
+				/>:""}
 
 			{/* {filterFrndList?.length === 0 && <NoDataFound />} */}
 

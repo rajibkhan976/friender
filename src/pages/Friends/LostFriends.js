@@ -33,7 +33,7 @@ import moment from "moment";
 import { FriendlistColDefs, LostFriendlistColDefs } from "../../components/common/SSListing/ListColumnDefs/ContactlistColDefs";
 import config from "../../configuration/config";
 import Listing2 from "../../components/common/SSListing/Listing2";
-const fb_user_id= localStorage.getItem("fr_default_fb");
+// const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const LostFriends = () => {
   //::::Friend List geting data from Redux::::
@@ -43,6 +43,8 @@ const LostFriends = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [listFilteredCount, setListFilteredCount] = useState(null)
   const [isReset, setIsReset] = useState(null)
+  const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
+
   const friendsList = useSelector((state) =>
     state.facebook_data.current_friend_list.filter(
       (item) => item.friendStatus === "Lost"
@@ -541,6 +543,19 @@ const LostFriends = () => {
 			}
 	}
 
+  useEffect(() => {
+    if (!fb_user_id || fb_user_id == null) {
+    fetchUserProfile().then((res) => {
+      if (res && res.length) {
+        // setProfiles(res);
+          localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+          set_fb_user_id(res[0].fb_user_id);
+      }
+    });
+  }
+  }, [])
+  
+
   return (
     <div className="main-content-inner d-flex d-flex-column listing-main">
       {modalOpen && (
@@ -581,14 +596,14 @@ const LostFriends = () => {
 				/>
         </>
       )} */}
-          <Listing2
+        {fb_user_id !=null?  <Listing2
             //friendsData={filterFrndList}
             listColDef = {LostFriendlistColDefs} 
             baseUrl = {config.fetchFriendListUrlv2}
             tableMethods = {tableMethods} 
             defaultParams = {defaultParams}
             dataExtractor = {dataExtractor}
-          />
+          />:""}
 
       {/* {
         !loading &&
