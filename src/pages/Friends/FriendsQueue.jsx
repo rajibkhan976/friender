@@ -583,7 +583,7 @@ const FriendsQueue = () => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{!loading && (
+			{(
 				<div className='friends-queue-action-bar'>
 					<div className='friends-queue-action-bar-item'>
 						<div className='friends-queue-total-count-area'>
