@@ -1280,7 +1280,8 @@
         width: 248px;
       }
     }
-    &.friendGender-header-class {
+    &.friendGender-header-class,
+    &.gender-header-class {
       width: 80px;
     }
     &.age-header-class {
@@ -1526,7 +1527,8 @@
         padding-left: 0;
       }
     }
-    &.friendGender-cell-class {
+    &.friendGender-cell-class,
+    &.gender-cell-class {
       width: 80px;
     }
     &.age-cell-class {
@@ -1605,6 +1607,39 @@
   // }
 }
 
+.pending-list {
+  .react-table-container {
+    // td,
+    // th {
+    //   &:first-child {
+    //     width: auto !important;
+    //     max-width: inherit !important;
+    //     min-width: 430px !important;
+    //   }
+    // }
+    th.gender-header-class,
+    td.gender-cell-class {
+      width: 80px !important;
+    }
+    th.age-header-class,
+    td.age-cell-class {
+      width: 120px !important;
+    }
+    th.matchedKeyword-header-class,
+    td.matchedKeyword-cell-class {
+      min-width: 300px !important;
+    }
+    th.source-header-class,
+    td.source-cell-class {
+      min-width: 300px !important;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+  }
+}
+
 /*
 * =============  MUI TABLE FOOTER STYLES =============
 */
@@ -1678,7 +1713,8 @@
 
 // 
 
-.friendGender-header-class {
+.friendGender-header-class,
+.gender-header-class {
   .Mui-TableHeadCell-Content-Wrapper {
     background-image: url("../../../images/gender-icon.svg");
     background-size: contain;

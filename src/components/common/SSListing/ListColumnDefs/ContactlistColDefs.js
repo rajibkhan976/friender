@@ -442,5 +442,13 @@ export const PendingListColDefs = (inactiveAfter) => {
     Keyword,
     Source,
   ];
-  return columns;
+  return columns.map(col => ({
+    ...col,
+    muiTableHeadCellProps: {
+      className: col.accessorKey+`-header-class`
+    },
+    muiTableBodyCellProps: {
+      className: col.accessorKey + `-cell-class`
+    },
+  }));
 }

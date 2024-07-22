@@ -72,7 +72,7 @@ export const getFriendCountAction = createAsyncThunk(
             {},
             { ...queryParam, local_time: new Date().toISOString().slice(0, 19).replace("T", " ") }
         );
-        console.log('RES ', res);
+        // console.log('RES ', res);
         return res;
     }
 );
@@ -174,10 +174,16 @@ export const ssListSlice = createSlice({
             state.selected_friends = [];
         },
         updateWhiteListStatusOfSelectesList: (state, action) => {
-            //console.log('action.payload', action.payload);
             state.ssList_data_obj[action.payload._id].whitelist_status = action.payload.status;
             action.payload.status===1? state.selected_friends_total_whiteList_count += 1 : state.selected_friends_total_whiteList_count -= 1;
             state.selected_friends = state.selected_friends.map(item => {
+                if (item._id === action.payload._id) {
+                    item.whitelist_status = action.payload.status;
+                }
+                return item;
+            });
+
+            state.ssList_data = state.ssList_data.map(item => {
                 if (item._id === action.payload._id) {
                     item.whitelist_status = action.payload.status;
                 }
@@ -229,6 +235,9 @@ export const ssListSlice = createSlice({
                 filter_key_value: null,
                 filter_fun_state: null,
             }
+        },
+        updateLocalListState: (state, action) => {
+            state.ssList_data = [...action?.payload]
         }
     },
     extraReducers: {
@@ -290,6 +299,7 @@ export const {
     updateWhiteListStatusOfSelectesList,
     updateBlackListStatusOfSelectesList,
     removeMTRallRowSelection,
-    crealGlobalFilter
+    crealGlobalFilter,
+    updateLocalListState
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

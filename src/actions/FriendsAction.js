@@ -106,14 +106,16 @@ export const BlockListFriend = createAsyncThunk(
 export const deleteFriend = createAsyncThunk(
   "facebook/deleteFriend",
   async ({ payload }) => {
+    console.log('payload IN ACTION :::', payload);
     const res = await deleteFriends(payload);
-    // console.log("unfriend");
+    console.log(res, ' :::: res in action');
     return res;
   }
 );
 
 const updateWhiteList = (currnList, payload) => {
   payload.forEach((item) => {
+    console.log(' >>>>>> ', item);
     let upateItem = currnList.find((obj) => obj.friendFbId === item.friendFbId);
     upateItem.whitelist_status = item.status;
   });
@@ -130,9 +132,12 @@ const updateBlockList = (currnList, payload) => {
 
 const updateUnfriendList = (currnList, payload) => {
   payload.forEach((item) => {
+    console.log('item :::::: ', item);
+    console.log('<<<<<<<<<<< currnList ::::::::::', currnList);
     let upateItem = currnList.find((obj) => obj.friendFbId === item.friendFbId);
-    upateItem.deleted_status = item.deleted_status;
-    upateItem.deleted_at = item.deleted_at;
+    console.log('upateItem ::::::: ', upateItem);
+    upateItem.deleted_status = item?.deleted_status;
+    upateItem.deleted_at = item?.deleted_at;
 
     // Parse the input date
     // const date = new Date();
@@ -294,10 +299,10 @@ const fbSlice = createSlice({
       );
     },
     [deleteFriend.fulfilled]: (state, action) => {
-      state.current_friend_list = updateUnfriendList(
-        state.current_friend_list,
-        action.payload.data
-      );
+      // state.current_friend_list = updateUnfriendList(
+      //   state.current_friend_list,
+      //   action.payload.data
+      // );
 
       // console.log("CURRENT FRIEND LIST -- ", state.current_friend_list);
       // console.log("Meta Action ===== ", action);

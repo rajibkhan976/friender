@@ -238,7 +238,7 @@ const Routeing = () => {
 						>
 							
 							<Route
-								path='all-contacts'
+								path='all'
 								element={
 									<Suspense fallback={""}>
 										<GlobalContactList />

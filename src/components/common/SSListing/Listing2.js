@@ -349,10 +349,15 @@ export default function Listing2(props) {
       };
 
       if (updatedFl.length > 0) {
-        const { values, fields, operators } = helper.listFilterParamsGenerator(
+        let { values, fields, operators } = helper.listFilterParamsGenerator(
           updatedFl,
           filteronColumnFns
         );
+        
+        if (fields?.indexOf('friendGender') > -1 && operators[fields?.indexOf('friendGender')][0] === 'contains'){
+          operators[fields?.indexOf('friendGender')][0] = 'equals';
+        }
+        console.log('values, fields, operators', values, fields, operators);
         queryParam["values"] = JSON.stringify(values);
         queryParam["fields"] = JSON.stringify(fields);
         queryParam["operators"] = JSON.stringify(operators);

@@ -506,7 +506,7 @@ const SendRequest = ({ deleteAllInterval }) => {
 			}
 	}
   return (
-    <div className="main-content-inner fff d-flex d-flex-column listing-main">
+    <div className="main-content-inner fff d-flex d-flex-column listing-main pending-list">
       {modalOpen && (
         <Modal
           modalType="normal-type"

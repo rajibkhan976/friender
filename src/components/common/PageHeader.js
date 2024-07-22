@@ -86,7 +86,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
-import { bulkAction, getFriendCountAction, getListData, removeMTRallRowSelection, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
+import { bulkAction, crealGlobalFilter, getFriendCountAction, getListData, removeMTRallRowSelection, resetFilters, updateLocalListState, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -237,6 +237,7 @@ function PageHeader({ headerText = "" }) {
 		(state) => state.friendlist.selected_friends
 	);
 	// ssList
+	const totalList = useSelector((state) => state.ssList.ssList_data);
 	const selectedListItems = useSelector((state) => state.ssList.selected_friends)
 	const filter_state = useSelector((state) => state.ssList.filter_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
@@ -244,6 +245,7 @@ function PageHeader({ headerText = "" }) {
 	//const current_list_selection_count = useSelector((state) => state.ssList.selected_friends_curr_count)
 	const selectAcross = useSelector((state) => state.ssList.selectAcross)
 	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
+	const pagination_state = useSelector((state) => state.ssList.pagination_state)
 	// ssList
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
@@ -507,7 +509,7 @@ function PageHeader({ headerText = "" }) {
 					syncManual: true,
 				});
 				break;
-			case "all-contacts":
+			case "all":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -924,7 +926,8 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	const skipWhitList = () => {
-		const listWithOutWhites = selectedFriends.filter((item) => {
+		// const listWithOutWhites = selectedFriends.filter((item) => {
+		const listWithOutWhites = selectedListItems.filter((item) => {
 			return item.whitelist_status !== 1;
 		});
 		unfriend(listWithOutWhites);
@@ -1008,8 +1011,13 @@ function PageHeader({ headerText = "" }) {
 		setSelectedCampaign(item?.campaign_id);
 	};
 
+	useEffect(() => {
+		console.log('totalList', totalList);
+	}, [totalList])
+
 	const unfriend = async (unfriendableList = selectedFriends) => {
-		// console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
+		let totalListPlacholder = [...totalList];
+		console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
 		if (!unfriendableList?.length > 0) {
 			Alertbox(
 				`Some error happend in selecting prfiles`,
@@ -1038,7 +1046,7 @@ function PageHeader({ headerText = "" }) {
 		);
 		window.addEventListener("beforeunload", handleBeforeUnload);
 		setRunningUnfriend(true);
-		dispatch(removeSelectedFriends());
+		// dispatch(removeSelectedFriends());
 		for (let i = 0; i < unfriendableList.length; i++) {
 			let item = unfriendableList[i];
 
@@ -1057,43 +1065,84 @@ function PageHeader({ headerText = "" }) {
 			});
 			//console.timeEnd("send remove req");
 
-			// console.log("unfriendFromFb", unfriendFromFb);
+			// console.log("unfriend RESULTS FROM EXTENSION ::::", unfriendFromFb);
 
-			dispatch(deleteFriend({ payload: payload }))
-				.unwrap()
-				.then((res) => {
-					fr_channel.postMessage({
-						cmd: "alert",
-						type: "success",
-						time: 3000,
-						message: `${
-							item.friendName
-						} unfriended successfully!   (Unfriending ${i + 1}/${
-							unfriendableList.length
-						})`,
-						position: "bottom-right",
-					});
-					Alertbox(
-						`${item.friendName} unfriended successfully!   (Unfriending ${
-							i + 1
-						}/${unfriendableList.length})`,
-						"success",
-						3000,
-						"bottom-right"
-					);
-				})
-				.catch((err) => {
-					//dispatch(removeSelectedFriends());
-					Alertbox(`${err.message} `, "error", 3000, "bottom-right");
-				});
-			// dispatch(removeSelectedFriends());
-			if (i !== unfriendableList.length - 1) {
-				let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
-				//console.time("wake up");
-				await helper.sleep(delay);
-				//console.timeEnd("wake up");
-			}
+			if (unfriendFromFb) {
+				// if (select_all_state?.selected) {
+				// 	// console.log(' >>>>> select_all_state?.selected <<<<<<');
+						dispatch(deleteFriend({ payload: payload }))
+							.unwrap()
+							.then((res) => {
+								console.log('item', item);
+								fr_channel.postMessage({
+									cmd: "alert",
+									type: "success",
+									time: 3000,
+									message: `${
+										item.friendName
+									} unfriended successfully!   (Unfriending ${i + 1}/${
+										unfriendableList.length
+									})`,
+									position: "bottom-right",
+								});
+								// Alertbox(
+								// 	`${item.friendName} unfriended successfully!   (Unfriending ${
+								// 		i + 1
+								// 	}/${unfriendableList.length})`,
+								// 	"success",
+								// 	3000,
+								// 	"bottom-right"
+								// );
+							})
+							.catch((err) => {
+								//dispatch(removeSelectedFriends());
+								Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+							});
+				// 		// dispatch(removeSelectedFriends());
+				// 		if (i !== unfriendableList.length - 1) {
+				// 			let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
+				// 			//console.time("wake up");
+				// 			await helper.sleep(delay);
+				// 			//console.timeEnd("wake up");
+				// 		}
+				// 	} 
+
+				// 	if (!select_all_state?.selected) {
+						// console.log(' >>>>> NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT select_all_state?.selected');
+						// console.log('unfriendableList >>>', totalList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid));
+						// unfriendableList[i] = unfriendableList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid)[0];
+						// console.log('currentUnfriendItem currentUnfriendItem currentUnfriendItem currentUnfriendItem', currentUnfriendItem);
+							// item = {
+							// 	...item,
+							// 	deleted_status: 1,
+							// 	friendship: 2
+							// }
+
+						console.log('item >>>>> item >>>>>>> item >>>>>>', item);
+						console.log('=========================================');
+
+						totalListPlacholder = totalListPlacholder?.map(el => el?.friendFbId === unfriendFromFb[0]?.uid ? {...el, deleted_status: 1, friendship: 2} : {...el})
+
+						console.log('totalListPlacholder >>>>>', totalListPlacholder);
+
+						dispatch(updateLocalListState(totalListPlacholder))
+						Alertbox(
+							`${item?.friendName} unfriended successfully!   (Unfriending ${
+								i + 1
+							}/${unfriendableList?.length})`,
+							"success",
+							3000,
+							"bottom-right"
+						);
+				// 	}
+				}
 		}
+
+		dispatch(crealGlobalFilter())
+		dispatch(resetFilters())
+		dispatch(removeMTRallRowSelection())
+		console.log('=============================Done all=============================');
+
 		setRunningUnfriend(false);
 		window.removeEventListener("beforeunload", handleBeforeUnload);
 	};
@@ -1974,14 +2023,13 @@ function PageHeader({ headerText = "" }) {
 		};
 	}
 
-	const triggerBulkOperation = (bulkType=null) => {
+	const triggerBulkOperation = async (bulkType=null) => {
 		return new Promise((resolve, reject) => {
 			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
 			let payload = {
 					fb_user_id: defaultFbId,
 					check: select_all_state?.selected ? 'all' : 'some',
 					//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
-					exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 1) ? [...select_all_state?.unSelected.map(el => el)]: [],
 					operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
 					friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
 				}
@@ -1989,6 +2037,10 @@ function PageHeader({ headerText = "" }) {
 				if(!select_all_state?.selected){
 					payload["include_list"]=[...selectedListItems?.map(el => el?._id)];
 				}
+
+			if (select_all_state?.selected) {
+				payload["exclude_list"] = select_all_state?.unSelected?.length > 1 ? [...select_all_state?.unSelected.map(el => el)]: []
+			}
 			
 			if (filter_state?.filter_key_value?.length > 0) {
 				const { values, fields, operators } = helper.listFilterParamsGenerator(
@@ -2029,26 +2081,44 @@ function PageHeader({ headerText = "" }) {
 			if (bulkType === 'queue') {
 				payload["settings_id"] = "664f3fc8915b190008002485";
 			}
-			dispatch(bulkAction(payload)).unwrap()
-				.then((res) => {
-					// console.log('res ', res?.data);
-					Alertbox(
-						bulkType === 'queue'?res?.data?.message:res?.data,
-						"success",
-						1000,
-						"bottom-right"
-					);
-					refreshAndDeselectList();
-					setModalOpen(false)
-					dispatch(updateSelectAllState({}))
-					dispatch(updateSelectedFriends([]));
-					// setAccessOptions(accessibilityOptions);
-					setIsComponentVisible(false);
-					dispatch(updateSelectAllState({}))
-					dispatch(removeSelectedFriends());
-					dispatch(updateRowSelection({}));
-					setIsAddingToCampaign(false)
-				})
+
+			if (
+				bulkType === "unfriend" &&
+				!select_all_state?.selected
+			) {
+				unfriend(selectedListItems)
+			} else {
+				dispatch(bulkAction(payload)).unwrap()
+					.then((res) => {
+						console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
+						if (bulkType === "unfriend" || bulkType === "skipWhitelisted") {
+							// console.log('res IN UNFRIEND ::::', res?.data?.unfriend_details);
+							unfriend(res?.data?.unfriend_details)
+								// .unwrap()
+								// .then(response => {
+								// 	console.log('response', response);
+								// })
+						}
+						else {
+							Alertbox(
+								bulkType === 'queue'?res?.data?.message:res?.data,
+								"success",
+								1000,
+								"bottom-right"
+							);
+						}
+						refreshAndDeselectList();
+						setModalOpen(false)
+						dispatch(updateSelectAllState({}))
+						dispatch(updateSelectedFriends([]));
+						// setAccessOptions(accessibilityOptions);
+						setIsComponentVisible(false);
+						dispatch(updateSelectAllState({}))
+						dispatch(removeSelectedFriends());
+						dispatch(updateRowSelection({}));
+						setIsAddingToCampaign(false)
+					})
+				}
 		})
 	}
 
@@ -2218,11 +2288,23 @@ function PageHeader({ headerText = "" }) {
 					}
 					closeBtnTxt={"Yes, unfriend"}
 					// closeBtnFun={unfriend}
-					closeBtnFun={()=>triggerBulkOperation('unfriend')}
+					closeBtnFun={()=>{
+						if (select_all_state?.selected) {
+							triggerBulkOperation('unfriend')
+						} else {
+							unfriend(selectedListItems)
+						}
+					}}
 					open={modalOpen}
 					setOpen={setModalOpen}
 					// ModalFun={skipWhitList}
-					ModalFun={()=>checkForBulkAction('skipWhitelisted')}
+					ModalFun={()=>{
+						if (select_all_state?.selected) {
+							checkForBulkAction('skipWhitelisted')
+						} else {
+							skipWhitList()
+						}
+					}}
 					btnText={"Skip whitelisted"}
 					ExtraProps={{
 						primaryBtnDisable:

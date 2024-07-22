@@ -18,7 +18,7 @@ export const fetchAllCampaign = (params) => {
 		axios
 			.get(config.fetchAllCampaignsUrl + queryParams, { headers: headers })
 			.then((res) => {
-				console.log('res >>>>', res?.data);
+				// console.log('res >>>>', res?.data);
 				resolve(res?.data)
 			}).catch((error) => {
 				// console.log(error);

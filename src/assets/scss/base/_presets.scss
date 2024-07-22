@@ -949,3 +949,13 @@ main {
     background-color: $themeGreen4;
   }
 }
+
+/* For WebKit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar-corner {
+  background-color: $themeBlack1;
+}
+
+/* To remove it completely, set background-color to transparent */
+::-webkit-scrollbar-corner {
+  background-color: $themeBlack1;
+}

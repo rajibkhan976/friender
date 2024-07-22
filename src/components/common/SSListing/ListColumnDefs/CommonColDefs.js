@@ -144,7 +144,8 @@ export const CommonColDefs = {
         filterSelectOptions: [
             { label: 'Male', value: 'Male' },
             { label: 'Female', value: 'Female' },
-            { label: 'Other', value: 'Other' },
+            { label: 'Neuter', value: 'Neuter' },
+            { label: 'NA', value: 'NA' },
         ],
         filterVariant: 'select'
     },

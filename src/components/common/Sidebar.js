@@ -467,7 +467,7 @@ const Sidebar = (props) => {
 									onClick={(e) => {
 										setSubMenuFriends(true);
 									}}
-									to='/contacts/all-contacts'
+									to='/contacts/all'
 									className={() => friendsSubMenuArr.includes(location?.pathname)
 											? "active"
 											: ""}
@@ -509,7 +509,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/all-contacts'
+												to='/contacts/all'
 												aria-label='All'
 											>
 												<span className='nav-menu-name'>- All</span>
