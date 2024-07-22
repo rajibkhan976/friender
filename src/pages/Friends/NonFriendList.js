@@ -698,7 +698,7 @@ const NonFriendList = () => {
 
 	const tableMethods = {}
 	const defaultParams = {
-		friend_status: "Non Friend",
+		friend_status: "Non friend",
 		fb_user_id: fb_user_id,
 	}
 	const dataExtractor = (response)=>{
