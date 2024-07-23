@@ -4,7 +4,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { MuiListStyleProps } from "./style/Style";
-import { MenuItem, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 //import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
 import { useDispatch, useSelector } from "react-redux";
 import helper from "../../../helpers/helper";
@@ -425,9 +425,9 @@ export default function Listing2(props) {
   };
   const debouncedFetchData = useCallback(helper.debounce(fetchData, 1000), []);
 
-  useEffect(() => {
-    console.log("filter_state updated", filter_state);
-  }, [filter_state]);
+  // useEffect(() => {
+  //   console.log("filter_state updated", filter_state);
+  // }, [filter_state]);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -454,9 +454,9 @@ export default function Listing2(props) {
     fetchData(pagination, textFilter, columnFilters, columnFilterFns, sorting);
   }, [pagination.pageIndex, pagination.pageSize, sorting]);
 
-  useEffect(() => {
-    console.log('columnFilters', columnFilters);
-  }, [columnFilters])
+  // useEffect(() => {
+  //   console.log('columnFilters', columnFilters);
+  // }, [columnFilters])
 
   const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
 
@@ -514,7 +514,7 @@ export default function Listing2(props) {
     paginationDisplayMode: "pages",
     filterFns: {
       notContains: (row, id, filterValue) => {
-        console.log('row, id, filterValue', row, id, filterValue);
+        // console.log('row, id, filterValue', row, id, filterValue);
         return row.getValue(id) === filterValue;
       },
     },
@@ -569,7 +569,7 @@ export default function Listing2(props) {
   return (
     <div className={`react-table-container ${isLoading ? 'is-loading':''}`}  style={{ width: '100%', minWidth: '800px' }}>
       {((rowSelection && Object.keys(rowSelection)?.length > 0) ||
-        selectAcross?.selected) && (
+        (selectAcross?.selected && selectAcross?.unSelected < rowCount) ) && (
           <div className="selection-popup d-flex f-justify-center f-align-center">
             <p>
               <strong>

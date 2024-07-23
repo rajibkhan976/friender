@@ -293,7 +293,6 @@ export const {
     updateFilterState,
     updateCurrlistCount,
     updateSelectedFriends,
-    removeSelectedFriends,
     updateNumberofListing,
     countCurrentListsize,
     updateWhiteListStatusOfSelectesList,

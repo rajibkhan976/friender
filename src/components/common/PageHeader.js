@@ -1986,13 +1986,13 @@ function PageHeader({ headerText = "" }) {
 		}
 
 		if (listFetchParams.queryParam.whitelist_status === 1){
-			queryParam['whitelist'] = true;
+			queryParam['whitelist'] = 1;
 		}
 		if (listFetchParams.queryParam.blacklist_status === 1){
-			queryParam['blacklist'] = true;
+			queryParam['blacklist'] = 1;
 		}
 		if (listFetchParams.queryParam.deleted_status === 1){
-			queryParam['unfriend'] = true;
+			queryParam['unfriend'] = 1;
 
 		}
 		if (action === 'queue') {
@@ -2058,13 +2058,13 @@ function PageHeader({ headerText = "" }) {
 			}
 
 			if (listFetchParams.queryParam.whitelist_status === 1){
-				payload['whitelist'] = true;
+				payload['whitelist'] = 1;
 			}
 			if (listFetchParams.queryParam.blacklist_status === 1){
-				payload['blacklist'] = true;
+				payload['blacklist'] = 1;
 			}
 			if (listFetchParams.queryParam.deleted_status === 1){
-				payload['unfriend'] = true;
+				payload['unfriend'] =  1;
 
 			}
 			if (bulkType === 'skipWhitelisted') {
@@ -2263,15 +2263,9 @@ function PageHeader({ headerText = "" }) {
 					setModalAddQueueOpen(false)
 					triggerBulkOperation('queue')}}
 				btnText={"Add to queue"}
-				// ExtraProps={{
-				// 	primaryBtnDisable:
-				// 		// whiteCountInUnfriend === 0 ||
-				// 		// whiteCountInUnfriend === selectedFriends.length
-				// 		Number(actionableContacts.whitelist_count) === 0 ||
-				// 		Number(actionableContacts.whitelist_count) === Number(actionableContacts.friendsCount)
-				// 			? true
-				// 			: false,
-				// }}
+				ExtraProps={{
+					primaryBtnDisable: !(Number(actionableContacts.nonFriend_count) > 0 )
+				}}
 				isLoading={isFetchingbulkActionCount}		
 			/>}
 			{/* {selectedFriends?.length > 0 && ( */}
