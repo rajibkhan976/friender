@@ -241,7 +241,7 @@ function PageHeader({ headerText = "" }) {
 	const selectedListItems = useSelector((state) => state.ssList.selected_friends)
 	const filter_state = useSelector((state) => state.ssList.filter_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
-    const select_all_state = useSelector((state) => state.ssList.select_all_state)
+	const select_all_state = useSelector((state) => state.ssList.select_all_state)
 	//const current_list_selection_count = useSelector((state) => state.ssList.selected_friends_curr_count)
 	const selectAcross = useSelector((state) => state.ssList.selectAcross)
 	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
@@ -278,7 +278,7 @@ function PageHeader({ headerText = "" }) {
 		(state) => state.facebook_data.fb_data
 	);
 	const [isFetchingbulkActionCount, setIsFetchingbulkActionCount] = useState(false);
-	const [actionableContacts, setActionableContacts] = useState({"whitelist_count":0,"blacklist_count":0,"friendsCount":0});
+	const [actionableContacts, setActionableContacts] = useState({ "whitelist_count": 0, "blacklist_count": 0, "friendsCount": 0 });
 	const [modalAddQueueOpen, setModalAddQueueOpen] = useState(false);
 	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
 	const list_filtered_count = useSelector((state) => state.ssList.list_filtered_count);
@@ -289,25 +289,25 @@ function PageHeader({ headerText = "" }) {
 	const selected_blacklist_contacts = useSelector((state) => state.ssList.selected_friends_total_blackList_count);
 
 
-	useEffect(()=>{
-		dispatch(fetchAllCampaigns({sort_order: "asc"}));
-	},[]);
-	useEffect(()=>{		
-				if (friendsListData) {
-					if (friendsListData.last_sync_at) {
-						setTooltip(friendsListData.last_sync_at);
-						localStorage.removeItem("fr_tooltip");
-					} else {
-						localStorage.setItem(
-							"fr_tooltip",
-							friendsListData.last_sync_at
-						);
-						setTooltip(friendsListData.last_sync_at);
-					}
-				}
-			
+	useEffect(() => {
+		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
+	}, []);
+	useEffect(() => {
+		if (friendsListData) {
+			if (friendsListData.last_sync_at) {
+				setTooltip(friendsListData.last_sync_at);
+				localStorage.removeItem("fr_tooltip");
+			} else {
+				localStorage.setItem(
+					"fr_tooltip",
+					friendsListData.last_sync_at
+				);
+				setTooltip(friendsListData.last_sync_at);
+			}
+		}
 
-	},[friendsListData]);
+
+	}, [friendsListData]);
 	const refreshFrList = () => {
 		dispatch(unLoadFrList());
 		setTimeout(() => {
@@ -386,8 +386,8 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
-		setWhiteListable(selected_whitelist_contacts<selected_friends_curr_count);;
-		setBlacklistable(selected_blacklist_contacts<selected_friends_curr_count);
+		setWhiteListable(selected_whitelist_contacts < selected_friends_curr_count);;
+		setBlacklistable(selected_blacklist_contacts < selected_friends_curr_count);
 	}, [selected_friends_curr_count,
 		selected_whitelist_contacts,
 		selected_blacklist_contacts,]);
@@ -454,22 +454,22 @@ function PageHeader({ headerText = "" }) {
 		validateHeaderOptions(locationPathName[locationPathName.length - 1]);
 	}, [location]);
 
-	const refreshAndDeselectList = () =>{
-	
+	const refreshAndDeselectList = () => {
+
 		//const funStr = listFetchParams.responseAdapter;
 		//const responseAdapter = eval(`(${funStr})`);
 		const payload = {
-			queryParam :listFetchParams.queryParam,
-			baseUrl : listFetchParams.baseUrl,
+			queryParam: listFetchParams.queryParam,
+			baseUrl: listFetchParams.baseUrl,
 			//responseAdapter: props.dataExtractor,
-		  }
-		 dispatch(getListData(payload)).unwrap().then((res)=>{
+		}
+		dispatch(getListData(payload)).unwrap().then((res) => {
 			//console.log("list res ",res);
-		 }).catch((err)=>{
-			console.log("Error in page header list fetch",err);
-		 });
-		 dispatch(removeMTRallRowSelection());
-	} 
+		}).catch((err) => {
+			console.log("Error in page header list fetch", err);
+		});
+		dispatch(removeMTRallRowSelection());
+	}
 	const onAccessClick = (e) => {
 		const updatedAccess = accessOptions.map((accessObj) => {
 			if (accessObj.type === e.type) {
@@ -782,8 +782,7 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${
-								selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} whitelisted successfully!`,
 							"success",
 							1000,
@@ -817,8 +816,7 @@ function PageHeader({ headerText = "" }) {
 				.then((res) => {
 					selectedFriends &&
 						Alertbox(
-							`${
-								selectedFriends.length > 1 ? "Contacts" : "Contact"
+							`${selectedFriends.length > 1 ? "Contacts" : "Contact"
 							} blacklisted successfully!`,
 							"success",
 							3000,
@@ -1017,7 +1015,7 @@ function PageHeader({ headerText = "" }) {
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		let totalListPlacholder = [...totalList];
-			unfriendableList = [...unfriendableList]?.filter(el => el?.deleted_status !== 1)
+		unfriendableList = [...unfriendableList]?.filter(el => el?.deleted_status !== 1)
 		console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
 		if (!unfriendableList?.length > 0) {
 			Alertbox(
@@ -1071,71 +1069,68 @@ function PageHeader({ headerText = "" }) {
 			if (unfriendFromFb) {
 				// if (select_all_state?.selected) {
 				// 	// console.log(' >>>>> select_all_state?.selected <<<<<<');
-						dispatch(deleteFriend({ payload: payload }))
-							.unwrap()
-							.then((res) => {
-								// console.log('item', item);
-								fr_channel.postMessage({
-									cmd: "alert",
-									type: "success",
-									time: 3000,
-									message: `${
-										item.friendName
-									} unfriended successfully!   (Unfriending ${i + 1}/${
-										unfriendableList.length
-									})`,
-									position: "bottom-right",
-								});
-								// Alertbox(
-								// 	`${item.friendName} unfriended successfully!   (Unfriending ${
-								// 		i + 1
-								// 	}/${unfriendableList.length})`,
-								// 	"success",
-								// 	3000,
-								// 	"bottom-right"
-								// );
+				dispatch(deleteFriend({ payload: payload }))
+					.unwrap()
+					.then((res) => {
+						// console.log('item', item);
+						fr_channel.postMessage({
+							cmd: "alert",
+							type: "success",
+							time: 3000,
+							message: `${item.friendName
+								} unfriended successfully!   (Unfriending ${i + 1}/${unfriendableList.length
+								})`,
+							position: "bottom-right",
+						});
+						// Alertbox(
+						// 	`${item.friendName} unfriended successfully!   (Unfriending ${
+						// 		i + 1
+						// 	}/${unfriendableList.length})`,
+						// 	"success",
+						// 	3000,
+						// 	"bottom-right"
+						// );
 
-								totalListPlacholder = totalListPlacholder?.map(el => el?.friendFbId === unfriendFromFb[0]?.uid ? {...el, deleted_status: 1, friendship: 2} : {...el})
-								dispatch(updateLocalListState(totalListPlacholder))
-								Alertbox(
-									`${item?.friendName} unfriended successfully!   (Unfriending ${
-										i + 1
-									}/${unfriendableList?.length})`,
-									"success",
-									3000,
-									"bottom-right"
-								);
-							})
-							.catch((err) => {
-								//dispatch(removeSelectedFriends());
-								Alertbox(`${err.message} `, "error", 3000, "bottom-right");
-							});
+						totalListPlacholder = totalListPlacholder?.map(el => el?.friendFbId === unfriendFromFb[0]?.uid ? { ...el, deleted_status: 1, friendship: 2 } : { ...el })
+						dispatch(updateLocalListState(totalListPlacholder))
+						Alertbox(
+							`${item?.friendName} unfriended successfully!   (Unfriending ${i + 1
+							}/${unfriendableList?.length})`,
+							"success",
+							3000,
+							"bottom-right"
+						);
+					})
+					.catch((err) => {
+						//dispatch(removeSelectedFriends());
+						Alertbox(`${err.message} `, "error", 3000, "bottom-right");
+					});
 				// 		// dispatch(removeSelectedFriends());
-						if (i !== unfriendableList.length - 1) {
-							let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
-							//console.time("wake up");
-							await helper.sleep(delay);
-							//console.timeEnd("wake up");
-						}
+				if (i !== unfriendableList.length - 1) {
+					let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
+					//console.time("wake up");
+					await helper.sleep(delay);
+					//console.timeEnd("wake up");
+				}
 				// 	} 
 
 				// 	if (!select_all_state?.selected) {
-						// console.log(' >>>>> NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT select_all_state?.selected');
-						// console.log('unfriendableList >>>', totalList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid));
-						// unfriendableList[i] = unfriendableList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid)[0];
-						// console.log('currentUnfriendItem currentUnfriendItem currentUnfriendItem currentUnfriendItem', currentUnfriendItem);
-							// item = {
-							// 	...item,
-							// 	deleted_status: 1,
-							// 	friendship: 2
-							// }
+				// console.log(' >>>>> NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT NOT select_all_state?.selected');
+				// console.log('unfriendableList >>>', totalList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid));
+				// unfriendableList[i] = unfriendableList?.filter(el => el?.friendFbId === unfriendFromFb[0]?.uid)[0];
+				// console.log('currentUnfriendItem currentUnfriendItem currentUnfriendItem currentUnfriendItem', currentUnfriendItem);
+				// item = {
+				// 	...item,
+				// 	deleted_status: 1,
+				// 	friendship: 2
+				// }
 
-						// console.log('item >>>>> item >>>>>>> item >>>>>>', item);
-						// console.log('=========================================');
+				// console.log('item >>>>> item >>>>>>> item >>>>>>', item);
+				// console.log('=========================================');
 
-						// console.log('totalListPlacholder >>>>>', totalListPlacholder);
+				// console.log('totalListPlacholder >>>>>', totalListPlacholder);
 				// 	}
-				}
+			}
 		}
 
 		dispatch(crealGlobalFilter())
@@ -1432,11 +1427,11 @@ function PageHeader({ headerText = "" }) {
 			facebookData?.fb_data == null ||
 			facebookData?.fb_data == "" ||
 			localStorage.getItem("fr_default_fb") !==
-				facebookData?.fb_data?.fb_user_id ||
+			facebookData?.fb_data?.fb_user_id ||
 			localStorage.getItem("fr_user_id") !== facebookData?.fb_data?.user_id
 		) {
 			localStorage.setItem("fr_user_id", facebookData?.fb_data?.user_id);
-			
+
 		} else {
 			setTooltip(facebookData?.fb_data?.last_sync_at);
 		}
@@ -1460,6 +1455,15 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
+		const sendEssentialsPayload = {
+			action: "sendEssentials",
+			fr_token: localStorage.getItem("fr_token"),
+			amount: localStorage.getItem("fr_amount")
+		};
+		//   console.log("sendEssentialsPayload ::: ", sendEssentialsPayload);
+		extensionAccesories.sendMessageToExt(
+			sendEssentialsPayload
+		);
 		if (messageType) {
 			radioMessageOptions
 				.filter((msg) => msg.data != messageType)
@@ -1677,12 +1681,13 @@ function PageHeader({ headerText = "" }) {
 			setIsFrQueActionsEnabled(false);
 			dispatch(getNewFriendsQueueRecordsInChunk())
 				.unwrap()
-				.then((resp) =>{
+				.then((resp) => {
 					dispatch(removeSelectedFriends())
-					.unwrap()
-					.then((response) =>
-						setIsFrQueActionsEnabled(true)
-					)}
+						.unwrap()
+						.then((response) =>
+							setIsFrQueActionsEnabled(true)
+						)
+				}
 				);
 		}
 	};
@@ -1958,9 +1963,9 @@ function PageHeader({ headerText = "" }) {
 	// const fetchFriendListV2 = () => {
 	// 	let payload = {}
 
-		// page_number: paginationData.pageIndex + 1,
-		//   page_size: paginationData.pageSize,
-		// search_string: textFilter?.length > 2 ? textFilter : null,
+	// page_number: paginationData.pageIndex + 1,
+	//   page_size: paginationData.pageSize,
+	// search_string: textFilter?.length > 2 ? textFilter : null,
 
 	// 	dispatch(getListData())
 	// }
@@ -1977,7 +1982,7 @@ function PageHeader({ headerText = "" }) {
 			friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
 		};
 
-		if(!select_all_state?.selected){
+		if (!select_all_state?.selected) {
 			queryParam["include_list"] = JSON.stringify([...selectedListItems?.map(el => el?._id)]);
 		}
 
@@ -1985,13 +1990,13 @@ function PageHeader({ headerText = "" }) {
 			queryParam["searchString"] = searchValue
 		}
 
-		if (listFetchParams.queryParam.whitelist_status === 1){
+		if (listFetchParams.queryParam.whitelist_status === 1) {
 			queryParam['whitelist'] = 1;
 		}
-		if (listFetchParams.queryParam.blacklist_status === 1){
+		if (listFetchParams.queryParam.blacklist_status === 1) {
 			queryParam['blacklist'] = 1;
 		}
-		if (listFetchParams.queryParam.deleted_status === 1){
+		if (listFetchParams.queryParam.deleted_status === 1) {
 			queryParam['unfriend'] = 1;
 
 		}
@@ -2023,25 +2028,25 @@ function PageHeader({ headerText = "" }) {
 		};
 	}
 
-	const triggerBulkOperation = async (bulkType=null) => {
+	const triggerBulkOperation = async (bulkType = null) => {
 		return new Promise((resolve, reject) => {
 			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
 			let payload = {
-					fb_user_id: defaultFbId,
-					check: select_all_state?.selected ? 'all' : 'some',
-					//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
-					operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
-					friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
-				}
+				fb_user_id: defaultFbId,
+				check: select_all_state?.selected ? 'all' : 'some',
+				//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
+				operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
+				friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+			}
 
-				if(!select_all_state?.selected){
-					payload["include_list"]=[...selectedListItems?.map(el => el?._id)];
-				}
+			if (!select_all_state?.selected) {
+				payload["include_list"] = [...selectedListItems?.map(el => el?._id)];
+			}
 
 			if (select_all_state?.selected) {
-				payload["exclude_list"] = select_all_state?.unSelected?.length > 1 ? [...select_all_state?.unSelected.map(el => el)]: []
+				payload["exclude_list"] = select_all_state?.unSelected?.length > 1 ? [...select_all_state?.unSelected.map(el => el)] : []
 			}
-			
+
 			if (filter_state?.filter_key_value?.length > 0) {
 				const { values, fields, operators } = helper.listFilterParamsGenerator(
 					filter_state?.filter_key_value,
@@ -2057,14 +2062,14 @@ function PageHeader({ headerText = "" }) {
 				payload["searchString"] = searchValue
 			}
 
-			if (listFetchParams.queryParam.whitelist_status === 1){
+			if (listFetchParams.queryParam.whitelist_status === 1) {
 				payload['whitelist'] = 1;
 			}
-			if (listFetchParams.queryParam.blacklist_status === 1){
+			if (listFetchParams.queryParam.blacklist_status === 1) {
 				payload['blacklist'] = 1;
 			}
-			if (listFetchParams.queryParam.deleted_status === 1){
-				payload['unfriend'] =  1;
+			if (listFetchParams.queryParam.deleted_status === 1) {
+				payload['unfriend'] = 1;
 
 			}
 			if (bulkType === 'skipWhitelisted') {
@@ -2111,7 +2116,7 @@ function PageHeader({ headerText = "" }) {
 						}
 						else {
 							Alertbox(
-								bulkType === 'queue'?res?.data?.message:res?.data,
+								bulkType === 'queue' ? res?.data?.message : res?.data,
 								"success",
 								1000,
 								"bottom-right"
@@ -2128,11 +2133,11 @@ function PageHeader({ headerText = "" }) {
 						dispatch(updateRowSelection({}));
 						setIsAddingToCampaign(false)
 					})
-				}
+			}
 		})
 	}
 
-	const checkForBulkAction = (bulkType=null) => {
+	const checkForBulkAction = (bulkType = null) => {
 		let payload;
 		// payload = assemblePayload(bulkType, !actionableContacts ? config.fetchFriendCount : config.bulkOperationFriends)
 		console.log(bulkType);
@@ -2142,35 +2147,35 @@ function PageHeader({ headerText = "" }) {
 			//console.log('payload', payload);
 
 			setIsFetchingbulkActionCount(true)
-			if(bulkType === 'unfriend'){
+			if (bulkType === 'unfriend') {
 				setModalOpen(true)
-			}else if( bulkType === 'queue'){
+			} else if (bulkType === 'queue') {
 				setModalAddQueueOpen(true);
 			}
 
-			 if (selected_friends_curr_count>0) {
+			if (selected_friends_curr_count > 0) {
 				dispatch(getFriendCountAction(payload)).unwrap()
 					.then((res) => {
 						setIsFetchingbulkActionCount(false)
 						setActionableContacts(res)
 						// if (bulkType === 'unfriend') {
-							
+
 						// }
 					})
-			 } 
+			}
 			// if (bulkType === 'unfriend') {
-				// else {
-				// 	triggerBulkOperation(bulkType)
-				// 		.then((res) => {
-				// 			console.log('res', res);
-				// 			setActionableContacts(null)
-				// 		})
-				// 		.catch((error) => {
-				// 			console.log(error);
-				// 		})
-				// }
+			// else {
+			// 	triggerBulkOperation(bulkType)
+			// 		.then((res) => {
+			// 			console.log('res', res);
+			// 			setActionableContacts(null)
+			// 		})
+			// 		.catch((error) => {
+			// 			console.log(error);
+			// 		})
 			// }
-		} 
+			// }
+		}
 		// else if (bulkType === 'campaign') {
 		// 	console.log('bulk campaign', selectedListItems)
 		// 	// setIsAddingToCampaign(true);
@@ -2179,13 +2184,13 @@ function PageHeader({ headerText = "" }) {
 			console.log('selectedListItems', selectedListItems);
 
 			if (bulkType === 'whitelist') {
-				if (selectedListItems?.length === selectedListItems?.filter(el => el?.whitelist_status === 1).length)  {
+				if (selectedListItems?.length === selectedListItems?.filter(el => el?.whitelist_status === 1).length) {
 					return false
 				}
 			}
 
 			if (bulkType === 'blacklist') {
-				if (selectedListItems?.length === selectedListItems?.filter(el => el?.blacklist_status === 1).length)  {
+				if (selectedListItems?.length === selectedListItems?.filter(el => el?.blacklist_status === 1).length) {
 					return false
 				}
 			}
@@ -2233,7 +2238,7 @@ function PageHeader({ headerText = "" }) {
 			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'non-friends') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
-			}			
+			}
 		} else {
 			return true
 		}
@@ -2241,33 +2246,34 @@ function PageHeader({ headerText = "" }) {
 
 	return (
 		<>
-			{(selected_friends_curr_count > 0 || select_all_state?.selected)  && 
-			<Modal
-				modalType='confused-type'
-				modalIcon={purpleAlertPng}
-				headerText={"Add to Queue"}
-				bodyText={
-					<>You have selected
-						{ <><b>&nbsp;{Number(actionableContacts.nonFriend_count)}&nbsp;</b>
+			{(selected_friends_curr_count > 0 || select_all_state?.selected) &&
+				<Modal
+					modalType='confused-type'
+					modalIcon={purpleAlertPng}
+					headerText={"Add to Queue"}
+					bodyText={
+						<>You have selected
+							{<><b>&nbsp;{Number(actionableContacts.nonFriend_count)}&nbsp;</b>
 								{Number(actionableContacts.nonFriend_count) > 1 ? 'contact(s),' : 'contact,'}</>}
-						Are you sure you want to add them to friend queue
-					</>
-				}
-				closeBtnTxt={"Cancel"}
-				// closeBtnFun={unfriend}
-				closeBtnFun={()=>setModalAddQueueOpen(false)}
-				open={modalAddQueueOpen}
-				setOpen={setModalAddQueueOpen}
-				// ModalFun={skipWhitList}
-				ModalFun={()=>{
-					setModalAddQueueOpen(false)
-					triggerBulkOperation('queue')}}
-				btnText={"Add to queue"}
-				ExtraProps={{
-					primaryBtnDisable: !(Number(actionableContacts.nonFriend_count) > 0 )
-				}}
-				isLoading={isFetchingbulkActionCount}		
-			/>}
+							Are you sure you want to add them to friend queue
+						</>
+					}
+					closeBtnTxt={"Cancel"}
+					// closeBtnFun={unfriend}
+					closeBtnFun={() => setModalAddQueueOpen(false)}
+					open={modalAddQueueOpen}
+					setOpen={setModalAddQueueOpen}
+					// ModalFun={skipWhitList}
+					ModalFun={() => {
+						setModalAddQueueOpen(false)
+						triggerBulkOperation('queue')
+					}}
+					btnText={"Add to queue"}
+					ExtraProps={{
+						primaryBtnDisable: !(Number(actionableContacts.nonFriend_count) > 0)
+					}}
+					isLoading={isFetchingbulkActionCount}
+				/>}
 			{/* {selectedFriends?.length > 0 && ( */}
 			{(selected_friends_curr_count > 0 || select_all_state?.selected) && (
 				<Modal
@@ -2292,7 +2298,7 @@ function PageHeader({ headerText = "" }) {
 					}
 					closeBtnTxt={"Yes, unfriend"}
 					// closeBtnFun={unfriend}
-					closeBtnFun={()=>{
+					closeBtnFun={() => {
 						if (select_all_state?.selected) {
 							triggerBulkOperation('unfriend')
 						} else {
@@ -2302,7 +2308,7 @@ function PageHeader({ headerText = "" }) {
 					open={modalOpen}
 					setOpen={setModalOpen}
 					// ModalFun={skipWhitList}
-					ModalFun={()=>{
+					ModalFun={() => {
 						if (select_all_state?.selected) {
 							checkForBulkAction('skipWhitelisted')
 						} else {
@@ -2315,7 +2321,7 @@ function PageHeader({ headerText = "" }) {
 							// whiteCountInUnfriend === 0 ||
 							// whiteCountInUnfriend === selectedFriends.length
 							Number(actionableContacts.whitelist_count) === 0 ||
-							Number(actionableContacts.whitelist_count) === Number(actionableContacts.friendsCount)
+								Number(actionableContacts.whitelist_count) === Number(actionableContacts.friendsCount)
 								? true
 								: false,
 					}}
@@ -2351,7 +2357,7 @@ function PageHeader({ headerText = "" }) {
 					closeBtnTxt={
 						Number(actionableContacts.blacklist_count) > 0 ? "Skip blacklisted" : "Cancel"
 					}
-					closeBtnFun={() => 
+					closeBtnFun={() =>
 						Number(actionableContacts.blacklist_count) > 0
 							? triggerBulkOperation('skipBlacklisted')//skipBlackList
 							: skipAddingToCampaign()
@@ -2373,8 +2379,8 @@ function PageHeader({ headerText = "" }) {
 								? selected_friends_curr_count === Number(actionableContacts.blacklist_count)
 									? true
 									: selectedCampaign === "Select"
-									? true
-									: false
+										? true
+										: false
 								: false,
 					}}
 					additionalClass='add-campaign-modal'
@@ -2437,7 +2443,7 @@ function PageHeader({ headerText = "" }) {
 					bodyText={
 						<>
 							{friendsQueueCsvUploadStep === 3 &&
-							uploadedFriendsQueueCsvReport ? (
+								uploadedFriendsQueueCsvReport ? (
 								<>
 									<div className='friend-request-queue-message-field'>
 										<label className='friend-request-sent-message-label'>
@@ -2572,23 +2578,23 @@ function PageHeader({ headerText = "" }) {
 											<div className='keyword-suggestion-bar'>
 												{savedKeyword?.length
 													? savedKeyword.map((item, index) => (
-															<button
-																className={"keyword-item saved should-modify"}
-																key={index}
-															>
-																{item}
-																<WhiteCrossIcon
-																	className='cross-icon'
-																	onClick={() =>
-																		setSavedKeyword(
-																			savedKeyword.filter(
-																				(keyword) => keyword !== item
-																			)
+														<button
+															className={"keyword-item saved should-modify"}
+															key={index}
+														>
+															{item}
+															<WhiteCrossIcon
+																className='cross-icon'
+																onClick={() =>
+																	setSavedKeyword(
+																		savedKeyword.filter(
+																			(keyword) => keyword !== item
 																		)
-																	}
-																/>
-															</button>
-													  ))
+																	)
+																}
+															/>
+														</button>
+													))
 													: null}
 											</div>
 										)}
@@ -2714,8 +2720,8 @@ function PageHeader({ headerText = "" }) {
 												</span>
 											</>
 										) : selectedCsvFile &&
-										  friendsQueueCsvUploadStep === 2 &&
-										  !uploadedFriendsQueueCsvReport ? (
+											friendsQueueCsvUploadStep === 2 &&
+											!uploadedFriendsQueueCsvReport ? (
 											<>
 												<ProgressIconOne className='import-csv-icon' />
 												<span className='progress'>98%</span>
@@ -2791,7 +2797,7 @@ function PageHeader({ headerText = "" }) {
 					}
 					open={showUploadCsvModal}
 					setOpen={setShowUploadCsvModal}
-					ModalFun={() => {}}
+					ModalFun={() => { }}
 					additionalClass={`import-csv-modal`}
 					modalButtons={false}
 				/>
@@ -2808,10 +2814,10 @@ function PageHeader({ headerText = "" }) {
 							{headerText !== ""
 								? headerText
 								: links.length > 0
-								? links[links.length - 2]?.location !== "campaigns"
-									? links[links.length - 1].location
-									: "Campaigns"
-								: ""}
+									? links[links.length - 2]?.location !== "campaigns"
+										? links[links.length - 1].location
+										: "Campaigns"
+									: ""}
 							{headerOptions.listingLengthWell && (
 								// <span className='num-header-count num-well'>{listCount}</span>
 								<span className='num-header-count num-well'>{listFilteredCount}</span>
@@ -2883,7 +2889,7 @@ function PageHeader({ headerText = "" }) {
 								</span>
 							</button>
 							<span className='last-sync-status text-center'>
-							{facebookData && <TooltipDate />}
+								{facebookData && <TooltipDate />}
 							</span>
 						</div>
 					)}
@@ -2909,16 +2915,15 @@ function PageHeader({ headerText = "" }) {
 										ref={clickedRef}
 									>
 										<button
-											className={`accessibility-btn btn h-100 ${
-												accessItem.active || accessItem.type == "exportHeader"
+											className={`accessibility-btn btn h-100 ${accessItem.active || accessItem.type == "exportHeader"
 													? "active"
 													: ""
-											}`}
+												}`}
 											key={accessItem.type + i}
 											onClick={() => onAccessClick(accessItem)}
 											ref={
 												accessItem.type === "quickAction" ||
-												accessItem.type === "queueListAction"
+													accessItem.type === "queueListAction"
 													? actionRef
 													: null
 											}
@@ -2933,12 +2938,11 @@ function PageHeader({ headerText = "" }) {
 										{accessItem.type === "queueListAction" &&
 											isComponentVisible && (
 												<div
-													className={`fr-dropdown fr-dropdownAction ${
-														accessItem.type === "queueListAction" &&
-														accessItem.active
+													className={`fr-dropdown fr-dropdownAction ${accessItem.type === "queueListAction" &&
+															accessItem.active
 															? "active"
 															: ""
-													}`}
+														}`}
 												>
 													<ul>
 														<li
@@ -2978,22 +2982,21 @@ function PageHeader({ headerText = "" }) {
 											)}
 										{accessItem.type == "quickAction" && isComponentVisible && (
 											<div
-												className={`fr-dropdown fr-dropdownAction ${
-													accessItem.type == "quickAction" && accessItem.active
+												className={`fr-dropdown fr-dropdownAction ${accessItem.type == "quickAction" && accessItem.active
 														? "active"
 														: ""
-												}`}
+													}`}
 											>
 												<ul>
 													<li
 														className={`del-fr-action ${checkDisability('unfriend') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeUnfriend(accessItem)}
-														onClick={()=>checkForBulkAction('unfriend')}
-														// data-disabled={
-														// 	!selectedFriends || selectedFriends.length === 0
-														// 		? true
-														// 		: false
-														// }
+														onClick={() => checkForBulkAction('unfriend')}
+													// data-disabled={
+													// 	!selectedFriends || selectedFriends.length === 0
+													// 		? true
+													// 		: false
+													// }
 													>
 														<figure>
 															<UnfriendIcon />
@@ -3003,7 +3006,7 @@ function PageHeader({ headerText = "" }) {
 													<li
 														className={`whiteLabel-fr-action ${checkDisability('whitelist') ? 'disabled' : ''}`}
 														// onClick={() => whiteLabeledUsers(accessItem)}
-														 data-disabled={!whiteListable}
+														data-disabled={!whiteListable}
 														onClick={() => checkForBulkAction('whitelist')}
 													>
 														<figure>

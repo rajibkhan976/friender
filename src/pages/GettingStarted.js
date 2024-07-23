@@ -45,200 +45,208 @@ const GettingStartedPage = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const profiles = useSelector((state) => state.profilespace.profiles);
-  const {isSynced, setIsSynced}=useOutletContext();
+  const { isSynced, setIsSynced } = useOutletContext();
 
-  const [accountMismatch,setAccountMismatch] = useState(false)
+  const [accountMismatch, setAccountMismatch] = useState(false)
   const [fbAuthProfileId, setFbAuthProfileId] = useState(null)
 
   /**
    * The function @proceedFurther is responsible to check which screen user will be going to after facebook auth login.
    */
-     const proceedFurther = () => {
-      /**
-       * 1. Checking if the user has reset the password or not.
-       *    - If @password_reset_status is 1 then reset password is done.
-       *    - If @password_reset_status is 0 then reset password is not done yet.
-       * 
-       * 2. Checking if the user has answerd all the on boarding questionaries or not.
-       *    - If @user_onbording_status is 1 then on boarding questioneries has been answered.
-       *    - If @user_onbording_status is 0 then on boarding questioneries has not been answered yet.
-       */
-      let password_reset_status = localStorage.getItem("fr_pass_changed");
-      let user_onbording_status = localStorage.getItem("fr_onboarding");
-      let facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
-      /**
-       * Check if facebook auth is already authenticated, if not go back to auth :
-       */
-      if (facebookAuthInfo?.accessToken == undefined) {
-        navigate("/facebook-auth")
-      }
-      /**
-       * 1. @case1 the password is not reset then take the user to rest password screen
-       * 2. @case2 If password is alredy reset then take the user to onBoarding questionaries screen
-       * 3. @case3 onBoard questionaries is also already answered then take the user to getting-started screen.
-       */
-      if (password_reset_status != 1) {
-        navigate("/reset-password");
-      } else if (user_onbording_status != 1) {
-        navigate("/onboarding");
-      } else {
-        navigate("/")
-      }
+  const proceedFurther = () => {
+    /**
+     * 1. Checking if the user has reset the password or not.
+     *    - If @password_reset_status is 1 then reset password is done.
+     *    - If @password_reset_status is 0 then reset password is not done yet.
+     * 
+     * 2. Checking if the user has answerd all the on boarding questionaries or not.
+     *    - If @user_onbording_status is 1 then on boarding questioneries has been answered.
+     *    - If @user_onbording_status is 0 then on boarding questioneries has not been answered yet.
+     */
+    let password_reset_status = localStorage.getItem("fr_pass_changed");
+    let user_onbording_status = localStorage.getItem("fr_onboarding");
+    let facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+    /**
+     * Check if facebook auth is already authenticated, if not go back to auth :
+     */
+    if (facebookAuthInfo?.accessToken == undefined) {
+      navigate("/facebook-auth")
     }
-    
-  useEffect(()=> {
-   if(installFrinder){
-    //Execute this once extension installed is confirmed : 
-     
-     connectProfile(false)
-   }
-  },[installFrinder])
+    /**
+     * 1. @case1 the password is not reset then take the user to rest password screen
+     * 2. @case2 If password is alredy reset then take the user to onBoarding questionaries screen
+     * 3. @case3 onBoard questionaries is also already answered then take the user to getting-started screen.
+     */
+    if (password_reset_status != 1) {
+      navigate("/reset-password");
+    } else if (user_onbording_status != 1) {
+      navigate("/onboarding");
+    } else {
+      navigate("/")
+    }
+  }
 
-  
-  useEffect(()=> {
-      // setIsSynced(false);
-      //   (async () => {
-      //     extInstallationStatus();
+  useEffect(() => {
+    if (installFrinder) {
+      //Execute this once extension installed is confirmed : 
 
-      //     // Checking with wrong flag
-      //     // setIsSyncing(
-      //     //   localStorage.getItem("fr_isSyncing")
-      //     //     ? localStorage.getItem("fr_isSyncing") === "active"
-      //     //       ? true
-      //     //       : false
-      //     //     : false
-      //     // );
+      connectProfile(false)
+    }
+  }, [installFrinder])
 
 
+  useEffect(() => {
+    const sendEssentialsPayload = {
+      action: "sendEssentials",
+      fr_token: localStorage.getItem("fr_token"),
+      amount: localStorage.getItem("fr_amount")
+    };
+    extensionAccesories.sendMessageToExt(
+      sendEssentialsPayload
+    );
+    // setIsSynced(false);
+    //   (async () => {
+    //     extInstallationStatus();
 
-
-
-      //     // setSyncFriendsLoader(localStorage.getItem("fr_isSyncing") === "active" ? true : false);
-      //     const friendCountPayload = {
-      //       action: "syncprofile",
-      //       frLoginToken: localStorage.getItem("fr_token"),
-      //     };
-          
-      //     const facebookProfile = await extensionAccesories.sendMessageToExt(
-      //       friendCountPayload
-      //     );
-      //     // localStorage.setItem("fr_current_fbId", facebookProfile.uid);
-      //     // let currentLoggedInFbUser = facebookProfile.uid;
-      //     // let defaultProfile = localStorage.getItem("fr_default_fb");
-
-      //     // Set default profile
-      //     // remove below if checking(only) to achive loggedin user as default
-      //     // if (!localStorage.getItem("fr_default_fb")) {
-      //     //   console.log("default fbid is not found ---->");
-      //     //   const profileSpaces = await fetchUserProfile();
-      //     //   // const currentProfilesFromDatabase =
-      //     //   //   profileSpaces.length > 0
-      //     //   //     ? profileSpaces.filter(
-      //     //   //         (el) =>
-      //     //   //           el &&
-      //     //   //           el?.fb_user_id?.toString() ===
-      //     //   //             facebookProfile?.uid?.toString()
-      //     //   //       )
-      //     //   //     : [];
-
-      //     //   // isCurrentProfileAvailable =  currentProfilesFromDatabase.length > 0 ? true : false; //localStorage.getItem("fr_default_fb") ? (localStorage.getItem("fr_default_fb") == facebookProfile.uid ? true : false) :
-
-      //     //   // if (currentProfilesFromDatabase.length) {
-      //     //   //   console.log("default user set in useEffect --->");
-      //     //   //   defaultProfile =
-      //     //   //     currentProfilesFromDatabase[0]?.fb_user_id.toString();
-      //     //   //   localStorage.setItem("fr_default_fb", defaultProfile);
-      //     //   //   dispatch(setDefaultProfileId(defaultProfile));
-      //     //   // }
-      //     // }
-
-      //     // setFacebookConnectLoader(false);
-
-      //     // let isCurrentProfileAvailable = false;
-      //     // if (Number(currentLoggedInFbUser) === Number(defaultProfile)) {
-      //     //   isCurrentProfileAvailable = true;
-      //     // }
-
-      //     // if (facebookProfile) {
-      //     //   // setFacebookConnectLoader(false);
-      //     //   setFbProfile({
-      //     //     ...facebookProfile,
-      //     //     isCurrentProfileAvailable: isCurrentProfileAvailable,
-      //     //   });
-      //     //   setFacebookConnect(
-      //     //     facebookProfile?.isFbLoggedin &&
-      //     //       isCurrentProfileAvailable &&
-      //     //       Number(currentLoggedInFbUser) === Number(defaultProfile)
-      //     //       ? true
-      //     //       : false
-      //     //   );
-
-      //     //   console.log(
-      //     //     "got fb profile",
-      //     //     facebookProfile?.isFbLoggedin && isCurrentProfileAvailable
-      //     //       ? true
-      //     //       : false
-      //     //   );
-      //     // }
-
-      //     // console.log("currentProfilesFromDatabase ::: ", currentProfilesFromDatabase)
-
-      //     // console.log("isCurrentProfileAvailable", isCurrentProfileAvailable);
-
-      //     // if (isCurrentProfileAvailable) {
-      //     //   if (Number(currentLoggedInFbUser) === Number(defaultProfile)) {
-      //     //     console.log("default user logged in fb");
-      //     //     setIsSynced(true);
-      //     //     setFacebookConnect(true);
-      //     //     setFacebookConnect(true);
-      //     //     setFacebookConnectLoader(false);
-      //     //     setSyncFriendsLoader(false);
-      //     //     setSyncFriends(false);
-      //     //     setIsFriendlistSynced(false);
-      //     //     setIsSyncing(false);
-
-      //     //     console.log("friend lenght found in fb loader - ", facebookConnect);
-      //     //   } else {
-      //     //     console.log(
-      //     //       "current fb logged user is not default user",
-      //     //       currentLoggedInFbUser,
-      //     //       defaultProfile,
-      //     //       currentLoggedInFbUser === defaultProfile
-      //     //     );
-      //     //     setFacebookConnectLoader(false);
-      //     //     setFacebookConnect(false);
-      //     //     return true;
-      //     //   }
-      //     // }
-      //     // const getCurrentFbProfile = await fetchUserProfile()
+    //     // Checking with wrong flag
+    //     // setIsSyncing(
+    //     //   localStorage.getItem("fr_isSyncing")
+    //     //     ? localStorage.getItem("fr_isSyncing") === "active"
+    //     //       ? true
+    //     //       : false
+    //     //     : false
+    //     // );
 
 
 
-      //     let checkConnectedProfile = await connectProfile(true)
-      //     if(checkConnectedProfile){
-      //       setIsSynced(true);
-      //       setFacebookConnect(true);
-      //       setFacebookConnect(true);
-      //       setFacebookConnectLoader(false);
-      //       setSyncFriendsLoader(false);
-      //       setSyncFriends(false);
-      //       setIsFriendlistSynced(false);
-      //       setIsSyncing(false);
-      //     }
-
-      //   })();
 
 
+    //     // setSyncFriendsLoader(localStorage.getItem("fr_isSyncing") === "active" ? true : false);
+    //     const friendCountPayload = {
+    //       action: "syncprofile",
+    //       frLoginToken: localStorage.getItem("fr_token"),
+    //     };
 
-    localStorage.setItem('onboaring_page_check',false)
+    //     const facebookProfile = await extensionAccesories.sendMessageToExt(
+    //       friendCountPayload
+    //     );
+    //     // localStorage.setItem("fr_current_fbId", facebookProfile.uid);
+    //     // let currentLoggedInFbUser = facebookProfile.uid;
+    //     // let defaultProfile = localStorage.getItem("fr_default_fb");
+
+    //     // Set default profile
+    //     // remove below if checking(only) to achive loggedin user as default
+    //     // if (!localStorage.getItem("fr_default_fb")) {
+    //     //   console.log("default fbid is not found ---->");
+    //     //   const profileSpaces = await fetchUserProfile();
+    //     //   // const currentProfilesFromDatabase =
+    //     //   //   profileSpaces.length > 0
+    //     //   //     ? profileSpaces.filter(
+    //     //   //         (el) =>
+    //     //   //           el &&
+    //     //   //           el?.fb_user_id?.toString() ===
+    //     //   //             facebookProfile?.uid?.toString()
+    //     //   //       )
+    //     //   //     : [];
+
+    //     //   // isCurrentProfileAvailable =  currentProfilesFromDatabase.length > 0 ? true : false; //localStorage.getItem("fr_default_fb") ? (localStorage.getItem("fr_default_fb") == facebookProfile.uid ? true : false) :
+
+    //     //   // if (currentProfilesFromDatabase.length) {
+    //     //   //   console.log("default user set in useEffect --->");
+    //     //   //   defaultProfile =
+    //     //   //     currentProfilesFromDatabase[0]?.fb_user_id.toString();
+    //     //   //   localStorage.setItem("fr_default_fb", defaultProfile);
+    //     //   //   dispatch(setDefaultProfileId(defaultProfile));
+    //     //   // }
+    //     // }
+
+    //     // setFacebookConnectLoader(false);
+
+    //     // let isCurrentProfileAvailable = false;
+    //     // if (Number(currentLoggedInFbUser) === Number(defaultProfile)) {
+    //     //   isCurrentProfileAvailable = true;
+    //     // }
+
+    //     // if (facebookProfile) {
+    //     //   // setFacebookConnectLoader(false);
+    //     //   setFbProfile({
+    //     //     ...facebookProfile,
+    //     //     isCurrentProfileAvailable: isCurrentProfileAvailable,
+    //     //   });
+    //     //   setFacebookConnect(
+    //     //     facebookProfile?.isFbLoggedin &&
+    //     //       isCurrentProfileAvailable &&
+    //     //       Number(currentLoggedInFbUser) === Number(defaultProfile)
+    //     //       ? true
+    //     //       : false
+    //     //   );
+
+    //     //   console.log(
+    //     //     "got fb profile",
+    //     //     facebookProfile?.isFbLoggedin && isCurrentProfileAvailable
+    //     //       ? true
+    //     //       : false
+    //     //   );
+    //     // }
+
+    //     // console.log("currentProfilesFromDatabase ::: ", currentProfilesFromDatabase)
+
+    //     // console.log("isCurrentProfileAvailable", isCurrentProfileAvailable);
+
+    //     // if (isCurrentProfileAvailable) {
+    //     //   if (Number(currentLoggedInFbUser) === Number(defaultProfile)) {
+    //     //     console.log("default user logged in fb");
+    //     //     setIsSynced(true);
+    //     //     setFacebookConnect(true);
+    //     //     setFacebookConnect(true);
+    //     //     setFacebookConnectLoader(false);
+    //     //     setSyncFriendsLoader(false);
+    //     //     setSyncFriends(false);
+    //     //     setIsFriendlistSynced(false);
+    //     //     setIsSyncing(false);
+
+    //     //     console.log("friend lenght found in fb loader - ", facebookConnect);
+    //     //   } else {
+    //     //     console.log(
+    //     //       "current fb logged user is not default user",
+    //     //       currentLoggedInFbUser,
+    //     //       defaultProfile,
+    //     //       currentLoggedInFbUser === defaultProfile
+    //     //     );
+    //     //     setFacebookConnectLoader(false);
+    //     //     setFacebookConnect(false);
+    //     //     return true;
+    //     //   }
+    //     // }
+    //     // const getCurrentFbProfile = await fetchUserProfile()
+
+
+
+    //     let checkConnectedProfile = await connectProfile(true)
+    //     if(checkConnectedProfile){
+    //       setIsSynced(true);
+    //       setFacebookConnect(true);
+    //       setFacebookConnect(true);
+    //       setFacebookConnectLoader(false);
+    //       setSyncFriendsLoader(false);
+    //       setSyncFriends(false);
+    //       setIsFriendlistSynced(false);
+    //       setIsSyncing(false);
+    //     }
+
+    //   })();
+
+
+
+    localStorage.setItem('onboaring_page_check', false)
     extInstallationStatus();
     proceedFurther()
-  },[])
+  }, [])
 
   // useEffect(() => {
   //   setIsSynced(false);
   //   (async () => {
-      
+
   //     extInstallationStatus();
   //     setIsSyncing(
   //       localStorage.getItem("fr_isSyncing")
@@ -252,7 +260,7 @@ const GettingStartedPage = (props) => {
   //       action: "syncprofile",
   //       frLoginToken: localStorage.getItem("fr_token"),
   //     };
-      
+
   //     const facebookProfile = await extensionAccesories.sendMessageToExt(
   //       friendCountPayload
   //     );
@@ -352,6 +360,7 @@ const GettingStartedPage = (props) => {
     let isInstalled = await extensionAccesories.isExtensionInstalled({
       action: "extensionInstallation",
       frLoginToken: localStorage.getItem("fr_token"),
+      amount: localStorage.getItem("fr_amount")
     });
 
     // console.log("is extension Installed",isInstalled)
@@ -390,10 +399,10 @@ const GettingStartedPage = (props) => {
    *  } checkingOnly 
    * @returns if(chekcingOnly flag is true)?true/false : executes the function
    */
-  const connectProfile = async (checkingOnly= false) => {
+  const connectProfile = async (checkingOnly = false) => {
     await extInstallationStatus()
     setIsSynced(false)
-    if(!checkingOnly){
+    if (!checkingOnly) {
       setAccountMismatch(false)
       setFacebookConnectLoader(true);
     }
@@ -401,99 +410,99 @@ const GettingStartedPage = (props) => {
     // console.log("userinfo getting started",profileData)
 
     // if user id is present already with the facebook auth information then : 
-    if(profileData?.length){
-      localStorage.setItem('fr_facebook_auth',JSON.stringify(profileData[0].fb_auth_info))
+    if (profileData?.length) {
+      localStorage.setItem('fr_facebook_auth', JSON.stringify(profileData[0].fb_auth_info))
       dispatch(setProfileSpaces(profileData));
-      if(profileData[0].fb_user_id!= null && profileData[0].fb_user_id){
+      if (profileData[0].fb_user_id != null && profileData[0].fb_user_id) {
         const facebookProfile = await extensionAccesories.sendMessageToExt({
           action: "syncprofile",
           frLoginToken: localStorage.getItem("fr_token"),
         });
         // console.log("facewbook data",facebookProfile)
         // console.log("profile datattat",profileData)
-          //If auth profile and current logged in profile is not matching then :
-          setFbAuthProfileId(profileData[0]?.fb_user_id)
-          if(facebookProfile?.error == "No response"){
-            if(checkingOnly){
-              return false
-            }
-            setFbProfile(undefined)
-            setFacebookConnectLoader(false);
-            setAccountMismatch(true)
-            return 
+        //If auth profile and current logged in profile is not matching then :
+        setFbAuthProfileId(profileData[0]?.fb_user_id)
+        if (facebookProfile?.error == "No response") {
+          if (checkingOnly) {
+            return false
           }
-          if (facebookProfile?.uid !=  profileData[0]?.fb_user_id) {
-            if(checkingOnly){
-              return false
-            }
-          
-            setFbProfile({...profileData[0]})
-            // setFbAuthProfileId(profileData[0]?.fb_user_id)
-            // alert(
-            //   "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-            //     localStorage.getItem("fr_default_fb") +
-            //     "Or click on refresh."
-            // );
-            setFacebookConnectLoader(false);
-            setAccountMismatch(true)
-            return;
-          }else{
-            localStorage.setItem("fr_default_fb",facebookProfile?.uid)
-            if(checkingOnly){
-              return true
-            }
-            dispatch(setDefaultProfileId(profileData[0].fb_user_id))
-            setFacebookConnectLoader(false);
-            setFacebookConnect(true)
-            // If 3 step, checking facebook user id is done then start syncing process with facebook account.
-            setSyncFriendsFn()
+          setFbProfile(undefined)
+          setFacebookConnectLoader(false);
+          setAccountMismatch(true)
+          return
+        }
+        if (facebookProfile?.uid != profileData[0]?.fb_user_id) {
+          if (checkingOnly) {
+            return false
           }
-      }else{
-        const fetchUserIdViaFacebookAuthProfileUrl = await extensionAccesories.sendMessageToExt({ "action" : "getUidForThisUrl", "url" : profileData[0].fb_auth_info?.link});
+
+          setFbProfile({ ...profileData[0] })
+          // setFbAuthProfileId(profileData[0]?.fb_user_id)
+          // alert(
+          //   "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
+          //     localStorage.getItem("fr_default_fb") +
+          //     "Or click on refresh."
+          // );
+          setFacebookConnectLoader(false);
+          setAccountMismatch(true)
+          return;
+        } else {
+          localStorage.setItem("fr_default_fb", facebookProfile?.uid)
+          if (checkingOnly) {
+            return true
+          }
+          dispatch(setDefaultProfileId(profileData[0].fb_user_id))
+          setFacebookConnectLoader(false);
+          setFacebookConnect(true)
+          // If 3 step, checking facebook user id is done then start syncing process with facebook account.
+          setSyncFriendsFn()
+        }
+      } else {
+        const fetchUserIdViaFacebookAuthProfileUrl = await extensionAccesories.sendMessageToExt({ "action": "getUidForThisUrl", "url": profileData[0].fb_auth_info?.link });
         // console.log("hello ******************** this is the response for facebook profile link  ", fetchUserIdViaFacebookAuthProfileUrl)
         // save fb id and then call this function again for checking the fb accounts and proceed further
-       
-       if(fetchUserIdViaFacebookAuthProfileUrl.status){
-        dispatch(setProfileSpaces(profileData));
-        dispatch(setDefaultProfileId(profileData[0].fb_user_id))
-         const profilebody = {
-           name: profileData[0]?.name,
-           profilePicture: profileData[0]?.fb_auth_info?.picture?.data?.url,
-           fbAuthInfo : profileData[0]?.fb_auth_info,
-           userId : fetchUserIdViaFacebookAuthProfileUrl.uid,
-           profileUrl : "https://www.facebook.com/"+fetchUserIdViaFacebookAuthProfileUrl.uid,
-         };
-         const userProfileRes = await saveUserProfile(profilebody);
- 
-         if(userProfileRes?.status == 200){
-          //  console.log("called connect profile reccrusively")
-           connectProfile(false)
-         }
-       }else{
-        setFbProfile({...profileData[0]})
-        // setFbAuthProfileId(profileData[0]?.fb_user_id)
-        // alert(
-        //   "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-        //     localStorage.getItem("fr_default_fb") +
-        //     "Or click on refresh."
-        // );
-        setFacebookConnectLoader(false);
-        setAccountMismatch(true)
-        return;
-       }
 
-         // userId: facebookProfile?.uid.toString(),
+        if (fetchUserIdViaFacebookAuthProfileUrl.status) {
+          dispatch(setProfileSpaces(profileData));
+          dispatch(setDefaultProfileId(profileData[0].fb_user_id))
+          const profilebody = {
+            name: profileData[0]?.name,
+            profilePicture: profileData[0]?.fb_auth_info?.picture?.data?.url,
+            fbAuthInfo: profileData[0]?.fb_auth_info,
+            userId: fetchUserIdViaFacebookAuthProfileUrl.uid,
+            profileUrl: "https://www.facebook.com/" + fetchUserIdViaFacebookAuthProfileUrl.uid,
+          };
+          const userProfileRes = await saveUserProfile(profilebody);
+
+          if (userProfileRes?.status == 200) {
+            //  console.log("called connect profile reccrusively")
+            connectProfile(false)
+          }
+        } else {
+          setFbProfile({ ...profileData[0] })
+          // setFbAuthProfileId(profileData[0]?.fb_user_id)
+          // alert(
+          //   "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
+          //     localStorage.getItem("fr_default_fb") +
+          //     "Or click on refresh."
+          // );
+          setFacebookConnectLoader(false);
+          setAccountMismatch(true)
+          return;
+        }
+
+        // userId: facebookProfile?.uid.toString(),
         // name: facebookAuthInfo?.name,
         // profilePicture: facebookAuthInfo?.picture?.data?.url,
         // profileUrl: "https://www.facebook.com" + facebookProfile.path,
         // fbAuthInfo : facebookAuthInfo
       }
-    }else{
+    } else {
       setFbProfile(undefined)
       setFacebookConnectLoader(false);
       navigate("/facebook-auth")
       // setAccountMismatch(true)
-  }
+    }
 
 
 
@@ -515,7 +524,7 @@ const GettingStartedPage = (props) => {
 
     // if (currentProfilesFromDatabase.length) {
     //   console.log("set default id from connect prof----->");
-      // localStorage.setItem("fr_default_fb", getCurrentFbProfile[0].uid.toString());
+    // localStorage.setItem("fr_default_fb", getCurrentFbProfile[0].uid.toString());
     //   dispatch(setDefaultProfileId(fbProfile.uid.toString()));
     // }
 
@@ -571,7 +580,7 @@ const GettingStartedPage = (props) => {
     let checkingIntv = setInterval(() => {
       let progressCount = localStorage.getItem("fr_countBadge");
       // console.log("checking progress...")
-      if(progressCount!=null && progressCount){
+      if (progressCount != null && progressCount) {
         setSyncedFrieneds(progressCount);
         // console.log("Check badge count", progressCount, totalFrndLenth,Number(totalFrndLenth) == Number(progressCount));
         if (Number(totalFrndLenth) == Number(progressCount)) {
@@ -579,13 +588,13 @@ const GettingStartedPage = (props) => {
           clearInterval(checkingIntv);
           localStorage.removeItem("fr_countBadge");
           setIsSynced(true);
-                setFacebookConnect(true);
-                setFacebookConnect(true);
-                setFacebookConnectLoader(false);
-                setSyncFriendsLoader(false);
-                setSyncFriends(false);
-                setIsFriendlistSynced(false);
-                setIsSyncing(false);
+          setFacebookConnect(true);
+          setFacebookConnect(true);
+          setFacebookConnectLoader(false);
+          setSyncFriendsLoader(false);
+          setSyncFriends(false);
+          setIsFriendlistSynced(false);
+          setIsSyncing(false);
         }
       }
     }, 500);
@@ -596,7 +605,7 @@ const GettingStartedPage = (props) => {
     setSyncFriendsLoader(true);
 
 
-    if(localStorage.getItem("fr_gs_synced") == "true"){
+    if (localStorage.getItem("fr_gs_synced") == "true") {
       // console.log("checked from loacal")
       setIsSynced(true);
       setFacebookConnect(true);
@@ -606,39 +615,39 @@ const GettingStartedPage = (props) => {
       setSyncFriends(false);
       setIsFriendlistSynced(false);
       setIsSyncing(false);
-      return 
-    }else{
+      return
+    } else {
       const res = await fetchFriendList({ fbUserId: localStorage.getItem("fr_default_fb") });
       let friendList = res?.data?.[0].friend_details
         ? res.data[0].friend_details.length
         : false;
-  
-      if(friendList){
-          localStorage.setItem("fr_gs_synced",true)
-          storeFriendListIndexDb(localStorage.getItem("fr_default_fb"), res);
-          setIsSynced(true);
-          setFacebookConnect(true);
-          setFacebookConnect(true);
-          setFacebookConnectLoader(false);
-          setSyncFriendsLoader(false);
-          setSyncFriends(false);
-          setIsFriendlistSynced(false);
-          setIsSyncing(false);
-  
+
+      if (friendList) {
+        localStorage.setItem("fr_gs_synced", true)
+        storeFriendListIndexDb(localStorage.getItem("fr_default_fb"), res);
+        setIsSynced(true);
+        setFacebookConnect(true);
+        setFacebookConnect(true);
+        setFacebookConnectLoader(false);
+        setSyncFriendsLoader(false);
+        setSyncFriends(false);
+        setIsFriendlistSynced(false);
+        setIsSyncing(false);
+
         return
       }
     }
 
 
 
-    const crossCheckingConnectedAccount = await connectProfile(true)  
-    if(!crossCheckingConnectedAccount){
+    const crossCheckingConnectedAccount = await connectProfile(true)
+    if (!crossCheckingConnectedAccount) {
       setSyncFriendsLoader(false);
       alert(
-            "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
-            fbAuthProfileId
-          );
-          return
+        "Please login to following facebook account https://www.facebook.com/profile.php?id=" +
+        fbAuthProfileId
+      );
+      return
     }
     helper.setCookie("fr_isSyncing", "active");
     localStorage.setItem("fr_update", "Syncing Friends...");
@@ -658,9 +667,9 @@ const GettingStartedPage = (props) => {
       friendCountPayload
     );
     // console.log("Total no of friends count", facebookFriendLength);
-    
-    
-    if (facebookFriendLength!= undefined && facebookFriendLength?.friendLength) {
+
+
+    if (facebookFriendLength != undefined && facebookFriendLength?.friendLength) {
       setSyncFriendsLoader(false);
 
       // console.log("FR len dom", facebookFriendLength.friendLength);
@@ -678,10 +687,10 @@ const GettingStartedPage = (props) => {
       };
       // Check badge count
       checkSyncProgressCount();
-      localStorage.setItem("fr_gs_synced",true)
+      localStorage.setItem("fr_gs_synced", true)
       let syncResp = await extensionAccesories.sendMessageToExt(
         friendListPayload
-        );
+      );
       //   console.log("*********friendListPayload")
       // console.log("syncResp", syncResp);
     }
@@ -859,7 +868,7 @@ const GettingStartedPage = (props) => {
           )}
         </div>
 
-        {installFrinder && installFrinder &&(
+        {installFrinder && installFrinder && (
           <>
             <div
               className={
@@ -934,7 +943,7 @@ const GettingStartedPage = (props) => {
                 fbProfile={fbProfile}
                 shouldLoginUrl={fbAuthProfileId}
                 refreshProfile={refreshProfile}
-                connectProfile={()=>{connectProfile(false)}}
+                connectProfile={() => { connectProfile(false) }}
                 facebookConnect={facebookConnect}
               />
             )}

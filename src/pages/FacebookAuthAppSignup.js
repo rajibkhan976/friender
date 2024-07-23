@@ -24,6 +24,7 @@ const FacebookAuthAppSignup = () => {
           .unwrap()
           .then(res => {
             localStorage.setItem("fr_token", res?.token);
+            localStorage.setItem("fr_amount", res?.amount);
             localStorage.setItem("fr_signup", true);
             setToken(token)
             console.log("here we go setup the token",res)

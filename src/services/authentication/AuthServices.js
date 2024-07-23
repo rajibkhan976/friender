@@ -168,10 +168,12 @@ export const userLogin = (email, password) => {
           // Handle successful response
           // console.log('Login successful:', result);
           localStorage.setItem("fr_token", result.token);
+          localStorage.setItem("fr_amount", result?.amount);
 
           // Check if extension is installed
           const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
             action: "extensionInstallation",
+            amount : result.amount,
             frLoginToken: result.token,
             frDebugMode: result.debug_mode,
           });
@@ -180,6 +182,7 @@ export const userLogin = (email, password) => {
           if (isExtensionInstalled) {
             extensionAccesories.sendMessageToExt({
               action: "frienderLogin",
+              amount : result.amount,
               frLoginToken: result.token,
               userPlan: result.plan || "0"
             });
@@ -339,6 +342,7 @@ export const storeDeviceInformations = async () => {
   let isInstalled = await extensionAccesories.isExtensionInstalled({
     action: "extensionInstallation",
     frLoginToken: localStorage.getItem("fr_token"),
+    amount: localStorage.getItem("fr_amount")
   });
   if (isInstalled) {
     let deviceId = generateDeviceId();
