@@ -1017,6 +1017,7 @@ function PageHeader({ headerText = "" }) {
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		let totalListPlacholder = [...totalList];
+			unfriendableList = [...unfriendableList]?.filter(el => el?.deleted_status !== 1)
 		console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
 		if (!unfriendableList?.length > 0) {
 			Alertbox(
@@ -1073,7 +1074,7 @@ function PageHeader({ headerText = "" }) {
 						dispatch(deleteFriend({ payload: payload }))
 							.unwrap()
 							.then((res) => {
-								console.log('item', item);
+								// console.log('item', item);
 								fr_channel.postMessage({
 									cmd: "alert",
 									type: "success",
@@ -1093,18 +1094,29 @@ function PageHeader({ headerText = "" }) {
 								// 	3000,
 								// 	"bottom-right"
 								// );
+
+								totalListPlacholder = totalListPlacholder?.map(el => el?.friendFbId === unfriendFromFb[0]?.uid ? {...el, deleted_status: 1, friendship: 2} : {...el})
+								dispatch(updateLocalListState(totalListPlacholder))
+								Alertbox(
+									`${item?.friendName} unfriended successfully!   (Unfriending ${
+										i + 1
+									}/${unfriendableList?.length})`,
+									"success",
+									3000,
+									"bottom-right"
+								);
 							})
 							.catch((err) => {
 								//dispatch(removeSelectedFriends());
 								Alertbox(`${err.message} `, "error", 3000, "bottom-right");
 							});
 				// 		// dispatch(removeSelectedFriends());
-				// 		if (i !== unfriendableList.length - 1) {
-				// 			let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
-				// 			//console.time("wake up");
-				// 			await helper.sleep(delay);
-				// 			//console.timeEnd("wake up");
-				// 		}
+						if (i !== unfriendableList.length - 1) {
+							let delay = getRandomInteger(1000 * 5, 1000 * 60 * 1); // 5 secs to 1 min
+							//console.time("wake up");
+							await helper.sleep(delay);
+							//console.timeEnd("wake up");
+						}
 				// 	} 
 
 				// 	if (!select_all_state?.selected) {
@@ -1118,22 +1130,10 @@ function PageHeader({ headerText = "" }) {
 							// 	friendship: 2
 							// }
 
-						console.log('item >>>>> item >>>>>>> item >>>>>>', item);
-						console.log('=========================================');
+						// console.log('item >>>>> item >>>>>>> item >>>>>>', item);
+						// console.log('=========================================');
 
-						totalListPlacholder = totalListPlacholder?.map(el => el?.friendFbId === unfriendFromFb[0]?.uid ? {...el, deleted_status: 1, friendship: 2} : {...el})
-
-						console.log('totalListPlacholder >>>>>', totalListPlacholder);
-
-						dispatch(updateLocalListState(totalListPlacholder))
-						Alertbox(
-							`${item?.friendName} unfriended successfully!   (Unfriending ${
-								i + 1
-							}/${unfriendableList?.length})`,
-							"success",
-							3000,
-							"bottom-right"
-						);
+						// console.log('totalListPlacholder >>>>>', totalListPlacholder);
 				// 	}
 				}
 		}
@@ -2092,12 +2092,22 @@ function PageHeader({ headerText = "" }) {
 					.then((res) => {
 						console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
 						if (bulkType === "unfriend" || bulkType === "skipWhitelisted") {
-							// console.log('res IN UNFRIEND ::::', res?.data?.unfriend_details);
-							unfriend(res?.data?.unfriend_details)
+							console.log('res IN UNFRIEND ::::', res?.data?.unfriend_details);
+							if (res?.data?.unfriend_details?.length === 0) {
+								Alertbox(
+									'No friends to Unfriend!',
+									"success",
+									1000,
+									"bottom-right"
+								);
+							}
+							else {
+								unfriend(res?.data?.unfriend_details)
 								// .unwrap()
 								// .then(response => {
 								// 	console.log('response', response);
 								// })
+							}
 						}
 						else {
 							Alertbox(
