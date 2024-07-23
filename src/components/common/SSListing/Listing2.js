@@ -354,9 +354,19 @@ export default function Listing2(props) {
           filteronColumnFns
         );
         
-        if (fields?.indexOf('friendGender') > -1 && operators[fields?.indexOf('friendGender')][0] === 'contains'){
+        if (
+              fields?.indexOf('friendGender') > -1 && 
+              (
+                operators[fields?.indexOf(('friendGender'))][0] === 'contains' ||
+                operators[fields?.indexOf(('gender'))][0] === 'contains'
+              )
+          ){
           operators[fields?.indexOf('friendGender')][0] = 'equals';
         }
+        // if (fields?.indexOf('gender') > -1 && operators[fields?.indexOf(('gender'))][0] === 'contains') {
+        //   operators[fields?.indexOf('gender')][0] = 'equals';
+        // }
+
         console.log('values, fields, operators', values, fields, operators);
         queryParam["values"] = JSON.stringify(values);
         queryParam["fields"] = JSON.stringify(fields);

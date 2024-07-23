@@ -1150,6 +1150,25 @@
           background-color: rgba($themeGreen4, 0.1);
         }
       }
+
+      &:has(.fb-friend-request-warning) {
+        td {
+          background-color: transparentize($themeRed1, 0.83) !important;
+  
+          &:first-child {
+            &:before {
+              top: 0;
+              position: absolute;
+              content: "";
+              left: 0;
+              height: 100%;
+              height: 100%;
+              width: 4px;
+              background: $themeRed1;
+            }
+          }
+        }
+      }
     }
   }
 

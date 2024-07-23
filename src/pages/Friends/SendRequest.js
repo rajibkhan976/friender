@@ -39,26 +39,26 @@ const SendRequest = ({ deleteAllInterval }) => {
   );
 
   // const [friendsList,setFriendsList]=useState(fr_req_send_list)
-  useEffect(() => {
-    friendsList && dispatch(countCurrentListsize(friendsList.length));
-  }, [dispatch, friendsList]);
+  // useEffect(() => {
+  //   friendsList && dispatch(countCurrentListsize(friendsList.length));
+  // }, [dispatch, friendsList]);
 
-  useEffect(() => {
-    // setFriendsList(fr_req_send_list)
-    dispatch(
-      getSendFriendReqst({
-        fbUserId: localStorage.getItem("fr_default_fb"),
-      })
-    )
-      .unwrap()
-      .then((res) => {
-        // console.log("the friend request send list", res);
-      });
-    let currentCookies = document.cookie;
-    if (currentCookies.includes("deleteAllPendingFR")) {
-      deleteAllInterval(() => { dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })) });
-    }
-  }, []);
+  // useEffect(() => {
+  //   // setFriendsList(fr_req_send_list)
+  //   dispatch(
+  //     getSendFriendReqst({
+  //       fbUserId: localStorage.getItem("fr_default_fb"),
+  //     })
+  //   )
+  //     .unwrap()
+  //     .then((res) => {
+  //       // console.log("the friend request send list", res);
+  //     });
+  //   let currentCookies = document.cookie;
+  //   if (currentCookies.includes("deleteAllPendingFR")) {
+  //     deleteAllInterval(() => { dispatch(getSendFriendReqst({ fbUserId: localStorage.getItem("fr_default_fb") })) });
+  //   }
+  // }, []);
   const [listFilteredCount, setListFilteredCount] = useState(null)
   const [isReset, setIsReset] = useState(null)
 

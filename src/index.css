@@ -376,7 +376,8 @@
 	line-height: 18px;
 	font-weight: 400;
 	color: #fff;
-    z-index: 1;
+    /* z-index: 1; */
+	z-index: 9;
 }
 
 .friend-queue-error-report {

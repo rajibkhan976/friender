@@ -22,6 +22,8 @@ export const FriendsQueueColDef = () => {
 			accessorKey: "message_group_request_sent",
 			header: "Message group: when friend request is sent",
       size:360,
+      enableColumnFilter: false,
+      enableSorting: false,
 			Cell: ({ renderedCellValue, row }) => {
         return (
             <MessageGroupRequestSentRenderer value={renderedCellValue} data={row.original} />
@@ -33,6 +35,8 @@ export const FriendsQueueColDef = () => {
 			accessorKey: "message_group_request_accepted",
 			header: "Message group: when friend request is accepted",
       size:400,
+      enableColumnFilter: false,
+      enableSorting: false,
       Cell: ({ renderedCellValue, row }) => {
         return (
             <MessageGroupRequestAcceptedRenderer value={renderedCellValue} data={row.original} />
