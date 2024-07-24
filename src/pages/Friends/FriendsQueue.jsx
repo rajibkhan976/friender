@@ -29,12 +29,16 @@ import extensionMethods from "../../configuration/extensionAccesories";
 import Listing2 from "../../components/common/SSListing/Listing2";
 import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumnDefs/FriendsQueueColDef";
 import config from "../../configuration/config";
-const fb_user_id= localStorage.getItem("fr_default_fb");
+import { useLocation } from "react-router-dom";
+import { fetchUserProfile } from "../../services/authentication/facebookData";
+// const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const FriendsQueue = () => {
+	const location = useLocation()
 	const dispatch = useDispatch();
 	const stopFRQS = useRef(null);
-
+	const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
+	const ssList_data = useSelector((state) => state.ssList.ssList_data)
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
 	const [isReset, setIsReset] = useState(null);
@@ -91,9 +95,11 @@ const FriendsQueue = () => {
 	const friendRequestSentInsight = useSelector(
 		(state) => state.friendsQueue.friendRequestSentInsight
 	);
-	const friendsQueueRecords = useSelector(
-		(state) => state.friendsQueue.friendsQueueRecords
-	);
+	// const friendsQueueRecords = useSelector(
+	// 	(state) => state.friendsQueue.friendsQueueRecords
+	// );
+
+	const [friendsQueueRecords, setFriendsQueueRecords] = useState(0)
 
 	// console.log("RECORDS FOR FRIRNDS QUEUE -- ", friendsQueueRecords);
 
@@ -123,6 +129,22 @@ const FriendsQueue = () => {
 	const [sendableRecordsCount, setSendableRecordsCount] = useState(0);
 
 	useEffect(() => {
+		if (location?.pathname?.includes("friends-queue")) {
+			setFriendsQueueRecords(ssList_data)
+		}
+	}, [ssList_data, location?.pathname])
+
+	useEffect(() => {
+		if (!fb_user_id || fb_user_id == null) {
+			fetchUserProfile().then((res) => {
+		if (res && res.length) {
+			// setProfiles(res);
+			localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+			set_fb_user_id(res[0].fb_user_id);
+		}
+		});
+		}
+		
 		sendMessageToExt();
 		window.addEventListener(
 			"message",

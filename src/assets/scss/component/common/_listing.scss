@@ -744,10 +744,10 @@
       margin-right: 5px;
       width: 32px;
 
-      *[fill] {
+      *[fill]:not([fill=black]) {
         fill: #fff;
       }
-      *[stroke] {
+      *[stroke]:not([stroke=black]) {
         stroke: #fff;
       }
     }
@@ -896,6 +896,10 @@
     margin-inline-start: 8px;
     cursor: pointer;
     display: inline-flex;
+
+    * {
+      pointer-events: none
+    }
   }
 
   @include theme-aware("color", "text-color");

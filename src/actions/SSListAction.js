@@ -1,6 +1,7 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import apiClient from "../services";
-import { bulkOperationContacts, fetchFriendCount } from "../services/SSListServices";
+import { bulkOperationContacts, bulkOperationFriendsQueueS, fetchFriendCount } from "../services/SSListServices";
+import config from "../configuration/config";
 
 //way to use adapter function stringyfy
 //
@@ -39,6 +40,8 @@ const initialState = {
     list_unfiltered_count: 0,
     select_all_state: {},
     global_searched_filter: "",
+    pluginRowSelection: {},
+    friendsQueueErrorRecordsCount: 0,
 };
 
 export const getListData = createAsyncThunk(
@@ -107,6 +110,15 @@ export const bulkAction = createAsyncThunk(
     }
 )
 
+export const bulkActionQueue = createAsyncThunk(
+    "sslist/bulkActionQueue",
+    async (payload) => {
+        const res = await bulkOperationFriendsQueueS(payload)
+        console.log('res in action', res);
+        return {...res, payload}
+    }
+)
+
 // export const getSendFriendReqstCount = createAsyncThunk(
 //     "facebook/getSendFriendReqst",
 //     async (payload) => {
@@ -124,7 +136,7 @@ export const ssListSlice = createSlice({
 
         },
         updateRowSelection: (state, action) => {
-            state.pagination = action.payload
+            state.pluginRowSelection = action.payload
         },
         updateSelectAllState: (state, action) => {
             state.select_all_state = action.payload;
@@ -248,6 +260,37 @@ export const ssListSlice = createSlice({
         },
         updateLocalListState: (state, action) => {
             state.ssList_data = [...action?.payload]
+        },
+        // removeFromTotalList: (state, action) => {
+        //     // console.log('action', action?.payload);
+        //     // console.log('LIST', state.ssList_data?.filter(el => action?.payload?.includes(el?._id)));
+        //     if (
+        //         state?.select_all_state
+            
+        //     ) {
+        //         // console.log(state.list_filtered_count, state.list_unfiltered_count);
+        //         state.list_unfiltered_count = state.list_unfiltered_count - action?.payload?.length
+        //         if (state.list_filtered_count) {
+        //             state.list_filtered_count = state.list_filtered_count - action?.payload?.length
+        //         }
+        //         state.ssList_data = state.ssList_data?.filter(el => !action?.payload?.includes(el?._id))
+        //         state.pluginRowSelection = action.payload
+        //         state.select_all_state = {}
+        //         state.MRT_selected_rows_state = {}
+        //     } else {
+        //         console.log('SELECTED ALL :::');
+        //         // getListData()
+        //     }
+        // },
+        // updatePagination: (state, action) => {
+        //     console.log('action', action);
+        //     state.pagination_state={
+        //         page_number: action?.payload?.pageIndex,
+        //         page_size: action?.payload?.pageSize
+        //     }
+        // },
+        updateFriendsQueueCount: (state, action) => {
+            state.friendsQueueErrorRecordsCount = action.payload
         }
     },
     extraReducers: {
@@ -289,6 +332,33 @@ export const ssListSlice = createSlice({
             });
             //state.ssList_data_obj = listObj;
         },
+        // [bulkActionQueue.pending]: (state,action) => {
+        //     // state.isLoading = true;
+        //     console.log('bulkActionQueue PENDING');
+        // },
+        // [bulkActionQueue.fulfilled]: (state,action) => {
+        //     // state.isLoading = false;
+        //     console.log('bulkActionQueue FULFILLED', action.payload?.payload);
+
+        //     if (action.payload?.payload.operation_name === "move_to_top") {
+        //         state.ssList_data = [
+        //                                 state.ssList_data?.filter(el => el?.includes(action.payload?.payload?.include_list)), 
+        //                                 ...state.ssList_data?.filter(el => !el?.includes(action.payload?.payload?.include_list))
+        //                             ]
+        //     }
+
+        //     if (action.payload?.payload.operation_name === "remove") {
+        //         state.ssList_data = state?.ssList_data?.filter(obj => !action.payload?.payload?.include_list?.includes(obj?.fb_user_id))[0]
+        //         console.log('=======================', action.payload?.payload?.include_list);
+        //         console.log(state.ssList_data?.filter(obj => !action.payload?.payload?.include_list?.includes(obj?.fb_user_id))[0]);
+        //     }
+
+        //     state.MRT_selected_rows_state = {}
+        //     state.filter_state = {
+        //         filter_key_value: null,
+        //         filter_fun_state: null,
+        //     }
+        // },
     },
 });
 
@@ -308,6 +378,9 @@ export const {
     updateBlackListStatusOfSelectesList,
     removeMTRallRowSelection,
     crealGlobalFilter,
-    updateLocalListState
+    updateLocalListState,
+    // removeFromTotalList,
+    // updatePagination,
+    updateFriendsQueueCount
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

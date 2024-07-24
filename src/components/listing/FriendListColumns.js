@@ -32,6 +32,7 @@ import {
 	UnfriendedIcon,
 	LostFriendsIcon,
 	NonFriendsIcon,
+	PostEngagementIcon,
 } from "../../assets/icons/Icons";
 // import {
 //   BlockListFriends,
@@ -1372,6 +1373,31 @@ export const SourceRendererPending = memo((params) => {
             </div>
         );
     }
+
+	if (
+		params?.data?.finalSource === "post_engagement" &&
+		params?.data?.source === "post_engagement"
+	) {
+		return (
+            <div 
+				className='friend-sync-source d-flex f-align-center'
+				data-text={'Post Engagement'}
+			>
+                <>
+                    <figure className='friend-source text-center'>
+                        {/* <SyncSourceIcon /> */}
+                        {/* <SyncIcon /> */}
+						<PostEngagementIcon />
+                    </figure>
+                    <span
+                        className="friendSource"
+                    >
+                        Post Engagem...
+                    </span>
+                </>
+            </div>
+        );
+	}
 
     if (params?.data?.task_name) {
         return (

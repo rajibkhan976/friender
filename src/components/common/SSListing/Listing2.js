@@ -15,16 +15,20 @@ import {
   removeMTRallRowSelection,
   resetFilters,
   updateFilterState,
+  updateFriendsQueueCount,
   updateMRTrowSelectionState,
+  updatePagination,
   updateSelectAcross,
   updateSelectAllState,
   updateSelectedFriends,
 } from "../../../actions/SSListAction";
 import {crealFilter, removeSelectedFriends} from "../../../actions/FriendListAction"
 import NoDataFound from "../NoDataFound";
+import { useLocation } from "react-router-dom";
 
 export default function Listing2(props) {
   //mock data - strongly typed if you are using TypeScript (optional, but recommended)
+  const location = useLocation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const inactiveAfter = useSelector(
@@ -33,6 +37,7 @@ export default function Listing2(props) {
   const textFilter = useSelector((state) => state.friendlist.searched_filter);
   const selected = useSelector((state) => state.ssList.selected_friends);
   const filter_state = useSelector((state) => state.ssList.filter_state);
+  const pagination_state= useSelector((state) => state.ssList.pagination_state)
   //  const select_all_state = useSelector((state) => state.ssList.select_all_state)
   const isInitialRender = useRef(true);
   const data = useSelector((state) => state.ssList.ssList_data);
@@ -332,6 +337,13 @@ export default function Listing2(props) {
       obj = { ...rowSelection, ...obj };
       dispatch(updateMRTrowSelectionState(obj));
     }
+
+    if (location?.pathname?.includes('friends-queue')) {
+      console.log('Data :::', data);
+			if (data.length > 0) {
+				dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
+			}
+    }
   }, [data]);
   const fetchData = async (
     paginationData,
@@ -365,15 +377,15 @@ export default function Listing2(props) {
           filteronColumnFns
         );
         
-        if (
-              fields?.indexOf('friendGender') > -1 && 
-              (
-                operators[fields?.indexOf(('friendGender'))][0] === 'contains' ||
-                operators[fields?.indexOf(('gender'))][0] === 'contains'
-              )
-          ){
-          operators[fields?.indexOf('friendGender')][0] = 'equals';
-        }
+        // if (
+        //       fields?.indexOf('friendGender') > -1 && 
+        //       (
+        //         operators[fields?.indexOf(('friendGender'))][0] === 'contains' ||
+        //         operators[fields?.indexOf(('gender'))][0] === 'contains'
+        //       )
+        //   ){
+        //   operators[fields?.indexOf('friendGender')][0] = 'equals';
+        // }
         // if (fields?.indexOf('gender') > -1 && operators[fields?.indexOf(('gender'))][0] === 'contains') {
         //   operators[fields?.indexOf('gender')][0] = 'equals';
         // }
@@ -387,7 +399,8 @@ export default function Listing2(props) {
 
       //console.log("sorting---outi :::>>>", sortingState);
       if (sortingState.length > 0) {
-        //console.log("sorting--- :::>>>", sortingState);
+        // console.log("sorting--- :::>>>", sortingState?.map(el => el?.id === "last_engagement_date" ? {...el, id: 'recent_engagement'} : {...el}));
+        sortingState = sortingState?.map(el => el?.id === "last_engagement_date" ? {...el, id: 'recent_engagement'} : {...el})
         queryParam["sort_by"] = sortingState[0].id;
         queryParam["sort_order"] = sortingState[0].desc ? "desc" : "asc";
       }
@@ -505,6 +518,11 @@ export default function Listing2(props) {
         /> : <NoDataFound />
     )
   }
+
+  // useEffect(() => {
+  //   dispatch(updatePagination(pagination))
+  //   console.log('pagination_state', pagination);
+  // }, [pagination])
 
   //pass table options to useMaterialReactTable
   const table = useMaterialReactTable({

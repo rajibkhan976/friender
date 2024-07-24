@@ -36,12 +36,14 @@ const MainComponent = () => {
 	//const [isHeader, setIsHeader] = useState(false);
 	const planModal = useSelector((state) => state.plan.showModal);
 	const [fbAuthInfo, setFBAuthInfo] = useState(null)
+	const ssList_data = useSelector((state) => state.ssList.ssList_data)
 
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
 	);
 
-	const friendsQueueErrorRecordsCount = useSelector((state) => state.friendsQueue.friendsQueueErrorRecordsCount);
+	// const friendsQueueErrorRecordsCount = useSelector((state) => state.friendsQueue.friendsQueueErrorRecordsCount);
+	const friendsQueueErrorRecordsCount = useSelector((state) => state.ssList.friendsQueueErrorRecordsCount)
 
 	const showHeader = () => {
 		if (
@@ -172,6 +174,7 @@ const MainComponent = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log(friendsQueueRecords, friendsQueueErrorRecordsCount);
 		if (friendsQueueRecords) {
 			// console.log(friendsQueueRecords);
 			// let count = 0;
@@ -190,6 +193,18 @@ const MainComponent = () => {
 			}
 		}
 	}, [friendsQueueRecords, friendsQueueErrorRecordsCount]);
+
+	useEffect(() => {
+		if (ssList_data?.length > 0 && location?.pathname.includes("friends-queue")) {
+			if (friendsQueueErrorRecordsCount > 0) {
+				setShowFriendsQueueErr(true);
+			}
+
+			if (friendsQueueErrorRecordsCount === 0) {
+				setShowFriendsQueueErr(false);
+			}
+		}
+	}, [ssList_data, friendsQueueErrorRecordsCount])
 
 	return (
 		<main

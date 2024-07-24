@@ -86,7 +86,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
-import { bulkAction, crealGlobalFilter, getFriendCountAction, getListData, removeMTRallRowSelection, resetFilters, updateLocalListState, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
+import { bulkAction, bulkActionQueue, crealGlobalFilter, getFriendCountAction, getListData, removeFromTotalList, removeMTRallRowSelection, resetFilters, updateLocalListState, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -288,6 +288,13 @@ function PageHeader({ headerText = "" }) {
 	const selected_whitelist_contacts = useSelector((state) => state.ssList.selected_friends_total_whiteList_count);
 	const selected_blacklist_contacts = useSelector((state) => state.ssList.selected_friends_total_blackList_count);
 
+	const dataExtractor = (response) => {
+		return {
+			res:response,
+			data: response?.data,
+			count: response?.count,
+		};
+	};
 
 	useEffect(() => {
 		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
@@ -885,43 +892,65 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	const deleteRecordsFromFriendsQueue = (item) => {
-		if (item) {
-			closeFilterDropdown(item);
-		}
-		if (selectedFriends && selectedFriends.length > 0 && isFrQueActionsEnabled) {
-			const fbIdList = [];
-			selectedFriends?.forEach((item) => {
-				if (item._id) {
-					fbIdList.push(item?._id);
-				}
-			});
-			dispatch(
-				popFriendsQueueRecordsFromQueue({
-					removeRecords: fbIdList,
-					fb_user_id: defaultFbId,
-				})
-			)
-				.unwrap()
-				.then((response) => {
-					dispatch(removeFriendsQueueRecordsFromIndexDB(fbIdList));
-					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
-						? JSON.parse(localStorage.getItem("fr_queue_settings"))
-						: null;
-					if (
-						fr_queue_settings?.length &&
-						typeof fr_queue_settings[0] === "object" &&
-						Object.keys(fr_queue_settings[0]).length >= 5
-					) {
-						// console.log(fr_queue_settings[0])
-						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
-					}
-				});
-			dispatch(updateSelectedFriends([]));
-			setIsComponentVisible(false);
-			// console.log(selectedFriends);
-		}
-	};
+	useEffect(() => {
+		console.log('selectedListItems', pagination_state);
+	}, [pagination_state])
+
+	// const deleteRecordsFromFriendsQueue = (item) => {
+	// 	if (item) {
+	// 		closeFilterDropdown(item);
+	// 	}
+
+	// 	if (!select_all_state?.selected) {
+	// 		if (selectedListItems && selectedListItems.length > 0 && isFrQueActionsEnabled) {
+	// 			const fbIdList = [];
+	// 			selectedListItems?.forEach((item) => {
+	// 				if (item._id) {
+	// 					fbIdList.push(item?._id);
+	// 				}
+	// 			});
+	// 			dispatch(
+	// 				popFriendsQueueRecordsFromQueue({
+	// 					removeRecords: fbIdList,
+	// 					fb_user_id: defaultFbId,
+	// 				})
+	// 			)
+	// 				.unwrap()
+	// 				.then((response) => {
+	// 					// console.log('pagination_state', pagination_state);
+	// 					const payload = {
+	// 						queryParam: {
+	// 							page_number: pagination_state.page_number ? pagination_state.page_number + 1 : 1,
+	// 							page_size: pagination_state.page_size?pagination_state.page_size:15,
+	// 							search_string: searchValue.length > 2 ? searchValue : null,
+	// 							fb_user_id: defaultFbId
+	// 						},
+	// 						baseUrl: config.fetchFriendsQueueRecordv2,
+	// 						responseAdapter: dataExtractor,
+	// 					};
+
+	// 					// console.log('?>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', payload);
+	// 					// dispatch(removeFriendsQueueRecordsFromIndexDB(fbIdList));
+	// 					dispatch(removeFromTotalList(fbIdList))
+	// 					dispatch(getListData(payload))
+	// 					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+	// 						? JSON.parse(localStorage.getItem("fr_queue_settings"))
+	// 						: null;
+	// 					if (
+	// 						fr_queue_settings?.length &&
+	// 						typeof fr_queue_settings[0] === "object" &&
+	// 						Object.keys(fr_queue_settings[0]).length >= 5
+	// 					) {
+	// 						// console.log(fr_queue_settings[0])
+	// 						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+	// 					}
+	// 				});
+	// 			dispatch(updateSelectedFriends([]));
+	// 			setIsComponentVisible(false);
+	// 			// console.log(selectedFriends);
+	// 		}
+	// 	}
+	// };
 
 	const skipWhitList = () => {
 		// const listWithOutWhites = selectedFriends.filter((item) => {
@@ -1397,6 +1426,8 @@ function PageHeader({ headerText = "" }) {
 			// 				)}
 			// 			);
 			// 	});
+
+			setIsFrQueActionsEnabled(true);
 		}
 		dispatch(fetchGroups())
 			.unwrap()
@@ -2092,6 +2123,25 @@ function PageHeader({ headerText = "" }) {
 				!select_all_state?.selected
 			) {
 				unfriend(selectedListItems)
+			} else if (bulkType === "remove" || bulkType === "move_to_top") {
+				delete payload["friend_status"]
+				delete payload["operation"]
+
+				payload['operation_name'] = bulkType
+
+				console.log('payload ::::', payload);
+				dispatch(bulkActionQueue(payload)).unwrap()
+					.then((res) => {
+						console.log('res in HEADER', res);
+						setModalOpen(false)
+						dispatch(updateSelectAllState({}))
+						dispatch(updateSelectedFriends([]));
+						setIsComponentVisible(false);
+						dispatch(updateSelectAllState({}))
+						dispatch(removeSelectedFriends());
+						dispatch(updateRowSelection({}));
+						refreshAndDeselectList();
+					})
 			} else {
 				dispatch(bulkAction(payload)).unwrap()
 					.then((res) => {
@@ -2243,6 +2293,10 @@ function PageHeader({ headerText = "" }) {
 			return true
 		}
 	}, [location?.pathname, MRT_selected_rows_state])
+
+	useEffect(() => {
+		console.log('isFrQueActionsEnabled', isFrQueActionsEnabled);
+	}, [isFrQueActionsEnabled])
 
 	return (
 		<>
@@ -2948,10 +3002,11 @@ function PageHeader({ headerText = "" }) {
 														<li
 															className='del-fr-action'
 															onClick={() =>
-																deleteRecordsFromFriendsQueue(accessItem)
+																// deleteRecordsFromFriendsQueue(accessItem)
+																triggerBulkOperation('remove')
 															}
 															data-disabled={
-																!selectedFriends || selectedFriends?.length === 0 || !isFrQueActionsEnabled
+																!selectedListItems || selectedListItems?.length === 0 || !isFrQueActionsEnabled
 																	? true
 																	: false
 															}
@@ -2964,10 +3019,11 @@ function PageHeader({ headerText = "" }) {
 														<li
 															className='del-fr-action'
 															onClick={() =>
-																alterFriendsQueueRecordsOrder(accessItem)
+																// alterFriendsQueueRecordsOrder(accessItem)
+																triggerBulkOperation('move_to_top')
 															}
 															data-disabled={
-																!selectedFriends || selectedFriends?.length === 0 || !isFrQueActionsEnabled
+																!selectedListItems || selectedListItems?.length === 0 || !isFrQueActionsEnabled
 																	? true
 																	: false
 															}

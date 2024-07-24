@@ -59,3 +59,20 @@ export const fetchGroupById = (groupId) => {
       });
   });
 };
+
+export const bulkOperationFriendsQueueS = async (payload) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        config.bulkOperationFriendsQueue,
+        payload,
+        {headers:headers}
+      ).then((res) => {
+        console.log('res >>>>>> IN SERVICE', res);
+        resolve(res)
+      }).catch((error) => {
+        console.log(error);
+        reject(error)
+      })
+  })
+}
