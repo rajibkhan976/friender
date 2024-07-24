@@ -141,6 +141,7 @@ export const ssListSlice = createSlice({
             state.selected_friends_curr_count = 0;
             state.selected_friends_total_blackList_count = 0;
             state.selected_friends_total_whiteList_count = 0;
+            state.selected_friends = [];
         },
         updateCurrlistCount: (state, action) => {
             state.list_unfiltered_count = action.payload;

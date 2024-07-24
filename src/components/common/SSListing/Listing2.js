@@ -101,6 +101,18 @@ export default function Listing2(props) {
     return filteredArray;
   }
 
+  function removeDuplicates(arr) {
+    const seen = new Set();
+    return arr.filter(item => {
+        if (seen.has(item._id)) {
+            return false;
+        } else {
+            seen.add(item._id);
+            return true;
+        }
+    });
+}
+
   useEffect(() => {
     //console.log('rowSelection??????>>>>>>________', rowSelection);
     // Fetching all unselectedIds by comparing with the previous rowSelection
@@ -153,7 +165,7 @@ export default function Listing2(props) {
       ];
       // console.log('arrayOfTrackerObjects', Array.from(new Set(arrayOfTrackerObjects)));
       dispatch(
-        updateSelectedFriends(Array.from(new Set(arrayOfTrackerObjects)))
+        updateSelectedFriends(removeDuplicates(arrayOfTrackerObjects))
       );
     } else {
       // If no previous global state value available then add it for the first time
@@ -188,7 +200,7 @@ export default function Listing2(props) {
       ];
       // console.log('arrayOfTrackerObjects', Array.from(new Set(arrayOfTrackerObjects)));
       dispatch(
-        updateSelectedFriends(Array.from(new Set(arrayOfTrackerObjects)))
+        updateSelectedFriends(removeDuplicates(arrayOfTrackerObjects))
       );
     }
   }, [rowSelection, rowSelectionTracker]);
