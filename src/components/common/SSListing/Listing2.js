@@ -5,7 +5,6 @@ import {
 } from "material-react-table";
 import { MuiListStyleProps } from "./style/Style";
 import { useTheme } from "@mui/material";
-//import { fetchFriendList2 } from '../../../services/friends/FriendListServices';
 import { useDispatch, useSelector } from "react-redux";
 import helper from "../../../helpers/helper";
 
@@ -579,7 +578,7 @@ export default function Listing2(props) {
   return (
     <div className={`react-table-container ${isLoading ? 'is-loading':''}`}  style={{ width: '100%', minWidth: '800px' }}>
       {((rowSelection && Object.keys(rowSelection)?.length > 0) ||
-        (selectAcross?.selected && selectAcross?.unSelected < rowCount) ) && (
+        ( selectAcross?.selected && selectAcross?.unSelected?.length < rowCount ) ) && (
           <div className="selection-popup d-flex f-justify-center f-align-center">
             <p>
               <strong>

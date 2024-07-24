@@ -39,7 +39,6 @@ const initialState = {
     list_unfiltered_count: 0,
     select_all_state: {},
     global_searched_filter: "",
-    pluginRowSelection: {}
 };
 
 export const getListData = createAsyncThunk(
@@ -132,6 +131,16 @@ export const ssListSlice = createSlice({
         },
         updateFilterState: (state, action) => {
             state.filter_state = action.payload;
+            state.selectAcross = {
+                selected:false,
+                unSelected:[],
+                unSelected_row_data:[],
+            };
+            state.MRT_selected_rows_state = {};
+            state.select_all_state = {};
+            state.selected_friends_curr_count = 0;
+            state.selected_friends_total_blackList_count = 0;
+            state.selected_friends_total_whiteList_count = 0;
         },
         updateCurrlistCount: (state, action) => {
             state.list_unfiltered_count = action.payload;
@@ -263,7 +272,6 @@ export const ssListSlice = createSlice({
             state.isLoading = false;
             state.isRefetching = false;
             state.list_filtered_count = action.payload.count;
-            console.log('COUNT CHANGED :::::', action.payload);
             if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
                 state.list_unfiltered_count = action.payload.count;
               }

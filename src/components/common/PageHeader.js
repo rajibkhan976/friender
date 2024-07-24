@@ -241,7 +241,7 @@ function PageHeader({ headerText = "" }) {
 	const selectedListItems = useSelector((state) => state.ssList.selected_friends)
 	const filter_state = useSelector((state) => state.ssList.filter_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
-	const select_all_state = useSelector((state) => state.ssList.select_all_state)
+    const select_all_state = useSelector((state) => state.ssList.selectAcross)
 	//const current_list_selection_count = useSelector((state) => state.ssList.selected_friends_curr_count)
 	const selectAcross = useSelector((state) => state.ssList.selectAcross)
 	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
