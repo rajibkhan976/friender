@@ -339,7 +339,7 @@ export default function Listing2(props) {
     }
 
     if (location?.pathname?.includes('friends-queue')) {
-      console.log('Data :::', data);
+      // console.log('Data :::', data);
 			if (data.length > 0) {
 				dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
 			}

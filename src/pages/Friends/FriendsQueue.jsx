@@ -31,6 +31,7 @@ import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumn
 import config from "../../configuration/config";
 import { useLocation } from "react-router-dom";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
+import { getQueueSendableCount } from "../../actions/SSListAction";
 // const fb_user_id= localStorage.getItem("fr_default_fb");
 
 const FriendsQueue = () => {
@@ -39,6 +40,7 @@ const FriendsQueue = () => {
 	const stopFRQS = useRef(null);
 	const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
 	const ssList_data = useSelector((state) => state.ssList.ssList_data)
+	const sendableCount = useSelector((state) => state.ssList.fetchSendableCount)
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
 	const [isReset, setIsReset] = useState(null);
@@ -144,6 +146,10 @@ const FriendsQueue = () => {
 		}
 		});
 		}
+
+		console.log('===================');
+		dispatch(getQueueSendableCount({fb_user_id: fb_user_id})).unwrap()
+		// console.log('===================');
 		
 		sendMessageToExt();
 		window.addEventListener(
@@ -170,17 +176,21 @@ const FriendsQueue = () => {
 	}
 
 	//
+	// useEffect(() => {
+	// 	if (friendsQueueRecords) {
+	// 		// const filteredErrorRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === false);
+	// 		const filteredSendbleRecords =
+	// 			friendsQueueRecords?.length &&
+	// 			friendsQueueRecords.filter(
+	// 				(item) => item.status === null && item.is_active === true
+	// 			);
+	// 		setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
+	// 	}
+	// }, [friendsQueueRecords]);
+
 	useEffect(() => {
-		if (friendsQueueRecords) {
-			// const filteredErrorRecords = friendsQueueRecords?.length && friendsQueueRecords.filter(item => item.status === false);
-			const filteredSendbleRecords =
-				friendsQueueRecords?.length &&
-				friendsQueueRecords.filter(
-					(item) => item.status === null && item.is_active === true
-				);
-			setSendableRecordsCount(filteredSendbleRecords?.length ?? 0);
-		}
-	}, [friendsQueueRecords]);
+		setSendableRecordsCount(sendableCount ?? 0);
+	}, [sendableCount])
 
 	function matchesFilter(cellValue, filterValues) {
 		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));

@@ -86,7 +86,7 @@ import { utils } from "../../helpers/utils";
 import DropSelectMessage from "../messages/DropSelectMessage";
 import { useDropzone } from "react-dropzone";
 import moment from "moment";
-import { bulkAction, bulkActionQueue, crealGlobalFilter, getFriendCountAction, getListData, removeFromTotalList, removeMTRallRowSelection, resetFilters, updateLocalListState, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
+import { bulkAction, bulkActionQueue, crealGlobalFilter, getFriendCountAction, getListData, getQueueSendableCount, removeFromTotalList, removeMTRallRowSelection, resetFilters, updateLocalListState, updateRowSelection, updateSelectAllState, updateWhiteListStatusOfSelectesList } from "../../actions/SSListAction";
 
 const syncBtnDefaultState = "Sync Now";
 const syncStatucCheckingIntvtime = 1000 * 10;
@@ -454,7 +454,7 @@ function PageHeader({ headerText = "" }) {
 			});
 		});
 
-		console.log("location array -- ", locationArray);
+		// console.log("location array -- ", locationArray);
 
 		setLinks(locationArray);
 
@@ -892,9 +892,9 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	useEffect(() => {
-		console.log('selectedListItems', pagination_state);
-	}, [pagination_state])
+	// useEffect(() => {
+	// 	console.log('selectedListItems', pagination_state);
+	// }, [pagination_state])
 
 	// const deleteRecordsFromFriendsQueue = (item) => {
 	// 	if (item) {
@@ -1038,9 +1038,9 @@ function PageHeader({ headerText = "" }) {
 		setSelectedCampaign(item?.campaign_id);
 	};
 
-	useEffect(() => {
-		console.log('totalList', totalList);
-	}, [totalList])
+	// useEffect(() => {
+	// 	console.log('totalList', totalList);
+	// }, [totalList])
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		let totalListPlacholder = [...totalList];
@@ -1710,16 +1710,20 @@ function PageHeader({ headerText = "" }) {
 		// if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
 			setIsFrQueActionsEnabled(false);
-			dispatch(getNewFriendsQueueRecordsInChunk())
-				.unwrap()
-				.then((resp) => {
-					dispatch(removeSelectedFriends())
-						.unwrap()
-						.then((response) =>
-							setIsFrQueActionsEnabled(true)
-						)
-				}
-				);
+			dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
+				.then((res) => {
+					console.log('res >>>>>>', res);
+				})
+			// dispatch(getNewFriendsQueueRecordsInChunk())
+			// 	.unwrap()
+			// 	.then((resp) => {
+			// 		dispatch(removeSelectedFriends())
+			// 			.unwrap()
+			// 			.then((response) =>
+			// 				setIsFrQueActionsEnabled(true)
+			// 			)
+			// 	}
+			// 	);
 		}
 	};
 
@@ -1727,7 +1731,7 @@ function PageHeader({ headerText = "" }) {
 		window.addEventListener(
 			"message",
 			(event) => {
-				// console.log("addEventListener", event);
+				console.log("addEventListener", event);
 				reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
 			},
 			false
@@ -2294,9 +2298,9 @@ function PageHeader({ headerText = "" }) {
 		}
 	}, [location?.pathname, MRT_selected_rows_state])
 
-	useEffect(() => {
-		console.log('isFrQueActionsEnabled', isFrQueActionsEnabled);
-	}, [isFrQueActionsEnabled])
+	// useEffect(() => {
+	// 	console.log('isFrQueActionsEnabled', isFrQueActionsEnabled);
+	// }, [isFrQueActionsEnabled])
 
 	return (
 		<>

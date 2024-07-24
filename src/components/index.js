@@ -63,7 +63,7 @@ const MainComponent = () => {
 		const myExtensionId = process.env.REACT_APP_KYUBI_EXTENSION_ID;
 		const currentEmail = localStorage.getItem('fr_default_email');
 
-		console.log('SUSPENSION FUNCTION');
+		// console.log('SUSPENSION FUNCTION');
 
 		(async () => {
 			if (myExtensionId && currentEmail) {
@@ -89,7 +89,7 @@ const MainComponent = () => {
 				let user_onbording_status = localStorage.getItem("fr_onboarding");
 				let isSignupUser = localStorage.getItem("fr_signup");
 
-				console.log("in index isSignupUser", isSignupUser);
+				// console.log("in index isSignupUser", isSignupUser);
 
 				const userProfile = await fetchUserProfile();
 				// console.log("user info index",userProfile)
@@ -174,7 +174,7 @@ const MainComponent = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(friendsQueueRecords, friendsQueueErrorRecordsCount);
+		// console.log(friendsQueueRecords, friendsQueueErrorRecordsCount);
 		if (friendsQueueRecords) {
 			// console.log(friendsQueueRecords);
 			// let count = 0;

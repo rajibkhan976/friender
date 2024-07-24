@@ -1,6 +1,6 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import apiClient from "../services";
-import { bulkOperationContacts, bulkOperationFriendsQueueS, fetchFriendCount } from "../services/SSListServices";
+import { bulkOperationContacts, bulkOperationFriendsQueueS, fetchFriendCount, fetchQueueCountS } from "../services/SSListServices";
 import config from "../configuration/config";
 
 //way to use adapter function stringyfy
@@ -42,13 +42,14 @@ const initialState = {
     global_searched_filter: "",
     pluginRowSelection: {},
     friendsQueueErrorRecordsCount: 0,
+    fetchSendableCount: 0
 };
 
 export const getListData = createAsyncThunk(
     "sslist/getListData",
     async (payload) => {
         const queryParam = payload.queryParam
-        console.log('queryParam', queryParam);
+        // console.log('queryParam', queryParam);
       const res  = await apiClient(
         "get",
         `${payload.baseUrl}`,
@@ -116,6 +117,16 @@ export const bulkActionQueue = createAsyncThunk(
         const res = await bulkOperationFriendsQueueS(payload)
         console.log('res in action', res);
         return {...res, payload}
+    }
+)
+
+export const getQueueSendableCount = createAsyncThunk(
+    "ssList/getQueueSendableCount",
+    async (payload) => {
+        console.log('>>>>>>>>>>>>>>', payload);
+        const res = await fetchQueueCountS(payload)
+        console.log('res', res);
+        return res
     }
 )
 
@@ -291,6 +302,10 @@ export const ssListSlice = createSlice({
         // },
         updateFriendsQueueCount: (state, action) => {
             state.friendsQueueErrorRecordsCount = action.payload
+        },
+        updateSendableAcount: (state, action) => {
+            console.log(' >>>>>>>>> ', action?.payload);
+            state.fetchSendableCount = action.payload.sendable_count
         }
     },
     extraReducers: {
@@ -359,6 +374,13 @@ export const ssListSlice = createSlice({
         //         filter_fun_state: null,
         //     }
         // },
+        [getQueueSendableCount.pending]: (state, action) => {
+            // console.log('----- LOADING -----');
+        },
+        [getQueueSendableCount.fulfilled]: (state, action) => {
+            // console.log('>>>>>>>> state', state, 'action', action?.payload?.sendable_count);
+            state.fetchSendableCount = action?.payload?.sendable_count
+        }
     },
 });
 

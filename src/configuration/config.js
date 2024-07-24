@@ -248,6 +248,12 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/"+
 		appEnv+
 		"/friend-queue-bulk-operation",
+	fetchSendableCount:
+		"https://"+
+		profileService +
+		".execute-api.us-east-1.amazonaws.com/"+
+		appEnv+
+		"/fetch-sendable-count",
 	// Messages Service
 	fetchDmfUrl:
 		"https://" +
