@@ -1,5 +1,6 @@
 import { MenuItem } from "@mui/material";
 import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, RefriendCountRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
+import { CSVAArrowIcon, FriendsFriendIcon, GroupIcon, IncomingIcon, IncomingRequest, OutgoingIcon, PostIcon, SuggestFriendIcon, SyncIcon } from "../../../../assets/icons/Icons";
 
 const notContainsFilterFn = (row, id, filterValue) => {
     console.log(!row.getValue(id).toLowerCase().includes(filterValue.toLowerCase()));
@@ -10,6 +11,81 @@ const notContainsFilterFn = (row, id, filterValue) => {
     <div className="fr-ls-tooltip">
       <span>{header}</span>
       <span className="tooltiptext">{tooltipText}</span>
+    </div>
+  );
+  const sourceTooltipToHeader = (header) => (
+    <div className="fr-ls-tooltip">
+      <span>{header}</span>
+      <div
+        className="header-tooltip-content tooltip"
+        style={{
+          width: "268px",
+        }}
+      >
+        <ul>
+          <li>
+            <span>
+              {" "}
+              <OutgoingIcon />
+            </span>{" "}
+            Outgoing
+          </li>
+          <li>
+            <span>
+              <IncomingIcon />
+            </span>
+            Incoming
+          </li>
+          <li>
+            <span>
+              <SyncIcon />
+            </span>
+            Sync
+          </li>
+          <li>
+            <span>
+              {/* <SourceCsvIcon /> */}
+              <CSVAArrowIcon />
+            </span>
+            CSV Upload
+          </li>
+          <li>
+            <span>
+              <GroupIcon />
+            </span>
+            Request from group
+          </li>
+          <li>
+            <span>
+              {" "}
+              <IncomingRequest />
+            </span>
+            Incoming request
+          </li>
+  
+          <li>
+            <span>
+              {" "}
+              <FriendsFriendIcon />
+            </span>{" "}
+            Request from friends friend
+          </li>
+          <li>
+            <span>
+              {" "}
+              <SuggestFriendIcon />
+            </span>{" "}
+            Request from suggested friends
+          </li>
+          <li>
+            <span>
+              {" "}
+              <PostIcon />
+            </span>{" "}
+            Request from post
+          </li>
+        </ul>
+      </div>
     </div>
   );
 
@@ -298,7 +374,7 @@ export const CommonColDefs = {
     },
     Source: {
         accessorKey: 'source', //simple recommended way to define a column
-        header: 'Source',
+        header: sourceTooltipToHeader("Source"),
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
         columnFilterModeOptions: ['contains', 'startsWith', 'endsWith', 'notContains'],

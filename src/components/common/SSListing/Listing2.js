@@ -628,6 +628,14 @@ export default function Listing2(props) {
               ) : (
                 <span>Do you want to select all Friends? </span>
               )}
+
+            {props?.extraParams?.isCampaignUserList && 
+              <button
+                className='remove-friends btn-inline red-text'
+                onClick={props?.extraParams?.removeFriendFromCampaign}
+              >
+              Remove friend(s)
+              </button>}
               <label className="fr-custom-check">
                 <input
                   type="checkbox"

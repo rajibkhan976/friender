@@ -43,7 +43,8 @@ export const FriendsQueueColDef = () => {
         )
     }
 		},
-    Source,
+    {...Source,
+      header:"Source"},
   ];
 
   return columns.map(col => ({

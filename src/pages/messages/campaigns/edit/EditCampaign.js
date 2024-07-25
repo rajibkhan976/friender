@@ -17,7 +17,6 @@ import CustomHeaderTooltip from "components/common/CustomHeaderTooltip";
 import CampaignScheduler from "components/messages/campaigns/CampaignScheduler";
 import CampaignSchedulerPopup from "components/messages/campaigns/CampaignScedulerPopup";
 import NoDataFound from "components/common/NoDataFound";
-import Listing from "components/common/Listing";
 import CampaignCreateEditLayout from "components/messages/campaigns/CampaignCreateEditLayout";
 import ScheduleSelector from "../../../../components/messages/campaigns/ScheduleSelector";
 import {
@@ -26,6 +25,10 @@ import {
 	updateCampaignSchedule
 } from "../../../../actions/CampaignsActions";
 import { updateCurrlistCount } from "../../../../actions/SSListAction";
+import { fetchUserProfile } from "../../../../services/authentication/facebookData";
+import Listing2 from "../../../../components/common/SSListing/Listing2";
+import config from "../../../../configuration/config";
+import { campaignUserColumnDefs } from "../../../../components/common/SSListing/ListColumnDefs/CampaignColDef";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();
@@ -45,7 +48,7 @@ const EditCampaign = (props) => {
 	const [keyWords, setKeyWords] = useState([]);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [selectedSchedule, setSelectedSchedule] = useState(null);
-
+	const [fb_user_id, set_fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
 	const [scheduleTime, setScheduleTime] = useState({
 		date: [new Date()],
 		start: "",
@@ -230,7 +233,7 @@ const EditCampaign = (props) => {
 		},
 	];
 
-	console.log("isEditingCampaign", isEditingCampaign);
+//	console.log("isEditingCampaign", isEditingCampaign);
 
 	useEffect(() => {
 		setView(editViews?.find((el) => el.checked).label);
@@ -269,68 +272,17 @@ const EditCampaign = (props) => {
 			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
 		}
 	}, []);
-
-	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
-	const renderComponentsView = () => {
-		if (view && isEditingCampaign?.friends) {
-			if (view === "view") {
-				console.log("loadingState", loadingState);
-				return (
-					<>
-						{isEditingCampaign?.friends?.length === 0 ? (
-							<NoDataFound
-								customText={`Whoops!`}
-								additionalText={`We couldn’t find any friends added to this campaign`}
-							/>
-						) : (
-							<div className='campaigns-edit h-100 d-flex d-flex-column'>
-								<Listing
-									friendsData={isEditingCampaign?.friends}
-									friendsListingRef={campaignFriendsRef}
-									getFilterNum={isEditingCampaign?.friends?.length}
-									reset={isReset}
-									setReset={setIsReset}
-									isListing='campaign-friends'
-									removeCampaignContacts={removeCampaignContacts}
-									getCurrentCampaignFriends={getCampaignUsersListFromAPI}
-								/>
-							</div>
-						)}
-					</>
-				);
-			} else {
-				console.log("loadingState", loadingState);
-				return (
-					<CampaignCreateEditLayout>
-						<div className='create-campaign-scheduler'>
-							{showPopup && (
-								<CampaignSchedulerPopup>
-									<ScheduleSelector
-										handleSetShowPopup={(status) => setShowPopup(status)}
-										popupCoordPos={popupCoordPos}
-										scheduleTime={scheduleTime}
-										selectedSchedule={selectedSchedule}
-										setScheduleTime={setScheduleTime}
-									/>
-								</CampaignSchedulerPopup>
-							)}
-							<CampaignScheduler
-								handleSetShowPopup={(status) => setShowPopup(status)}
-								handleSetPopupPos={(pos) => {
-									setPopupCoordPos({ x: pos.X, y: pos.Y });
-								}}
-								handleSetSelectedSchedule={setSelectedSchedule}
-								selectedSchedule={selectedSchedule}
-								setScheduleTime={setScheduleTime}
-							/>
-						</div>
-					</CampaignCreateEditLayout>
-				);
-			}
-		}
-	};
-
-	// REMOVE FRIENDS FROM THIS LIST..
+	useEffect(() => {
+		if (!fb_user_id || fb_user_id == null) {
+		fetchUserProfile().then((res) => {
+      if (res && res.length) {
+        // setProfiles(res);
+          localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+          set_fb_user_id(res[0].fb_user_id);
+      }
+    });
+	}
+	}, [])
 	const removeCampaignContacts = async (data = {}) => {
 		const fbUserId = current_fb_id;
 		const campaignId = params?.campaignId;
@@ -364,6 +316,89 @@ const EditCampaign = (props) => {
 			};
 		}
 	};
+	// Any list specific Methods 
+	const tableMethods = {};
+	//query params
+	const defaultParams = {
+		campaign_id: params?.campaignId,
+		fb_user_id: fb_user_id,
+	}
+	const dataExtractor = (response)=>{
+			return {
+				res:response,
+				data: response.data,
+				count: 300
+			}
+	}
+	const extraParams = {
+		isCampaignUserList: true,
+		removeFriendFromCampaign: removeCampaignContacts
+	}
+
+	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..
+	const renderComponentsView = () => {
+		if (view && isEditingCampaign?.friends) {
+			if (view === "view") {
+				//console.log("loadingState", loadingState);
+				return (
+          <>
+            {isEditingCampaign?.friends?.length === 0 ? (
+              <NoDataFound
+                customText={`Whoops!`}
+                additionalText={`We couldn’t find any friends added to this campaign`}
+              />
+            ) : (
+              <div className="campaigns-edit h-100 d-flex d-flex-column listing-main listing-campaign">
+                {fb_user_id != null ? (
+                  <Listing2
+                    listColDef={campaignUserColumnDefs}
+                    baseUrl={config.fetchCampaignUsersv2}
+                    tableMethods={tableMethods}
+                    defaultParams={defaultParams}
+                    dataExtractor={dataExtractor}
+					extraParams = {extraParams}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
+          </>
+        );
+			} else {
+				console.log("loadingState", loadingState);
+				return (
+					<CampaignCreateEditLayout>
+						<div className='create-campaign-scheduler'>
+							{showPopup && (
+								<CampaignSchedulerPopup>
+									<ScheduleSelector
+										handleSetShowPopup={(status) => setShowPopup(status)}
+										popupCoordPos={popupCoordPos}
+										scheduleTime={scheduleTime}
+										selectedSchedule={selectedSchedule}
+										setScheduleTime={setScheduleTime}
+									/>
+								</CampaignSchedulerPopup>
+							)}
+							<CampaignScheduler
+								handleSetShowPopup={(status) => setShowPopup(status)}
+								handleSetPopupPos={(pos) => {
+									setPopupCoordPos({ x: pos.X, y: pos.Y });
+								}}
+								handleSetSelectedSchedule={setSelectedSchedule}
+								selectedSchedule={selectedSchedule}
+								setScheduleTime={setScheduleTime}
+							/>
+						</div>
+					</CampaignCreateEditLayout>
+				);
+			}
+		}
+	};
+
+	// REMOVE FRIENDS FROM THIS LIST..
+	
 
 	console.log("editingCampaign", editingCampaign);
 

@@ -19,81 +19,7 @@ const addTooltipToHeader = (header, tooltipText) => (
     <span className="tooltiptext">{tooltipText}</span>
   </div>
 );
-const sourceTooltipToHeader = (header) => (
-  <div className="fr-ls-tooltip">
-    <span>{header}</span>
-    <div
-      className="header-tooltip-content tooltip"
-      style={{
-        width: "268px",
-      }}
-    >
-      <ul>
-        <li>
-          <span>
-            {" "}
-            <OutgoingIcon />
-          </span>{" "}
-          Outgoing
-        </li>
-        <li>
-          <span>
-            <IncomingIcon />
-          </span>
-          Incoming
-        </li>
-        <li>
-          <span>
-            <SyncIcon />
-          </span>
-          Sync
-        </li>
-        <li>
-          <span>
-            {/* <SourceCsvIcon /> */}
-            <CSVAArrowIcon />
-          </span>
-          CSV Upload
-        </li>
-        <li>
-          <span>
-            <GroupIcon />
-          </span>
-          Request from group
-        </li>
-        <li>
-          <span>
-            {" "}
-            <IncomingRequest />
-          </span>
-          Incoming request
-        </li>
 
-        <li>
-          <span>
-            {" "}
-            <FriendsFriendIcon />
-          </span>{" "}
-          Request from friends friend
-        </li>
-        <li>
-          <span>
-            {" "}
-            <SuggestFriendIcon />
-          </span>{" "}
-          Request from suggested friends
-        </li>
-        <li>
-          <span>
-            {" "}
-            <PostIcon />
-          </span>{" "}
-          Request from post
-        </li>
-      </ul>
-    </div>
-  </div>
-);
 
 const countryTooltipRenderer = (header) => (
   <div className="fr-ls-tooltip">
@@ -225,7 +151,7 @@ export const FriendlistColDefs = (inactiveAfter) => {
     ...Keyword,
     header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
   },
-  { ...Source, header: sourceTooltipToHeader("Source") },
+  Source,
   ];
 
   return columns.map(col => ({
@@ -293,7 +219,7 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
       ...Keyword,
       header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
     },
-    { ...Source, header: sourceTooltipToHeader("Source") },
+    Source,
   ];
 
   return columns.map(col => ({
@@ -351,7 +277,7 @@ export const WhiteAndBlacklistContactlistColDefs = (inactiveAfter) => {
     ...Keyword,
     header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
   },
-  { ...Source, header: sourceTooltipToHeader("Source") },
+  Source,
   ];
 
   return columns.map(col => ({
@@ -410,7 +336,7 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
     ...Keyword,
     header: addTooltipToHeader("Keyword(s)", "Matched Keywords"),
   },
-  { ...Source, header: sourceTooltipToHeader("Source") },
+  Source,
   ];
 
   return columns.map(col => ({

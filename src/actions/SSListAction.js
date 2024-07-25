@@ -334,12 +334,8 @@ export const ssListSlice = createSlice({
             if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
                 state.list_unfiltered_count = action.payload.count;
               }
-            if(action.payload?.res?.data[0]?.total_blacklist_count){
-                state.currlist_total_blacklist_count = action.payload.res?.data[0]?.total_blacklist_count;
-            }
-            if(action.payload?.res?.data[0]?.total_whitelist_count){
-                state.currlist_total_whitelist_count = action.payload.res?.data[0]?.total_whitelist_count;
-            }
+            state.currlist_total_blacklist_count = action.payload.res?.data[0]?.total_blacklist_count ?? 0;
+            state.currlist_total_whitelist_count = action.payload.res?.data[0]?.total_whitelist_count ?? 0;
             state.ssList_data = action.payload.data; 
             //let listObj = {};
             action.payload.data?.forEach((item) => {
