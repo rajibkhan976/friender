@@ -176,8 +176,8 @@ export const CommonColDefs = {
         filterSelectOptions: [
             { label: 'Friend', value: 1 },
             { label: 'Unfriended', value: 2 },
-            { label: 'Lost Friend', value: 3 },
-            { label: 'Non Friend', value: 4 },
+            { label: 'Lost', value: 3 },
+            { label: 'Non friend', value: 4 },
         ],
         muiFilterTextFieldProps: { 
             placeholder: 'Filter by Friendship',

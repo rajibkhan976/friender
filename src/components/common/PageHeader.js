@@ -3059,11 +3059,17 @@ function PageHeader({ headerText = "" }) {
 														className={`del-fr-action ${checkDisability('unfriend') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeUnfriend(accessItem)}
 														onClick={() => checkForBulkAction('unfriend')}
-													// data-disabled={
-													// 	!selectedFriends || selectedFriends.length === 0
-													// 		? true
-													// 		: false
-													// }
+														data-disabled={
+															selectedListItems?.length > 0 &&
+															selectedListItems?.filter(
+																el => 
+																	el?.friendship === 1 && 
+																	el?.friendStatus === "Activate"
+															)?.length <= 0
+														// 	!selectedFriends || selectedFriends.length === 0
+														// 		? true
+														// 		: false
+														}
 													>
 														<figure>
 															<UnfriendIcon />
@@ -3138,9 +3144,15 @@ function PageHeader({ headerText = "" }) {
 													<li
 														className={`campaign-fr-action ${checkDisability('queue') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeAddToCampaign(accessItem)}
-														// data-disabled={
+														data-disabled={
+															selectedListItems?.length > 0 &&
+															selectedListItems?.filter(
+																el => 
+																	el?.friendship === 4 && 
+																	el?.friendStatus === "Non friend"
+															)?.length <= 0
 														// 	!selectedFriends || selectedFriends.length === 0
-														// }
+														}
 														onClick={() => checkForBulkAction('queue')}
 													>
 														<figure>
