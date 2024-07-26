@@ -854,43 +854,43 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	const alterFriendsQueueRecordsOrder = (item) => {
-		if (item) {
-			closeFilterDropdown(item);
-		}
-		if (selectedFriends && selectedFriends.length > 0 && isFrQueActionsEnabled) {
-			const fbIdList = [];
-			selectedFriends?.forEach((item) => {
-				if (item._id) {
-					fbIdList.push(item?._id);
-				}
-			});
-			dispatch(
-				reorderFriendsQueueRecordsToTop({
-					topRecords: fbIdList,
-					fb_user_id: defaultFbId,
-				})
-			)
-				.unwrap()
-				.then((response) => {
-					// dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
-					const fr_queue_settings = localStorage.getItem("fr_queue_settings")
-						? JSON.parse(localStorage.getItem("fr_queue_settings"))
-						: null;
-					if (
-						fr_queue_settings?.length &&
-						typeof fr_queue_settings[0] === "object" &&
-						Object.keys(fr_queue_settings[0]).length >= 5
-					) {
-						// console.log(fr_queue_settings[0])
-						fRQueueExtMsgSendHandler(fr_queue_settings[0]);
-					}
-				});
-			dispatch(updateSelectedFriends([]));
-			setIsComponentVisible(false);
-			// console.log(selectedFriends);
-		}
-	};
+	// const alterFriendsQueueRecordsOrder = (item) => {
+	// 	if (item) {
+	// 		closeFilterDropdown(item);
+	// 	}
+	// 	if (selectedFriends && selectedFriends.length > 0 && isFrQueActionsEnabled) {
+	// 		const fbIdList = [];
+	// 		selectedFriends?.forEach((item) => {
+	// 			if (item._id) {
+	// 				fbIdList.push(item?._id);
+	// 			}
+	// 		});
+	// 		dispatch(
+	// 			reorderFriendsQueueRecordsToTop({
+	// 				topRecords: fbIdList,
+	// 				fb_user_id: defaultFbId,
+	// 			})
+	// 		)
+	// 			.unwrap()
+	// 			.then((response) => {
+	// 				// dispatch(reorderFriendsQueueRecordsInIndexDB(fbIdList));
+	// 				const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+	// 					? JSON.parse(localStorage.getItem("fr_queue_settings"))
+	// 					: null;
+	// 				if (
+	// 					fr_queue_settings?.length &&
+	// 					typeof fr_queue_settings[0] === "object" &&
+	// 					Object.keys(fr_queue_settings[0]).length >= 5
+	// 				) {
+	// 					// console.log(fr_queue_settings[0])
+	// 					fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+	// 				}
+	// 			});
+	// 		dispatch(updateSelectedFriends([]));
+	// 		setIsComponentVisible(false);
+	// 		// console.log(selectedFriends);
+	// 	}
+	// };
 
 	// useEffect(() => {
 	// 	console.log('selectedListItems', pagination_state);
@@ -1920,6 +1920,7 @@ function PageHeader({ headerText = "" }) {
 
 	useEffect(() => {
 		if (uploadedFriendsQueueRecordResponse) {
+			console.log('NOw ??????????');
 			timeout.current = setTimeout(() => {
 				setShowUploadCsvModal(false);
 				setFriendsQueueCsvUploadStep(0);
@@ -1935,10 +1936,11 @@ function PageHeader({ headerText = "" }) {
 					})
 				);
 				setIsFrQueActionsEnabled(false);
-				dispatch(getAllFriendsQueueRecordsInChunk())
-					.unwrap()
-					.then((response) => {
+				// dispatch(getAllFriendsQueueRecordsInChunk())
+				// 	.unwrap()
+				// 	.then((response) => {
 						dispatch(removeSelectedFriends());
+						setIsFrQueActionsEnabled(true)
 						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
 							? JSON.parse(localStorage.getItem("fr_queue_settings"))
 							: null;
@@ -1955,20 +1957,23 @@ function PageHeader({ headerText = "" }) {
 						// .then((result) => 
 						// 	setIsFrQueActionsEnabled(true)
 						// );
-					})
-					.catch((error) => {
-						const fr_queue_settings = localStorage.getItem("fr_queue_settings")
-							? JSON.parse(localStorage.getItem("fr_queue_settings"))
-							: null;
-						if (
-							fr_queue_settings?.length &&
-							typeof fr_queue_settings[0] === "object" &&
-							Object.keys(fr_queue_settings[0]).length >= 5
-						) {
-							// console.log(fr_queue_settings[0])
-							fRQueueExtMsgSendHandler(fr_queue_settings[0]);
-						}
-					});
+					// })
+					// .catch((error) => {
+					// 	const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+					// 		? JSON.parse(localStorage.getItem("fr_queue_settings"))
+					// 		: null;
+					// 	if (
+					// 		fr_queue_settings?.length &&
+					// 		typeof fr_queue_settings[0] === "object" &&
+					// 		Object.keys(fr_queue_settings[0]).length >= 5
+					// 	) {
+					// 		// console.log(fr_queue_settings[0])
+					// 		fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+					// 	}
+					// });
+
+					refreshAndDeselectList();
+					dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
 			}, 3000);
 		}
 
@@ -2138,18 +2143,15 @@ function PageHeader({ headerText = "" }) {
 					.then((res) => {
 						console.log('res in HEADER', res);
 						dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
-							.then((response) => {
-								if (response) {
-									setModalOpen(false)
-									dispatch(updateSelectAllState({}))
-									dispatch(updateSelectedFriends([]));
-									setIsComponentVisible(false);
-									dispatch(updateSelectAllState({}))
-									dispatch(removeSelectedFriends());
-									dispatch(updateRowSelection({}));
-									refreshAndDeselectList();
-								}
-							})
+
+						setModalOpen(false)
+						dispatch(updateSelectAllState({}))
+						dispatch(updateSelectedFriends([]));
+						setIsComponentVisible(false);
+						dispatch(updateSelectAllState({}))
+						dispatch(removeSelectedFriends());
+						dispatch(updateRowSelection({}));
+						refreshAndDeselectList();
 					})
 			} else {
 				dispatch(bulkAction(payload)).unwrap()

@@ -376,6 +376,10 @@ export const ssListSlice = createSlice({
         [getQueueSendableCount.fulfilled]: (state, action) => {
             // console.log('>>>>>>>> state', state, 'action', action?.payload?.sendable_count);
             state.fetchSendableCount = action?.payload?.sendable_count
+        },
+        [getQueueSendableCount.rejected]: (state, action) => {
+            console.log('rejected');
+            state.fetchSendableCount = 0
         }
     },
 });

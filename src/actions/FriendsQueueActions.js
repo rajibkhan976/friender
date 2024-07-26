@@ -551,7 +551,7 @@ export const friendsQueueSlice = createSlice({
 		},
 		[uploadFriendsQueueRecordsForSaving.fulfilled]: (state, action) => {
 			state.isListLoading = true;
-			state.uploadedFriendsQueueRecordResponse = action.payload;
+			state.uploadedFriendsQueueRecordResponse = action?.payload ? action?.payload : 0;
 		},
 		[uploadFriendsQueueRecordsForSaving.rejected]: (state) => {
 			state.isListLoading = false;
