@@ -2137,14 +2137,19 @@ function PageHeader({ headerText = "" }) {
 				dispatch(bulkActionQueue(payload)).unwrap()
 					.then((res) => {
 						console.log('res in HEADER', res);
-						setModalOpen(false)
-						dispatch(updateSelectAllState({}))
-						dispatch(updateSelectedFriends([]));
-						setIsComponentVisible(false);
-						dispatch(updateSelectAllState({}))
-						dispatch(removeSelectedFriends());
-						dispatch(updateRowSelection({}));
-						refreshAndDeselectList();
+						dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
+							.then((response) => {
+								if (response) {
+									setModalOpen(false)
+									dispatch(updateSelectAllState({}))
+									dispatch(updateSelectedFriends([]));
+									setIsComponentVisible(false);
+									dispatch(updateSelectAllState({}))
+									dispatch(removeSelectedFriends());
+									dispatch(updateRowSelection({}));
+									refreshAndDeselectList();
+								}
+							})
 					})
 			} else {
 				dispatch(bulkAction(payload)).unwrap()
