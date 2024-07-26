@@ -60,7 +60,7 @@ const MainComponent = () => {
 		}
 	};
 
-	
+
 	/**
 	 * Logout Function
 	 */
@@ -109,6 +109,27 @@ const MainComponent = () => {
 		})();
 	}, [navigate, dispatch, toggleDarkMode, darkMode]);
 
+
+	// #region User Alert Check
+	useEffect(() => {
+		(async () => {
+			try {
+				const userProfile = await fetchUserProfile();
+
+				const alertUserStatus = {
+					alert_message: userProfile[0]?.alert_message,
+					alert_status: userProfile[0]?.alert_message_status,
+				};
+
+				setAlertUserStatusCheck(alertUserStatus);
+
+			} catch(error) {
+				console.log('User Profile Error -- ', error);
+			}
+		})();
+	}, [navigate]);
+
+
 	useEffect(() => {
 		switchLoaderOn();
 		const fetchUserData = async () => {
@@ -122,12 +143,6 @@ const MainComponent = () => {
 				const userProfile = await fetchUserProfile();
 				// console.log("user info index",userProfile)
 				let fbAuthValidation = userProfile[0]?.fb_auth_info;
-
-				const alertUserStatus = {
-					alert_message: userProfile[0]?.alert_message,
-					alert_status: userProfile[0]?.alert_message_status,
-				};
-				setAlertUserStatusCheck(alertUserStatus);
 
 				if (fbAuthValidation != undefined && user_onbording_status == 1) {
 					localStorage.setItem(
