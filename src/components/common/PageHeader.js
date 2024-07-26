@@ -549,7 +549,7 @@ function PageHeader({ headerText = "" }) {
 					queryTopHeader: {
 						active: true,
 						content:
-							"Due to limitations on how Facebook shows and counts friends there may be a slight mismatch between the number shown here and the number shown on your profile from Facebook.",
+							"View Facebook accounts of people who are not your friends.",
 					},
 				});
 				break;
@@ -2319,7 +2319,7 @@ function PageHeader({ headerText = "" }) {
 					bodyText={
 						<>You have selected
 							{<><b>&nbsp;{Number(actionableContacts.nonFriend_count)}&nbsp;</b>
-								{Number(actionableContacts.nonFriend_count) > 1 ? 'contact(s),' : 'contact,'}</>}
+								{Number(actionableContacts.nonFriend_count) > 1 ? 'contact(s). ' : 'contact. '}</>}
 							Are you sure you want to add them to friend queue
 						</>
 					}

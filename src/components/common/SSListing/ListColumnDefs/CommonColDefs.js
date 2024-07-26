@@ -1,4 +1,5 @@
 import { MenuItem } from "@mui/material";
+import { ReactComponent as TooltipIcon } from "../../../../assets/images/grey-query-icon.svg";
 import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, RefriendCountRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
 import { CSVAArrowIcon, FriendsFriendIcon, GroupIcon, IncomingIcon, IncomingRequest, OutgoingIcon, PostIcon, SuggestFriendIcon, SyncIcon } from "../../../../assets/icons/Icons";
 
@@ -13,9 +14,13 @@ const notContainsFilterFn = (row, id, filterValue) => {
       <span className="tooltiptext">{tooltipText}</span>
     </div>
   );
-  const sourceTooltipToHeader = (header) => (
+
+  const sourceTooltipToHeader = (header, showTooltipicon = false) => (
     <div className="fr-ls-tooltip">
-      <span>{header}</span>
+    <span>
+        {header}
+        {showTooltipicon && <TooltipIcon style={{verticalAlign: "middle"}} />}
+    </span>
       <div
         className="header-tooltip-content tooltip"
         style={{
@@ -374,7 +379,7 @@ export const CommonColDefs = {
     },
     Source: {
         accessorKey: 'source', //simple recommended way to define a column
-        header: sourceTooltipToHeader("Source"),
+        header: sourceTooltipToHeader("Source", true),
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
         columnFilterModeOptions: ['contains', 'startsWith', 'endsWith', 'notContains'],

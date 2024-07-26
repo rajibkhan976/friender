@@ -1,5 +1,6 @@
 import { UnlinkedNameCellRenderer } from "../../../listing/FriendListColumns";
 import { CommonColDefs } from "./CommonColDefs";
+import { ReactComponent as TooltipIcon } from "../../../../assets/images/grey-query-icon.svg";
 
 import {
   CSVAArrowIcon,
@@ -13,17 +14,23 @@ import {
   SyncIcon,
 } from "../../../..//assets/icons/Icons";
 
-const addTooltipToHeader = (header, tooltipText) => (
+const addTooltipToHeader = (header, tooltipText, showTooltipicon = false) => (
   <div className="fr-ls-tooltip">
-    <span>{header}</span>
+    <span>
+      {header}
+      {showTooltipicon && <TooltipIcon style={{verticalAlign: "middle"}} />}
+    </span>
     <span className="tooltiptext">{tooltipText}</span>
   </div>
 );
 
 
-const countryTooltipRenderer = (header) => (
+const countryTooltipRenderer = (header, showTooltipicon = false) => (
   <div className="fr-ls-tooltip">
-    <span>{header}</span>
+    <span>
+      {header}
+      {showTooltipicon && <TooltipIcon style={{verticalAlign: "middle"}} />}
+    </span>
     <div
       className="header-tooltip-content"
       style={{
@@ -118,7 +125,8 @@ export const FriendlistColDefs = (inactiveAfter) => {
     ...FrindShip,
     header: addTooltipToHeader(
       "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
+      `This section showcases all\n kinds of friendship statuses.`,
+      true
     ),
     enableColumnFilter: false,
   },
@@ -126,12 +134,13 @@ export const FriendlistColDefs = (inactiveAfter) => {
     ...Age,
     header: addTooltipToHeader(
       "Age",
-      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`
+      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`,
+      true
     ),
   },
   {
     ...Country,
-    header: countryTooltipRenderer("Country"),
+    header: countryTooltipRenderer("Country", true),
   },
   {
     ...TotalReaction,
@@ -186,7 +195,8 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
       ...FrindShip,
       header: addTooltipToHeader(
         "Friendship",
-        `This section showcases all\n kinds of friendship statuses.`
+        `This section showcases all\n kinds of friendship statuses.`,
+        true
       ),
       enableColumnFilter: false,
     },
@@ -194,12 +204,13 @@ export const LostFriendlistColDefs = (inactiveAfter) => {
       ...Age,
       header: addTooltipToHeader(
         "Age",
-        `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`
+        `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`,
+        true
       ),
     },
     {
       ...Country,
-      header: countryTooltipRenderer("Country"),
+      header: countryTooltipRenderer("Country", true),
     },
     {
       ...TotalReaction,
@@ -245,19 +256,21 @@ export const WhiteAndBlacklistContactlistColDefs = (inactiveAfter) => {
     ...FrindShip,
     header: addTooltipToHeader(
       "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
+      `This section showcases all\n kinds of friendship statuses.`,
+      true
     ),
   },
   {
     ...Age,
     header: addTooltipToHeader(
       "Age",
-      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`
+      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`,
+      true
     ),
   },
   {
     ...Country,
-    header: countryTooltipRenderer("Country"),
+    header: countryTooltipRenderer("Country", true),
   },
   {
     ...TotalReaction,
@@ -303,7 +316,8 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
     ...FrindShip,
     header: addTooltipToHeader(
       "Friendship",
-      `This section showcases all\n kinds of friendship statuses.`
+      `This section showcases all\n kinds of friendship statuses.`,
+      true
     ),
     // enableColumnFilter: false,
   },
@@ -311,12 +325,13 @@ export const GlobalContactlistColDefs = (inactiveAfter) => {
     ...Age,
     header: addTooltipToHeader(
       "Age",
-      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`
+      `Friender calculates age based on when you first connected, unfriended, lost, or sent a friend request. This isn't determined by Facebook's data, but if the request was via Friender, accuracy is high.\n`,
+      true
     ),
   },
   {
     ...Country,
-    header: countryTooltipRenderer("Country"),
+    header: countryTooltipRenderer("Country", true),
   },
   {
     ...TotalReaction,

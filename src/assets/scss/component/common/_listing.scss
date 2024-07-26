@@ -1370,12 +1370,46 @@
         max-width: 169px;
         line-height: 18px;
         white-space: normal;
+        font-size: 12px;
+        font-weight: 400;
+      }
+
+      .tooltiptext::after {
+        width: 22px;
+        height: 31px;
+        background-color: #313037;
+        border-radius: 2px;
+        content: "";
+        position: absolute;
+        transform-origin: 50% 50%;
+        top: 0%;
+        left: 45%;
+        margin-bottom: -30px;
+        z-index: -1;
+        rotate: 45deg;
+        transform: translate(-10px, 0px);
       }
 
       .header-tooltip-content {
         right: 0;
         left: auto;
         transform: translateX(30%);
+      }
+
+      .header-tooltip-content::after {
+        width: 22px;
+        height: 31px;
+        background-color: #313037;
+        border-radius: 2px;
+        content: "";
+        position: absolute;
+        transform-origin: 50% 50%;
+        top: 0%;
+        left: 45%;
+        margin-bottom: -30px;
+        z-index: -1;
+        rotate: 45deg;
+        transform: translate(-10px, 0px);
       }
 
          
