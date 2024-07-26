@@ -389,6 +389,15 @@
 	align-items: center;
 }
 
+
+.user-alert-status-bg {
+	background-color: #D95A65;
+}
+
+.user-alert-status-bg > .user-alert-status-txt {
+	color: #fff !important;
+}
+
 .friend-queue-error-report > .friend-queue-error-txt {
 	font-size: 14px;
 	line-height: 19px;
@@ -413,6 +422,13 @@
 	font-weight: 500;
 	cursor: pointer;
 	color: rgba(255, 219, 222, 1) !important;
+}
+
+.user-alert-status-bg > .user-alert-signout-btn {
+	background-color: #1C1C1E !important;
+    width: auto;
+    height: 25px;
+    padding: 0 10px;
 }
 
 .encrypted-msg-settings-tooltip-container {

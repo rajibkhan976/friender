@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { fetchUserProfile } from "../services/authentication/facebookData";
 import { ReactComponent as FriendQueueErrorIcon } from "../assets/images/FriendQueueErrorIcon.svg";
 import PlanModal from "./common/PlanModal";
-import { kyubiUserCheck } from '../services/authentication/AuthServices';
+import { kyubiUserCheck, alertUserStatusUpdate } from "../services/authentication/AuthServices";
 import {
 	setProfileSpaces,
 	setDefaultProfileId,
@@ -36,7 +36,9 @@ const MainComponent = () => {
 	//const [isHeader, setIsHeader] = useState(false);
 	const planModal = useSelector((state) => state.plan.showModal);
 	const [fbAuthInfo, setFBAuthInfo] = useState(null)
-	const ssList_data = useSelector((state) => state.ssList.ssList_data)
+	const ssList_data = useSelector((state) => state.ssList.ssList_data);
+	const [alertUserStatusCheck, setAlertUserStatusCheck] = useState(null);
+	const [signoutOnProcess, setSignoutOnProcess] = useState(false);
 
 	const friendsQueueRecords = useSelector(
 		(state) => state.friendsQueue.friendsQueueRecords
@@ -58,6 +60,32 @@ const MainComponent = () => {
 		}
 	};
 
+	
+	/**
+	 * Logout Function
+	 */
+	const handleSignoutFunc = async () => {
+		setSignoutOnProcess(true);
+		try {
+			await alertUserStatusUpdate();
+
+			// Logout here..
+			dispatch(setDefaultProfileId(""));
+			dispatch(setProfileSpaces([]));
+			dispatch(userLogout());
+			if (!darkMode) {
+				toggleDarkMode();
+			}
+
+			setSignoutOnProcess(false);
+
+		} catch (error) {
+			console.log('ERROR HERE -- ', error);
+		}
+	};
+
+
+	// #region Kyubi User Check
 	// Calling Kyubi Server to Check User's Status..
 	useEffect(() => {
 		const myExtensionId = process.env.REACT_APP_KYUBI_EXTENSION_ID;
@@ -94,6 +122,12 @@ const MainComponent = () => {
 				const userProfile = await fetchUserProfile();
 				// console.log("user info index",userProfile)
 				let fbAuthValidation = userProfile[0]?.fb_auth_info;
+
+				const alertUserStatus = {
+					alert_message: userProfile[0]?.alert_message,
+					alert_status: userProfile[0]?.alert_message_status,
+				};
+				setAlertUserStatusCheck(alertUserStatus);
 
 				if (fbAuthValidation != undefined && user_onbording_status == 1) {
 					localStorage.setItem(
@@ -216,19 +250,40 @@ const MainComponent = () => {
 					}`
 			}
 		>
-			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") && (
-				<div className='friend-queue-error-report'>
-					<div className='friend-queue-error-txt'>
-						<FriendQueueErrorIcon className='friend-queue-error-icon' />
-						{`Sending friend requests to ${friendsQueueErrorRecordsCount} individual(s) was unsuccessful either due to an
+			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") &&
+				alertUserStatusCheck && alertUserStatusCheck?.alert_status === 0 && (
+					<div className='friend-queue-error-report'>
+						<div className='friend-queue-error-txt'>
+							<FriendQueueErrorIcon className='friend-queue-error-icon' />
+							{`Sending friend requests to ${friendsQueueErrorRecordsCount} individual(s) was unsuccessful either due to an
 					unknown error from Facebook or they already exists in the friend/pending list.`}
+						</div>
+						<button
+							className='friend-queue-error-close-btn'
+							type='button'
+							onClick={() => setShowFriendsQueueErr(false)}
+						>
+							Close
+						</button>
 					</div>
+				)}
+
+			{alertUserStatusCheck && alertUserStatusCheck?.alert_status === 1 && (
+				<div className="friend-queue-error-report user-alert-status-bg">
+					<div className="friend-queue-error-txt user-alert-status-txt">
+						<FriendQueueErrorIcon className="friend-queue-error-icon" />
+						<span
+							dangerouslySetInnerHTML={{ __html: alertUserStatusCheck?.alert_message }}
+						></span>
+					</div>
+
 					<button
-						className='friend-queue-error-close-btn'
-						type='button'
-						onClick={() => setShowFriendsQueueErr(false)}
+						className="friend-queue-error-close-btn user-alert-signout-btn"
+						type="button"
+						onClick={handleSignoutFunc}
+						disabled={signoutOnProcess}
 					>
-						Close
+						{signoutOnProcess ? "Signing out..." : "Sign out"}
 					</button>
 				</div>
 			)}

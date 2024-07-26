@@ -7,6 +7,34 @@ let headers = {
   "Content-Type": "application/json",
 };
 
+
+/**
+ // #region Alert Status Update
+ * @returns 
+ */
+export const alertUserStatusUpdate = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        config.userAlertStatusUpdateUrl,
+        { headers: headers }
+      ).then((result) => {
+        resolve(result.data);
+
+      }).catch((error) => {
+        console.log('ERROR IN COMMUNICATION TO ALERT USER UPDATE::::', error);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
+
+
+/**
+ // #region Kyubi User Check
+ * @param {*} extId 
+ * @param {*} email 
+ * @returns 
+ */
 export const kyubiUserCheck = (extId, email) => {
   return new Promise((resolve, reject) => {
     axios
@@ -25,6 +53,8 @@ export const kyubiUserCheck = (extId, email) => {
       })
   })
 }
+
+
 
 export const checkUserEmail = (email) => {
   console.log('email >>>', email);
@@ -173,7 +203,7 @@ export const userLogin = (email, password) => {
           // Check if extension is installed
           const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
             action: "extensionInstallation",
-            amount : result.amount,
+            amount: result.amount,
             frLoginToken: result.token,
             frDebugMode: result.debug_mode,
           });
@@ -182,7 +212,7 @@ export const userLogin = (email, password) => {
           if (isExtensionInstalled) {
             extensionAccesories.sendMessageToExt({
               action: "frienderLogin",
-              amount : result.amount,
+              amount: result.amount,
               frLoginToken: result.token,
               userPlan: result.plan || "0"
             });

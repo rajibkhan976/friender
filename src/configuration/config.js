@@ -407,4 +407,5 @@ module.exports = {
 	fetchCampaignUsersv2: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/fetch-campaign-users-v2`,
 	deleteCampaignContactsUrl: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/delete-campaign-contacts`,
 	kyubiServerCheckUserUrl: `https://app.kyubi.io/api/end-user/get-status`,
+	userAlertStatusUpdateUrl: `https://${profileService}.execute-api.us-east-1.amazonaws.com/${appEnv}/update-alert-message-status`,
 };

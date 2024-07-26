@@ -25,7 +25,7 @@ import { ReactComponent as CampaignIcon } from "../../assets/images/CampaignIcon
 import { ReactComponent as PostsIcon } from "../../assets/images/PostsIcon.svg";
 import { ReactComponent as FriendRequestIcon } from "../../assets/images/FriendRequestIcon.svg";
 import "../../assets/scss/component/common/_sidebar.scss";
-
+import { alertUserStatusUpdate } from 'services/authentication/AuthServices';
 
 
 
@@ -48,6 +48,7 @@ const Sidebar = (props) => {
   const onboarding_token = parseInt(localStorage.getItem("fr_pass_changed"));
   const menu_status_refresh = parseInt(localStorage.getItem("submenu_status"));
   const facebookAuthInfoStatus = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+  const [alertUserStatusCheck, setAlertUserStatusCheck] = useState(null);
 
 
   // console.log("()()()()()f acebook auth info",facebookAuthInfoStatus?.accessToken)
@@ -225,16 +226,36 @@ const Sidebar = (props) => {
 
   const [isActiveMenu, setIsActiveMenu] = useState(false);
   const [local_fb_id, setLocal_fb_id] = useState("");
+  
+	const logoutDispatchFunc = () => {
+		// Logout..
+		dispatch(setDefaultProfileId(""));
+		dispatch(setProfileSpaces([]));
+		dispatch(userLogout());
+		if (!darkMode) {
+			toggleDarkMode();
+		}
+	};
 
-  const logoOut = (e) => {
-    e.preventDefault();
-    dispatch(setDefaultProfileId(""));
-    dispatch(setProfileSpaces([]));
-    dispatch(userLogout());
-    if (!darkMode) {
-      toggleDarkMode();
-    }
-  };
+	const logoOut = (e) => {
+		e.preventDefault();
+
+		// Checking the alert user status and if its alert active then make it update for 0..
+		if (alertUserStatusCheck && alertUserStatusCheck?.alert_status === 1) {
+			(async () => {
+				try {
+					await alertUserStatusUpdate();
+					logoutDispatchFunc();
+
+				} catch (error) {
+					console.log("ERR! while try to update alert user status - ", error);
+				}
+			})();
+		} else {
+			logoutDispatchFunc();
+		}
+	};
+
 
   //token
   // const userToken = localStorage.getItem("fr_token");
@@ -252,6 +273,10 @@ const Sidebar = (props) => {
       // console.log("user info sidebar",res)
       if (res && res.length) {
 
+		setAlertUserStatusCheck({
+			alert_status: res[0]?.alert_message_status,
+			alert_message: res[0]?.alert_message,
+		});
         
         if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken!=undefined && res[0]?.fb_auth_info?.accessToken) {
           // console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
