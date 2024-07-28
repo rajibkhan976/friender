@@ -18,6 +18,7 @@ import {
 	OpenInNewTab,
 	InfoIcon,
 	AddToQueueAction,
+	AddToQueueIcon,
 } from "../../assets/icons/Icons";
 import config from "../../configuration/config"
 import { ReactComponent as CsvDownloadIcon } from "../../assets/images/CsvDownloadIcon.svg";
@@ -554,7 +555,7 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
-			case "friend-list":
+			case "friends":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -601,7 +602,7 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
-			case "lost-friends":
+			case "lost":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -612,7 +613,7 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
-			case "unfriended-friends":
+			case "unfriended":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -623,7 +624,7 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
-			case "whitelisted-friends":
+			case "whitelisted":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -634,7 +635,7 @@ function PageHeader({ headerText = "" }) {
 				});
 				break;
 
-			case "blacklisted-friends":
+			case "blacklisted":
 				setHeaderOptions({
 					...headerOptions,
 					viewSelect: false,
@@ -1310,6 +1311,7 @@ function PageHeader({ headerText = "" }) {
 			await helper.sleep(refethingDelayAfterSync);
 			await completeSync();
 			setIsSyncing(false);
+			setInlineLoader(false);
 			// console.log("now ending:::::::");
 		}
 	};
@@ -2019,7 +2021,7 @@ function PageHeader({ headerText = "" }) {
 			//include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
 			exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 0) ? JSON.stringify([...select_all_state?.unSelected?.map(el => el)]) : [],
 			operation: action,
-			friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+			friend_status: location?.pathname?.split('/').pop() === 'friends' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost' ? 'Lost' : 'all'
 		};
 
 		if (!select_all_state?.selected) {
@@ -2076,7 +2078,7 @@ function PageHeader({ headerText = "" }) {
 				check: select_all_state?.selected ? 'all' : 'some',
 				//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
 				operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
-				friend_status: location?.pathname?.split('/').pop() === 'friend-list' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost-friends' ? 'Lost' : 'all'
+				friend_status: location?.pathname?.split('/').pop() === 'friends' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost' ? 'Lost' : 'all'
 			}
 
 			if (!select_all_state?.selected) {
@@ -2280,19 +2282,19 @@ function PageHeader({ headerText = "" }) {
 		if (
 			selectAcross?.selected || Object.keys(MRT_selected_rows_state)?.length > 0
 		) {
-			if (item === 'whitelist' && location?.pathname?.split('/').pop() === 'whitelisted-friends') {
+			if (item === 'whitelist' && location?.pathname?.split('/').pop() === 'whitelisted') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
-			if (item === 'blacklist' && location?.pathname?.split('/').pop() === 'blacklisted-friends') {
+			if (item === 'blacklist' && location?.pathname?.split('/').pop() === 'blacklisted') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
-			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'unfriended-friends') {
+			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'unfriended') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
-			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'lost-friends') {
+			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'lost') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
@@ -2313,14 +2315,14 @@ function PageHeader({ headerText = "" }) {
 		<>
 			{(selected_friends_curr_count > 0 || select_all_state?.selected) &&
 				<Modal
-					modalType='confused-type'
-					modalIcon={purpleAlertPng}
+					modalType="ADD-TO-QUEUE"
+					ModalIconElement={AddToQueueIcon}
 					headerText={"Add to Queue"}
 					bodyText={
 						<>You have selected
 							{<><b>&nbsp;{Number(actionableContacts.nonFriend_count)}&nbsp;</b>
 								{Number(actionableContacts.nonFriend_count) > 1 ? 'contact(s). ' : 'contact. '}</>}
-							Are you sure you want to add them to friend queue
+							Are you sure you want to add them to friend queue?
 						</>
 					}
 					closeBtnTxt={"Cancel"}

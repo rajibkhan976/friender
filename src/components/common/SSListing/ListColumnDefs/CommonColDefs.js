@@ -1,98 +1,114 @@
 import { MenuItem } from "@mui/material";
 import { ReactComponent as TooltipIcon } from "../../../../assets/images/grey-query-icon.svg";
 import { AgeRenderer, CommentRenderer, CountryRenderer, EngagementRenderer, FriendShipStatusRenderer, GenderRenderer, KeywordRenderer, MessageRenderer, ReactionRenderer, RecentEngagementRenderer, RefriendCountRenderer, SourceRendererPending, UnlinkedNameCellWithOptionsRenderer } from "../../../listing/FriendListColumns";
-import { CSVAArrowIcon, FriendsFriendIcon, GroupIcon, IncomingIcon, IncomingRequest, OutgoingIcon, PostIcon, SuggestFriendIcon, SyncIcon } from "../../../../assets/icons/Icons";
+import { CSVAArrowIcon, FriendsFriendIcon, GroupIcon, IncomingIcon, IncomingRequest, OutgoingIcon, PostIcon, SuggestFriendIcon, SyncIcon, PostEngagementBorderedIcon, FbBorderedIcon } from "../../../../assets/icons/Icons";
 
 const notContainsFilterFn = (row, id, filterValue) => {
     console.log(!row.getValue(id).toLowerCase().includes(filterValue.toLowerCase()));
     return !row.getValue(id).toLowerCase().includes(filterValue.toLowerCase());
-  };
-  
-  const addTooltipToHeader = (header, tooltipText) => (
-    <div className="fr-ls-tooltip">
-      <span>{header}</span>
-      <span className="tooltiptext">{tooltipText}</span>
-    </div>
-  );
+};
 
-  const sourceTooltipToHeader = (header, showTooltipicon = false) => (
+const addTooltipToHeader = (header, tooltipText) => (
     <div className="fr-ls-tooltip">
-    <span>
-        {header}
-        {showTooltipicon && <TooltipIcon style={{verticalAlign: "middle"}} />}
-    </span>
-      <div
-        className="header-tooltip-content tooltip"
-        style={{
-          width: "268px",
-        }}
-      >
-        <ul>
-          <li>
-            <span>
-              {" "}
-              <OutgoingIcon />
-            </span>{" "}
-            Outgoing
-          </li>
-          <li>
-            <span>
-              <IncomingIcon />
-            </span>
-            Incoming
-          </li>
-          <li>
-            <span>
-              <SyncIcon />
-            </span>
-            Sync
-          </li>
-          <li>
-            <span>
-              {/* <SourceCsvIcon /> */}
-              <CSVAArrowIcon />
-            </span>
-            CSV Upload
-          </li>
-          <li>
-            <span>
-              <GroupIcon />
-            </span>
-            Request from group
-          </li>
-          <li>
-            <span>
-              {" "}
-              <IncomingRequest />
-            </span>
-            Incoming request
-          </li>
-  
-          <li>
-            <span>
-              {" "}
-              <FriendsFriendIcon />
-            </span>{" "}
-            Request from friends friend
-          </li>
-          <li>
-            <span>
-              {" "}
-              <SuggestFriendIcon />
-            </span>{" "}
-            Request from suggested friends
-          </li>
-          <li>
-            <span>
-              {" "}
-              <PostIcon />
-            </span>{" "}
-            Request from post
-          </li>
-        </ul>
-      </div>
+        <span>{header}</span>
+        <span className="tooltiptext">{tooltipText}</span>
     </div>
-  );
+);
+
+const sourceTooltipToHeader = (header, showTooltipicon = false) => (
+    <div className="fr-ls-tooltip">
+        <span>
+            {header}
+            {showTooltipicon && <TooltipIcon style={{ verticalAlign: "middle" }} />}
+        </span>
+        <div
+            className="header-tooltip-content tooltip"
+            style={{
+                width: "268px",
+            }}
+        >
+            <ul>
+                <li>
+                    <span>
+                        {" "}
+                        <OutgoingIcon />
+                    </span>{" "}
+                    Outgoing
+                </li>
+                <li>
+                    <span>
+                        <IncomingIcon />
+                    </span>
+                    Incoming
+                </li>
+                <li>
+                    <span>
+                        <SyncIcon />
+                    </span>
+                    Sync
+                </li>
+                <li>
+                    <span>
+                        {/* <SourceCsvIcon /> */}
+                        <CSVAArrowIcon />
+                    </span>
+                    CSV Upload
+                </li>
+                <li>
+                    <span>
+                        <GroupIcon />
+                    </span>
+                    Request from group
+                </li>
+                <li>
+                    <span>
+                        {" "}
+                        <IncomingRequest />
+                    </span>
+                    Incoming request
+                </li>
+
+                <li>
+                    <span>
+                        {" "}
+                        <FriendsFriendIcon />
+                    </span>{" "}
+                    Request from friends friend
+                </li>
+                <li>
+                    <span>
+                        {" "}
+                        <SuggestFriendIcon />
+                    </span>{" "}
+                    Request from suggested friends
+                </li>
+                <li>
+                    <span>
+                        {" "}
+                        <PostIcon />
+                    </span>{" "}
+                    Request from post
+                </li>
+
+                <li>
+                    <span>
+                        {" "}
+                        <PostEngagementBorderedIcon />
+                    </span>{" "}
+                    Post Engagement
+                </li>
+
+                <li>
+                    <span>
+                        {" "}
+                        <FbBorderedIcon />
+                    </span>{" "}
+                    FB UI
+                </li>
+            </ul>
+        </div>
+    </div>
+);
 
 export const CommonColDefs = {
     Name: {
@@ -104,11 +120,11 @@ export const CommonColDefs = {
                 <UnlinkedNameCellWithOptionsRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
+        muiFilterTextFieldProps: {
             placeholder: 'Filter by Name',
         },
         columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
-        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+        renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode, table }) => {
             return [
                 <MenuItem
                     key="1"
@@ -158,7 +174,8 @@ export const CommonColDefs = {
                 >
                     <div>Not Contains</div>
                 </MenuItem>,
-        ]}
+            ]
+        }
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem
         //       key="fuzzy"
@@ -184,19 +201,19 @@ export const CommonColDefs = {
             { label: 'Lost', value: 3 },
             { label: 'Non friend', value: 4 },
         ],
-        muiFilterTextFieldProps: { 
+        muiFilterTextFieldProps: {
             placeholder: 'Filter by Friendship',
             className: 'fr-filter-friendship'
         },
         enableColumnFilter: true,
         enableColumnFilterModes: false,
-        filterFns:'equals',
+        filterFns: 'equals',
         filterSelectProps: {
             classes: {
                 root: 'fr-checkbox',
             },
         },
-      //  columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
+        //  columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
         // renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode }) => [
         //     <MenuItem
         //       key="fuzzy"
@@ -216,7 +233,7 @@ export const CommonColDefs = {
                 <GenderRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
+        muiFilterTextFieldProps: {
             placeholder: 'Filter by Gender',
             className: 'fr-filter-gender'
         },
@@ -239,8 +256,8 @@ export const CommonColDefs = {
                 <AgeRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Age' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Age'
         },
         columnFilterModeOptions: ['equals', 'lessThan', 'greaterThan']
     },
@@ -254,11 +271,11 @@ export const CommonColDefs = {
                 <CountryRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Country' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Country'
         },
         enableColumnFilterModes: true,
-        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+        renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode, table }) => {
             return [
                 <MenuItem
                     key="1"
@@ -284,20 +301,21 @@ export const CommonColDefs = {
                 >
                     <div>Not Contains</div>
                 </MenuItem>,
-        ]}
+            ]
+        }
     },
     TotalReaction: {
         accessorKey: 'reactionThread', //simple recommended way to define a column
         header: 'Total Reaction',
         enableHiding: false,
-        columnFilterModeOptions: ['lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        columnFilterModeOptions: ['lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <ReactionRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Reactions' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Reactions'
         },
     },
     TotalComment: {
@@ -305,14 +323,14 @@ export const CommonColDefs = {
         header: 'Total Comment',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
-        columnFilterModeOptions: ['lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        columnFilterModeOptions: ['lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <CommentRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Comments' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Comments'
         },
     },
     Engagement: {
@@ -320,14 +338,14 @@ export const CommonColDefs = {
         header: 'Engagement',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
-        columnFilterModeOptions: ['lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        columnFilterModeOptions: ['lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <EngagementRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Total Engagement' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Total Engagement'
         },
     },
     MessageCount: {
@@ -335,32 +353,32 @@ export const CommonColDefs = {
         header: 'Message Count',
         //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
         enableHiding: false,
-        columnFilterModeOptions: [ 'lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        columnFilterModeOptions: ['lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <MessageRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Message Count' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Message Count'
         },
     },
-    RecentEngagement: (inactiveAfter)=>{
-        return({
+    RecentEngagement: (inactiveAfter) => {
+        return ({
             accessorKey: 'last_engagement_date', //simple recommended way to define a column
             header: 'Recent Engagement',
             //muiTableHeadCellProps: { style: { color: 'white' } }, //custom props
             enableHiding: false,
-            columnFilterModeOptions: [ 'lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+            columnFilterModeOptions: ['lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
             Cell: ({ renderedCellValue, row }) => {
                 return (
-                    <RecentEngagementRenderer value={renderedCellValue} data={{...row.original}} inactiveAfter={inactiveAfter} />
+                    <RecentEngagementRenderer value={renderedCellValue} data={{ ...row.original }} inactiveAfter={inactiveAfter} />
                 )
             },
-            muiFilterTextFieldProps: { 
-                placeholder: 'Filter by Recent Engagement' 
+            muiFilterTextFieldProps: {
+                placeholder: 'Filter by Recent Engagement'
             },
-        })   
+        })
     },
     Keyword: {
         accessorKey: 'matchedKeyword', //simple recommended way to define a column
@@ -373,8 +391,8 @@ export const CommonColDefs = {
                 <KeywordRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Keywords' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Keywords'
         },
     },
     Source: {
@@ -388,10 +406,10 @@ export const CommonColDefs = {
                 <SourceRendererPending value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Sourcename' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Sourcename'
         },
-        renderColumnFilterModeMenuItems: ({column, onSelectFilterMode, table}) => {
+        renderColumnFilterModeMenuItems: ({ column, onSelectFilterMode, table }) => {
             return [
                 <MenuItem
                     key="1"
@@ -417,24 +435,25 @@ export const CommonColDefs = {
                 >
                     <div>Not Contains</div>
                 </MenuItem>,
-        ]}
+            ]
+        }
     },
-    Refrending:{
+    Refrending: {
         accessorKey: 'refriending_attempt', //simple recommended way to define a column
         header: '# Re-friending',
         enableHiding: false,
-        columnFilterModeOptions:[ 'equals', 'notEquals', 'empty', 'notEmpty','lessThan', 'greaterThan','greaterThanOrEqualTo','lessThanOrEqualTo'],
+        columnFilterModeOptions: ['equals', 'notEquals', 'empty', 'notEmpty', 'lessThan', 'greaterThan', 'greaterThanOrEqualTo', 'lessThanOrEqualTo'],
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <RefriendCountRenderer value={renderedCellValue} data={row.original} />
             )
         },
-        muiFilterTextFieldProps: { 
-            placeholder: 'Filter by Refriending' 
+        muiFilterTextFieldProps: {
+            placeholder: 'Filter by Refriending'
         },
     }
 };
 
 export const filterFns = {
     notContains: notContainsFilterFn,
-  };
+};

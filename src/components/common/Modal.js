@@ -6,7 +6,7 @@ const Modal = ({
   headerText,
   modalIcon,
   bodyText,
-  modalType,
+  modalType = null,
   open,
   setOpen,
   closeBtnTxt = "Close",
@@ -41,7 +41,7 @@ const Modal = ({
                 setOpen(false);
               }}
             >
-              <XMarkIcon />
+              {modalType === 'ADD-TO-QUEUE' ? <XMarkIcon color="white" /> : <XMarkIcon />}
             </span>
             <div className={`modal-header d-flex f-align-center ${modalType}`}>
               {modalIcon && (

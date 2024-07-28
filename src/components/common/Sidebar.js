@@ -330,13 +330,13 @@ const Sidebar = (props) => {
 
   	const friendsSubMenuArr = [
 		"/contacts/all",
-		"/contacts/friend-list",
+		"/contacts/friends",
 		"/contacts/non-friends",
-		"/contacts/unfriended-friends",
-		"/contacts/whitelisted-friends",
+		"/contacts/unfriended",
+		"/contacts/whitelisted",
 		// "/contacts/deactivated-friends",
-		"/contacts/lost-friends",
-		"/contacts/blacklisted-friends",
+		"/contacts/lost",
+		"/contacts/blacklisted",
 	];
 
 	const friendReqSubMenuArr = [
@@ -545,7 +545,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/friend-list'
+												to='/contacts/friends'
 												aria-label='Friends'
 											>
 												<span className='nav-menu-name'>- Friends</span>
@@ -568,7 +568,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/unfriended-friends'
+												to='/contacts/unfriended'
 												aria-label='Unfriended'
 											>
 												<span className='nav-menu-name'>- Unfriended</span>
@@ -579,7 +579,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/lost-friends'
+												to='/contacts/lost'
 												aria-label='Lost'
 											>
 												<span className='nav-menu-name'>- Lost</span>
@@ -590,7 +590,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/whitelisted-friends'
+												to='/contacts/whitelisted'
 												aria-label='Whitelisted'
 											>
 												<span className='nav-menu-name'>- Whitelisted</span>
@@ -601,7 +601,7 @@ const Sidebar = (props) => {
 											onClick={listClick}
 										>
 											<NavLink
-												to='/contacts/blacklisted-friends'
+												to='/contacts/blacklisted'
 												aria-label='Blacklisted'
 											>
 												<span className='nav-menu-name'>- Blacklisted</span>

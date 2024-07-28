@@ -246,7 +246,7 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='friend-list'
+								path='friends'
 								element={
 									<Suspense fallback={""}>
 										<FriendsList />
@@ -262,7 +262,7 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='whitelisted-friends'
+								path='whitelisted'
 								element={
 									<Suspense fallback={""}>
 										<WhiteList />
@@ -270,7 +270,7 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='blacklisted-friends'
+								path='blacklisted'
 								element={
 									<Suspense fallback={""}>
 										<BlackList />
@@ -294,7 +294,7 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='unfriended-friends'
+								path='unfriended'
 								element={
 									<Suspense fallback={""}>
 										<Unfriend />
@@ -310,7 +310,7 @@ const Routeing = () => {
 								}
 							></Route>
 							<Route
-								path='lost-friends'
+								path='lost'
 								element={
 									<Suspense fallback={""}>
 										<LostFriends />

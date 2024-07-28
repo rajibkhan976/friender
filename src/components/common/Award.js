@@ -39,7 +39,7 @@ const Award = (props) => {
         <h2>Congratulations!</h2>
         <p>You have sucessfully completed your first 4 steps</p>
 
-        <Link to="/contacts/friend-list" className="btn-primary btn link-btn">Your friend list is ready. Click here</Link>
+        <Link to="/contacts/friends" className="btn-primary btn link-btn">Your friend list is ready. Click here</Link>
         {/* <div className="time-save-wraper d-flex">
           <span className="fire-wraper">
             <img src={Fire} alt="" />
