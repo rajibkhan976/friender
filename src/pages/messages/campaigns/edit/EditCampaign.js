@@ -24,11 +24,13 @@ import {
 	deleteCampaignContacts,
 	updateCampaignSchedule
 } from "../../../../actions/CampaignsActions";
-import { updateCurrlistCount } from "../../../../actions/SSListAction";
+import { commonbulkAction, getListData, removeMTRallRowSelection, updateCurrlistCount } from "../../../../actions/SSListAction";
 import { fetchUserProfile } from "../../../../services/authentication/facebookData";
 import Listing2 from "../../../../components/common/SSListing/Listing2";
 import config from "../../../../configuration/config";
 import { campaignUserColumnDefs } from "../../../../components/common/SSListing/ListColumnDefs/CampaignColDef";
+import helper from "../../../../helpers/helper";
+import Alertbox from "../../../../components/common/Toast";
 
 const EditCampaign = (props) => {
 	const dispatch = useDispatch();
@@ -56,10 +58,13 @@ const EditCampaign = (props) => {
 	});
 	const [showPopup, setShowPopup] = useState(false);
 	const [popupCoordPos, setPopupCoordPos] = useState({ x: 0, y: 0 });
-
+	const select_all_state = useSelector((state) => state.ssList.selectAcross);
+	const selectedListItems = useSelector((state) => state.ssList.selected_friends);
+	const filter_state = useSelector((state) => state.ssList.filter_state);
 	function matchesFilter(cellValue, filterValues) {
 		return filterValues.some(filter => cellValue?.toLowerCase().includes(filter?.toLowerCase()));
 	}
+	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
 
 	function sourceComparator(valueA, valueB, nodeA, nodeB, isDescending) {
 		// "groups", "group", "suggestions", "friends", "post", "sync", "incoming", "csv", task_name
@@ -283,6 +288,74 @@ const EditCampaign = (props) => {
     });
 	}
 	}, [])
+
+	const refreshAndDeselectList = () => {
+
+		//const funStr = listFetchParams.responseAdapter;
+		//const responseAdapter = eval(`(${funStr})`);
+		const payload = {
+			queryParam: listFetchParams.queryParam,
+			baseUrl: listFetchParams.baseUrl,
+			//responseAdapter: props.dataExtractor,
+		}
+		dispatch(getListData(payload)).unwrap().then((res) => {
+			//console.log("list res ",res);
+		}).catch((err) => {
+			console.log("Error in page header list fetch", err);
+		});
+		dispatch(removeMTRallRowSelection());
+	}
+
+	const triggerBulkOperation = async (bulkType = null) => {
+		return new Promise((resolve, reject) => {
+			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
+			let reqBody = {
+				fb_user_id: current_fb_id,
+				check: select_all_state?.selected ? 'all' : 'some',
+				//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
+				// operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
+				campaign_id: params?.campaignId,
+			}
+
+			if (!select_all_state?.selected) {
+				reqBody["include_list"] = [...selectedListItems?.map(el => el?._id)];
+			}
+
+			if (select_all_state?.selected) {
+				reqBody["exclude_list"] = select_all_state?.unSelected?.length > 1 ? [...select_all_state?.unSelected.map(el => el)] : []
+			}
+
+			if (filter_state?.filter_key_value?.length > 0) {
+				const { values, fields, operators } = helper.listFilterParamsGenerator(
+					filter_state?.filter_key_value,
+					filter_state?.filter_fun_state
+				);
+				reqBody["values"] = values;
+				reqBody["fields"] = fields;
+				reqBody["operators"] = operators;
+				reqBody["filter"] = 1;
+			}
+
+			const payload ={
+				"method": "POST",
+				"baseUrl": `${config.deleteCampaignContactsv2}`,
+				reqBody
+			}
+
+				dispatch(commonbulkAction(payload)).unwrap()
+					.then((res) => {
+						console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
+						// Alertbox(
+						// 	bulkType === 'queue' ? res?.data?.message : res?.data,
+						// 	"success",
+						// 	1000,
+						// 	"bottom-right"
+						// );
+						refreshAndDeselectList();
+					})
+			
+		})
+	}
 	const removeCampaignContacts = async (data = {}) => {
 		const fbUserId = current_fb_id;
 		const campaignId = params?.campaignId;
@@ -327,12 +400,12 @@ const EditCampaign = (props) => {
 			return {
 				res:response,
 				data: response.data,
-				count: 300
+				count: response.total_campaign_contacts,
 			}
 	}
 	const extraParams = {
 		isCampaignUserList: true,
-		removeFriendFromCampaign: removeCampaignContacts
+		removeFriendFromCampaign: triggerBulkOperation
 	}
 
 	// RENDER VIEW COMPONENT DEPENDING ON VIEW MODES (VIEW PEOPLES / EDIT CAMPAIGN)..

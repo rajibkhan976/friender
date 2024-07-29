@@ -1739,9 +1739,9 @@ function PageHeader({ headerText = "" }) {
 		}
 	};
 
-	useEffect(()=>{
-		console.log("listFilteredCount ::: ", pagination_state);
-	}, [pagination_state])
+	// useEffect(()=>{
+	// 	console.log("listFilteredCount ::: ", pagination_state);
+	// }, [pagination_state])
 
 	useEffect(() => {
 		// console.log('XXXXXXXXXXXX', listFilteredCount);
@@ -2160,7 +2160,6 @@ function PageHeader({ headerText = "" }) {
 					.then((res) => {
 						console.log('res in HEADER', res);
 						dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
-
 						setModalOpen(false)
 						dispatch(updateSelectAllState({}))
 						dispatch(updateSelectedFriends([]));

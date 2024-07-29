@@ -43,7 +43,8 @@ const initialState = {
     global_searched_filter: "",
     pluginRowSelection: {},
     friendsQueueErrorRecordsCount: 0,
-    fetchSendableCount: 0
+    fetchSendableCount: 0,
+    currentPageSize: 0
 };
 
 export const getListData = createAsyncThunk(
@@ -121,10 +122,30 @@ export const bulkActionQueue = createAsyncThunk(
     }
 )
 
+export const commonbulkAction = createAsyncThunk(
+    "sslist/getListData",
+    async (payload) => {
+        const reqBody = payload.reqBody
+        // console.log('queryParam', queryParam);
+      const res  = await apiClient(
+        `${payload.method}`,
+        `${payload.baseUrl}`,
+        {...reqBody, local_time: new Date().toISOString().slice(0, 19).replace("T", " ")},
+        {}
+      );
+    //   if(payload.responseAdapter){
+    //     adapter = payload.responseAdapter;
+    //   }
+      //adapter = payload.responseAdapter? payload.responseAdapter(res) : res;
+     // return adapter(res);
+     return res;
+    }
+  );
+
 export const getQueueSendableCount = createAsyncThunk(
     "ssList/getQueueSendableCount",
     async (payload) => {
-        // console.log('>>>>>>>>>>>>>>', payload);
+       // console.log('>>>>>>>>>>>>>>', payload);
         const res = await fetchQueueCountS(payload)
         // console.log('res', res);
         return res
@@ -206,6 +227,7 @@ export const ssListSlice = createSlice({
             state.selected_friends_total_blackList_count = 0;
             state.selected_friends_total_whiteList_count = 0;
             state.selected_friends = [];
+            state.select_all_state = {};
         },
         updateWhiteListStatusOfSelectesList: (state, action) => {
             state.ssList_data_obj[action.payload._id].whitelist_status = action.payload.status;
@@ -262,7 +284,8 @@ export const ssListSlice = createSlice({
             state.global_searched_filter = "";
         },
         updateListNumCount: (state, action) => {
-            state.list_filtered_count = action.payload.count
+            // state.list_filtered_count = action.payload.count
+            state.list_filtered_count = action.payload
         },
         resetFilters: (state, action) => {
             state.filter_state = {
@@ -310,6 +333,9 @@ export const ssListSlice = createSlice({
         },
         goToPage: (state, action) => {
             state.go_to_page = action.payload
+        },
+        updateCurrentPageSize: (state, action) => {
+            state.currentPageSize = action.payload
         }
     },
     extraReducers: {
@@ -335,6 +361,7 @@ export const ssListSlice = createSlice({
             state.isLoading = false;
             state.isRefetching = false;
             state.list_filtered_count = action.payload.count;
+            // console.log('action.payload', action.payload);
             if( !action.meta?.arg?.queryParam?.filter || action.meta?.arg?.queryParam?.filter === 0 ){
                 state.list_unfiltered_count = action.payload.count;
               }
@@ -404,6 +431,8 @@ export const {
     // removeFromTotalList,
     updatePagination,
     updateFriendsQueueCount,
-    goToPage
+    goToPage,
+    updateListNumCount,
+    updateCurrentPageSize
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

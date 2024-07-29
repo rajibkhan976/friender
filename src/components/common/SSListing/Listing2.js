@@ -14,6 +14,7 @@ import {
   getListData,
   removeMTRallRowSelection,
   resetFilters,
+  updateCurrentPageSize,
   updateFilterState,
   updateFriendsQueueCount,
   updateMRTrowSelectionState,
@@ -344,6 +345,7 @@ export default function Listing2(props) {
 			if (data.length > 0) {
 				dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
 			}
+      dispatch(updateCurrentPageSize(table.getRowModel().rows))
     }
   }, [data]);
   const fetchData = async (

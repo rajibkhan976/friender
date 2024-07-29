@@ -31,7 +31,7 @@ import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumn
 import config from "../../configuration/config";
 import { useLocation } from "react-router-dom";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
-import { getListData, getQueueSendableCount, goToPage, updatePagination } from "../../actions/SSListAction";
+import { getListData, getQueueSendableCount, goToPage, updateListNumCount, updatePagination } from "../../actions/SSListAction";
 // const fb_user_id= localStorage.getItem("fr_default_fb");
 import helper from "../../helpers/helper"
 
@@ -46,7 +46,9 @@ const FriendsQueue = () => {
 	const mySettings = useSelector((state) => state.settings.mySettings);
 	const pagination_state = useSelector((state) => state.ssList.pagination_state)
 	const textFilter = useSelector((state) => state.friendlist.searched_filter);
+	const currentPageSize = useSelector((state) => state.ssList.currentPageSize)
 	const [isReset, setIsReset] = useState(null);
+	const [oldSendableCount, setOldSendableCount] = useState(0)
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
@@ -201,28 +203,52 @@ const FriendsQueue = () => {
 	// 	console.log('====', pagination_state.page_number, listFilteredCount, pagination_state.page_size, '====');
 	// }, [pagination_state])
 
+	// useEffect(() => {
+	// 	if (currentPageSize?.length < pagination_state?.page_size) {
+	// 		console.log('currentPageSize', currentPageSize);
+	// 	}
+	// }, [currentPageSize])
+
 	useEffect(() => {
+		// console.log('listFilteredCount:::::::::::::::::::::::::::::::::::::::::', listFilteredCount);
+		if (sendableCount !== 0) {
+			// console.log('listFilteredCount>>>>>>', listFilteredCount);
+			// state.list_filtered_count = listFilteredCount+(sendableCount - oldSendableCount)
+			dispatch(updateListNumCount(listFilteredCount+(sendableCount - oldSendableCount)))
+			// console.log('UPDATE PAGE ::::', pagination_state.page_number, '>>>>>>>>', pagination_state.page_size && Math.ceil((listFilteredCount+(sendableCount - oldSendableCount))/pagination_state.page_size));
+			// console.log('listFilteredCount+(sendableCount - oldSendableCount))', listFilteredCount,sendableCount, oldSendableCount);
+
+			if (currentPageSize?.length < pagination_state?.page_size) {
+				// console.log('currentPageSize', currentPageSize, 'pagination_state.page_number', pagination_state.page_number);
+				// if (sendableCount>listFilteredCount) {
+				// if(pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size) || pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size -1)){
+					let queryParam = {
+						page_number: pagination_state.page_number,
+						page_size: !pagination_state?.page_size ? 15 : pagination_state?.page_size,
+						search_string: textFilter.length > 2 ? textFilter : null,
+						...defaultParams
+					}
+					let payload = {
+						queryParam: queryParam,
+						baseUrl: config.fetchFriendsQueueRecordv2,
+						responseAdapter: dataExtractor,
+					};
+		
+							console.log('payload :::', pagination_state);
+					helper.debounce(dispatch(getListData(payload)), 1000)
+					// }
+					// }
+				} 
+			// 	else {
+			// 		dispatch(goToPage(Math.ceil((listFilteredCount+(sendableCount - oldSendableCount))/pagination_state.page_size)))
+			// }
+		}
 		setSendableRecordsCount(sendableCount ?? 0);
+		setOldSendableCount(sendableCount)
 
-		if (sendableCount>listFilteredCount) {
-			if(pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size) || pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size -1)){
-			let queryParam = {
-				page_number: listFilteredCount !== 0 ? Math.ceil(listFilteredCount/pagination_state.page_size) : Math.ceil(sendableCount/pagination_state.page_size),
-				page_size: !pagination_state?.page_size ? 15 : pagination_state?.page_size,
-				search_string: textFilter.length > 2 ? textFilter : null,
-				...defaultParams
-			}
-			let payload = {
-				queryParam: queryParam,
-				baseUrl: config.fetchFriendsQueueRecordv2,
-				responseAdapter: dataExtractor,
-			};
-
-					console.log('payload :::', pagination_state);
-			helper.debounce(dispatch(getListData(payload)), 1000)
-			dispatch(goToPage(Math.ceil(listFilteredCount/pagination_state.page_size)))
-		}
-		}
+		// console.log('sendableCount', sendableCount);
+		// }
+		// }
 	}, [sendableCount])
 
 	function matchesFilter(cellValue, filterValues) {
