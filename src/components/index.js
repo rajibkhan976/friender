@@ -26,6 +26,7 @@ const Footer = lazy(() => import("./common/Footer"));
 const MainComponent = () => {
 	const dispatch = useDispatch();
 	const [showFriendsQueueErr, setShowFriendsQueueErr] = useState(false);
+	const [showErrorReallyOff, setShowErrorReallyOff] = useState(false)
 	const friendsQueueErrorCount = useRef(0);
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -237,7 +238,7 @@ const MainComponent = () => {
 				setShowFriendsQueueErr(true);
 			}
 
-			if (friendsQueueErrorRecordsCount === 0) {
+			if (friendsQueueErrorRecordsCount === 0 && showErrorReallyOff) {
 				setShowFriendsQueueErr(false);
 			}
 		}
@@ -249,11 +250,17 @@ const MainComponent = () => {
 				setShowFriendsQueueErr(true);
 			}
 
-			if (friendsQueueErrorRecordsCount === 0) {
+			if (friendsQueueErrorRecordsCount === 0 && showErrorReallyOff) {
 				setShowFriendsQueueErr(false);
 			}
 		}
 	}, [ssList_data, friendsQueueErrorRecordsCount])
+
+	useEffect(() => {
+		if (location.pathname.split('/').includes("friends-queue")) {
+			setShowErrorReallyOff(false)
+		}
+	}, [location.pathname])
 
 	return (
 		<main
@@ -265,7 +272,7 @@ const MainComponent = () => {
 					}`
 			}
 		>
-			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") &&
+			{showFriendsQueueErr && location?.pathname?.includes("friends-queue") && !showErrorReallyOff &&
 				alertUserStatusCheck && alertUserStatusCheck?.alert_status === 0 && (
 					<div className='friend-queue-error-report'>
 						<div className='friend-queue-error-txt'>
@@ -276,7 +283,10 @@ const MainComponent = () => {
 						<button
 							className='friend-queue-error-close-btn'
 							type='button'
-							onClick={() => setShowFriendsQueueErr(false)}
+							onClick={() => {
+								setShowErrorReallyOff(true)
+								setShowFriendsQueueErr(false)
+							}}
 						>
 							Close
 						</button>
@@ -303,7 +313,7 @@ const MainComponent = () => {
 				</div>
 			)}
 			<ToastContainer />
-			<div className={`main-wrapper ${showFriendsQueueErr && location?.pathname?.includes("friends-queue") ? 'showingQueue' : ''}`}>
+			<div className={`main-wrapper ${(showFriendsQueueErr && location?.pathname?.includes("friends-queue")) && !showErrorReallyOff ? 'showingQueue' : ''}`}>
 				<div className='body-content-wraper'>
 					<Suspense fallback={""}>
 						<Sidebar

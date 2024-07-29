@@ -38,6 +38,7 @@ export default function Listing2(props) {
   const selected = useSelector((state) => state.ssList.selected_friends);
   const filter_state = useSelector((state) => state.ssList.filter_state);
   const pagination_state= useSelector((state) => state.ssList.pagination_state)
+  const go_to_page = useSelector((state) => state.ssList.go_to_page)
   //  const select_all_state = useSelector((state) => state.ssList.select_all_state)
   const isInitialRender = useRef(true);
   const data = useSelector((state) => state.ssList.ssList_data);
@@ -519,10 +520,24 @@ export default function Listing2(props) {
     )
   }
 
-  // useEffect(() => {
-  //   dispatch(updatePagination(pagination))
-  //   console.log('pagination_state', pagination);
-  // }, [pagination])
+  useEffect(() => {
+    dispatch(updatePagination({page_number: pagination.pageIndex+1, page_size: pagination.pageSize}))
+    console.log('pagination_state', pagination);
+  }, [pagination])
+
+  const goToPage = (pageIndex) => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex
+    }))
+  }
+
+  useEffect(() => {
+    // console.log('go_to_page', go_to_page);
+    if (!go_to_page && go_to_page > 0) {
+      goToPage(go_to_page)
+    }
+  }, [go_to_page])
 
   //pass table options to useMaterialReactTable
   const table = useMaterialReactTable({

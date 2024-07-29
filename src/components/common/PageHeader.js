@@ -251,6 +251,7 @@ function PageHeader({ headerText = "" }) {
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
 	const listFilteredCount = useSelector((state) => state.ssList.list_filtered_count);
+	const listUnfilteredCount = useSelector((state) => state.ssList.list_unfiltered_count)
 	const facebookData = useSelector((state) => state?.facebook_data);
 	const [links, setLinks] = useState([]);
 	const [accessOptions, setAccessOptions] = useState(accessibilityOptions);
@@ -288,6 +289,7 @@ function PageHeader({ headerText = "" }) {
 	const selected_friends_curr_count = useSelector((state) => state.ssList.selected_friends_curr_count);
 	const selected_whitelist_contacts = useSelector((state) => state.ssList.selected_friends_total_whiteList_count);
 	const selected_blacklist_contacts = useSelector((state) => state.ssList.selected_friends_total_blackList_count);
+	const [addToQueue, setAddToQueue] = useState(0)
 
 	const dataExtractor = (response) => {
 		return {
@@ -1045,8 +1047,14 @@ function PageHeader({ headerText = "" }) {
 
 	const unfriend = async (unfriendableList = selectedFriends) => {
 		let totalListPlacholder = [...totalList];
-		unfriendableList = [...unfriendableList]?.filter(el => el?.deleted_status !== 1)
-		console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
+		unfriendableList = [...unfriendableList]?.filter(
+													el => el?.deleted_status !== 1 &&
+													(
+														el?.friendship === 1 && 
+														el?.friendStatus === "Activate"
+													)
+												)
+		// console.log("Calling unfriendddddddddd////////?????/////", unfriendableList);
 		if (!unfriendableList?.length > 0) {
 			Alertbox(
 				`Some error happend in selecting prfiles`,
@@ -1166,7 +1174,7 @@ function PageHeader({ headerText = "" }) {
 		dispatch(crealGlobalFilter())
 		dispatch(resetFilters())
 		dispatch(removeMTRallRowSelection())
-		console.log('=============================Done all=============================');
+		// console.log('=============================Done all=============================');
 
 		setRunningUnfriend(false);
 		window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -1706,15 +1714,16 @@ function PageHeader({ headerText = "" }) {
 	}, [groupMsgSelect2, quickMsg2]);
 
 	const reFetchFrQueDataRef = useRef(null);
-
+// const [fr_queue_loaded, setFr_queue_loaded] = useState(0)
 	const reFetchDataOnRunFriendQueueSuccess = (event) => {
 		// console.log("reFetchDataOnRunFriendQueueSuccess", event);
 		// if (!event?.origin?.includes(process.env.REACT_APP_APP_URL)) return;
 		if (event?.data === "fr_queue_success") {
+			// setFr_queue_loaded(fr_queue_loaded+1)
 			setIsFrQueActionsEnabled(false);
 			dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
 				.then((res) => {
-					console.log('res >>>>>>', res);
+					// console.log('res >>>>>>', res);
 				})
 			// dispatch(getNewFriendsQueueRecordsInChunk())
 			// 	.unwrap()
@@ -1726,14 +1735,20 @@ function PageHeader({ headerText = "" }) {
 			// 			)
 			// 	}
 			// 	);
+			// console.log('>>>>>>>>>>>>>>>', pagination_state, listFilteredCount, Math.ceil(listFilteredCount/pagination_state.page_size), '<<<<<<<<<<<<<<<');
 		}
 	};
 
+	useEffect(()=>{
+		console.log("listFilteredCount ::: ", pagination_state);
+	}, [pagination_state])
+
 	useEffect(() => {
+		// console.log('XXXXXXXXXXXX', listFilteredCount);
 		window.addEventListener(
 			"message",
 			(event) => {
-				console.log("addEventListener", event);
+				// console.log("addEventListener", event);
 				reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
 			},
 			false
@@ -1746,7 +1761,7 @@ function PageHeader({ headerText = "" }) {
 			});
 			clearTimeout(reFetchFrQueDataRef);
 		};
-	}, []);
+	}, [listFilteredCount, pagination_state]);
 
 	const handleShowCsvUploadModal = () => {
 		setTaskName(`CSV Upload ${moment().format("YYYYMMDDHHmmss")}`);
@@ -3029,6 +3044,12 @@ function PageHeader({ headerText = "" }) {
 															</figure>
 															<span>Remove</span>
 														</li>
+														{
+															console.log(
+																select_all_state?.selected,
+																selectedListItems?.length, totalList?.length
+															)
+														}
 														<li
 															className='del-fr-action'
 															onClick={() =>
@@ -3036,7 +3057,15 @@ function PageHeader({ headerText = "" }) {
 																triggerBulkOperation('move_to_top')
 															}
 															data-disabled={
-																!selectedListItems || selectedListItems?.length === 0 || !isFrQueActionsEnabled
+																!selectedListItems || 
+																selectedListItems?.length === 0 || 
+																!isFrQueActionsEnabled || (
+																	(
+																		select_all_state?.selected ||
+																		selectedListItems?.length >= totalList?.length
+																	) &&
+																	!filter_state?.filter_key_value?.length > 0
+																)
 																	? true
 																	: false
 															}

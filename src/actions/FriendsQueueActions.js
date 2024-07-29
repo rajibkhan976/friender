@@ -47,7 +47,7 @@ export const fRQueueExtMsgSendHandler = async (data) => {
 		frLoginToken: localStorage.getItem("fr_token"),
 		payload: payload,
 	});
-	console.log("message res", extRes);
+	// console.log("message res", extRes);
 };
 
 // export const saveFriendsQueueRecordsInIndexDb = async (

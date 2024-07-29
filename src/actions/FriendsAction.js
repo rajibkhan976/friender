@@ -115,7 +115,7 @@ export const deleteFriend = createAsyncThunk(
 
 const updateWhiteList = (currnList, payload) => {
   payload.forEach((item) => {
-    console.log(' >>>>>> ', item);
+    // console.log(' >>>>>> ', item);
     let upateItem = currnList.find((obj) => obj.friendFbId === item.friendFbId);
     upateItem.whitelist_status = item.status;
   });

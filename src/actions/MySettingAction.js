@@ -20,7 +20,7 @@ const dispatchSettingsToExtension = async (actionStr, dataObject) => {
     frLoginToken: localStorage.getItem("fr_token"),
     payload: dataObject,
   });
-  console.log("message res", extRes);
+  // console.log("message res", extRes);
 };
 
  const initialState = {

@@ -36,6 +36,7 @@ const initialState = {
         page_number: 0,
         page_size: 15,
     },
+    go_to_page: null,
     list_filtered_count: 0,
     list_unfiltered_count: 0,
     select_all_state: {},
@@ -104,9 +105,9 @@ export const getFriendCountAction = createAsyncThunk(
 export const bulkAction = createAsyncThunk(
     "sslist/bulkAction",
     async (payload) => {
-        console.log('PAYLOAD IN ACTION', payload);
+        // console.log('PAYLOAD IN ACTION', payload);
         const res = await bulkOperationContacts({...payload,local_time:new Date().toISOString().slice(0, 19).replace("T", " ")});
-        console.log('RES IN ACTION', res);
+        // console.log('RES IN ACTION', res);
         return res;
     }
 )
@@ -115,7 +116,7 @@ export const bulkActionQueue = createAsyncThunk(
     "sslist/bulkActionQueue",
     async (payload) => {
         const res = await bulkOperationFriendsQueueS(payload)
-        console.log('res in action', res);
+        // console.log('res in action', res);
         return {...res, payload}
     }
 )
@@ -123,9 +124,9 @@ export const bulkActionQueue = createAsyncThunk(
 export const getQueueSendableCount = createAsyncThunk(
     "ssList/getQueueSendableCount",
     async (payload) => {
-        console.log('>>>>>>>>>>>>>>', payload);
+        // console.log('>>>>>>>>>>>>>>', payload);
         const res = await fetchQueueCountS(payload)
-        console.log('res', res);
+        // console.log('res', res);
         return res
     }
 )
@@ -293,19 +294,22 @@ export const ssListSlice = createSlice({
         //         // getListData()
         //     }
         // },
-        // updatePagination: (state, action) => {
-        //     console.log('action', action);
-        //     state.pagination_state={
-        //         page_number: action?.payload?.pageIndex,
-        //         page_size: action?.payload?.pageSize
-        //     }
-        // },
+        updatePagination: (state, action) => {
+            console.log('action', action);
+            state.pagination_state={
+                page_number: action?.payload?.page_number,
+                page_size: action?.payload?.page_size
+            }
+        },
         updateFriendsQueueCount: (state, action) => {
             state.friendsQueueErrorRecordsCount = action.payload
         },
         updateSendableAcount: (state, action) => {
-            console.log(' >>>>>>>>> ', action?.payload);
+            // console.log(' >>>>>>>>> ', action?.payload);
             state.fetchSendableCount = action.payload.sendable_count
+        },
+        goToPage: (state, action) => {
+            state.go_to_page = action.payload
         }
     },
     extraReducers: {
@@ -317,8 +321,8 @@ export const ssListSlice = createSlice({
                 state.isRefetching = true;
             }
             state.pagination_state = {
-                page_number:action.meta?.arg?.page_number,
-                page_size:action.meta?.arg?.page_size,
+                page_number:action.meta?.arg?.page_number||1,
+                page_size:action.meta?.arg?.page_size||15,
             };
             state.listFetchParams = {
                 queryParam: action.meta?.arg?.queryParam,
@@ -376,10 +380,6 @@ export const ssListSlice = createSlice({
         [getQueueSendableCount.fulfilled]: (state, action) => {
             // console.log('>>>>>>>> state', state, 'action', action?.payload?.sendable_count);
             state.fetchSendableCount = action?.payload?.sendable_count
-        },
-        [getQueueSendableCount.rejected]: (state, action) => {
-            console.log('rejected');
-            state.fetchSendableCount = 0
         }
     },
 });
@@ -402,7 +402,8 @@ export const {
     crealGlobalFilter,
     updateLocalListState,
     // removeFromTotalList,
-    // updatePagination,
-    updateFriendsQueueCount
+    updatePagination,
+    updateFriendsQueueCount,
+    goToPage
 } = ssListSlice.actions;
 export default ssListSlice.reducer;

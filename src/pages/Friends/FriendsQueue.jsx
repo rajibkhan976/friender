@@ -31,8 +31,9 @@ import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumn
 import config from "../../configuration/config";
 import { useLocation } from "react-router-dom";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
-import { getQueueSendableCount } from "../../actions/SSListAction";
+import { getListData, getQueueSendableCount, goToPage, updatePagination } from "../../actions/SSListAction";
 // const fb_user_id= localStorage.getItem("fr_default_fb");
+import helper from "../../helpers/helper"
 
 const FriendsQueue = () => {
 	const location = useLocation()
@@ -43,11 +44,14 @@ const FriendsQueue = () => {
 	const sendableCount = useSelector((state) => state.ssList.fetchSendableCount)
 	const loading = useSelector((state) => state.facebook_data.isLoading);
 	const mySettings = useSelector((state) => state.settings.mySettings);
+	const pagination_state = useSelector((state) => state.ssList.pagination_state)
+	const textFilter = useSelector((state) => state.friendlist.searched_filter);
 	const [isReset, setIsReset] = useState(null);
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const inactiveAfter = useSelector((state) => state.settings.mySettings?.data[0]?.friends_willbe_inactive_after);
-	const [listFilteredCount, setListFilteredCount] = useState(null);
+	// const [listFilteredCount, setListFilteredCount] = useState(null);
+	const listFilteredCount = useSelector((state) => state.ssList.list_filtered_count);
 
 	const fbUserId = localStorage.getItem("fr_default_fb");
 	const timeDelays = [
@@ -147,8 +151,11 @@ const FriendsQueue = () => {
 		});
 		}
 
-		console.log('===================');
-		dispatch(getQueueSendableCount({fb_user_id: fb_user_id})).unwrap()
+		// console.log('===================');
+		dispatch(getQueueSendableCount({fb_user_id: fb_user_id}))
+		// console.log('===================');
+
+		// console.log(pagination_state, listFilteredCount);
 		// console.log('===================');
 		
 		sendMessageToExt();
@@ -172,7 +179,8 @@ const FriendsQueue = () => {
 			action: "fRqueAlarmStatusCheck",
 			frLoginToken: localStorage.getItem("fr_token")
 		});
-		console.log("extRes in FRQUE LIST", extRes);
+		console.log("extRes in FRQUE LIST", extRes, 'data >>>>>', data);
+		extRes?.error && Alertbox(`${extRes?.error?.message} `, "error", 3000, "bottom-right");
 	}
 
 	//
@@ -188,8 +196,33 @@ const FriendsQueue = () => {
 	// 	}
 	// }, [friendsQueueRecords]);
 
+	// useEffect(() => {
+	// 	console.log('pagination_state', pagination_state);
+	// 	console.log('====', pagination_state.page_number, listFilteredCount, pagination_state.page_size, '====');
+	// }, [pagination_state])
+
 	useEffect(() => {
 		setSendableRecordsCount(sendableCount ?? 0);
+
+		if (sendableCount>listFilteredCount) {
+			if(pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size) || pagination_state.page_number == Math.ceil(listFilteredCount/pagination_state.page_size -1)){
+			let queryParam = {
+				page_number: listFilteredCount !== 0 ? Math.ceil(listFilteredCount/pagination_state.page_size) : Math.ceil(sendableCount/pagination_state.page_size),
+				page_size: !pagination_state?.page_size ? 15 : pagination_state?.page_size,
+				search_string: textFilter.length > 2 ? textFilter : null,
+				...defaultParams
+			}
+			let payload = {
+				queryParam: queryParam,
+				baseUrl: config.fetchFriendsQueueRecordv2,
+				responseAdapter: dataExtractor,
+			};
+
+					console.log('payload :::', pagination_state);
+			helper.debounce(dispatch(getListData(payload)), 1000)
+			dispatch(goToPage(Math.ceil(listFilteredCount/pagination_state.page_size)))
+		}
+		}
 	}, [sendableCount])
 
 	function matchesFilter(cellValue, filterValues) {
