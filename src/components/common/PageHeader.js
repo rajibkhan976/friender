@@ -3084,9 +3084,13 @@ function PageHeader({ headerText = "" }) {
 																selectedListItems?.length === 0 || (
 																	(
 																		select_all_state?.selected ||
-																		selectedListItems?.length >= totalList?.length
+																		// selectedListItems?.length >= totalList?.length
+																		selectedListItems?.length >= listCount
 																	) &&
 																	!filter_state?.filter_key_value?.length > 0
+																) || (
+																	pagination_state?.page_size === selectedListItems?.length &&
+																	pagination_state?.page_number === 1
 																)
 																	? true
 																	: false
