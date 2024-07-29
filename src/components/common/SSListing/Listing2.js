@@ -345,6 +345,7 @@ export default function Listing2(props) {
 			if (data.length > 0) {
 				dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
 			}
+      // console.log('table.getRowModel().rows >>>>>>>>>>>>', table.getRowModel().rows);
       dispatch(updateCurrentPageSize(table.getRowModel().rows))
     }
   }, [data]);
@@ -524,7 +525,7 @@ export default function Listing2(props) {
 
   useEffect(() => {
     dispatch(updatePagination({page_number: pagination.pageIndex+1, page_size: pagination.pageSize}))
-    console.log('pagination_state', pagination);
+    // console.log('pagination_state', pagination);
   }, [pagination])
 
   const goToPage = (pageIndex) => {

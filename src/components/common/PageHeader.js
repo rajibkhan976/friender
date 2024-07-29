@@ -473,6 +473,7 @@ function PageHeader({ headerText = "" }) {
 			baseUrl: listFetchParams.baseUrl,
 			//responseAdapter: props.dataExtractor,
 		}
+		// console.log('payload  >>>>>>>>>>>>>>> ', payload);
 		dispatch(getListData(payload)).unwrap().then((res) => {
 			//console.log("list res ",res);
 		}).catch((err) => {
@@ -1712,6 +1713,10 @@ function PageHeader({ headerText = "" }) {
 			setQuickMsg2(null);
 		}
 	}, [groupMsgSelect2, quickMsg2]);
+
+	// useEffect(() => {
+	// 	console.log('isFrQueActionsEnabled VALUE ISSSSSSS :::::', isFrQueActionsEnabled);
+	// }, [isFrQueActionsEnabled])
 
 	const reFetchFrQueDataRef = useRef(null);
 // const [fr_queue_loaded, setFr_queue_loaded] = useState(0)
@@ -3033,7 +3038,7 @@ function PageHeader({ headerText = "" }) {
 																triggerBulkOperation('remove')
 															}
 															data-disabled={
-																!selectedListItems || selectedListItems?.length === 0 || !isFrQueActionsEnabled
+																!selectedListItems || selectedListItems?.length === 0
 																	? true
 																	: false
 															}
@@ -3043,12 +3048,12 @@ function PageHeader({ headerText = "" }) {
 															</figure>
 															<span>Remove</span>
 														</li>
-														{
+														{/* {
 															console.log(
 																select_all_state?.selected,
 																selectedListItems?.length, totalList?.length
 															)
-														}
+														} */}
 														<li
 															className='del-fr-action'
 															onClick={() =>
@@ -3057,8 +3062,7 @@ function PageHeader({ headerText = "" }) {
 															}
 															data-disabled={
 																!selectedListItems || 
-																selectedListItems?.length === 0 || 
-																!isFrQueActionsEnabled || (
+																selectedListItems?.length === 0 || (
 																	(
 																		select_all_state?.selected ||
 																		selectedListItems?.length >= totalList?.length

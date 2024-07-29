@@ -203,19 +203,13 @@ const FriendsQueue = () => {
 	// 	console.log('====', pagination_state.page_number, listFilteredCount, pagination_state.page_size, '====');
 	// }, [pagination_state])
 
-	// useEffect(() => {
-	// 	if (currentPageSize?.length < pagination_state?.page_size) {
-	// 		console.log('currentPageSize', currentPageSize);
-	// 	}
-	// }, [currentPageSize])
-
 	useEffect(() => {
 		// console.log('listFilteredCount:::::::::::::::::::::::::::::::::::::::::', listFilteredCount);
 		if (sendableCount !== 0) {
 			// console.log('listFilteredCount>>>>>>', listFilteredCount);
 			// state.list_filtered_count = listFilteredCount+(sendableCount - oldSendableCount)
 			dispatch(updateListNumCount(listFilteredCount+(sendableCount - oldSendableCount)))
-			// console.log('UPDATE PAGE ::::', pagination_state.page_number, '>>>>>>>>', pagination_state.page_size && Math.ceil((listFilteredCount+(sendableCount - oldSendableCount))/pagination_state.page_size));
+			// console.log('UPDATE PAGE ::::', currentPageSize?.length, pagination_state?.page_size);
 			// console.log('listFilteredCount+(sendableCount - oldSendableCount))', listFilteredCount,sendableCount, oldSendableCount);
 
 			if (currentPageSize?.length < pagination_state?.page_size) {
@@ -234,7 +228,7 @@ const FriendsQueue = () => {
 						responseAdapter: dataExtractor,
 					};
 		
-							console.log('payload :::', pagination_state);
+							// console.log('payload :::', pagination_state);
 					helper.debounce(dispatch(getListData(payload)), 1000)
 					// }
 					// }

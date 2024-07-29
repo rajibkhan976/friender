@@ -347,8 +347,8 @@ export const ssListSlice = createSlice({
                 state.isRefetching = true;
             }
             state.pagination_state = {
-                page_number:action.meta?.arg?.page_number||1,
-                page_size:action.meta?.arg?.page_size||15,
+                page_number:action.meta?.arg?.queryParam?.page_number||1,
+                page_size:action.meta?.arg?.queryParam?.page_size||15,
             };
             state.listFetchParams = {
                 queryParam: action.meta?.arg?.queryParam,
