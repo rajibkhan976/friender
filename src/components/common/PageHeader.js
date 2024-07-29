@@ -49,6 +49,7 @@ import {
 	getSendFriendReqst,
 	reLoadFrList,
 	unLoadFrList,
+	getUserSyncData
 } from "../../actions/FriendsAction";
 import {
 	deleteFriend,
@@ -1288,14 +1289,25 @@ function PageHeader({ headerText = "" }) {
 		isStopingSync = false;
 		localStorage.removeItem("fr_update");
 		// console.log("syncing completed_________________________>")
+
+		const updatedAccess = accessOptions.map((accessObj) => {
+			return {
+				...accessObj,
+				active: false,
+			};
+		});
+
+		setAccessOptions(updatedAccess);
+
 		Alertbox(
 			"Friends syncing is successfully completed",
 			"success",
 			1000,
 			"bottom-right"
 		);
-		fetchPendingFrRquest();
+		fetchPendingFrRquest(config.fetchPendingListv2);
 		fetchFriends();
+		facebookData?.fb_data?.fb_user_id && dispatch(getUserSyncData(facebookData?.fb_data?.fb_user_id))
 	};
 
 	const checkSyncingStatus = async (intv) => {
@@ -1322,6 +1334,13 @@ function PageHeader({ headerText = "" }) {
 			setIsSyncing(false);
 			setInlineLoader(false);
 			// console.log("now ending:::::::");
+		}
+		
+		if (
+			!syncingUpdate &&
+			!isSyncActive
+		) {
+			setInlineLoader(false);
 		}
 	};
 

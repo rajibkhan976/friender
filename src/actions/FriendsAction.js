@@ -4,6 +4,7 @@ import {
   deleteFriends,
   fetchFriendList,
   fetchSenFriendReqList,
+  getUserSyncDataS,
   whiteListFriends,
 } from "../services/friends/FriendListServices";
 import { fetchFriendLost } from "../services/friends/FriendListServices";
@@ -152,6 +153,15 @@ const updateUnfriendList = (currnList, payload) => {
   });
   return currnList;
 };
+
+export const getUserSyncData = createAsyncThunk(
+  "facebook/getUserSyncData",
+  async({payload}) => {
+    const res = await getUserSyncDataS(payload);
+    // console.log('res >>>>>>>', res);
+    return res
+  }
+)
 
 const fbSlice = createSlice({
   name: "facebook",
@@ -313,6 +323,13 @@ const fbSlice = createSlice({
     [getSendFriendReqst.fulfilled]: (state, action) => {
       state.send_friend_request_list = action?.payload?.data;
     },
+    [getUserSyncData.pending]: (state, action) => {
+      // console.log('getUserSyncData PENDING');
+    },
+    [getUserSyncData.fulfilled]: (state, action) => {
+      // console.log('getUserSyncData PENDING >>>>>>', action?.payload?.data[0]);
+      state.fb_data = action?.payload?.data[0]
+    }
   },
 });
 

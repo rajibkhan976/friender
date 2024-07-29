@@ -72,6 +72,7 @@ export const getProfileSettingFromIndexDb = createAsyncThunk(
 
       if ( !indProfileSetting || indProfileSetting.length <= 0) {
         const resp = await fetchProfileSetting({ fbUserId: fbUserId });
+        // console.log('resp >>>>', resp);
         indProfileSetting = resp?.data[0];
         storeProfileSettingIndexDb(fbUserId,indProfileSetting);
       }

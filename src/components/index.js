@@ -15,6 +15,7 @@ import {
 	setDefaultProfileId,
 } from '../actions/ProfilespaceActions';
 import { userLogout } from '../actions/AuthAction';
+import { getUserSyncData } from "../actions/FriendsAction";
 
 
 const Sidebar = lazy(() => import("./common/Sidebar"));
@@ -194,6 +195,9 @@ const MainComponent = () => {
 				// if((fbAuthValidation == undefined || fbAuthValidation!=undefined) &&  password_reset_status== 1 && user_onbording_status == "0"){
 				//   navigate("/")
 				// }
+
+				// console.log('fbAuthValidation >>>>>', userProfile[0]?.fb_user_id);
+				dispatch(getUserSyncData(userProfile[0]?.fb_user_id))
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
@@ -214,6 +218,7 @@ const MainComponent = () => {
 		const onPageLoad = () => {
 			switchLoaderOff();
 		};
+
 
 		if (document.readyState === "complete") {
 			// onPageLoad();

@@ -2700,8 +2700,8 @@ export const PostEngagementIcon = () => {
 			<path
 				d="M1.39025 10.0013L9.3903 10.0008M9.3903 10.0008L6.3903 7.00026M9.3903 10.0008L6.3903 13"
 				stroke="white"
-				stroke-linecap="round"
-				stroke-linejoin="round"
+				strokeLinecap="round"
+				strokeLinejoin="round"
 			/>
 		</svg>
 	);

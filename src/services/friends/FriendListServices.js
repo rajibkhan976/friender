@@ -143,3 +143,17 @@ export const fetchSenFriendReqList= (payload)=>{
       })
   })
 }
+
+export const getUserSyncDataS = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(
+        config.userSyncDataFetchUrl+`?fb_user_id=${fb_user_id}`,
+        {headers: headers}
+      ).then((res) => {
+        resolve(res.data);
+      }).catch((error) => {
+        reject(error)
+      })
+  })
+}
