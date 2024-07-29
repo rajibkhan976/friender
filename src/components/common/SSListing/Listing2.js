@@ -640,8 +640,7 @@ export default function Listing2(props) {
                   }`}
               </strong>
               selected.
-              {selectAcross?.selected &&
-                selectAcross?.unSelected?.length === 0 ? (
+              {(selectAcross?.selected && selectAcross?.unSelected?.length === 0 ) || (selected.length === rowCount) ? (
                 <span>Do you want to unselect all Friends? </span>
               ) : (
                 <span>Do you want to select all Friends? </span>

@@ -344,13 +344,13 @@ const EditCampaign = (props) => {
 
 				dispatch(commonbulkAction(payload)).unwrap()
 					.then((res) => {
-						console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
-						// Alertbox(
-						// 	bulkType === 'queue' ? res?.data?.message : res?.data,
-						// 	"success",
-						// 	1000,
-						// 	"bottom-right"
-						// );
+						//console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
+						Alertbox(
+							 res?.message ,
+							"success",
+							1000,
+							"bottom-right"
+						);
 						refreshAndDeselectList();
 					})
 			
