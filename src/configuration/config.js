@@ -372,6 +372,7 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-user-campaigns-v2",
+	deleteCampaignV2Url: `https://${campaignService}.execute-api.us-east-1.amazonaws.com/${appEnv}/delete-campaigns-v2`,
 	fetchAllCampaignsCountUrl:
 		"https://" +
 		campaignService +

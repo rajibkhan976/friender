@@ -490,7 +490,7 @@ export default function Listing2(props) {
   useEffect(() => {
     //console.log("pagination", pagination);
     fetchData(pagination, textFilter, columnFilters, columnFilterFns, sorting);
-  }, [pagination.pageIndex, pagination.pageSize, sorting]);
+  }, [pagination.pageIndex, pagination.pageSize, sorting, props?.defaultParams]);
 
   // useEffect(() => {
   //   console.log('columnFilters', columnFilters);
@@ -646,12 +646,12 @@ export default function Listing2(props) {
                 <span>Do you want to select all Friends? </span>
               )}
 
-            {props?.extraParams?.isCampaignUserList && 
+            {(props?.extraParams?.isCampaignUserList || props?.extraParams?.isCampaignList) && 
               <button
                 className='remove-friends btn-inline red-text'
                 onClick={props?.extraParams?.removeFriendFromCampaign}
               >
-              Remove friend(s)
+              {props?.extraParams?.isCampaignList ? "Delete campaign(s)" : "Remove friend(s)"}
               </button>}
               <label className="fr-custom-check">
                 <input

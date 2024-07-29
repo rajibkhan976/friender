@@ -11,7 +11,7 @@ import {
 	updateCampaignFilter,
 	updateCampaignDuration,
 } from "actions/CampaignsActions";
-import { updateCurrlistCount } from "actions/SSListAction";
+import { updateCurrlistCount, commonbulkAction, getListData, removeMTRallRowSelection } from "actions/SSListAction";
 import extensionAccesories from "../../../configuration/extensionAccesories";
 
 import {
@@ -29,6 +29,10 @@ import CreateCampaign from "./create/CreateCampaign";
 import Modal from "components/common/Modal";
 import { DangerIcon } from "assets/icons/Icons";
 import { CampaignColDef } from "./list/CampaignColDef";
+import Listing2 from 'components/common/SSListing/Listing2';
+import { campaignColumnDefs } from 'components/common/SSListing/ListColumnDefs/CampaignColDef';
+import config from "configuration/config";
+import helper from 'helpers/helper';
 
 const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
@@ -135,6 +139,13 @@ const Campaigns = () => {
 	const campaignId = useSelector(
 		(state) => state.campaign.selectedCampaignId
 	);
+	const select_all_state = useSelector((state) => state.ssList.selectAcross);
+	const selectedListItems = useSelector((state) => state.ssList.selected_friends);
+	const filter_state = useSelector((state) => state.ssList.filter_state);
+	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
+
+
+
 	// const [loading, setLoading] = useState(false);
 	const [createNew, setCreateNew] = useState(true);
 	const [radioOption, setRadioOption] = useState(radioOptions);
@@ -142,9 +153,23 @@ const Campaigns = () => {
 	const [statusOption, setStatusOption] = useState(statusOptions);
 	const [editViews, setEditViews] = useState(editView);
 	const [isEditingCampaign, setIsEditingCampaign] = useState(null); //{isPaused: true}
+	const [fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
+	const current_fb_id = localStorage.getItem("fr_default_fb");
+	const [defaultParams, setDefaultParams] = useState({
+		sort_order: "asc"
+	});
 
-	console.log("campaignsFilter", campaignFilter);
-	console.log("campaignDuration", campaignDuration);
+	const weekDays = [
+		"Sunday",
+		"Monday",
+		"Tuesday",
+		"Wednesday",
+		"Thursday",
+		"Friday",
+		"Saturday",
+	];
+
+	const today = new Date();
 
 	const fetchAll = async () => {
 		try {
@@ -250,6 +275,14 @@ const Campaigns = () => {
 			}))
 		);
 
+		setDefaultParams((prevState) => {
+			if (el === "today") {
+				return {...prevState, campaign_day: weekDays[today.getDay()] }
+			} else {
+				return {...prevState, campaign_day: null }
+			}
+		});	
+
 		dispatch(updateCampaignDuration(el));
 
 		// filterCampaigns();
@@ -264,6 +297,14 @@ const Campaigns = () => {
 				selected: e.value != el ? false : true,
 			}))
 		);
+
+		setDefaultParams((prevState) => {
+			if (el === "inactive") {
+				return {...prevState, campaign_status: 0 }
+			} else if (el === "active") {
+				return {...prevState, campaign_status: 1 }
+			}
+		});	
 
 		dispatch(updateCampaignFilter(el));
 		// filterCampaigns();
@@ -396,6 +437,93 @@ const Campaigns = () => {
 
 	console.log("isEditingCampaign", isEditingCampaign);
 
+	const refreshAndDeselectList = () => {
+
+		//const funStr = listFetchParams.responseAdapter;
+		//const responseAdapter = eval(`(${funStr})`);
+		const payload = {
+			queryParam: listFetchParams.queryParam,
+			baseUrl: listFetchParams.baseUrl,
+			//responseAdapter: props.dataExtractor,
+		}
+		dispatch(getListData(payload)).unwrap().then((res) => {
+			//console.log("list res ",res);
+		}).catch((err) => {
+			console.log("Error in page header list fetch", err);
+		});
+		dispatch(removeMTRallRowSelection());
+	}
+
+	const triggerBulkOperation = async (bulkType = null) => {
+		return new Promise((resolve, reject) => {
+			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
+			console.log("THE PARAMS HERE -- ", params);
+			let reqBody = {
+				// fb_user_id: current_fb_id,
+				check: select_all_state?.selected ? 'all' : 'some',
+				//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
+				// operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
+				// campaign_id: params?.campaignId,
+			}
+
+			if (!select_all_state?.selected) {
+				reqBody["include_list"] = [...selectedListItems?.map(el => el?._id)];
+			}
+
+			if (select_all_state?.selected) {
+				reqBody["exclude_list"] = select_all_state?.unSelected?.length > 1 ? [...select_all_state?.unSelected.map(el => el)] : []
+			}
+
+			console.log("filter value -- ", filter_state)
+
+			if (filter_state?.filter_key_value?.length > 0) {
+				const { values, fields, operators } = helper.listFilterParamsGenerator(
+					filter_state?.filter_key_value,
+					filter_state?.filter_fun_state
+				);
+				reqBody["values"] = values;
+				reqBody["fields"] = fields;
+				reqBody["operators"] = operators;
+				reqBody["filter"] = 1;
+			}
+
+			const payload ={
+				"method": "POST",
+				"baseUrl": `${config.deleteCampaignV2Url}`,
+				reqBody
+			}
+
+				dispatch(commonbulkAction(payload)).unwrap()
+					.then((res) => {
+						console.log('res IN DISPATH BULK ACTION >>>>  ::::', res);
+						// Alertbox(
+						// 	bulkType === 'queue' ? res?.data?.message : res?.data,
+						// 	"success",
+						// 	1000,
+						// 	"bottom-right"
+						// );
+						refreshAndDeselectList();
+					})
+			
+		})
+	}
+
+	// Any list specific Methods 
+	const tableMethods = {};
+	
+	const dataExtractor = (response)=>{
+		return {
+			res: response,
+			data: response.data,
+			count: response.total_campaings,
+		}
+	}
+
+	const extraParams = {
+		isCampaignList: true,
+		removeFriendFromCampaign: triggerBulkOperation
+	}
+
 	useEffect(() => {
 		// console.log("isEditingCampaign", isEditingCampaign);
 
@@ -519,7 +647,7 @@ const Campaigns = () => {
 											campaignsCreated={filterCampaigns()}
 											setIsEditingCampaign={setIsEditingCampaign}
 										/> */}
-										<CampaignList 
+										{/* <CampaignList 
 											listColDef={() =>[
 												CampaignName,
 												Status,
@@ -530,6 +658,16 @@ const Campaigns = () => {
 												Actions
 											]}
 											radioOption={radioOption}
+										/> */}
+
+										<Listing2 
+											listColDef={campaignColumnDefs}
+											baseUrl={config.fetchAllCampaignsUrl}
+											tableMethods={tableMethods}
+											defaultParams={defaultParams}
+											dataExtractor={dataExtractor}
+											extraParams = {extraParams}
+
 										/>
 									</Suspense>
 								)
