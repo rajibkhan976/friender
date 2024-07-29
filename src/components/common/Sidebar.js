@@ -490,6 +490,8 @@ const Sidebar = (props) => {
 							>
 								<NavLink
 									onClick={(e) => {
+										setSubMenuFriendsRequest(false);
+										setSubMenuMessage(false);
 										setSubMenuFriends(true);
 									}}
 									to='/contacts/all'
@@ -645,6 +647,8 @@ const Sidebar = (props) => {
 							>
 								<NavLink
 									onClick={(e) => {
+										setSubMenuMessage(false);
+										setSubMenuFriends(false);
 										setSubMenuFriendsRequest(true);
 									}}
 									to='/friends/friends-queue'
@@ -723,6 +727,8 @@ const Sidebar = (props) => {
 								<NavLink
 									to='/messages/groups'
 									onClick={(e) => {
+										setSubMenuFriends(false);
+										setSubMenuFriendsRequest(false);
 										setSubMenuMessage(true);
 									}}
 									className={() => messageSubMenuArr.includes(location?.pathname)
