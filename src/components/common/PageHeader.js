@@ -73,6 +73,7 @@ import {
 	uploadFriendsQueueRecordsForReview,
 	uploadFriendsQueueRecordsForSaving,
 } from "../../actions/FriendsQueueActions";
+import { getMySettings } from "../../actions/MySettingAction";
 import Modal from "./Modal";
 import DeleteImgIcon from "../../assets/images/deleteModal.png";
 import purpleAlertPng from "../../assets/images/purpleAlertPng.png"
@@ -300,9 +301,6 @@ function PageHeader({ headerText = "" }) {
 		};
 	};
 
-	useEffect(() => {
-		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
-	}, []);
 	useEffect(() => {
 		if (friendsListData) {
 			if (friendsListData.last_sync_at) {
@@ -1516,6 +1514,10 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
+			
+		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
+		dispatch(getMySettings({ fbUserId: defaultFbId }));
+
 		const sendEssentialsPayload = {
 			action: "sendEssentials",
 			fr_token: localStorage.getItem("fr_token"),
