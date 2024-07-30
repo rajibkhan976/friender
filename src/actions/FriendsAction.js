@@ -156,7 +156,8 @@ const updateUnfriendList = (currnList, payload) => {
 
 export const getUserSyncData = createAsyncThunk(
   "facebook/getUserSyncData",
-  async({payload}) => {
+  async(payload) => {
+    // console.log('payload >>>>>>>>>>>>>', payload);
     const res = await getUserSyncDataS(payload);
     // console.log('res >>>>>>>', res);
     return res
@@ -328,7 +329,9 @@ const fbSlice = createSlice({
     },
     [getUserSyncData.fulfilled]: (state, action) => {
       // console.log('getUserSyncData PENDING >>>>>>', action?.payload?.data[0]);
-      state.fb_data = action?.payload?.data[0]
+      if (action?.payload?.data?.length > 0) {
+        state.fb_data = action?.payload?.data ? action?.payload?.data[0] : []
+      }
     }
   },
 });

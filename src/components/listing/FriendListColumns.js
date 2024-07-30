@@ -1088,7 +1088,7 @@ export const CountryRenderer = memo((params) => {
 
 
 export const FriendShipStatusRenderer = memo((params) => {
-	console.log('params', params);
+	// console.log('params', params);
 	const friendShipsUiObj ={
 		1:<span className={`friendship-cell friend`}><FriendsIcon/> &nbsp; Friend </span>,
 		 2:<span className={`friendship-cell unfriended`}><UnfriendedIcon/> &nbsp; Unfriended </span>,

@@ -16,6 +16,7 @@ import {
 } from '../actions/ProfilespaceActions';
 import { userLogout } from '../actions/AuthAction';
 import { getUserSyncData } from "../actions/FriendsAction";
+import Alertbox from "./common/Toast";
 
 
 const Sidebar = lazy(() => import("./common/Sidebar"));
@@ -197,9 +198,18 @@ const MainComponent = () => {
 				// }
 
 				// console.log('fbAuthValidation >>>>>', userProfile[0]?.fb_user_id);
-				dispatch(getUserSyncData(userProfile[0]?.fb_user_id))
+				if (userProfile[0]?.fb_user_id) {
+					// console.log('userProfile', userProfile[0]?.fb_user_id);
+					dispatch(getUserSyncData(userProfile[0]?.fb_user_id))
+				}
 			} catch (error) {
 				console.error("Error fetching data:", error);
+				// Alertbox(
+				// 	{error},
+				// 	"error",
+				// 	1000,
+				// 	"bottom-right"
+				// );
 			}
 		};
 
