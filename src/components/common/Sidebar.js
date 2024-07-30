@@ -502,7 +502,6 @@ const Sidebar = (props) => {
 								>
 									<ContactIcon />
 									<span
-										onClick={(e) => setSubMenuFriendsFn(e)}
 										className='nav-menu-name'
 									>
 										Contacts{" "}
@@ -659,7 +658,6 @@ const Sidebar = (props) => {
 								>
 									<FriendRequestIcon />
 									<span
-										onClick={(e) => setSubMenuFriendRequestFn(e)}
 										className='nav-menu-name'
 									>
 										Friend requests
