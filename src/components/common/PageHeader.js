@@ -1543,10 +1543,14 @@ function PageHeader({ headerText = "" }) {
 		function dateDiffInDays(a, b) {
 			const _MS_PER_DAY = 1000 * 60 * 60 * 24;
 			// Discard the time and time-zone information.
-			const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-			const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+			// const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+			// const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+			
+			const local1 = new Date(b).getTime();
+			const local2 = new Date(a).getTime();
 
-			return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+			// return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+			return Math.floor((local2 - local1) / _MS_PER_DAY);
 		}
 
 		if (toolTip) {
@@ -1555,6 +1559,9 @@ function PageHeader({ headerText = "" }) {
 				let differenceInDays = Math.abs(
 					dateDiffInDays(new Date(), new Date(toolTip))
 				);
+
+				// console.log('toolTip DATE ::::', new Date(toolTip).getDate(), new Date(toolTip).getMonth()+1, new Date(toolTip).getFullYear())
+				
 				//console.log('differenceInDays:::', differenceInDays);
 
 				if (differenceInDays === 1) {

@@ -1397,7 +1397,7 @@ export const SourceRendererPending = memo((params) => {
 	) {
 		return (
             <div 
-				className='friend-sync-source d-flex f-align-center'
+				className='friend-sync-source d-flex f-align-center tooltipFullName'
 				data-text={'Post Engagement'}
 			>
                 <>

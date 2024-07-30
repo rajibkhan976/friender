@@ -811,10 +811,10 @@ const Sidebar = (props) => {
 									<span className='nav-menu-name'>Campaigns</span>
 								</NavLink>
 							</li>
-							<li
+							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+							{/* <li
 								className='nav-menu has-child'
 							>
-								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 								<NavLink
 									to='/crm'
 									aria-label='CRM'
@@ -846,11 +846,11 @@ const Sidebar = (props) => {
 										</span>
 									</span>
 								</NavLink>
-							</li>
-							<li
+							</li> */}
+								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+							{/* <li
 								className='nav-menu'
 							>
-								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 								<NavLink
 									to='/posts'
 									aria-label='Posts'
@@ -859,7 +859,7 @@ const Sidebar = (props) => {
 									<PostsIcon />
 									<span className='nav-menu-name'>Posts</span>
 								</NavLink>
-							</li>
+							</li> */}
 						</ul>
 					)}
 				</nav>

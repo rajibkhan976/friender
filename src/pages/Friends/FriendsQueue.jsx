@@ -181,8 +181,8 @@ const FriendsQueue = () => {
 			action: "fRqueAlarmStatusCheck",
 			frLoginToken: localStorage.getItem("fr_token")
 		});
-		console.log("extRes in FRQUE LIST", extRes, 'data >>>>>', data);
-		extRes?.error && Alertbox(`${extRes?.error?.message} `, "error", 3000, "bottom-right");
+		// console.log("extRes in FRQUE LIST", extRes, 'data >>>>>', data);
+		// extRes?.error && Alertbox(`${extRes?.error?.message} `, "error", 3000, "bottom-right");
 	}
 
 	//

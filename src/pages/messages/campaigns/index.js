@@ -224,7 +224,8 @@ const Campaigns = () => {
 				).unwrap();
 			}
 		} catch (error) {
-			Alertbox(`${error} `, "error", 3000, "bottom-right");
+			// Alertbox(`${error} `, "error", 3000, "bottom-right");
+			console.log('error :::', error);
 		}
 	};
 
