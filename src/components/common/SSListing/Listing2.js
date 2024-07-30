@@ -490,7 +490,7 @@ export default function Listing2(props) {
   useEffect(() => {
     //console.log("pagination", pagination);
     fetchData(pagination, textFilter, columnFilters, columnFilterFns, sorting);
-  }, [pagination.pageIndex, pagination.pageSize, sorting, props?.defaultParams]);
+  }, [pagination.pageIndex, pagination.pageSize, sorting]);
 
   // useEffect(() => {
   //   console.log('columnFilters', columnFilters);

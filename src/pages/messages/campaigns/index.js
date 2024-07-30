@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -37,8 +37,8 @@ import helper from 'helpers/helper';
 const CampaignsCalendar = lazy(() =>
 	import("components/messages/campaigns/CampaignsCalendar")
 );
-const CampaignList = lazy(() => import("./list/CampaignList"));
-const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
+// const CampaignList = lazy(() => import("./list/CampaignList"));
+// const CampaignsListingPage = lazy(() => import("./list/CampaignsListingPage"));
 
 const {
 	CampaignName,
@@ -143,7 +143,7 @@ const Campaigns = () => {
 	const selectedListItems = useSelector((state) => state.ssList.selected_friends);
 	const filter_state = useSelector((state) => state.ssList.filter_state);
 	const listFetchParams = useSelector((state) => state.ssList.listFetchParams);
-
+	const firstRender = useRef(true);
 
 
 	// const [loading, setLoading] = useState(false);
@@ -159,6 +159,14 @@ const Campaigns = () => {
 		sort_order: "asc"
 	});
 
+	useEffect(() => {
+		if (firstRender.current) {
+			firstRender.current = false;
+			return;
+		}else{
+			refreshAndDeselectList(defaultParams)
+		}
+	}, [defaultParams]);
 	const weekDays = [
 		"Sunday",
 		"Monday",
@@ -437,12 +445,9 @@ const Campaigns = () => {
 
 	console.log("isEditingCampaign", isEditingCampaign);
 
-	const refreshAndDeselectList = () => {
-
-		//const funStr = listFetchParams.responseAdapter;
-		//const responseAdapter = eval(`(${funStr})`);
+	const refreshAndDeselectList = (params) => {
 		const payload = {
-			queryParam: listFetchParams.queryParam,
+			queryParam: {...listFetchParams.queryParam, ...params},
 			baseUrl: listFetchParams.baseUrl,
 			//responseAdapter: props.dataExtractor,
 		}
@@ -618,9 +623,9 @@ const Campaigns = () => {
 				ModalIconElement={() => <DangerIcon />}
 				additionalClass={`campaign-view-details-delete-modal`}
 			/>
-			{loading ? (
+			{/* {loading ? (
 				<ListingLoader />
-			) : (
+			) : ( */}
 				<>
 					<CampaignsHeader
 						radioOptions={radioOption}
@@ -688,7 +693,7 @@ const Campaigns = () => {
 						<CreateCampaign />
 					)}
 				</>
-			)}
+			{/* //)} */}
 		</div>
 	);
 };

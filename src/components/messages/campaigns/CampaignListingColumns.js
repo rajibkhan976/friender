@@ -410,6 +410,7 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 	// const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 	// const timeCalc = `${new Date(params?.data?.friendAddedAt).getDate()} ${month[new Date(params?.data?.friendAddedAt).getMonth()]}, ${new Date(params?.data?.friendAddedAt).getFullYear()}  ${new Date(params?.data?.friendAddedAt).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`
 	// console.log('localTime >>>', localTime, "timeCalc <<<<", timeCalc);
+	const [value,setValue] = useState((typeof params?.value)==="string"? params?.value?.toLowerCase() : "");
 	let localTime = utils.convertUTCtoLocal(params?.data?.message_send_at?.replace(" ", "T") + ".000Z", true);
 	return (
 		<div className='campaign-friendName-cell'>
@@ -417,21 +418,21 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 			<span
 				data-text={localTime}
 				className={
-					params?.value?.toLowerCase() === "successful" || params?.value?.toLowerCase() === "send" || params?.value?.toLowerCase() === "sent"
+					value === "successful" || value === "send" || value === "sent"
 						? `activeEngaged actUser tooltipFullName campaign-tooltip`
 						: `activeEngaged actPending`
 				}
 			>
-				<span className='dot'></span> {params?.value?.trim().toLowerCase()==='send'?'Successful': params.value}
+				<span className='dot'></span> {value.trim()==='send'?'Successful': params.value}
 			</span> : 
 			<span
 				className={
-					params?.value?.toLowerCase() === "successful" || params?.value?.toLowerCase() === "send" || params?.value?.toLowerCase() === "sent"
+					value === "successful" || value === "send" || value === "sent"
 						? `activeEngaged actUser`
 						: `activeEngaged actPending`
 				}
 			>
-				<span className='dot'></span> {params?.value?.trim().toLowerCase() === 'send' ? 'Successful' : params?.value}
+				<span className='dot'></span> {value.trim() === 'send' ? 'Successful' : params?.value}
 			</span>
 			}
 		</div>
