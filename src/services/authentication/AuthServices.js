@@ -200,13 +200,32 @@ export const userLogin = (email, password) => {
           localStorage.setItem("fr_token", result.token);
           localStorage.setItem("fr_amount", result?.amount);
 
+          // Set local extension id if any
+          let local_extension_id = response.local_extension_id;
+          localStorage.removeItem("local_extension_id");
+          if (local_extension_id) {
+            console.log("Setting local ext");
+            localStorage.setItem("local_extension_id", local_extension_id);
+          } 
+          
+
           // Check if extension is installed
-          const isExtensionInstalled = await extensionAccesories.isExtensionInstalled({
+          const extIntsallCheckPayload = {
             action: "extensionInstallation",
             amount: result.amount,
             frLoginToken: result.token,
             frDebugMode: result.debug_mode,
-          });
+          }
+          let isExtensionInstalled = await extensionAccesories.isExtensionInstalled(extIntsallCheckPayload);
+          
+          // If not available local ext then revert back to env ext
+          if(local_extension_id && !isExtensionInstalled) {
+            console.log("### Local extension is not insalled, fallback to env ext ###")
+            localStorage.removeItem("local_extension_id");
+
+            // Check if env ext is enstalled 
+            isExtensionInstalled = await extensionAccesories.isExtensionInstalled(extIntsallCheckPayload);
+          }
 
           // Send message to extension if installed
           if (isExtensionInstalled) {

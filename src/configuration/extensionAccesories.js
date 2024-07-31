@@ -1,11 +1,16 @@
-const extensionId = process.env.REACT_APP_EXTENSION_ID;
+
+const getExtensionId = () => {
+    const local_extension_id = localStorage.getItem("local_extension_id");
+    const extensionId = local_extension_id ? local_extension_id : process.env.REACT_APP_EXTENSION_ID;
+    return extensionId;
+}
 const extensionMethods = {
-    extensionId : extensionId,
+    extensionId : getExtensionId(),
     isExtensionInstalled : async (extensionPayload) => {
                                 return new Promise((resolve, reject) => {
-                                    console.log("extensionId",extensionId)
+                                    console.log("extensionId",getExtensionId())
                                     if(chrome.runtime) {
-                                        chrome.runtime.sendMessage(extensionId, extensionPayload, (res) => {
+                                        chrome.runtime.sendMessage(getExtensionId(), extensionPayload, (res) => {
                                             if(!chrome.runtime.lastError){
                                                 if(res) resolve(true); else resolve(false);
                                             }else resolve(false);
@@ -19,7 +24,7 @@ const extensionMethods = {
     sendMessageToExt :  async (extensionPayload) => {
                                 return new Promise((resolve, reject) => {
                                     if(chrome.runtime) {
-                                        chrome.runtime.sendMessage(extensionId, extensionPayload, (res,err) => {
+                                        chrome.runtime.sendMessage(getExtensionId(), extensionPayload, (res,err) => {
                                             console.log("resssss",res,err)
                                             if(!chrome.runtime.lastError){
                                                 if(res) resolve(res); else resolve({error : {message : "No response"}});
