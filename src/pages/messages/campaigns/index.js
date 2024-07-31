@@ -157,12 +157,26 @@ const Campaigns = () => {
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 	const [defaultParams, setDefaultParams] = useState({
 	});
+	const [campaignsPagination, setCampaignsPagination] = useState({});
+	const [cameBack, setCameBack] = useState(false);
 
+	useEffect(() => {
+		if (location.pathname.split("/").pop() === "campaigns") {
+			setCameBack(false)
+			setCampaignsPagination({
+				"page_number": listFetchParams?.queryParam?.page_number,
+				"page_size": listFetchParams?.queryParam?.page_size,
+			})
+		}
+	}, [listFetchParams])
+	const restorePagination = () => {
+		setCameBack(true)	
+	}
 	useEffect(() => {
 		if (firstRender.current) {
 			firstRender.current = false;
 			return;
-		}else{
+		}else if(location.pathname.split("/").pop() === "campaigns"){
 			refreshAndDeselectList(defaultParams)
 		}
 	}, [defaultParams]);
@@ -649,6 +663,7 @@ const Campaigns = () => {
 						setIsEditingCampaign={setIsEditingCampaign}
 						toggleEditCampaign={toggleEditCampaign}
 						fetchCampaign={fetchCampaign}
+						restorePagination={restorePagination}
 					/>
 					{location?.pathname?.split("/")?.slice(-1)[0] === "campaigns" ? (
 						<div className='campaigns-main listing-main'>
@@ -676,7 +691,7 @@ const Campaigns = () => {
 											listColDef={campaignColumnDefs}
 											baseUrl={config.fetchAllCampaignsUrl}
 											tableMethods={tableMethods}
-											defaultParams={defaultParams}
+											defaultParams={cameBack?{...defaultParams,...campaignsPagination}:defaultParams}
 											dataExtractor={dataExtractor}
 											extraParams = {extraParams}
 

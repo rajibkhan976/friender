@@ -183,7 +183,7 @@ export const campaignColumnDefs = () => {
     },
 
     {
-      accessorKey: '_id', //simple recommended way to define a column
+      accessorKey: 'campaign_id', //simple recommended way to define a column
       header: 'Scheduled on',
       enableHiding: false,
       enableSorting: false,

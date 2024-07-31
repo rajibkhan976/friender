@@ -66,8 +66,8 @@ export default function Listing2(props) {
   const rowCount = useSelector((state) => state.ssList.list_filtered_count);
   // const [rowCount, setRowCount] = useState();
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 15, //customize the default page size
+    pageIndex: props?.defaultParams?.page_number ? props?.defaultParams?.page_number-1 : 0,
+    pageSize: props?.defaultParams?.page_size??15, //customize the default page size
   });
   const listMuiProps = MuiListStyleProps(theme, data?.length);
   const customTableMethods = props.tableMethods;
@@ -85,6 +85,7 @@ export default function Listing2(props) {
   //   console.log("useEffect_+_+_+_+_+_+_+>>>>", props);
   //   console.log("+++++++++props.listColDef+++++++++++", props.listColDef);
   // }, [props]);
+  //console.log("default params", props.defaultParams);
 
   function getUniqueRecords(array1, array2) {
     // Create a Set to store unique elements

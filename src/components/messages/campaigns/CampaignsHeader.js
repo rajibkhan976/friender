@@ -26,7 +26,7 @@ const CampaignsHeader = ({
 	campaignsCreated,
 	setIsEditingCampaign,
 	toggleEditCampaign = null,
-	// fetchCampaign,
+	restorePagination,
 }) => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -131,6 +131,7 @@ const CampaignsHeader = ({
 
 	const resetEditCampaign = () => {
 		localStorage.removeItem("fr_editCampaign_view");
+		restorePagination();
 	};
 
 	const RenderEditView = useCallback(() => {
