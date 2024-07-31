@@ -2347,14 +2347,19 @@ function PageHeader({ headerText = "" }) {
 				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
-			if ((item === 'unfriend' || item === 'queue') && location?.pathname?.split('/').pop() === 'non-friends') {
+			if ((item === 'unfriend') && location?.pathname?.split('/').pop() === 'non-friends') {
 				console.log(location?.pathname?.split('/').pop());
 				return true
+			}
+			if ((item === 'queue')) {
+				if (selectedListItems?.filter(el => el?.finalSource === 'incoming').length > 0) {
+					return true
+				}
 			}
 		} else {
 			return true
 		}
-	}, [location?.pathname, MRT_selected_rows_state])
+	}, [location?.pathname, MRT_selected_rows_state, selectedListItems])
 
 	// useEffect(() => {
 	// 	console.log('isFrQueActionsEnabled', isFrQueActionsEnabled);
@@ -3216,8 +3221,10 @@ function PageHeader({ headerText = "" }) {
 															selectedListItems?.length > 0 &&
 															selectedListItems?.filter(
 																el => 
-																	el?.friendship === 4 && 
-																	el?.friendStatus === "Non friend"
+																	(
+																		el?.friendship === 4 && 
+																		el?.friendStatus === "Non friend"
+																	) ||  el?.finalSource === 'incoming'
 															)?.length <= 0
 														// 	!selectedFriends || selectedFriends.length === 0
 														}
