@@ -8,6 +8,7 @@ const notContainsFilterFn = (row, id, filterValue) => {
     return !row.getValue(id).toLowerCase().includes(filterValue.toLowerCase());
 };
 
+// #region Add Tooltip Header
 const addTooltipToHeader = (header, tooltipText) => (
     <div className="fr-ls-tooltip">
         <span>{header}</span>
@@ -15,6 +16,7 @@ const addTooltipToHeader = (header, tooltipText) => (
     </div>
 );
 
+// #region Source Tooltip
 const sourceTooltipToHeader = (header, showTooltipicon = false) => (
     <div className="fr-ls-tooltip">
         <span>
@@ -110,11 +112,13 @@ const sourceTooltipToHeader = (header, showTooltipicon = false) => (
     </div>
 );
 
+// #region Common Column
 export const CommonColDefs = {
     Name: {
         accessorKey: 'friendName', //simple recommended way to define a column
         header: addTooltipToHeader("Name", "Name"),
         enableHiding: false,
+        grow: true,
         Cell: ({ renderedCellValue, row }) => {
             return (
                 <UnlinkedNameCellWithOptionsRenderer value={renderedCellValue} data={row.original} />
@@ -188,6 +192,8 @@ export const CommonColDefs = {
     FrindShip: {
         accessorKey: 'friendship', //simple recommended way to define a column
         header: 'Friendship',
+        size: 148,
+        grow: false,
         enableHiding: false,
         Cell: ({ renderedCellValue, row }) => {
             return (
@@ -245,7 +251,9 @@ export const CommonColDefs = {
             { label: 'Neuter', value: 'Neuter' },
             { label: 'NA', value: 'NA' },
         ],
-        filterVariant: 'select'
+        filterVariant: 'select',
+        grow: false,
+        size: 80
     },
     Age: {
         accessorKey: 'age',
@@ -259,7 +267,9 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Age'
         },
-        columnFilterModeOptions: ['equals', 'lessThan', 'greaterThan']
+        columnFilterModeOptions: ['equals', 'lessThan', 'greaterThan'],
+        grow: false,
+        size: 110
     },
     Country: {
         accessorKey: 'country', //simple recommended way to define a column
@@ -302,7 +312,9 @@ export const CommonColDefs = {
                     <div>Not Contains</div>
                 </MenuItem>,
             ]
-        }
+        },
+        size: 134,
+        grow: false,
     },
     TotalReaction: {
         accessorKey: 'reactionThread', //simple recommended way to define a column
@@ -317,6 +329,8 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Reactions'
         },
+        grow: false,
+        size: 75
     },
     TotalComment: {
         accessorKey: 'commentThread', //simple recommended way to define a column
@@ -332,6 +346,8 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Comments'
         },
+        grow: false,
+        size: 75
     },
     Engagement: {
         accessorKey: 'total_engagement', //simple recommended way to define a column
@@ -347,6 +363,8 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Total Engagement'
         },
+        grow: false,
+        size: 75
     },
     MessageCount: {
         accessorKey: 'message_thread', //simple recommended way to define a column
@@ -362,6 +380,8 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Message Count'
         },
+        grow: false,
+        size: 80
     },
     RecentEngagement: (inactiveAfter) => {
         return ({
@@ -378,6 +398,8 @@ export const CommonColDefs = {
             muiFilterTextFieldProps: {
                 placeholder: 'Filter by Recent Engagement'
             },
+            grow: false,
+            size: 96
         })
     },
     Keyword: {
@@ -394,6 +416,8 @@ export const CommonColDefs = {
         muiFilterTextFieldProps: {
             placeholder: 'Filter by Keywords'
         },
+        size: 166,
+        grow: false,
     },
     Source: {
         accessorKey: 'source', //simple recommended way to define a column
@@ -436,7 +460,9 @@ export const CommonColDefs = {
                     <div>Not Contains</div>
                 </MenuItem>,
             ]
-        }
+        },
+        size: 235,
+        grow: false,
     },
     Refrending: {
         accessorKey: 'refriending_attempt', //simple recommended way to define a column
