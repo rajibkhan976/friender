@@ -1236,6 +1236,10 @@
     background-color: #131314;
     border-radius: 5px;
     border-color: white;
+    position: inherit;
+    width: 220px;
+    bottom: 50%;
+    left: -300%;
 
     div {
       color: white;
@@ -1243,6 +1247,11 @@
       button {
         color: gray;
       }
+
+      button.Mui-disabled {
+        visibility: hidden;
+      }
+
 
       button:after {
         color: white;
@@ -1584,7 +1593,6 @@
       svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium[data-testid="FilterAltIcon"] {
         color: #0094ff;
       }
-
     }
 
     button {
@@ -2093,4 +2101,12 @@
       }
     }
   }
+}
+
+.campaign-status-cell,
+.campaign-count-cell,
+.campaign-schedule-cell,
+.campaign-endTime-cell,
+.campaign-contextMenu-cell {
+  padding-left: 0;
 }

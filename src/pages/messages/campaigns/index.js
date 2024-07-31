@@ -551,6 +551,8 @@ const Campaigns = () => {
 	}, [isEditingCampaign]);
 
 	useEffect(() => {
+		console.log("EDIT MODE 2 ----- ", editing);
+
 		if (editing) {
 			if (editing?.friends?.length > 0) {
 				setIsEditingCampaign(editing);
@@ -576,14 +578,17 @@ const Campaigns = () => {
 	// }, [location.pathname]);
 
 	// REMOVE
-	useEffect(() => {
-		if (
-			location?.pathname?.split("/")?.slice(-1)[0] === "create-campaign" ||
-			location?.pathname?.split("/")?.slice(-1)[0] === "campaigns"
-		) {
-			setIsEditingCampaign(null);
-		}
-	}, [location.pathname]);
+	// useEffect(() => {
+	// 	if (
+	// 		location?.pathname?.split("/")?.slice(-1)[0] === "create-campaign" ||
+	// 		location?.pathname?.split("/")?.slice(-1)[0] === "campaigns"
+	// 	) {
+	// 		setIsEditingCampaign(null);
+	// 	}
+	// }, [location.pathname]);
+
+
+	console.log("EDIT MODE --- ", isEditingCampaign);
 
 	useEffect(() => {
 		if (radioOption && 
@@ -686,7 +691,7 @@ const Campaigns = () => {
 								</Suspense>
 							)}
 						</div>
-					) : isEditingCampaign ? (
+					) : (isEditingCampaign || params?.campaignId) ? (
 						<Outlet
 							key={location.pathname}
 							context={[isEditingCampaign, setIsEditingCampaign, editViews]}

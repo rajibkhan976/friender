@@ -415,7 +415,7 @@ const EditCampaign = (props) => {
 				//console.log("loadingState", loadingState);
 				return (
           <>
-            {isEditingCampaign?.friends?.length === 0 ? (
+            {/* {isEditingCampaign?.friends?.length === 0 ? (
               <NoDataFound
                 customText={`Whoops!`}
                 additionalText={`We couldn’t find any friends added to this campaign`}
@@ -435,7 +435,22 @@ const EditCampaign = (props) => {
                   ""
                 )}
               </div>
-            )}
+            )} */}
+
+			  <div className="campaigns-edit h-100 d-flex d-flex-column listing-main listing-campaign">
+                {fb_user_id != null ? (
+                  <Listing2
+                    listColDef={campaignUserColumnDefs}
+                    baseUrl={config.fetchCampaignUsersv2}
+                    tableMethods={tableMethods}
+                    defaultParams={defaultParams}
+                    dataExtractor={dataExtractor}
+					extraParams = {extraParams}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
           </>
         );
 			} else {
@@ -525,7 +540,7 @@ const EditCampaign = (props) => {
 					additionalClass='modal-keywords'
 				/>
 			)}
-			{loading ? <ListingLoader /> : renderComponentsView()}
+			{renderComponentsView()}
 		</>
 	);
 };
