@@ -156,7 +156,6 @@ const Campaigns = () => {
 	const [fb_user_id] = useState(localStorage.getItem("fr_default_fb"));
 	const current_fb_id = localStorage.getItem("fr_default_fb");
 	const [defaultParams, setDefaultParams] = useState({
-		sort_order: "asc"
 	});
 
 	useEffect(() => {
@@ -312,6 +311,8 @@ const Campaigns = () => {
 				return {...prevState, campaign_status: 0 }
 			} else if (el === "active") {
 				return {...prevState, campaign_status: 1 }
+			}else{
+				return {...prevState,campaign_status:null}
 			}
 		});	
 
@@ -417,7 +418,7 @@ const Campaigns = () => {
 				extensionAccesories.sendMessageToExt({
 					action: "update_schedules"
 				  });
-
+				  refreshAndDeselectList(defaultParams);
 				Alertbox(
 					`Campaign(s) has been deleted successfully.`,
 					"success",

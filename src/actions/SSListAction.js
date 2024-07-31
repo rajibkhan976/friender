@@ -1,7 +1,7 @@
 import { createAsyncThunk,createSlice } from "@reduxjs/toolkit";
 import apiClient from "../services";
-import { bulkOperationContacts, bulkOperationFriendsQueueS, fetchFriendCount, fetchQueueCountS } from "../services/SSListServices";
-import config from "../configuration/config";
+import { bulkOperationContacts, bulkOperationFriendsQueueS, fetchQueueCountS } from "../services/SSListServices";
+
 
 //way to use adapter function stringyfy
 //
@@ -250,6 +250,13 @@ export const ssListSlice = createSlice({
             state.ssList_data_obj[action.payload._id].blacklist_status = action.payload.status;
             action.payload.status? state.selected_friends_total_blackList_count += 1 : state.selected_friends_total_blackList_count -= 1;
             state.selected_friends = state.selected_friends.map(item => {
+                if (item._id === action.payload._id) {
+                    item.blacklist_status = action.payload.status;
+                }
+                return item;
+            });
+
+            state.ssList_data = state.ssList_data.map(item => {
                 if (item._id === action.payload._id) {
                     item.blacklist_status = action.payload.status;
                 }
