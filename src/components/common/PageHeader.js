@@ -2063,13 +2063,14 @@ function PageHeader({ headerText = "" }) {
 
 	// NEW FUNCTIONS FOR BULK ACTIONS
 	const assemblePayload = (action, url) => {
+		const pathSuffix = location?.pathname?.split('/').pop()
 		let queryParam = {
 			fb_user_id: defaultFbId,
 			check: select_all_state?.selected ? 'all' : 'some',
 			//include_list: select_all_state?.selected ? [] : JSON.stringify([...selectedListItems?.map(el => el?._id)]),
 			exclude_list: (select_all_state?.selected && select_all_state?.unSelected?.length > 0) ? JSON.stringify([...select_all_state?.unSelected?.map(el => el)]) : [],
 			operation: action,
-			friend_status: location?.pathname?.split('/').pop() === 'friends' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost' ? 'Lost' : 'all'
+			friend_status: pathSuffix === 'friends' ? 'Activate' : pathSuffix === 'lost' ? 'Lost' : pathSuffix === "non-friends" ? "Non friend" :'all'
 		};
 
 		if (!select_all_state?.selected) {
@@ -2121,12 +2122,13 @@ function PageHeader({ headerText = "" }) {
 	const triggerBulkOperation = async (bulkType = null) => {
 		return new Promise((resolve, reject) => {
 			// let payload = assemblePayload(bulkType, config.bulkOperationFriends)
+			const pathSuffix = location?.pathname?.split('/').pop()
 			let payload = {
 				fb_user_id: defaultFbId,
 				check: select_all_state?.selected ? 'all' : 'some',
 				//include_list: select_all_state?.selected ? [] : [...selectedListItems?.map(el => el?._id)],
 				operation: bulkType === 'skipWhitelisted' ? 'unfriend' : bulkType === 'skipBlacklisted' ? 'campaign' : bulkType,
-				friend_status: location?.pathname?.split('/').pop() === 'friends' ? 'Activate' : location?.pathname?.split('/').pop() === 'lost' ? 'Lost' : 'all'
+				friend_status: pathSuffix === 'friends' ? 'Activate' : pathSuffix === 'lost' ? 'Lost' : pathSuffix === "non-friends" ? "Non friend" :'all'
 			}
 
 			if (!select_all_state?.selected) {
