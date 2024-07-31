@@ -591,13 +591,13 @@ const Campaigns = () => {
 	console.log("EDIT MODE --- ", isEditingCampaign);
 
 	useEffect(() => {
-		if (radioOption && 
-			Array.isArray(radioOption) && 
-			radioOption?.length && 
-			radioOption.some((item) => item?.label === "calendar" && item?.checked)
-		) {
+		// if (radioOption && 
+		// 	Array.isArray(radioOption) && 
+		// 	radioOption?.length && 
+		// 	radioOption.some((item) => item?.label === "calendar" && item?.checked)
+		// ) {
 			fetchAll();
-		}
+		// }
 	}, [campaignDuration, campaignFilter, location, radioOption]);
 
 	useEffect(() => {
