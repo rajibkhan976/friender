@@ -30,6 +30,7 @@ export const campaignUserColumnDefs = () => {
   const columns = [
     {
       ...Name,
+      enableColumnFilter: false,
       Cell: ({ renderedCellValue, row }) => {
         return (
           <UnlinkedNameCellRenderer
@@ -44,7 +45,7 @@ export const campaignUserColumnDefs = () => {
       header: "Status",
       size: 100,
       enableHiding: false,
-      enableColumnFilter: false,
+      columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
       Cell: ({ renderedCellValue, row }) => {
         return (
           <CampaignFriendStatusRenderer
@@ -69,7 +70,10 @@ export const campaignUserColumnDefs = () => {
         );
       },
     },
-    Keyword,
+    {
+      ...Keyword,
+      enableColumnFilter: false,
+    },
     Source,
     {
       accessorKey: "created_at",

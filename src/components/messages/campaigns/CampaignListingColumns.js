@@ -441,11 +441,12 @@ export const CampaignFriendStatusRenderer = memo((params) => {
 
 export const CampaignFriendMessageRenderer = memo((params) => {
 	// const messageRender = params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message');
+	const editingCampaign = useSelector((state) => state.campaign.editingCampaign);
 	const messageRender = (params?.data?.status === "send" || params?.data?.status === "failed" || params?.data?.status === "fail") ?
 		params?.data?.message_group_name ?
 			params?.data?.message_group_name :
-			params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message') :
-		params?.editingCampaign?.group_name || (params?.editingCampaign?.quick_message && 'Quick Message')
+			editingCampaign?.group_name || (editingCampaign?.quick_message && 'Quick Message') :
+		editingCampaign?.group_name || (editingCampaign?.quick_message && 'Quick Message')
 
 	// console.log('params');
 
