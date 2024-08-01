@@ -1140,7 +1140,7 @@ export const SourceRendererPending = memo((params) => {
         params?.data?.finalSource?.toLowerCase() === "friends" ||
         params?.data?.finalSource?.toLowerCase() === "post"
     ) {
-        const sourceName = params?.data?.sourceName;
+        const sourceName = params?.data?.source ? params?.data?.source : params?.data?.sourceName
 
         if (sourceName) {
             return (
@@ -1435,6 +1435,18 @@ export const SourceRendererPending = memo((params) => {
             </div>
         );
     }
+
+	if (
+		params?.data?.source?.toLowerCase() !== 'sync' && 
+		params?.data?.sourceName == null && 
+		params?.data?.sourceUrl == null
+	) {
+		return (
+			<div className='friend-sync-source d-flex f-align-center'>
+				<span className='muted-text'>N/A</span>
+			</div>
+		)
+	}
 
 	if (
 		(!params?.data?.finalSource &&
