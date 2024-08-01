@@ -43,7 +43,7 @@ const initialState = {
     global_searched_filter: "",
     pluginRowSelection: {},
     friendsQueueErrorRecordsCount: 0,
-    fetchSendableCount: 0,
+    fetchSendableCount: null,
     currentPageSize: 0
 };
 

@@ -779,7 +779,7 @@ const Sidebar = (props) => {
 												<span className='nav-menu-name'>- Segment</span>
 											</NavLink>
 										</li>
-										<li className='nav-menu no-click'>
+										{/* <li className='nav-menu no-click'>
 											<NavLink
 												to='/messages/dmf'
 												aria-label='Friends'
@@ -789,7 +789,7 @@ const Sidebar = (props) => {
 													- DMF <span className='warn-badget'>Coming soon</span>
 												</span>
 											</NavLink>
-										</li>
+										</li> */}
 										{/* <li className="nav-menu">
 											<NavLink to="/messages/campaigns" aria-label="Friends">
 											<span className="nav-menu-name">- Campaigns</span>

@@ -40,6 +40,7 @@ export default function Listing2(props) {
   const filter_state = useSelector((state) => state.ssList.filter_state);
   const pagination_state= useSelector((state) => state.ssList.pagination_state)
   const go_to_page = useSelector((state) => state.ssList.go_to_page)
+  const fetchSendableCount = useSelector((state) => state.ssList.fetchSendableCount)
   const [filterCoords, setFilterCoords] = useState({
     x: 0, 
     y: 0
@@ -348,7 +349,11 @@ export default function Listing2(props) {
     if (location?.pathname?.includes('friends-queue')) {
       // console.log('Data :::', data);
 			if (data.length > 0) {
-				dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
+        // console.log('fetchSendableCount', fetchSendableCount, 'data', data, 'rowCount', rowCount);
+				// dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
+        if (fetchSendableCount && rowCount > 0 && rowCount >= fetchSendableCount) {
+          dispatch(updateFriendsQueueCount(rowCount - fetchSendableCount))
+        }
 			}
       // console.log('table.getRowModel().rows >>>>>>>>>>>>', table.getRowModel().rows);
       dispatch(updateCurrentPageSize(table.getRowModel().rows))

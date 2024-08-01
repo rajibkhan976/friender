@@ -2192,7 +2192,20 @@ function PageHeader({ headerText = "" }) {
 				console.log('payload ::::', payload);
 				dispatch(bulkActionQueue(payload)).unwrap()
 					.then((res) => {
-						console.log('res in HEADER', res);
+						// console.log('res in HEADER', res);
+						if (res) {
+							const fr_queue_settings = localStorage.getItem("fr_queue_settings")
+								? JSON.parse(localStorage.getItem("fr_queue_settings"))
+								: null;
+							if (
+								fr_queue_settings?.length &&
+								typeof fr_queue_settings[0] === "object" &&
+								Object.keys(fr_queue_settings[0]).length >= 5
+							) {
+								console.log(fr_queue_settings[0])
+								fRQueueExtMsgSendHandler(fr_queue_settings[0]);
+							}
+						}
 						dispatch(getQueueSendableCount({fb_user_id: defaultFbId})).unwrap()
 						setModalOpen(false)
 						dispatch(updateSelectAllState({}))
