@@ -201,7 +201,7 @@ export const userLogin = (email, password) => {
           localStorage.setItem("fr_amount", result?.amount);
 
           // Set local extension id if any
-          let local_extension_id = response.local_extension_id;
+          let local_extension_id = result?.local_extension_id;
           localStorage.removeItem("local_extension_id");
           if (local_extension_id) {
             console.log("Setting local ext");
