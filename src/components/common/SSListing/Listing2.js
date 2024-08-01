@@ -272,8 +272,10 @@ export default function Listing2(props) {
     );
 
     if (e.target.checked) {
-      let obj = data.reduce((acc, item) => {
-        acc[item._id] = true;
+      let obj = table.getRowModel().rows.reduce((acc, item) => {
+        if(item.getCanSelect()){
+          acc[item.original._id] = true;
+        }
         return acc;
       }, {});
       obj = { ...rowSelection, ...obj };
@@ -334,10 +336,12 @@ export default function Listing2(props) {
   // }, [columnFilters, columnFilterFns]);
   useEffect(() => {
     if (selectAcross?.selected) {
-      let obj = data.reduce((acc, item) => {
+      let obj = table.getRowModel().rows.reduce((acc, item) => {
         // Ensure item and item._id are valid
-        if (item?._id && !unSelectedIds?.includes(item._id)) {
-          acc[item._id] = true;
+        if (item?.original?._id && !unSelectedIds?.includes(item.original._id)) {
+          if(item.getCanSelect()){
+            acc[item.original._id] = true;
+          }
         }
         return acc; // Always return acc
       }, {});
