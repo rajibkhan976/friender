@@ -390,7 +390,11 @@ const EditCampaign = (props) => {
 		}
 	};
 	// Any list specific Methods 
-	const tableMethods = {};
+	const tableMethods = {
+		enableRowSelection: (row) => {
+			return (row.original.status !== "send");
+		} 
+	};
 	//query params
 	const defaultParams = {
 		campaign_id: params?.campaignId,
