@@ -1514,7 +1514,7 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
-		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
+		dispatch(fetchAllCampaigns({ sort_order: "desc" }));
 		dispatch(getMySettings({ fbUserId: defaultFbId }));
 
 		const sendEssentialsPayload = {
