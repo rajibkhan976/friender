@@ -42,7 +42,7 @@ const initialState = {
     select_all_state: {},
     global_searched_filter: "",
     pluginRowSelection: {},
-    friendsQueueErrorRecordsCount: 0,
+    friendsQueueErrorRecordsCount: null,
     fetchSendableCount: null,
     currentPageSize: 0
 };
@@ -147,7 +147,7 @@ export const getQueueSendableCount = createAsyncThunk(
     async (payload) => {
        // console.log('>>>>>>>>>>>>>>', payload);
         const res = await fetchQueueCountS(payload)
-        // console.log('res', res);
+        console.log('res', res);
         return res
     }
 )
@@ -325,7 +325,7 @@ export const ssListSlice = createSlice({
         //     }
         // },
         updatePagination: (state, action) => {
-            console.log('action', action);
+            // console.log('action', action);
             state.pagination_state={
                 page_number: action?.payload?.page_number,
                 page_size: action?.payload?.page_size

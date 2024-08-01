@@ -239,7 +239,7 @@ const MainComponent = () => {
 	}, []);
 
 	useEffect(() => {
-		// console.log(friendsQueueRecords, friendsQueueErrorRecordsCount);
+		console.log(friendsQueueRecords, friendsQueueErrorRecordsCount);
 		if (friendsQueueRecords) {
 			// console.log(friendsQueueRecords);
 			// let count = 0;
@@ -253,7 +253,7 @@ const MainComponent = () => {
 				setShowFriendsQueueErr(true);
 			}
 
-			if (friendsQueueErrorRecordsCount === 0 && showErrorReallyOff) {
+			if (friendsQueueErrorRecordsCount === 0 || showErrorReallyOff) {
 				setShowFriendsQueueErr(false);
 			}
 		}
@@ -265,7 +265,7 @@ const MainComponent = () => {
 				setShowFriendsQueueErr(true);
 			}
 
-			if (friendsQueueErrorRecordsCount === 0 && showErrorReallyOff) {
+			if (friendsQueueErrorRecordsCount === 0 || showErrorReallyOff) {
 				setShowFriendsQueueErr(false);
 			}
 		}
@@ -292,7 +292,7 @@ const MainComponent = () => {
 					<div className='friend-queue-error-report'>
 						<div className='friend-queue-error-txt'>
 							<FriendQueueErrorIcon className='friend-queue-error-icon' />
-							{`Sending friend requests to ${friendsQueueErrorRecordsCount} individual(s) was unsuccessful either due to an
+							{`Sending friend requests to ${friendsQueueErrorRecordsCount ? friendsQueueErrorRecordsCount : 0} individual(s) was unsuccessful either due to an
 					unknown error from Facebook or they already exists in the friend/pending list.`}
 						</div>
 						<button

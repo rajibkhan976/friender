@@ -78,7 +78,7 @@ export const bulkOperationFriendsQueueS = async (payload) => {
 }
 
 export const fetchQueueCountS = async (payload) => {
-  console.log(config.fetchSendableCount + `?fb_user_id=${payload?.fb_user_id}`);
+  // console.log(config.fetchSendableCount + `?fb_user_id=${payload?.fb_user_id}`);
   return new Promise((resolve, reject) => {
     axios
       .get(config.fetchSendableCount + `?fb_user_id=${payload?.fb_user_id}`,{headers:headers})

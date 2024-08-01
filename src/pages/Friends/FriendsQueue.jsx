@@ -31,7 +31,7 @@ import { FriendsQueueColDef } from "../../components/common/SSListing/ListColumn
 import config from "../../configuration/config";
 import { useLocation } from "react-router-dom";
 import { fetchUserProfile } from "../../services/authentication/facebookData";
-import { getListData, getQueueSendableCount, goToPage, updateListNumCount, updatePagination } from "../../actions/SSListAction";
+import { getListData, getQueueSendableCount, goToPage, updateFriendsQueueCount, updateListNumCount, updatePagination } from "../../actions/SSListAction";
 // const fb_user_id= localStorage.getItem("fr_default_fb");
 import helper from "../../helpers/helper"
 
@@ -205,6 +205,7 @@ const FriendsQueue = () => {
 
 	useEffect(() => {
 		// console.log('listFilteredCount:::::::::::::::::::::::::::::::::::::::::', listFilteredCount);
+		// console.log('sendableCount >>>>>>>>>> ', sendableCount);
 		if (sendableCount !== 0) {
 			// console.log('listFilteredCount>>>>>>', listFilteredCount);
 			// state.list_filtered_count = listFilteredCount+(sendableCount - oldSendableCount)
@@ -237,6 +238,11 @@ const FriendsQueue = () => {
 			// 		dispatch(goToPage(Math.ceil((listFilteredCount+(sendableCount - oldSendableCount))/pagination_state.page_size)))
 			// }
 		}
+		
+		if (sendableCount === 0) {
+			dispatch(updateListNumCount(0))
+		}
+
 		setSendableRecordsCount(sendableCount ?? 0);
 		setOldSendableCount(sendableCount)
 
@@ -552,7 +558,10 @@ const FriendsQueue = () => {
 		// dispatch(getFriendsQueueRecordsFromIndexDB(fbUserId));
 		//getSettingsData();
 
-		return () => clearTimeout(timeoutToSaveFriendsQueueSettings);
+		return () => {
+			dispatch(updateFriendsQueueCount(null))
+			clearTimeout(timeoutToSaveFriendsQueueSettings)
+		}
 	}, []);
 
 	useEffect(() => {

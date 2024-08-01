@@ -353,8 +353,16 @@ export default function Listing2(props) {
 				// dispatch(updateFriendsQueueCount(data.filter(queueData => queueData?.is_active === true && queueData?.status === 0)?.length))
         if (fetchSendableCount && rowCount > 0 && rowCount >= fetchSendableCount) {
           dispatch(updateFriendsQueueCount(rowCount - fetchSendableCount))
+        } else {
+          if (fetchSendableCount === 0) {
+            dispatch(updateFriendsQueueCount(data.length))
+          }
         }
 			}
+      
+      if (data.length === 0) {
+        dispatch(updateFriendsQueueCount(null))
+      }
       // console.log('table.getRowModel().rows >>>>>>>>>>>>', table.getRowModel().rows);
       dispatch(updateCurrentPageSize(table.getRowModel().rows))
     }
