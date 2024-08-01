@@ -1514,7 +1514,6 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
-			
 		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
 		dispatch(getMySettings({ fbUserId: defaultFbId }));
 
@@ -2348,11 +2347,23 @@ function PageHeader({ headerText = "" }) {
 				return true
 			}
 			if ((item === 'unfriend') && location?.pathname?.split('/').pop() === 'non-friends') {
-				console.log(location?.pathname?.split('/').pop());
 				return true
 			}
 			if ((item === 'queue')) {
-				if (selectedListItems?.filter(el => el?.finalSource === 'incoming').length > 0) {
+				if (
+					(!selectAcross?.select &&
+					(selectedListItems?.length > 0 &&
+					selectedListItems?.filter(
+						el =>
+							el?.friendship === 4 && 
+							el?.friendStatus === "Non friend"
+					)?.length <= 0)) || (
+						!selectAcross?.select && 
+						selectedListItems?.length === selectedListItems?.filter(el => el?.finalSource === 'incoming').length
+					)
+					// selectedListItems?.filter(el => el?.finalSource === 'incoming').length > 0 ||
+					// selectedListItems.length === selectedListItems?.filter(el => el?.finalSource === 'incoming').length
+				) {
 					return true
 				}
 			}
@@ -3218,14 +3229,16 @@ function PageHeader({ headerText = "" }) {
 														className={`campaign-fr-action ${checkDisability('queue') ? 'disabled' : ''}`}
 														// onClick={() => checkBeforeAddToCampaign(accessItem)}
 														data-disabled={
-															selectedListItems?.length > 0 &&
+															(!selectAcross?.select &&
+															(selectedListItems?.length > 0 &&
 															selectedListItems?.filter(
-																el => 
-																	(
-																		el?.friendship === 4 && 
-																		el?.friendStatus === "Non friend"
-																	) ||  el?.finalSource === 'incoming'
-															)?.length <= 0
+																el =>
+																	el?.friendship === 4 && 
+																	el?.friendStatus === "Non friend"
+															)?.length <= 0)) || (
+																!selectAcross?.select && 
+																selectedListItems?.length === selectedListItems?.filter(el => el?.finalSource === 'incoming').length
+															)
 														// 	!selectedFriends || selectedFriends.length === 0
 														}
 														onClick={() => checkForBulkAction('queue')}

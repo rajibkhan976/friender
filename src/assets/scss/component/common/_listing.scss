@@ -1236,10 +1236,12 @@
     background-color: #131314;
     border-radius: 5px;
     border-color: white;
-    position: inherit;
-    width: 220px;
-    bottom: 50%;
-    left: -300%;
+    &:not(:has(.fr-filter-friendship)) {
+      position: inherit;
+      width: 220px;
+      bottom: 50%;
+      left: -300%;
+    }
 
     div {
       color: white;
@@ -1978,7 +1980,7 @@
             &.MuiPaper-elevation8 {
               &.MuiPopover-paper {
                 // left: 47dvw !important;
-                left: 34.5% !important;
+                left: 31.5% !important;
                 top: 90px !important;
               }
             }

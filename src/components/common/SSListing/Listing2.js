@@ -40,6 +40,10 @@ export default function Listing2(props) {
   const filter_state = useSelector((state) => state.ssList.filter_state);
   const pagination_state= useSelector((state) => state.ssList.pagination_state)
   const go_to_page = useSelector((state) => state.ssList.go_to_page)
+  const [filterCoords, setFilterCoords] = useState({
+    x: 0, 
+    y: 0
+  })
   //  const select_all_state = useSelector((state) => state.ssList.select_all_state)
   const isInitialRender = useRef(true);
   const data = useSelector((state) => state.ssList.ssList_data);
@@ -500,10 +504,10 @@ export default function Listing2(props) {
   const columns = useMemo(()=>{return props.listColDef(inactiveAfter)}, [props.listColDef,data]);
 
   useEffect(() => {
-    dispatch(resetFilters())
-    dispatch(crealFilter(""))
-    dispatch(crealGlobalFilter())
-  }, [])
+    dispatch(resetFilters());
+    dispatch(crealFilter(""));
+    dispatch(crealGlobalFilter());
+  }, []);
 
   const RenderEmpty = () => {
     // console.log('HIIIII', filter_state);
