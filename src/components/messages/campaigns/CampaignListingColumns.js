@@ -75,16 +75,17 @@ export const CampaignNameCellRenderer = memo((params) => {
 });
 
 
+// #region Campaign Status
 export const CampaignStatusCellRenderer = memo((params) => {
 	const dispatch = useDispatch();
 	const [campaignStatus, setCampaignStatus] = useState(params?.data?.status);
 	const campaignId = params?.data?.campaign_id || params?.data?._id;
 	const endDateAndTime = params?.data?.campaign_end_time ? new Date(params?.data?.campaign_end_time) : '';
-	const pendingFriends = params?.data?.friends_pending ? params?.data?.friends_pending : 0;
+	const pendingFriends = params?.data?.friends_pending ?? params?.data?.friends_pending;
 
 	useEffect(() => {
 		dispatch(syncCampaignStatus());
-	}, [campaignStatus]);
+	}, [campaignStatus, dispatch]);
 
 
 	// CHECK THE PENDING FRIENDS AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
@@ -103,7 +104,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 				})();
 			}
 		}
-	}, [pendingFriends]);
+	}, [campaignId, campaignStatus, dispatch, pendingFriends]); 
 
 
 	// CHECK THE END DATE AND TIME THEN MAKE DECISION TO TURN OFF STATUS TOGGLE..
@@ -211,6 +212,7 @@ export const CampaignStatusCellRenderer = memo((params) => {
 	);
 });
 
+// #region Friends Count
 export const CampaignFriendsCountCellRenderer = memo((params) => {
 	// console.log("FRIENDS COUNT CELL RENDERER - ", params?.value);
 	// console.log("FRIENDS ADDED CELL - ", params?.data?.friends_added);
