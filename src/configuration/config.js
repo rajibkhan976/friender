@@ -15,6 +15,7 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		process.env.REACT_APP_ENV +
 		"/register",
+
 	checkRegisterEmail:
 		`https://${process.env.REACT_APP_AUTH}.execute-api.us-east-1.amazonaws.com/${process.env.REACT_APP_ENV}/check-user-email`,
 	loginsUrl:
@@ -61,12 +62,14 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/store-user-profile",
+
 	fetchprofileDataUrl:
 		"https://" +
 		profileService +
 		".execute-api.us-east-1.amazonaws.com/" +
 		appEnv +
 		"/fetch-user-profiles",
+		
 	fetchprofileSettingUrl:
 		"https://" +
 		profileService +
