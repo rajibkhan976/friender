@@ -1472,7 +1472,13 @@ function PageHeader({ headerText = "" }) {
 
 		setLinks(locationArray);
 
-		validateHeaderOptions(locationPathName[locationPathName.length - 1]);
+		// console.log('VALIDATE HEADER OPTIONS -- ', locationPathName[locationPathName.length - 2]);
+
+		if (locationPathName[locationPathName.length - 2] === "campaigns") {
+			validateHeaderOptions(locationPathName[locationPathName.length - 2]);
+		} else {
+			validateHeaderOptions(locationPathName[locationPathName.length - 1]);
+		}
 	}, [location]);
 
 	useEffect(() => {
