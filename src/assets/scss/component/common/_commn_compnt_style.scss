@@ -33,6 +33,8 @@
     size: 14px;
   }
   .selector_box_options{
+      display: flex;
+      flex-direction: column-reverse;
       max-height: 250px;
       overflow-y: auto;
     position: absolute;

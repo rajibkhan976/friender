@@ -301,7 +301,11 @@ export const campaignSlice = createSlice({
 			});
 
 			if (newAdd) {
-				const addedCampaignList = [{ ...actionResponse, friends_added: 0, friends_pending: 0 }, ...placeholderArray];
+				const responseAfterCreateCampaign = { ...actionResponse, friends_added: 0, friends_pending: 0 };
+				const addedCampaignList = [responseAfterCreateCampaign, ...placeholderArray];
+				// console.log("I AM ADDED REDUX CAMPAIGN ( placeholderArray ) -- ", placeholderArray);
+				// console.log("I AM ADDED REDUX CAMPAIGN ( responseAfterCreateCampaign ) -- ", responseAfterCreateCampaign);
+				// console.log("I AM ADDED REDUX CAMPAIGN -- ", addedCampaignList);
 				state.campaignsArray = [...addedCampaignList];
 			} else {
 				const updatedCampaignList = action?.payload?.data

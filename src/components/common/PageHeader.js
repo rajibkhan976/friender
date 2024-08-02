@@ -1520,7 +1520,7 @@ function PageHeader({ headerText = "" }) {
 	};
 
 	useEffect(() => {
-		dispatch(fetchAllCampaigns({ sort_order: "desc" }));
+		dispatch(fetchAllCampaigns({ sort_order: "asc" }));
 		dispatch(getMySettings({ fbUserId: defaultFbId }));
 
 		const sendEssentialsPayload = {
