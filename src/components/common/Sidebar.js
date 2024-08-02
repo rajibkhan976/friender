@@ -13,10 +13,10 @@ import { userLogout } from "../../actions/AuthAction";
 import { asyncLocalStorage } from "../../helpers/AsyncLocalStorage";
 import useComponentVisible from "../../helpers/useComponentVisible";
 import { crealFilter, removeSelectedFriends } from "../../actions/FriendListAction";
-import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon, WorldIcon, CampaignQuicActionIcon } from "../../assets/icons/Icons";
+import { SidebarIcon, SettingIcon, HomeIcon, FriendIcon, LogoutIcon, OpenInNewTab, NavMessageIcon, WorldIcon, CampaignQuicActionIcon, AffiliateIcon } from "../../assets/icons/Icons";
 import {
-  setProfileSpaces,
-  setDefaultProfileId,
+	setProfileSpaces,
+	setDefaultProfileId,
 } from "../../actions/ProfilespaceActions";
 import { store } from "../../app/store";
 import { ReactComponent as ContactIcon } from "../../assets/images/ContactIcon.svg";
@@ -33,200 +33,200 @@ import { alertUserStatusUpdate } from 'services/authentication/AuthServices';
 
 
 const Sidebar = (props) => {
-  const { clickedRef, isComponentVisible, setIsComponentVisible } =
-    useComponentVisible(false);
-  const location = useLocation();
-  const { darkMode, toggleDarkMode } = useContext(ModeContext);
-  const navigate = useNavigate();
-  const [sidebarToogle, setSidebarToogle] = useState(true);
-  const [subMenuFriends, setSubMenuFriends] = useState(false);
-  const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(false);
-  const [subMenuMessage, setSubMenuMessage] = useState(false);
-  // const [profiles, setProfiles] = useState([]);
-  const [authenticated, setAuthenticated] = useState(false);
-  const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
-  const onboarding_token = parseInt(localStorage.getItem("fr_pass_changed"));
-  const menu_status_refresh = parseInt(localStorage.getItem("submenu_status"));
-  const facebookAuthInfoStatus = JSON.parse(localStorage.getItem("fr_facebook_auth"));
-  const [alertUserStatusCheck, setAlertUserStatusCheck] = useState(null);
+	const { clickedRef, isComponentVisible, setIsComponentVisible } =
+		useComponentVisible(false);
+	const location = useLocation();
+	const { darkMode, toggleDarkMode } = useContext(ModeContext);
+	const navigate = useNavigate();
+	const [sidebarToogle, setSidebarToogle] = useState(true);
+	const [subMenuFriends, setSubMenuFriends] = useState(false);
+	const [subMenuFriendRequest, setSubMenuFriendsRequest] = useState(false);
+	const [subMenuMessage, setSubMenuMessage] = useState(false);
+	// const [profiles, setProfiles] = useState([]);
+	const [authenticated, setAuthenticated] = useState(false);
+	const resetpassword_token = parseInt(localStorage.getItem("fr_onboarding"));
+	const onboarding_token = parseInt(localStorage.getItem("fr_pass_changed"));
+	const menu_status_refresh = parseInt(localStorage.getItem("submenu_status"));
+	const facebookAuthInfoStatus = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+	const [alertUserStatusCheck, setAlertUserStatusCheck] = useState(null);
 
 
-  // console.log("()()()()()f acebook auth info",facebookAuthInfoStatus?.accessToken)
+	// console.log("()()()()()f acebook auth info",facebookAuthInfoStatus?.accessToken)
 
-  const [sidebarOpenFriends, setSidebarOpenFriends] = useState(false);
-  const profiles = useSelector((state) => state.profilespace.profiles);
-  const [token, setToken] = useState(localStorage.getItem('fr_token'))
+	const [sidebarOpenFriends, setSidebarOpenFriends] = useState(false);
+	const profiles = useSelector((state) => state.profilespace.profiles);
+	const [token, setToken] = useState(localStorage.getItem('fr_token'))
 
-  const defaultProfileId = useSelector(
-    (state) => state.profilespace.defaultProfileId
-  );
+	const defaultProfileId = useSelector(
+		(state) => state.profilespace.defaultProfileId
+	);
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const authCheck = () => {
-    const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
-    const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
-    const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
-    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ? 
-								JSON.parse(localStorage.getItem("fr_facebook_auth")) :
-								JSON.parse(props?.fbAuthInfo);
+	const authCheck = () => {
+		const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+		const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
+		const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+		const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ?
+			JSON.parse(localStorage.getItem("fr_facebook_auth")) :
+			JSON.parse(props?.fbAuthInfo);
 
-	// console.log('here >>>>>', resetpassword_status === 1,onboarding_status === 1, facebookAuthInfo);
+		// console.log('here >>>>>', resetpassword_status === 1,onboarding_status === 1, facebookAuthInfo);
 
 
-	if (
-		resetpassword_status === 1 && 
-		onboarding_status === 1 && 
-		facebookAuthInfo?.accessToken!=undefined && 
-		facebookAuthInfo?.accessToken
-	){
-		// console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-		// console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
-		setAuthenticated(true);
-	}else{
-		setAuthenticated(false)
+		if (
+			resetpassword_status === 1 &&
+			onboarding_status === 1 &&
+			facebookAuthInfo?.accessToken != undefined &&
+			facebookAuthInfo?.accessToken
+		) {
+			// console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+			// console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
+			setAuthenticated(true);
+		} else {
+			setAuthenticated(false)
+		}
+		if (menu_refresh_status === 1) {
+			setSidebarOpenFriends(true);
+		} else {
+			setSidebarOpenFriends(false);
+		}
 	}
-	if (menu_refresh_status === 1) {
-		setSidebarOpenFriends(true);
-	} else {
+
+	useEffect(() => {
+		// alert("b")
+		// setAuthenticated(false)
+		const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+		const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
+		const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+		const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ?
+			JSON.parse(localStorage.getItem("fr_facebook_auth")) :
+			JSON.parse(props?.fbAuthInfo);
+
+		if (
+			resetpassword_status === 1 &&
+			onboarding_status === 1 &&
+			facebookAuthInfo?.accessToken != undefined &&
+			facebookAuthInfo?.accessToken
+		) {
+			// console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+			// console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
+			setAuthenticated(true);
+		} else {
+			setAuthenticated(false)
+		}
+		if (menu_refresh_status === 1) {
+			setSidebarOpenFriends(true);
+		} else {
+			setSidebarOpenFriends(false);
+		}
+
+	}, [props.isSynced])
+
+	useEffect(() => {
+		// alert("c")
+
+		(async () => {
+			const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
+			const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
+			const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
+			const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
+
+
+
+			if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken != undefined && facebookAuthInfo?.accessToken) {
+				// console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
+				// console.log("Authentication is off and now the sidebar can access the menu buttons on screeen. --1")
+				setAuthenticated(true);
+			} else {
+				setAuthenticated(false)
+			}
+		})()
+	}, [localStorage.getItem("fr_facebook_auth") || localStorage.getItem("fr_pass_changed") || localStorage.getItem("fr_onboarding")]);
+
+	const closePopupFn = (e) => {
+		setIsComponentVisible(false);
+	};
+
+	const setShowProfileFn = (e) => {
+		// console.log('clicked', facebookAuthInfoStatus);
+		// setShowProfile((current) => profiles?.length > 0 ? !current : false)
+		getProfileData();
+		setIsComponentVisible((current) => !current);
+		setSubMenuFriends(false);
+	};
+
+	// const checkIfNotFriends = () => {
+	//   return location.pathname.split("/")[location.pathname.split("/").length - 1] ===
+	//     "friend-list" ||
+	//   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
+	//     "unfriended-friends" ||
+	//   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
+	//     "whitelisted-friends" ||
+	//   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
+	//     "inactive-friends" ||
+	//   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
+	//     "lost-friends"
+	// }
+
+	const setSubMenuFriendsFn = (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		if (!subMenuFriends) {
+			setSubMenuMessage(false);
+			setSubMenuFriendsRequest(false);
+		}
+		setSubMenuFriends(!subMenuFriends);
+	};
+
+	const setSubMenuMessageFn = (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		if (!subMenuMessage) {
+			setSubMenuFriends(false);
+			setSubMenuFriendsRequest(false);
+		}
+		setSubMenuMessage(!subMenuMessage)
+	}
+
+	const setSubMenuFriendRequestFn = (e) => {
+		e.stopPropagation();
+		e.preventDefault();
+		if (!subMenuFriendRequest) {
+			setSubMenuFriends(false);
+			setSubMenuMessage(false);
+		}
+		setSubMenuFriendsRequest(!subMenuFriendRequest);
+	};
+
+	const [dontSendFrindReqIRejct, setDontSendFrindReqIRejct] = useState(false);
+
+	const setSidebarToogleFn = (e) => {
+		localStorage.setItem("fr_sidebarToogle", !sidebarToogle);
+		setSidebarToogle((current) => !current);
+	};
+
+	const setSidebarOpenFn = (e) => {
+		localStorage.setItem("fr_sidebarToogle", false);
+		localStorage.setItem("submenu_status", 1);
+		const menu_status = parseInt(localStorage.getItem("submenu_status"));
+		if (menu_status === 1) {
+			setSidebarOpenFriends(true);
+		}
+		setSidebarToogle(false);
+	};
+
+	const setSidebarHomeOpenFn = (e) => {
+		localStorage.setItem("submenu_status", 0);
 		setSidebarOpenFriends(false);
-	}
-  }
+		localStorage.removeItem("submenu_status");
+		//menu_status_refresh = 0;
+		//setSidebarToogle(false);
+	};
 
-  useEffect(()=>{
-    // alert("b")
-    // setAuthenticated(false)
-    const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
-    const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
-    const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
-    const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth")) ? 
-								JSON.parse(localStorage.getItem("fr_facebook_auth")) :
-								JSON.parse(props?.fbAuthInfo);
+	const [isActiveMenu, setIsActiveMenu] = useState(false);
+	const [local_fb_id, setLocal_fb_id] = useState("");
 
-  if (
-		resetpassword_status === 1 && 
-		onboarding_status === 1 && 
-		facebookAuthInfo?.accessToken!=undefined && 
-		facebookAuthInfo?.accessToken
-	){
-    // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-    // console.log("Authentication is off and now the sidebar can access the menu buttons on screeen.2")
-    setAuthenticated(true);
-  }else{
-    setAuthenticated(false)
-  }
-  if (menu_refresh_status === 1) {
-    setSidebarOpenFriends(true);
-  } else {
-    setSidebarOpenFriends(false);
-  }
-
-  }, [props.isSynced])
-
-  useEffect(() => {
-    // alert("c")
-
-    (async () => {
-      const resetpassword_status = parseInt(localStorage.getItem("fr_pass_changed"));
-      const onboarding_status = parseInt(localStorage.getItem("fr_onboarding"));
-      const menu_refresh_status = parseInt(localStorage.getItem("submenu_status"));
-      const facebookAuthInfo = JSON.parse(localStorage.getItem("fr_facebook_auth"));
-
-
-
-  if (resetpassword_status === 1 && onboarding_status === 1 && facebookAuthInfo?.accessToken!=undefined && facebookAuthInfo?.accessToken){
-    // console.log("authenticated after synced:::::::::::::::>>>>>>>>>")
-    // console.log("Authentication is off and now the sidebar can access the menu buttons on screeen. --1")
-    setAuthenticated(true);
-  }else{
-    setAuthenticated(false)
-  }
-    })()
-  }, [localStorage.getItem("fr_facebook_auth") || localStorage.getItem("fr_pass_changed") || localStorage.getItem("fr_onboarding")]);
-
-  const closePopupFn = (e) => {
-    setIsComponentVisible(false);
-  };
-
-  const setShowProfileFn = (e) => {
-    // console.log('clicked', facebookAuthInfoStatus);
-    // setShowProfile((current) => profiles?.length > 0 ? !current : false)
-	getProfileData();
-    setIsComponentVisible((current) => !current);
-    setSubMenuFriends(false);
-  };
-
-  // const checkIfNotFriends = () => {
-  //   return location.pathname.split("/")[location.pathname.split("/").length - 1] ===
-  //     "friend-list" ||
-  //   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
-  //     "unfriended-friends" ||
-  //   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
-  //     "whitelisted-friends" ||
-  //   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
-  //     "inactive-friends" ||
-  //   location.pathname.split("/")[location.pathname.split("/").length - 1] ===
-  //     "lost-friends"
-  // }
-
-  const setSubMenuFriendsFn = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-	if (!subMenuFriends) {
-		setSubMenuMessage(false);
-		setSubMenuFriendsRequest(false);
-	}
-    setSubMenuFriends(!subMenuFriends);
-  };
-
-  const setSubMenuMessageFn = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-	if (!subMenuMessage) {
-		setSubMenuFriends(false);
-		setSubMenuFriendsRequest(false);
-	}
-    setSubMenuMessage(!subMenuMessage)
-  }
-
-  const setSubMenuFriendRequestFn = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-	if (!subMenuFriendRequest) {
-		setSubMenuFriends(false);
-		setSubMenuMessage(false);
-	}
-    setSubMenuFriendsRequest(!subMenuFriendRequest);
-  };
-
-  const [dontSendFrindReqIRejct, setDontSendFrindReqIRejct] = useState(false);
-
-  const setSidebarToogleFn = (e) => {
-    localStorage.setItem("fr_sidebarToogle", !sidebarToogle);
-    setSidebarToogle((current) => !current);
-  };
-
-  const setSidebarOpenFn = (e) => {
-    localStorage.setItem("fr_sidebarToogle", false);
-    localStorage.setItem("submenu_status", 1);
-    const menu_status = parseInt(localStorage.getItem("submenu_status"));
-    if (menu_status === 1) {
-      setSidebarOpenFriends(true);
-    }
-    setSidebarToogle(false);
-  };
-
-  const setSidebarHomeOpenFn = (e) => {
-    localStorage.setItem("submenu_status", 0);
-    setSidebarOpenFriends(false);
-    localStorage.removeItem("submenu_status");
-    //menu_status_refresh = 0;
-    //setSidebarToogle(false);
-  };
-
-  const [isActiveMenu, setIsActiveMenu] = useState(false);
-  const [local_fb_id, setLocal_fb_id] = useState("");
-  
 	const logoutDispatchFunc = () => {
 		// Logout..
 		dispatch(setDefaultProfileId(""));
@@ -257,78 +257,78 @@ const Sidebar = (props) => {
 	};
 
 
-  //token
-  // const userToken = localStorage.getItem("fr_token");
-  const userFbProfile = localStorage.getItem("fr_default_fb");
-  const userEmail = localStorage.getItem("fr_default_email");
+	//token
+	// const userToken = localStorage.getItem("fr_token");
+	const userFbProfile = localStorage.getItem("fr_default_fb");
+	const userEmail = localStorage.getItem("fr_default_email");
 
-  const getProfileData = () => {
-    // alert("sidebar")
-    if (menu_status_refresh === 1) {
-      setSidebarOpenFriends(true);
-    } else {
-      setSidebarOpenFriends(false);
-    }
-    fetchUserProfile().then((res) => {
-      // console.log("user info sidebar",res)
-      if (res && res.length) {
+	const getProfileData = () => {
+		// alert("sidebar")
+		if (menu_status_refresh === 1) {
+			setSidebarOpenFriends(true);
+		} else {
+			setSidebarOpenFriends(false);
+		}
+		fetchUserProfile().then((res) => {
+			// console.log("user info sidebar",res)
+			if (res && res.length) {
 
-		setAlertUserStatusCheck({
-			alert_status: res[0]?.alert_message_status,
-			alert_message: res[0]?.alert_message,
+				setAlertUserStatusCheck({
+					alert_status: res[0]?.alert_message_status,
+					alert_message: res[0]?.alert_message,
+				});
+
+				if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken != undefined && res[0]?.fb_auth_info?.accessToken) {
+					// console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
+					setAuthenticated(true);
+				} else {
+					setAuthenticated(false)
+				}
+				// setProfiles(res);
+				dispatch(setProfileSpaces(res));
+				if (!userFbProfile || userFbProfile == null) {
+					// console.log(
+					//   "set default from sidebar frnd----->>>",
+					//   res[0].fb_user_id
+					// );
+
+					localStorage.setItem("fr_default_fb", res[0].fb_user_id);
+					dispatch(setDefaultProfileId(res[0].fb_user_id));
+					setLocal_fb_id(res[0].fb_user_id);
+				} else {
+					setLocal_fb_id(userFbProfile);
+				}
+			}
 		});
-        
-        if (resetpassword_token === 1 && onboarding_token === 1 && res[0]?.fb_auth_info?.accessToken!=undefined && res[0]?.fb_auth_info?.accessToken) {
-          // console.log("SIDEBAR STATUS 3",resetpassword_token,onboarding_token,res)
-          setAuthenticated(true);
-        }else{
-          setAuthenticated(false)
-        }
-        // setProfiles(res);
-        dispatch(setProfileSpaces(res));
-        if (!userFbProfile || userFbProfile == null) {
-          // console.log(
-          //   "set default from sidebar frnd----->>>",
-          //   res[0].fb_user_id
-          // );
+	};
 
-          localStorage.setItem("fr_default_fb", res[0].fb_user_id);
-          dispatch(setDefaultProfileId(res[0].fb_user_id));
-          setLocal_fb_id(res[0].fb_user_id);
-        } else {
-          setLocal_fb_id(userFbProfile);
-        }
-      }
-    });
-  };
+	const switchProfile = (profileId) => {
+		// console.log("switch profile", profileId);
+		localStorage.setItem("fr_default_fb", profileId);
+		localStorage.removeItem("fr_tooltip")
+		// dispatch( setDefaultProfileId(profileId) )
+		setIsComponentVisible(false);
 
-  const switchProfile = (profileId) => {
-    // console.log("switch profile", profileId);
-    localStorage.setItem("fr_default_fb", profileId);
-    localStorage.removeItem("fr_tooltip")
-    // dispatch( setDefaultProfileId(profileId) )
-    setIsComponentVisible(false);
+		if (location.pathname == "/") {
+			navigate(0);
+			setIsComponentVisible(false);
+		} else {
+			navigate("/");
+			navigate(0);
+			setIsComponentVisible(false);
+		}
+	};
 
-    if (location.pathname == "/") {
-      navigate(0);
-      setIsComponentVisible(false);
-    } else {
-      navigate("/");
-      navigate(0);
-      setIsComponentVisible(false);
-    }
-  };
+	const listClick = () => {
+		if (!localStorage.getItem('fr_token')) {
+			store.dispatch(userLogout())
+		}
+		dispatch(removeSelectedFriends());
+		dispatch(crealFilter());
+		setSidebarOpenFn();
+	};
 
-  const listClick = () => {
-    if (!localStorage.getItem('fr_token')) {
-      store.dispatch(userLogout())
-    }
-    dispatch(removeSelectedFriends());
-    dispatch(crealFilter());
-    setSidebarOpenFn();
-  };
-
-  	const friendsSubMenuArr = [
+	const friendsSubMenuArr = [
 		"/contacts/all",
 		"/contacts/friends",
 		"/contacts/non-friends",
@@ -344,7 +344,7 @@ const Sidebar = (props) => {
 		"/friends/friends-queue",
 	];
 
-  	const messageSubMenuArr = [
+	const messageSubMenuArr = [
 		"/messages/groups",
 		"/messages/segments",
 		"/messages/dmf",
@@ -353,30 +353,30 @@ const Sidebar = (props) => {
 
 	useEffect(() => {
 		getProfileData();
-	
+
 		if (friendsSubMenuArr?.includes(location?.pathname)) {
 			setSubMenuFriends(true);
 		}
-	
+
 		if (friendReqSubMenuArr?.includes(location?.pathname)) {
 			setSubMenuFriendsRequest(true);
 		}
-	
+
 		if (messageSubMenuArr?.includes(location?.pathname)) {
 			setSubMenuMessage(true);
 		}
-	
+
 		const toggle = asyncLocalStorage.getItem("fr_sidebarToogle");
-	
+
 		toggle.then((res) => {
-		  if (res) {
-			setSidebarToogle(JSON.parse(res.toLowerCase()));
-		  }
+			if (res) {
+				setSidebarToogle(JSON.parse(res.toLowerCase()));
+			}
 		});
-	  }, []);
+	}, []);
 
 	useEffect(() => {
-		if(
+		if (
 			location.pathname === "/facebook-auth" ||
 			location.pathname === "/reset-password" ||
 			location.pathname === "/onboarding"
@@ -390,7 +390,7 @@ const Sidebar = (props) => {
 		// setSubMenuFriends(checkIfNotFriends());
 	}, [location]);
 
-  return (
+	return (
 		<aside
 			className={
 				sidebarToogle
@@ -407,7 +407,7 @@ const Sidebar = (props) => {
 						<span
 							className={sidebarToogle ? "menu-toogle closed" : "menu-toogle"}
 							onClick={setSidebarToogleFn}
-							// aria-label="Menu Toggle"
+						// aria-label="Menu Toggle"
 						>
 							<SidebarIcon />
 						</span>
@@ -496,8 +496,8 @@ const Sidebar = (props) => {
 									}}
 									to='/contacts/all'
 									className={() => friendsSubMenuArr.includes(location?.pathname)
-											? "active"
-											: ""}
+										? "active"
+										: ""}
 									aria-label='Friends'
 								>
 									<ContactIcon />
@@ -563,7 +563,7 @@ const Sidebar = (props) => {
 												<span className='nav-menu-name'>- Non friends</span>
 											</NavLink>
 										</li>
-										
+
 										<li
 											className='nav-menu'
 											onClick={listClick}
@@ -652,8 +652,8 @@ const Sidebar = (props) => {
 									}}
 									to='/friends/friends-queue'
 									className={() => friendReqSubMenuArr.includes(location?.pathname)
-											? "active"
-											: ""}
+										? "active"
+										: ""}
 									aria-label='Friends'
 								>
 									<FriendRequestIcon />
@@ -709,7 +709,7 @@ const Sidebar = (props) => {
 												<span className='nav-menu-name'>- Pending request</span>
 											</NavLink>
 										</li>
-										
+
 									</ul>
 								) : null}
 							</li>
@@ -730,8 +730,8 @@ const Sidebar = (props) => {
 										setSubMenuMessage(true);
 									}}
 									className={() => messageSubMenuArr.includes(location?.pathname)
-											? "active"
-											: ""}
+										? "active"
+										: ""}
 									aria-label='Messages'
 								>
 									<NavMessageIcon color={"#0094FF"} />
@@ -845,7 +845,7 @@ const Sidebar = (props) => {
 									</span>
 								</NavLink>
 							</li> */}
-								{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
+							{/* className={isActiveMenu ? "nav-menu active" : "nav-menu"} */}
 							{/* <li
 								className='nav-menu'
 							>
@@ -894,6 +894,16 @@ const Sidebar = (props) => {
 					))}
 
 				<ul className='bottom-nav-bar m-top-a'>
+					<li className='nav-menu nav-wiki'>
+						<Link
+							to='https://friender.firstpromoter.com/signup/12840'
+							target='_blank'
+						>
+							<AffiliateIcon />
+							Earn money as an affiliate <OpenInNewTab />
+						</Link>
+					</li>
+
 					<li className='nav-menu nav-wiki'>
 						<Link
 							to='https://wiki.friender.io/'
@@ -989,7 +999,7 @@ const Sidebar = (props) => {
 											profiles && profiles.length
 												? profiles[0]?.fb_profile_picture
 												: ProfilePhoto
-										})`,
+											})`,
 									}}
 								>
 									{/* <img src={profiles?.filter((el) => el.fb_user_id == defaultProfileId)[0]?.fb_profile_picture} alt="" /> */}
@@ -1007,7 +1017,7 @@ const Sidebar = (props) => {
 								)
 								} */}
 
-												{/* {isComponentVisible && (
+								{/* {isComponentVisible && (
 
 								<SidebarPopUp 
 									authenticated={authenticated}
@@ -1086,10 +1096,10 @@ const Sidebar = (props) => {
 								</svg>
 								</button>
 							</li>  */}
-							{/* <li className="nav-menu opened-only no-click">
+						{/* <li className="nav-menu opened-only no-click">
 								<button className="btn-primary upgrade-btn">Upgrade</button>
 							</li>  */}
-							{/* <li className="nav-menu opened-only no-click">
+						{/* <li className="nav-menu opened-only no-click">
 								<NavLink to="/" aria-label="FAQ">
 								<svg
 									width="24"
