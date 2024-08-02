@@ -147,7 +147,7 @@ export const getQueueSendableCount = createAsyncThunk(
     async (payload) => {
        // console.log('>>>>>>>>>>>>>>', payload);
         const res = await fetchQueueCountS(payload)
-        console.log('res', res);
+       // console.log('res', res);
         return res
     }
 )

@@ -1780,14 +1780,15 @@ function PageHeader({ headerText = "" }) {
 	// useEffect(()=>{
 	// 	console.log("listFilteredCount ::: ", pagination_state);
 	// }, [pagination_state])
-
+	const debouncedFetchData = useCallback(helper.debounce(reFetchDataOnRunFriendQueueSuccess, 1000), []);
 	useEffect(() => {
 		// console.log('XXXXXXXXXXXX', listFilteredCount);
 		window.addEventListener(
 			"message",
 			(event) => {
 				// console.log("addEventListener", event);
-				reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 3000);
+				//reFetchFrQueDataRef.current = setTimeout(() => reFetchDataOnRunFriendQueueSuccess(event), 1000);
+				debouncedFetchData(event)
 			},
 			false
 		);
@@ -1795,11 +1796,11 @@ function PageHeader({ headerText = "" }) {
 			localStorage.removeItem("fr_edit_mode_quickCampMsg");
 			localStorage.removeItem("fr_quickMessage_campaigns_message");
 			window.removeEventListener("message", (event) => {
-				reFetchDataOnRunFriendQueueSuccess(event);
+				debouncedFetchData(event);
 			});
-			clearTimeout(reFetchFrQueDataRef);
+			//clearTimeout(reFetchFrQueDataRef);
 		};
-	}, [listFilteredCount, pagination_state]);
+	}, []);
 
 	const handleShowCsvUploadModal = () => {
 		setTaskName(`CSV Upload ${moment().format("YYYYMMDDHHmmss")}`);
