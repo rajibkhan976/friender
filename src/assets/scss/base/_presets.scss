@@ -93,6 +93,15 @@ body {
   > .MuiTooltip-popper {
     display: none !important;
   }
+
+  &:has(#root .react-table-container .page-loader-mainSpace){
+    >*[role="presentation"] {
+      &[class*="Mui"]{
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  }
 }
 *[data-disabled="true"],
 *[disabled] {
@@ -462,6 +471,17 @@ main {
       flex-direction: column;
       flex: 1 1 auto;
       font-family: "Nunito", sans-serif !important;
+      position: relative;
+
+      .list-loader {
+        position: absolute;
+        inset: 0;
+        top: 0;
+        z-index: 999999;
+        background: #000;
+        margin: 0;
+        padding-top: 20px;
+      }
 
       * {
         font-family: "Nunito", sans-serif !important;

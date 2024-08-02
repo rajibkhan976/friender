@@ -1106,6 +1106,7 @@
   // overflow: hidden;
   // height: 100vh;
   // max-height: 88%;
+  position: relative;
 
   .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded {
     height: 100%;
@@ -1174,6 +1175,15 @@
         }
       }
     }
+  }
+
+  .page-loader-mainSpace {
+    position: absolute;
+    z-index: 99;
+    background: #000;
+    // margin-top: 50px;
+    margin-top: 0;
+    padding-top: 20px;
   }
 
   &:has(.no-data-found) {
@@ -1493,6 +1503,10 @@
           }
         }
       }
+
+      svg {
+        margin-inline-start: 4px;
+      }
     }
 
     &:hover {
@@ -1543,7 +1557,8 @@
     }
     .Mui-TableHeadCell-Content-Wrapper + * {
       order: 1;
-      margin-right: 5px;
+      // margin-right: 5px;
+      margin-right: 10px;
       button {
         margin-left: 0;
       }
@@ -1552,9 +1567,36 @@
       &:not(.Mui-checked) {
         order: 3;
 
+        &:not(:first-child) {
+          width: 14px;
+          aspect-ratio: 1 / 1;
+          margin-inline-start: 10px;
+          background-image: url('../../../images/sort-sprite.png');
+          background-repeat: no-repeat;
+          background-position: -13px -13px;
+          background-size: 65px auto;
+
+          &[aria-label*="Sort by"],
+          &[aria-label*="Sorted by"] {
+            * {
+              display: none;
+            }
+          }
+      
+          &[aria-label*="Sorted by"] {
+            &[aria-label*="ascending"] {
+              background-position: -13px -38px;
+            }
+            &[aria-label*="descending"] {
+              background-position: -38px -13px;
+            }
+          }
+        }
+
         svg {
           &:not(input ~ svg) {
             color: #fff !important;
+            display: none;
             // color: #605BFF !important;
 
             // MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc css-1vweko9-MuiSvgIcon-root-MuiTableSortLabel-icon
@@ -1720,7 +1762,8 @@
     // }
     th.gender-header-class,
     td.gender-cell-class {
-      width: 80px !important;
+      // width: 80px !important;
+      width: 100px !important;
     }
     th.age-header-class,
     td.age-cell-class {
@@ -2111,4 +2154,14 @@
 .campaign-endTime-cell,
 .campaign-contextMenu-cell {
   padding-left: 0;
+}
+
+
+.campaigns-edit {
+  .react-table-container  {
+    .list-loader {
+      margin-top: 0;
+      padding-top: 20px;
+    }
+  }
 }

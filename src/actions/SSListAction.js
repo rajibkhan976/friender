@@ -381,6 +381,9 @@ export const ssListSlice = createSlice({
             });
             //state.ssList_data_obj = listObj;
         },
+        [getListData.rejected]: (state,action) => {
+            state.isLoading = false;
+        },
         // [bulkActionQueue.pending]: (state,action) => {
         //     // state.isLoading = true;
         //     console.log('bulkActionQueue PENDING');
@@ -410,10 +413,15 @@ export const ssListSlice = createSlice({
         // },
         [getQueueSendableCount.pending]: (state, action) => {
             // console.log('----- LOADING -----');
+            state.isLoading = true;
         },
         [getQueueSendableCount.fulfilled]: (state, action) => {
+            state.isLoading = false;
             // console.log('>>>>>>>> state', state, 'action', action?.payload?.sendable_count);
             state.fetchSendableCount = action?.payload?.sendable_count
+        },
+        [getQueueSendableCount.rejected]: (state, action) => {
+            state.isLoading = false;
         }
     },
 });

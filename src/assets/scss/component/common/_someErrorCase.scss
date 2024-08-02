@@ -1,0 +1,59 @@
+@use "../../abstract/color" as *;
+@use "../../abstract/color-themes" as *;
+@use "../../abstract/mixins" as *;
+@use "../../abstract/variables" as *;
+
+.error-case-outer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .error-case-body {
+        width: 340px;
+        padding-inline: 29px;
+        padding-block: 30px 20px;
+        position: relative;
+        @include theme-aware('background-color', 'listing-cell-bg');
+        border-radius: 10px;
+
+        figure {
+            text-align: center;
+            margin-block-end: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 24.55px;
+        }
+
+        h3 {
+            margin-block-end: 10px;
+            @include theme-aware('color', 'text-color')
+        }
+        p {
+            font-size: 12px;
+            line-height: 18px;
+            margin-block-end: 30px;
+            @include theme-aware('color', 'text-para-color');
+        }
+
+        .btn {
+            margin: 0;
+        }
+
+        &::after {
+            @include gradient(90deg, $themeColorList);
+            //background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background: linear-gradient(-90deg, #045cff, #23d5ab, #045cff, #23d5ab);
+            width: $full-width;
+            height: 10px;
+            @include positioned(absolute);
+            top: 0;
+            left: 0;
+            content: "";
+            @include border-radius(10px, 10px, 0px, 0px);
+            animation: gradient 5s ease infinite;
+            background-size: 400% 100%;
+        }
+    }
+}

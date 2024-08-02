@@ -1437,7 +1437,10 @@ export const SourceRendererPending = memo((params) => {
     }
 
 	if (
-		params?.data?.source?.toLowerCase() !== 'sync' && 
+		(
+			typeof params?.data?.source === 'string' && 
+			params?.data?.source?.toLowerCase() !== 'sync'
+		) && 
 		params?.data?.sourceName == null && 
 		params?.data?.sourceUrl == null
 	) {

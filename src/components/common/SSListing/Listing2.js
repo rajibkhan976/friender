@@ -26,6 +26,8 @@ import {
 import {crealFilter, removeSelectedFriends} from "../../../actions/FriendListAction"
 import NoDataFound from "../NoDataFound";
 import { useLocation } from "react-router-dom";
+import ListLoader from "../loaders/ListLoader";
+import SomeErrorCase from "../SomeErrorCase";
 
 export default function Listing2(props) {
   //mock data - strongly typed if you are using TypeScript (optional, but recommended)
@@ -623,7 +625,7 @@ export default function Listing2(props) {
       rowSelection,
       columnFilters,
       columnFilterFns,
-      isLoading,
+      isLoading: false,
       showProgressBars: false,
       showLoadingOverlay: false,
       isSaving: false,
@@ -696,7 +698,16 @@ export default function Listing2(props) {
         )}
 
       {/* {data && data?.length > 0 ? ( */}
-        <MaterialReactTable table={table} />
+        {
+          isLoading &&
+          <ListLoader />
+        }
+        {(
+            !isLoading && data?.length === 0 && (!filter_state?.filter_key_value && !filter_state?.filter_key_value)
+          ) ?
+          <SomeErrorCase /> :
+          <MaterialReactTable table={table} />
+        }
       {/* ) : (
         <NoDataFound />
       )} */}
