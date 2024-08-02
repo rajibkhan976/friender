@@ -477,10 +477,14 @@ main {
         position: absolute;
         inset: 0;
         top: 0;
-        z-index: 999999;
+        z-index: 3;
         background: #000;
         margin: 0;
         padding-top: 20px;
+      }
+
+      .selection-popup~.list-loader {
+        top: 125px;
       }
 
       * {

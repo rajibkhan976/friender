@@ -249,6 +249,7 @@ function PageHeader({ headerText = "" }) {
 	const selectAcross = useSelector((state) => state.ssList.selectAcross)
 	const MRT_selected_rows_state = useSelector((state) => state.ssList.MRT_selected_rows_state)
 	const pagination_state = useSelector((state) => state.ssList.pagination_state)
+	const currentPageSize = useSelector((state) => state.ssList.currentPageSize)
 	// ssList
 	const defaultFbId = localStorage.getItem("fr_default_fb");
 	const listCount = useSelector((state) => state.ssList.list_unfiltered_count);
@@ -2199,7 +2200,6 @@ function PageHeader({ headerText = "" }) {
 				console.log('payload ::::', payload);
 				dispatch(bulkActionQueue(payload)).unwrap()
 					.then((res) => {
-						// console.log('res in HEADER', res);
 						if (res) {
 							const fr_queue_settings = localStorage.getItem("fr_queue_settings")
 								? JSON.parse(localStorage.getItem("fr_queue_settings"))
@@ -2222,6 +2222,32 @@ function PageHeader({ headerText = "" }) {
 						dispatch(removeSelectedFriends());
 						dispatch(updateRowSelection({}));
 						refreshAndDeselectList();
+
+						if (res){
+							if (bulkType === "move_to_top") {
+								Alertbox(
+									res?.data,
+									"success",
+									1000,
+									"bottom-right"
+								);
+							}
+
+							if (bulkType === "remove") {
+								Alertbox(
+									`${
+										select_all_state?.selected ? 
+											payload.exclude_list?.length > 0 ?
+												'All except '+payload.exclude_list?.length :
+												'All' :
+											payload?.include_list?.length
+											} friends have been removed from your friend queue`,
+									"success",
+									1000,
+									"bottom-right"
+								);
+							}
+						}
 					})
 			} else {
 				dispatch(bulkAction(payload)).unwrap()
@@ -3114,12 +3140,6 @@ function PageHeader({ headerText = "" }) {
 															</figure>
 															<span>Remove</span>
 														</li>
-														{/* {
-															console.log(
-																select_all_state?.selected,
-																selectedListItems?.length, totalList?.length
-															)
-														} */}
 														<li
 															className='del-fr-action'
 															onClick={() =>
@@ -3127,17 +3147,11 @@ function PageHeader({ headerText = "" }) {
 																triggerBulkOperation('move_to_top')
 															}
 															data-disabled={
-																!selectedListItems || 
-																selectedListItems?.length === 0 || (
-																	(
-																		select_all_state?.selected ||
-																		// selectedListItems?.length >= totalList?.length
-																		selectedListItems?.length >= listCount
-																	) &&
-																	!filter_state?.filter_key_value?.length > 0
-																) || (
-																	pagination_state?.page_size === selectedListItems?.length &&
-																	pagination_state?.page_number === 1
+																!selectedListItems ||
+																selectedListItems?.length === 0 ||
+																(
+																	select_all_state?.selected &&
+																	!(filter_state == null || filter_state?.filter_key_value?.length>0)
 																)
 																	? true
 																	: false

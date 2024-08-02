@@ -700,11 +700,6 @@ export default function Listing2(props) {
             </p>
           </div>
         )}
-        {
-          console.log(
-            !isLoading, data?.length === 0, !filter_state?.filter_key_value, !filter_state?.filter_key_value
-          )
-        }
 
       {/* {data && data?.length > 0 ? ( */}
         {
