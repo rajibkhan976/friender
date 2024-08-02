@@ -274,7 +274,7 @@ const EditCampaign = (props) => {
 
 	useEffect(() => {
 		if (params?.campaignId) {
-			getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
+			// getCampaignUsersListFromAPI(current_fb_id, params?.campaignId);
 		}
 	}, []);
 	useEffect(() => {

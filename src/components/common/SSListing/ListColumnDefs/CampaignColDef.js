@@ -1,4 +1,3 @@
-import { size } from "lodash";
 import {
   CampaignCreationRenderer,
   UnlinkedNameCellRenderer,
@@ -16,6 +15,9 @@ import {
 } from "../../../messages/campaigns/CampaignListingColumns";
 import { CommonColDefs } from "./CommonColDefs";
 const { Name, Keyword, Source } = CommonColDefs;
+
+
+// #region Add Tooltip Header
 const addTooltipToHeader = (header, tooltipText) => (
   <div className="fr-ls-tooltip">
     <span>{header}</span>
@@ -31,6 +33,8 @@ export const campaignUserColumnDefs = () => {
     {
       ...Name,
       enableColumnFilter: false,
+      grow: true,
+      size: 400,
       Cell: ({ renderedCellValue, row }) => {
         return (
           <UnlinkedNameCellRenderer
@@ -43,7 +47,9 @@ export const campaignUserColumnDefs = () => {
     {
       accessorKey: "status",
       header: "Status",
-      size: 100,
+      grow: true,
+      size: 150,
+      maxSize: 150,
       enableHiding: false,
       columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
       Cell: ({ renderedCellValue, row }) => {
@@ -57,7 +63,10 @@ export const campaignUserColumnDefs = () => {
     },
     {
       accessorKey: "message",
-      header: "Message  ",
+      header: "Message",
+      grow: true,
+      size: 200,
+      maxSize: 250,
       enableHiding: false,
       enableColumnFilter: false,
       enableSorting: false,
@@ -73,12 +82,22 @@ export const campaignUserColumnDefs = () => {
     {
       ...Keyword,
       enableColumnFilter: false,
+      grow: true,
+      size: 200,
+      maxSize: 250,
     },
-    Source,
+    {
+      ...Source,
+      size: 100,
+      maxSize: 100,
+      grow: false,
+    },
     {
       accessorKey: "created_at",
       enableHiding: false,
-      // size: 80,
+      Size: 200,
+      maxSize: 200,
+      grow: false,
       Cell: ({ renderedCellValue, row }) => {
         return (
           <CampaignCreationRenderer
