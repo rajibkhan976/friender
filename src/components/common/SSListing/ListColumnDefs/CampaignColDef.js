@@ -34,7 +34,7 @@ export const campaignUserColumnDefs = () => {
       ...Name,
       enableColumnFilter: false,
       grow: true,
-      size: 400,
+      size: 300,
       Cell: ({ renderedCellValue, row }) => {
         return (
           <UnlinkedNameCellRenderer
@@ -48,8 +48,8 @@ export const campaignUserColumnDefs = () => {
       accessorKey: "status",
       header: "Status",
       grow: true,
-      size: 150,
-      maxSize: 150,
+      size: 300,
+      maxSize: 300,
       enableHiding: false,
       columnFilterModeOptions: ['contains', 'equals', 'notEquals', 'startsWith', 'endsWith', 'empty', 'notEmpty'],
       Cell: ({ renderedCellValue, row }) => {
@@ -84,7 +84,7 @@ export const campaignUserColumnDefs = () => {
       enableColumnFilter: false,
       grow: true,
       size: 200,
-      maxSize: 250,
+      maxSize: 200,
     },
     {
       ...Source,
@@ -95,9 +95,9 @@ export const campaignUserColumnDefs = () => {
     {
       accessorKey: "created_at",
       enableHiding: false,
-      Size: 200,
-      maxSize: 200,
-      grow: false,
+      Size: 300,
+      maxSize: 300,
+      grow: true,
       Cell: ({ renderedCellValue, row }) => {
         return (
           <CampaignCreationRenderer
