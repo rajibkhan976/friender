@@ -526,6 +526,10 @@ export default function Listing2(props) {
     dispatch(resetFilters());
     dispatch(crealFilter(""));
     dispatch(crealGlobalFilter());
+
+    return () => {
+      setIsError(false);
+    }
   }, []);
 
   const RenderEmpty = () => {
@@ -696,18 +700,26 @@ export default function Listing2(props) {
             </p>
           </div>
         )}
+        {
+          console.log(
+            !isLoading, data?.length === 0, !filter_state?.filter_key_value, !filter_state?.filter_key_value
+          )
+        }
 
       {/* {data && data?.length > 0 ? ( */}
         {
-          isLoading &&
-          <ListLoader />
+          isLoading ?
+          <ListLoader /> :
+          isError ?
+          <SomeErrorCase /> :
+          <MaterialReactTable table={table} />
         }
-        {(
+        {/* {(
             !isLoading && data?.length === 0 && (!filter_state?.filter_key_value && !filter_state?.filter_key_value)
           ) ?
           <SomeErrorCase /> :
           <MaterialReactTable table={table} />
-        }
+        } */}
       {/* ) : (
         <NoDataFound />
       )} */}
