@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
-import Tooltip from "../components/common/Tooltip";
 import ProfilePhoto from "../assets/images/profilePhoto.png";
+import NumberRangeInput from "../components/common/NumberRangeInput";
 
 import "../assets/scss/pages/myprofile.scss";
 
 
 const MyProfile = () => {
     const profiles = useSelector((state) => state.profilespace.profiles);
-    const [userDetails, setUserDetails] = useState(null)
+    const [userDetails, setUserDetails] = useState(null);
+    const [intentedAmount, setIntentedAmount] = useState(0);
+    const [shouldEditIntendedAmount, setShouldEditIntendedAmount] = useState(false);
 
-    useEffect(()=>{
-        console.log('profiles', profiles);
+    useEffect(() => {
         setUserDetails({
             name: JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name ? JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name : profiles[0]?.name ? profiles[0]?.name : "Anonymous",
             email: localStorage.getItem('fr_default_email'),
@@ -22,7 +22,34 @@ const MyProfile = () => {
             plan: localStorage?.getItem('fr_plan'),
             planName: localStorage?.getItem('fr_plan_name')
         })
-    }, [profiles])
+    }, [profiles]);
+
+    const onChangeIntendedAmount = (event) => {
+		let intentedAmount = event.target.value;
+
+        if (typeof intentedAmount === "number" && parseFloat(intentedAmount).toFixed(2)) {
+            setIntentedAmount(parseFloat(intentedAmount).toFixed(2));
+        } else {
+            setIntentedAmount(event.target.value);
+        }
+	};
+
+	const handleIncrementDecrementVal = (type) => {
+        let amount = parseFloat(intentedAmount);
+		if (type === "INCREMENT") {
+            let incrementedAmount = amount + 0.1;
+			setIntentedAmount(parseFloat(incrementedAmount).toFixed(2));
+		}
+
+		if (type === "DECREMENT" && amount > 0) {
+            let idecrementedAmount = amount - 0.1;
+			setIntentedAmount(parseFloat(idecrementedAmount).toFixed(2));
+		}
+	};
+    
+    console.log('intentedAmount', intentedAmount);
+    console.log('profiles', profiles);
+
     return (
         <div className="main-content-inner d-flex d-flex-column my-profile">
             <div className="info-box">
@@ -66,6 +93,33 @@ const MyProfile = () => {
                             {(userDetails?.facebookURL && userDetails?.facebookID != 'null') ? `facebook.com/${userDetails?.facebookID}` : 'Please complete the getting started'}
                         </a>
                     </p>
+                </div>
+                <div className="info-box-footer">
+                    <div className="info-box-footer-txt">How much do you value 1 hour of your time in dollars?</div>
+                    <div className="value-info">
+                    {shouldEditIntendedAmount ?
+                        <>
+                            <NumberRangeInput
+                                value={intentedAmount}
+                                step={"0.1"}
+                                handleChange={onChangeIntendedAmount}
+                                setIncrementDecrementVal={handleIncrementDecrementVal}
+                                customStyleClass='intended-amount'
+                            />
+                            <div className="save-amount-btn" onClick={() => setShouldEditIntendedAmount(false)}>
+                                Save
+                            </div>
+                        </>
+                        
+                    :
+                        <>
+                            <div className="value-amount">{intentedAmount}</div>
+                            <div className="value-action">
+                                <div className="value-action-txt" onClick={() => setShouldEditIntendedAmount(true)}>Edit</div>
+                            </div>
+                        </>
+                    }
+                    </div>
                 </div>
             </div>
         </div>

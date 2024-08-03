@@ -25,6 +25,10 @@
     }
 
     .info-box-content {
+        border-bottom: 1px solid;
+        border-bottom-color: #313037;
+        padding-bottom: 1rem;
+
         .user-image-name {
             margin-block-end: 30px;
 
@@ -104,6 +108,80 @@
 
         p + p {
             margin-block-start: 16px;
+        }
+    }
+
+    .info-box-footer {
+        padding-top: 1rem;
+
+        .info-box-footer-txt {
+            color: rgba(255, 255, 255, 1);
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 19px;
+        }
+
+        .value-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+
+            .intended-amount {
+                width: 343px;
+                height: 40px;
+                background-color: #313037;
+            }
+
+            .save-amount-btn {
+                width: 152px;
+                height: 40px;
+                background-color: #605BFF;
+                border-radius: 4px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 19px;
+                cursor: pointer;
+            }
+
+            .value-amount {  
+                color: rgba(255, 255, 255, 1);
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 27px;
+            }
+
+            .value-action:hover {
+                background-color: rgba(242, 147, 57, 0.15);
+                color: rgba(242, 147, 57, 1);
+                background-image: url("../../images/EditAmountHover.svg");
+            }
+
+            .value-action {
+                width: 90px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(49, 48, 55, 1);
+                border-radius: 20px;
+                cursor: pointer;
+                background-image: url("../../images/EditAmountIcon.svg");
+                background-position-x: 16px;
+                background-position-y: center;
+                background-repeat: no-repeat;
+                color: rgba(118, 116, 133, 1);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 19px;
+                
+                .value-action-txt {
+                    margin-left: 12px;
+                }
+            }
         }
     }
 
