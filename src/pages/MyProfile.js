@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import ProfilePhoto from "../assets/images/profilePhoto.png";
 import NumberRangeInput from "../components/common/NumberRangeInput";
+import { fetchUserAmount, saveUserAmount } from "../services/authentication/facebookData";
+import extensionMethods from "../configuration/extensionAccesories";
 
 import "../assets/scss/pages/myprofile.scss";
 
@@ -13,6 +15,12 @@ const MyProfile = () => {
     const [shouldEditIntendedAmount, setShouldEditIntendedAmount] = useState(false);
 
     useEffect(() => {
+        fetchUserAmount()
+        .then((res) => {
+            if (res?.amount && parseFloat(res?.amount)) {
+                setIntentedAmount(parseFloat(res?.amount));
+            }
+        });
         setUserDetails({
             name: JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name ? JSON.parse(localStorage.getItem('fr_facebook_auth'))?.name : profiles[0]?.name ? profiles[0]?.name : "Anonymous",
             email: localStorage.getItem('fr_default_email'),
@@ -46,6 +54,32 @@ const MyProfile = () => {
 			setIntentedAmount(parseFloat(idecrementedAmount).toFixed(2));
 		}
 	};
+
+    const handleSaveUserAmount = () => {
+        if (intentedAmount && parseFloat(intentedAmount).toFixed(2) >= 0) {
+            saveUserAmount({amount: parseFloat(intentedAmount)})
+            .then((resp) => {
+                if (resp) {
+                    console.log("save amount response", resp);
+                    fetchUserAmount()
+                    .then((res) => {
+                        if (res?.amount && parseFloat(res?.amount)) {
+                            setIntentedAmount(parseFloat(res?.amount));
+                            const sendEssentialsPayload = {
+                                action: "sendEssentials",
+                                fr_token: localStorage.getItem("fr_token"),
+                                amount: parseFloat(intentedAmount)
+                            };
+                            extensionMethods.sendMessageToExt(
+                                sendEssentialsPayload
+                            );
+                        }
+                    });
+                }
+            });
+        }
+        setShouldEditIntendedAmount(false)
+    }
     
     console.log('intentedAmount', intentedAmount);
     console.log('profiles', profiles);
@@ -106,7 +140,7 @@ const MyProfile = () => {
                                 setIncrementDecrementVal={handleIncrementDecrementVal}
                                 customStyleClass='intended-amount'
                             />
-                            <div className="save-amount-btn" onClick={() => setShouldEditIntendedAmount(false)}>
+                            <div className="save-amount-btn" onClick={handleSaveUserAmount}>
                                 Save
                             </div>
                         </>

@@ -15,7 +15,16 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		process.env.REACT_APP_ENV +
 		"/register",
-
+	getUserAmount: "https://" +
+		process.env.REACT_APP_AUTH +
+		".execute-api.us-east-1.amazonaws.com/" +
+		process.env.REACT_APP_ENV +
+		"/fetch-user-amount",
+	saveUserAmount: "https://" +
+		process.env.REACT_APP_AUTH +
+		".execute-api.us-east-1.amazonaws.com/" +
+		process.env.REACT_APP_ENV +
+		"/update-user-amount",
 	checkRegisterEmail:
 		`https://${process.env.REACT_APP_AUTH}.execute-api.us-east-1.amazonaws.com/${process.env.REACT_APP_ENV}/check-user-email`,
 	loginsUrl:

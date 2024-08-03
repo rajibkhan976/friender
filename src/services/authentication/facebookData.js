@@ -45,3 +45,42 @@ export const fetchUserProfile = ()=>{
       })
   })
 }
+
+export const fetchUserAmount = ()=>{
+  return new Promise((resolve, reject)=>{
+    axios
+      .get(
+        config.getUserAmount,
+        { headers: headers }
+      ).then((result)=>{
+        console.log(result);
+          resolve(result.data);
+      })
+      .catch((error)=>{
+        // console.log("error:::", error.message);
+        reject(error?.response?.data ? error.response.data : error.message);
+      })
+  })
+}
+
+export const saveUserAmount = (payload) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(
+        config.saveUserAmount,
+        payload,
+        { headers: headers }
+      )
+      .then((result) => {
+        console.log(result);
+        resolve(result.data);
+      })
+      .catch((error) => {
+        console.log(
+          "Error Saving user amount",
+          error
+        );
+        reject(error?.response?.data ? error.response.data : error.message);
+      });
+  });
+};
