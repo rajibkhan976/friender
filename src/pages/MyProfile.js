@@ -88,7 +88,8 @@ const MyProfile = () => {
                         }
                     });
                 }
-            });
+            })
+            .catch((error) => setShouldEditAmount(false));
         } else {
             setShouldEditAmount(false);
         }
@@ -160,11 +161,13 @@ const MyProfile = () => {
                     :
                         <>
                             <div className="value-amount">{showAmount}</div>
-                            <div className="value-action">
-                                <div className="value-action-txt" onClick={() => {
+                            <div className="value-action" 
+                            onClick={() => {
                                     setUpdatedAmount(showAmount);
                                     setShouldEditAmount(true);
-                                }}>Edit</div>
+                                }}
+                            >
+                                <div className="value-action-txt">Edit</div>
                             </div>
                         </>
                     }
