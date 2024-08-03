@@ -11,14 +11,15 @@ import "../assets/scss/pages/myprofile.scss";
 const MyProfile = () => {
     const profiles = useSelector((state) => state.profilespace.profiles);
     const [userDetails, setUserDetails] = useState(null);
-    const [intentedAmount, setIntentedAmount] = useState(0);
-    const [shouldEditIntendedAmount, setShouldEditIntendedAmount] = useState(false);
+    const [showAmount, setShowAmount] = useState(0);
+    const [updatedAmount, setUpdatedAmount] = useState(0);
+    const [shouldEditAmount, setShouldEditAmount] = useState(false);
 
     useEffect(() => {
         fetchUserAmount()
         .then((res) => {
             if (res?.amount && parseFloat(res?.amount)) {
-                setIntentedAmount(parseFloat(res?.amount));
+                setShowAmount(parseFloat(res?.amount));
             }
         });
         setUserDetails({
@@ -33,42 +34,53 @@ const MyProfile = () => {
     }, [profiles]);
 
     const onChangeIntendedAmount = (event) => {
-		let intentedAmount = event.target.value;
+        
+		let intentedAmount = event.target.value?.trim();
 
-        if (typeof intentedAmount === "number" && parseFloat(intentedAmount).toFixed(2)) {
-            setIntentedAmount(parseFloat(intentedAmount).toFixed(2));
+        console.log("intentedAmount", intentedAmount);
+
+        if (typeof intentedAmount === "number" && 
+            parseFloat(intentedAmount).toFixed(2) && 
+            parseFloat(intentedAmount).toFixed(2) > 0 &&
+            !intentedAmount.includes("+") &&
+            !intentedAmount.includes("-")
+        ) {
+            setUpdatedAmount(parseFloat(intentedAmount).toFixed(2));
         } else {
-            setIntentedAmount(event.target.value);
+            setUpdatedAmount(event.target.value);
         }
 	};
 
 	const handleIncrementDecrementVal = (type) => {
-        let amount = parseFloat(intentedAmount);
+        let amount = parseFloat(updatedAmount);
+
 		if (type === "INCREMENT") {
             let incrementedAmount = amount + 0.1;
-			setIntentedAmount(parseFloat(incrementedAmount).toFixed(2));
+			setUpdatedAmount(parseFloat(incrementedAmount).toFixed(2));
 		}
 
 		if (type === "DECREMENT" && amount > 0) {
-            let idecrementedAmount = amount - 0.1;
-			setIntentedAmount(parseFloat(idecrementedAmount).toFixed(2));
+            let decrementedAmount = amount - 0.1;
+			setUpdatedAmount(parseFloat(decrementedAmount).toFixed(2));
 		}
 	};
 
     const handleSaveUserAmount = () => {
-        if (intentedAmount && parseFloat(intentedAmount).toFixed(2) >= 0) {
-            saveUserAmount({amount: parseFloat(intentedAmount)})
+        if (updatedAmount && parseFloat(updatedAmount).toFixed(2) > 0) {
+            saveUserAmount({amount: parseFloat(updatedAmount)})
             .then((resp) => {
                 if (resp) {
                     console.log("save amount response", resp);
                     fetchUserAmount()
                     .then((res) => {
                         if (res?.amount && parseFloat(res?.amount)) {
-                            setIntentedAmount(parseFloat(res?.amount));
+                            setShowAmount(parseFloat(res?.amount));
+                            setShouldEditAmount(false);
+
                             const sendEssentialsPayload = {
                                 action: "sendEssentials",
                                 fr_token: localStorage.getItem("fr_token"),
-                                amount: parseFloat(intentedAmount)
+                                amount: parseFloat(res?.amount)
                             };
                             extensionMethods.sendMessageToExt(
                                 sendEssentialsPayload
@@ -77,11 +89,12 @@ const MyProfile = () => {
                     });
                 }
             });
+        } else {
+            setShouldEditAmount(false);
         }
-        setShouldEditIntendedAmount(false)
     }
     
-    console.log('intentedAmount', intentedAmount);
+    console.log('updatedAmount', updatedAmount);
     console.log('profiles', profiles);
 
     return (
@@ -131,11 +144,10 @@ const MyProfile = () => {
                 <div className="info-box-footer">
                     <div className="info-box-footer-txt">How much do you value 1 hour of your time in dollars?</div>
                     <div className="value-info">
-                    {shouldEditIntendedAmount ?
+                    {shouldEditAmount ?
                         <>
                             <NumberRangeInput
-                                value={intentedAmount}
-                                step={"0.1"}
+                                value={updatedAmount}
                                 handleChange={onChangeIntendedAmount}
                                 setIncrementDecrementVal={handleIncrementDecrementVal}
                                 customStyleClass='intended-amount'
@@ -147,9 +159,12 @@ const MyProfile = () => {
                         
                     :
                         <>
-                            <div className="value-amount">{intentedAmount}</div>
+                            <div className="value-amount">{showAmount}</div>
                             <div className="value-action">
-                                <div className="value-action-txt" onClick={() => setShouldEditIntendedAmount(true)}>Edit</div>
+                                <div className="value-action-txt" onClick={() => {
+                                    setUpdatedAmount(showAmount);
+                                    setShouldEditAmount(true);
+                                }}>Edit</div>
                             </div>
                         </>
                     }
